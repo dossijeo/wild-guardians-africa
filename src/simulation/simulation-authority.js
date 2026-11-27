@@ -5,6 +5,7 @@ import {sameNativeRouteReference} from '../world/native-route-reference.js';
 import {nativeTaskActionProjectionMatches} from '../world/native-task-action-attestation.js';
 import {nativeTaskActionActor} from '../world/native-task-action-presentation.js';
 import {nativeDeliveryProjectionMatches} from '../world/native-task-consequence.js';
+import {nativeTaskSettlementProjectionMatches} from '../world/native-task-settlement.js';
 import {centerRuinApproachEndpoint,copyNativeRecoveryGroup,nativeIdleCycleRecoveryPhaseMatches,nativeOrdinaryRecoveryKinds,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../world/native-worker-route-recovery.js';
 import {nativeClockResourceEnd} from '../rendering/native-clock-resource-end.js';
 import {sameNativeHomeArrivalAttestation} from '../world/native-home-arrival.js';
@@ -1342,6 +1343,15 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     });
   }
   function recoveryExecution({kind,actorId}){
+    if(kind===17){
+      if(!nativeWorkerLifecycle||game.raid||game.workers.length!==1||!civilShieldPhysicsAvailable()||
+         session.core.wasm.spatial_body_count()!==1)return null;
+      const execution=planner.nativeSettledWorkerExecution(actorId);
+      if(!execution||!sameNativeWorldBoundary(execution.binding.reference.worldBoundary,planner.nativeWorldResourceBoundary()))return null;
+      const worker=game.workers.find(worker=>worker.id==='worker-'+execution.actorId);
+      const crate=game.crates.find(crate=>crate.id==='crate-'+execution.crateId),center=game.structures.find(center=>center.id===worker?.centerId);
+      return nativeTaskSettlementProjectionMatches(execution,worker,crate,center,game.elapsed)?execution:null;
+    }
     if(kind===16){
       const execution=planner.nativeDeliveryExecution(actorId);
       if(!execution)return null;
@@ -1405,7 +1415,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   function recoverableOrdinaryIdleSource(actorId){
     const group=ordinaryWorkerRecovery();
     const cycle=group?.executions[group.members.findIndex(member=>member.kind===21&&'worker-'+member.actorId===actorId)];
-    return cycle?.finished?JSON.stringify(cycle.binding):null;
+    if(cycle?.finished)return JSON.stringify(cycle.binding);
+    const settlement=recoveryExecution({kind:17,actorId});
+    if(!settlement)return null;
+    const successor=planner.nativeSettlementIdleSource(actorId);
+    return successor?JSON.stringify(successor):null;
   }
   function inheritedRecoveryCycles(group,route){
     return group.executions.flatMap(({binding},i)=>route.members?.[i].kind===21&&binding.reference.sourceCycleSequence?[binding]:[]);
@@ -1472,6 +1486,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       const execution=recoveryExecution({kind,actorId:worker.id});
       return execution&&worker.id==='worker-'+execution.actorId?{kind,actorId:execution.actorId}:null;
     }
+    const settlement=recoveryExecution({kind:17,actorId:worker.id});
+    if(settlement)return {kind:17,actorId:settlement.actorId};
     if(!['native-home','native-idle-stroll','native-farm-arrival'].includes(admission))return null;
     const kind=admission==='native-home'?18:admission==='native-idle-stroll'?22:23;
     const bindings=kind===18?planner.nativeHomeRouteBindings():kind===22?planner.nativeIdleStrollBindings():planner.nativeFarmArrivalRouteBindings();
@@ -1638,7 +1654,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
         const presentation=handle&&planner.captureNativeRoutePresentation(handle);
         if(presentation?.gates.length&&!recoveryGateCurrent(kind,execution,presentation))throw Error('Recovered gate motor has changed');
         const resources=profile.copyResources({version:1,kind,phase:'committed',worldBoundary:boundary,
-          [profile.bindingField]:binding,...(kind===15||kind===21||kind===27?{}:{nativeRoute:presentation?.nativeRoute,presentation})},route.members?cut:null);
+          [profile.bindingField]:binding,...(kind===15||kind===17||kind===21||kind===27?{}:{nativeRoute:presentation?.nativeRoute,presentation})},route.members?cut:null);
         return {execution,resources};
       });
 

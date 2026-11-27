@@ -1,5 +1,7 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Delivery17 conserva el cuerpo y el ingreso ya abonado al perder Draw. NVIDIA confirmó la cancelación del Idle22 pendiente, el picking del sustituto con el reloj retenido y la adquisición de un nuevo Idle22 en el mismo cuerpo. [Recorrido y límites](native-terminal-resource-recovery-20261120.md#reemplazo-terminal-después-de-delivery17).
+
 Carry16 conserva el corredor y la caja al perder Draw. El primer dibujo del sustituto en NVIDIA incluyó las nueve piezas de la caja. El trabajador siguió siendo seleccionable y Game liquidó una sola entrega. [Recorrido y límites](native-terminal-resource-recovery-20261120.md#reemplazo-terminal-durante-carry16).
 
 Action15 conserva el riego en marcha al perder Draw. NVIDIA confirmó la edad del clip, el picking antes de reanudar, un solo riego y el regreso a Idle con el mismo cuerpo. [Recorrido y límites](native-terminal-resource-recovery-20261120.md#reemplazo-terminal-durante-action15).

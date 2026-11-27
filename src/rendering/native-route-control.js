@@ -12,7 +12,7 @@ import {floorFloat32} from './float32-time.js';
 import {isNativeIdleStrollArrivalSource,nativeIdleCycleBodyState,nativeSettledIdleSourceMatches} from '../world/native-idle-cycle-body-source.js';
 import {copyNativeHomeArrivalReference,copyNativeHomeArrivalAttestation,sameNativeHomeArrivalReference} from '../world/native-home-arrival.js';
 import {copyNativeHomeRouteReference,copyNativeHomeRouteAttestation,nativeHomeRouteAttestationCovers,sameNativeHomeRouteReference} from '../world/native-home-route.js';
-import {sameNativeTaskSettlementReference} from '../world/native-task-settlement.js';
+import {sameNativeTaskSettlementAttestation as sameSettlementProof,sameNativeTaskSettlementReference} from '../world/native-task-settlement.js';
 import {copyNativeHomeRequestReference,sameNativeHomeRequestReference,nativeHomeRequestContinuesIdle,nativeHomeRequestContinuesInitialIdle,nativeHomeRequestContinuesFarmRequest,nativeHomeRequestContinuesIdleCycle,nativeHomeRequestContinuesHeldWorker,nativeHomeRequestContinuesRepairAction} from '../world/native-home-request-reference.js';
 import {copyNativeInitialIdleRequestReference,sameNativeInitialIdleRequestReference} from '../world/native-initial-idle-request-reference.js';
 import {copyNativeInitialIdleBodyReference,copyNativeInitialIdleBodyAttestation,nativeInitialIdleBodyAttestationCovers,nativeInitialIdleActionSource,nativeTaskCancellationMatchesAction,nativeTaskCancellationMatchesPendingAction,nativeTaskCancellationMatchesTerminalRoute,nativeTaskCancellationMatchesHeldRoute} from '../world/native-initial-idle-body.js';
@@ -811,7 +811,6 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     const record=actor?.current,proof=actor?.consequenceProof;
     return !closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.state===1&&active.get(reference.actorId)===record&&!!record&&actor.latestSequence===record.assignmentSequence&&sameHandle(record.handle,reference.expectedRouteHandle)&&record.startTime===proof?.reference.worldBoundary.effectiveTime&&proof?.assignmentSequence===record.assignmentSequence&&nativeTaskConsequenceAttestationCovers(proof,reference);
   }
-  function sameSettlementProof(a,b){return !!a&&!!b&&a.settlementSequence===b.settlementSequence&&sameNativeTaskSettlementReference(a.reference,b.reference)&&sameNativeTaskSettlementReference(a.preparedReference,b.preparedReference);}
   function strollRecordCurrent(reference,actor){const record=actor?.current,proof=actor?.strollProof;return !closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.state===1&&active.get(reference.actorId)===record&&!!record&&actor.latestSequence===record.assignmentSequence&&sameHandle(record.handle,reference.expectedRouteHandle)&&record.startTime===proof?.reference.worldBoundary.effectiveTime&&proof?.assignmentSequence===record.assignmentSequence&&proof.assignmentSequence<=clock.intentSequence||completedStrollHomeCurrent(reference,actor);}
   function completedTaskHomeRequestMatches(request,record){
     const proof=record?.issuedStart,r=proof?.reference;
@@ -1120,6 +1119,17 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
            !(at>=ref.startTime&&at<ref.endTime)||!current())
           throw Error('Recovered action conflicts with the fresh control baseline');
         return ()=>{if(!current())throw Error('Recovered action was revoked before materialization');};
+      }
+      if(kind===17){
+        const actor=actors.get(ref.actorId),record=actor?.settlementRecord,at=clock?.committedThrough;
+        const current=()=>!!clock&&clock.committedThrough===at&&clock.intentSequence===sequence&&
+          actors.size===1&&active.size===0&&actor?.state===7&&actor.settlementRecord===record&&record?.lastDrawTime===null&&
+          settlementCurrent(ref,actor)&&sameSettlementProof(actor.settlementProof,proof);
+        if(ref.home||sharedCut||cohortSize!==1||!sameNativeWorldBoundary(boundary,ref.worldBoundary)||
+           boundary.authorityEpoch!==authorityEpoch||clock?.nativeSession!==boundary.nativeSession||
+           !(at>=ref.worldBoundary.effectiveTime)||!current())
+          throw Error('Recovered delivery settlement conflicts with the fresh control baseline');
+        return ()=>{if(!current())throw Error('Recovered delivery settlement was revoked before materialization');};
       }
       if(kind===21){
         const actor=actors.get(ref.actorId),source=actor?.idleCycleSource,at=clock?.committedThrough,start=ref.worldBoundary.effectiveTime;

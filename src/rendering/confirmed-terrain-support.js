@@ -72,10 +72,10 @@ export function createConfirmedTerrainSupport({residency,maxPieces=16384,maxActo
   const reference=copyNativeTaskActionReference(value);
   return prepareStationaryPoint(reference,reference.origin,reference.startTime,String(nativeTaskActionActor(reference.request)),'native-task-action-terrain-support',terrainManifest);
  }
- function prepareNativeTaskSettlement(value){
+ function prepareNativeTaskSettlement(value,{terrainManifest=null}={}){
   if(closed)throw Error('Confirmed terrain support disposed');
   const reference=copyNativeTaskSettlementReference(value);
-  return prepareStationaryPoint(reference,reference.pose,reference.worldBoundary.effectiveTime,String(reference.actorId),'native-task-settlement-terrain-support');
+  return prepareStationaryPoint(reference,reference.pose,reference.worldBoundary.effectiveTime,String(reference.actorId),'native-task-settlement-terrain-support',terrainManifest);
  }
  function prepareNativeIdleCycle(value){
   if(closed)throw Error('Confirmed terrain support disposed');

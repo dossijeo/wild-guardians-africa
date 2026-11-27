@@ -1,0 +1,133 @@
+{
+  "scenario": "Sabana 714, tercer turno pagado desde el guardado público, pérdida terminal de Draw antes de adquirir el sucesor de Delivery17",
+  "baseRevision": "007f26930c7ceab1e95915ab42dd307dc37568bd",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 74.74499997496605
+    }
+  },
+  "artifacts": {
+    "native-savanna-delivery17-terminal-recovery-20261127-extended.json": "e7ce71a9a987dd19f415eb934cf6d03fa558cf542628b031629ef1558247d06e",
+    "native-savanna-delivery17-terminal-recovery-20261127-verified-extended.json": "56834dd6741a5bfbb0a5dd6191e924a9dece4c41d3b1b2b8a53d93def669edf8",
+    "terminal-delivery17-retained-successor-20261127.log": "60a191bd3d7d5cc450c69625500d079b36b7b6a6e9fc40f7d6d046e8a87701e7",
+    "terminal-delivery17-source-after-20261127.log": "2ab9f04f08e3bb0af31d762c8b31d51f41f2ef93ae8d84263396524081023113",
+    "terminal-delivery17-impact-20261127.tap": "40082baa2c50ad0ee30f171beb29e7accd75b56abd5c9ea045c530263969425b",
+    "terminal-delivery17-build-20261127.log": "96b7fabb67085c057dde31997e555c6f8542417588d4185a8f41fe9833343f34",
+    "tests/fixtures/sabana714-d3-before-paid-harvest.json.gz": "9d8a8d333058b0fd2ebba1b80b2be3c1a9c9dcda989a8dea319184f8836a4c4f"
+  },
+  "delivery": {
+    "actorId": 16,
+    "bodyId": 1,
+    "centerId": 2,
+    "crateId": 18,
+    "settlementSequence": 9,
+    "pose": {
+      "x": 86.91100311279297,
+      "z": -2.6090269088745117,
+      "yaw": -0.2238155277160509,
+      "radius": 0.28,
+      "runPhase": 0,
+      "walkPhase": 47.77103241118032,
+      "carryPhase": 6.112464330938642,
+      "runRemaining": 105.80409353316266
+    },
+    "ticket": 12,
+    "preparedTicket": 11,
+    "event": {
+      "id": "event-58",
+      "type": "CrateDelivered",
+      "workerId": "worker-16",
+      "targetId": "crate-18",
+      "species": "platano",
+      "multiplyIncome": {
+        "n": "0",
+        "d": "1"
+      },
+      "simulationTime": 1249.399999999418
+    },
+    "payment": {
+      "n": "321",
+      "d": "1"
+    },
+    "balance": {
+      "n": "751",
+      "d": "1"
+    }
+  },
+  "original": {
+    "sequence": 213,
+    "ticket": 12,
+    "clockElapsed": 1249.399999999418,
+    "epoch": 1247.8499999994194,
+    "executionEpoch": 1249.399999999418,
+    "relativeTime": 0,
+    "referenceTicket": 11
+  },
+  "cancelledSuccessor": {
+    "resourceRequest": 7,
+    "publication": 1134,
+    "proposedTicket": 13,
+    "aborted": true
+  },
+  "retirement": {
+    "holdId": 452,
+    "publicationFloor": 1144,
+    "heldPublication": 1144,
+    "heldClock": 1249.6999999994177,
+    "drawClosed": true,
+    "drawDrained": true,
+    "callbacksSettled": true
+  },
+  "replacement": {
+    "sequence": 1,
+    "ticket": 12,
+    "clockElapsed": 1249.6999999994177,
+    "epoch": 1249.399999999418,
+    "executionEpoch": 1249.399999999418,
+    "relativeTime": 0.29999998211860657,
+    "referenceTicket": 12,
+    "submittedBeforeActivation": true,
+    "pick": {
+      "actor": "worker-16",
+      "trials": [
+        {
+          "height": 0.7,
+          "result": "worker-16"
+        }
+      ],
+      "before": 1,
+      "after": 2
+    }
+  },
+  "successor": {
+    "ticket": 15,
+    "assignmentSequence": 10,
+    "bodyId": 1,
+    "sourceSequence": 9,
+    "sourceAt": 1249.399999999418,
+    "frame": 4,
+    "clock": 1251.3499999994162,
+    "resumedElapsed": 1251.599999999416
+  },
+  "final": {
+    "drawDrained": true,
+    "workers": [
+      {
+        "id": "worker-16",
+        "status": "idle",
+        "nativeRouteAdmission": "native-idle-stroll"
+      }
+    ],
+    "errors": []
+  }
+}

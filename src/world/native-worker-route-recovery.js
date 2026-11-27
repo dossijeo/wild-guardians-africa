@@ -14,6 +14,7 @@ import {copyNativeTaskStartAttestation} from './native-task-start-attestation.js
 import {copyNativeTaskActionAttestation,copyNativeTaskActionResources,sameNativeTaskActionAttestation} from './native-task-action-attestation.js';
 import {sameNativeTaskActionReference} from './native-task-action-presentation.js';
 import {copyNativeTaskConsequenceAttestation,sameNativeTaskConsequenceReference} from './native-task-consequence.js';
+import {copyNativeTaskSettlementAttestation,copyNativeTaskSettlementResources,sameNativeTaskSettlementAttestation,sameNativeTaskSettlementReference} from './native-task-settlement.js';
 import {sameNativeTaskStartReference} from './native-task-start-reference.js';
 import {copyNativeRouteReference,sameNativeRouteReference} from './native-route-reference.js';
 
@@ -159,6 +160,12 @@ const profiles=new Map([
   copyAttestation:copyNativeTaskConsequenceAttestation,
   sameAttestation:(a,b)=>sameTaskRouteAttestation(a,b,sameNativeTaskConsequenceReference),sameReference:sameNativeTaskConsequenceReference
  })],
+ [17,Object.freeze({
+  kind:17,admission:undefined,executionKind:'native-settled-worker-execution',maxGates:0,
+  bindingField:'nativeTaskSettlementBinding',clockField:'nativeSettlement',
+  obsoleteCode:'native-settlement-admission-obsolete',copyResources:copyNativeTaskSettlementResources,copyAttestation:copyNativeTaskSettlementAttestation,
+  sameAttestation:sameNativeTaskSettlementAttestation,sameReference:sameNativeTaskSettlementReference
+ })],
  [18,Object.freeze({
   kind:18,admission:'native-home',executionKind:'native-home-route-execution',maxGates:1024,
   bindingField:'nativeHomeRouteBinding',clockField:'nativeHome',proofField:'homeProof',
@@ -216,7 +223,7 @@ export function recoveredNativeGateSamples(row){
  return row.nativeGate===undefined?[]:[{nativeGate:row.nativeGate,gateElapsed:row.gateElapsed}];
 }
 
-export const nativeRecoverySequence=proof=>proof.cycleSequence??proof.actionSequence??proof.assignmentSequence;
+export const nativeRecoverySequence=proof=>proof.cycleSequence??proof.actionSequence??proof.settlementSequence??proof.assignmentSequence;
 export const nativeRecoveryGates=proof=>proof.gateIds??[];
 export function nativeOrdinaryRecoveryKinds(kinds,withRefuge=false){
  const [first,second]=kinds;

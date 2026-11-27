@@ -42,6 +42,22 @@ export function copyNativeTaskSettlementAttestation(value){
  return Object.freeze({kind:value.kind,version:1,projectionVersion:1,settlementSequence:value.settlementSequence,reference,preparedReference});
 }
 export const nativeTaskSettlementAttestationCovers=(proof,reference)=>sameNativeTaskSettlementReference(proof?.reference,reference)||sameNativeTaskSettlementReference(proof?.preparedReference,reference);
+export const sameNativeTaskSettlementAttestation=(a,b)=>!!a&&!!b&&a.settlementSequence===b.settlementSequence&&
+ sameNativeTaskSettlementReference(a.reference,b.reference)&&sameNativeTaskSettlementReference(a.preparedReference,b.preparedReference);
+export function nativeTaskSettlementProjectionMatches(execution,worker,crate,center,at){
+ const r=execution?.binding?.reference;
+ return !!r&&!r.home&&!!worker&&!!crate&&!!center&&execution.kind==='native-settled-worker-execution'&&
+  execution.executedThrough===at&&at>=r.worldBoundary.effectiveTime&&
+  ['actorId','bodyId','crateId','centerId'].every(key=>execution[key]===r[key])&&poseKeys.every(key=>execution[key]===r.pose[key])&&
+  worker.id===`worker-${r.actorId}`&&worker.status==='idle'&&worker.nativeRouteAdmission===undefined&&
+  worker.path===null&&worker.idleState===null&&!worker.taskId&&!worker.crateId&&!worker.nativeDelivery&&!worker.deliveryApproach&&
+  !worker.incapacitated&&!worker.recovery&&!worker.recoveryExitRemaining&&!worker.fallRemaining&&!worker.raidReturn&&
+  worker.running===false&&worker.gateWaiting===false&&worker.heading===execution.yaw&&
+  ['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(key=>worker[key]===execution[key])&&
+  crate.id===`crate-${r.crateId}`&&crate.delivered===true&&crate.carrierId===null&&
+  crate.sourcePlantId===`plant-${r.sourceCarry.reference.sourceAction.reference.request.targetId}`&&
+  center.id===`structure-${r.centerId}`&&worker.centerId===center.id&&center.status==='intact';
+}
 export function nativeTaskSettlementReferenceCovered(reference,boundary){const w=reference.worldBoundary;return !!boundary&&w.authorityEpoch===boundary.authorityEpoch&&w.nativeSession===boundary.nativeSession&&boundary.ticket>=w.ticket&&boundary.effectiveTime>=w.effectiveTime;}
 export function copyNativeTaskSettlementResources(value){
  if(value?.version!==1||value.kind!==17||value.phase!=='committed'||Object.keys(value).some(k=>!['version','kind','phase','worldBoundary','nativeTaskSettlementBinding'].includes(k)))throw TypeError('Invalid native task settlement resources');
@@ -50,5 +66,5 @@ export function copyNativeTaskSettlementResources(value){
  return Object.freeze({version:1,kind:17,phase:'committed',worldBoundary,nativeTaskSettlementBinding});
 }
 export function nativeTaskSettlementPresentationMatches(proposal,value,binding){
- try{const prepared=nativeTaskSettlementReferenceFromProposal(proposal),resources=copyNativeTaskSettlementResources(value),proof=copyNativeTaskSettlementAttestation(binding),actual=resources.nativeTaskSettlementBinding;return nativeTaskSettlementAttestationCovers(proof,prepared)&&actual.settlementSequence===proof.settlementSequence&&sameNativeTaskSettlementReference(actual.reference,proof.reference)&&sameNativeTaskSettlementReference(actual.preparedReference,proof.preparedReference);}catch{return false;}
+ try{const prepared=nativeTaskSettlementReferenceFromProposal(proposal),resources=copyNativeTaskSettlementResources(value),proof=copyNativeTaskSettlementAttestation(binding);return nativeTaskSettlementAttestationCovers(proof,prepared)&&sameNativeTaskSettlementAttestation(resources.nativeTaskSettlementBinding,proof);}catch{return false;}
 }

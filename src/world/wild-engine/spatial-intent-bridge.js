@@ -811,10 +811,12 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     }else if(recoveredWorkerRoute!==null){
       const profile=nativeWorkerRouteRecoveryProfile(recoveredWorkerRoute.kind);
       const crop=profile.kind===26,strike=profile.kind===27,task=profile.kind===14,action=profile.kind===15,carry=profile.kind===16;
-      if(count!==(strike||action?0:1)||strolls.length+farmCount+homes.length!==(crop||strike||task||action||carry?0:1)||
-         action&&nativeTaskActionBindings().length!==1)
+      const settlement=profile.kind===17;
+      if(count!==(strike||action||settlement?0:1)||strolls.length+farmCount+homes.length!==(crop||strike||task||action||carry||settlement?0:1)||
+         action&&nativeTaskActionBindings().length!==1||settlement&&nativeTaskSettlementBindings().length!==1)
         throw Error('Unexpected active routes at recovery');
       const execution=action?nativeTaskActionExecution(nativeTaskActionActor(recoveredWorkerRoute.proof.reference.request)):
+        settlement?nativeSettledWorkerExecution(recoveredWorkerRoute.proof.reference.actorId):
         strike?nativeAnimalCropStrikeExecution('animal-'+recoveredWorkerRoute.proof?.reference?.actorId):
         crop?nativeAnimalCropRouteExecution('animal-'+data[0]):profile.kind===18?nativeHomeRouteExecution(data[0]):
         profile.kind===22?nativeIdleStrollExecution(data[0]):task?nativeTaskExecution(data[0]):
@@ -822,7 +824,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       const binding=task?nativeTaskStartBinding(data[0]):execution?.binding;
       const endpoint=profile.kind===18&&qualifyRaidEncounter&&owningState?.workers.length===1&&
         woundedHomeExecutionAtEndpoint(owningState,owningState.workers[0],execution);
-      if(!execution||!binding||action&&execution.completed!==false||execution.arrived&&!endpoint||!action&&binding.gateIds.length>profile.maxGates||
+      if(!execution||!binding||action&&execution.completed!==false||execution.arrived&&!endpoint||(binding.gateIds?.length??0)>profile.maxGates||
          profile.kind===18&&execution.binding.reference.sourceRequest?.raidSpawnSequence||
          (task||carry)&&!sameNativeRouteReference(execution.nativeRoute,{actorId:binding.reference.actorId,
            assignmentSequence:binding.assignmentSequence,routeHandle:binding.reference.expectedRouteHandle})||

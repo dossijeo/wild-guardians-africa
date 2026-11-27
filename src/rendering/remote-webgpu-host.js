@@ -1292,7 +1292,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     if(recovered) {
       const missing=recovered.members.find(({profile,ref,gateIds})=>{
         const epoch=ref.worldBoundary.effectiveTime;
-        const end=profile.kind===15||profile.kind===21?undefined:profile.kind===27?ref.endTime:nativeClockResourceEnd(epoch,ref.endTime);
+        const end=[15,17,21].includes(profile.kind)?undefined:profile.kind===27?ref.endTime:nativeClockResourceEnd(epoch,ref.endTime);
         return !preparedBindings.some(b=>recoveryBindingMatches(b,profile,ref)&&b.epoch===epoch&&b.resourceEnd===end)||
           profile.kind===21&&ref.sourceCycleSequence!==0&&!preparedBindings.some(b=>recoveredIdleOffsetMatches(b,ref)&&b.epoch===epoch)||
           !gateIds.every(id=>preparedBindings.some(b=>recoveryGateMatches(b,id,ref.worldBoundary)&&
@@ -2425,6 +2425,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
          }
         let accepted;
         if(message?.type==='IntentBaseline'){
+          const recovery=message.recoveredWorkerRoute;
           const recoveryMembers=message.recoveredWorkerRoute?.members;
           const cycleCount=Array.isArray(recoveryMembers)?recoveryMembers.filter(member=>member?.kind===21).length:0;
           if(message.nativeIdleCycles!==undefined&&(!Array.isArray(message.nativeIdleCycles)||message.nativeIdleCycles.length)||
@@ -2435,10 +2436,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           if(message.nativeStrolls!==undefined&&(!Array.isArray(message.nativeStrolls)||message.nativeStrolls.length))throw Error('Native Idle stroll routes require prepared graphical admission');
           if(message.nativeFarmArrivals!==undefined&&(!Array.isArray(message.nativeFarmArrivals)||message.nativeFarmArrivals.length))throw Error('Native farm arrival routes require prepared graphical admission');
           if(message.nativeHomes!==undefined&&(!Array.isArray(message.nativeHomes)||message.nativeHomes.length))throw Error('Native Home routes require prepared graphical admission');
-          if(message.nativeSettlements!==undefined&&(!Array.isArray(message.nativeSettlements)||message.nativeSettlements.length))throw Error('Native settled bodies require prepared graphical admission');
+          if(recovery?.kind===17?message.nativeSettlements?.length!==1||!Array.isArray(message.nativeSettlements):
+             message.nativeSettlements!==undefined&&(!Array.isArray(message.nativeSettlements)||message.nativeSettlements.length))throw Error('Native settled bodies require prepared graphical admission');
           if(routeControl||message.protocolVersion!==2||!Array.isArray(message.routes)||
              !Number.isFinite(message.effectiveTime))throw Error('Invalid or repeated native intent baseline');
-           const recovery=message.recoveredWorkerRoute;
            const recoverySource=cycleCount?copyNativeRecoveryGroup(recovery,copyNativeWorldBoundary(message.worldBoundary??null)):null;
            const recoveryCycles=recoverySource?.members.filter(member=>member.kind===21).map(member=>member.proof)??[];
            const recoveredAnimalId=recovery?.version===2?recovery.members?.find(member=>member.kind===26||member.kind===27)?.proof?.reference?.actorId:
@@ -2456,6 +2457,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
            if(message.nativeStartedRoutes!==undefined)routeControl.installStartedRoutes(nativeWorldBoundary,message.nativeStartedRoutes,{bootstrap:true});
            if(message.nativeActions!==undefined)routeControl.installActions(nativeWorldBoundary,message.nativeActions,{bootstrap:true});
            if(message.nativeConsequences!==undefined)routeControl.installConsequences(nativeWorldBoundary,message.nativeConsequences,{bootstrap:true});
+           if(recovery?.kind===17)routeControl.installSettlements(nativeWorldBoundary,message.nativeSettlements,{bootstrap:true});
            if(nativeWorldBoundary&&(nativeWorldBoundary.authorityEpoch!==message.authorityEpoch||
               nativeWorldBoundary.nativeSession!==message.clock?.nativeSession||
               nativeWorldBoundary.effectiveTime>message.clock.committedThrough))throw Error('Invalid native world resource baseline');
