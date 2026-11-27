@@ -16,7 +16,7 @@ import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-se
 import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
 import {createEventDrivenTaskPlanner} from '../src/world/wild-engine/spatial-intent-bridge.js';
 import {nativeProductionAuthority, untilProduction} from './helpers/native-production-authority.js';
-import {recoverRetreatAfterRuin} from './helpers/native-center-ruin-recovery.js';
+import {recoverRouteAfterRuin} from './helpers/native-center-ruin-recovery.js';
 
 const binary = process.env.QA_BARRIER_WASM ?? new URL('../src/world/wild-engine/spatial-savanna.wasm', import.meta.url);
 const module = new WebAssembly.Module(readFileSync(binary));
@@ -431,7 +431,7 @@ for(const savanna of [false,true])test(`center ruin spends its retained ticket i
    await restoreShelteredRetreatBeforeRuin(beforeRuin,manifest,source);
    await restoreShelteredRetreat(checkpoint(),manifest,source);
    // Destroy the original Draw only after it submitted the kind4 packet.
-   replacement=await recoverRetreatAfterRuin(fixture,retention.commit.nativeCenterRuin,state.elapsed,state);
+   replacement=await recoverRouteAfterRuin(fixture,retention.commit.nativeCenterRuin,state.elapsed,state);
    const step=()=>fixture.command({kind:'advance',seconds:.05,steps:2,nightFastForward:false});
    let final=state;
    for(let i=0;i<500&&!final.result;i++){

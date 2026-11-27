@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {nativeFarmArrivalRouteFixture} from './helpers/native-farm-arrival-route.js';
-import {recoverRetreatAfterRuin} from './helpers/native-center-ruin-recovery.js';
+import {recoverRouteAfterRuin} from './helpers/native-center-ruin-recovery.js';
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
 import {centerServicePoint} from '../src/world/centers.js';
 import {readFileSync} from 'node:fs';
@@ -342,7 +342,7 @@ for(const scenario of [
     const proof=ruin.commit.nativeCenterRuin,old=world.host.inspect().nativeRouteFrame;
     assert.equal(old.worldBoundary.ticket,proof.acquired.ticket);
     assert(old.bindings.some(row=>row.nativeAnimalCrop?.purpose==='retreat'));
-    replacement=await recoverRetreatAfterRuin(world,proof,confirmed.elapsed);
+    replacement=await recoverRouteAfterRuin(world,proof,confirmed.elapsed);
    }
   }
   const absence=world.records.find(row=>row.kind==='home-arrival'&&row.committed);
@@ -423,7 +423,7 @@ for(const scenario of [
  }finally{releaseFarm();releaseRoute();replacement?.client.dispose();await replacement?.host.dispose();await world.close();}
 });
 
-test('a cold successor approach keeps the collapsing center until the original substep', {timeout:90000},async()=>{
+test('a cold successor approach keeps the original collapse substep and survives Draw loss', {timeout:90000},async()=>{
  const initial=mixedState(true),civil=initial.structures[0],original=initial.structures.find(row=>row.id===gateId);
  initial.structures.push({...original,id:`structure-${initial.nextId++}`,created:original.created+1,z:5.3});
  initial.dayPlan.at=initial.time+10;
@@ -470,9 +470,13 @@ test('a cold successor approach keeps the collapsing center until the original s
  assert.equal(disk.raid.animals[0].hitsRemaining,1);
  const before=disk.workerNativeAuthorityCheckpoint.spatialState.polygons;
  const options=savedNativeAuthorityOptions(serialize(disk));
- let release,ready;
+ let release,ready,replacement;
  const held=new Promise(resolve=>{release=resolve;});
- const cold=await nativeProductionAuthority(disk,{...options,onReady(record){
+ const manifest={epoch:'deterministic-host-test',chunks:chunkKeys.map(key=>{
+  const [cx,cz]=key.split(',').map(Number);
+  return {cx,cz,revision:1};
+ })};
+ const cold=await nativeProductionAuthority(disk,{...options,chunkKeys,getTerrainManifest:()=>manifest,onReady(record){
   if(!ready&&record.kind==='animal-crop-route'){ready=record;return held;}
  }});
  try{
@@ -500,6 +504,7 @@ test('a cold successor approach keeps the collapsing center until the original s
      assert.equal((await ruin.packet.presented).sequence,ruin.packet.sequence);
      assert.deepEqual(cold.command({kind:'snapshot',nativeAuthorityCheckpoint:true}).nativeAuthorityCheckpoint.spatialState.polygons,
       before.filter(row=>row.id!==proof.polygon));
+     replacement=await recoverRouteAfterRuin(cold,proof,state.elapsed,state);
     }
    }
    if(!state.raid&&state.workers[0].nativeRouteAdmission==='native-idle')break;
@@ -516,5 +521,5 @@ test('a cold successor approach keeps the collapsing center until the original s
   assert.deepEqual(hits.map(event=>event.targetId),[doomed.id,doomed.id,doomed.id,civil.id]);
   assert.equal(new Set(hits.map(event=>event.attackId)).size,4);
   assert.equal(state.structures.find(row=>row.id===civil.id).hp,580);
- }finally{release();await cold.close();}
+ }finally{release();replacement?.client.dispose();await replacement?.host.dispose();await cold.close();}
 });

@@ -5,15 +5,15 @@ import {floorFloat32} from '../../src/rendering/float32-time.js';
 import {nativeClockResourceEnd} from '../../src/rendering/native-clock-resource-end.js';
 import {copyNativeRecoveryGroup} from '../../src/world/native-worker-route-recovery.js';
 
-export async function recoverRetreatAfterRuin(world,proof,at,state=null){
+export async function recoverRouteAfterRuin(world,proof,at,state=null){
  world.gpu.device.destroy();world.retireResourceEndpoint();
  const hold=await world.authority.quiesceNativeIntentProduction();
  const retired=await world.authority.flushNativeResourcePreparation({allowRetired:true});
  assert(retired.terminal&&retired.callbacksSettled);
- const route=await world.authority.terminalWorkerRoute(),ref=proof.prepared.retreat.reference;
+ const route=await world.authority.terminalWorkerRoute(),ref=(proof.prepared.retreat??proof.prepared.approach).reference;
  assert.deepEqual(route,{version:2,ruin:true,members:[{kind:26,actorId:ref.actorId}]});
  const [authorityPort,drawPort]=pair();
- const draw=await fixture({capabilities:{nativeAnimalCropVersion:1}},
+ const draw=await fixture({capabilities:{nativeAnimalCropVersion:1,nativeFarmArrivalVersion:1,nativeIdleCycleVersion:1}},
   {intentControl:{port:drawPort,session:'production-control',recoveryHold:30},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
  let rig;
  try{
@@ -28,6 +28,12 @@ export async function recoverRetreatAfterRuin(world,proof,at,state=null){
    const animal=state.raid.animals[0];
    assert.deepEqual([execution.x,execution.z,execution.phase,execution.yaw],
     [animal.x,animal.z,animal.motionPhase,animal.heading]);
+   assert.equal(animal.targetId,ref.purpose==='center'?'structure-'+ref.targetId:null);
+   if(ref.purpose==='center'){
+    const target=state.structures.find(row=>row.id===animal.targetId);
+    assert.equal(target?.status,'intact');
+    assert.deepEqual([target.x,target.z],[ref.targetX,ref.targetZ]);
+   }
    rig=await originalRig(structuredClone(state),q.terrainManifest);
    const requests=await rig.recover({resources,execution,terrainManifest:q.terrainManifest,recoveryCut:q.worldBoundary});
    assert(requests.some(count=>count>0));

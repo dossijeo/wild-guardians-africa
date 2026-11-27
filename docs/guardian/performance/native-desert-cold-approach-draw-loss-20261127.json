@@ -1,0 +1,168 @@
+{
+  "base": "5df4e8805c7bb6715cdbcb3c2c47ef80912027a5",
+  "source": {
+    "path": "D:/wild-guardians-qa/cold-collapse-approach-public-20261127.save.json",
+    "sha256": "1ef476a31b9fd34152ce36e918f92d621e2a0bc0e7818da939ce6483ae0f6156",
+    "elapsed": 47.800000000002,
+    "qualification": {}
+  },
+  "hardware": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja"
+  },
+  "original": {
+    "ruin": "structure-1000002",
+    "polygon": 10,
+    "prepared": {
+      "version": 1,
+      "authorityEpoch": "bb796f1f-4a26-45e0-bc39-066e3795faf9/1",
+      "nativeSession": 1,
+      "ticket": 3,
+      "effectiveTime": 47.950000000002014
+    },
+    "acquired": {
+      "version": 1,
+      "authorityEpoch": "bb796f1f-4a26-45e0-bc39-066e3795faf9/1",
+      "nativeSession": 1,
+      "ticket": 3,
+      "effectiveTime": 47.97000000000202
+    },
+    "frame": 18,
+    "age": 0.16999998688697815,
+    "smoke": 66,
+    "debris": 270,
+    "event": "event-29218",
+    "loss": "Error: WebGPU device lost: Device was destroyed."
+  },
+  "replacement": {
+    "hold": 5,
+    "checkpoint": 1,
+    "replayedSequence": 16,
+    "activationSequence": 18,
+    "terrainChunks": 25,
+    "frame": 1,
+    "clock": 48.50000000000206,
+    "age": 0.699999988079071,
+    "epoch": 47.800000000002,
+    "route": {
+      "actor": 1000003,
+      "body": 1,
+      "assignment": 4,
+      "slot": 0,
+      "generation": 3,
+      "target": 2,
+      "ticket": 2,
+      "end": 63.52277166717941,
+      "knots": 26
+    },
+    "pose": {
+      "x": -22.991347846713065,
+      "z": -16,
+      "yaw": -1.5707963267948966,
+      "phase": 20.26730847723351
+    },
+    "warthogMeshes": [
+      {
+        "id": 687,
+        "geometry": 183,
+        "material": [
+          234
+        ]
+      },
+      {
+        "id": 688,
+        "geometry": 184,
+        "material": [
+          235
+        ]
+      },
+      {
+        "id": 689,
+        "geometry": 185,
+        "material": [
+          236
+        ]
+      },
+      {
+        "id": 690,
+        "geometry": 186,
+        "material": [
+          237
+        ]
+      }
+    ],
+    "gates": [
+      {
+        "id": "structure-1000000",
+        "opening": 1
+      },
+      {
+        "id": "structure-1000001",
+        "opening": 1
+      }
+    ]
+  },
+  "continuation": {
+    "hits": [
+      {
+        "attackId": "attack-29209",
+        "targetId": "structure-1000002",
+        "simulationTime": 38.32000000000052
+      },
+      {
+        "attackId": "attack-29212",
+        "targetId": "structure-1000002",
+        "simulationTime": 40.04000000000079
+      },
+      {
+        "attackId": "attack-29215",
+        "targetId": "structure-1000002",
+        "simulationTime": 44.760000000001526
+      },
+      {
+        "attackId": "attack-29219",
+        "targetId": "structure-2",
+        "simulationTime": 68.32000000000313
+      }
+    ],
+    "centers": [
+      {
+        "id": "structure-2",
+        "hp": 580
+      },
+      {
+        "id": "structure-1000002",
+        "hp": 0
+      }
+    ],
+    "raidEnded": 77.09000000000263,
+    "farm": {
+      "version": 1,
+      "authorityEpoch": "bb796f1f-4a26-45e0-bc39-066e3795faf9/1",
+      "nativeSession": 1,
+      "ticket": 9,
+      "effectiveTime": 81.80000000000237
+    },
+    "idle": 90.95000000000185,
+    "worker": "worker-900011",
+    "ledgerUnchanged": true,
+    "drained": true
+  },
+  "cpu": {
+    "baseline": ".cache/cold-collapse-loss-before.tap",
+    "final": ".cache/cold-collapse-loss-regression.tap",
+    "control": "tests/native-mixed-center-ruin.test.js",
+    "selection": "cold successor approach",
+    "passed": 37,
+    "tapSha256": "be8d6a8bd26615809bc7541023df8ecc6fc72758350b01d22f3bdb163232c7a7"
+  },
+  "raw": {
+    "path": "D:/wild-guardians-qa/cold-collapse-approach-device-loss-nvidia-20261127.json",
+    "sha256": "133478c15954e53ac00739160b38626878413819a995cfcf9eade6362401a87e"
+  }
+}

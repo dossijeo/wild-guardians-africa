@@ -1349,6 +1349,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       if(!civilShieldPhysicsAvailable()||game.raid.animals.length!==1)return null;
       const kind=animal.status==='attacking'?27:26;
       const workersAtRefuge=game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id));
+      if(workersAtRefuge&&kind===26){
+        const ruin=planner.nativeCenterRuinRouteRecovery();
+        if(ruin)return {version:2,ruin:true,members:[{kind:26,actorId:ruin.execution.actorId}]};
+      }
       if(!workersAtRefuge&&qualifyAnimalCrop){
         const approach=animal.status!=='retreating',fall=planner.nativeEncounterFallRecovery(approach?'center':'retreat');
         if(fall)return {version:2,encounter:approach?'approach':'retreat',members:[{kind:26,actorId:fall.execution.actorId}]};
@@ -1366,8 +1370,6 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       if(!qualifyAnimalCrop){
         if(!nativeWorkerLifecycle||!nativeShelteredSavannaCenterActor(game,animal))return null;
         if(animal.status==='retreating'){
-          const ruined=planner.nativeCenterRuinRetreatRecovery();
-          if(ruined)return {version:2,ruin:true,members:[{kind:26,actorId:ruined.execution.actorId}]};
           if(game.structures[0].status!=='intact'||!shelteredCenterRetreat(game))return null;
           const retreat=planner.nativeAnimalCropRouteExecution(animal.id);
           return retreat?.binding.reference.purpose==='retreat'?{kind:26,actorId:retreat.actorId}:null;
@@ -1376,9 +1378,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
         return execution?.binding.reference.purpose==='center'?{kind,actorId:execution.actorId}:null;
       }
       const execution=kind===27?planner.nativeAnimalCropStrikeExecution(animal.id):planner.nativeAnimalCropRouteExecution(animal.id);
-      if(execution)return {kind,actorId:execution.actorId};
-      const ruined=kind===26&&planner.nativeCenterRuinRetreatRecovery();
-      return ruined?{version:2,ruin:true,members:[{kind,actorId:ruined.execution.actorId}]}:null;
+      return execution?{kind,actorId:execution.actorId}:null;
     }
     if(game.workers.length!==1)return null;
     const worker=game.workers[0],admission=worker.nativeRouteAdmission;
@@ -1418,7 +1418,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       const [member]=route.members;
       if(route.members.length!==1||(member.kind!==26&&(!route.refuge||member.kind!==27)))return null;
       const source=route.encounter?planner.nativeEncounterFallRecovery(route.encounter==='approach'?'center':'retreat'):
-        route.ruin?planner.nativeCenterRuinRetreatRecovery():planner.nativeRefugeCropRecovery(member.kind);
+        route.ruin?planner.nativeCenterRuinRouteRecovery():planner.nativeRefugeCropRecovery(member.kind);
       if(!source||member.actorId!==source.execution.actorId)return null;
       const {execution,...evidence}=source;
       return {executions:[execution],...evidence};
