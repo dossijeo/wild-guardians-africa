@@ -1157,6 +1157,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       const approachEndpoint=kind===26&&cohortSize===1&&sharedCut&&centerRuinApproachEndpoint(ruin,boundary,proof,clock?.committedThrough);
       if(closed||!clock||actors.size!==cohortSize||active.size!==movingCount||proof.gateIds.length>profile.maxGates||
          !record||active.get(ref.actorId)!==record||record.lastDrawTime!==null||actor.strollProof||actor.farmArrivalProof||actor.homeProof||
+         kind===14&&!profile.sameAttestation(actor.startProof,proof)||
          kind===18&&Boolean(ref.sourceRequest?.raidSpawnSequence)!==(cohortSize===2&&!ordinaryWorkers)||
          actor.latestSequence!==proof.assignmentSequence||!matches(record,{actorId:ref.actorId,assignmentSequence:proof.assignmentSequence,routeHandle:handle})||
          !(sharedCut?nativeRecoveryCovers(boundary,source):sameNativeWorldBoundary(boundary,source))||record.startTime!==source.effectiveTime||

@@ -5,3 +5,8 @@ export function copyNativeRouteReference(value){
  if(!id(actorId)||!id(assignmentSequence)||typeof routeHandle?.authorityEpoch!=='string'||!routeHandle.authorityEpoch||!id(routeHandle.session)||!Number.isSafeInteger(routeHandle.slot)||routeHandle.slot<0||!id(routeHandle.generation))throw TypeError('Invalid native route reference');
  return Object.freeze({actorId,assignmentSequence,routeHandle:Object.freeze({authorityEpoch:routeHandle.authorityEpoch,session:routeHandle.session,slot:routeHandle.slot,generation:routeHandle.generation})});
 }
+
+export function sameNativeRouteReference(a,b){
+ return !!a?.routeHandle&&!!b?.routeHandle&&a.actorId===b.actorId&&a.assignmentSequence===b.assignmentSequence&&
+   ['authorityEpoch','session','slot','generation'].every(key=>a.routeHandle[key]===b.routeHandle[key]);
+}

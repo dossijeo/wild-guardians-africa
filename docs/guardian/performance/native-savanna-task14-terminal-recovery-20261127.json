@@ -1,0 +1,331 @@
+{
+  "scenario": "Sabana 714 desde menú, pérdida terminal de Draw durante Task14 adquirido",
+  "baseRevision": "849d348632326e443cfd12c89840fd68bf8f33c3",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 108.50499999523163
+    }
+  },
+  "artifacts": {
+    "native-savanna-task14-terminal-recovery-20261127-extended.json": "fc1d28690429bd31c7afb9cfc53e5d3d399fc94c8b806ad52a172ad0c04ec73e",
+    "terminal-task14-recovery-before-20261127.log": "be522ed363af582c61195766dc406da7a1f3a450ce3347f80cffbc50f761dcab",
+    "task14-terminal-nvidia-20261127.log": "8b7cc5fa110f9ace5f70f410e08c74b6dd8471615426344355809390dbb5322b"
+  },
+  "original": {
+    "sequence": 222,
+    "ticket": 4,
+    "clockElapsed": 29.849999999999937,
+    "taskClocks": [
+      {
+        "nativeStart": {
+          "kind": "native-task-start-reference",
+          "version": 1,
+          "actorId": 6,
+          "bodyId": 1,
+          "taskId": 7,
+          "targetId": 3,
+          "requestSequence": 3,
+          "requestedAt": 19.019999999999783,
+          "sourceControlSequence": 3,
+          "endTime": 58.44330281153195,
+          "sourceRequestHandle": {
+            "kind": "native-task-route-request-handle",
+            "authorityEpoch": "d4d71cca-6ebd-425a-af95-1d80790f3c21/1",
+            "session": 1,
+            "slot": 0,
+            "generation": 1
+          },
+          "expectedRouteHandle": {
+            "authorityEpoch": "d4d71cca-6ebd-425a-af95-1d80790f3c21/1",
+            "session": 1,
+            "slot": 0,
+            "generation": 3
+          },
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "d4d71cca-6ebd-425a-af95-1d80790f3c21/1",
+            "nativeSession": 1,
+            "ticket": 3,
+            "effectiveTime": 19.099999999999785
+          }
+        },
+        "relativeTime": 0.09999999403953552,
+        "semantic": "relative",
+        "epoch": 19.099999999999785,
+        "executionEpoch": 29.749999999999936,
+        "elapsed": 19.19999999403932
+      }
+    ]
+  },
+  "acquisition": {
+    "reference": {
+      "kind": "native-task-start-reference",
+      "version": 1,
+      "actorId": 6,
+      "bodyId": 1,
+      "taskId": 7,
+      "targetId": 3,
+      "requestSequence": 3,
+      "requestedAt": 19.019999999999783,
+      "sourceControlSequence": 3,
+      "endTime": 69.0933028115321,
+      "sourceRequestHandle": {
+        "kind": "native-task-route-request-handle",
+        "authorityEpoch": "d4d71cca-6ebd-425a-af95-1d80790f3c21/1",
+        "session": 1,
+        "slot": 0,
+        "generation": 1
+      },
+      "expectedRouteHandle": {
+        "authorityEpoch": "d4d71cca-6ebd-425a-af95-1d80790f3c21/1",
+        "session": 1,
+        "slot": 0,
+        "generation": 3
+      },
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "d4d71cca-6ebd-425a-af95-1d80790f3c21/1",
+        "nativeSession": 1,
+        "ticket": 4,
+        "effectiveTime": 29.749999999999936
+      }
+    },
+    "preparedReference": {
+      "kind": "native-task-start-reference",
+      "version": 1,
+      "actorId": 6,
+      "bodyId": 1,
+      "taskId": 7,
+      "targetId": 3,
+      "requestSequence": 3,
+      "requestedAt": 19.019999999999783,
+      "sourceControlSequence": 3,
+      "endTime": 58.44330281153195,
+      "sourceRequestHandle": {
+        "kind": "native-task-route-request-handle",
+        "authorityEpoch": "d4d71cca-6ebd-425a-af95-1d80790f3c21/1",
+        "session": 1,
+        "slot": 0,
+        "generation": 1
+      },
+      "expectedRouteHandle": {
+        "authorityEpoch": "d4d71cca-6ebd-425a-af95-1d80790f3c21/1",
+        "session": 1,
+        "slot": 0,
+        "generation": 3
+      },
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "d4d71cca-6ebd-425a-af95-1d80790f3c21/1",
+        "nativeSession": 1,
+        "ticket": 3,
+        "effectiveTime": 19.099999999999785
+      }
+    },
+    "assignmentSequence": 4,
+    "projectionVersion": 1,
+    "gateIds": []
+  },
+  "retirement": {
+    "holdId": 144,
+    "publicationFloor": 587,
+    "heldPublication": 588,
+    "heldClock": 30.249999999999943,
+    "drawClosed": true,
+    "drawDrained": true,
+    "callbacksSettled": true
+  },
+  "firstReplacement": {
+    "sequence": 1,
+    "ticket": 4,
+    "clockElapsed": 30.249999999999943,
+    "taskClocks": [
+      {
+        "nativeStart": {
+          "kind": "native-task-start-reference",
+          "version": 1,
+          "actorId": 6,
+          "bodyId": 1,
+          "taskId": 7,
+          "targetId": 3,
+          "requestSequence": 3,
+          "requestedAt": 19.019999999999783,
+          "sourceControlSequence": 3,
+          "endTime": 69.0933028115321,
+          "sourceRequestHandle": {
+            "kind": "native-task-route-request-handle",
+            "authorityEpoch": "d4d71cca-6ebd-425a-af95-1d80790f3c21/1",
+            "session": 1,
+            "slot": 0,
+            "generation": 1
+          },
+          "expectedRouteHandle": {
+            "authorityEpoch": "d4d71cca-6ebd-425a-af95-1d80790f3c21/1",
+            "session": 1,
+            "slot": 0,
+            "generation": 3
+          },
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "d4d71cca-6ebd-425a-af95-1d80790f3c21/1",
+            "nativeSession": 1,
+            "ticket": 4,
+            "effectiveTime": 29.749999999999936
+          }
+        },
+        "relativeTime": 0.5,
+        "semantic": "relative",
+        "epoch": 29.749999999999936,
+        "executionEpoch": 29.749999999999936,
+        "elapsed": 30.249999999999936
+      }
+    ]
+  },
+  "activation": {
+    "firstSubmitBeforeRequest": true,
+    "completed": true
+  },
+  "pick": {
+    "actorId": "worker-6",
+    "pose": {
+      "x": 60,
+      "z": -0.5400000000000077
+    },
+    "trials": [
+      {
+        "height": 0.7,
+        "result": "worker-6"
+      }
+    ],
+    "before": {
+      "sequence": 1,
+      "ticket": 4,
+      "clockElapsed": 30.249999999999943,
+      "taskClocks": [
+        {
+          "nativeStart": {
+            "kind": "native-task-start-reference",
+            "version": 1,
+            "actorId": 6,
+            "bodyId": 1,
+            "taskId": 7,
+            "targetId": 3,
+            "requestSequence": 3,
+            "requestedAt": 19.019999999999783,
+            "sourceControlSequence": 3,
+            "endTime": 69.0933028115321,
+            "sourceRequestHandle": {
+              "kind": "native-task-route-request-handle",
+              "authorityEpoch": "d4d71cca-6ebd-425a-af95-1d80790f3c21/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 1
+            },
+            "expectedRouteHandle": {
+              "authorityEpoch": "d4d71cca-6ebd-425a-af95-1d80790f3c21/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 3
+            },
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "d4d71cca-6ebd-425a-af95-1d80790f3c21/1",
+              "nativeSession": 1,
+              "ticket": 4,
+              "effectiveTime": 29.749999999999936
+            }
+          },
+          "relativeTime": 0.5,
+          "semantic": "relative",
+          "epoch": 29.749999999999936,
+          "executionEpoch": 29.749999999999936,
+          "elapsed": 30.249999999999936
+        }
+      ]
+    },
+    "after": {
+      "sequence": 2,
+      "ticket": 4,
+      "clockElapsed": 30.249999999999943,
+      "taskClocks": [
+        {
+          "nativeStart": {
+            "kind": "native-task-start-reference",
+            "version": 1,
+            "actorId": 6,
+            "bodyId": 1,
+            "taskId": 7,
+            "targetId": 3,
+            "requestSequence": 3,
+            "requestedAt": 19.019999999999783,
+            "sourceControlSequence": 3,
+            "endTime": 69.0933028115321,
+            "sourceRequestHandle": {
+              "kind": "native-task-route-request-handle",
+              "authorityEpoch": "d4d71cca-6ebd-425a-af95-1d80790f3c21/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 1
+            },
+            "expectedRouteHandle": {
+              "authorityEpoch": "d4d71cca-6ebd-425a-af95-1d80790f3c21/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 3
+            },
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "d4d71cca-6ebd-425a-af95-1d80790f3c21/1",
+              "nativeSession": 1,
+              "ticket": 4,
+              "effectiveTime": 29.749999999999936
+            }
+          },
+          "relativeTime": 0.5,
+          "semantic": "relative",
+          "epoch": 29.749999999999936,
+          "executionEpoch": 29.749999999999936,
+          "elapsed": 30.249999999999936
+        }
+      ]
+    }
+  },
+  "continuation": {
+    "elapsed": 78.35000000000188,
+    "worker": "worker-6",
+    "actionTicket": 6,
+    "actionBody": 1,
+    "water": [
+      {
+        "id": "event-11",
+        "type": "WaterSatisfied",
+        "workerId": "worker-6",
+        "targetId": "plant-3",
+        "simulationTime": 78.25000000000189
+      }
+    ],
+    "balance": {
+      "n": "510",
+      "d": "1"
+    },
+    "taskAcquisitions": 1,
+    "actionAcquisitions": 1,
+    "drawDrained": true
+  },
+  "pageErrors": [],
+  "console": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "THREE.WebGPURenderer: WebGPU Device Lost:\n\nMessage: Device was destroyed.\nReason: destroyed"
+  ]
+}

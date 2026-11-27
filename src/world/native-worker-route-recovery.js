@@ -10,6 +10,9 @@ import {centerSource,verifiesCenter} from './native-center-ruin-source.js';
 import {LOCOMOTION} from '../simulation/locomotion-calibration.js';
 import {RECOVERY_EXIT_SECONDS,WORKER_RECOVERY,woundedHomeSourceCurrent} from '../simulation/worker-recovery.js';
 import {copyNativeHomeRequestReference,sameNativeHomeRequestReference} from './native-home-request-reference.js';
+import {copyNativeTaskStartAttestation} from './native-task-start-attestation.js';
+import {sameNativeTaskStartReference} from './native-task-start-reference.js';
+import {copyNativeRouteReference,sameNativeRouteReference} from './native-route-reference.js';
 
 export function woundedHomeEndpoint(binding,at){
  const {reference,gateIds}=binding??{},request=reference?.sourceRequest;
@@ -110,7 +113,32 @@ function copyStrikeResources(value){
  return Object.freeze({version:1,kind:27,phase:'committed',worldBoundary,nativeAnimalCropStrikeBinding:binding});
 }
 
+function sameTaskStartAttestation(a,b){
+ return !!a&&!!b&&a.assignmentSequence===b.assignmentSequence&&a.projectionVersion===b.projectionVersion&&
+   sameNativeTaskStartReference(a.reference,b.reference)&&sameNativeTaskStartReference(a.preparedReference,b.preparedReference)&&
+   Array.isArray(a.gateIds)&&a.gateIds.length===b.gateIds?.length&&a.gateIds.every((id,i)=>id===b.gateIds[i]);
+}
+
+function copyTaskStartResources(value,cut=null){
+ const b=copyNativeTaskStartAttestation(value?.nativeTaskStartBinding),r=b.reference;
+ const worldBoundary=copyNativeWorldBoundary(value.worldBoundary),presentation=copyNativeRoutePresentation(value.presentation);
+ const nativeRoute=copyNativeRouteReference(value.nativeRoute);
+ if(value.version!==1||value.kind!==14||value.phase!=='committed'||!sameNativeWorldBoundary(worldBoundary,r.worldBoundary)||
+    !sameNativeWorldBoundary(presentation.worldBoundary,cut??worldBoundary)||presentation.motionMode!=='worker'||
+    presentation.startTime!==worldBoundary.effectiveTime||presentation.endTime!==r.endTime||
+    !sameNativeRouteReference(nativeRoute,presentation.nativeRoute)||!sameNativeRouteReference(nativeRoute,{actorId:r.actorId,assignmentSequence:b.assignmentSequence,routeHandle:r.expectedRouteHandle})||
+    presentation.gates.length!==b.gateIds.length||b.gateIds.some(id=>!presentation.gates.some(gate=>gate.gateId===id)))
+   throw TypeError('Recovered Task14 program differs from the acquired route');
+ return Object.freeze({version:1,kind:14,phase:'committed',worldBoundary,nativeRoute,presentation,nativeTaskStartBinding:b});
+}
+
 const profiles=new Map([
+ [14,Object.freeze({
+  kind:14,admission:'native-task',executionKind:'native-task-execution',maxGates:1024,
+  bindingField:'nativeTaskStartBinding',clockField:'nativeStart',proofField:'startProof',issuedField:'issuedStart',
+  obsoleteCode:'native-start-admission-obsolete',copyResources:copyTaskStartResources,copyAttestation:copyNativeTaskStartAttestation,
+  sameAttestation:sameTaskStartAttestation,sameReference:sameNativeTaskStartReference
+ })],
  [18,Object.freeze({
   kind:18,admission:'native-home',executionKind:'native-home-route-execution',maxGates:1024,
   bindingField:'nativeHomeRouteBinding',clockField:'nativeHome',proofField:'homeProof',

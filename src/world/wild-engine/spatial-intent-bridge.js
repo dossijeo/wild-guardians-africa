@@ -21,7 +21,7 @@ import {copyNativeFarmArrivalRouteProposal,copyNativeFarmArrivalRouteReference,c
 import {sameNativeFarmArrivalRequestReference} from '../native-farm-arrival-request-reference.js';
 import {nativeFarmArrivalState,nativeFarmArrivalRetainedPendingState,nativeFarmArrivalExecutionState,nativeFarmArrivalHeldState,nativeFarmArrivalTerminalState,nativeFarmArrivalBoundState,nativeFarmFlightState} from '../native-farm-arrival-state.js';
 import {LOCOMOTION} from '../../simulation/locomotion-calibration.js';
-import {copyNativeRouteReference} from '../native-route-reference.js';
+import {copyNativeRouteReference,sameNativeRouteReference} from '../native-route-reference.js';
 import {nativeIdleStrollStopCodec,nativeFarmArrivalStopCodec,nativeTaskRouteStopCodec} from '../native-worker-route-stop-codec.js';
 import {copyNativeIdleStrollStopReference,copyNativeIdleStrollStopProposal,copyNativeIdleStrollStopTicket,nativeIdleStrollStopTicketFromProposal,copyNativeIdleStrollStopAttestation,copyNativeIdleStrollStopProjection} from '../native-idle-stroll-stop.js';
 import {copyNativeIdleCycleBodySource,isNativeIdleStrollArrivalSource,nativeIdleCycleBodyState} from '../native-idle-cycle-body-source.js';
@@ -810,17 +810,20 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       }
     }else if(recoveredWorkerRoute!==null){
       const profile=nativeWorkerRouteRecoveryProfile(recoveredWorkerRoute.kind);
-      const crop=profile.kind===26,strike=profile.kind===27;
-      if(count!==(strike?0:1)||strolls.length+farmCount+homes.length!==(crop||strike?0:1))
+      const crop=profile.kind===26,strike=profile.kind===27,task=profile.kind===14;
+      if(count!==(strike?0:1)||strolls.length+farmCount+homes.length!==(crop||strike||task?0:1))
         throw Error('Unexpected active routes at recovery');
       const execution=strike?nativeAnimalCropStrikeExecution('animal-'+recoveredWorkerRoute.proof?.reference?.actorId):
         crop?nativeAnimalCropRouteExecution('animal-'+data[0]):profile.kind===18?nativeHomeRouteExecution(data[0]):
-        profile.kind===22?nativeIdleStrollExecution(data[0]):nativeFarmArrivalRouteExecution(data[0]);
+        profile.kind===22?nativeIdleStrollExecution(data[0]):task?nativeTaskExecution(data[0]):nativeFarmArrivalRouteExecution(data[0]);
+      const binding=task?nativeTaskStartBinding(data[0]):execution?.binding;
       const endpoint=profile.kind===18&&qualifyRaidEncounter&&owningState?.workers.length===1&&
         woundedHomeExecutionAtEndpoint(owningState,owningState.workers[0],execution);
-      if(!execution||execution.arrived&&!endpoint||execution.binding.gateIds.length>profile.maxGates||
+      if(!execution||!binding||execution.arrived&&!endpoint||binding.gateIds.length>profile.maxGates||
          profile.kind===18&&execution.binding.reference.sourceRequest?.raidSpawnSequence||
-         !profile.sameAttestation(execution.binding,recoveredWorkerRoute.proof))
+         task&&!sameNativeRouteReference(execution.nativeRoute,{actorId:binding.reference.actorId,
+           assignmentSequence:binding.assignmentSequence,routeHandle:binding.reference.expectedRouteHandle})||
+         !profile.sameAttestation(binding,recoveredWorkerRoute.proof))
         throw Error('Held native route changed before bootstrap');
     }else{
       if(strolls.length)throw Error('Native Idle strolls require prepared graphical admission');

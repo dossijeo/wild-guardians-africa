@@ -1,5 +1,7 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+La pérdida de Draw durante Task14 conserva el corredor de riego adquirido. NVIDIA confirmó el mismo cuerpo y reloj en el sustituto, el picking y un solo riego tras reanudar desde el menú de Sabana 714. [Recorrido y límites](native-terminal-resource-recovery-20261120.md#reemplazo-terminal-durante-task14).
+
 Sabana 714 pasó el anochecer tras Home19 con el reloj ordinario. Al denegar en otro recorrido el certificado posterior al evento real `NightStarted`, NVIDIA acreditó el drenaje del consumidor incompleto, el primer dibujo del sustituto, la activación y la primera marcha del facóquero. [Prueba de Recovery y alcance](native-terminal-resource-recovery-20261120.md#reemplazo-tras-aplicar-el-evento-del-primer-anochecer).
 
 En Sabana 714 también pasó la recarga con dos trabajadores pagados. El sustituto presentó la ausencia de ambos después de Home19 y, en otra prueba, los dos relojes de Home18 e Idle22 antes de reanudar. [Retiradas](performance/native-savanna-two-home-terminal-20261127.json) · [Rutas activas](performance/native-savanna-two-live-recovery-20261127.json).

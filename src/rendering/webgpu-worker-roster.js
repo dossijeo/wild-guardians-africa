@@ -24,6 +24,7 @@ import {copyNativeInitialIdleBodyReference,copyNativeInitialIdleBodyAttestation,
 import {createNativeInitialIdleBodyGpuMotion} from './native-initial-idle-body-gpu-motion.js';
 import {nativeHomeRequestContinuesInitialIdle,nativeHomeRequestContinuesIdleCycle,nativeHomeRequestContinuesHeldWorker} from '../world/native-home-request-reference.js';
 import {nativeEntityNumericId} from '../world/native-entity-id.js';
+import {sameNativeRouteReference as sameNativeReference} from '../world/native-route-reference.js';
 import {createNativeTaskConsequenceGpuMotion} from './native-gpu-motion.js';
 import {nativeTaskStartPresentationMatches} from '../world/native-task-start-attestation.js';
 import {nativeTaskActionActor,copyNativeTaskActionReference,sameNativeTaskActionReference} from '../world/native-task-action-presentation.js';
@@ -255,7 +256,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
 
     function prepareNativeRoute(actorId,support,options){return prepareWorkerRoute(actorId,support,options,null);}
     function prepareRecoveredWorkerRoute(source,options){
-      const profile=nativeWorkerRouteRecoveryProfile(source?.resources?.kind),farm=profile.kind===23,home=profile.kind===18;
+      const profile=nativeWorkerRouteRecoveryProfile(source?.resources?.kind),farm=profile.kind===23,home=profile.kind===18,task=profile.kind===14;
       const resources=profile.copyResources(source.resources,source.recoveryCut),b=resources[profile.bindingField],r=b.reference;
       const actorId='worker-'+r.actorId,entry=entries.get(actorId);
       if(!entry||entry.nativePending||entry.nativeState||b.gateIds.length>profile.maxGates||
@@ -265,8 +266,17 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
         const endpoint=home&&state.workers.length===1&&woundedHomeExecutionAtEndpoint(state,worker,e);
         if(e.kind!==profile.executionKind||e.arrived&&!endpoint||e.actorId!==r.actorId||e.bodyId!==r.bodyId||
            !profile.sameAttestation(e.binding,b)||state.elapsed!==e.executedThrough||
-           !home&&entry.profile!==(farm?r.sourceRequest.workerProfile:r.workerProfile)||
+           !home&&!task&&entry.profile!==(farm?r.sourceRequest.workerProfile:r.workerProfile)||
            worker.nativeRouteAdmission!==profile.admission)return false;
+        if(task){
+          const job=tasks.get(worker.taskId);
+          return nativeLocomotionEntity(entry,false,b.gateIds.length>0)&&worker.status==='walking'&&
+            job?.workerId===worker.id&&nativeEntityNumericId(job.id)===r.taskId&&
+            nativeEntityNumericId(job.targetId)===r.targetId&&e.taskId===r.taskId&&e.targetId===r.targetId&&
+            Array.isArray(worker.path)&&worker.path.length===0&&worker.heading===e.yaw&&worker.running===e.running&&
+            worker.gateWaiting===(e.currentSpeed===0)&&
+            ['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(key=>worker[key]===e[key]);
+        }
         if(home){
           const sourceHome=nativeHomeRouteSource(r),destination=sourceHome.home;
           const village=state.villages.find(row=>nativeEntityNumericId(row.id)===destination.villageId),arrival=village?.entry??village;
@@ -302,7 +312,8 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
       const support=source.terrain.prepareNativeRoute(resources.presentation,{terrainManifest:source.terrainManifest});
       return prepareWorkerRoute(actorId,support,options,{resources,current,recoveryCut:source.recoveryCut,
         binding:{[profile.bindingField]:b,[profile.clockField]:r,...(home?{}:farm?
-          {farmTaskPolicy:completedFarmPolicy(entry.entity,r.sourceRequest)}:{strollHomePolicy:farmTaskPolicy(entry.entity)})}});
+          {farmTaskPolicy:completedFarmPolicy(entry.entity,r.sourceRequest)}:task?
+          {taskHomePolicy:farmTaskPolicy(entry.entity)}:{strollHomePolicy:farmTaskPolicy(entry.entity)})}});
     }
     async function prepareWorkerRoute(actorId,support,{getPickTime,getPickIdleOffset,signal,isCurrent=()=>true,prepareGateParticipants=null}={},recovery){
   const entry=entries.get(actorId),packet=copyNativeRoutePresentation(support?.presentation),carrying=(packet.motionFlags&8)!==0,crateId=carrying?entry?.entity?.crateId:null;
@@ -663,7 +674,6 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
    return part;
   }catch(error){if(entry.nativePending===pending)entry.nativePending=null;if(entry.motionPreparing===pending)entry.motionPreparing=null;controller.abort();signal?.removeEventListener('abort',abort);if(candidate)retireNative(candidate);throw error;}
  }
- function sameNativeReference(a,b){return !!a&&!!b&&a.actorId===b.actorId&&a.assignmentSequence===b.assignmentSequence&&['authorityEpoch','session','slot','generation'].every(key=>a.routeHandle?.[key]===b.routeHandle?.[key]);}
  function releaseNativeRoute(actorId,nativeRoute){
   const entry=entries.get(actorId),value=entry?.nativeState,pending=entry?.nativePending;
   if(pending&&sameNativeReference(pending.nativeRoute,nativeRoute)){pending.controller.abort();entry.nativePending=null;}

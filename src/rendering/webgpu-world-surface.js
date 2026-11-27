@@ -842,7 +842,8 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
     // Draw and terrain support must all attest the route before publishing it.
     const woundedHome=members.length===1&&members[0].profile.kind===18&&
       members[0].ref.sourceRequest?.recoveryHit&&members[0].resources.presentation?.gates.length===0;
-    const replayMatches=sameNativeWorldBoundary(replayed,boundary)||(stationary||woundedHome||stationaryRefuge||ordinaryWorkers||members.some(member=>member.crop))&&
+    const movingTask=members.length===1&&members[0].profile.kind===14;
+    const replayMatches=sameNativeWorldBoundary(replayed,boundary)||(stationary||woundedHome||stationaryRefuge||ordinaryWorkers||movingTask||members.some(member=>member.crop))&&
       (!replayed||nativeRecoveryCovers(boundary,replayed));
     const current=()=>!closed&&timelineRecovering&&firstReplacementFrame===null&&recoveryHold!==null&&recoveryHold===source.holdId&&
       stream.status().sequence===sequence&&state.elapsed===at&&refugeCurrent()&&ruinCurrent()&&encounterCurrent()&&
@@ -869,12 +870,12 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
             getPickAge:reference=>nativePickFrame.getIdleCycleElapsed(reference),
             getPickPhaseOffset:(reference,period)=>nativePickFrame.getIdleCyclePhaseOffset(reference,period)});
         }else{
-          const home=profile.kind===18,farm=profile.kind===23;
+          const home=profile.kind===18,farm=profile.kind===23,task=profile.kind===14;
           const gates=(resources.presentation?.gates??[]).map(({nativeRoute,...gate})=>({...gate,worldBoundary:ref.worldBoundary}));
           if(gates.length&&settlements?.nativeGatePreparationReadiness({gates})?.()!==true)throw Error('Recovered gate wall is not resident');
           await workers.prepareRecoveredWorkerRoute({...input,terrain:terrainSupport},{signal:ownerSignal,isCurrent:current,
-            getPickTime:()=>nativePickFrame[home?'getHomeTime':farm?'getFarmArrivalTime':'getStrollTime'](ref),
-            ...(home?{}:{getPickIdleOffset:duration=>nativePickFrame[farm?'getFarmArrivalIdleOffset':'getStrollIdleOffset'](ref,ref.worldBoundary.effectiveTime,duration)}),
+            getPickTime:()=>nativePickFrame[home?'getHomeTime':farm?'getFarmArrivalTime':task?'getStartTime':'getStrollTime'](ref,ref.worldBoundary.effectiveTime),
+            ...(home||task?{}:{getPickIdleOffset:duration=>nativePickFrame[farm?'getFarmArrivalIdleOffset':'getStrollIdleOffset'](ref,ref.worldBoundary.effectiveTime,duration)}),
             prepareGateParticipants:({signal})=>settlements.prepareNativeGateMotors({gates},{signal,
               getPickTime:(gate,epoch)=>nativePickFrame.getGateTime(gate,epoch)})});
         }

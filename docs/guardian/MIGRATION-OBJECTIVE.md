@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+La pérdida de Draw durante Task14 conserva el corredor de riego adquirido. NVIDIA confirmó el mismo cuerpo y reloj en el sustituto, el picking y un solo riego tras reanudar desde el menú de Sabana 714. [Recorrido y límites](native-terminal-resource-recovery-20261120.md#reemplazo-terminal-durante-task14).
+
 El derrumbe de Desierto admite un READY de marcha retenido hasta el propio corte. NVIDIA confirmó la publicación de la adquisición, el dibujo de kind4 y los cuatro golpes con retirada y drenaje. La activación ordinaria y C4 siguen abiertos. [Recibo y alcance](native-desert-mixed-flight-center-20261125.md#ready-de-marcha-retenido-hasta-el-derrumbe).
 
 El arranque aislado de Desierto admite también que Strike27 del segundo centro esté activo al vencer el derrumbe. NVIDIA confirmó el mismo ataque antes y después de kind4, un solo débito de HP en el sucesor y la retirada del animal. [Recibo y alcance](native-desert-mixed-flight-center-20261125.md#nacimiento-con-el-golpe-sucesor-activo-al-vencer-el-derrumbe).

@@ -1,6 +1,7 @@
 import {sameNativeIdleStrollAttestation} from '../world/native-idle-stroll.js';
 import {sameNativeIdleCycleAttestation} from '../world/native-idle-cycle.js';
 import {sameNativeInitialIdleBodyReference} from '../world/native-initial-idle-body.js';
+import {sameNativeRouteReference} from '../world/native-route-reference.js';
 import {centerRuinApproachEndpoint,copyNativeRecoveryGroup,nativeIdleCycleRecoveryPhaseMatches,nativeOrdinaryRecoveryKinds,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../world/native-worker-route-recovery.js';
 import {nativeClockResourceEnd} from '../rendering/native-clock-resource-end.js';
 import {sameNativeHomeArrivalAttestation} from '../world/native-home-arrival.js';
@@ -1338,6 +1339,13 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     });
   }
   function recoveryExecution({kind,actorId}){
+    if(kind===14){
+      const execution=planner.nativeTaskExecution(actorId),binding=planner.nativeTaskStartBinding(actorId),ref=binding?.reference;
+      if(!execution||!ref||execution.bodyId!==ref.bodyId||execution.taskId!==ref.taskId||execution.targetId!==ref.targetId||
+         execution.executedThrough!==game.elapsed||execution.executedThrough>=ref.endTime||
+         !sameNativeRouteReference(execution.nativeRoute,{actorId:ref.actorId,assignmentSequence:binding.assignmentSequence,routeHandle:ref.expectedRouteHandle}))return null;
+      return {...execution,actorId:ref.actorId,binding};
+    }
     return kind===27?planner.nativeAnimalCropStrikeExecution('animal-'+actorId):
       kind===26?planner.nativeAnimalCropRouteExecution('animal-'+actorId):
       kind===18?planner.nativeHomeRouteExecution(actorId):kind===21?planner.nativeIdleCycleExecution(actorId):
@@ -1440,6 +1448,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     if(encounter)return {version:2,encounter:'stationary',workerId:encounter.workerId,members:[]};
     if(qualifyRaidEncounter&&civilShieldPhysicsAvailable()&&planner.nativeWoundedRefugeRecovery())
       return {version:2,refuge:true,members:[]};
+    if(admission==='native-task'&&nativeWorkerLifecycle&&civilShieldPhysicsAvailable()&&session.core.wasm.spatial_body_count()===1){
+      const execution=recoveryExecution({kind:14,actorId:worker.id});
+      return execution?{kind:14,actorId:execution.actorId}:null;
+    }
     if(!['native-home','native-idle-stroll','native-farm-arrival'].includes(admission))return null;
     const kind=admission==='native-home'?18:admission==='native-idle-stroll'?22:23;
     const bindings=kind===18?planner.nativeHomeRouteBindings():kind===22?planner.nativeIdleStrollBindings():planner.nativeFarmArrivalRouteBindings();

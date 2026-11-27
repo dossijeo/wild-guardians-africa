@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+La pérdida de Draw durante Task14 conserva el corredor de riego adquirido. NVIDIA confirmó el mismo cuerpo y reloj en el sustituto, el picking y un solo riego tras reanudar desde el menú de Sabana 714. [Recorrido y límites](native-terminal-resource-recovery-20261120.md#reemplazo-terminal-durante-task14).
+
 Sabana 714 recuperó un Idle21 adquirido después de que Home19 retirara al otro trabajador. NVIDIA confirmó el picking del cuerpo activo y la ausencia del cuerpo retirado antes de reanudar. Los cortes con Idle22 y Home18 activos pasan en CPU. [Pruebas y alcance](native-terminal-resource-recovery-20261120.md#reemplazo-con-un-trabajador-refugiado-y-otro-activo).
 
 Sabana 714 recuperó dos trabajadores con Idle21 adquirido en el mismo corte. NVIDIA confirmó ambos cuerpos y ambos picks antes de reanudar. El control CPU rechaza un primer envío parcial. [Pruebas y alcance](native-terminal-resource-recovery-20261120.md#reemplazo-con-dos-trabajadores-en-idle21).
