@@ -936,6 +936,8 @@ NVIDIA recargó un guardado de Sabana 714 con dos trabajadores pagados. Idle20 e
 
 El mismo guardado acreditó Home18 e Idle21 en NVIDIA con el sucesor pendiente y con el sucesor ya adquirido. El sustituto recuperó el escalar de fase del ciclo instalado del recibo de drenaje y presentó ambos relojes antes de reanudar. El picking físico y la pérdida con desfase acumulado positivo quedan pendientes. [Sucesor pendiente](performance/native-savanna-home-idle21-recovery-20261127.json) · [Sucesor adquirido](performance/native-savanna-home18-inherited-cycle-recovery-20261127.json).
 
+En un guardado con un solo trabajador, NVIDIA también acreditó el primer envío de Idle21 y su picking con el reloj retenido. La cobertura del sucesor pendiente y adquirido de ese trabajador está comprobada en CPU. [Prueba del trabajador único](native-terminal-resource-recovery-20261120.md#reemplazo-con-un-solo-trabajador-en-idle21).
+
 El alta de Escudo con reloj en marcha y su caducidad conservan sus calificaciones acotadas. La aceptación del perfil ordinario de Escudo, Flee y Recovery sigue los criterios del [estado por vertical](MIGRATION-VERTICALS.md).
 
 Conectar el avance cinemático común a entidades, fases persistentes y consecuencias

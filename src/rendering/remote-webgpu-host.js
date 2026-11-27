@@ -2421,7 +2421,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
          }
         let accepted;
         if(message?.type==='IntentBaseline'){
-          const recoveringCycle=message.recoveredWorkerRoute?.members?.[1]?.kind===21;
+          const recoveryMembers=message.recoveredWorkerRoute?.members;
+          const recoveringCycle=Array.isArray(recoveryMembers)&&recoveryMembers.some(member=>member?.kind===21);
           if(message.nativeIdleCycles!==undefined&&(!Array.isArray(message.nativeIdleCycles)||message.nativeIdleCycles.length)||
              message.pendingIdleCycleRequests!==undefined&&(!Array.isArray(message.pendingIdleCycleRequests)||
                message.pendingIdleCycleRequests.length>(recoveringCycle?1:0)))throw Error('Native Idle cycles require prepared graphical admission');

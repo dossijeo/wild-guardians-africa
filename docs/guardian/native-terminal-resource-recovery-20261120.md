@@ -190,6 +190,16 @@ Pasaron 140 pruebas dirigidas de Recovery, Idle y primeros usos de recursos. El 
 
 En NVIDIA Turing, el primer dibujo del sustituto conservó el ticket 12 y el sucesor del ciclo 7 a 253,35 s. Presentó el cuerpo 2 de Home18 con edad de 0,949999988 s y el cuerpo 1 de Idle21 con edad de 0,149999991 s. Las dos escrituras de fase conservaron el desfase cero del recibo anterior. Hosted siguió hasta 253,50 s con saldo 480 y Draw drenó. Quedan pendientes el picking físico en el sustituto y una pérdida de dispositivo con desfase acumulado positivo. [Recibo de NVIDIA](performance/native-savanna-home18-inherited-cycle-recovery-20261127.json).
 
+## Reemplazo con un solo trabajador en Idle21
+
+El control de preimagen destruye Draw con Idle21 adquirido y confirma el drenaje. La autoridad no encuentra una fuente terminal para ese cuerpo. El mismo selector de civiles acepta ahora al único trabajador si WASM conserva su ciclo y la frontera mundial es exactamente la de su adquisición. El consumidor nuevo prepara el rig y presenta la edad congelada antes de que Hosted vuelva a despachar. Comparte la comprobación de fase del recibo anterior y el patrón de conservación de progreso descrito para el sucesor de dos cuerpos.
+
+`node --test tests/native-terminal-idle-cycle.test.js` comprueba el primer ciclo, un sucesor en preparación y un sucesor adquirido. El control rechaza un paquete sin el binding, una frontera de otro ticket y la activación antes del primer envío. La preparación pendiente se descarta y vuelve a adquirirse en el reemplazo tras reanudar.
+
+Pasaron 145 pruebas dirigidas de recuperación, fases, transporte y admisión. El build WebGPU de producción en memoria terminó en 48,28 s con los mismos binarios WASM.
+
+En NVIDIA Turing, Sabana 714 se cargó desde un guardado público con Idle22 en marcha. Tras llegar a Idle21 se destruyó el dispositivo. El primer envío del sustituto presentó el ticket 4 a 69,55 s con `worker-6`, cuerpo 1 y edad 0,199999988 s. Antes de la activación, el picker seleccionó ese trabajador con el mismo ticket y reloj retenido. La partida avanzó a 69,75 s y drenó con saldo 510. El ensayo de hardware cubre el primer ciclo. [Recibo de NVIDIA y huellas de los artefactos](performance/native-savanna-single-idle21-recovery-20261127.json).
+
 `node --test tests/native-ordinary-worker-recovery-pair.test.js` cubre la pérdida tanto durante el ciclo como durante la preparación del sucesor. En esta última verifica el cierre del preparador antes y después del hold, que la preparación retirada no adquiere la orden, y que el sucesor se admite en el sustituto. La regresión conserva el rechazo si falta cualquiera de los dos relojes. Pasaron 139 pruebas dirigidas de Idle, admisión y Recovery. Quedan abiertos el picking físico del sustituto, la combinación con portones y el reemplazo cuando el ciclo adquirido ya hereda una fase de otro ciclo.
 
 ### Vencimiento tras publicar una subfrontera histórica

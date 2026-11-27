@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+Sabana 714 recuperó al único trabajador desde el primer Idle21 en NVIDIA. El sustituto presentó el mismo cuerpo y el picking lo seleccionó al reloj retenido antes de reanudar. Los casos con sucesor pendiente o adquirido pasan en CPU. [Recibo y alcance](native-terminal-resource-recovery-20261120.md#reemplazo-con-un-solo-trabajador-en-idle21).
+
 Sabana 714 recuperó Home18 e Idle21 tanto con el sucesor pendiente como después de adquirirlo. NVIDIA confirmó el relevo posterior en el primer caso y la continuidad de los dos relojes en el segundo. El desfase acumulado positivo se comprobó en CPU. Quedan el picking físico y una pérdida con ese desfase positivo. [Sucesor pendiente](native-terminal-resource-recovery-20261120.md#reemplazo-con-home18-y-el-primer-ciclo-idle21) · [Sucesor adquirido](native-terminal-resource-recovery-20261120.md#reemplazo-con-un-sucesor-idle21-adquirido).
 
 El recorrido de Desierto desde una aproximación ya seleccionada conserva el impacto que inició el derrumbe y adquiere kind4 mientras el facóquero ejecuta Strike27 en el siguiente centro. Está acreditado el relevo de Draw con el mismo ataque y un solo golpe tras reanudar. [Pruebas y alcance](native-desert-mixed-flight-center-20261125.md#golpe-sucesor-al-vencer-el-derrumbe).

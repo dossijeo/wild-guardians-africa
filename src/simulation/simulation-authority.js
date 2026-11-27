@@ -1355,28 +1355,31 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       woundedHomeExecutionAtEndpoint(game,game.workers[0],execution)||kind===26&&
       centerRuinApproachEndpoint(ruin,planner.nativeWorldResourceBoundary(),execution.binding,game.elapsed))&&recoveryGateCurrent(kind,execution);
   }
-  function ordinaryWorkerRecoveryPair(){
-    if(!nativeWorkerLifecycle||game.raid||game.workers.length!==2||!civilShieldPhysicsAvailable()||
-       session.core.wasm.spatial_body_count()!==2||game.workers.some(worker=>worker.incapacitated))return null;
+  function ordinaryWorkerRecovery(){
+    const count=game.workers.length;
+    if(!nativeWorkerLifecycle||game.raid||![1,2].includes(count)||!civilShieldPhysicsAvailable()||
+       session.core.wasm.spatial_body_count()!==count||game.workers.some(worker=>worker.incapacitated))return null;
     const home=game.workers.find(worker=>worker.nativeRouteAdmission==='native-home');
     const idle=game.workers.find(worker=>['native-idle','native-idle-stroll'].includes(worker.nativeRouteAdmission));
-    if(!home||!idle)return null;
+    if(!idle||(count===1?idle.nativeRouteAdmission!=='native-idle':!home))return null;
     const kind=idle.nativeRouteAdmission==='native-idle'?21:22;
-    const executions=[planner.nativeHomeRouteExecution(home.id),kind===21?planner.nativeIdleCycleExecution(idle.id):planner.nativeIdleStrollExecution(idle.id)];
-    if(executions.some(row=>!row||row.arrived||row.executedThrough!==game.elapsed)||!recoverableExecution(kind,executions[1]))return null;
-    const members=executions.map(({actorId},i)=>({kind:i===0?18:kind,actorId}));
+    const cycle=kind===21?planner.nativeIdleCycleExecution(idle.id):planner.nativeIdleStrollExecution(idle.id);
+    const kinds=home?[18,kind]:[kind],executions=home?[planner.nativeHomeRouteExecution(home.id),cycle]:[cycle];
+    if(executions.some(row=>!row||row.arrived||row.executedThrough!==game.elapsed)||!recoverableExecution(kind,cycle))return null;
+    const members=executions.map(({actorId},i)=>({kind:kinds[i],actorId}));
     const proofs=members.map(({kind},i)=>({kind,proof:executions[i].binding}));
     try{copyNativeRecoveryGroup({version:2,members:proofs},planner.nativeWorldResourceBoundary(),{awaitingIdleCyclePhase:true});}
     catch{return null;}
     return {members,executions};
   }
   function recoverableOrdinaryIdleSource(actorId){
-    const pair=ordinaryWorkerRecoveryPair(),cycle=pair?.executions[1];
-    return pair?.members[1].kind===21&&'worker-'+cycle.actorId===actorId&&cycle.finished?JSON.stringify(cycle.binding):null;
+    const group=ordinaryWorkerRecovery(),cycle=group?.executions[group.members.findIndex(({kind})=>kind===21)];
+    return cycle?.finished&&'worker-'+cycle.actorId===actorId?JSON.stringify(cycle.binding):null;
   }
-  function retiredCyclePhase(group,route,retirement){
-    const cycle=route.members?.[1]?.kind===21?group.executions[1].binding:null;
-    if(!cycle?.reference.sourceCycleSequence)return null;
+  function recoveryCycleProof(group,route){
+    return group.executions[route.members?.findIndex(({kind})=>kind===21)]?.binding??null;
+  }
+  function retiredCyclePhase(cycle,retirement){
     return retirement.idleCyclePhases?.find(phase=>nativeIdleCycleRecoveryPhaseMatches(phase,cycle))??null;
   }
   function recoveryRoute(){
@@ -1422,7 +1425,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     }
     if(nativeWorkerLifecycle&&civilShieldPhysicsAvailable()&&planner.nativeOrdinaryRefugeRecovery())
       return {version:2,refuge:true,members:[]};
-    const ordinary=ordinaryWorkerRecoveryPair();
+    const ordinary=ordinaryWorkerRecovery();
     if(ordinary)return {version:2,members:ordinary.members};
     if(game.workers.length!==1)return null;
     const worker=game.workers[0],admission=worker.nativeRouteAdmission;
@@ -1466,9 +1469,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       const {execution,...evidence}=source;
       return {executions:[execution],...evidence};
     }
-    if([21,22].includes(route.members[1]?.kind)){
-      const ordinary=ordinaryWorkerRecoveryPair();
-      return ordinary&&route.members.length===2&&ordinary.members.every(({kind,actorId},i)=>
+    if(route.members[0]?.kind===21||[21,22].includes(route.members[1]?.kind)){
+      const ordinary=ordinaryWorkerRecovery();
+      return ordinary&&route.members.length===ordinary.members.length&&ordinary.members.every(({kind,actorId},i)=>
         kind===route.members[i].kind&&actorId===route.members[i].actorId)?{executions:ordinary.executions}:null;
     }
     const pair=planner.nativeRaidFlightRecoveryExecutions();
@@ -1494,8 +1497,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
          !live||JSON.stringify(live)!==JSON.stringify(group)||
          live.executions.some((execution,i)=>!recoverableExecution(routes[i].kind,execution,live.ruin)))
         throw Error('Native assignments changed while waiting for terminal draw');
-      const idleCyclePhase=retiredCyclePhase(live,route,retirement);
-      if(route.members?.[1]?.kind===21&&live.executions[1].binding.reference.sourceCycleSequence&&!idleCyclePhase)return null;
+      const cycle=recoveryCycleProof(live,route);
+      const idleCyclePhase=cycle?.reference.sourceCycleSequence?retiredCyclePhase(cycle,retirement):null;
+      if(cycle?.reference.sourceCycleSequence&&!idleCyclePhase)return null;
       return idleCyclePhase?{...route,idleCyclePhase}:route;
     },
     async attachNativeResourcePreparation(port,transportSession){
@@ -1586,10 +1590,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
          !route.members&&!sameNativeWorldBoundary(cut,executions[0].binding.reference.worldBoundary)||
          executions.some((execution,i)=>!recoverableExecution(routes[i].kind,execution,group.ruin)))
         throw Error('Expected current native recovery assignments');
-      const idleCyclePhase=route.members?.[1]?.kind===21?
-        retiredCyclePhase(group,route,await nativeIntentControl.waitForTerminalDraw()):null;
+      const cycle=recoveryCycleProof(group,route);
+      const idleCyclePhase=cycle?.reference.sourceCycleSequence?
+        retiredCyclePhase(cycle,await nativeIntentControl.waitForTerminalDraw()):null;
       if(JSON.stringify(idleCyclePhase)!==JSON.stringify(route.idleCyclePhase??null)||
-         route.members?.[1]?.kind===21&&executions[1].binding.reference.sourceCycleSequence&&!idleCyclePhase)
+         cycle?.reference.sourceCycleSequence&&!idleCyclePhase)
         throw Error('Expected the prior consumer’s exact Idle cycle phase');
       const members=executions.map((execution,i)=>{
         const {kind}=routes[i],profile=nativeWorkerRouteRecoveryProfile(kind);

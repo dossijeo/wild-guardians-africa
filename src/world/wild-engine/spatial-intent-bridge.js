@@ -789,11 +789,13 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
         if(count||strolls.length||farmCount||homes.length||JSON.stringify(arrival)!==JSON.stringify(nativeWoundedRefugeRecovery()??nativeOrdinaryRefugeRecovery()))
           throw Error('Held Home absence changed before bootstrap');
       }else if(ordinaryWorkers){
-        const [home,idle]=members;
+        const home=members.find(({kind})=>kind===18),idle=members.find(({kind})=>kind!==18);
+        const homeCount=home?1:0;
         recoveredCycle=idle.kind===21;
         const binding=recoveredCycle?nativeIdleCycleBinding(idle.proof.reference.actorId):strolls[0];
-        if(!nativeWorkerLifecycle||owningState?.raid||count!==(recoveredCycle?1:2)||homes.length!==1||strolls.length!==(recoveredCycle?0:1)||farmCount||
-           !nativeWorkerRouteRecoveryProfile(18).sameAttestation(homes[0],home.proof)||
+        if(!nativeWorkerLifecycle||owningState?.raid||count!==homeCount+(recoveredCycle?0:1)||homes.length!==homeCount||
+           strolls.length!==(recoveredCycle?0:1)||farmCount||
+           home&&!nativeWorkerRouteRecoveryProfile(18).sameAttestation(homes[0],home.proof)||
            !nativeWorkerRouteRecoveryProfile(idle.kind).sameAttestation(binding,idle.proof)||
            recoveredCycle&&nativeIdleCycleBindings().length!==1)
           throw Error('Held worker routes changed before bootstrap');

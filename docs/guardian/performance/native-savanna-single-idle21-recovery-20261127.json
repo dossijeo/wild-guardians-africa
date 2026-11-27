@@ -1,0 +1,160 @@
+{
+  "scenario": "Sabana 714, recuperación del único trabajador en Idle21",
+  "baseRevision": "905da0af82f58593237226818d6f61d2165ac90e",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 76.44000002741814
+    }
+  },
+  "artifacts": {
+    "savanna-idle22-moving-checkpoint.json": "d5ad44bd2dac2867cbaf4b15c092c917d235db0278d0cf4c0d64b9f7fc2a4d41",
+    "single-idle21-recovery-before-20261127.log": "e4052813cbbb8ac6c73af362e6cc15fdbb97cd7c1121a8e9359354a907bd94ba",
+    "native-savanna-single-idle21-recovery-20261127-extended.json": "a3bf1577abc3f530dc70e1dda9084a5015aede2a0525187f9a29ae3a2b026d2f"
+  },
+  "original": {
+    "frame": 72,
+    "ticket": 4,
+    "elapsed": 69.3500000000024,
+    "clocks": [
+      {
+        "semantic": "relative",
+        "relativeTime": 0,
+        "executionEpoch": 69.3500000000024,
+        "actorId": 6,
+        "bodyId": 1,
+        "sourceCycleSequence": 0,
+        "sourceControlSequence": 3
+      },
+      {
+        "semantic": "idle-offset",
+        "relativeTime": 0,
+        "executionEpoch": 69.3500000000024,
+        "actorId": 6,
+        "bodyId": 1,
+        "sourceCycleSequence": 0,
+        "sourceControlSequence": 3,
+        "phaseDelay": 0,
+        "phaseTime": 69.3500000000024,
+        "phaseOffset": 0,
+        "period": 3.799999952316284
+      },
+      {
+        "semantic": "idle-offset",
+        "relativeTime": 0,
+        "executionEpoch": 69.3500000000024,
+        "actorId": 6,
+        "bodyId": 1,
+        "sourceCycleSequence": 0,
+        "sourceControlSequence": 3,
+        "phaseDelay": 0,
+        "phaseTime": 69.3500000000024,
+        "phaseOffset": 0,
+        "period": 4.0416669845581055
+      }
+    ]
+  },
+  "retirement": {
+    "holdId": 59,
+    "publicationFloor": 184,
+    "heldPublication": 184,
+    "closedDrawLastClock": 69.55000000000238,
+    "heldClock": 69.55000000000238,
+    "callbacksSettled": true,
+    "drawClosed": true,
+    "drawDrained": true
+  },
+  "replacement": {
+    "frame": 1,
+    "ticket": 4,
+    "elapsed": 69.55000000000238,
+    "clocks": [
+      {
+        "semantic": "relative",
+        "relativeTime": 0.19999998807907104,
+        "executionEpoch": 69.3500000000024,
+        "actorId": 6,
+        "bodyId": 1,
+        "sourceCycleSequence": 0,
+        "sourceControlSequence": 3
+      },
+      {
+        "semantic": "idle-offset",
+        "relativeTime": 0.19999998807907104,
+        "executionEpoch": 69.3500000000024,
+        "actorId": 6,
+        "bodyId": 1,
+        "sourceCycleSequence": 0,
+        "sourceControlSequence": 3,
+        "phaseDelay": 0,
+        "phaseTime": 69.55000000000238,
+        "phaseOffset": 0,
+        "period": 3.799999952316284
+      },
+      {
+        "semantic": "idle-offset",
+        "relativeTime": 0.19999998807907104,
+        "executionEpoch": 69.3500000000024,
+        "actorId": 6,
+        "bodyId": 1,
+        "sourceCycleSequence": 0,
+        "sourceControlSequence": 3,
+        "phaseDelay": 0,
+        "phaseTime": 69.55000000000238,
+        "phaseOffset": 0,
+        "period": 4.0416669845581055
+      }
+    ]
+  },
+  "picking": {
+    "actor": "worker-6",
+    "pose": {
+      "x": 84.72858428955078,
+      "z": -5.6585211753845215
+    },
+    "trials": [
+      {
+        "height": 0.7,
+        "result": "worker-6"
+      }
+    ],
+    "frameBefore": 1,
+    "frameAfter": 2,
+    "elapsed": 69.55000000000238
+  },
+  "resumed": {
+    "elapsed": 69.75000000000237,
+    "worker": {
+      "id": "worker-6",
+      "status": "idle",
+      "nativeRouteAdmission": "native-idle",
+      "x": 84.72858428955078,
+      "z": -5.6585211753845215,
+      "idleState": {
+        "anchorId": "farm-plant-3",
+        "mode": "rest",
+        "elapsed": 0.39999999999997726,
+        "remaining": 14.79999980926516,
+        "rng": 3770203518,
+        "approachRetry": 0
+      }
+    },
+    "balance": "510",
+    "drained": true,
+    "pageErrors": 0
+  },
+  "scope": {
+    "raid": false,
+    "gates": 0,
+    "deviceLoss": "explicit"
+  }
+}
