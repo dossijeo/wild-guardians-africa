@@ -1,0 +1,94 @@
+{
+  "scenario": "Pérdida terminal de Draw con Home18, Idle21 y dos motores de portón",
+  "priorRevision": "f6ebe6356ee62dd081feca377675c9857235a6b4",
+  "artifacts": {
+    "civil-gated-recovery-pair-before-20261127.log": "8965533d27cc9672dd1412062e453cb58ef37cd2b5444c2e02bd2426ab3459de",
+    "civil-gated-recovery-pair-regression-before-20261127.tap": "f54cfb16f4a4cbd1a86dc1e78d7c32d522ceb554bc84b4dec1e94e919e6de30b",
+    "civil-gated-recovery-pair-final-20261127.tap": "fb4ca2af9b9cf9c99c8e911774e9238771a2afd314d37a351f28897ace606b20",
+    "civil-gated-recovery-pair-impact-20261127.tap": "115f4f839c93834d139bf23d0220dfdb2d8407539c16660fd9f97e0902be0998",
+    "civil-gated-recovery-pair-build-20261127.log": "17f9346dec559a16ec5d4f2bcda100dabcca4330bf6a63ce8d945d767e12c722"
+  },
+  "cut": {
+    "time": 10.400000000000006,
+    "workers": [
+      [
+        "worker-900011",
+        "idle",
+        "native-idle",
+        "structure-2",
+        -10.6,
+        11.8
+      ],
+      [
+        "worker-900012",
+        "returning",
+        "native-home",
+        "structure-2",
+        -14,
+        3.2
+      ]
+    ],
+    "routes": [
+      {
+        "kind": "initial-idle-body"
+      },
+      {
+        "kind": "home-route",
+        "gates": [
+          1000001,
+          1000000
+        ],
+        "actor": 900012
+      },
+      {
+        "kind": "idle-cycle"
+      }
+    ],
+    "openings": [
+      [
+        "structure-1000000",
+        0
+      ],
+      [
+        "structure-1000001",
+        0.25000000000000355
+      ]
+    ]
+  },
+  "priorTerminalRoute": null,
+  "recoveredTerminalRoute": {
+    "version": 2,
+    "members": [
+      {
+        "kind": 18,
+        "actorId": 900012
+      },
+      {
+        "kind": 21,
+        "actorId": 900011
+      }
+    ]
+  },
+  "checks": {
+    "negative": [
+      "peer clock omitted",
+      "each Home motor omitted",
+      "motor retagged with the cohort world boundary",
+      "fence before first submit",
+      "each motor omitted from a later submitted frame"
+    ],
+    "positive": [
+      "both actor bindings and both owned gate clocks at the same cut",
+      "picking gate clocks match the submitted elapsed times",
+      "resume and advance both civilians with unchanged ledger"
+    ]
+  },
+  "verification": {
+    "standaloneWasm": true,
+    "gpu": "deterministic queue",
+    "tests": 48,
+    "focalWithWrongBoundaryControl": true,
+    "productionViteBuild": "passed",
+    "physicalGpu": false
+  }
+}

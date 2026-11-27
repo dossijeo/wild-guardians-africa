@@ -416,7 +416,9 @@ export function copyNativeRecoveryGroup(value,world,{awaitingIdleCyclePhase=fals
      throw Error('Single Idle recovery needs its acquired world cut');
  }
  const refs=members.map(member=>member.proof.reference);
- if((ordinaryWorkers?members.some(({kind,proof})=>nativeRecoveryGates(proof).length||kind===18&&
+ // In a live civil pair, Home18 is the only member that can own motor
+ // programs. Its submitted gate clocks stay tied to its acquired boundary.
+ if((ordinaryWorkers?members.some(({kind,proof})=>(nativeRecoveryGates(proof).length&&(kind!==18||!!refuge))||kind===18&&
     (proof.reference.sourceRequest?.raidSpawnSequence||proof.reference.sourceRequest?.recoveryHit)):
     !refs[0].sourceRequest?.raidSpawnSequence||refs[1].purpose==='retreat')||
     new Set(refs.map(ref=>ref.actorId)).size!==members.length||new Set(refs.map(ref=>ref.bodyId)).size!==members.length||

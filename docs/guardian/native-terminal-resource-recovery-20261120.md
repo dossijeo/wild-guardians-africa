@@ -178,6 +178,12 @@ El mismo guardado permite perder Draw con un trabajador de camino al refugio y e
 
 En la primera pasada de NVIDIA, la notificación de cierre del preparador llegó antes del hold de Hosted y se propagó como fallo al cliente. En la repetición, el primer envío del sustituto conservó el ticket 10 a 253,35 s. Escribió una edad de 0,649999976 s para Home18 y una edad limitada a 3,241666555 s para Idle21, con ambos desfases de clip. Tras el fence y la activación FIFO, el sucesor del mismo Idle21 se presentó en el dibujo 4 con el ticket 13 y edad cero. La partida avanzó a 253,95 s y drenó con saldo 480. [Recibo de la retirada, el reemplazo y el sucesor](performance/native-savanna-home-idle21-recovery-20261127.json).
 
+### Home18 con dos portones e Idle21
+
+El control pierde Draw a 10,40 s con dos civiles vivos. `worker-900012` conserva Home18 y los dos programas de portón adquiridos. En el corte, el primer motor lleva un cuarto de apertura y el segundo sigue cerrado. `worker-900011` conserva su propio Idle21. La preimagen devuelve un descriptor vacío aunque ambos cuerpos y relojes sigan vigentes en WASM.
+
+La recuperación del par admite los motores del Home18 civil. Sus uniformes y el picking quedan ligados a la adquisición de ese cuerpo, mientras Idle21 conserva su propio reloj. El Host determinista rechaza la omisión de cualquiera de los motores, la falta del reloj Idle21 y un motor registrado con la frontera común del par en lugar de su adquisición. También exige los dos motores en el último envío antes de reanudar. Tras acreditar los dos bindings de actor y los dos motores en el envío, Game vuelve a avanzar conservando el saldo. Pasaron 48 pruebas dirigidas y el build de producción. Queda la prueba de la escena completa en NVIDIA. [Recibo del control](performance/native-civil-gated-pair-recovery-20261127.json).
+
 ## Reemplazo con un sucesor Idle21 adquirido
 
 El recibo de drenaje del Draw retirado conserva el desfase de clip del Idle21 instalado, ligado al actor, el cuerpo, la secuencia del ciclo y su frontera mundial. La autoridad lo coteja con la asignación que lee de WASM mientras Hosted mantiene el hold. El sustituto reconstruye la edad física desde ese corte y acredita el desfase en una escritura de fase sometida a la cola GPU antes de reanudar. La recuperación exige un Home18 ordinario y un Idle21 del mismo corte, con dos cuerpos distintos y sin portones.

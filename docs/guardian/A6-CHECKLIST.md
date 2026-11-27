@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+La recuperación civil con Home18 e Idle21 conserva dos programas de portón admitidos por Home18. El Host determinista exige los dos cuerpos y ambos motores antes de reanudar. Queda validar la escena completa en NVIDIA. [Recorrido y alcance](native-terminal-resource-recovery-20261120.md#home18-con-dos-portones-e-idle21).
+
 NVIDIA confirmó la recuperación de Task25 con dos portones. En un corte la primera hoja estaba abriendo y en el otro ya estaba abierta. El segundo motor seguía cerrado en ambos. El sustituto acreditó el picking, Home19 y el drenaje. Los controles deterministas rechazan la omisión de cada motor detenido. [Recorrido y alcance](native-terminal-resource-recovery-20261120.md#task25-con-dos-portones).
 
 Task25 conserva la apertura parcial de un portón y la pose del trabajador en el mismo corte. NVIDIA confirmó el primer envío del sustituto, el picking con la autoridad suspendida, el regreso por el mismo cuerpo y la presentación de su ausencia en Home19. El sustituto drenó. La cola determinista cubre además la hoja ya abierta. [Recorrido y alcance](native-terminal-resource-recovery-20261120.md#task25-con-un-portón).

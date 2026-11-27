@@ -12,6 +12,8 @@ import {copyNativeRecoveryGroup} from '../src/world/native-worker-route-recovery
 import {nativeIdleCycleBodyState} from '../src/world/native-idle-cycle-body-source.js';
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
 import {fixture as drawFixture,flush} from './helpers/remote-webgpu-fixture.js';
+import {nativeIdleCycleGameFixture} from './helpers/native-idle-cycle-game.js';
+import {centerServicePoint} from '../src/world/centers.js';
 
 for(const loss of ['stroll','cycle','preparer first','hold first','acquired successor'])test(`terminal Draw recovery requires Home18 and ${loss==='stroll'?'Idle22':'Idle21'} at the same cut (${loss})`,async()=>{
  const stationary=loss!=='stroll',duringSuccessor=loss==='preparer first'||loss==='hold first',acquiredSuccessor=loss==='acquired successor';
@@ -143,6 +145,103 @@ for(const loss of ['stroll','cycle','preparer first','hold first','acquired succ
   assert.deepEqual(f.faults,[]);
  }finally{
   release();
+  try{await f.close();}finally{if(replacement&&!attached){replacement.client.dispose();await replacement.host.dispose();}ports.port1.close();ports.port2.close();}
+ }
+});
+
+test('terminal Draw recovery requires both civil clocks and both Home18 gate motors',async()=>{
+ const original=nativeIdleCycleGameFixture({peer:true,remaining:14}),state=structuredClone(original.state);original.close();
+ const [idle,home]=state.workers,center=state.structures.find(row=>row.id===home.centerId);
+ const service=centerServicePoint(center,state,.8);
+ state.tasks=[];state.plants=state.plants.filter(row=>row.id==='plant-900098');
+ Object.assign(idle,{x:-10.6,z:11.8});Object.assign(state.plants[0],{x:idle.x,z:idle.z});
+ Object.assign(home,{x:-14,z:3.2,status:'returning',nativeRouteAdmission:'pending-home-resources',idleState:null,
+  destinationId:null,taskId:null,path:null,crateId:null,running:false,gateWaiting:false,raidReturn:false});
+ center.x+=-14-service.x;center.z+=3.2-service.z;
+ state.villages.find(row=>row.id===home.villageId).entry={x:-14,z:11.8};
+ const gate={id:'structure-1000000',created:29207,kind:'wall',material:'zarzas',gate:true,x:-14,z:8.2,yaw:0,maxHp:60,hp:60,
+  status:'intact',villageId:home.villageId,cost:10,collapseRemaining:0,gateOpen:0};
+ state.structures.push(gate,{...gate,id:'structure-1000001',created:29208,z:5.3});state.nextId=1000002;
+ const chunkKeys=[...Array.from({length:9},(_,i)=>[i%3-1,Math.floor(i/3)-1].join(',')),'2,-1','2,0','2,1'];
+ const f=await nativeProductionAuthority(state,{chunkKeys,nativeWorkerLifecycle:true}),ports=new MessageChannel();
+ const ids=[1000001,1000000],route={version:2,members:[{kind:18,actorId:900012},{kind:21,actorId:900011}]};
+ let view,replacement,attached=false;
+ try{
+  for(let i=0;i<50;i++){
+   f.advance(.025);await f.present();const cut=f.snapshot();
+   if(cut.workers[1].nativeRouteAdmission==='native-home'&&f.records.some(r=>r.kind==='idle-cycle'&&r.committed)&&
+      cut.structures.some(row=>row.id==='structure-1000001'&&row.gateOpen>0&&row.gateOpen<1)){view=cut;break;}
+  }
+  assert(view,'The selected cut must include the opening motor and the stationary peer');
+  assert.deepEqual(f.records.find(row=>row.kind==='home-route'&&row.committed).resources.gates.map(row=>row.gateId),ids);
+  assert.equal(view.structures.find(row=>row.id===gate.id).gateOpen,0);
+  const held=f.authority.quiesceNativeIntentProduction({forLostDraw:true});
+  f.gpu.device.destroy();f.retireResourceEndpoint();const hold=await held;
+  await untilProduction(f,()=>f.authority.nativeIntentControlStatus().current?.drained);
+  assert.deepEqual(await f.authority.terminalWorkerRoute(),route);
+  replacement=await drawFixture({capabilities:{nativeHomeRouteVersion:1,nativeIdleCycleVersion:1}},
+   {intentControl:{port:ports.port2,session:'production-control',recoveryHold:30}});
+  const {recoveredWorkerRoute:source}=await f.authority.attachHeldWorkerRoute(ports.port1,'production-control',30,hold,route);
+  const [homeSource,idleSource]=source.members;
+  const homeRef=homeSource.execution.binding.reference,idleRef=idleSource.execution.binding.reference;
+  const at=view.elapsed,origin=homeRef.worldBoundary.effectiveTime,resourceEnd=nativeClockResourceEnd(origin,homeRef.endTime);
+  assert.deepEqual(homeSource.resources.presentation.gates.map(row=>row.gateId),ids);
+  assert(source.members.every(row=>row.execution.executedThrough===at));
+  assert.notEqual(homeRef.bodyId,idleRef.bodyId);
+  const {client,host,pipeline}=replacement;
+  function group(binding){
+   const buffer=client.device.createBuffer({size:16,usage:72});
+   client.device.queue.writeBuffer(buffer,0,new Float32Array(4));
+   client.registerClockBinding(buffer,{byteOffset:0,semantic:'relative',...binding});
+   return client.device.createBindGroup({entries:[{binding:0,resource:{buffer}}]});
+  }
+  const actors=[group({epoch:origin,resourceEnd,nativeHome:homeRef}),
+   group({epoch:idleRef.worldBoundary.effectiveTime,nativeIdleCycle:idleRef})];
+  const motors=ids.map(gateId=>group({epoch:origin,resourceEnd,nativeGate:{gateId,worldBoundary:homeRef.worldBoundary}}));
+  const metadata={nativeWorldBoundary:source.worldBoundary,clock:{...f.clock,elapsed:at,safeUntil:at,paused:true,segments:[]}};
+  function frame(groups){
+   client.beginFrame(metadata);
+   const encoder=client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{
+    view:client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
+   pass.setPipeline(pipeline);for(const bindGroup of groups){pass.setBindGroup(0,bindGroup);pass.draw(3);}pass.end();
+   client.device.queue.submit([encoder.finish()]);return client.endFrame();
+  }
+  async function present(groups){
+   const drawing=frame(groups);drawing.catch(()=>{});await flush();await host.idle();host.present();await drawing;
+  }
+  await assert.rejects(frame([actors[0],...motors]),/Replacement requires its bound worker clock/);
+  for(const motor of motors)await assert.rejects(frame([...actors,motor]),/Replacement requires its bound worker clock/);
+  assert.notDeepEqual(source.worldBoundary,homeRef.worldBoundary);
+  const wrongMotor=group({epoch:source.worldBoundary.effectiveTime,resourceEnd,
+   nativeGate:{gateId:ids[1],worldBoundary:source.worldBoundary}});
+  await assert.rejects(frame([...actors,motors[0],wrongMotor]),/Replacement requires its bound worker clock/);
+  const exact=[...actors,...motors];
+  await assert.rejects(f.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
+  await present(exact);
+  const witness=await f.authority.checkHeldDraw(30,hold,route);
+  const age=floorFloat32(at-origin);
+  assert.equal(witness.elapsed,at);
+  assert.deepEqual(witness.members.map(row=>row.kind),[18,21]);
+  assert.equal(witness.members[0].relativeTime,age);
+  assert.deepEqual(witness.members[0].nativeGates,ids.map(gateId=>({
+   nativeGate:{gateId,worldBoundary:homeRef.worldBoundary},gateElapsed:origin+age})));
+  assert.equal(witness.members[1].relativeTime,floorFloat32(at-idleRef.worldBoundary.effectiveTime));
+  const pick=captureNativeRoutePickFrame(host.inspect());
+  for(const sample of witness.members[0].nativeGates)assert.equal(pick.getGateTime(sample.nativeGate,origin),sample.gateElapsed);
+  for(const motor of motors){
+   await present([...actors,motor]);
+   await assert.rejects(f.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
+  }
+  await present(exact);
+  assert.deepEqual(await f.authority.checkHeldDraw(30,hold,route),witness);
+  await f.attachRecoveredResources(replacement);attached=true;
+  assert(f.authority.resumeNativeIntentProduction(hold));
+  const resumed=f.advance(.1);
+  assert(resumed.elapsed>at);
+  assert.deepEqual(resumed.workers.map(worker=>worker.nativeRouteAdmission),['native-idle','native-home']);
+  assert.deepEqual(resumed.ledger,view.ledger);
+  assert.deepEqual(f.faults,[]);
+ }finally{
   try{await f.close();}finally{if(replacement&&!attached){replacement.client.dispose();await replacement.host.dispose();}ports.port1.close();ports.port2.close();}
  }
 });
