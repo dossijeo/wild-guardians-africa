@@ -900,7 +900,7 @@ aceptación con personajes, sin publicaciones periódicas de posición JS.
 
 ## Próximo bloqueo
 
-En la campaña continua de Sabana, el primer corredor del león puede agotar el plazo mientras prepara sus pipelines. La última repetición empleó 6,154 s en alcanzar la publicación requerida y 3,146 s más en preparar el rig. El siguiente contraste reproduce el cuarto turno desde su guardado público y mide por separado el avance de Surface, la espera de Draw y la admisión gráfica. La campaña completa debe volver a acreditar los cinco relevos de incursión, el último dibujo y el drenaje. [Corte del plazo y alcance](native-cold-worker-admission-20261126.md#campaña-continua-hasta-el-nacimiento-del-león).
+En la campaña continua de Sabana, el primer corredor del león puede agotar el plazo mientras prepara sus pipelines. La repetición desde el cuarto amanecer acumuló 4,106 s esperando ACK de dibujo y 0,520 s aplicando la secuencia de Surface antes de preparar el rig. El siguiente contraste divide esos ACK entre transporte, admisión y primer dibujo. La campaña completa debe volver a acreditar los cinco relevos de incursión, el último dibujo y el drenaje. [Corte del plazo y alcance](native-cold-worker-admission-20261126.md#campaña-continua-hasta-el-nacimiento-del-león).
 
 El alta de Escudo con reloj en marcha y su caducidad conservan sus calificaciones acotadas. La aceptación del perfil ordinario de Escudo, Flee y Recovery sigue los criterios del [estado por vertical](MIGRATION-VERTICALS.md).
 
