@@ -104,6 +104,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   let nativeBodies=null,nativeProduction=null,nativeBirthRevision=null,nativeBirthsPending=false;
   let repairFlightProposal=null;
   let liveCenterClockArmed=false;
+  const ordinarySavannaFlight=nativeWorkerLifecycle&&game.biome==='sabana';
+  const mixedFlight=ordinarySavannaFlight||qualifyFarmFlee&&qualifyAnimalCrop;
   const nativeMarkers=new Set(['native-idle','pending-idle-resources','native-idle-stroll','pending-stroll-resources','native-home','pending-home-resources','native-task','pending-resources','native-action','pending-action-resources','pending-farm-arrival-resources','native-farm-arrival','native-farm-arrival-held']);
   const nativeRestoration=game.workers.some(worker=>nativeMarkers.has(worker.nativeRouteAdmission));
   const nativeGateOwners=game.structures.filter(s=>s.gate&&s.status!=='ruined');
@@ -141,7 +143,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   // Reuse the session's identity registry, once, before restoring declarations.
   // Binding never republishes or upserts a body after native execution owns it.
   if(nativeRosterSupported)nativeBodies=createSpatialDynamicBodies(session.core.wasm);
-  const planner=createEventDrivenTaskPlanner(session,{qualifyFarmFlee,nativeWorkerLifecycle,
+  const planner=createEventDrivenTaskPlanner(session,{qualifyFarmFlee:qualifyFarmFlee||ordinarySavannaFlight,nativeWorkerLifecycle,
     qualifyRaidEncounter:qualifyRaidEncounter&&qualifyFarmFlee&&qualifyAnimalCrop,repairFlightTicket:source=>{
     const repair=repairFlightProposal;
     return repair?.actorId===source.actorId&&repair.actionSequence===source.sourceSequence&&repair.targetId===source.targetId&&
@@ -209,7 +211,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    nativeProduction=createNativeIntentProduction({state:game,planner,bodyId:id=>nativeBodies.id(id),getPublication:()=>nativeIntentControl,getResources:()=>nativeResourcePreparation,publicationSequence:()=>sequence,terrainManifest:()=>getTerrainManifest?.()??null,stationaryTaskNavigation:nav,restoreRuinedWall:restoreNativeRuinedWall,ruinedWallWakeKey:nativeRuinedWallWakeKey,onError:error=>onNativeIntentControlError?.(error)});
   }
   function prepareRaidFlightAnimal(event){
-   if(!qualifyFarmFlee||!qualifyAnimalCrop||!nativeBodies||
+   if(!mixedFlight||!nativeBodies||
       !game.raid?.daytime||game.raid.id!==event.raidFacts?.id||event.simulationTime!==game.elapsed||
       game.workers.length!==1||game.raid.animals.length!==1||session.core.wasm.spatial_body_count()!==1)return;
    const [animal]=game.raid.animals,[worker]=game.workers;
@@ -1191,9 +1193,24 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     if(game.raid){
       const [animal]=game.raid.animals;
       if(!civilShieldPhysicsAvailable()||game.raid.animals.length!==1)return null;
+      const kind=animal.status==='attacking'?27:26;
+      const workersAtRefuge=game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id));
+      if(!workersAtRefuge&&qualifyAnimalCrop){
+        const approach=animal.status!=='retreating',fall=planner.nativeEncounterFallRecovery(approach?'center':'retreat');
+        if(fall)return {version:2,encounter:approach?'approach':'retreat',members:[{kind:26,actorId:fall.execution.actorId}]};
+      }
+      if(mixedFlight){
+        if(workersAtRefuge){
+          const sheltered=planner.nativeRefugeCropRecovery(kind);
+          if(sheltered)return {version:2,refuge:true,members:[{kind,actorId:sheltered.execution.actorId}]};
+        }else{
+          const pair=planner.nativeRaidFlightRecoveryExecutions();
+          if(pair)return {version:2,members:pair.map(({actorId},i)=>({kind:i===0?18:26,actorId}))};
+        }
+      }
+      if(!workersAtRefuge)return null;
       if(!qualifyAnimalCrop){
-        if(!nativeWorkerLifecycle||!nativeShelteredSavannaCenterActor(game,animal)||
-           !game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id)))return null;
+        if(!nativeWorkerLifecycle||!nativeShelteredSavannaCenterActor(game,animal))return null;
         if(animal.status==='retreating'){
           const ruined=planner.nativeCenterRuinRetreatRecovery();
           if(ruined)return {version:2,ruin:true,members:[{kind:26,actorId:ruined.execution.actorId}]};
@@ -1201,19 +1218,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
           const retreat=planner.nativeAnimalCropRouteExecution(animal.id);
           return retreat?.binding.reference.purpose==='retreat'?{kind:26,actorId:retreat.actorId}:null;
         }
-        const kind=animal.status==='attacking'?27:26;
         const execution=kind===27?planner.nativeAnimalCropStrikeExecution(animal.id):planner.nativeAnimalCropRouteExecution(animal.id);
         return execution?.binding.reference.purpose==='center'?{kind,actorId:execution.actorId}:null;
       }
-      if(!game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id))){
-        const approach=animal.status!=='retreating',fall=planner.nativeEncounterFallRecovery(approach?'center':'retreat');
-        if(fall)return {version:2,encounter:approach?'approach':'retreat',members:[{kind:26,actorId:fall.execution.actorId}]};
-        const pair=qualifyFarmFlee&&planner.nativeRaidFlightRecoveryExecutions();
-        return pair?{version:2,members:pair.map(({actorId},i)=>({kind:i===0?18:26,actorId}))}:null;
-      }
-      const kind=animal.status==='attacking'?27:26;
-      const sheltered=qualifyFarmFlee&&planner.nativeRefugeCropRecovery(kind);
-      if(sheltered)return {version:2,refuge:true,members:[{kind,actorId:sheltered.execution.actorId}]};
       const execution=kind===27?planner.nativeAnimalCropStrikeExecution(animal.id):planner.nativeAnimalCropRouteExecution(animal.id);
       if(execution)return {kind,actorId:execution.actorId};
       const ruined=kind===26&&planner.nativeCenterRuinRetreatRecovery();

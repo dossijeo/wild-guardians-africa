@@ -19,9 +19,10 @@ function source() {
 }
 const chunkKeys = Array.from({length: 25}, (_, i) => [i % 5, Math.floor(i / 5) - 2].join(','));
 
-for(const complete of [false,true])test('terminal Draw loss requires both Flight Home and crop clocks: '+complete, async () => {
+for(const [profile,complete] of [['qualification',false],['qualification',true],['lifecycle',true]])test(`terminal Draw loss requires both Flight Home and crop clocks (${profile}): ${complete}`, async () => {
   const receipts=new Map();
-  const f=await nativeProductionAuthority(source(),{qualifyFarmFlee:true,qualifyAnimalCrop:true,chunkKeys,
+  const nativeWorkerLifecycle=profile==='lifecycle';
+  const f=await nativeProductionAuthority(source(),{nativeWorkerLifecycle,qualifyFarmFlee:!nativeWorkerLifecycle,qualifyAnimalCrop:!nativeWorkerLifecycle,chunkKeys,
     onCommit(record,receipt){receipts.set(record.kind,receipt);}});
   const ports=new MessageChannel();
   let replacement;
@@ -101,11 +102,12 @@ for(const complete of [false,true])test('terminal Draw loss requires both Flight
   }
 });
 
-for(const mode of ['exact','fractional refuge','foreign refuge','retired clock'])test('terminal Draw loss after Home19: '+mode,async()=>{
+for(const [profile,mode] of [['qualification','exact'],['qualification','fractional refuge'],['qualification','foreign refuge'],['qualification','retired clock'],['lifecycle','exact']])test(`terminal Draw loss after Home19 (${profile}): ${mode}`,async()=>{
   const receipts=new Map();
   const initial=source();
   if(mode==='fractional refuge')initial.villages.find(v=>v.id==='village-1').entry.z=.2;
-  const f=await nativeProductionAuthority(initial,{qualifyFarmFlee:true,qualifyAnimalCrop:true,chunkKeys,
+  const nativeWorkerLifecycle=profile==='lifecycle';
+  const f=await nativeProductionAuthority(initial,{nativeWorkerLifecycle,qualifyFarmFlee:!nativeWorkerLifecycle,qualifyAnimalCrop:!nativeWorkerLifecycle,chunkKeys,
     onCommit(record,receipt){receipts.set(record.kind,receipt);}});
   const ports=new MessageChannel();
   let replacement;
@@ -266,11 +268,11 @@ for (const enabled of [false, true]) {
   });
 }
 
-test('a moving Farm and a new crop share two submitted clocks through the Home absence', async () => {
+for(const nativeWorkerLifecycle of [false,true])test(`a moving Farm and a new crop share two submitted clocks through the Home absence (${nativeWorkerLifecycle?'lifecycle':'qualification'})`, async () => {
   let releaseStop, held;
   const hold = new Promise(resolve => { releaseStop = resolve; });
   const f = await nativeProductionAuthority(source(), {
-    qualifyFarmFlee:true, qualifyAnimalCrop:true, chunkKeys,
+    nativeWorkerLifecycle, qualifyFarmFlee:!nativeWorkerLifecycle, qualifyAnimalCrop:!nativeWorkerLifecycle, chunkKeys,
     async onReady(record) {
       if (record.kind === 'farm-arrival-stop' && !held) { held = record; await hold; }
     },
@@ -434,12 +436,12 @@ for (const tampered of [null, 'body', 'event']) {
 }
 import {copyNativeFarmArrivalRequestReference as copyFarmRequest} from '../src/world/native-farm-arrival-request-reference.js';
 
-for(const order of ['retired-active','absence-first','foreign-retirement']){
- test('paid civilian returns after the actual RaidEnded: '+order,async()=>{
+for(const [order,nativeWorkerLifecycle] of [['retired-active',false],['absence-first',false],['foreign-retirement',false],['retired-active',true],['foreign-retirement',true]]){
+ test(`paid civilian returns after the actual RaidEnded (${nativeWorkerLifecycle?'lifecycle':'qualification'}): ${order}`,async()=>{
   const initial=source(),original=initial.workers[0],receipts=new Map();
   let release,ready,absent=false,firstHome,retreat,heldState;
   const wait=new Promise(resolve=>{release=resolve;});
-  const f=await nativeProductionAuthority(initial,{qualifyFarmFlee:true,qualifyAnimalCrop:true,chunkKeys,
+  const f=await nativeProductionAuthority(initial,{nativeWorkerLifecycle,qualifyFarmFlee:!nativeWorkerLifecycle,qualifyAnimalCrop:!nativeWorkerLifecycle,chunkKeys,
    onCommit(record,data){receipts.set(record,data);},
    async onPrepare(record){
     if(record.kind!=='farm-arrival'||!firstHome||order!=='absence-first')return;
