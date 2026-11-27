@@ -896,7 +896,11 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
         }else{
           const home=profile.kind===18,farm=profile.kind===23,task=profile.kind===14,carry=profile.kind===16;
           const gates=(resources.presentation?.gates??[]).map(({nativeRoute,...gate})=>({...gate,worldBoundary:ref.worldBoundary}));
-          if(gates.length&&settlements?.nativeGatePreparationReadiness({gates})?.()!==true)throw Error('Recovered gate wall is not resident');
+          if(gates.length){
+            const gatesReady=settlements.nativeGatePreparationReadiness({gates});
+            await waitNativePublication(sequence,ownerSignal??new AbortController().signal,gatesReady);
+            if(ownerSignal?.aborted||!current())throw Error('Recovered gate source is no longer current');
+          }
           await workers.prepareRecoveredWorkerRoute({...input,terrain:terrainSupport},{signal:ownerSignal,isCurrent:current,
             getPickTime:()=>nativePickFrame[home?'getHomeTime':farm?'getFarmArrivalTime':task?'getStartTime':carry?'getConsequenceTime':'getStrollTime'](ref,ref.worldBoundary.effectiveTime),
             ...(home||task||carry?{}:{getPickIdleOffset:duration=>nativePickFrame[farm?'getFarmArrivalIdleOffset':'getStrollIdleOffset'](ref,ref.worldBoundary.effectiveTime,duration)}),

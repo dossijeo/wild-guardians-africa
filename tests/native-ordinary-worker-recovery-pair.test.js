@@ -8,12 +8,56 @@ import {nativeClockResourceEnd} from '../src/rendering/native-clock-resource-end
 import {nativeIdleCyclePhaseOffset} from '../src/rendering/native-farm-idle-phase.js';
 import {captureNativeRoutePickFrame} from '../src/rendering/native-route-pick-frame.js';
 import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
-import {copyNativeRecoveryGroup} from '../src/world/native-worker-route-recovery.js';
+import {copyNativeRecoveryGroup,nativeOrdinaryRecoveryKinds,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile} from '../src/world/native-worker-route-recovery.js';
+import {sameNativeWorldBoundary} from '../src/world/native-world-boundary.js';
 import {nativeIdleCycleBodyState} from '../src/world/native-idle-cycle-body-source.js';
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
 import {fixture as drawFixture,flush} from './helpers/remote-webgpu-fixture.js';
 import {nativeIdleCycleGameFixture} from './helpers/native-idle-cycle-game.js';
 import {centerServicePoint} from '../src/world/centers.js';
+
+async function assertRecoveredSurfaceWaitsForGates(source,homeBoundary,ids){
+ const surface=readFileSync(new URL('../src/rendering/webgpu-world-surface.js',import.meta.url),'utf8');
+ const extract=(start,end)=>{
+  const from=surface.indexOf(start),to=surface.indexOf(end,from);
+  assert(from>=0&&to>from);return surface.slice(from,to);
+ };
+ const code=extract('  const nativePublicationWaiters','  const nativeFrameState')+
+  extract('  let firstReplacementFrame','  function remoteClockLease');
+ for(const outcome of ['ready','replaced','cancelled']){
+  const signal=new AbortController(),ready=new Set(),installed=[];
+  let replacement=false;
+  const deps={nativeOrdinaryRecoveryKinds,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile,sameNativeWorldBoundary,
+   recoveryHold:source.holdId,state:{elapsed:source.members[0].execution.executedThrough},stream:{status:()=>({sequence:source.publicationSequence})},
+   remoteGpu:{requiredNativeWorldBoundary:()=>source.worldBoundary},
+   settlements:{nativeGatePreparationReadiness({gates}){
+    assert.deepEqual(gates.map(gate=>gate.gateId),ids);
+    assert(gates.every(gate=>sameNativeWorldBoundary(gate.worldBoundary,homeBoundary)));
+    return ()=>{if(replacement)throw new DOMException('Native gate preparation owner changed','AbortError');return gates.every(gate=>ready.has(gate.gateId));};
+   }},
+   terrainSupport:{prepareNativeIdleCycle:()=>({valid:()=>true})},
+   workers:{prepareRecoveredWorkerRoute(){installed.push(18);},prepareRecoveredIdleCycle(){installed.push(21);},
+    recoveredIdleCycleCurrent:()=>true,nativeRouteCurrent:()=>true},
+   admitRecoveredNativeWorld:async boundary=>{installed.push('frame');return boundary;},onPresentationReady(){}
+  };
+  const start=new Function(...Object.keys(deps),`let closed=false,timelineRecovering=true,preparedNativeWorldBoundary=null,
+    nativeRoutePreparations=0,nativeWorldFrameAdmission=null,nativeRouteResourceRevision=0,nativeRouteRejected=false;
+   ${code}\nreturn {prepareRecoveredWorkerRoute,wakeNativePublications,firstFrame:()=>firstReplacementFrame};`);
+  const api=start(...Object.values(deps)),promise=api.prepareRecoveredWorkerRoute(source,signal.signal);
+  let settled=false;promise.then(()=>{settled=true;},()=>{settled=true;});
+  ready.add(ids[0]);api.wakeNativePublications();await flush();
+  assert.deepEqual(installed,[]);assert.equal(settled,false,'One resident motor must not settle recovery');
+  if(outcome==='cancelled')signal.abort();
+  else {replacement=outcome==='replaced';ready.add(ids[1]);api.wakeNativePublications();}
+  if(outcome==='ready'){
+   await promise;
+   assert.deepEqual(installed,[18,21,'frame']);assert.equal(api.firstFrame()?.at,deps.state.elapsed);
+  }else{
+   await assert.rejects(promise,{name:'AbortError'});
+   assert.deepEqual(installed,[]);assert.equal(api.firstFrame(),null);
+  }
+ }
+}
 
 for(const loss of ['stroll','cycle','preparer first','hold first','acquired successor'])test(`terminal Draw recovery requires Home18 and ${loss==='stroll'?'Idle22':'Idle21'} at the same cut (${loss})`,async()=>{
  const stationary=loss!=='stroll',duringSuccessor=loss==='preparer first'||loss==='hold first',acquiredSuccessor=loss==='acquired successor';
@@ -188,6 +232,7 @@ test('terminal Draw recovery requires both civil clocks and both Home18 gate mot
   assert.deepEqual(homeSource.resources.presentation.gates.map(row=>row.gateId),ids);
   assert(source.members.every(row=>row.execution.executedThrough===at));
   assert.notEqual(homeRef.bodyId,idleRef.bodyId);
+  await assertRecoveredSurfaceWaitsForGates(source,homeRef.worldBoundary,ids);
   const {client,host,pipeline}=replacement;
   function group(binding){
    const buffer=client.device.createBuffer({size:16,usage:72});

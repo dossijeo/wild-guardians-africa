@@ -89,6 +89,84 @@
     "tests": 48,
     "focalWithWrongBoundaryControl": true,
     "productionViteBuild": "passed",
-    "physicalGpu": false
+    "physicalGpu": true,
+    "surfaceGateReadinessTests": 32
+  },
+  "nvidia": {
+    "baseRevision": "9fdcf13eb4b080dab1d1c67c3e59eb8c595d8c75",
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "holdId": 100,
+    "publicationSequence": 98,
+    "originalFrameSequence": 40,
+    "firstReplacementSequence": 1,
+    "worldTicket": 6,
+    "cutTime": 10.049999999999999,
+    "members": [
+      {
+        "kind": 18,
+        "actorId": 900012,
+        "bodyId": 2,
+        "preparedTicket": 3,
+        "acquiredTicket": 4,
+        "relativeTime": 0.04999999701976776
+      },
+      {
+        "kind": 21,
+        "actorId": 900011,
+        "bodyId": 1,
+        "preparedTicket": 5,
+        "acquiredTicket": 6,
+        "relativeTime": 0.04999999701976776
+      }
+    ],
+    "gates": [
+      {
+        "id": 1000000,
+        "ticket": 4,
+        "elapsed": 10.049999997019768
+      },
+      {
+        "id": 1000001,
+        "ticket": 4,
+        "elapsed": 10.049999997019768
+      }
+    ],
+    "picks": [
+      {
+        "actor": "worker-900012",
+        "publicationSequence": 98,
+        "hitPoint": {
+          "x": -13.894351201579289,
+          "y": 18.465833490644798,
+          "z": 3.284519038736565
+        }
+      },
+      {
+        "actor": "worker-900011",
+        "publicationSequence": 98,
+        "hitPoint": {
+          "x": -10.492576282295023,
+          "y": 18.46766165750762,
+          "z": 11.88593897416397
+        }
+      }
+    ],
+    "postActivationTime": 10.149999999999997,
+    "ledgerUnchanged": true,
+    "drawDrained": true,
+    "errors": [],
+    "scope": "The paired recovery and two advances after activation. Home18 is still active at the end.",
+    "artifacts": {
+      "civil-gated-pair-nvidia-20261127.json": "0d94e2660e9a3a7534fe5782440acbab3a2578fa90626c86d6d4c60068e8e809",
+      "civil-gated-pair-nvidia-20261127.wall-before.failure.json": "c4f1d7f9d9cfbf1d09888fda1b3f7e7762b576bcf5f3d3dca173253b41b9bfa8",
+      "civil-gated-pair-nvidia-20261127.reference-check.failure.json": "7942424d762e48153afc8cb4f473849695e56b1d6d50fea54ea70a508ff50739",
+      "civil-gated-pair-wall-ready-cpu-20261127.tap": "934dffd5e12e0958b984c731167c1cd6e3c6e0031c950de6928edcae57eed6de",
+      "civil-gated-pair-wall-ready-impact-20261127.tap": "0f782ee6a2cd0a340e766bd965a364310e027e4f698484909853a46d65534149"
+    },
+    "harness": {
+      "probe-civil-gated-recovery-browser.mjs": "eadd46a8ec203ad611303ed130e479caae0b04965d1be9a45e41dfcf0d04e096",
+      "civil-gated-pair-browser.js": "c4f23cdff918e4a7b53ac0e186e5bbe528407341007069c27fc57119ceba38c9"
+    }
   }
 }
