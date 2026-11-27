@@ -1,4 +1,4 @@
-import {nativeGateModelId} from './gate-passages.js';
+import {nativeGateModelId,validGateOpening} from './gate-passages.js';
 
 const poseFields=['x','z','yaw','runPhase','walkPhase','carryPhase','runRemaining'];
 const id=value=>Number.isSafeInteger(value)&&value>0;
@@ -25,7 +25,7 @@ export function nativeDesertRefugeLayout(state){
   const gates=state.structures.filter(structure=>structure.gate&&structure.status!=='ruined');
   const [gate]=gates;
   if(gates.length>1||gate&&(gate.status!=='intact'||gate.hp!==gate.maxHp||
-     !nativeGateModelId(gate.material)||![0,1].includes(gate.gateOpen)))return null;
+     !nativeGateModelId(gate.material)||!validGateOpening(gate.gateOpen)))return null;
   return {gate};
 }
 
@@ -34,7 +34,7 @@ export function copyRefugeReturnCheckpoint(value){
   if(version!==1||![actorId,animalId,spawnSequence].every(id)||actorId===animalId||
      !Number.isSafeInteger(contractDay)||contractDay<0||
      ![personId,centerId,villageId].every(key=>typeof key==='string'&&key.length>0)||
-     gate!==undefined&&(!gate||typeof gate.id!=='string'||!/^structure-[1-9]\d*$/.test(gate.id)||![0,1].includes(gate.opening)))
+     gate!==undefined&&(!gate||typeof gate.id!=='string'||!/^structure-[1-9]\d*$/.test(gate.id)||!validGateOpening(gate.opening)))
     throw TypeError('Invalid native refuge return checkpoint');
   return Object.freeze({version,actorId,animalId,spawnSequence,personId,contractDay,centerId,villageId,pose:copyPose(pose),
     ...(gate?{gate:Object.freeze({id:gate.id,opening:gate.opening})}:{})});

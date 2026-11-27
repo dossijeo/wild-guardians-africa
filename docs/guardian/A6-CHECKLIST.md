@@ -739,6 +739,8 @@ Después de Home19, Desierto 983 se guardó desde aproximación, golpe y Retreat
 
 Desierto 983 también se guardó después de Stop24 con Home18 pendiente. La recarga en NVIDIA preparó Home y la aproximación antes de reanudar, y volvió al mismo centro por el portón original. [Guardado antes de Home18](raid-flight-pending-home-checkpoint-20261127.md).
 
+Con la hoja de zarzas inmóvil al 31,58 %, NVIDIA verificó tres recargas. La primera tenía Home pendiente, la segunda ya tenía Home y la aproximación adquiridos, y la tercera se tomó tras Home19. Farm volvió a adquirir el motor del mismo portón en los tres casos. [Guardado de la hoja detenida](desert-frozen-gate-checkpoint-20261127.md).
+
 ### Componentes ya implementados, con sus límites
 
 | Componente | Hecho | Límite de lo entregado |

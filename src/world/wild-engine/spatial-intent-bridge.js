@@ -910,7 +910,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       farmTicket:null,raidSpawnSequence:marker.spawnSequence};
     const pair={raid:state.raid,animal,worker,event:marker.spawnSequence,animalBody:body,workerBody,
       birth,center:numericId(subject.center.id),centerAttack:subject.purpose==='center',cold:true,
-      ...(marker.gate&&!marker.homePending?{gateId:numericId(marker.gate.id)}:{})};
+      ...(marker.gate&&!marker.homePending?{gateIds:marker.gate.reservedByHome===false?[]:[numericId(marker.gate.id)]}:{})};
     raidFlight=pair;
     if(!requestNativeAnimalCropRoute(state,animal,body)){raidFlight=null;return false;}
     pair.requestSequence=nativeAnimalCropState(animal.id)?.requestSequence;
@@ -3734,8 +3734,8 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     const current=()=>owningState===state&&state.workers.includes(worker)&&state.villages.includes(village)&&(flight?nativeRaidFlightMember(state,state.raid?.animals[0])===worker&&r.raidSpawnSequence===raidFlight?.event:worker.status===nativeHomeWorkerStatus(r))&&(r.recoveryHit?worker.incapacitated&&worker.hits===2&&worker.recoveryExitRemaining===(r.recoveryExit??RECOVERY_EXIT_SECONDS):!worker.incapacitated&&!worker.recoveryExitRemaining)&&!worker.recovery&&!worker.fallRemaining&&!worker.raidReturn&&worker.running===false&&worker.gateWaiting===false&&['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>worker[k]===r.pose[k])&&!worker.taskId&&!worker.crateId&&(fresh?worker.nativeRouteAdmission===(flight?'pending-raid-flight-resources':'pending-home-resources')&&worker.heading===r.pose.yaw&&sameNativeHomeRequestReference(nativeHomeRequestReference(actor),source):!worker.nativeRouteAdmission)&&!worker.path?.length&&numericId(worker.villageId)===home.villageId&&(village.entry??village).x===home.x&&(village.entry??village).z===home.z;
     if(!current())return Promise.resolve({status:'unsupported',authorizedAutonomy:false,authorizedPassage:false});let candidate=null,translation=null,preparedTicket=null;
     const flightRouteClear=proposal=>{
-      const gateId=raidFlight?.gateId;
-      return (!gateId||proposal.gates.length===1&&proposal.gates[0].gateId===gateId)&&
+      const ids=raidFlight?.gateIds;
+      return (!ids||proposal.gates.length===ids.length&&proposal.gates.every((gate,i)=>gate.gateId===ids[i]))&&
         flightCandidateClear(proposal.ticket.session,proposal.ticket.ticket);
     };
     const protocol={preparedFrameRequired:true,deferred:true,motionKind:'home-route',

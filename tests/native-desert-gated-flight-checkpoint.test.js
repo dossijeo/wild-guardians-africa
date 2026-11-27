@@ -68,8 +68,10 @@ async function prepareColdHomeGraphics(state,proposal){
  }
 }
 
-test('public Desert flight checkpoint reacquires the open gate and both routes',async()=>{
+for(const frozenGate of [false,true])test(frozenGate?'a partially open gate survives a checkpoint with both flight routes acquired':
+ 'public Desert flight checkpoint reacquires the open gate and both routes',async()=>{
  const original=deserialize(input.snapshot);
+ if(frozenGate)original.dayPlan.at=original.time+.5;
  const live=await nativeProductionAuthority(original,{chunkKeys:input.chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true});
  let cold,release,held;
  const wait=new Promise(resolve=>{release=resolve;});
@@ -77,7 +79,8 @@ test('public Desert flight checkpoint reacquires the open gate and both routes',
  const pair=f=>{
   const frame=f.host.inspect().nativeRouteFrame;
   const home=frame?.bindings.find(row=>row.nativeHome),animal=frame?.bindings.find(row=>row.nativeAnimalCrop?.purpose==='center');
-  return home&&animal&&frame.bindings.some(row=>row.nativeGate?.gateId===input.expectedGate)?{frame,home,animal}:null;
+  const motor=frame?.bindings.some(row=>row.nativeGate?.gateId===input.expectedGate);
+  return home&&animal&&motor===!frozenGate?{frame,home,animal}:null;
  };
  try{
   live.command({kind:'setNavigationView',view:input.navigationView});
@@ -86,14 +89,18 @@ test('public Desert flight checkpoint reacquires the open gate and both routes',
   for(let i=0;i<420&&!cut;i++){
    current=await tick(live);
    const draw=pair(live);
-   if(current.workers[0].status==='fleeing'&&draw?.home.relativeTime>0&&draw.animal.relativeTime>0&&gate(current).gateOpen===1)cut=draw;
+   if(current.workers[0].status==='fleeing'&&draw?.home.relativeTime>0&&draw.animal.relativeTime>0)cut=draw;
   }
-  assert(cut,'expected both advancing clocks and the gate motor in the cut');
+  assert(cut,'expected both advancing clocks in the cut');
   const saving=live.command({kind:'snapshot',nativeAuthorityCheckpoint:true,visualTerrain:true});
   const disk=prepareWorkerCheckpoint(saving,{slotId:original.slotId,policy:{nativeAuthority:true},savedAt:0});
   assert(disk.saved);
   const marker=disk.state.workerNativeAuthorityCheckpoint.raidFlight;
-  assert.deepEqual(marker.gate,{id:gateId,opening:1});
+  const opening=gate(disk.state).gateOpen;
+  if(frozenGate)assert(opening>0&&opening<1);else assert.equal(opening,1);
+  assert.deepEqual(marker.gate,{id:gateId,opening,...(frozenGate?{reservedByHome:false}:{})});
+  assert.equal(marker.homePending,undefined);
+  assert(marker.homePath.length>0);
   assert.equal(disk.state.workers[0].x,current.workers[0].x);
   assert.equal(disk.state.raid.animals[0].motionPhase,current.raid.animals[0].motionPhase);
   const badOpening=structuredClone(disk.state);
@@ -102,28 +109,38 @@ test('public Desert flight checkpoint reacquires the open gate and both routes',
   const badOwner=structuredClone(disk.state);
   badOwner.workerNativeAuthorityCheckpoint.raidFlight.gate.id=original.structures[1].id;
   assert.throws(()=>savedNativeAuthorityOptions(serialize(badOwner)),/differs from the saved cohort/);
+  if(frozenGate){
+   const badReservation=structuredClone(disk.state);
+   delete badReservation.workerNativeAuthorityCheckpoint.raidFlight.gate.reservedByHome;
+   assert.throws(()=>savedNativeAuthorityOptions(serialize(badReservation)),/Invalid native raid flight checkpoint/);
+  }
 
   const options=savedNativeAuthorityOptions(serialize(disk.state));
   cold=await nativeProductionAuthority(disk.state,{...options,attach:false,onCommit:(record,data)=>commits.set(record,data),async onPrepare(record){
-   if(record.kind==='home-route')await prepareColdHomeGraphics(cold.snapshot(),record.resources);
+   if(!frozenGate&&record.kind==='home-route')await prepareColdHomeGraphics(cold.snapshot(),record.resources);
   },async onReady(record){
    if(!held){held=record;await wait;}
   }});
   await cold.attach();
   assert.equal(cold.authority.verifyNativeBootstrap(options.nativeBootstrap),true);
-  assert.equal(gate(cold.snapshot()).gateOpen,1);
+  assert.equal(gate(cold.snapshot()).gateOpen,opening);
   await untilProduction(cold,()=>held?.packet);
   assert.equal(held.kind,'home-route');
-  assert.deepEqual(held.resources.gates.map(row=>row.gateId),[input.expectedGate]);
+  const gateIds=frozenGate?[]:[input.expectedGate];
+  assert.deepEqual(held.resources.gates.map(row=>row.gateId),gateIds);
   for(let i=0;i<2;i++){
    const waiting=await tick(cold);
-   assert.equal(gate(waiting).gateOpen,1);
+   assert.equal(gate(waiting).gateOpen,opening);
    assert.equal(waiting.workers[0].z,marker.workerPose.z);
    assert.equal(waiting.workers[0].runPhase,marker.workerPose.runPhase);
    assert.equal(waiting.raid.animals[0].motionPhase,marker.animalPose.phase);
   }
   release();
   let firstPair,checkedRefuge=false;
+  if(frozenGate){
+   await untilProduction(cold,()=>pair(cold));
+   firstPair=pair(cold);
+  }
   for(let i=0;i<1800;i++){
    current=await tick(cold);
    firstPair??=pair(cold);
@@ -131,14 +148,14 @@ test('public Desert flight checkpoint reacquires the open gate and both routes',
     checkedRefuge=true;
     const sheltered=cold.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
     assert.equal(sheltered.saveAvailable,true);
-    assert.deepEqual(sheltered.nativeAuthorityCheckpoint.refugeReturn.gate,marker.gate);
+    assert.deepEqual(sheltered.nativeAuthorityCheckpoint.refugeReturn.gate,{id:gateId,opening});
    }
    if(!current.raid&&current.workers[0].nativeRouteAdmission==='native-idle')break;
   }
   assert(firstPair);
   assert(checkedRefuge);
   assert.notEqual(firstPair.frame.worldBoundary.authorityEpoch,cut.frame.worldBoundary.authorityEpoch);
-  assert.deepEqual(commits.get(held).nativeHomeRouteBinding.gateIds,[input.expectedGate]);
+  assert.deepEqual(commits.get(held).nativeHomeRouteBinding.gateIds,gateIds);
   const home=cold.records.find(record=>record.kind==='home-arrival'&&record.committed);
   const retired=commits.get(home).nativeHomeArrivalBinding,carried=commits.get(cold.records.find(row=>row.kind==='farm-arrival'&&row.committed)).nativeFarmArrivalBinding;
   assert.equal(carried.reference.sourceRequest.refugeSequence,retired.retiredSequence);
@@ -153,20 +170,23 @@ test('public Desert flight checkpoint reacquires the open gate and both routes',
  }finally{release();await cold?.close();await live.close();}
 });
 
-test('a sheltered Desert worker returns through the saved gate after a cold center raid',async()=>{
+for(const frozenGate of [false,true])test(`a sheltered Desert worker returns through the ${frozenGate?'partially open':'open'} saved gate after a cold center raid`,async()=>{
  const initial=deserialize(input.snapshot),cuts=new Map(),commits=new Map();
+ if(frozenGate)initial.dayPlan.at=initial.time+.5;
+ const phases=frozenGate?['approach']:['approach','strike','retreat'];
  const live=await nativeProductionAuthority(initial,{chunkKeys:input.chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,
   onCommit:(record,data)=>commits.set(record.kind,data)});
  let originalEpoch;
  try{
   live.command({kind:'setNavigationView',view:input.navigationView});
   await untilProduction(live,()=>live.records.some(row=>row.kind==='farm-arrival'&&row.committed));
-  for(let i=0;i<1750&&cuts.size<3;i++){
+  for(let i=0;i<1750&&cuts.size<phases.length;i++){
    await tick(live);
    const current=live.snapshot(),animal=current.raid?.animals[0];
    const home=commits.get('home-arrival')?.nativeHomeArrivalBinding;
    if(!home||!animal||current.workers[0].status!=='home')continue;
    const phase=animal.status==='attacking'?'strike':animal.status==='retreating'?'retreat':'approach';
+   if(!phases.includes(phase))continue;
    const kind=phase==='strike'?27:26,purpose=phase==='retreat'?'retreat':'center';
    const draw=live.host.inspect().nativeRouteFrame;
    if(cuts.has(phase)||!draw?.bindings.some(row=>row.nativeAnimalCrop?.kind===kind&&
@@ -175,11 +195,13 @@ test('a sheltered Desert worker returns through the saved gate after a cold cent
    const disk=prepareWorkerCheckpoint(result,{slotId:initial.slotId,policy:{nativeAuthority:true},savedAt:0});
    assert(disk.saved,`missing ${phase} checkpoint`);
    assert.equal(disk.state.workers[0].status,'home');
-   assert.deepEqual(disk.state.workerNativeAuthorityCheckpoint.refugeReturn.gate,{id:gateId,opening:1});
+   const opening=gate(disk.state).gateOpen;
+   if(frozenGate)assert(opening>0&&opening<1);else assert.equal(opening,1);
+   assert.deepEqual(disk.state.workerNativeAuthorityCheckpoint.refugeReturn.gate,{id:gateId,opening});
    cuts.set(phase,{disk:disk.state,purpose,kind});
    originalEpoch=home.reference.worldBoundary.authorityEpoch;
   }
-  assert.deepEqual([...cuts.keys()],['approach','strike','retreat']);
+  assert.deepEqual([...cuts.keys()],phases);
  }finally{await live.close();}
  for(const [phase,{disk,purpose,kind}] of cuts){
   const changed=structuredClone(disk);
@@ -201,11 +223,12 @@ test('a sheltered Desert worker returns through the saved gate after a cold cent
    assert.notEqual(absence.authorityEpoch,originalEpoch);
    assert.equal(absence.actorId,900011);
    assert.deepEqual(cold.snapshot().workers,disk.workers);
-   assert.equal(gate(cold.snapshot()).gateOpen,1);
+   assert.equal(gate(cold.snapshot()).gateOpen,gate(disk).gateOpen);
    await untilProduction(cold,()=>held?.packet);
    assert.equal(held.kind,kind===27?'animal-crop-strike':'animal-crop-route');
    assert.equal(held.resources.reference.purpose,purpose);
    const waiting=await tick(cold),animal=waiting.raid.animals[0],saved=disk.raid.animals[0];
+   assert.equal(gate(waiting).gateOpen,gate(disk).gateOpen);
    assert.equal(waiting.workers[0].status,'home');
    assert.equal(waiting.workers[0].walkPhase,disk.workers[0].walkPhase);
    for(const key of ['x','z','heading','motionPhase','hitsRemaining','attackId','attackRemaining'])
@@ -236,8 +259,9 @@ test('a sheltered Desert worker returns through the saved gate after a cold cent
  }
 });
 
-test('a confirmed Stop24 reloads while Home READY is still outstanding',async()=>{
+for(const frozenGate of [false,true])test(`a confirmed Stop24 reloads with a ${frozenGate?'partially open':'fully open'} gate while Home READY is outstanding`,async()=>{
  const initial=deserialize(input.snapshot);
+ if(frozenGate)initial.dayPlan.at=initial.time+.5;
  let stop,preparingHome,oldHome,releaseStop,releasePreparation,releaseHome;
  const stopReady=new Promise(resolve=>{releaseStop=resolve;});
  const homePreparation=new Promise(resolve=>{releasePreparation=resolve;});
@@ -274,7 +298,12 @@ test('a confirmed Stop24 reloads while Home READY is still outstanding',async()=
   assert.equal(marker.homePending,true);
   assert.equal(marker.homePath,undefined);
   assert.equal(marker.workerPose.runPhase,oldHome.resources.sourceRequest.pose.runPhase);
-  assert.deepEqual(marker.gate,{id:gateId,opening:1});
+  const opening=gate(disk.state).gateOpen;
+  if(frozenGate)assert(opening>0&&opening<1);else assert.equal(opening,1);
+  assert.deepEqual(marker.gate,{id:gateId,opening});
+  const changed=structuredClone(disk.state);
+  gate(changed).gateOpen=0;
+  assert.throws(()=>savedNativeAuthorityOptions(serialize(changed)),/checkpoint differs from the saved cohort/i);
   const incompatible=structuredClone(disk.state);
   incompatible.workerNativeAuthorityCheckpoint.raidFlight.homePath=[oldHome.resources.sourceRequest.home];
   assert.throws(()=>savedNativeAuthorityOptions(serialize(incompatible)),/Invalid native raid flight checkpoint/i);
@@ -292,7 +321,7 @@ test('a confirmed Stop24 reloads while Home READY is still outstanding',async()=
   assert(cold.authority.verifyNativeBootstrap(options.nativeBootstrap));
   await untilProduction(cold,()=>held?.packet);
   assert.notEqual(held.resources.worldBoundary.authorityEpoch,oldEpoch);
-  assert.deepEqual(held.resources.gates.map(gate=>gate.gateId),[input.expectedGate]);
+  assert.deepEqual(held.resources.gates.map(gate=>gate.gateId),frozenGate?[]:[input.expectedGate]);
   for(let i=0;i<3;i++){
    const waiting=await tick(cold),worker=waiting.workers[0],animal=waiting.raid.animals[0];
    assert.equal(worker.nativeRouteAdmission,'pending-raid-flight-resources');
@@ -301,7 +330,7 @@ test('a confirmed Stop24 reloads while Home READY is still outstanding',async()=
    assert.equal(worker.heading,marker.workerPose.yaw);
    assert.equal(animal.x,marker.animalPose.x);
    assert.equal(animal.z,marker.animalPose.z);
-   assert.equal(gate(waiting).gateOpen,1);
+   assert.equal(gate(waiting).gateOpen,marker.gate.opening);
   }
   const again=cold.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
   assert.equal(again.saveAvailable,true);
@@ -311,11 +340,11 @@ test('a confirmed Stop24 reloads while Home READY is still outstanding',async()=
   for(let i=0;i<1850;i++){
    current=await tick(cold);
    const draw=cold.host.inspect().nativeRouteFrame;
-   if(draw?.bindings.some(item=>item.nativeHome)&&draw.bindings.some(item=>item.nativeAnimalCrop)&&
-      draw.bindings.some(item=>item.nativeGate?.gateId===input.expectedGate))firstPair??=draw;
+   if(draw?.bindings.some(item=>item.nativeHome)&&draw.bindings.some(item=>item.nativeAnimalCrop))firstPair??=draw;
    if(!current.raid&&current.workers[0].nativeRouteAdmission==='native-idle')break;
   }
   assert(firstPair);
+  assert.equal(firstPair.bindings.some(item=>item.nativeGate?.gateId===input.expectedGate),!frozenGate);
   assert(!cold.records.some(record=>record.kind==='farm-arrival-stop'));
   assert.deepEqual([...commits.keys()].slice(0,2),['home-route','animal-crop-route']);
   const arrival=commits.get('home-arrival').nativeHomeArrivalBinding;

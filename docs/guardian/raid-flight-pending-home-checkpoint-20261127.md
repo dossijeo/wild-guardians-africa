@@ -26,4 +26,4 @@ Pasaron 71 pruebas de cinco archivos. El build de producción con WebGPU Worker 
 
 Ambos WASM mantienen sus imports y exports respecto de `71679774a`. El standalone tiene SHA-256 `17900baa12278d3350576e28fa929c64ebce98b19c8684d63e90f694833626ca` y el pthread `226d9d4aa4af07c9a33987a5a1fd54dc5f457fce1cdcf64a5d5c417acd4f5e3c`.
 
-El portón en tránsito y el guardado antes de tener una parada confirmada quedan fuera de este recorrido.
+El [guardado con la hoja detenida a media apertura](desert-frozen-gate-checkpoint-20261127.md) se calificó después. El portón en tránsito y el guardado antes de tener una parada confirmada siguen pendientes.

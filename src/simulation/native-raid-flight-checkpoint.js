@@ -1,6 +1,6 @@
 import {nativeCropRouteSubject} from './raids.js';
 import {refugeWorkerPose,sameRefugePose} from '../world/native-refuge-return.js';
-import {nativeGateModelId} from '../world/gate-passages.js';
+import {nativeGateModelId,validGateOpening} from '../world/gate-passages.js';
 
 const poseFields=['x','z','yaw','runPhase','walkPhase','carryPhase','runRemaining'];
 const positive=value=>Number.isSafeInteger(value)&&value>0;
@@ -26,7 +26,8 @@ export function copyNativeRaidFlightCheckpoint(value){
     typeof animalPose.targetId!=='string'||!animalPose.targetId||typeof animalPose.reservation!=='string'||!animalPose.reservation||
     homePending!==undefined&&homePending!==true||
     gate!==undefined&&(!gate||typeof gate.id!=='string'||!/^structure-[1-9]\d*$/.test(gate.id)||
-      (homePending?![0,1].includes(gate.opening):gate.opening!==1))||
+      !validGateOpening(gate.opening)||gate.reservedByHome!==undefined&&(gate.reservedByHome!==false||homePending)||
+      !homePending&&gate.reservedByHome!==false&&gate.opening!==1)||
     (homePending?homePath!==undefined:!Array.isArray(homePath)||!homePath.length||homePath.length>4096||
       homePath.some(point=>!pointValue(point?.x)||!pointValue(point?.z)||point.x!==Math.fround(point.x)||point.z!==Math.fround(point.z))))
   throw Error('Invalid native raid flight checkpoint');
@@ -34,7 +35,8 @@ export function copyNativeRaidFlightCheckpoint(value){
  const animal={x:animalPose.x,z:animalPose.z,yaw:animalPose.yaw,phase:animalPose.phase,
   targetId:animalPose.targetId,reservation:animalPose.reservation};
  return {version,at,spawnSequence,actorId,animalId,personId,contractDay,villageId,centerId,workerPose:pose,animalPose:animal,
-  ...(homePending?{homePending}:{homePath:homePath.map(({x,z})=>({x,z}))}),...(gate?{gate:{id:gate.id,opening:gate.opening}}:{})};
+  ...(homePending?{homePending}:{homePath:homePath.map(({x,z})=>({x,z}))}),
+  ...(gate?{gate:{id:gate.id,opening:gate.opening,...(gate.reservedByHome===false?{reservedByHome:false}:{})}}:{})};
 }
 
 export function nativeRaidFlightCheckpointActors(state,marker){
@@ -67,11 +69,11 @@ export function nativeRaidFlightCheckpointActors(state,marker){
  return {marker:value,worker,animal,home};
 }
 
-export function captureNativeRaidFlightCheckpoint(state,worker,animal,spawnSequence,homePath,gate=null){
+export function captureNativeRaidFlightCheckpoint(state,worker,animal,spawnSequence,homePath,gate=null,reservedByHome=true){
  const marker={version:1,at:state.elapsed,spawnSequence,actorId:numberFromId(worker.id),animalId:numberFromId(animal.id),
   personId:worker.personId,contractDay:worker.contractDay,villageId:worker.villageId,centerId:worker.centerId,
   workerPose:refugeWorkerPose(worker),animalPose:{x:animal.x,z:animal.z,yaw:animal.heading,phase:animal.motionPhase,
    targetId:animal.targetId,reservation:animal.reservation},...(homePath?{homePath}:{homePending:true}),
-  ...(gate?{gate:{id:gate.id,opening:gate.gateOpen}}:{})};
+  ...(gate?{gate:{id:gate.id,opening:gate.gateOpen,...(reservedByHome?{}:{reservedByHome:false})}}:{})};
  return nativeRaidFlightCheckpointActors(state,marker).marker;
 }

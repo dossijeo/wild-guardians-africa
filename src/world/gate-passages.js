@@ -4,6 +4,7 @@ const cache=new WeakMap();
 const swingCache=new WeakMap();
 const nativeModelIds=new Map([['zarzas',1],['empalizada',2],['reforzado',3]]);
 export const nativeGateModelId=material=>nativeModelIds.get(material);
+export const validGateOpening=opening=>Number.isFinite(opening)&&opening>=0&&opening<=1;
 export const gateScale=entity=>({adobe:1.4,piedra:1.4,reforzado:1.6}[entity.material]??1);
 export function gateFrameFootprints(entity,opening=1){
   const source=entity.gate&&nativeGateFrames[entity.material];if(!source)return null;
