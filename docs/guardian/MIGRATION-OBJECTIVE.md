@@ -900,7 +900,7 @@ aceptación con personajes, sin publicaciones periódicas de posición JS.
 
 ## Próximo bloqueo
 
-El transporte por lotes superó en NVIDIA el primer corredor del león desde el cuarto amanecer de Sabana. La autoridad adquirió a los 9,048 s de la solicitud, Draw presentó la edad inicial cero y la sesión drenó. La campaña desde el menú debe volver a acreditar los cinco relevos de incursión, el último dibujo y el drenaje. [Cortes del plazo y alcance](native-cold-worker-admission-20261126.md#campaña-continua-hasta-el-nacimiento-del-león).
+El transporte por lotes superó en NVIDIA el primer corredor del león desde el cuarto amanecer de Sabana. En la campaña siguiente desde el menú, Home19 presentó la primera retirada y el watchdog invalidó la publicación histórica 7059. Hosted agotó la espera de un checkpoint del consumidor vivo dentro de `markVisualLost`, antes de activar el reemplazo. El siguiente control debe acreditar la salida de ese estado con un recibo real del consumidor. Quedan los cinco relevos de incursión, el último dibujo y el drenaje en una única sesión desde el menú. [Corte de Recovery](performance/native-savanna-menu-event-recovery-nvidia-20261127.json).
 
 El alta de Escudo con reloj en marcha y su caducidad conservan sus calificaciones acotadas. La aceptación del perfil ordinario de Escudo, Flee y Recovery sigue los criterios del [estado por vertical](MIGRATION-VERTICALS.md).
 
