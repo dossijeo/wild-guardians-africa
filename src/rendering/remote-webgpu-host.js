@@ -2409,7 +2409,11 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           if(message.nativeSettlements!==undefined&&(!Array.isArray(message.nativeSettlements)||message.nativeSettlements.length))throw Error('Native settled bodies require prepared graphical admission');
           if(routeControl||message.protocolVersion!==2||!Array.isArray(message.routes)||
              !Number.isFinite(message.effectiveTime))throw Error('Invalid or repeated native intent baseline');
+           const recovery=message.recoveredWorkerRoute;
+           const recoveredAnimalId=recovery?.version===2?recovery.members?.find(member=>member.kind===26||member.kind===27)?.proof?.reference?.actorId:
+             [26,27].includes(recovery?.kind)?recovery.proof?.reference?.actorId:null;
            routeControl=createNativeRouteControl({authorityEpoch:message.authorityEpoch,
+             restoredRefugeReturn:message.restoredRefugeReturn??null,initialNativeSession:message.clock?.nativeSession,recoveredAnimalId,
              initialSequence:message.sequence,initialTime:message.effectiveTime,routes:message.routes,restoredWallRepairs:message.restoredWallRepairs??[],pendingTaskRequests:message.pendingTaskRequests??[],pendingActionRequests:message.pendingActionRequests??[],pendingHomeRequests:message.pendingHomeRequests??[],pendingInitialIdleRequests:message.pendingInitialIdleRequests??[],pendingIdleStrollRequests:message.pendingIdleStrollRequests??[],pendingAnimalCrop:message.pendingAnimalCrop??null,pendingFarmArrivalRequests:message.pendingFarmArrivalRequests===undefined?[]:message.pendingFarmArrivalRequests});
            if(message.consumerToken!==undefined&&(typeof message.consumerToken!=='string'||!message.consumerToken))throw Error('Invalid native consumer identity');
            nativeConsumerToken=message.consumerToken??null;

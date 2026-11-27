@@ -59,6 +59,7 @@ import {createPresentationWorkerHeadings} from './presentation-worker-headings.j
 import {captureWorldMotion} from './worker-world-motion.js';
 import {workerPhysicsActivity} from './worker-physics-activity.js';
 import {queryGuardianOrigin,queryGuardianTutorialOrigin} from './guardian-origin-query.js';
+import {validateRefugeReturnState} from '../world/native-refuge-return.js';
 
 export function parseSimulationChunkKey(key){
  if(typeof key!=='string'||!/^(-?\d+),(-?\d+)$/.test(key))throw TypeError('Invalid chunk key');
@@ -125,6 +126,12 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   if(savedStrike&&savedEncounter)throw Error('Saved native center strike has another owner');
   const savedRaidRoute=savedRetreat??savedApproach;
   const savedRaidAnimal=savedRaidRoute??savedStrike;
+  const savedRefuge=savedCheckpoint?.refugeReturn;
+  if(savedRaidAnimal&&game.raid.daytime&&game.workers.length&&savedRefuge===undefined)
+   throw Error('Saved daytime native raid has no refuge return');
+  if(savedRefuge!==undefined&&(!savedRaidAnimal||savedCheckpoint.workerLifecycle!==1||savedEncounter))
+   throw Error('Native refuge return has no restorable animal');
+  if(savedRefuge!==undefined)validateRefugeReturnState(game,savedRefuge);
   // Home19 and Dawn can both leave the authority without a live body. Restore
   // its clock and registry before the next raid or hiring request is emitted.
   const inactiveNativeRoster=nativeWorkerLifecycle&&(game.biome==='desierto'||game.biome==='sabana')&&!restoringPhysics&&
@@ -149,6 +156,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     return repair?.actorId===source.actorId&&repair.actionSequence===source.sourceSequence&&repair.targetId===source.targetId&&
       repair.boundary?.nativeSession===source.nativeSession?repair.boundary.ticket:0;
   },onNativeRefugeReturn:(actor,body)=>{
+    if(body===null){
+      if(!nativeBodies||nativeBodies.id(actor)!==undefined)throw Error('Restored refuge already owns a body');
+      return ()=>{nativeBirthsPending=true;};
+    }
     if(nativeBodies?.id(actor)!==body||session.core.wasm.spatial_body_has_blockers(body,0)!==-1)throw Error('Civil return lost its retired Home body');
     return ()=>{if(!nativeBodies.forgetRetired(actor,body))throw Error('Civil return body identity changed');nativeBirthsPending=true;};
   },onNativeAnimalDeparted:(actor,body)=>{
@@ -162,7 +173,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       chunks:resources.chunks.map(({cx,cz})=>({cx,cz})),removed:resources.removed.map(point=>({...point})),...(resources.kind===2?{nativeBarrierAdditionBinding:resources.nativeBarrierAdditionBinding}:{}),
       ...(resources.nativeShield?{nativeShield:resources.nativeShield}:{}),...(resources.nativeCenterRuin?{nativeCenterRuin:resources.nativeCenterRuin}:{}),
       ...(resources.nativeCenterPlacement?{nativeCenterPlacement:resources.nativeCenterPlacement}:{})});
-  }});planner.resetFromState(game,{restoredEncounterApproach:savedEncounter?.version===3});
+  }});planner.resetFromState(game,{restoredEncounterApproach:savedEncounter?.version===3,refugeReturn:savedRefuge??null});
   nativeIntentControl=createNativeIntentControlCohort({observe:planner.observeNativeIntentControl,
     onError:error=>onNativeIntentControlError?.(error)});
   const nav=createSpatialNavigationMovement(session,game);stopTasks=planner.observeTasks(game);stopWorld=planner.observeWorld(game);nav.intentTaskPlanner=planner;nav.raidEntryResident=(entry,radii)=>[...raidEntryChunks(entry,radii)].every(key=>loaded.has(key));if(raidWaitBindings!==null||savedWaitBindings!==null)restoreRaidWaitBindings(game,nav,raidWaitBindings??savedWaitBindings);
@@ -377,8 +388,21 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   if(navigationView!==null)setNavigationView(navigationView);
   function residency(){const required=[...new Set([...raidResidentDemand(game,nav),...workerChunkDemand(game)])].sort();return {required,missing:required.filter(key=>!loaded.has(key))};}
   // Cinematic presentation is not restorable; do not persist its transient pause.
-  function saveAvailable(){return !game.pauses.includes('campaign-cinematic')&&(!savedEncounter||!!nativeBodies)&&
-    !planner.encounterCheckpointBlocked()&&confirmedStateSaveAvailable(game);}
+  function refugeReturnCheckpoint(){
+   if(!ordinarySavannaFlight||game.raid?.daytime!==true||game.workers.length!==1||
+      game.workers[0].status!=='home'||!civilShieldPhysicsAvailable())return null;
+   const route=shelteredCenterRetreat(game)??shelteredCenterApproach(game),strike=route?null:shelteredCenterStrike(game);
+   const actor=route??strike;
+   if(!actor)return null;
+   const motion=planner.nativeAnimalCropState(actor.id);
+   const routeReady=route&&(motion?.mode===1||motion?.mode===2&&(motion.purpose==='center'||!motion.arrived));
+   const strikeReady=strike&&motion?.purpose==='center'&&
+     (motion.mode===3&&strike.attackId==='attack-'+motion.strike.attackId||
+      strike===savedStrike&&motion.mode===5&&strike.attackId==='attack-'+motion.restore.attackId);
+   return routeReady||strikeReady?planner.nativeRefugeReturnCheckpoint():null;
+  }
+  function saveAvailable(refugeReturn=refugeReturnCheckpoint()){return !game.pauses.includes('campaign-cinematic')&&(!savedEncounter||!!nativeBodies)&&
+    !planner.encounterCheckpointBlocked(!!refugeReturn)&&confirmedStateSaveAvailable(game);}
   function nativeAnimalCheckpointState(){
    const animal=game.raid?.animals[0];
    if(!nativeBodies||!animal||game.raid.animals.length!==1)return game;
@@ -1757,7 +1781,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     const physicsPoses=pausedPoses===undefined?(physics?.poses({activeOnly:command.visualTerrain===true?false:compactPhysicsPoses})??null):pausedPoses;
     const physical=command.kind==='snapshot'&&(command.physicsCheckpoint===true||command.physicsCheckpoint==='encoded')?physics?.checkpointFall()??null:undefined;
     const encounter=command.kind==='snapshot'?planner.encounterCheckpoint(command.nativeAuthorityCheckpoint===true):null;
-    const captureNativeCheckpoint=command.kind==='snapshot'&&command.nativeAuthorityCheckpoint===true&&!planner.encounterCheckpointBlocked();
+    const refugeReturn=refugeReturnCheckpoint();
+    const captureNativeCheckpoint=command.kind==='snapshot'&&command.nativeAuthorityCheckpoint===true&&!planner.encounterCheckpointBlocked(!!refugeReturn);
     const snapshotState=captureNativeCheckpoint?nativeAnimalCheckpointState():game;
     const raidAnimal=captureNativeCheckpoint&&nativeWorkerLifecycle&&civilShieldPhysicsAvailable()?
       shelteredCenterRetreat(snapshotState)??shelteredCenterApproach(snapshotState):null;
@@ -1769,9 +1794,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       strike===savedStrike&&strikeSource.mode===5&&strike.attackId==='attack-'+strikeSource.restore.attackId);
     const workerLifecycle=captureNativeCheckpoint&&nativeWorkerLifecycle&&(!game.raid||restorableRaidRoute||restorableStrike)&&game.workers.every(worker=>
       nativeMarkers.has(worker.nativeRouteAdmission)||planner.nativeWorkerHomeInactive(worker.id));
-    const nativeAuthorityCheckpoint=captureNativeCheckpoint?{version:3,...(encounter?{encounter}:{}),...(workerLifecycle?{workerLifecycle:1}:{}),wallOwners:session.captureWallOwners(),shieldOwners:session.captureShieldOwners(),chunkKeys:session.core.captureResidentChunks().keys,spatialState:session.core.snapshot(),navigationView:nav.activeBounds&&nav.raidView?{bounds:[...nav.activeBounds],eye:{...nav.raidView.eye},target:{...nav.raidView.target}}:null}:null;
+    if(captureNativeCheckpoint&&refugeReturn&&!workerLifecycle)throw Error('Native refuge return lost its restorable animal');
+    const nativeAuthorityCheckpoint=captureNativeCheckpoint?{version:3,...(encounter?{encounter}:{}),...(workerLifecycle?{workerLifecycle:1}:{}),...(refugeReturn?{refugeReturn}:{}),wallOwners:session.captureWallOwners(),shieldOwners:session.captureShieldOwners(),chunkKeys:session.core.captureResidentChunks().keys,spatialState:session.core.snapshot(),navigationView:nav.activeBounds&&nav.raidView?{bounds:[...nav.activeBounds],eye:{...nav.raidView.eye},target:{...nav.raidView.target}}:null}:null;
     const projectedPaths=compactPresentationPaths&&!captureHistoricalEvents&&command.kind==='advance'&&!terrainCheckpoint&&!motionTrace&&!motionInvalidation&&(game.workers.some(actor=>Array.isArray(actor.path)&&actor.path.length>1)||(game.raid?.animals??[]).some(actor=>Array.isArray(actor.path)&&actor.path.length>1));
-    const preparedState=prepareTransportSnapshots?prepareConfirmedStateTransport(snapshotState,{projectPaths:projectedPaths}):null;const result={sequence,value,...(pausedQuiescent?{pausedQuiescent:true}:{}),...(tutorialGuideRevision===null?{}:{tutorialGuideRevision}),...(projectedPaths?{presentationPaths:'head-v1'}:{}),...(nativeAuthorityCheckpoint?{nativeAuthorityCheckpoint}:{}),...(presentationWorkerHeadings?.length?{presentationWorkerHeadings}:{}),...(terrainCheckpoint?{terrainCheckpoint}:{}),...(command.steps!==undefined?{stepsExecuted}:{}),...(clockCapture?{clockSegments:clockCapture}:{}),...(eventBoundaries&&emitted.length?{historicalEventBoundaries:eventBoundaries.finish(emitted)}:{}),...(motionTrace?{motionTrace}:{}),...(worldMotionTrace?{worldMotionTrace}:{}),...(motionInvalidation?{motionInvalidation}:{}),...(rejection?{rejection}:{}),...(commandLoadedChunks.length?{commandLoadedChunks}:{}),...(physical===undefined?{}:{physicsCheckpoint:physical&&command.physicsCheckpoint==='encoded'?encodePhysicsCheckpoint(physical):physical}),residency:resident,physicsPose:physicsPoses?.[0]??null,...(physicsPoses?.length>1?{physicsPoses}:{}),elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,...(emittedSettlements.length?{settlements:emittedSettlements}:{}),...(emitted.length?{presentationJournalVersion:2}:{}),presentationJournal:lifecycle,...(!checkpointRaidWaitsOnly||command.kind==='snapshot'?{raidWaitBindings:captureRaidWaitBindings(game,nav)}:{}),saveAvailable:saveAvailable()&&(!encounter||!!nativeAuthorityCheckpoint),snapshot:preparedState?null:(projectedPaths?serializeConfirmedPresentationState(snapshotState):serializeConfirmedState(snapshotState)),terrainChanged:takeTerrainChanged()};if(preparedState){Object.defineProperty(result,'snapshot',{enumerable:true,configurable:true,get:()=>preparedState.snapshot});Object.defineProperty(result,authoritySnapshotFields,{value:preparedState.fields});}
+    const preparedState=prepareTransportSnapshots?prepareConfirmedStateTransport(snapshotState,{projectPaths:projectedPaths}):null;const result={sequence,value,...(pausedQuiescent?{pausedQuiescent:true}:{}),...(tutorialGuideRevision===null?{}:{tutorialGuideRevision}),...(projectedPaths?{presentationPaths:'head-v1'}:{}),...(nativeAuthorityCheckpoint?{nativeAuthorityCheckpoint}:{}),...(presentationWorkerHeadings?.length?{presentationWorkerHeadings}:{}),...(terrainCheckpoint?{terrainCheckpoint}:{}),...(command.steps!==undefined?{stepsExecuted}:{}),...(clockCapture?{clockSegments:clockCapture}:{}),...(eventBoundaries&&emitted.length?{historicalEventBoundaries:eventBoundaries.finish(emitted)}:{}),...(motionTrace?{motionTrace}:{}),...(worldMotionTrace?{worldMotionTrace}:{}),...(motionInvalidation?{motionInvalidation}:{}),...(rejection?{rejection}:{}),...(commandLoadedChunks.length?{commandLoadedChunks}:{}),...(physical===undefined?{}:{physicsCheckpoint:physical&&command.physicsCheckpoint==='encoded'?encodePhysicsCheckpoint(physical):physical}),residency:resident,physicsPose:physicsPoses?.[0]??null,...(physicsPoses?.length>1?{physicsPoses}:{}),elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,...(emittedSettlements.length?{settlements:emittedSettlements}:{}),...(emitted.length?{presentationJournalVersion:2}:{}),presentationJournal:lifecycle,...(!checkpointRaidWaitsOnly||command.kind==='snapshot'?{raidWaitBindings:captureRaidWaitBindings(game,nav)}:{}),saveAvailable:saveAvailable(refugeReturn)&&(!encounter||!!nativeAuthorityCheckpoint),snapshot:preparedState?null:(projectedPaths?serializeConfirmedPresentationState(snapshotState):serializeConfirmedState(snapshotState)),terrainChanged:takeTerrainChanged()};if(preparedState){Object.defineProperty(result,'snapshot',{enumerable:true,configurable:true,get:()=>preparedState.snapshot});Object.defineProperty(result,authoritySnapshotFields,{value:preparedState.fields});}
     // The corridor in a disk checkpoint is needed for cold restoration. The
     // live actor still belongs to the current admission and keeps its pose.
     if(snapshotState!==game)result.liveSnapshot=serializeConfirmedState(game);

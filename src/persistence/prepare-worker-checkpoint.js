@@ -3,6 +3,7 @@ import {confirmedStateSaveAvailable,deserializeConfirmedState} from '../simulati
 import {validateNativeAuthorityCheckpoint} from '../simulation/native-authority-checkpoint.js';
 import {validateRaidWaitBindings} from '../simulation/raid-wait-handoff.js';
 import {nativeEncounterCheckpointActors} from '../simulation/native-encounter-checkpoint.js';
+import {validateRefugeReturnState} from '../world/native-refuge-return.js';
 
 // This runs next to the storage transaction when an IndexedDB Worker owns
 // persistence. It is also used by the compatibility path on the main thread.
@@ -21,6 +22,7 @@ export function prepareWorkerCheckpoint(result,{slotId,policy,savedAt}){
   validateSnapshot(state);
  }
  if(checkpoint?.encounter)nativeEncounterCheckpointActors(state,checkpoint.encounter);
+ if(checkpoint?.refugeReturn)validateRefugeReturnState(state,checkpoint.refugeReturn);
  if(physical){if(state.pauses.includes('campaign-cinematic'))return {saved:false,reason:'physics-active',sequence:result.sequence};state.workerPhysicsCheckpoint=physical;}
  else if(!confirmedStateSaveAvailable(state))throw Error('Worker checkpoint is not restorable');
  validateRaidWaitBindings(state,result.raidWaitBindings);

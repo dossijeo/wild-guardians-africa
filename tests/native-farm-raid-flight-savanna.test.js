@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {validateSnapshot} from '../src/persistence/snapshots.js';
+import {serialize,validateSnapshot} from '../src/persistence/snapshots.js';
+import {prepareWorkerCheckpoint} from '../src/persistence/prepare-worker-checkpoint.js';
+import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
 import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
 import {createEventDrivenTaskPlanner} from '../src/world/wild-engine/spatial-intent-bridge.js';
 import {readFileSync} from 'node:fs';
@@ -19,15 +21,19 @@ function source() {
 }
 const chunkKeys = Array.from({length: 25}, (_, i) => [i % 5, Math.floor(i / 5) - 2].join(','));
 
-for(const collapses of [false,true])test(`a daytime Savanna center target keeps its native body through ${collapses?'the ruin':'the worker evacuation and return'}`, async () => {
+for(const mode of ['the worker evacuation and return','the ruin','a cold reload after Home19','a cold reload during a strike',
+  'a cold reload during Retreat','a cold reload with foreign refuge sequence'])test(`a daytime Savanna center target keeps its native body through ${mode}`, async () => {
+  const collapses=mode==='the ruin',reload=mode.startsWith('a cold reload');
+  const foreign=mode.endsWith('foreign refuge sequence');
   const state=source();
   state.plants=[];
   if(collapses)state.structures[0].hp=146;
   const acquired=[];
   let retainedHome,releaseHome;
   const hold=new Promise(resolve=>{releaseHome=resolve;});
-  const f=await nativeProductionAuthority(state,{nativeWorkerLifecycle:true,chunkKeys,
-    onCommit(record,data){acquired.push({kind:record.kind,data});},
+  const onCommit=(record,data)=>acquired.push({kind:record.kind,data});
+  let f=await nativeProductionAuthority(state,{nativeWorkerLifecycle:true,chunkKeys,
+    onCommit,
     async onReady(record){if(record.kind==='home-route'&&!retainedHome){retainedHome=record;await hold;}},
   });
   const worker=state.workers[0],center=state.structures[0];
@@ -43,7 +49,7 @@ for(const collapses of [false,true])test(`a daytime Savanna center target keeps 
     }
     for(const key of result.residency.missing){const [cx,cz]=key.split(',').map(Number);f.command({kind:'addChunk',cx,cz});}
     await f.present();
-    assert.deepEqual(f.faults,[]);
+    if(!foreign||!f.host.inspect().failed)assert.deepEqual(f.faults,[]);
     return JSON.parse(result.snapshot);
   };
   try{
@@ -55,6 +61,7 @@ for(const collapses of [false,true])test(`a daytime Savanna center target keeps 
     const spawn=current.events.findLast(e=>e.type==='RaidSpawned');
     assert.equal(animal.targetId,center.id);
     await untilProduction(f,()=>{f.snapshot();return retainedHome;});
+    assert.equal(f.command({kind:'snapshot',nativeAuthorityCheckpoint:true}).saveAvailable,false);
     for(let i=0;i<3;i++){
       const waiting=await step();
       assert.deepEqual([waiting.raid.animals[0].x,waiting.raid.animals[0].z],[animal.x,animal.z]);
@@ -62,27 +69,61 @@ for(const collapses of [false,true])test(`a daytime Savanna center target keeps 
       assert.ok(!acquired.some(row=>row.kind==='home-route'||row.kind.startsWith('animal-crop-')));
     }
     releaseHome();
-    let seenPair=false,checkedRefuge=false;
+    let seenPair=false,checkedRefuge=false,oldEpoch,restoredAbsence;
     for(let i=0;i<1600;i++){
       current=await step();
       const bindings=f.host.inspect().nativeRouteFrame?.bindings??[];
       if(bindings.some(b=>b.nativeHome)&&bindings.some(b=>b.nativeAnimalCrop?.purpose==='center'))seenPair=true;
-      if(!checkedRefuge&&current.raid&&acquired.some(row=>row.kind==='home-arrival')){
+      const phase=current.raid?.animals[0]?.status;
+      if(!checkedRefuge&&current.raid&&acquired.some(row=>row.kind==='home-arrival')&&
+          (!mode.endsWith('during a strike')||phase==='attacking')&&(!mode.endsWith('during Retreat')||phase==='retreating')){
         const saving=f.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
-        assert.equal(saving.saveAvailable,false);
-        assert.equal(saving.nativeAuthorityCheckpoint,undefined);
+        assert.equal(saving.saveAvailable,true);
+        const disk=prepareWorkerCheckpoint(saving,{slotId:state.slotId,policy:{nativeAuthority:true},savedAt:0});
+        assert(disk.saved);
+        assert.equal(disk.state.workerNativeAuthorityCheckpoint.refugeReturn.actorId,21);
+        if(reload){
+          const tampered=structuredClone(disk.state);
+          tampered.workers[0].walkPhase+=.1;
+          assert.throws(()=>savedNativeAuthorityOptions(serialize(tampered)),/refuge return/i);
+          oldEpoch=acquired.find(row=>row.kind==='home-arrival').data.nativeHomeArrivalBinding.reference.worldBoundary.authorityEpoch;
+          await f.close();
+          f=await nativeProductionAuthority(disk.state,{...savedNativeAuthorityOptions(serialize(disk.state)),onCommit,attach:false});
+          const post=f.controlPort.postMessage;
+          f.controlPort.postMessage=event=>{
+            if(event.restoredRefugeReturn)restoredAbsence=event.restoredRefugeReturn;
+            if(foreign&&event.farmArrivalRequest?.version===2)
+              event={...event,farmArrivalRequest:{...event.farmArrivalRequest,refugeSequence:event.farmArrivalRequest.refugeSequence+1}};
+            post(event);
+          };
+          await f.attach();
+          current=f.snapshot();
+          assert.deepEqual(current.workers,disk.state.workers);
+          assert(restoredAbsence);
+          assert.equal(restoredAbsence.actorId,21);
+          assert.notEqual(restoredAbsence.authorityEpoch,oldEpoch);
+          const again=f.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+          assert.equal(again.saveAvailable,true);
+          assert.deepEqual(again.nativeAuthorityCheckpoint.refugeReturn,disk.state.workerNativeAuthorityCheckpoint.refugeReturn);
+        }
         checkedRefuge=true;
+      }
+      if(foreign&&f.host.inspect().failed){
+        assert.match(f.host.inspect().errors.join('\n'),/Civil Farm request lacks its acquired Home absence/);
+        assert.equal(acquired.filter(row=>row.kind==='farm-arrival').length,1);
+        return;
       }
       if(!current.raid&&(collapses||current.workers[0].nativeRouteAdmission==='native-idle'))break;
     }
     assert(seenPair,'expected the center and refuge clocks in the same submitted packet');
-    assert(checkedRefuge,'expected an unsaved live raid after Home19');
+    assert(!foreign,'expected Draw to reject the foreign absence');
+    assert(checkedRefuge,'expected the saved live raid after Home19');
     const hits=current.events.filter(e=>e.type==='AnimalLogicalHit'&&e.simulationTime>=spawn.simulationTime);
     const strikes=acquired.filter(row=>row.kind==='animal-crop-strike').map(({data})=>data.nativeAnimalCropStrikeBinding);
     assert.equal(hits.length,collapses?1:animal.hitsRemaining);
     assert.equal(new Set(hits.map(e=>e.attackId)).size,hits.length);
     assert(hits.every(e=>e.targetId===center.id));
-    assert.deepEqual(hits.map(e=>e.attackId),strikes.map(strike=>'attack-'+strike.attackId));
+    assert.deepEqual(hits.map(e=>e.attackId),[...new Set(strikes.map(strike=>'attack-'+strike.attackId))]);
     assert.deepEqual(current.events.filter(e=>e.type==='StructureHit'&&e.animalId===animal.id).map(e=>e.structureHit.hp),collapses?[126]:[560,540]);
     assert.equal(current.events.filter(e=>e.type==='RaidEnded'&&e.simulationTime>=spawn.simulationTime).length,1);
     assert.deepEqual(current.ledger,state.ledger);
@@ -92,7 +133,8 @@ for(const collapses of [false,true])test(`a daytime Savanna center target keeps 
     assert.equal(returned.hits,0);
     const programs=acquired.filter(row=>row.kind.startsWith('animal-crop-')).map(({data})=>
       data.nativeAnimalCropRouteBinding??data.nativeAnimalCropStrikeBinding);
-    assert.equal(new Set(programs.map(({reference})=>reference.bodyId)).size,1);
+    for(const epoch of new Set(programs.map(({reference})=>reference.worldBoundary.authorityEpoch)))
+      assert.equal(new Set(programs.filter(({reference})=>reference.worldBoundary.authorityEpoch===epoch).map(({reference})=>reference.bodyId)).size,1);
     assert.equal(programs[0].reference.purpose,'center');
     assert.equal(programs.at(-1).reference.purpose,'retreat');
     const farm=acquired.filter(row=>row.kind==='farm-arrival');
@@ -113,8 +155,14 @@ for(const collapses of [false,true])test(`a daytime Savanna center target keeps 
     const home=acquired.find(row=>row.kind==='home-arrival').data.nativeHomeArrivalBinding;
     assert.equal(farm[0].data.nativeFarmArrivalBinding.reference.bodyId,home.reference.bodyId);
     const returnedFarm=farm[1].data.nativeFarmArrivalBinding.reference;
-    assert.equal(returnedFarm.sourceRequest.refugeSequence,home.retiredSequence);
-    assert.notEqual(returnedFarm.bodyId,home.reference.bodyId);
+    if(reload){
+      assert.notEqual(returnedFarm.sourceRequest.refugeSequence,home.retiredSequence);
+      assert.equal(returnedFarm.sourceRequest.refugeSequence,restoredAbsence.retiredSequence);
+      assert.notEqual(returnedFarm.worldBoundary.authorityEpoch,oldEpoch);
+    }else{
+      assert.equal(returnedFarm.sourceRequest.refugeSequence,home.retiredSequence);
+      assert.notEqual(returnedFarm.bodyId,home.reference.bodyId);
+    }
   }finally{releaseHome();await f.close();}
 });
 

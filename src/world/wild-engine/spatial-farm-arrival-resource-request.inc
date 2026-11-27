@@ -19,13 +19,18 @@ static int requestFarmArrival(double retired,double actor,double workerProfile,d
  const auto found=s.workers.find(uint64_t(actor));if(found==s.workers.end())return 0;
  const auto& worker=found->second;const auto center=s.targets.find(worker.center);SpatialBodyView body;
  if(retired){
-  // Consume the exact Home19 absence. A restored inactive actor has no live receipt.
+  // Both cold absence and live arrival are specific to one worker and epoch.
   const auto& h=s.homeArrivalResult;
+  const auto& restored=s.restoredRefugeReturn;
+  const bool live=h[0]==1&&h[1]==retired&&h[29]==actor&&worker.x==h[45]&&worker.z==h[46]&&
+    yaw==h[38]&&runPhase==h[40]&&walkPhase==h[41]&&carryPhase==h[42]&&runRemaining==h[43];
+  const bool cold=double(restored.sequence)==retired&&double(restored.actor)==actor&&
+    worker.x==restored.x&&worker.z==restored.z&&yaw==restored.yaw&&runPhase==restored.run&&
+    walkPhase==restored.walk&&carryPhase==restored.carry&&runRemaining==restored.remaining;
   const int biome=spatial_world_biome();
-  if(!integer(retired)||(biome!=0&&biome!=1)||h[0]!=1||h[1]!=retired||h[29]!=actor||
+  if(!integer(retired)||(biome!=0&&biome!=1)||(!live&&!cold)||
      worker.inactiveSequence!=uint64_t(retired)||worker.eligible||worker.body||worker.bodyBound||
-     worker.x!=h[45]||worker.z!=h[46]||yaw!=h[38]||runPhase!=h[40]||walkPhase!=h[41]||
-     carryPhase!=h[42]||runRemaining!=h[43]||!s.activeIntents.empty()||spatial_body_count()!=0)return -2;
+     !s.activeIntents.empty()||spatial_body_count()!=0)return -2;
  }else if(!worker.eligible||worker.inactiveSequence)return -2;
  if(worker.actionActive||!worker.center||center==s.targets.end()||!center->second.active||center->second.kind!=4||center->second.status!=0||!center->second.serviceKnown)return -2;
  if(worker.bodyBound&&(!worker.body||!spatialReadBody(worker.body,body)||body.kind!=0||!(body.flags&1)||(body.flags&2)||body.x!=worker.x||body.z!=worker.z||body.r<=0||body.r>2||s.reservedBodies.count(worker.body)||s.suspendedBodies.count(worker.body)))return -2;
@@ -42,7 +47,10 @@ static int requestFarmArrival(double retired,double actor,double workerProfile,d
  if(worker.bodyBound){request->body=worker.body;request->radius=body.r;request->bodyFlags=body.flags;}
  ActiveIntent intent;intent.actor=request->actor;intent.requiresResources=true;intent.lease=false;intent.state=PlanningState::AwaitingResources;intent.profile=request->profile;intent.farmArrivalRequest=std::move(request);
  auto& stored=s.activeIntents.emplace(intent.actor,std::move(intent)).first->second;
- if(retired)found->second.inactiveSequence=0;
+ if(retired){
+  found->second.inactiveSequence=0;
+  if(s.restoredRefugeReturn.sequence==uint64_t(retired))s.restoredRefugeReturn={};
+ }
  stored.farmArrivalRequest->sequence=emitIntentChange(s,stored);s.entityRevision++;return 1;
 }
 EMSCRIPTEN_KEEPALIVE int nav_intent_request_farm_arrival(double actor,double profile,double yaw,double run,double walk,double carry,double remaining){

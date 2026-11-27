@@ -1,6 +1,7 @@
 import {copyNativeShieldCropStop,sameNativeShieldCropStop} from '../world/native-shield-world.js';
 import {copyPendingAnimalCrop,animalCropMatchesRequest,copyNativeAnimalCropReference,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference,sameRestoredAnimalStrike} from '../world/native-animal-crop-resource.js';
 import {copyRestoredWallRepairDeclaration,restoredWallRepairKey} from '../world/restored-wall-repair-reference.js';
+import {copyRestoredRefugeReturn,sameRefugePose} from '../world/native-refuge-return.js';
 import {WALL_REPAIR_DURATION} from '../simulation/structure-presentation.js';
 import {copyNativeStoppedGateSelector} from './native-stopped-clock.js';
 import {copyNativeIdleStrollReference,copyNativeIdleStrollAttestation,nativeIdleStrollContinuesNext,nativeIdleStrollArrivalSourceMatches,nativeIdleStrollAttestationCovers,sameNativeIdleStrollAttestation} from '../world/native-idle-stroll.js';
@@ -51,7 +52,7 @@ function validHandle(handle,epoch){return handle?.authorityEpoch===epoch&&
 // movement model. It owns no independent body motion or collision simulation.
 // Admission resolves a stable record once. Revocation updates that exact record
 // even if preparation has not finished; drawing only reads its time limit.
-export function createNativeRouteControl({authorityEpoch,initialSequence=0,initialTime=null,routes=[],pendingTaskRequests=[],pendingActionRequests=[],pendingHomeRequests=[],pendingInitialIdleRequests=[],pendingIdleStrollRequests=[],pendingFarmArrivalRequests=[],pendingAnimalCrop=null,nativeIdleCycles=[],pendingIdleCycleRequests=[],restoredWallRepairs=[]}={}){
+export function createNativeRouteControl({authorityEpoch,initialSequence=0,initialTime=null,routes=[],pendingTaskRequests=[],pendingActionRequests=[],pendingHomeRequests=[],pendingInitialIdleRequests=[],pendingIdleStrollRequests=[],pendingFarmArrivalRequests=[],pendingAnimalCrop=null,nativeIdleCycles=[],pendingIdleCycleRequests=[],restoredWallRepairs=[],restoredRefugeReturn=null,initialNativeSession=null,recoveredAnimalId=null}={}){
   if(typeof authorityEpoch!=='string'||!authorityEpoch||
      !Number.isSafeInteger(initialSequence)||initialSequence<0||
      initialTime!==null&&(!Number.isFinite(initialTime)||initialTime<0)||!Array.isArray(routes)||!Array.isArray(pendingTaskRequests)||!Array.isArray(pendingActionRequests)||!Array.isArray(pendingHomeRequests)||!Array.isArray(pendingInitialIdleRequests)||!Array.isArray(pendingIdleStrollRequests)||!Array.isArray(pendingFarmArrivalRequests)||!Array.isArray(nativeIdleCycles)||!Array.isArray(pendingIdleCycleRequests))
@@ -124,6 +125,11 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       worker.state=0;worker.restoredWorkerImpact=q.restoredWorkerImpact;
     }
   }
+  let restoredRefuge=restoredRefugeReturn===null?null:copyRestoredRefugeReturn(restoredRefugeReturn);
+  if(restoredRefuge&&(restoredRefuge.authorityEpoch!==authorityEpoch||restoredRefuge.nativeSession!==initialNativeSession||
+    restoredRefuge.retiredSequence>initialSequence||initialTime===null||restoredRefuge.at>initialTime||actors.has(restoredRefuge.actorId)||
+    restoredRefuge.animalId!==(pendingAnimalCrop?.actorId??recoveredAnimalId)))
+    throw Error('Restored refuge return conflicts with its native baseline');
 
   let sequence=initialSequence,effectiveTime=initialTime??-Infinity,closed=false,clock=null;
   const counters={accepted:0,revoked:0,oldEpoch:0,admissions:0};
@@ -517,12 +523,17 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     }
     if(farmArrivalRequest?.version===2){
       const previous=retiredRefuge?.reference,goal=previous?.sourceHome.reference.sourceRequest?.home;
-      if(!goal||retiredRefuge.retiredSequence!==farmArrivalRequest.refugeSequence||
-         previous.worldBoundary.authorityEpoch!==farmArrivalRequest.authorityEpoch||
-         previous.worldBoundary.nativeSession!==farmArrivalRequest.nativeSession||previous.actorId!==farmArrivalRequest.actorId||
-         previous.bodyId===farmArrivalRequest.bodyId||farmArrivalRequest.pose.x!==goal.x||farmArrivalRequest.pose.z!==goal.z||
-         previous.worldBoundary.effectiveTime>farmArrivalRequest.requestedAt||
-         ['yaw','runPhase','walkPhase','carryPhase','runRemaining'].some(k=>previous.pose[k]!==farmArrivalRequest.pose[k]))
+      const live=goal&&retiredRefuge.retiredSequence===farmArrivalRequest.refugeSequence&&
+         previous.worldBoundary.authorityEpoch===farmArrivalRequest.authorityEpoch&&
+         previous.worldBoundary.nativeSession===farmArrivalRequest.nativeSession&&previous.actorId===farmArrivalRequest.actorId&&
+         previous.bodyId!==farmArrivalRequest.bodyId&&farmArrivalRequest.pose.x===goal.x&&farmArrivalRequest.pose.z===goal.z&&
+         previous.worldBoundary.effectiveTime<=farmArrivalRequest.requestedAt&&
+         ['yaw','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>previous.pose[k]===farmArrivalRequest.pose[k]);
+      const cold=restoredRefuge?.retiredSequence===farmArrivalRequest.refugeSequence&&
+        restoredRefuge.authorityEpoch===farmArrivalRequest.authorityEpoch&&restoredRefuge.nativeSession===farmArrivalRequest.nativeSession&&
+        restoredRefuge.actorId===farmArrivalRequest.actorId&&restoredRefuge.at<=farmArrivalRequest.requestedAt&&
+        !actors.has(restoredRefuge.animalId)&&sameRefugePose(restoredRefuge.pose,farmArrivalRequest.pose);
+      if(!live&&!cold)
         throw Error('Civil Farm request lacks its acquired Home absence');
     }
     if(farmArrivalRequest&&(current||actor.closed||actor.taskId||actor.targetId||actor.state!==null&&actor.state!==6||actor.pendingFarmArrivalRequest||actor.pendingIdleStrollRequest||actor.pendingInitialIdleRequest||actor.pendingTaskRequest||actor.pendingActionRequest||actor.pendingHomeRequest||actor.idleCycleSource||actor.strollProof||actor.revoked||actor.initialIdleBodySource||actor.settlementSource||actor.actionProof))throw Error('Native farm arrival request cannot replace an existing owner');
@@ -704,6 +715,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       // NeedsPlan retains its existing intent and revoked record, never a draw clock.
       if(!actor.current&&actor.state!==0&&actor.state!==2&&actor.state!==4&&actor.state!==6&&actor.state!==7){actor.closed=true;actors.delete(event.actorId);}}
     if(farmArrivalRequest&&retiredRefuge?.reference.actorId===event.actorId)retiredRefuge=null;
+    if(farmArrivalRequest?.version===2&&restoredRefuge?.actorId===event.actorId)restoredRefuge=null;
     if(actor){actor.pendingTaskCancellation=pendingTaskCancellation;actor.pendingHomeRequest=homeRequest;actor.pendingInitialIdleRequest=initialIdleRequest;actor.pendingIdleStrollRequest=idleStrollRequest;actor.pendingFarmArrivalRequest=farmArrivalRequest;actor.taskId=event.taskId??null;actor.targetId=event.targetId??null;}
     sequence=event.sequence;effectiveTime=event.effectiveTime;counters.accepted++;
     return true;

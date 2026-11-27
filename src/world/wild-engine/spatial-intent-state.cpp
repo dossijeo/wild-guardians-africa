@@ -674,6 +674,10 @@ struct IntentState {
   std::array<double,42> idleStrollExecutionResult{};
   std::array<double,30> homeExecutionResult{};
   std::array<double,52> homeArrivalResult{};
+  struct RestoredRefugeReturn {
+    uint64_t actor=0,sequence=0;
+    double x=0,z=0,yaw=0,run=0,walk=0,carry=0,remaining=0;
+  } restoredRefugeReturn;
   std::array<double,19> homeRequestResult{};
   std::vector<double> homeRequestsResult;
   std::array<double,24> farmArrivalRequestResult{};std::vector<double> farmArrivalRequestsResult;
@@ -2176,7 +2180,7 @@ void nav_intent_reset(){
   if(!s.gates.empty())spatialGateSupportChanged();
   s.gates.clear();s.gateBodyActors.clear();s.gateInput.clear();s.gateResult.clear();
   cancelGateMotionProposal(s);s.gateMotionResult.fill(0);
-  s.barrierProposal=PendingBarrierProposal{};s.pendingShieldCropStop.reset();s.barrierProposalResult.fill(0);s.homeArrivalResult.fill(0);s.gateRevision=0;s.worldMutationPreview=false;s.worldPreviewRetainsRoutes=true;s.worldPreviewStoppedRoutes.clear();
+  s.barrierProposal=PendingBarrierProposal{};s.pendingShieldCropStop.reset();s.barrierProposalResult.fill(0);s.homeArrivalResult.fill(0);s.restoredRefugeReturn={};s.gateRevision=0;s.worldMutationPreview=false;s.worldPreviewRetainsRoutes=true;s.worldPreviewStoppedRoutes.clear();
   s.farmArrivalRequestResult.fill(0);s.farmArrivalRequestsResult.clear();s.farmArrivalRouteBindingResult.clear();s.farmArrivalExecutionResult.fill(0);
   s.homeRequestResult.fill(0);s.homeRequestsResult.clear();s.strollRequestResult.fill(0);s.strollRequestsResult.clear();s.strollFailedRestResult.fill(0);s.initialIdleRequestResult.fill(0);s.initialIdleRequestsResult.clear();s.initialIdleBodyBindingResult.clear();
   s.routeHoldResult.clear();s.routeKnotResult.clear();s.gateWaitSegments=0;

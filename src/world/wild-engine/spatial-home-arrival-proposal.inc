@@ -79,3 +79,17 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_worker_inactive(double actor){
  const auto& s=state();if(!integer(actor))return 0;const auto w=s.workers.find(uint64_t(actor));
  return w!=s.workers.end()&&w->second.inactiveSequence&&!w->second.eligible&&!w->second.actionActive&&!w->second.bodyBound&&!w->second.body&&!s.activeIntents.count(uint64_t(actor))?1:0;
 }
+
+EMSCRIPTEN_KEEPALIVE double nav_intent_restore_refuge_return(double actor,double x,double z,double yaw,
+ double run,double walk,double carry,double remaining){
+ auto& s=state();
+ for(double value:{x,z,yaw,run,walk,carry,remaining})if(!std::isfinite(value)||!std::isfinite(float(value)))return -1;
+ if(run<0||walk<0||carry<0||remaining<0||!integer(actor))return -1;
+ if(spatial_world_biome()!=0||s.causalClock||s.executionEnabled||s.bodyDomainActive||s.proposalOpen||
+    s.barrierProposal.pending||s.worldMutationPreview||spatial_body_count()!=0||s.restoredRefugeReturn.actor||
+    !s.activeIntents.empty()||nav_intent_worker_inactive(actor)!=1)return -2;
+ const auto& worker=s.workers.at(uint64_t(actor));
+ if(worker.x!=x||worker.z!=z)return -2;
+ s.restoredRefugeReturn={worker.id,worker.inactiveSequence,x,z,yaw,run,walk,carry,remaining};
+ return double(worker.inactiveSequence);
+}
