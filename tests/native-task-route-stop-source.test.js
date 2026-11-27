@@ -125,11 +125,15 @@ for(const threaded of [false,true]){
   assert.equal(f.planner.commitNativeCausalClock().status,'committed');
   const held=f.planner.nativeSuspendedGateRoute(actor);
   assert(held);
+  const heldRow=()=>f.w.nav_gate_suspended_route(actor)===1?
+   Array.from(new Float64Array(f.w.memory.buffer,f.w.nav_gate_suspended_route_ptr(),27)):null;
+  const beforeHome=heldRow();
   assert.equal(request(handle.generation),-2);
   const taskCount=f.w.nav_intent_task_count();
   assert.equal(request(),1);
   const requestSequence=f.w.nav_intent_transition_sequence();
   assert.equal(request(),1);
+  assert.equal(request(handle.generation+2),-2);
   assert.equal(request(handle.generation+1,goal.x+1),-3);
   assert.equal(f.w.nav_intent_transition_sequence(),requestSequence);
   assert.equal(f.w.nav_intent_task_count(),taskCount);
@@ -143,6 +147,10 @@ for(const threaded of [false,true]){
   assert.equal(home.bodyId,f.execution.bodyId);
   assert.deepEqual(home.home,{villageId:1,...goal});
   for(const key of ['x','z','yaw','runPhase','walkPhase','carryPhase','runRemaining'])assert.equal(home.pose[key],held.pose[key]);
+  // Home owns the suspended body, so the native pose remains readable but
+  // the old gate-resume path may no longer claim that route's points.
+  assert.deepEqual(heldRow(),beforeHome);
+  assert.equal(f.planner.nativeSuspendedGateRoute(actor),null);
   assert.equal(f.planner.nativeTaskExecution(actor),null);
   assert.equal(f.planner.commitNativeCausalClock().status,'committed');
   assert.equal(f.planner.nativeGameExecutionState(),1);
@@ -157,6 +165,7 @@ for(const threaded of [false,true]){
   assert.equal(f.w.nav_home_route_proposal_commit_bound(...p.slice(0,5),p[1]),1);
   assert.equal(f.planner.commitNativeCausalClock().status,'committed');
   assert.equal(f.planner.nativeHomeRouteExecution(actor).bodyId,f.execution.bodyId);
+  assert.equal(heldRow(),null);
   f.state.elapsed+=.2;
   assert.equal(f.planner.advanceNativeRouteExecution(f.state.elapsed).status,'advanced');
   assert.notDeepEqual(f.body(1),body);
