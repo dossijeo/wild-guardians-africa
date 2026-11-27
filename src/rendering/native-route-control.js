@@ -1150,7 +1150,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
           installIdleCycleRecord(actor,source);
         };
       }
-      if(kind===24||kind===25){
+      if(kind===12||kind===24||kind===25){
         const home=kind===25,field=home?'pendingHomeRequest':'pendingTaskRequest',requestField=home?'stoppedHomeRequest':'stoppedTaskRequest';
         const actor=actors.get(ref.actorId),request=actor?.[field],at=clock?.committedThrough;
         const current=()=>!closed&&!!clock&&clock.committedThrough===at&&clock.intentSequence===sequence&&
@@ -1162,11 +1162,12 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
           throw Error('Recovered stopped worker differs from its pending request');
         return ()=>{
           if(!current())throw Error('Recovered stopped worker was revoked before materialization');
-          const {projection,...stop}=proof.proof,p=stop.reference.sourceRoute,predecessor=home?proof.task:proof.farm;
+          const {projection,...stop}=proof.proof,p=stop.reference.sourceRoute,predecessor=proof.task??proof.farm??proof.stroll;
           actor.revoked={actorId:ref.actorId,handle:p.routeHandle,assignmentSequence:p.assignmentSequence,
             startTime:predecessor.reference.worldBoundary.effectiveTime,safeUntil:ref.worldBoundary.effectiveTime,lastDrawTime:null,actor,
             revokedState:4,revokedSequence:proof.revokedSequence,stopProof:stop,[requestField]:request,
-            ...(home?{taskStopBodyId:ref.bodyId}:{issuedFarmArrival:predecessor,farmArrivalAdmitted:true})};
+            ...(home?{taskStopBodyId:ref.bodyId}:kind===12?{issuedStroll:predecessor,strollAdmitted:true}:
+              {issuedFarmArrival:predecessor,farmArrivalAdmitted:true})};
           actor.proof=proof.bodyReference;
           actor.stoppedProjection=stoppedProjection(stop,projection.routeEffects.rows.slice(8,26),null);
         };

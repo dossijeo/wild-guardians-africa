@@ -1,4 +1,4 @@
-import {copyStop24Source} from "../world/native-stop24-task-recovery.js";
+import {copyStop12Source,copyStop24Source} from "../world/native-stop24-task-recovery.js";
 import {copyTask25HomeSource} from '../world/native-task25-home-recovery.js';
 import {sameNativeIdleStrollAttestation} from '../world/native-idle-stroll.js';
 import {sameNativeIdleCycleAttestation} from '../world/native-idle-cycle.js';
@@ -1352,12 +1352,13 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       return {kind:'native-stopped-home-execution',version:1,binding,actorId:binding.reference.actorId,
         bodyId:binding.reference.bodyId,executedThrough:game.elapsed,taskTemplate:source.taskTemplate};
     }
-    if(kind===24){
+    if(kind===12||kind===24){
       const found=exactStoppedTaskRecovery(typeof actorId==='number'?'worker-'+actorId:actorId);
-      if(!found)return null;
-      const binding=copyStop24Source(found);
+      if(!found||!!found.stroll!==(kind===12))return null;
+      const binding=(kind===12?copyStop12Source:copyStop24Source)(found);
       return {kind:'native-stopped-task-execution',version:1,binding,actorId:binding.reference.actorId,
-        bodyId:binding.reference.bodyId,executedThrough:game.elapsed,pose:found.pose,farmTemplate:found.farmTemplate};
+        bodyId:binding.reference.bodyId,executedThrough:game.elapsed,pose:found.pose,
+        ...(kind===12?{strollTemplate:found.strollTemplate}:{farmTemplate:found.farmTemplate})};
     }
     if(kind===17){
       if(!nativeWorkerLifecycle||game.raid||game.workers.length!==1||!civilShieldPhysicsAvailable()||
@@ -1465,7 +1466,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     if(worker.id!==actorId||worker.status!=='waiting-task'||worker.nativeRouteAdmission!=='pending-resources'||
        worker.path!==null||worker.running!==false||worker.gateWaiting!==false||worker.crateId||worker.incapacitated||
        worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining||worker.raidReturn)return null;
-    const source=planner.stoppedFarmTaskRecovery(actorId),task=game.tasks.find(task=>task.id===worker.taskId);
+    const source=planner.stoppedStrollTaskRecovery(actorId)??planner.stoppedFarmTaskRecovery(actorId),
+      task=game.tasks.find(task=>task.id===worker.taskId);
     if(!source||task?.workerId!==actorId||task.id!=='task-'+source.request.taskId||!task.targetId?.endsWith('-'+source.request.targetId)||
        source.pose.yaw!==worker.heading||!['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>worker[k]===source.pose[k]))return null;
     return source;
@@ -1524,8 +1526,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     if(qualifyRaidEncounter&&civilShieldPhysicsAvailable()&&planner.nativeWoundedRefugeRecovery())
       return {version:2,refuge:true,members:[]};
     const kindOfTask=admission==='native-task'?14:admission==='native-action'?15:admission==='native-delivery'?16:null;
-    const stoppedTask=recoveryExecution({kind:24,actorId:worker.id});
-    if(stoppedTask)return {kind:24,actorId:stoppedTask.actorId};
+    const stoppedTask=exactStoppedTaskRecovery(worker.id);
+    if(stoppedTask)return {kind:stoppedTask.stroll?12:24,actorId:stoppedTask.request.actorId};
     const stoppedHome=recoveryExecution({kind:25,actorId:worker.id});
     if(stoppedHome)return {kind:25,actorId:stoppedHome.actorId};
     if(kindOfTask&&nativeWorkerLifecycle&&civilShieldPhysicsAvailable()&&session.core.wasm.spatial_body_count()===1){
@@ -1701,7 +1703,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
         const presentation=handle&&planner.captureNativeRoutePresentation(handle);
         if(presentation?.gates.length&&!recoveryGateCurrent(kind,execution,presentation))throw Error('Recovered gate motor has changed');
         const resources=profile.copyResources({version:1,kind,phase:'committed',worldBoundary:boundary,
-          [profile.bindingField]:binding,...(kind===24?{farmTemplate:execution.farmTemplate}:kind===25?{taskTemplate:execution.taskTemplate}:
+          [profile.bindingField]:binding,...(kind===12?{strollTemplate:execution.strollTemplate}:kind===24?{farmTemplate:execution.farmTemplate}:kind===25?{taskTemplate:execution.taskTemplate}:
             kind===15||kind===17||kind===21||kind===27?{}:{nativeRoute:presentation?.nativeRoute,presentation})},route.members?cut:null);
         return {execution,resources};
       });

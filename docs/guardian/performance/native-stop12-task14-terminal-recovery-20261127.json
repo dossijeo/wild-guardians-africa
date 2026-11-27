@@ -1,0 +1,120 @@
+{
+  "scenario": "Siembra durante el paseo Idle22 y pérdida con Stop12 presentado antes de Task14",
+  "base": "0d491f8dc19fe263ebcec4b454dc3b1a5628fb13",
+  "before": {
+    "cut": 10.44999999999999,
+    "worker": "worker-900011",
+    "walkTicket": 5,
+    "stopTicket": 8,
+    "heldTaskTicket": 9,
+    "originalFrame": 4,
+    "error": "Error: Native intent production failed: Native resource preparer closed"
+  },
+  "cpu": {
+    "bothRetirementOrders": true,
+    "rig": {
+      "actor": "worker-900011",
+      "color": 4,
+      "shadows": 4,
+      "pickSamples": 12,
+      "slots": [
+        "age",
+        "arrived",
+        "carryPhase",
+        "phase",
+        "relative",
+        "runPhase",
+        "walkPhase",
+        "x",
+        "yaw",
+        "z"
+      ],
+      "tableKnots": 5,
+      "tableBytes": 400,
+      "height": 15.343789152681133
+    },
+    "tests": 220,
+    "buildSeconds": 50.74
+  },
+  "hardware": {
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 91.89999997615814
+      }
+    },
+    "actor": "worker-900011",
+    "bodyId": 1,
+    "original": {
+      "worldTicket": 8,
+      "frame": 40
+    },
+    "replacement": {
+      "worldTicket": 8,
+      "frame": 1,
+      "clockElapsed": 12.949999999999937,
+      "projection": {
+        "age": 0.7999999523162842,
+        "x": -18,
+        "z": 0.5811572670936584,
+        "yaw": 0,
+        "phase": 0.800000011920929,
+        "runPhase": 23.25,
+        "walkPhase": 8.324999809265137,
+        "carryPhase": 9.5,
+        "arrived": 0
+      },
+      "checkpoint": 277,
+      "attached": 297,
+      "activated": 298,
+      "pickTrials": [
+        {
+          "h": 0.7,
+          "id": "worker-900011"
+        }
+      ]
+    },
+    "heldTask": {
+      "ticket": 9,
+      "requestId": 5,
+      "committedOnRetiredEndpoint": false
+    },
+    "task": {
+      "ticket": 11,
+      "firstDraw": 9
+    },
+    "watering": {
+      "id": "event-29209",
+      "type": "WaterSatisfied",
+      "workerId": "worker-900011",
+      "targetId": "plant-1000001",
+      "simulationTime": 24.9
+    },
+    "waterCount": 1,
+    "ledgerUnchanged": true,
+    "replacementDrained": true,
+    "pageErrors": []
+  },
+  "evidenceFiles": {
+    "terminal-stop12-before-20261127.tap": "c1124544f349600a72508a48e59eacd9e7399c30d1e36294cbd28cacf8272735",
+    "terminal-stop12-product-focal-20261127.tap": "7d99aa088baf89811917bbd52039ab730ac8783e0dd57e9943ea9b8eb026f0b0",
+    "terminal-stop12-rig-20261127.tap": "e13f416d752bfff766604367a679b4ec0053960043db9a00ee19f9bc9de6eb88",
+    "terminal-stop12-impact-20261127.tap": "8231299424cfeb54a382f35727e41443bc443b245b4633b772faccf045d947b1",
+    "terminal-stop12-build-20261127.log": "6f08d098dca0d268aebfe9b4cadabd69f71958ff8a3919790c446b9604f42b75",
+    "terminal-stop12-water-held-harness-20261127.failure.json": "9262d6917ddaf1b600524abfb3bcf9aa7bde2830daca110ff7418624b2b6831a",
+    "terminal-stop12-hosted-nvidia-20261127.json": "b5cff9d025dc3e176c2f29eec3ddb4b79e520f540595b05e436a3edc1afcf24a",
+    "terminal-stop12-hosted-nvidia-20261127.log": "5b1d36dc6c2c7d486f78753eee269839ea8af6856c0ef648c165775b801faebe",
+    "terminal-stop12-impact-original-expectations-20261127.tap": "3340b8a47d9b5a311dc35319a0ef46cb273859e68abb92a66de7486be382bd9b",
+    "terminal-stop12-impact-base-idle-20261127.tap": "1529800b4ba7f9ce6d85c25a423d68219dd0b2e6aa3b710bd799a961dcc56195",
+    "terminal-stop12-impact-base-idle-updated-20261127.tap": "5ce124d4ed33ff4458f47142b6fe55041d3a952d835d8fabe33e03dea26cf34a"
+  }
+}

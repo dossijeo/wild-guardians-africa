@@ -22,7 +22,21 @@ for(const threaded of [false,true])for(const profile of PROFILES)test(`${threade
  }finally{f?.close();await runtime?.dispose();}
 });
 for(const stop of [false,true])test(`${stop?'suspended':'still moving'}22 cannot discard its owner through immediate task assignment`,()=>{
- const f=controlledNativeIdleMovingTask({stop});try{const body=f.body(1),worker=structuredClone(f.worker),binding=f.planner.nativeIdleStrollBinding(f.actor),rows=plan(f);assert.equal(rows.filter(r=>r.status===1).length,1);assert.throws(()=>f.planner.commitTaskBatchToState(f.state,rows,{navVersion:1}),/became stale/);assert.deepEqual(f.worker,worker);assert.deepEqual(f.body(1),body);assert.deepEqual(f.planner.nativeIdleStrollBinding(f.actor),binding);assert(stop?f.heldLease.isCurrent():f.walkLease.isCurrent());if(!stop){const retry=f.planner.planIfNeeded(f.state.elapsed);assert.throws(()=>f.planner.commitTaskBatchToState(f.state,retry,{navVersion:1,pendingResources:true}),/became stale/);assert(f.walkLease.isCurrent());assert.deepEqual(f.worker,worker);}}
+ const f=controlledNativeIdleMovingTask({stop});try{
+  const body=f.body(1),worker=structuredClone(f.worker),binding=f.planner.nativeIdleStrollBinding(f.actor),rows=plan(f);
+  assert.equal(rows.filter(r=>r.status===1).length,1);
+  assert.throws(()=>f.planner.commitTaskBatchToState(f.state,rows,{navVersion:1}),/became stale/);
+  assert.deepEqual(f.worker,worker);assert.deepEqual(f.body(1),body);assert.deepEqual(f.planner.nativeIdleStrollBinding(f.actor),binding);
+  assert(stop?f.heldLease.isCurrent():f.walkLease.isCurrent());
+  if(!stop){
+   const retry=f.planner.planIfNeeded(f.state.elapsed);
+   assert.equal(f.planner.commitTaskBatchToState(f.state,retry,{navVersion:1,pendingResources:true}),0);
+   assert.equal(f.planner.pendingTaskRoute(f.actor),null);
+   const request=f.planner.nativeIdleStrollStopRequest(f.actor);
+   assert.equal(request?.reason,'task');assert.deepEqual(request.binding,binding);
+   assert(f.walkLease.isCurrent());assert.deepEqual(f.worker,worker);assert.deepEqual(f.body(1),body);
+  }
+ }
  finally{f.close();}
 });
 test('the pending stopped22 task body rejects physical writes and releases its claim source on removal',()=>{
@@ -35,7 +49,12 @@ test('a delayed eligibility notice uses the recognized native pose and rejects a
  const f=controlledNativeIdleMovingTask({stop:false});try{
   const source=f.planner.nativeIdleStrollBinding(f.actor),body=f.body(1),x=f.worker.x;f.worker.x+=.1;
   assert.throws(()=>plan(f),/executed Game pose/);assert.deepEqual(f.body(1),body);assert.deepEqual(f.planner.nativeIdleStrollBinding(f.actor),source);assert(f.walkLease.isCurrent());
-  f.worker.x=x;assert(f.planner.flushTaskEvents()>0);const rows=f.planner.planIfNeeded(f.state.elapsed);assert.equal(rows.filter(r=>r.status===1).length,1);assert.throws(()=>f.planner.commitTaskBatchToState(f.state,rows,{navVersion:1,pendingResources:true}),/became stale/);assert(f.walkLease.isCurrent());assert.deepEqual(f.body(1),body);
+  f.worker.x=x;assert(f.planner.flushTaskEvents()>0);
+  const rows=f.planner.planIfNeeded(f.state.elapsed);assert.equal(rows.filter(r=>r.status===1).length,1);
+  assert.equal(f.planner.commitTaskBatchToState(f.state,rows,{navVersion:1,pendingResources:true}),0);
+  assert.equal(f.planner.pendingTaskRoute(f.actor),null);
+  assert.deepEqual(f.planner.nativeIdleStrollStopRequest(f.actor)?.binding,source);
+  assert(f.walkLease.isCurrent());assert.deepEqual(f.body(1),body);
  }finally{f.close();}
 });
 

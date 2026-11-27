@@ -322,30 +322,41 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
     }
     function prepareRecoveredStoppedWorker({resources,execution,terrain,terrainManifest},options){
       const profile=nativeWorkerRouteRecoveryProfile(resources.kind),validated=profile.copyResources(resources),
-        proof=validated[profile.bindingField],ref=proof.reference,farm=resources.kind===24,q=proof.farm?.reference.sourceRequest;
-      const actorId='worker-'+ref.actorId,entry=entries.get(actorId),pose=farm?execution.pose:proof.held.pose;
+        proof=validated[profile.bindingField],ref=proof.reference,farm=proof.farm,stroll=proof.stroll,
+        pendingTask=farm??stroll,q=farm?.reference.sourceRequest??stroll?.reference;
+      const actorId='worker-'+ref.actorId,entry=entries.get(actorId),pose=pendingTask?execution.pose:proof.held.pose;
       const current=()=>{
         const worker=entry?.entity,task=tasks.get(worker?.taskId);
         return !!worker&&options.isCurrent()&&execution.executedThrough===state.elapsed&&worker.nativeRouteAdmission===profile.admission&&
           !worker.crateId&&!worker.recovery&&!worker.incapacitated&&!worker.raidReturn&&worker.path===null&&worker.running===false&&worker.gateWaiting===false&&
           worker.heading===pose.yaw&&['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(key=>worker[key]===pose[key])&&
-          (farm?worker.status==='waiting-task'&&worker.profile===q.workerProfile&&worker.centerId==='structure-'+q.centerId&&
+          (pendingTask?worker.status==='waiting-task'&&worker.profile===q.workerProfile&&worker.centerId==='structure-'+q.centerId&&
             task?.workerId===actorId&&task.id==='task-'+proof.request.taskId&&nativeEntityNumericId(task.targetId)===proof.request.targetId:
             worker.status==='returning'&&!worker.taskId&&worker.villageId==='village-'+proof.request.home.villageId);
       };
       if(!current()||entry.nativePending||entry.nativeState)throw Error('Recovered stop differs from the confirmed worker');
       const support=farm?terrain.prepareNativeFarmArrivalProposal(validated.farmTemplate,{terrainManifest}):
+        stroll?terrain.prepareNativeIdleStrollProposal(validated.strollTemplate,{terrainManifest}):
         terrain.prepareNativeTaskStartProposal(validated.taskTemplate,{terrainManifest});
       const foot=terrain.prepareNativeBody(proof.bodyReference,Float64Array.from(proof.proof.projection.routeEffects.rows.slice(8,26)));
       if(!support?.valid()||!foot?.valid())throw Error('Recovered stop source terrain is unavailable');
-      const held=farm?copyNativeFarmArrivalHeldExecution({kind:'native-farm-arrival-held-execution',version:1,actorId:ref.actorId,bodyId:ref.bodyId,
-        sourceReference:proof.farm.reference,assignmentSequence:proof.farm.assignmentSequence,resumeHandle:{...proof.bodyReference.nativeRoute.routeHandle,
-          generation:proof.bodyReference.resumeGeneration},suspendedAt:proof.bodyReference.suspendedAt,executedThrough:execution.executedThrough,pose}):proof.held;
+      let held=proof.held;
+      if(pendingTask){
+        const sourceReference=pendingTask.reference,{suspendedAt,resumeGeneration,nativeRoute}=proof.bodyReference;
+        const source={version:1,actorId:ref.actorId,bodyId:ref.bodyId,sourceReference,assignmentSequence:pendingTask.assignmentSequence,
+          resumeHandle:{...nativeRoute.routeHandle,generation:resumeGeneration},suspendedAt,executedThrough:execution.executedThrough,pose};
+        if(farm)held=copyNativeFarmArrivalHeldExecution({kind:'native-farm-arrival-held-execution',...source});
+        else{
+          const age=suspendedAt-sourceReference.worldBoundary.effectiveTime;
+          held=copyNativeIdleStrollHeldExecution({kind:'native-idle-stroll-held-execution',...source,walkState:{mode:'walk',
+            rng:q.walkRng,approachRetry:Math.max(0,q.approachRetry-age),age,...(q.version===2?{remaining:q.walkRemaining}:{})}});
+        }
+      }
       const routeSupport={...support,valid:()=>support.valid()&&foot.valid(),presentation:{...support.presentation,kind:'native-route-presentation',
         version:1,nativeRoute:proof.bodyReference.nativeRoute,executionScope:'canonical-native',nativeCrossingAdmitted:false}};
       return prepareWorkerRoute(actorId,routeSupport,{...options,getPickTime:()=>options.getProjection(ref.selector,ref.epoch).at},
         {resources:validated,current,stopped:{support,foot,getProjection:()=>options.getProjection(ref.selector,ref.epoch)},
-        binding:{[farm?'nativeHeldFarmArrival':'nativeHeldTaskRoute']:held,nativeStopped:ref.selector,suspended:proof.bodyReference}});
+        binding:{[farm?'nativeHeldFarmArrival':stroll?'nativeHeldIdleStroll':'nativeHeldTaskRoute']:held,nativeStopped:ref.selector,suspended:proof.bodyReference}});
     }
     function recoveredStoppedWorkerCurrent(actorId,ref,profile){
       const value=entries.get(actorId)?.nativeState;

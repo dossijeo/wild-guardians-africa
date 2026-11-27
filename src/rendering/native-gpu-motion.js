@@ -4,7 +4,7 @@ import {prepareAnimalCropGpuTable} from './native-route-gpu-table.js';
 import {nativeFarmIdlePhaseOffset} from './native-farm-idle-phase.js';
 import {NATIVE_STOP_POSE_FIELDS} from '../world/native-worker-route-stop-codec.js';
 import {copyNativeStoppedBodySelector} from './native-stopped-clock.js';
-import {nativeIdleStrollSuccessor} from '../world/native-idle-stroll.js';
+import {sameNativeIdleStrollReference,nativeIdleStrollSuccessor} from '../world/native-idle-stroll.js';
 import {nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
 import {nativeFarmArrivalRouteSuccessor,sameNativeFarmArrivalRouteReference} from '../world/native-farm-arrival-route.js';
 import {nativeHomeRouteSuccessor} from '../world/native-home-route.js';
@@ -44,13 +44,14 @@ export function createNativeTaskConsequenceGpuMotion(options={}){if(options.supp
 export function createNativeFarmArrivalGpuMotion(options={}){if(options.support?.kind!=='native-farm-arrival-terrain-support')throw TypeError('Native farm arrival requires proposal terrain support');return createMotion(options);}
 export function createRecoveredStoppedWorkerGpuMotion({resources,getProjection,...options}){
   const profile=nativeWorkerRouteRecoveryProfile(resources.kind),source=profile.copyResources(resources),
-    proof=source[profile.bindingField],presentation=options.support?.presentation,farm=profile.kind===24;
+    proof=source[profile.bindingField],presentation=options.support?.presentation,farm=profile.kind===24,stroll=profile.kind===12;
   if(!(farm?sameNativeFarmArrivalRouteReference(source.farmTemplate.nativeFarmArrival,presentation?.nativeFarmArrival):
+    stroll?sameNativeIdleStrollReference(source.strollTemplate.nativeIdleStroll,presentation?.nativeIdleStroll):
     sameNativeTaskStartReference(source.taskTemplate.nativeStart,presentation?.nativeStart)))
     throw Error('Recovered stopped body has a different source table');
-  const original=(farm?createNativeFarmArrivalGpuMotion:createNativeTaskStartGpuMotion)(options);
+  const original=(farm?createNativeFarmArrivalGpuMotion:stroll?createNativeIdleStrollGpuMotion:createNativeTaskStartGpuMotion)(options);
   try{
-    original.setExecutionEpoch((proof.farm??proof.task).reference.worldBoundary.effectiveTime);
+    original.setExecutionEpoch((proof.farm??proof.stroll??proof.task).reference.worldBoundary.effectiveTime);
     const nativePose=Float64Array.from(proof.proof.projection.routeEffects.rows.slice(8,26));
     return original.prepareStopped({reference:proof.reference.selector,nativePose,height:options.height,
       isCurrent:options.support.valid,getProjection});

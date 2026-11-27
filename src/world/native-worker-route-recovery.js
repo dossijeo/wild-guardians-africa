@@ -1,4 +1,5 @@
-import {copyStop24Source,copyStop24Resources,sameStop24Source,sameStop24Clock,stop24ProjectionMatches} from "./native-stop24-task-recovery.js";
+import {copyStop12Source,copyStop12Resources,sameStop12Source,sameStop12Clock,stop12ProjectionMatches,
+ copyStop24Source,copyStop24Resources,sameStop24Source,sameStop24Clock,stop24ProjectionMatches} from './native-stop24-task-recovery.js';
 import {copyTask25HomeSource,copyTask25HomeResources,sameTask25HomeSource,sameTask25HomeClock,task25ProjectionMatches} from './native-task25-home-recovery.js';
 import {copyNativeFarmArrivalRouteAttestation,copyNativeFarmArrivalRouteResources,sameNativeFarmArrivalRouteAttestation,sameNativeFarmArrivalRouteReference} from './native-farm-arrival-route.js';
 import {copyNativeIdleStrollAttestation,copyNativeIdleStrollResources,sameNativeIdleStrollAttestation,sameNativeIdleStrollReference} from './native-idle-stroll.js';
@@ -140,6 +141,12 @@ function copyTaskRouteResources(value,cut,kind,bindingField,copyAttestation){
 }
 
 const profiles=new Map([
+ [12,Object.freeze({
+  kind:12,admission:'pending-resources',executionKind:'native-stopped-task-execution',maxGates:0,
+  bindingField:'stoppedTaskBinding',clockField:'nativeStopped',obsoleteCode:'native-stroll-stop-admission-obsolete',
+  stopProjectionMatches:stop12ProjectionMatches,
+  copyResources:copyStop12Resources,copyAttestation:copyStop12Source,sameAttestation:sameStop12Source,sameReference:sameStop12Clock
+ })],
  [14,Object.freeze({
   kind:14,admission:'native-task',executionKind:'native-task-execution',maxGates:1024,
   bindingField:'nativeTaskStartBinding',clockField:'nativeStart',proofField:'startProof',issuedField:'issuedStart',
