@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {webcrypto} from 'node:crypto';
+import {setImmediate as nextTurn} from 'node:timers/promises';
 import {Scene,MeshBasicMaterial,DoubleSide,PerspectiveCamera,Vector3} from 'three';
 import {vec4} from 'three/tsl';
 import {MeshStandardNodeMaterial,WebGPURenderer,NodeMaterial} from 'three/webgpu';
@@ -26,16 +27,23 @@ import {floorFloat32} from '../src/float32-time.js';
 import {createWebGpuPicker} from '../src/rendering/webgpu-picker.js';
 
 const fetcher=async url=>{const bytes=await readFile('public'+url);return {ok:true,json:async()=>JSON.parse(bytes),arrayBuffer:async()=>bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)};};
-async function fixture({bootstrap=false}={}){
- const native=createNativeTaskGameFixture(),actorId=native.state.workers[0].id,packet=native.planner.captureNativeRoutePresentation(native.proposals[0].expectedRouteHandle),scene=new Scene(),ground=new MeshBasicMaterial({side:DoubleSide}),residency=createWebGpuTerrainResidency({scene,material:ground}),chunks=[];
+async function fixture({bootstrap=false,onBake,taskKind}={}){
+ const native=createNativeTaskGameFixture({taskKind}),actorId=native.state.workers[0].id,packet=native.planner.captureNativeRoutePresentation(native.proposals[0].expectedRouteHandle),scene=new Scene(),ground=new MeshBasicMaterial({side:DoubleSide}),residency=createWebGpuTerrainResidency({scene,material:ground}),chunks=[];
  for(let z=-1;z<=1;z++)for(let x=-1;x<=1;x++){native.session.core.selectChunk(x,z);residency.replace(native.session.core.chunkPayload(),1,'action-graphics');chunks.push({cx:x,cz:z,revision:1});}
  const terrain=createConfirmedTerrainSupport({residency}),manifest={epoch:'action-graphics',chunks};tick(native.state,.01,native.nav);
  const state=structuredClone(native.state);state.workers=state.workers.filter(w=>w.id===actorId);const profile=state.workers[0].profile,clips=['Walk_Skip','Run','Harvest','Plant','Water','Idle'],values=await Promise.all(clips.map(clip=>loadBakedWorkerWalkAsset(profile,{clip,fetcher,subtle:webcrypto.subtle}))),bakes=new Map(clips.map((c,i)=>[c,values[i]])),asset=await actorAsset(bakes.get('Walk_Skip').meta.source),library=JSON.parse(await readFile('public/content/worker-actions.json'))[profile],registry=createWebGpuResourceRegistry(),retired=[],errors=[];let acquires=0,pickAge=0,pickTime=state.elapsed;
- const renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:()=>new MeshStandardNodeMaterial()}},admission={async prepare(){},async prepareAndPublish(_object,_options,publish){publish();},deferRelease(_root,release){retired.push(release);}},bank={async acquire(){acquires++;return {model:clone(asset.scene),clips:prepareWorkerClips(asset.animations),library,release(){}};},dispose(){}},get=clip=>({get:async()=>bakes.get(clip)}),roster=createWebGpuWorkerRoster({scene,residency,state,assetBank:bank,renderer,resourceRegistry:registry,pipelineAdmission:admission,bakedWalkBank:get('Walk_Skip'),bakedRunBank:get('Run'),bakedHarvestBank:get('Harvest'),bakedPlantBank:get('Plant'),bakedWaterBank:get('Water'),bakedIdleBank:get('Idle'),onError:e=>errors.push(e),onBakedWalkError:(_p,e)=>errors.push(e)});
+ const renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:()=>new MeshStandardNodeMaterial()}},admission={async prepare(){},async prepareAndPublish(_object,_options,publish){publish();},deferRelease(_root,release){retired.push(release);}},bank={async acquire(){acquires++;return {model:clone(asset.scene),clips:prepareWorkerClips(asset.animations),library,release(){}};},dispose(){}},get=clip=>({get:async()=>{await onBake?.(clip);return bakes.get(clip);}}),roster=createWebGpuWorkerRoster({scene,residency,state,assetBank:bank,renderer,resourceRegistry:registry,pipelineAdmission:admission,bakedWalkBank:get('Walk_Skip'),bakedRunBank:get('Run'),bakedHarvestBank:get('Harvest'),bakedPlantBank:get('Plant'),bakedWaterBank:get('Water'),bakedIdleBank:get('Idle'),onError:e=>errors.push(e),onBakedWalkError:(_p,e)=>errors.push(e)});
  roster.sync();if(!bootstrap)await roster.prepareNativeRoute(actorId,terrain.prepareNativeRoute(packet,{terrainManifest:manifest}),{getPickTime:()=>pickTime});
  tick(native.state,native.proposals[0].endTime-native.state.elapsed+.05,native.nav);state.workers[0]=structuredClone(native.state.workers[0]);state.tasks=structuredClone(native.state.tasks);state.elapsed=native.state.elapsed;roster.sync();pickTime=packet.endTime;
  const result=native.planner.prepareNativeTaskActionProposal(native.planner.nativeTaskActionRequest(actorId));assert.equal(result.status,'proposed');const proposal=result.proposal,reference=nativeTaskActionReferenceFromProposal(proposal),support=terrain.prepareNativeTaskAction(reference);
- return {...native,actorId,state,scene,residency,terrain,manifest,roster,registry,retired,errors,renderer,bakes,reference,support,proposal,get acquires(){return acquires;},set pickAge(v){pickAge=v;},getPickAge:()=>pickAge,flush(){for(const release of retired.splice(0))release();},advance(at){native.state.elapsed=at;assert.equal(native.planner.advanceNativeRouteExecution(at).status,'advanced');native.planner.commitNativeCausalClock();},commit(prepared=proposal){assert.equal(native.w.nav_intent_barrier_proposal_ticket(),1);const t=Array.from(new Float64Array(native.w.memory.buffer,native.w.nav_intent_barrier_proposal_ticket_ptr(),6));assert.equal(native.w.nav_task_action_proposal_commit_bound(...t.slice(0,5),prepared.ticket.ticket),1);native.planner.commitNativeCausalClock();return native.planner.nativeTaskActionBinding(actorId);},close(){roster.dispose();for(const release of retired.splice(0))release();terrain.dispose();residency.dispose();ground.dispose();for(const b of values)b.dispose();registry.dispose();native.close();}};
+ return {...native,actorId,state,scene,residency,terrain,manifest,roster,registry,retired,errors,renderer,admission,bakes,reference,support,proposal,get acquires(){return acquires;},set pickAge(v){pickAge=v;},getPickAge:()=>pickAge,projectAction(age){
+  this.advance(reference.startTime+age);
+  const execution=native.planner.projectNativeTaskActionExecution(native.state,native.state.workers[0]);
+  state.elapsed=native.state.elapsed;
+  state.workers[0]=structuredClone(native.state.workers[0]);
+  roster.sync();
+  return {...execution,actorId:execution.binding.reference.request.nativeRoute.actorId,bodyId:execution.binding.reference.request.bodyId};
+ },flush(){for(const release of retired.splice(0))release();},advance(at){native.state.elapsed=at;assert.equal(native.planner.advanceNativeRouteExecution(at).status,'advanced');native.planner.commitNativeCausalClock();},commit(prepared=proposal){assert.equal(native.w.nav_intent_barrier_proposal_ticket(),1);const t=Array.from(new Float64Array(native.w.memory.buffer,native.w.nav_intent_barrier_proposal_ticket_ptr(),6));assert.equal(native.w.nav_task_action_proposal_commit_bound(...t.slice(0,5),prepared.ticket.ticket),1);native.planner.commitNativeCausalClock();return native.planner.nativeTaskActionBinding(actorId);},close(){roster.dispose();for(const release of retired.splice(0))release();terrain.dispose();residency.dispose();ground.dispose();for(const b of values)b.dispose();registry.dispose();native.close();}};
 }
 function bodyMeshes(root){const result=[];root.traverse(node=>{if(node.isMesh&&!node.userData.wgCpuPickProxy&&node._wgWalkAttachmentIndex===undefined)result.push({mesh:node,geometry:node.geometry,index:node.geometry.index});});return result;}
 
@@ -123,4 +131,45 @@ for(const profile of PROFILES)test(`${profile.id}: relative action phases select
   }
   for(const {mesh,geometry,index} of before){assert.equal(mesh.geometry,geometry);assert.equal(geometry.index,index);}assert.equal(motion.clockNode.value,0);assert.equal(f.planner.nativeTaskActionBinding(f.actorId),null);
  }finally{variant?.dispose();motion.dispose();gpuActor?.dispose();cpuActor?.dispose();for(const b of values)b.dispose();f.close();}
+});
+
+for(const resident of [false,true])test(`the acquired action owns the same rig with an ordinary Water bake ${resident?'already selected':'finishing during replacement admission'}`,{timeout:15000},async()=>{
+ let releaseWater,requestWater;
+ const waterRequested=new Promise(resolve=>requestWater=resolve),waterHeld=new Promise(resolve=>releaseWater=resolve);
+ let firstWater=true;
+ const f=await fixture({bootstrap:true,taskKind:'initial',onBake(clip){
+  if(clip==='Water'&&firstWater){firstWater=false;requestWater();return waterHeld;}
+ }});
+ try{
+  for(let i=0;i<100&&!f.roster.get(f.actorId)?.hasBakedWalking();i++)await nextTurn();
+  assert(f.roster.get(f.actorId)?.hasBakedWalking());
+  const proof=f.commit(),ref=proof.reference,execution=f.projectAction(ref.request.duration*.7);
+  await waterRequested;
+  const actor=f.roster.get(f.actorId),before=bodyMeshes(actor.root),root=actor.root;
+  assert(!actor.isBakedWatering());
+  if(resident){
+   releaseWater();
+   for(let i=0;i<100&&!actor.isBakedWatering();i++)await nextTurn();
+   assert(actor.isBakedWatering());
+  }else{
+   const publish=f.admission.prepareAndPublish.bind(f.admission);
+   f.admission.prepareAndPublish=async function(object,options,commit){
+    f.admission.prepareAndPublish=publish;
+    releaseWater();
+    await nextTurn();
+    return publish(object,options,commit);
+   };
+  }
+  const resources={version:1,kind:15,phase:'committed',worldBoundary:ref.worldBoundary,nativeTaskActionBinding:proof};
+  const support=f.terrain.prepareNativeTaskAction(ref,{terrainManifest:f.manifest});
+  f.pickAge=floorFloat32(execution.executedThrough-ref.startTime);
+  await f.roster.prepareRecoveredTaskAction({execution,resources},support,{isCurrent:()=>true,getPickAge:f.getPickAge});
+  assert(f.roster.recoveredTaskActionCurrent(f.actorId,ref));
+  assert.equal(f.roster.get(f.actorId),actor);
+  assert.equal(actor.root,root);
+  assert(before.every(item=>item.geometry===item.mesh.geometry));
+  assert.equal(f.roster.status().nativePreparing,0);
+  assert(!actor.isBakedWatering());
+  assert.deepEqual(f.errors,[]);
+ }finally{releaseWater();f.close();}
 });

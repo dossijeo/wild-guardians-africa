@@ -7,10 +7,12 @@ import {floorFloat32} from '../src/rendering/float32-time.js';
 import {nativeClockResourceEnd} from '../src/rendering/native-clock-resource-end.js';
 import {captureNativeRoutePickFrame} from '../src/rendering/native-route-pick-frame.js';
 import {nativeWorkerRouteRecoveryProfile} from '../src/world/native-worker-route-recovery.js';
+import {nativeTaskActionProjectionMatches} from '../src/world/native-task-action-attestation.js';
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
 import {fixture as drawFixture,flush} from './helpers/remote-webgpu-fixture.js';
 
-test('terminal Draw recovery preserves acquired Task14 through one watering action',{timeout:45000},async()=>{
+for(const kind of [14,15])test(`terminal Draw recovery preserves acquired phase ${kind} through one watering action`,{timeout:45000},async()=>{
+ const profile=nativeWorkerRouteRecoveryProfile(kind),action=kind===15;
  const opening=await createSpatialCampaignOpening();
  const {state,nav}=opening,chunkKeys=[...opening.loaded.keys()];
  try{
@@ -22,7 +24,7 @@ test('terminal Draw recovery preserves acquired Task14 through one watering acti
  const farmReady=new Promise(resolve=>releaseFarm=resolve);
  const f=await nativeProductionAuthority(state,{chunkKeys,nativeWorkerLifecycle:true,
   onReady:record=>record.kind==='farm-arrival'?farmReady:undefined,
-  onCommit(_record,receipt){acquired??=receipt.nativeTaskStartBinding;}});
+  onCommit(_record,receipt){acquired??=receipt[profile.bindingField];}});
  const ports=new MessageChannel();
  let replacement,attached=false;
  try{
@@ -36,16 +38,18 @@ test('terminal Draw recovery preserves acquired Task14 through one watering acti
    return f.snapshot();
   }
   let cut;
-  for(let i=0;i<100;i++){
+  for(let i=0;i<600;i++){
    const current=await advance(2);
    if(current.workers[0]?.nativeRouteAdmission==='pending-resources')releaseFarm();
    const frame=f.host.inspect().nativeRouteFrame;
-   if(acquired&&frame?.bindings.some(row=>row.nativeStart&&row.elapsed>acquired.reference.worldBoundary.effectiveTime)){
+   const earliest=action&&acquired?acquired.reference.request.duration*(3.8/7.2):0;
+   if(acquired&&current.workers[0]?.nativeRouteAdmission===profile.admission&&
+      frame?.bindings.some(row=>row[profile.clockField]&&row.relativeTime>earliest)){
     cut=current;
     break;
    }
   }
-  assert(cut,'The paid Task14 never appeared with positive age');
+  assert(cut,`The paid phase ${kind} never appeared with positive age`);
   const holding=f.authority.quiesceNativeIntentProduction({forLostDraw:true});
   f.retireResourceEndpoint();
   const hold=await holding;
@@ -54,30 +58,39 @@ test('terminal Draw recovery preserves acquired Task14 through one watering acti
   const terminal=await f.authority.flushNativeResourcePreparation({forLostDraw:true,allowRetired:true});
   assert(terminal.terminal&&terminal.callbacksSettled);
   const route=await f.authority.terminalWorkerRoute();
-  assert.deepEqual(route,{kind:14,actorId:6});
+  assert.deepEqual(route,{kind,actorId:6});
   replacement=await drawFixture({capabilities:{nativeTaskStartVersion:1,nativeTaskActionVersion:1,nativeTaskActionClockVersion:1,
    nativeInitialIdleBodyVersion:1,nativeIdleCycleVersion:1,nativeIdleCycleIdlePhaseVersion:1}},
    {intentControl:{port:ports.port2,session:'production-control',recoveryHold:30}});
   const {recoveredWorkerRoute:source}=await f.authority.attachHeldWorkerRoute(ports.port1,'production-control',30,hold,route);
   const {execution,resources}=source,ref=acquired.reference,epoch=ref.worldBoundary.effectiveTime;
   assert.deepEqual(execution.binding,acquired);
-  assert.deepEqual(resources.nativeTaskStartBinding,acquired);
+  assert.deepEqual(resources[profile.bindingField],acquired);
   assert.equal(execution.executedThrough,cut.elapsed);
-  for(const field of ['x','z','runPhase','walkPhase','carryPhase','runRemaining'])
-   assert.equal(execution[field],cut.workers[0][field]);
   assert.equal(execution.bodyId,1);
-  assert.equal('task-'+execution.taskId,cut.workers[0].taskId);
-  assert.equal(resources.nativeRoute.assignmentSequence,acquired.assignmentSequence);
-  const profile=nativeWorkerRouteRecoveryProfile(route.kind);
-  assert.throws(()=>profile.copyResources({...resources,nativeRoute:{...resources.nativeRoute,
-   routeHandle:{...resources.nativeRoute.routeHandle,generation:resources.nativeRoute.routeHandle.generation+1}}}),
-   /Recovered Task14 program differs/);
+  if(action){
+   const worker=cut.workers[0],task=cut.tasks.find(task=>task.id===worker.taskId);
+   assert(nativeTaskActionProjectionMatches(execution,worker,task,cut.elapsed));
+   assert(!nativeTaskActionProjectionMatches(execution,worker,{...task,targetId:'plant-100'},cut.elapsed));
+   assert(!nativeTaskActionProjectionMatches(execution,{...worker,actionRemaining:worker.actionRemaining+.05},task,cut.elapsed));
+   assert.throws(()=>profile.copyResources({...resources,worldBoundary:{...resources.worldBoundary,
+    ticket:resources.worldBoundary.ticket+1}}),/Native action resource boundary mismatch/);
+   assert.equal(cut.events.filter(event=>event.type==='WaterSatisfied').length,0);
+  }else{
+   for(const field of ['x','z','runPhase','walkPhase','carryPhase','runRemaining'])
+    assert.equal(execution[field],cut.workers[0][field]);
+   assert.equal('task-'+execution.taskId,cut.workers[0].taskId);
+   assert.equal(resources.nativeRoute.assignmentSequence,acquired.assignmentSequence);
+   assert.throws(()=>profile.copyResources({...resources,nativeRoute:{...resources.nativeRoute,
+    routeHandle:{...resources.nativeRoute.routeHandle,generation:resources.nativeRoute.routeHandle.generation+1}}}),
+    /Recovered Task14 program differs/);
+  }
 
   const {host,client,pipeline}=replacement;
   const buffer=client.device.createBuffer({size:16,usage:72});
   client.device.queue.writeBuffer(buffer,0,new Float32Array(4));
-  client.registerClockBinding(buffer,{byteOffset:0,semantic:'relative',epoch,
-   resourceEnd:nativeClockResourceEnd(epoch,ref.endTime),nativeStart:ref});
+  client.registerClockBinding(buffer,{byteOffset:0,semantic:'relative',epoch,[profile.clockField]:ref,
+   ...(action?{}:{resourceEnd:nativeClockResourceEnd(epoch,ref.endTime)})});
   const group=client.device.createBindGroup({entries:[{binding:0,resource:{buffer}}]});
   function frame(bind){
    client.beginFrame({nativeWorldBoundary:ref.worldBoundary,clock:{...f.clock,
@@ -95,17 +108,19 @@ test('terminal Draw recovery preserves acquired Task14 through one watering acti
   host.present();await pending;
   const witness=await f.authority.checkHeldDraw(30,hold,route),age=floorFloat32(cut.elapsed-epoch);
   assert.equal(witness.relativeTime,age);
-  assert.equal(witness.assignmentSequence,acquired.assignmentSequence);
-  assert.deepEqual(witness.nativeStart,ref);
-  assert.equal(captureNativeRoutePickFrame(host.inspect()).getStartTime(ref,epoch),epoch+age);
+  assert.equal(witness.assignmentSequence,action?acquired.actionSequence:acquired.assignmentSequence);
+  assert.deepEqual(witness[profile.clockField],ref);
+  const pick=captureNativeRoutePickFrame(host.inspect());
+  assert.equal(action?pick.getActionElapsed(ref):pick.getStartTime(ref,epoch),action?age:epoch+age);
   await f.attachRecoveredResources(replacement);attached=true;
   assert(f.authority.resumeNativeIntentProduction(hold));
 
   let later;
   for(let i=0;i<300;i++){
    later=await advance(4);
-   if(later.events.some(event=>event.type==='WaterSatisfied'))break;
+   if(later.workers[0].nativeRouteAdmission==='native-idle'&&later.events.some(event=>event.type==='WaterSatisfied'))break;
   }
+  assert.equal(later.workers[0].nativeRouteAdmission,'native-idle');
   assert.equal(later.events.filter(event=>event.type==='WaterSatisfied').length,1);
   assert.equal(f.records.filter(record=>record.kind==='task-start'&&record.committed).length,1);
   assert.equal(f.records.filter(record=>record.kind==='task-action'&&record.committed).length,1);

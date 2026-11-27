@@ -29,7 +29,7 @@ import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-w
 import {centerRuinApproachEndpoint,copyNativeIdleCycleRecoveryPhase,copyRecoveredEncounterFall,copyRecoveredEncounterPose,matchesNativeOrdinaryRefugeContinuation,matchesNativeStationaryRefuge,nativeIdleCycleRecoveryPhaseMatches,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile,woundedHomeEndpoint} from '../world/native-worker-route-recovery.js';
 import {copyNativeTaskActionReference,nativeTaskActionActor} from '../world/native-task-action-presentation.js';
 import {copyNativeTaskActionRestoreReference,sameNativeTaskActionRestoreReference} from '../world/native-task-action-restore-reference.js';
-import {copyNativeTaskActionAttestation,nativeTaskActionAttestationCovers} from '../world/native-task-action-attestation.js';
+import {copyNativeTaskActionAttestation,nativeTaskActionAttestationCovers,sameNativeTaskActionAttestation as sameActionProof} from '../world/native-task-action-attestation.js';
 import {sameNativeTaskActionReference} from '../world/native-task-action-presentation.js';
 import {copyNativeTaskConsequenceReference,copyNativeTaskConsequenceAttestation,nativeTaskConsequenceAttestationCovers} from '../world/native-task-consequence.js';
 import {copyNativeTaskSettlementReference,copyNativeTaskSettlementAttestation,nativeTaskSettlementAttestationCovers} from '../world/native-task-settlement.js';
@@ -793,7 +793,6 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
   function actionCurrent(reference,actor){
     return !closed&&!!clock&&!!actor&&!actor.closed&&actors.get(nativeTaskActionActor(reference.request))===actor&&actor.state===2&&actor.current===null&&actor.actionRecord?.actionSequence===actor.latestSequence&&actor.actionProof?.actionSequence===actor.latestSequence&&nativeTaskActionAttestationCovers(actor.actionProof,reference);
   }
-  function sameActionProof(a,b){return !!a&&!!b&&a.actionSequence===b.actionSequence&&sameNativeTaskActionReference(a.reference,b.reference)&&sameNativeTaskActionReference(a.preparedReference,b.preparedReference);}
   function currentTaskRouteCancellationOwner(actor){
     const current=actor?.current,record=current??actor?.revoked,start=record?.issuedStart;
     if(!start)return null;
@@ -1111,6 +1110,17 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     },
     prepareRecoveredWorkerRoute(kind,input,boundary,{cohortSize=1,movingCount=cohortSize,sharedCut=false,ruin=null,ordinaryWorkers=false,idleCyclePhase=null}={}) {
       const profile=nativeWorkerRouteRecoveryProfile(kind),proof=profile.copyAttestation(input),ref=proof.reference;
+      if(kind===15){
+        const actor=actors.get(nativeTaskActionActor(ref.request)),record=actor?.actionRecord,at=clock?.committedThrough;
+        const current=()=>!!clock&&clock.committedThrough===at&&clock.intentSequence===sequence&&
+          actors.size===1&&active.size===0&&actor?.actionRecord===record&&record?.lastDrawTime===null&&
+          actionCurrent(ref,actor)&&sameActionProof(actor.actionProof,proof);
+        if(sharedCut||cohortSize!==1||!sameNativeWorldBoundary(boundary,ref.worldBoundary)||
+           boundary.authorityEpoch!==authorityEpoch||clock?.nativeSession!==boundary.nativeSession||
+           !(at>=ref.startTime&&at<ref.endTime)||!current())
+          throw Error('Recovered action conflicts with the fresh control baseline');
+        return ()=>{if(!current())throw Error('Recovered action was revoked before materialization');};
+      }
       if(kind===21){
         const actor=actors.get(ref.actorId),source=actor?.idleCycleSource,at=clock?.committedThrough,start=ref.worldBoundary.effectiveTime;
         const next=actor?.pendingIdleCycleRequest,end=start+ref.duration;

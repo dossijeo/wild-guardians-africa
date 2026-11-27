@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+Action15 conserva el riego en marcha al perder Draw. NVIDIA confirmó la edad del clip, el picking antes de reanudar, un solo riego y el regreso a Idle con el mismo cuerpo. [Recorrido y límites](native-terminal-resource-recovery-20261120.md#reemplazo-terminal-durante-action15).
+
 La pérdida de Draw durante Task14 conserva el corredor de riego adquirido. NVIDIA confirmó el mismo cuerpo y reloj en el sustituto, el picking y un solo riego tras reanudar desde el menú de Sabana 714. [Recorrido y límites](native-terminal-resource-recovery-20261120.md#reemplazo-terminal-durante-task14).
 
 Sabana 714 recuperó un Idle21 adquirido después de que Home19 retirara al otro trabajador. NVIDIA confirmó el picking del cuerpo activo y la ausencia del cuerpo retirado antes de reanudar. Los cortes con Idle22 y Home18 activos pasan en CPU. [Pruebas y alcance](native-terminal-resource-recovery-20261120.md#reemplazo-con-un-trabajador-refugiado-y-otro-activo).

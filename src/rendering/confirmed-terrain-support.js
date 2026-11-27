@@ -67,10 +67,10 @@ export function createConfirmedTerrainSupport({residency,maxPieces=16384,maxActo
   const result=preparePaths(trace,{wanted:null,sequence:reference.nativeRoute.assignmentSequence,physicalIds:[],sourceLimit:maxNativeSourceSegments,exactManifest:false});
   return result?Object.freeze({kind:'native-body-terrain-support',reference,point:Object.freeze({...point,height:result.actors[0].startHeight}),valid:result.valid,unchangedBy:result.unchangedBy}):null;
  }
- function prepareNativeTaskAction(value){
+ function prepareNativeTaskAction(value,{terrainManifest=null}={}){
   if(closed)throw Error('Confirmed terrain support disposed');
   const reference=copyNativeTaskActionReference(value);
-  return prepareStationaryPoint(reference,reference.origin,reference.startTime,String(nativeTaskActionActor(reference.request)),'native-task-action-terrain-support');
+  return prepareStationaryPoint(reference,reference.origin,reference.startTime,String(nativeTaskActionActor(reference.request)),'native-task-action-terrain-support',terrainManifest);
  }
  function prepareNativeTaskSettlement(value){
   if(closed)throw Error('Confirmed terrain support disposed');
@@ -87,9 +87,11 @@ export function createConfirmedTerrainSupport({residency,maxPieces=16384,maxActo
   const reference=copyNativeInitialIdleBodyReference(value);
   return prepareStationaryPoint(reference,reference.sourceRequest.pose,reference.worldBoundary.effectiveTime,String(reference.actorId),'native-initial-idle-body-terrain-support');
  }
- function prepareStationaryPoint(reference,{x,z},at,actorId,kind){
+ function prepareStationaryPoint(reference,{x,z},at,actorId,kind,terrainManifest=null){
   const cx=Math.floor((x+24)/48),cz=Math.floor((z+24)/48),revision=residency.revisionAt?.(cx,cz);
   if(!revision||typeof revision.epoch!=='string')return null;
+  if(terrainManifest&&(terrainManifest.epoch!==revision.epoch||
+     !terrainManifest.chunks.some(chunk=>chunk.cx===cx&&chunk.cz===cz&&chunk.revision===revision.revision)))return null;
   const point={at,x,z},manifest={epoch:revision.epoch,chunks:[{cx,cz,revision:revision.revision}]},trace={start:point.at,end:point.at,terrainManifest:manifest,actors:[{actorId,continuous:true,timed:true,start:point,end:point,segments:[]}]};
   if(!residency.matchesManifest(manifest))return null;
   const result=preparePaths(trace,{wanted:null,sequence:null,physicalIds:[],sourceLimit:maxNativeSourceSegments,exactManifest:false});

@@ -1292,7 +1292,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     if(recovered) {
       const missing=recovered.members.find(({profile,ref,gateIds})=>{
         const epoch=ref.worldBoundary.effectiveTime;
-        const end=profile.kind===21?undefined:profile.kind===27?ref.endTime:nativeClockResourceEnd(epoch,ref.endTime);
+        const end=profile.kind===15||profile.kind===21?undefined:profile.kind===27?ref.endTime:nativeClockResourceEnd(epoch,ref.endTime);
         return !preparedBindings.some(b=>recoveryBindingMatches(b,profile,ref)&&b.epoch===epoch&&b.resourceEnd===end)||
           profile.kind===21&&ref.sourceCycleSequence!==0&&!preparedBindings.some(b=>recoveredIdleOffsetMatches(b,ref)&&b.epoch===epoch)||
           !gateIds.every(id=>preparedBindings.some(b=>recoveryGateMatches(b,id,ref.worldBoundary)&&

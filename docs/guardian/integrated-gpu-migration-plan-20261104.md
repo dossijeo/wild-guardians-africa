@@ -1,5 +1,7 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Action15 conserva el riego en marcha al perder Draw. NVIDIA confirmó la edad del clip, el picking antes de reanudar, un solo riego y el regreso a Idle con el mismo cuerpo. [Recorrido y límites](native-terminal-resource-recovery-20261120.md#reemplazo-terminal-durante-action15).
+
 La pérdida de Draw durante Task14 conserva el corredor de riego adquirido. NVIDIA confirmó el mismo cuerpo y reloj en el sustituto, el picking y un solo riego tras reanudar desde el menú de Sabana 714. [Recorrido y límites](native-terminal-resource-recovery-20261120.md#reemplazo-terminal-durante-task14).
 
 Sabana 714 pasó el anochecer tras Home19 con el reloj ordinario. Al denegar en otro recorrido el certificado posterior al evento real `NightStarted`, NVIDIA acreditó el drenaje del consumidor incompleto, el primer dibujo del sustituto, la activación y la primera marcha del facóquero. [Prueba de Recovery y alcance](native-terminal-resource-recovery-20261120.md#reemplazo-tras-aplicar-el-evento-del-primer-anochecer).
