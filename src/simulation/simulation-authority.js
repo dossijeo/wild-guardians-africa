@@ -70,34 +70,39 @@ export function parseSimulationChunkKey(key){
 // Owns the game state and a native world inside the simulation worker. Chunk
 // residency is explicit: callers must provide the confirmed simulation demand.
 export const authoritySnapshotFields=Symbol('authoritySnapshotFields');
-function shelteredCenterCheckpointActor(state,animal){
- if(nativeShelteredSavannaCenterActor(state,animal))return true;
+function shelteredCenterCheckpointSite(state,animal){
+ if(nativeShelteredSavannaCenterActor(state,animal))return state.structures[0];
  if(!nativeDesertRefugeLayout(state)||state.raid?.daytime!==true||state.raid.animals.length!==1||
     state.raid.animals[0]!==animal||animal?.species!=='warthog'||state.workers.length!==1||
-    !nativeCenterAttackCohort(state))return false;
- const center=state.structures[0].id;
- if(animal.targetId===center)return true;
+    !nativeCenterAttackCohort(state))return null;
+ const centers=state.structures.filter(structure=>structure.kind==='center');
+ if(animal.targetId)return centers.find(center=>center.id===animal.targetId);
  const spawn=state.events.findLast(event=>event.type==='RaidSpawned');
- return spawn?.raidFacts?.id===state.raid.id&&state.events.some(event=>
-   event.type==='StructureHit'&&event.animalId===animal.id&&event.targetId===center&&event.simulationTime>=spawn.simulationTime);
+ if(spawn?.raidFacts?.id!==state.raid.id)return null;
+ const hit=state.events.findLast(event=>event.type==='StructureHit'&&event.animalId===animal.id&&
+   event.structureHit?.kind==='center'&&event.simulationTime>=spawn.simulationTime);
+ if(centers.length>1&&!state.events.some(event=>event.type==='AnimalLogicalHit'&&event.attackId===animal.attackId&&
+   event.targetId===hit?.targetId&&event.simulationTime===hit?.simulationTime&&
+   event.presentation?.target?.kind==='center'&&event.presentation.shield===null))return null;
+ return centers.find(center=>center.id===hit?.targetId);
 }
 function shelteredCenterApproach(state){
  const animal=state.raid?.animals[0];
- if(!shelteredCenterCheckpointActor(state,animal)||!['entering','walking'].includes(animal.status)||
+ if(!shelteredCenterCheckpointSite(state,animal)||!['entering','walking'].includes(animal.status)||
     nativeCropRouteSubject(state,animal)?.purpose!=='center')return null;
  return animal;
 }
 function shelteredCenterStrike(state){
  const animal=state.raid?.animals[0];
- if(!shelteredCenterCheckpointActor(state,animal)||nativeCropRouteSubject(state,animal)?.purpose!=='center'||
+ if(!shelteredCenterCheckpointSite(state,animal)||nativeCropRouteSubject(state,animal)?.purpose!=='center'||
     !savedRaidStrike(animal))return null;
  return animal;
 }
 function shelteredCenterRetreat(state){
- const [animal]=state.raid?.animals??[],center=state.structures[0];
+ const [animal]=state.raid?.animals??[],center=shelteredCenterCheckpointSite(state,animal);
  const intact=center?.status==='intact'&&operational(center)&&animal?.hitsRemaining===0;
  const collapse=center?.status==='collapsing'&&center.hp>0&&center.collapseRemaining>0;
- if((!intact&&!collapse&&(center?.status!=='ruined'||center.hp!==0))||!shelteredCenterCheckpointActor(state,animal)||
+ if((!intact&&!collapse&&(center?.status!=='ruined'||center.hp!==0))||
     !nativeRetreatSubject(state,animal))return null;
  return animal;
 }

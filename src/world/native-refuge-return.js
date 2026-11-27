@@ -20,8 +20,8 @@ export function refugeWorkerPose(worker){
 }
 
 export function nativeDesertRefugeLayout(state){
-  if(state.biome!=='desierto'||state.structures[0]?.kind!=='center'||state.spells.length||
-     state.structures.slice(1).some(structure=>structure.kind!=='wall'))return null;
+  if(state.biome!=='desierto'||state.spells.length||!state.structures.some(structure=>structure.kind==='center')||
+     state.structures.some(structure=>structure.kind!=='center'&&structure.kind!=='wall'))return null;
   const gates=state.structures.filter(structure=>structure.gate&&structure.status!=='ruined');
   if(gates.length>1024||gates.some(gate=>gate.status!=='intact'||gate.hp!==gate.maxHp||
      !nativeGateModelId(gate.material)||!validGateOpening(gate.gateOpen)))return null;

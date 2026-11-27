@@ -50,11 +50,10 @@ export function farmStopCutFromNative(row){
 }
 
 export function nativeRaidFlightCheckpointLayout(state){
- const [center,...walls]=state.structures;
+ const center=state.structures.find(structure=>structure.id===state.workers[0]?.centerId);
  if(center?.kind!=='center'||center.status!=='intact'||state.spells.length)return null;
- if(state.biome==='sabana'&&!walls.length)return {gates:[]};
- const layout=nativeDesertRefugeLayout(state);
- return layout?.gates.length?layout:null;
+ if(state.biome==='sabana'&&state.structures.length===1)return {gates:[]};
+ return nativeDesertRefugeLayout(state);
 }
 
 export function copyNativeRaidFlightCheckpoint(value){
@@ -93,10 +92,11 @@ export function nativeRaidFlightCheckpointActors(state,marker){
  const endpoint=value.homePath?.at(-1),approachEnd=animal?.path?.at(-1);
  const admission=value.farmStop?'pending-farm-flight-stop':value.homePending?'pending-raid-flight-resources':'native-home';
  const layout=nativeRaidFlightCheckpointLayout(state);
+ const subject=animal&&nativeCropRouteSubject(state,animal,worker);
  if(!layout||!sameCheckpointGateOpenings(layout.gates,value)||
     state.elapsed!==value.at||state.raid?.daytime!==true||state.raid.animals.length!==1||
     state.workers.length!==1||animal?.species!=='warthog'||
-    !['entering','walking'].includes(animal.status)||value.farmStop&&(state.biome!=='desierto'||animal.status!=='entering'||animal.targetId!==value.centerId)||
+    !['entering','walking'].includes(animal.status)||value.farmStop&&(state.biome!=='desierto'||animal.status!=='entering'||subject?.purpose!=='center')||
     worker?.status!=='fleeing'||worker.hits!==0||
     worker.incapacitated||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining||worker.raidReturn||
     worker.taskId||worker.crateId||worker.path!==null||worker.gateWaiting!==(value.farmStop?.waiting??false)||
@@ -108,7 +108,7 @@ export function nativeRaidFlightCheckpointActors(state,marker){
     !sameRefugePose(refugeWorkerPose(worker),value.workerPose)||
     animal.x!==value.animalPose.x||animal.z!==value.animalPose.z||animal.heading!==value.animalPose.yaw||
     animal.motionPhase!==value.animalPose.phase||animal.targetId!==value.animalPose.targetId||animal.reservation!==value.animalPose.reservation||
-    !nativeCropRouteSubject(state,animal,worker)||!approachEnd||
+    !subject||!approachEnd||
     approachEnd.x!==Math.fround(animal.approach.x)||approachEnd.z!==Math.fround(animal.approach.z)||
     spawn?.id!=='event-'+value.spawnSequence||spawn.raidFacts?.daytime!==true||spawn.raidFacts.id!==state.raid.id||
     spawn.raidFacts.day!==state.day||spawn.simulationTime>value.at||

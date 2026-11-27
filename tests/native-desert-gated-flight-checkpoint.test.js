@@ -9,10 +9,94 @@ import {copyNativeFarmArrivalRouteProposal} from '../src/world/native-farm-arriv
 import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
 import {nativeWorkerGraphicsFixture} from './helpers/native-task-consequence-graphics.js';
+import {nativeFarmArrivalRouteFixture} from './helpers/native-farm-arrival-route.js';
 
 const input=JSON.parse(gunzipSync(readFileSync(new URL('./fixtures/desierto983-gated-flight-input.json.gz',import.meta.url))));
 const gateId='structure-'+input.expectedGate;
 const gate=state=>state.structures.find(structure=>structure.gate);
+
+for(const phases of [['flight'],['approach','strike','retreat']])test(`a second Desert center keeps its identity across ${phases.join(', ')} disk cuts`,async()=>{
+ const source=nativeFarmArrivalRouteFixture({peer:false});
+ const initial=structuredClone(source.state);
+ source.close();
+ const civilCenter=initial.workers[0].centerId,targetId=`structure-${initial.nextId++}`;
+ initial.structures.push({...initial.structures[0],id:targetId,x:-18,z:-12});
+ initial.dayPlan={done:false,at:initial.time+.8,group:['warthog']};
+ const view={bounds:[-48,-48,48,48],eye:{x:-10,z:-24},target:{x:-10,z:0}};
+ const live=await nativeProductionAuthority(initial,{chunkKeys:input.chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true});
+ const cuts=new Map();
+ let originalEpoch;
+ try{
+  live.command({kind:'setNavigationView',view});
+  await untilProduction(live,()=>live.records.some(row=>row.kind==='farm-arrival'&&row.committed));
+  for(let i=0;i<1800&&cuts.size<phases.length;i++){
+   const current=await tick(live),animal=current.raid?.animals[0],worker=current.workers[0];
+   if(!animal)continue;
+   const phase=worker.status==='fleeing'?'flight':worker.status==='home'?
+    animal.status==='attacking'?'strike':animal.status==='retreating'?'retreat':'approach':null;
+   if(!phases.includes(phase)||cuts.has(phase))continue;
+   const kind=phase==='strike'?27:26,purpose=phase==='retreat'?'retreat':'center';
+   const draw=live.host.inspect().nativeRouteFrame;
+   const binding=draw?.bindings.find(row=>row.nativeAnimalCrop?.kind===kind&&row.nativeAnimalCrop.purpose===purpose&&row.relativeTime>.1);
+   if(!binding||phase==='flight'&&!draw.bindings.some(row=>row.nativeHome&&row.relativeTime>.1))continue;
+   const result=live.command({kind:'snapshot',nativeAuthorityCheckpoint:true,visualTerrain:true});
+   const disk=prepareWorkerCheckpoint(result,{slotId:initial.slotId,policy:{nativeAuthority:true},savedAt:0});
+   assert(disk.saved,`missing ${phase} checkpoint`);
+   const checkpoint=disk.state.workerNativeAuthorityCheckpoint;
+   assert.equal((checkpoint.raidFlight??checkpoint.refugeReturn)?.centerId,civilCenter);
+   if(phase!=='retreat')assert.equal(disk.state.raid.animals[0].targetId,targetId);
+   cuts.set(phase,{disk:disk.state,kind,purpose});
+   originalEpoch=binding.nativeAnimalCrop.worldBoundary.authorityEpoch;
+  }
+  assert.deepEqual([...cuts.keys()],phases);
+ }finally{await live.close();}
+
+ for(const [phase,{disk,kind,purpose}] of cuts){
+  const altered=structuredClone(disk),checkpoint=altered.workerNativeAuthorityCheckpoint;
+  if(phase==='flight')checkpoint.raidFlight.animalPose.targetId=civilCenter;
+  else checkpoint.refugeReturn.centerId=targetId;
+  assert.throws(()=>savedNativeAuthorityOptions(serialize(altered)),/differs from/);
+  const options=savedNativeAuthorityOptions(serialize(disk));
+  let release,held,returned,restoredDraw;
+  const ready=new Promise(resolve=>{release=resolve;});
+  const cold=await nativeProductionAuthority(disk,{...options,async onReady(record){
+   const expected=phase==='flight'?'home-route':kind===27?'animal-crop-strike':'animal-crop-route';
+   if(record.kind===expected&&!held){held=record;await ready;}
+  },onCommit(record,data){if(record.kind==='farm-arrival')returned=data.nativeFarmArrivalBinding;}});
+  try{
+   await untilProduction(cold,()=>held?.packet);
+   const waiting=await tick(cold),animal=waiting.raid.animals[0],saved=disk.raid.animals[0];
+   for(const key of ['x','z','heading','motionPhase','targetId','attackId','attackRemaining','hitsRemaining'])
+    assert.equal(animal[key],saved[key],`${phase}: ${key} changed before READY`);
+   assert.equal(waiting.workers[0].centerId,civilCenter);
+   release();
+   let current;
+   for(let i=0;i<1850;i++){
+    current=await tick(cold);
+    restoredDraw??=cold.host.inspect().nativeRouteFrame?.bindings.find(row=>{
+     const ref=row.nativeAnimalCrop;
+     return ref?.kind===kind&&ref.purpose===purpose&&ref.worldBoundary.authorityEpoch!==originalEpoch&&
+      (purpose==='retreat'||'structure-'+ref.targetId===targetId)&&row.relativeTime>=0;
+    });
+    if(!current.raid&&current.workers[0].nativeRouteAdmission==='native-idle')break;
+   }
+   assert(restoredDraw,`missing restored ${phase} draw`);
+   assert.equal(current.raid,null);
+   assert.equal(current.workers[0].nativeRouteAdmission,'native-idle');
+   assert.equal(current.workers[0].centerId,civilCenter);
+   assert.equal(current.workers[0].personId,disk.workers[0].personId);
+   assert.equal(current.workers[0].hits,0);
+   assert.deepEqual(current.ledger,disk.ledger);
+   assert.equal('structure-'+returned.reference.sourceRequest.centerId,civilCenter);
+   assert.equal(current.structures.find(row=>row.id===civilCenter).hp,600);
+   assert.deepEqual(current.events.filter(row=>row.type==='StructureHit').map(row=>[row.targetId,row.structureHit.hp]),
+    [580,560,540,520].map(hp=>[targetId,hp]));
+   const hits=current.events.filter(row=>row.type==='AnimalLogicalHit');
+   assert.equal(new Set(hits.map(row=>row.attackId)).size,4);
+   assert.equal(hits.length,4);
+  }finally{release();await cold.close();}
+ }
+});
 
 test('a Desert flight checkpoint restores both retained Home gate reservations and the sheltered successor',async()=>{
  const original=deserialize(input.snapshot),extraGate=original.nextId++;
