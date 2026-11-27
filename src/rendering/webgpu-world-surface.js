@@ -589,7 +589,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
     }
     return prepareNativeResources(resources,{...options,deferredStart:true});
    };
-   return timelinePump?timelinePump.withOrdinaryPublications(prepare):prepare(null);
+   return timelinePump?timelinePump.withOrdinaryPublications(prepare,{minSequence:options.minSequence}):prepare(null);
   }
   const prepareNativeAnimalCropRouteResources=(p,o)=>prepareAnimalCropResources(p,26,o);
   const prepareNativeAnimalCropStrikeResources=(p,o)=>prepareAnimalCropResources(p,27,o);

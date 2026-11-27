@@ -7,6 +7,48 @@ import {confirmedEventsAtEndpoint} from '../src/rendering/confirmed-endpoint-eve
 
 function fixture(items){let sequence=0,lastElapsed=0,ready=true,lastClock=null;const seen=[];return {seen,setReady(value){ready=value;},stream:{status:()=>({closed:false,sequence,lastElapsed}),timelineStatus:()=>({receivedElapsed:items.at(-1)?.elapsed??lastElapsed}),lastConfirmedClockSegments:()=>lastClock,nextTimelineBoundary:()=>items[0]??null,advanceNextTimelineBoundary(){if(!ready)return false;const item=items.shift();sequence=item.sequence;lastElapsed=item.elapsed;lastClock=item.clock??null;seen.push(item);return true;}}};}
 
+test('native resource preparation applies ordered slices up to its exact publication',async()=>{
+ const f=fixture(Array.from({length:8},(_,i)=>({sequence:i+1,elapsed:i+1})));
+ const pump=createConfirmedTimelinePump({stream:f.stream,maxBoundaries:2}),yields=[];
+ const prepare=pump.withOrdinaryPublications(async()=>{await new Promise(resolve=>yields.push(resolve));},{minSequence:5});
+ try{
+  assert.equal(pump.hasNativePreparationBacklog(),true);
+  const boundariesAtYield=[];
+  const count=await pump.advanceNativePreparationSource({
+   yieldBetween:async()=>{boundariesAtYield.push(f.stream.status().sequence);},
+   isCurrent:()=>true,
+  });
+  assert.equal(count,5);
+  assert.deepEqual(boundariesAtYield,[2,4]);
+  assert.deepEqual(f.seen.map(item=>item.sequence),[1,2,3,4,5]);
+  assert.equal(pump.hasNativePreparationBacklog(),false);
+  assert.equal(pump.advance(),2);
+  assert.equal(f.seen.at(-1).sequence,7);
+ }finally{yields[0]();await prepare;pump.dispose();}
+});
+
+for(const stop of ['retired preparation','replaced surface','terrain pending'])test('native preparation catch-up stops for '+stop,async()=>{
+ const f=fixture(Array.from({length:16},(_,i)=>({sequence:i+1,elapsed:i+1})));
+ const pump=createConfirmedTimelinePump({stream:f.stream,maxBoundaries:2});
+ let release,current=true,nYields=0;
+ const prepare=pump.withOrdinaryPublications(()=>new Promise(resolve=>{release=resolve;}),{minSequence:12});
+ try{
+  const count=await pump.advanceNativePreparationSource({
+   yieldBetween:async()=>{
+    nYields++;
+    if(stop==='retired preparation'){release();await prepare;}
+    if(stop==='replaced surface')current=false;
+    if(stop==='terrain pending')f.setReady(false);
+   },
+   isCurrent:()=>current,
+  });
+  assert.equal(count,stop==='replaced surface'?null:2);
+  assert.equal(nYields,1);
+  assert.deepEqual(f.seen.map(item=>item.sequence),[1,2]);
+  assert.equal(f.stream.nextTimelineBoundary().sequence,3);
+ }finally{release();await prepare;pump.dispose();}
+});
+
 function preparedFixture({allow=true,onPreview=null,certify=value=>value,lastRejection=()=>null,cancel}={}){
  let now=0;const items=[1,2].map(sequence=>{const start=(sequence-1)/10,end=sequence/10;return {sequence,elapsed:end,clock:{version:1,start,end,startPauses:[],endPauses:[],complete:true,segments:[{start,end,realDuration:.1,rate:1}]}};}),f=fixture(items),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now,timeOrigin:0});
  f.stream.previewNextMotionBoundary=()=>{const item=items[0];return item?{sequence:item.sequence,start:item.clock.start,end:item.elapsed,reasons:[],safeForAutonomousPlayback:true,clockSegments:item.clock}:null;};

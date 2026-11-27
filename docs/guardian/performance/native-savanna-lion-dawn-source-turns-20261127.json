@@ -1,0 +1,90 @@
+{
+  "baseRevision": "eaffc6716eef3703e0996a61fa3a0564abc5ebd5",
+  "sources": {
+    "src/rendering/confirmed-timeline-pump.js": "775d375f7b4a432cdf7775a029eb9974627c3ed3681a77c1fb46d289c0405906",
+    "src/rendering/webgpu-world-worker.js": "492811a13aca74f95a328dec7a768c7ff51fc8f7e85e57e3995d4a9dbe144ae4",
+    "src/rendering/webgpu-world-surface.js": "ed4aaaadbb52b8f2e414345a10d8c90777ade3bc80fd79c53cbd926ec9d7feb0",
+    "tests/confirmed-timeline-pump.test.js": "35fbdf72fd22098586c61a13ea9ce1eaeac8a6b41a1652e67fa00fd889cf693c"
+  },
+  "artifact": "native-savanna-lion-dawn-native-source-turns.json",
+  "sha256": "5798f8cd977166be767299be5863163bc7045968417a4f6b9aa5ee48dbdf171e",
+  "input": {
+    "artifact": "native-menu-campaign-714-released-floor-event-recovery-dawn-4.json",
+    "sha256": "f709274acf6e9bf4c21cb5818bdd91a282cb04ad4902041110aab574c7c53595"
+  },
+  "scenario": {
+    "biome": "sabana",
+    "seed": 714,
+    "clock": "Hosted ordinario",
+    "adapter": "NVIDIA Turing",
+    "profile": "nativeWorkerLifecycle"
+  },
+  "route": {
+    "request": {
+      "id": 5,
+      "ticket": 9,
+      "effectiveTime": 2137.848709451765,
+      "minSequence": 6858
+    },
+    "initialApplied": 6771,
+    "initialReceived": 6795,
+    "sourceAppliedMs": 2591.8701171875,
+    "ordinaryFrameAcks": {
+      "count": 5,
+      "sumMs": 1634.2399999946356,
+      "maxMs": 361.6850000023842
+    },
+    "slicedApplication": null,
+    "acquired": {
+      "elapsedMs": 8661.505126953125,
+      "ticket": 10
+    },
+    "firstDraw": {
+      "sequence": 1383,
+      "clockElapsed": 2147.3487094517996,
+      "relativeTime": 0
+    }
+  },
+  "strike": {
+    "request": {
+      "id": 6,
+      "ticket": 11,
+      "effectiveTime": 2163.5487094518585,
+      "minSequence": 7178
+    },
+    "initialApplied": 7094,
+    "initialReceived": 7119,
+    "sourceAppliedMs": 6448.324951171875,
+    "ordinaryFrameAcks": {
+      "count": 5,
+      "sumMs": 5573.850000008941,
+      "maxMs": 1695.9350000023842
+    },
+    "slicedApplication": {
+      "count": 11,
+      "sumMs": 289.9150000065565,
+      "maxMs": 34.07999999821186,
+      "committed": 81,
+      "maxPublications": 8,
+      "largestLimit": 8
+    },
+    "acquired": {
+      "elapsedMs": 9004.784912109375,
+      "ticket": 12
+    },
+    "firstDraw": {
+      "sequence": 1421,
+      "clockElapsed": 2171.398709451887,
+      "relativeTime": 0
+    }
+  },
+  "sameBody": 2,
+  "hit": {
+    "attackId": "attack-104",
+    "targetId": "structure-2",
+    "elapsed": 2172.9487094518927
+  },
+  "drained": true,
+  "pageErrors": [],
+  "unattributedConsole404s": 2
+}
