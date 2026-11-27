@@ -382,7 +382,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    if(animal.species!=='warthog'||animal.targetId||animal.status!=='entering')return;
    const selected=targetFor(game,animal,nav);
    if(!selected||selected.shieldId||selected.native||!selected.approach.path?.length||
-      !nativeLiveCenterAttackSite(game,animal,selected.target))return;
+      !nativeLiveCenterAttackSite(game,animal,selected.target,selected.approach.point,nav))return;
    const bodies=createSpatialDynamicBodies(session.core.wasm);
    try{
     const body=bodies.publish(animal.id,{x:animal.x,z:animal.z,radius:animal.radius,kind:1,flags:1});

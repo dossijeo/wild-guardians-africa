@@ -799,39 +799,54 @@ function animalStructureDamage(animal){
 function centerSurvivesStrikes(target,animal,hits){
  return target.hp-animalStructureDamage(animal)*hits>collapseThreshold(target)+1e-9;
 }
+function centerApproachRadius(state,center,animal){
+ const hull=centerFootprint(center,state).footprint;
+ return Math.max(...hull.map(point=>dist(point,center)))+animal.radius+.5;
+}
+function nativeCenterCollapseSuccessors(state,animal,target){
+ if(state.biome!=='desierto'||state.spells.length||state.structures.some(structure=>
+   structure.kind==='center'&&structure.status==='collapsing'))return null;
+ const centers=state.structures.filter(center=>center!==target&&operational(center));
+ const damage=animalStructureDamage(animal);
+ const untilCollapse=Math.max(1,Math.ceil((target.hp-collapseThreshold(target)-1e-9)/damage));
+ return centers.length&&centers.every(next=>centerSurvivesStrikes(next,animal,animal.hitsRemaining-untilCollapse))?
+   centers:null;
+}
 export function nativeLiveCenterRaidCanArm(state,plan){
- if(!state.structures.some(operational))return false;
+ const centers=state.structures.filter(operational);
+ if(!centers.length)return false;
  if(state.structures.length===1)return true;
  // Arming the empty clock commits Game to native execution at birth.
  // Cover every possible target until the ordinary selector chooses one.
- const species=plan.group[0],actor=plan.actors?.[0];
- const animal={species,damageProfile:actor?.damageProfile,hitsRemaining:actor?.hits??animalSpec(species).hit_budget_max};
- return state.structures.every(center=>center.status==='ruined'||operational(center)&&centerSurvivesStrikes(center,animal,animal.hitsRemaining));
+ const species=plan.group[0],actor=plan.actors?.[0],spec=animalSpec(species);
+ const animal={species,damageProfile:actor?.damageProfile,hitsRemaining:actor?.hits??spec.hit_budget_max,
+   radius:ANIMAL_ACTIONS.animals[species].presentation.footprint.radius};
+ return state.structures.every(center=>center.status==='ruined'||operational(center))&&centers.every(center=>{
+  if(centerSurvivesStrikes(center,animal,animal.hitsRemaining))return true;
+  // Before spawn no exit has been selected. Only certify a collapse that
+  // leaves another hit for every possible roll, then bound all approaches.
+  if(centerSurvivesStrikes(center,animal,(actor?.hits??spec.hit_budget_min)-1))return false;
+  const successors=nativeCenterCollapseSuccessors(state,animal,center);
+  return !!successors&&successors.every(next=>dist(center,next)-centerApproachRadius(state,center,animal)-
+    centerApproachRadius(state,next,animal)>(CENTER_COLLAPSE_SECONDS+.02)*APPROACH_SPEED);
+ });
 }
-export function nativeLiveCenterAttackSite(state,animal,target,mixedApproach=null,nav=null){
+export function nativeLiveCenterAttackSite(state,animal,target,approach=null,nav=null){
  if(!nativeCenterAttackSite(state,target))return false;
  if(!state.structures.some(center=>center!==target&&center.kind==='center')||
     centerSurvivesStrikes(target,animal,animal.hitsRemaining))return true;
  // The collapse transaction needs an acquired route that lasts through its substep.
  const exit=animal.exit??animal.spawn;
- if(!mixedApproach||!exit)return false;
+ if(!approach||!exit)return false;
  if(centerSurvivesStrikes(target,animal,animal.hitsRemaining-1))
-  return Math.hypot(Math.fround(mixedApproach.x)-Math.fround(exit.x),Math.fround(mixedApproach.z)-Math.fround(exit.z))>
+  return Math.hypot(Math.fround(approach.x)-Math.fround(exit.x),Math.fround(approach.z)-Math.fround(exit.z))>
     (CENTER_COLLAPSE_SECONDS+.02)*RETREAT_SPEED;
- if(!nav||state.biome!=='desierto'||state.spells.length||state.structures.some(structure=>
-   structure.kind==='center'&&structure.status==='collapsing'))return false;
- const centers=state.structures.filter(center=>center!==target&&operational(center));
- const damage=animalStructureDamage(animal);
- const untilCollapse=Math.max(1,Math.ceil((target.hp-collapseThreshold(target)-1e-9)/damage));
- const from={...animal,x:Math.fround(mixedApproach.x),z:Math.fround(mixedApproach.z)};
- return centers.every(next=>{
-  if(!centerSurvivesStrikes(next,animal,animal.hitsRemaining-untilCollapse))return false;
-  // Every approach lies within the footprint radius plus its interaction gap.
-  // Game may choose any of these centers when the strike finishes.
-  const hull=centerFootprint(next,state).footprint;
-  const clearance=Math.max(...hull.map(point=>dist(point,next)))+animal.radius+.5;
-  return dist(from,next)-clearance>(CENTER_COLLAPSE_SECONDS+.02)*APPROACH_SPEED;
- })&&centers.some(next=>!!reachableApproach(from,next,nav)?.path?.length);
+ const centers=nav&&nativeCenterCollapseSuccessors(state,animal,target);
+ if(!centers)return false;
+ const from={...animal,x:Math.fround(approach.x),z:Math.fround(approach.z)};
+ // Game may choose any of these centers when the strike finishes.
+ return centers.every(next=>dist(from,next)-centerApproachRadius(state,next,animal)>
+   (CENTER_COLLAPSE_SECONDS+.02)*APPROACH_SPEED)&&centers.some(next=>!!reachableApproach(from,next,nav)?.path?.length);
 }
 export function nativeCenterCollapseSite(state,animal){
  if(!animal?.hitApplied||!animal.attackId)return null;

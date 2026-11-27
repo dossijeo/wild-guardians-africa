@@ -181,6 +181,71 @@ test('a second center that can collapse within the raid keeps its ordinary defen
   }
 });
 
+test('a live Desert raid admits a collapsing first center and the separated successor', {timeout:90000}, async () => {
+  const initial=beforeTwoCenterRaid();
+  initial.structures[1].hp=180;
+  initial.dayPlan.actors=[{hits:4}];
+  let release;
+  const ready=new Promise(resolve=>{release=resolve;});
+  const acquired=[];
+  const world=await nativeProductionAuthority(initial,{chunkKeys,navigationView:view,qualifyAnimalCrop:true,
+    onReady(record){if(record.kind==='animal-crop-route'&&!acquired.length)return ready;},
+    onCommit(record,data){if(record.kind!=='center-ruin')acquired.push(data.nativeAnimalCropRouteBinding??data.nativeAnimalCropStrikeBinding);},
+  });
+  async function advance(){
+    let result=world.command({kind:'advance',seconds:.05,steps:2,nightFastForward:false});
+    if(result instanceof Promise){
+      let settled=false;
+      void result.then(()=>{settled=true;},()=>{settled=true;});
+      await untilProduction(world,()=>settled);
+      result=await result;
+    }
+    for(const key of result.residency.missing){
+      const [cx,cz]=key.split(',').map(Number);
+      world.command({kind:'addChunk',cx,cz});
+    }
+    return JSON.parse(result.snapshot);
+  }
+  try{
+    const clock=world.host.inspect().nativeCausalClock;
+    assert.equal(clock?.committedThrough,initial.elapsed);
+    const polygons=()=>world.command({kind:'snapshot',nativeAuthorityCheckpoint:true}).nativeAuthorityCheckpoint.spatialState.polygons;
+    const before=polygons();
+    let state;
+    for(let i=0;i<12&&!state?.raid;i++)state=await advance();
+    const born=state.raid.animals[0];
+    assert.equal(born.targetId,'structure-3');
+    assert.deepEqual([born.x,born.z],[born.spawn.x,born.spawn.z]);
+    await untilProduction(world,()=>world.records.some(record=>record.kind==='animal-crop-route'));
+    const waiting=(await advance()).raid.animals[0];
+    assert.deepEqual([waiting.x,waiting.z,waiting.motionPhase],[born.x,born.z,born.motionPhase]);
+    assert.deepEqual(acquired,[]);
+    release();
+    await untilProduction(world,()=>!!acquired[0]);
+    for(let i=0;i<1300&&state.raid;i++){
+      state=await advance();
+      await world.present();
+      assert.deepEqual(world.faults,[]);
+    }
+    const ruin=world.records.find(record=>record.kind==='center-ruin');
+    assert(ruin?.committed);
+    const proof=ruin.commit.nativeCenterRuin;
+    await ruin.packet.presented;
+    assert.equal(proof.prepared.approach.reference.targetId,2);
+    assert.equal(proof.prepared.approach.reference.bodyId,acquired[0].reference.bodyId);
+    assert.equal(new Set(acquired.map(({reference})=>reference.bodyId)).size,1);
+    const hits=state.events.filter(event=>event.type==='StructureHit');
+    assert.deepEqual(hits.map(({targetId,structureHit})=>[targetId,structureHit.hp]),
+      [['structure-3',160],['structure-3',140],['structure-3',120],['structure-2',580]]);
+    const ruins=state.events.filter(event=>event.type==='StructureRuined');
+    assert.deepEqual(ruins.map(event=>[event.targetId,event.simulationTime]),[['structure-3',proof.acquired.effectiveTime]]);
+    assert(before.some(polygon=>polygon.id===proof.prepared.polygon));
+    assert.deepEqual(polygons(),before.filter(polygon=>polygon.id!==proof.prepared.polygon));
+    assert.equal(state.raid,null);
+    assert.equal(state.events.filter(event=>event.type==='RaidEnded').length,1);
+  }finally{release();await world.close();}
+});
+
 test('the live Desert raid publishes a pending center approach and keeps the newborn still until GO', async () => {
   const initial = beforeRaid();
   let route, binding, release;
