@@ -1,5 +1,7 @@
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 
+export const HISTORICAL_EVENT_CONTINUATION_LOST='historical-event-continuation-lost';
+
 // Invalid recording and resource lifetime are separate (Babylon snapshot
 // invalidation). Retained uploads still require a genuinely applied native
 // delta and freshly recorded passes, never a new tag on the rejected commands.

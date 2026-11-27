@@ -902,7 +902,7 @@ aceptación con personajes, sin publicaciones periódicas de posición JS.
 
 La última campaña desde el menú completó las tres primeras incursiones y presentó el corredor inicial del león en NVIDIA dentro de su plazo. La preparación del primer golpe agotó el plazo después de aplicar su publicación de origen. El siguiente corte separa la espera de Surface y la admisión del paquete preparado en Draw. Quedan los cinco relevos de incursión, el último dibujo y el drenaje en una única sesión. [Recibo del primer golpe del león](performance/native-savanna-campaign-lion-strike-timeout-20261127.json).
 
-El candidato local distingue el vencimiento tras aplicar una subfrontera histórica y retira por el protocolo terminal. Pasó el control con Worker y puertos reales. Queda acreditar en hardware ese caso de reemplazo y localizar el motivo que impidió continuar el intervalo en la pasada anterior. [Corte de Recovery](performance/native-savanna-menu-event-recovery-nvidia-20261127.json).
+El vencimiento tras aplicar una subfrontera histórica usa ahora la retirada terminal. La inyección en el Worker real acreditó el reemplazo en NVIDIA y la marcha siguiente del facóquero. Queda localizar el motivo que impidió continuar el intervalo en la campaña anterior. [Recibo del reemplazo](performance/native-savanna-historical-terminal-nvidia-20261127.json).
 
 El alta de Escudo con reloj en marcha y su caducidad conservan sus calificaciones acotadas. La aceptación del perfil ordinario de Escudo, Flee y Recovery sigue los criterios del [estado por vertical](MIGRATION-VERTICALS.md).
 
