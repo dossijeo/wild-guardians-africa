@@ -8,7 +8,7 @@ import {copyNativeAnimalCropAttestation,copyNativeAnimalCropProposal,sameNativeA
 import {nativeMotionPresentationMatches} from '../native-motion-presentation-match.js';
 import {copyNativeShieldWorld,nativeShieldWorldKind,shieldCropStopFromProposal,copyNativeShieldCropExpiry} from '../native-shield-world.js';
 import {spatialShieldFootprint} from './spatial-shield-mirror.js';
-import {canAttackCrop,nativeCenterAttackCohort,nativeCenterAttackSite,nativeShelteredSavannaCenterActor,nativeCropRouteSubject,nativeCropCohortCurrent,nativeRetreatBudgetAllowed,nativeRetreatSubject,reachableApproach,raidTarget,previewRaidStrike,projectAcquiredRaidStrike,savedRaidStrike} from '../../simulation/raids.js';
+import {canAttackCrop,nativeCenterAttackCohort,nativeCenterAttackSite,nativeLiveCenterAttackSite,nativeShelteredSavannaCenterActor,nativeCropRouteSubject,nativeCropCohortCurrent,nativeRetreatBudgetAllowed,nativeRetreatSubject,reachableApproach,raidTarget,previewRaidStrike,projectAcquiredRaidStrike,savedRaidStrike} from '../../simulation/raids.js';
 import {captureRefugeReturnCheckpoint,copyRestoredRefugeReturn,refugeGateFields,refugeWorkerPose,sameRefugePose,validateRefugeReturnState} from '../native-refuge-return.js';
 import {nativeEncounterCheckpointActors} from '../../simulation/native-encounter-checkpoint.js';
 import {farmStopCutFromNative,savedRaidFlightHomeGateIds} from '../../simulation/native-raid-flight-checkpoint.js';
@@ -912,7 +912,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     const birth={workerActor:marker.actorId,workerBody,sourceSequence:farm?.assignmentSequence??home.requestSequence,
       farmTicket:farm?.reference.worldBoundary.ticket??null,raidSpawnSequence:marker.spawnSequence};
     const pair={raid:state.raid,animal,worker,event:marker.spawnSequence,animalBody:body,workerBody,
-      birth,center:numericId(subject.center.id),centerAttack:subject.purpose==='center',cold:true,farmSequence:farm?.assignmentSequence,
+      birth,centerAttack:subject.purpose==='center',cold:true,farmSequence:farm?.assignmentSequence,
       ...(marker.homePath?{gateIds:savedRaidFlightHomeGateIds(marker)}:{})};
     raidFlight=pair;
     const requested=marker.farmStop?subject.purpose==='center'&&requestNativeCenterBirth(state,animal,{
@@ -922,7 +922,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     pair.requestSequence=nativeAnimalCropState(animal.id)?.requestSequence;
     return !!pair.requestSequence;
   }
-  function declareRaidFlightPair(state,animal,worker,event,body,center,select){
+  function declareRaidFlightPair(state,animal,worker,event,body,paceCenter,select){
     if(!qualifyFarmFlee||state!==owningState||!state.raid?.daytime||state.raid.animals[0]!==animal||state.workers[0]!==worker||
        animal.species!=='warthog'||!Number.isSafeInteger(event)||event<=0||!Number.isSafeInteger(body)||body<=0)return false;
     const farm=nativeFarmArrivalRouteBinding(worker.id),home=nativeHomeRequestReference(worker.id),
@@ -934,17 +934,19 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       ...(task?{taskTicket:task.reference.worldBoundary.ticket}:{}),raidSpawnSequence:event};
     const centerCohort=nativeCenterAttackCohort(state,worker);
     const pair={raid:state.raid,animal,worker,event,animalBody:body,workerBody,farmSequence:farm?.assignmentSequence,
-      strollSequence:stroll?.assignmentSequence,taskSequence:task?.assignmentSequence,birth,center:numericId(center.id),
+      strollSequence:stroll?.assignmentSequence,taskSequence:task?.assignmentSequence,birth,paceCenter:numericId(paceCenter.id),
       centerAttack:state.biome==='desierto'&&centerCohort};
     raidFlight=pair;
     let selected;
     try{
       const result=nativeRaidFlightMember(state,animal)&&select();
-      if(centerCohort&&!pair.requestSequence&&result?.target===center)pair.centerAttack=true;
+      if(!result||result.shieldId)return null;
+      const centerSelected=centerCohort&&nativeLiveCenterAttackSite(state,animal,result.target);
+      if(centerSelected&&!pair.requestSequence)pair.centerAttack=true;
       if(pair.centerAttack){
-        if(result?.target!==center||result.native||result.shieldId||!requestNativeCenterBirth(state,animal,result,body,pair))return null;
+        if(!centerSelected||result.native||!requestNativeCenterBirth(state,animal,result,body,pair))return null;
         pair.requestSequence=nativeAnimalCropState(animal.id)?.requestSequence;
-      }else if(!result?.native||result.shieldId||!result.target?.alive)return null;
+      }else if(!result.native||!result.target?.alive)return null;
       const q=nativeAnimalCropState(animal.id);
       if(q?.mode!==1||q.body!==body||q.target!==numericId(result.target.id)||pair.requestSequence!==q.requestSequence)throw Error('Raid spawn lost its pending crop body');
       selected=pair.centerAttack?{...result,approach:{point:result.approach.point,path:null}}:result;
@@ -4190,7 +4192,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     const status=plan(numericId(animal.id),
       animal.x,animal.z,animal.radius,1,transient.blockerCount,
       transient.reservedTargetCount,timedRoute?1:0,...(birth?[wasm.nav_intent_session(),birth.birth.workerActor,
-        birth.birth.sourceSequence,birth.animalBody,birth.center,animal.heading??0,animal.motionPhase??0]:[]));
+        birth.birth.sourceSequence,birth.animalBody,birth.paceCenter,animal.heading??0,animal.motionPhase??0]:[]));
     if(status<0)throw Error(`Native crop intention rejected: ${status}`);
     const values=new Float64Array(wasm.memory.buffer,
       wasm.nav_intent_attack_result_ptr(),13);

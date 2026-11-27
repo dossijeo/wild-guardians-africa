@@ -22,8 +22,15 @@ function mixedDesertRaid() {
   return {state,chunkKeys};
 }
 
-test('a southern Desert center approach and refuge acquire on their original bodies', async () => {
+for(const secondCenter of [false,true])test(`a southern Desert center approach and refuge acquire on their original bodies${secondCenter?' with a second center':''}`, async () => {
   const {state,chunkKeys} = mixedDesertRaid();
+  const view={bounds:[-48,-48,48,48],eye:{x:-10,z:-24},target:{x:-10,z:0}};
+  const civilCenter=state.workers[0].centerId;
+  let targetId=civilCenter;
+  if(secondCenter){
+    targetId=`structure-${state.nextId++}`;
+    state.structures.push({...state.structures[0],id:targetId,x:-18,z:-12});
+  }
   const acquired = [];
   let releaseHome, home;
   const hold = new Promise(resolve => { releaseHome = resolve; });
@@ -50,13 +57,13 @@ test('a southern Desert center approach and refuge acquire on their original bod
   }
   try {
     await untilProduction(world,()=>acquired.some(row=>row.kind==='farm-arrival'));
-    world.command({kind:'setNavigationView',view:{bounds:[-48,-48,48,48],eye:{x:-10,z:-24},target:{x:-10,z:0}}});
+    world.command({kind:'setNavigationView',view});
     let next;
     for (let i=0;i<20&&!next?.raid;i++) next=await step();
     assert(next?.raid);
     const animal=next.raid.animals[0];
     assert.deepEqual(pose(animal).slice(0,2),[-16.6,-27.1]);
-    assert.equal(animal.targetId,'structure-2');
+    assert.equal(animal.targetId,targetId);
     await untilProduction(world,()=>{world.snapshot();return !!home;});
     for (let i=0;i<4;i++) {
       const waiting=await step();
@@ -68,7 +75,7 @@ test('a southern Desert center approach and refuge acquire on their original bod
     for (let i=0;i<200&&next.workers[0].status!=='home';i++) next=await step();
     assert.equal(next.workers[0].status,'home');
     assert.equal(next.workers[0].hits,0);
-    assert.equal(next.raid.animals[0].targetId,'structure-2');
+    assert.equal(next.raid.animals[0].targetId,targetId);
     assert.equal(next.structures[0].hp,600);
     const farm=world.records.find(row=>row.kind==='farm-arrival');
     const homeReference=nativeResourceAdmissionProfile('home-route').reference(home.resources);
@@ -81,13 +88,18 @@ test('a southern Desert center approach and refuge acquire on their original bod
       [[26,'center'],[27,'center'],[26,'center'],[27,'center'],[26,'center'],[27,'center'],[26,'center'],[27,'center'],[26,'retreat']]);
     assert.equal(new Set(animalPrograms.map(row=>row.reference.bodyId)).size,1);
     assert.notEqual(animalPrograms[0].reference.bodyId,homeReference.bodyId);
-    assert.deepEqual(next.events.filter(event=>event.type==='StructureHit').map(event=>event.structureHit.hp),[580,560,540,520]);
+    const target=Number(targetId.split('-').at(-1));
+    assert(animalPrograms.slice(0,-1).every(({reference})=>reference.targetId===target&&reference.centerId===target));
+    assert.deepEqual(next.events.filter(event=>event.type==='StructureHit').map(event=>[event.targetId,event.structureHit.hp]),
+      [580,560,540,520].map(hp=>[targetId,hp]));
+    if(secondCenter)assert.equal(next.structures.find(row=>row.id===civilCenter).hp,600);
     assert.equal(next.events.filter(event=>event.type==='WorkerHit'||event.type==='WorkerIncapacitated').length,0);
     for (let i=0;i<400&&next.workers[0].nativeRouteAdmission!=='native-idle';i++) next=await step();
     const arrival=acquired.find(row=>row.kind==='home-arrival').data.nativeHomeArrivalBinding;
     const returnToFarm=acquired.findLast(row=>row.kind==='farm-arrival').data.nativeFarmArrivalBinding.reference;
     assert.equal(next.workers[0].nativeRouteAdmission,'native-idle');
     assert.equal(next.workers[0].id,state.workers[0].id);
+    assert.equal(next.workers[0].centerId,civilCenter);
     assert.equal(returnToFarm.sourceRequest.refugeSequence,arrival.retiredSequence);
     assert.notEqual(returnToFarm.bodyId,homeReference.bodyId);
     assert.equal(returnToFarm.motionFlags,0);

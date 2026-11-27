@@ -273,7 +273,6 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    const centerCohort=nativeCenterAttackCohort(game,worker);
    const desertCenter=game.biome==='desierto'&&centerCohort;
    if(game.biome!=='sabana'&&!desertCenter)return;
-   if(desertCenter&&game.structures.slice(1).some(structure=>structure.kind!=='wall'))return;
    const stopRequest=planner.nativeRaidFlightStopRequest(worker.id);
    const source=stopRequest?.binding??(worker.nativeRouteAdmission==='pending-raid-flight-resources'?planner.nativeHomeRequestReference(worker.id):null);
    if(nativeGateOwners.length){
@@ -318,12 +317,12 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    const seq=source?.assignmentSequence??source?.requestSequence;
    const originClear=desertCenter?session.core.wasm.nav_flight_center_origin_clear:session.core.wasm.nav_flight_crop_origin_clear;
    if(!seq||originClear?.(session.core.wasm.nav_intent_session(),Number(worker.id.split('-').at(-1)),seq,animal.x,animal.z,animal.radius)!==1)return;
-   const center=game.structures.find(operational);
-   if(!center)return;
+   const paceCenter=game.structures.find(operational);
+   if(!paceCenter)return;
    const body=nativeBodies.publish(animal.id,{x:animal.x,z:animal.z,radius:animal.radius,kind:1,flags:1});
    let selected;
    try{
-    selected=planner.declareRaidFlightPair(game,animal,worker,raidSpawnSequence,body,center,()=>targetFor(game,animal,nav,!centerCohort));
+    selected=planner.declareRaidFlightPair(game,animal,worker,raidSpawnSequence,body,paceCenter,()=>targetFor(game,animal,nav,!centerCohort));
     if(selected)assignRaidTarget(game,animal,selected,nav);
    }finally{if(!selected)nativeBodies.remove(animal.id);}
   }

@@ -1,0 +1,258 @@
+{
+  "base": "9553db89c8b009268bc407c3f8f1073eceded531",
+  "input": {
+    "source": "Desert 983 southern mixed flight fixture",
+    "path": ".cache/flee-return/mixed-two-center-physical-input.json",
+    "sha256": "d9cdd4ea976f04dd72b6049118b8a8a98b200b40b6ff34980272e34ee8cc189f",
+    "snapshotSHA256": "5a5000554ffa26e186f24e1f58568a13fbc31e0ff4ddd342a08921e743190fc9",
+    "secondCenter": [
+      -18,
+      -12
+    ]
+  },
+  "validation": {
+    "first": {
+      "path": ".cache/mixed-two-centers-base.tap",
+      "sha256": "b2ed49f5762cbf14bc6cd27d03642b6e29f3f532eac8d8a1f75189d641af9781"
+    },
+    "savannaPrior": {
+      "path": ".cache/mixed-two-centers-savanna-base.tap",
+      "sha256": "6384baf8f676444ba1ddc58c68039a470744a2a0a1f401f32287ac5eb3f65dfb"
+    },
+    "final": {
+      "path": ".cache/mixed-two-centers-final.tap",
+      "sha256": "01a44f86a53d76d15669d724b830682cd6e352c2f81e19c72fc589fa738a8893",
+      "pass": 18,
+      "fail": 0,
+      "skipped": 62
+    }
+  },
+  "hardware": {
+    "raw": {
+      "path": "D:/wild-guardians-qa/mixed-two-centers-nvidia-20261127.json",
+      "sha256": "55f4225432dd36969cd272731414e56d05ddd3c30f1d4942abf3660415f48482"
+    },
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 133.79999999701977
+      }
+    },
+    "home": {
+      "body": 1,
+      "ticket": 7,
+      "at": 17.549999999999894
+    },
+    "animal": {
+      "body": 2,
+      "ticket": 9,
+      "at": 19.39999999999992
+    },
+    "simultaneous": {
+      "samples": 32,
+      "first": {
+        "sequence": 52,
+        "homeAge": 1.8499999046325684,
+        "animalAge": 0
+      },
+      "last": {
+        "sequence": 83,
+        "homeAge": 5.688212871551514,
+        "animalAge": 4
+      }
+    },
+    "reusedBuffers": {
+      "compared": 1355,
+      "sameReference": 1355,
+      "sameVersion": 1355
+    },
+    "arrival": {
+      "body": 1,
+      "ticket": 11,
+      "at": 23.449999999999978,
+      "retiredSequence": 9
+    },
+    "programs": [
+      {
+        "body": 2,
+        "ticket": 9,
+        "at": 19.39999999999992,
+        "kind": 26,
+        "centerId": 1000000,
+        "target": 1000000
+      },
+      {
+        "body": 2,
+        "ticket": 13,
+        "at": 38.750000000000675,
+        "kind": 27,
+        "centerId": 1000000,
+        "target": 1000000,
+        "attackId": 29209
+      },
+      {
+        "body": 2,
+        "ticket": 15,
+        "at": 41.3500000000009,
+        "kind": 26,
+        "centerId": 1000000,
+        "target": 1000000
+      },
+      {
+        "body": 2,
+        "ticket": 17,
+        "at": 42.00000000000095,
+        "kind": 27,
+        "centerId": 1000000,
+        "target": 1000000,
+        "attackId": 29212
+      },
+      {
+        "body": 2,
+        "ticket": 19,
+        "at": 44.150000000001135,
+        "kind": 26,
+        "centerId": 1000000,
+        "target": 1000000
+      },
+      {
+        "body": 2,
+        "ticket": 21,
+        "at": 45.200000000001225,
+        "kind": 27,
+        "centerId": 1000000,
+        "target": 1000000,
+        "attackId": 29215
+      },
+      {
+        "body": 2,
+        "ticket": 23,
+        "at": 50.45000000000167,
+        "kind": 26,
+        "centerId": 1000000,
+        "target": 1000000
+      },
+      {
+        "body": 2,
+        "ticket": 25,
+        "at": 51.60000000000177,
+        "kind": 27,
+        "centerId": 1000000,
+        "target": 1000000,
+        "attackId": 29218
+      }
+    ],
+    "centers": [
+      {
+        "id": "structure-2",
+        "hp": 600
+      },
+      {
+        "id": "structure-1000000",
+        "hp": 520
+      }
+    ],
+    "logicalHits": [
+      {
+        "attackId": "attack-29209",
+        "targetId": "structure-1000000",
+        "simulationTime": 40.30000000000081
+      },
+      {
+        "attackId": "attack-29212",
+        "targetId": "structure-1000000",
+        "simulationTime": 43.550000000001084
+      },
+      {
+        "attackId": "attack-29215",
+        "targetId": "structure-1000000",
+        "simulationTime": 49.75000000000161
+      },
+      {
+        "attackId": "attack-29218",
+        "targetId": "structure-1000000",
+        "simulationTime": 55.32000000000209
+      }
+    ],
+    "raidEnd": 59.77000000000247,
+    "animalAbsent": {
+      "sequence": 381,
+      "elapsed": 59.80000000000247
+    },
+    "civilReturn": {
+      "body": 3,
+      "ticket": 29,
+      "at": 64.10000000000282,
+      "worker": "worker-900011",
+      "center": "structure-2",
+      "status": "native-idle",
+      "atIdle": 66.40000000000269,
+      "sourceSequence": 9,
+      "balance": {
+        "n": "100000",
+        "d": "1"
+      }
+    },
+    "drain": {
+      "disposed": true
+    }
+  },
+  "cadence": {
+    "accepted": false,
+    "targetFrameMs": 16.666666666666668,
+    "declaredSamples": null,
+    "recordedSamples": 1900,
+    "recordedIntervals": 1899,
+    "completeHistory": true,
+    "missingPredecessors": 0,
+    "recordedOpportunities": 1307,
+    "intervalsAboveTarget": 1898,
+    "maxRecordedIntervalMs": 622.60009765625,
+    "topIntervals": [
+      {
+        "at": 1795777688209.7,
+        "intervalMs": 622.60009765625,
+        "drawMs": 6.800048828125,
+        "sequence": 381,
+        "trigger": "raf",
+        "from": 1795777687587.0999,
+        "excessOverTargetMs": 605.9334309895834,
+        "previousDrawMs": 11.800048828125,
+        "afterPreviousDrawUntilCurrentStartMs": 610.800048828125
+      },
+      {
+        "at": 1795777666076.2998,
+        "intervalMs": 266.599853515625,
+        "drawMs": 4.800048828125,
+        "sequence": 230,
+        "trigger": "raf",
+        "from": 1795777665809.7,
+        "excessOverTargetMs": 249.93318684895834,
+        "previousDrawMs": 2.599853515625,
+        "afterPreviousDrawUntilCurrentStartMs": 264
+      },
+      {
+        "at": 1795777681043,
+        "intervalMs": 166.7001953125,
+        "drawMs": 3.199951171875,
+        "sequence": 341,
+        "trigger": "raf",
+        "from": 1795777680876.2998,
+        "excessOverTargetMs": 150.03352864583334,
+        "previousDrawMs": 4.300048828125,
+        "afterPreviousDrawUntilCurrentStartMs": 162.400146484375
+      }
+    ],
+    "attribution": "Unattributed: intervals are Host draw-start spacing, drawMs is instrumented host wall time; neither is GPU execution or scanout.",
+    "coverage": "Contiguous recorded history only; this does not establish full-session or physical-presentation coverage."
+  }
+}

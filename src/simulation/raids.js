@@ -789,7 +789,7 @@ export function nativeCenterAttackCohort(state,flightWorker=null){
 }
 export function nativeCenterAttackSite(state,target){
  return !!target&&operational(target)&&(target===state.structures[0]||
-   state.biome==='desierto'&&!state.workers.length&&state.structures.includes(target));
+   state.biome==='desierto'&&state.structures.includes(target));
 }
 function animalStructureDamage(animal){
  return validDamageProfile(animal.damageProfile)?animal.damageProfile.structureDamage:animalSpec(animal.species).structure_hit_damage;
@@ -808,7 +808,7 @@ export function nativeLiveCenterRaidCanArm(state,plan){
 }
 export function nativeLiveCenterAttackSite(state,animal,target){
  if(!nativeCenterAttackSite(state,target))return false;
- if(state.structures.length===1)return true;
+ if(!state.structures.some(center=>center!==target&&center.kind==='center'))return true;
  // The ruin transaction still belongs to the one-center cohort.
  return centerSurvivesRaid(target,animal);
 }

@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+La huida de un trabajador de Desierto 983 comparte dibujo con el facóquero que marcha al segundo centro. NVIDIA confirmó cuatro golpes al centro elegido y la readmisión civil en el primero después de Home19 y Retreat. [Recorrido y evidencia](native-desert-mixed-flight-center-20261125.md#huida-con-dos-centros).
+
 En Desierto 712, el facóquero puede adquirir la marcha y los dos golpes contra el centro que elige Game entre dos candidatos. NVIDIA acreditó el mismo cuerpo hasta la retirada y el drenaje. La calificación cubre una incursión sin trabajadores ni cultivos vivos. [Recorrido y evidencia](native-desert-attack-center-20261125.md#selección-entre-dos-centros-en-desierto).
 
 Desierto 983 recarga Farm23 antes de Stop24 durante la apertura de cualquiera de sus dos hojas. NVIDIA acreditó los dos relojes y la parada, hasta Home19, regreso civil y drenaje. [Recorrido y límites](desert-frozen-gate-checkpoint-20261127.md#recarga-de-farm23-con-dos-programas-de-motor).
