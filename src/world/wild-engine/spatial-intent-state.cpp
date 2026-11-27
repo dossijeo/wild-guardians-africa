@@ -1973,10 +1973,15 @@ static bool centerRuinSourceCurrent(IntentState& s,const PendingBarrierProposal:
   if(s.reservedBodies.size()!=1||c.slot>=s.routeSlots.size()||intent.animalStrike||
      intent.slot!=c.slot||intent.generation!=c.generation)return false;
   const auto& r=s.routeSlots[c.slot];
-  return r.generation==c.generation&&r.actor==c.actor&&r.reservationBody==c.body&&r.hasExecution&&
+  if(!(r.generation==c.generation&&r.actor==c.actor&&r.reservationBody==c.body&&r.hasExecution&&
     r.gateReservations.empty()&&executionBindingCoherent(s,c.body,c.slot)&&c.binding&&c.binding->source&&r.animalRouteBinding==c.binding&&
     (intent.retreat||c.binding->source->attackCenter)&&
-    c.binding->actual.ticket==c.routeTicket&&c.binding->assignmentSequence==c.assignment&&c.end<c.binding->actual.header[11];
+    c.binding->actual.ticket==c.routeTicket&&c.binding->assignmentSequence==c.assignment))return false;
+  if(c.end<c.binding->actual.header[11])return true;
+  // A center approach keeps its body and its terminal pose until Strike27
+  // acquires it. Retreat removes the body at arrival.
+  return !intent.retreat&&intent.state==PlanningState::RouteActive&&
+    r.executionPose==sampleRouteTiming(r,s.effectiveTime);
 }
 int stageCenterRuin(const SpatialWorldProposalInput& input,const SpatialStaticMutation& shape,int center,
     double actor,double body,double slot,double gen,double assignment,double routeTicket,double end){

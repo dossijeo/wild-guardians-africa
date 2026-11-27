@@ -226,6 +226,108 @@ test('a center keeps the exact collapsing impact after the animal starts its nex
  }
 });
 
+test('center ruin retains the successor approach when it reaches its endpoint in the ruin substep',{timeout:90000},async()=>{
+ const before=mixedState(false);
+ before.workers=[];
+ before.structures=before.structures.filter(center=>center.kind==='center');
+ const [successor]=before.structures;
+ Object.assign(successor,{x:-24,z:-18,hp:successor.maxHp});
+ const doomed={...successor,id:'structure-'+before.nextId++,x:-18,z:-12,hp:180};
+ before.structures.push(doomed);
+ before.dayPlan={done:false,at:before.time+.10,group:['warthog'],actors:[{hits:4}]};
+ const navigationView={...view,eye:{x:-16,z:-15},target:{x:-20,z:-10}};
+ const ordinary=await nativeProductionAuthority(before,{chunkKeys,navigationView});
+ let selected;
+ try{
+  for(let i=0;i<20&&!selected;i++){
+   const row=ordinary.command({kind:'advance',seconds:.02,nightFastForward:false});
+   const state=JSON.parse(row.snapshot);
+   if(state.raid?.animals[0].targetId){
+    assert.equal(state.raid.animals[0].targetId,doomed.id);
+    selected=deserialize(row.snapshot);
+   }
+  }
+  assert(selected,'Game did not select the first center');
+ }finally{await ordinary.close();}
+ const target=Number(successor.id.split('-')[1]);
+ let releaseApproach,releaseStrike,approach,strike,ruin,route;
+ const approachReady=new Promise(resolve=>{releaseApproach=resolve;});
+ const strikeReady=new Promise(resolve=>{releaseStrike=resolve;});
+ const world=await nativeProductionAuthority(selected,{chunkKeys,navigationView,qualifyAnimalCrop:true,
+  onReady(record){
+   if(record.resources.reference?.targetId!==target)return;
+   if(record.kind==='animal-crop-route'){approach=record;return approachReady;}
+   if(record.kind==='animal-crop-strike'){strike=record;return strikeReady;}
+  },onCommit(record,data){
+   if(record===approach)route=data.nativeAnimalCropRouteBinding;
+   if(record.kind==='center-ruin')ruin=record;
+  },
+ });
+ async function advance(seconds,steps=1){
+  let result=world.command({kind:'advance',seconds,steps,nightFastForward:false});
+  if(result instanceof Promise){
+   let settled=false;
+   void result.then(()=>{settled=true;},()=>{settled=true;});
+   await untilProduction(world,()=>settled);
+   result=await result;
+  }
+  assert(!result.centerStrikePublication);
+  await world.present();
+  assert.deepEqual(world.faults,[]);
+  return JSON.parse(result.snapshot);
+ }
+ async function reach(state,at){
+  for(let i=0;i<100&&at-state.elapsed>1e-9;i++)state=await advance(Math.min(.05,at-state.elapsed));
+  assert(Math.abs(state.elapsed-at)<1e-9);
+  return state;
+ }
+ try{
+  let state=selected;
+  for(let i=0;i<600&&!approach;i++)state=await advance(.05,2);
+  assert(approach);
+  const collapse=state.structures.find(center=>center.id===doomed.id);
+  const deadline=state.elapsed+collapse.collapseRemaining,prepared=approach.resources.reference;
+  assert.equal(collapse.status,'collapsing');
+  const departure=deadline-(prepared.endTime-prepared.worldBoundary.effectiveTime)-.004;
+  assert(departure>state.elapsed);
+  state=await reach(state,departure);
+  releaseApproach();
+  await untilProduction(world,()=>!!route);
+  state=await reach(state,deadline-.012);
+  const {endTime,bodyId}=route.reference;
+  assert(state.elapsed<endTime&&endTime<state.elapsed+.020);
+  const polygons=()=>world.command({kind:'snapshot',nativeAuthorityCheckpoint:true}).nativeAuthorityCheckpoint.spatialState.polygons;
+  const intact=polygons();
+  state=await advance(.020);
+  assert(ruin?.committed);
+  await ruin.packet.presented;
+  const proof=ruin.commit.nativeCenterRuin,frame=world.host.inspect().nativeRouteFrame;
+  assert.equal(frame.worldBoundary.ticket,proof.acquired.ticket);
+  assert.equal(proof.prepared.approach.reference.bodyId,bodyId);
+  assert.equal(proof.prepared.approach.reference.endTime,endTime);
+  assert(proof.acquired.effectiveTime>endTime);
+  const row=frame.bindings.find(row=>sameNativeAnimalCropReference(row.nativeAnimalCrop,route.preparedReference));
+  const epoch=prepared.worldBoundary.effectiveTime;
+  assert.equal(row?.relativeTime,floorFloat32(nativeClockResourceEnd(epoch,prepared.endTime)-epoch));
+  assert.deepEqual(polygons(),intact.filter(polygon=>polygon.id!==proof.polygon));
+  assert.deepEqual(state.events.filter(event=>event.type==='StructureRuined').map(event=>[event.targetId,event.simulationTime]),
+   [[doomed.id,proof.acquired.effectiveTime]]);
+  assert.equal(state.raid.animals[0].status,'walking');
+  assert.equal(state.raid.animals[0].targetId,successor.id);
+  assert.equal(state.structures.find(center=>center.id===successor.id).hp,600);
+  await untilProduction(world,()=>!!strike);
+  assert.equal(strike.committed,false);
+  releaseStrike();
+  await untilProduction(world,()=>strike.committed);
+  for(let i=0;i<600&&state.raid;i++)state=await advance(.05,2);
+  assert.equal(state.raid,null);
+  const hits=state.events.filter(event=>event.type==='StructureHit');
+  assert.deepEqual(hits.map(hit=>[hit.targetId,hit.structureHit.hp]),
+   [[doomed.id,160],[doomed.id,140],[doomed.id,120],[successor.id,580]]);
+  assert.equal(strike.resources.reference.bodyId,bodyId);
+ }finally{releaseApproach();releaseStrike();await world.close();}
+});
+
 for(const mode of ['crossing','opening motor','foreign motor ticket','refuge','strike after Home19','retreat after Home19'])test('mixed center loss recovers the acquired cut: '+mode,async()=>{
  const initial=mixedState(true),receipts=new Map(),[authorityPort,drawPort]=pair();
  const opening=mode==='opening motor';

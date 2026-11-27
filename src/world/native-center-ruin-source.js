@@ -17,7 +17,7 @@ export function centerSource(s){
    !nat(s.initialClock)||!nat(s.intent)||route.assignmentSequence!==s.intent||
    !/^structure-[1-9]\d*$/.test(s.center)||!nat(s.polygon)||!s.polygon||
    !Number.isFinite(s.end)||s.end<=boundary.effectiveTime||s.end>boundary.effectiveTime+.020000001||
-   s.end>=route.reference.endTime)throw Error('Invalid center removal source');
+   field!=='approach'&&s.end>=route.reference.endTime)throw Error('Invalid center removal source');
  return Object.freeze({boundary,previous:route.reference.worldBoundary,[field]:route,initialClock:s.initialClock,intent:s.intent,
    center:s.center,polygon:s.polygon,end:s.end,revisions:copyArray(s.revisions,3,nat),
    footprint:copyArray(s.footprint,48,x=>Number.isFinite(x)&&x===Math.fround(x))});
