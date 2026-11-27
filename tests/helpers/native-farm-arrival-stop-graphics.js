@@ -5,9 +5,10 @@ import {floorFloat32} from '../../src/float32-time.js';
 
 // Actual Farm23/24, Game mirror, authored actor/banks and terrain. Renderer,
 // admission and submitted pick witness are doubles, not hardware acceptance.
-export async function nativeFarmArrivalStopGraphicsFixture(options={}){
+export async function nativeFarmArrivalStopGraphicsFixture({onFarmSource=()=>{},...options}={}){
  const f=await nativeFarmArrivalGraphicsFixture(options);let arrival,parts=[];
  try{
+  onFarmSource(f);
   arrival=await f.roster.prepareNativeFarmArrivalProposal(f.support,{getPickTime:f.getPickTime});arrival.activate();const data=f.commitFarm();arrival.finalize(data);f.sync();f.flush();f.advance(.03);f.sync();
   const before=f.planner.prepareNativeFarmArrivalStopProposal(f.nativeActor);assert.equal(before.status,'proposed');const p=before.proposal,view={get:(cx,cz)=>(f.residency.getVisible??f.residency.get).call(f.residency,cx,cz),changedKeys:new Set()};let submitted,proof,source;
   const args={stopEffects:p,boundary:p.worldBoundary,nativeFarmArrivalStopTemplate:p.nativeStop,prepareBodySupport:(r,pose)=>f.terrain.prepareNativeBody(r,pose),getPickTime:()=>{throw Error('Farm stop cannot borrow a legacy clock');},getStoppedProjection:()=>submitted};

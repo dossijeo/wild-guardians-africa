@@ -75,6 +75,13 @@ function completedFarmPolicy(entity,source){
  const {nativeRefugeSequence,...fields}=entity;
  return farmTaskPolicy({...fields,raidReturn:false});
 }
+function confirmedFlightSpawn(state,match){
+ const raid=state.raid,animal=raid?.animals?.[0];
+ return raid?.daytime===true&&raid.animals.length===1&&animal?.species==='warthog'?state.events?.findLast(e=>
+  e.type==='RaidSpawned'&&match(e)&&e.raidFacts?.id===raid.id&&e.raidFacts.day===state.day&&e.raidFacts.daytime===true&&
+  e.raidFacts.elapsed===e.simulationTime&&e.raidFacts.actors?.length===1&&e.raidFacts.actors[0].id===animal.id&&
+  e.raidFacts.actors[0].species===animal.species):null;
+}
 function farmPathMetadataCurrent(entity){return entity.taskApproach==null&&(entity.pathVersion===undefined||Number.isFinite(entity.pathVersion));}
 function taskStartContinuesCompletedFarm(packet,previous,entity,at){
  const r=packet.nativeStart,b=previous?.nativeFarmArrivalBinding,s=b?.reference,p=previous?.packet,a=p?.rows,i=(a?.length??0)-16;
@@ -571,9 +578,17 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
   const farmEntity=()=>{try{const e=entry?.entity,q=ref.sourceRequest,p=nativeFarmArrivalSourcePose(ref),continuing=!!ref.sourceHeld,semantic=continuing?nativeFarmArrivalHeldState(state,e):e?.nativeRouteAdmission==='pending-farm-flight-restore'?nativeFarmFlightState(state,e):nativeFarmArrivalState(state,e,{canonical:true});return (continuing?nativeFarmArrivalContinuesHeld(ref,previous?.nativeHeldFarmArrival)&&previous.motion.valid():!previous)&&e.nativeRefugeSequence===q.refugeSequence&&(!q.refugeSequence||e.raidReturn===true)&&e.profile===q.workerProfile&&semantic.centerId===q.centerId&&q.requestedAt<=state.elapsed&&(e.radius===undefined||e.radius===p.radius)&&Object.keys(semantic.pose).every(k=>semantic.pose[k]===p[k])&&Object.keys(semantic.goal).every(k=>semantic.goal[k]===q.goal[k]);}catch{return false;}};
   const strollEntity=()=>{const e=entry?.entity,p=ref.pose,idle=e?.idleState,phase=ref.version===2?!!idle&&['rest','watch'].includes(idle.mode)&&idle.remaining===ref.walkRemaining&&idle.rng===ref.walkRng&&idle.approachRetry===0&&idle.anchorId===`${ref.anchor.kind===1?'farm-plant':'farm-structure'}-${ref.anchor.id}`&&e.destinationId===null&&Object.keys(idle).every(k=>['anchorId','mode','elapsed','remaining','rng','approachRetry'].includes(k)):idle?.mode==='watch'&&idle.remaining<=1e-9;if(ref.sourceSettlement)return !!e&&e.status==='idle'&&e.nativeRouteAdmission===undefined&&e.idleState===null&&!e.nativeTaskAction&&e.profile===ref.workerProfile&&nativeEntityNumericId(e.centerId)===ref.centerId&&!e.taskId&&!e.crateId&&e.path===null&&!e.recovery&&!e.recoveryExitRemaining&&!e.fallRemaining&&!e.incapacitated&&!e.raidReturn&&e.running===false&&e.gateWaiting===false&&e.heading===p.yaw&&['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>e[k]===p[k]);if(ref.sourceFarm)return !!e&&e.status==='arriving'&&e.nativeRouteAdmission==='native-farm-arrival'&&e.idleState===null&&e.destinationId===null&&farmPathMetadataCurrent(e)&&!e.nativeTaskAction&&e.profile===ref.workerProfile&&nativeEntityNumericId(e.centerId)===ref.centerId&&!e.taskId&&!e.crateId&&e.path===null&&!e.recovery&&!e.recoveryExitRemaining&&!e.fallRemaining&&!e.incapacitated&&!e.raidReturn&&e.running===false&&e.gateWaiting===false&&e.heading===p.yaw&&['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>e[k]===p[k]);if(ref.sourceRequest)return pendingIdleStrollMatches(state,e,ref.sourceRequest);return !!e&&e.profile===ref.workerProfile&&nativeEntityNumericId(e.centerId)===ref.centerId&&e.status==='idle'&&e.nativeRouteAdmission==='native-idle'&&!e.taskId&&!e.crateId&&e.path===null&&phase&&!e.recovery&&!e.recoveryExitRemaining&&!e.fallRemaining&&!e.incapacitated&&!e.raidReturn&&e.running===false&&e.gateWaiting===false&&e.heading===p.yaw&&['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>e[k]===p[k]);};
   if(closed||!entry||historyRun||entry.nativePending||entry.motionPreparing||support.valid?.()!==true||typeof getPickTime!=='function'||signal?.aborted||(farm?!farmEntity()||!!previous&&!previous.variant.current():stroll?!strollEntity()||!strollSourceCurrent()||!!previous&&!previous.variant.current():home?!homeEntity()||!homeProofCurrent()||!!previous&&!previous.variant.current():consequence?!actionEntity()||!actionProofCurrent()||!previous.variant.current():starting?!pendingEntity()||!!previous&&(!(settledStartCurrent()||initialStartCurrent()||cycleStartCurrent()||heldStartCurrent()||completedFarmStartCurrent())||!previous.variant.current()):!previous||!held||held.bodyId!==ref.bodyId||held.nativeRoute.actorId!==ref.actorId||held.nativeRoute.assignmentSequence!==ref.sourceAssignmentSequence||held.suspendedAt!==ref.suspendedAt||held.resumeGeneration!==source.generation||['authorityEpoch','session','slot'].some(key=>held.nativeRoute.routeHandle[key]!==source[key])||!previous.motion.valid()||!previous.variant.current())||!!(packet.motionFlags&48)&&!(home&&ref.sourceRequest?.recoveryHit)||starting&&!!(packet.motionFlags&8))throw Error('Native motion has no matching source worker');
+  const restoringFarm=farm&&entry.entity.nativeRouteAdmission==='pending-farm-flight-restore';
+  const restoredSpawn=()=>confirmedFlightSpawn(state,e=>e.simulationTime<=state.elapsed);
+  const spawn=restoringFarm?restoredSpawn():null;
+  if(restoringFarm&&(!spawn||ref.worldBoundary.effectiveTime!==state.elapsed||ref.sourceRequest.requestedAt!==state.elapsed))
+   throw Error('Restored Farm motion has no matching confirmed raid birth');
+  const farmFlightBirth=spawn?{id:spawn.id,at:spawn.simulationTime,raid:spawn.raidFacts.id,animal:spawn.raidFacts.actors[0].id}:null;
+  const matchesFarmFlightBirth=e=>e?.id===farmFlightBirth?.id&&e?.simulationTime===farmFlightBirth?.at&&
+   e?.raidFacts.id===farmFlightBirth?.raid&&e?.raidFacts.actors[0].id===farmFlightBirth?.animal;
   const entity=entry.entity,stamp=JSON.stringify(entity),carrying=!!(packet.motionFlags&8),crateId=consequence?`crate-${ref.crateId}`:carrying?entity.crateId:null,controller=new AbortController(),abort=()=>controller.abort(),pending={controller,stage:'loading',[key]:ref};entry.nativePending=pending;signal?.addEventListener('abort',abort,{once:true});
   let candidate=null,activated=false,finished=false,locked=false,carryReady=false;
-  const current=()=>!closed&&!finished&&!controller.signal.aborted&&entries.get(id)===entry&&entry.nativePending===pending&&(!locked||entry.motionPreparing===pending)&&JSON.stringify(entry.entity)===stamp&&(farm?farmEntity():stroll?strollEntity()&&strollSourceCurrent():home?homeEntity()&&homeProofCurrent():consequence?actionEntity()&&actionProofCurrent():starting?pendingEntity()&&(!previous||settledStartCurrent()||initialStartCurrent()||cycleStartCurrent()||heldStartCurrent()||completedFarmStartCurrent()):nativeLocomotionEntity(entry,carrying,true)&&crateId===previous.crateId)&&support.valid()===true&&entry.nativeState===(activated?candidate:previous);
+  const current=()=>!closed&&!finished&&!controller.signal.aborted&&entries.get(id)===entry&&entry.nativePending===pending&&(!locked||entry.motionPreparing===pending)&&JSON.stringify(entry.entity)===stamp&&(farm?farmEntity()&&(!farmFlightBirth||state.elapsed===ref.sourceRequest.requestedAt&&matchesFarmFlightBirth(restoredSpawn())):stroll?strollEntity()&&strollSourceCurrent():home?homeEntity()&&homeProofCurrent():consequence?actionEntity()&&actionProofCurrent():starting?pendingEntity()&&(!previous||settledStartCurrent()||initialStartCurrent()||cycleStartCurrent()||heldStartCurrent()||completedFarmStartCurrent()):nativeLocomotionEntity(entry,carrying,true)&&crateId===previous.crateId)&&support.valid()===true&&entry.nativeState===(activated?candidate:previous);
   const check=()=>{if(!current())throw new DOMException('Native resumed worker changed','AbortError');};
   try{
    await entry.ready;await entry.bakeResourcePromise;await entry.bakeRequestPromise;check();
@@ -598,7 +613,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
    try{const phases={runningNode:motion.runningNode,idleNode:motion.idleNode,resolve:(fallback,clip,duration)=>motion.resolve(fallback,clip,duration),sampleClip(){const pose=motion.sample(pickTime());return carrying?'Carry_Crate':needsIdle&&pose.currentSpeed<=0?'Idle':pose.running?'Run':'Walk_Skip';},sampleForClip:(clip,duration)=>motion.sampleForClip(pickTime(),clip,duration,(farm||stroll)&&clip==='Idle'&&getPickIdleOffset?getPickIdleOffset(ref,packet.startTime,duration):undefined)};
     if(home&&ref.sourceRequest?.recoveryHit)Object.assign(phases,homeExitPhases(motion,pickTime,ref.sourceRequest));
     variant=actor.prepareNativeMotionVariant(phases,{clipBakes,clip:carrying?'Carry_Crate':actor.isBakedIdle?.()?'Idle':farm||starting||home||stroll?'Walk_Skip':null});const options={motion,getPickTime:pickTime,materialAlternatives:variant.materialAlternatives,replicaSources:variant.replicaSources,meshes:variant.materialAlternatives.map(item=>item.mesh)};binding=oldBinding?oldBinding.prepareReplacement(options):bindWebGpuActorMotion({root:actor.root,renderer,actorId:id,resourceRegistry,staged:true,...options});
-    candidate={actor,motion,variant,binding,packet,support,crateId,...(starting?{taskHomePolicy:farmTaskPolicy(entity)}:farm?{farmTaskPolicy:completedFarmPolicy(entity,ref.sourceRequest)}:stroll?{strollHomePolicy:farmTaskPolicy(entity)}:{}),preparedRun:needsRun,preparedIdle:needsIdle,[key]:ref,nativeRoute:null,start:packet.startTime,end:packet.endTime,gateParticipants:[]};pending.candidate=candidate;
+    candidate={actor,motion,variant,binding,packet,support,crateId,...(starting?{taskHomePolicy:farmTaskPolicy(entity)}:farm?{farmTaskPolicy:completedFarmPolicy(entity,ref.sourceRequest),farmFlightBirth}:stroll?{strollHomePolicy:farmTaskPolicy(entity)}:{}),preparedRun:needsRun,preparedIdle:needsIdle,[key]:ref,nativeRoute:null,start:packet.startTime,end:packet.endTime,gateParticipants:[]};pending.candidate=candidate;
    }catch(error){binding?.dispose();variant?.dispose();motion.dispose();throw error;}
    const options={signal:controller.signal,include:variant.materialAlternatives.map(item=>item.mesh),materialAlternatives:binding.materialAlternatives()},valid=()=>current()&&(activated?variant.current()&&binding.current():(!previous||previous.motion.valid()&&previous.variant.current())&&variant.valid()&&binding.canActivate());
    function restore(){if(activated){if(oldBinding)binding.rollbackActivation();else binding.detach();variant.rollbackActivation();entry.nativeState=previous;entry.motion=oldMotion;entry.motionBinding=oldBinding;activated=false;}}
@@ -682,11 +697,12 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
     const flightStop=!!flightSource&&!!template&&sameNativeReference(previous.nativeRoute,template.sourceRoute)&&
       reference.bodyId===flightSource.bodyId&&entity.nativeRouteAdmission===flightMarker;
     const {[flightSampleKey]:initialSample,...initialPolicy}=flightStop?entity:{};
-    const spawn=flightStop&&state.raid?.daytime===true&&(taskRoot||
-      (farm?previous.farmTaskPolicy:previous.strollHomePolicy)===farmTaskPolicy(initialPolicy))?state.events?.findLast(e=>e.type==='RaidSpawned'&&
-      (initialSample?e.id==='event-'+initialSample.eventId&&e.simulationTime===initialSample.spawnTime:e.simulationTime===entityTime)&&
-      e.raidFacts?.id===state.raid?.id&&e.raidFacts.day===state.day&&e.raidFacts.daytime===true&&
-      e.raidFacts.elapsed===e.simulationTime&&e.raidFacts.actors?.length===1&&e.raidFacts.actors[0].species==='warthog'):null;
+    const spawn=flightStop&&(taskRoot||
+      (farm?previous.farmTaskPolicy:previous.strollHomePolicy)===farmTaskPolicy(initialPolicy))?confirmedFlightSpawn(state,e=>
+      initialSample?e.id==='event-'+initialSample.eventId&&e.simulationTime===initialSample.spawnTime:e.simulationTime===entityTime):null;
+    const farmBirth=farm?previous.farmFlightBirth:null;
+    const restoredBirth=!!spawn&&!!farmBirth&&spawn.id===farmBirth.id&&spawn.simulationTime===farmBirth.at&&
+      spawn.raidFacts.id===farmBirth.raid&&spawn.raidFacts.actors[0].id===farmBirth.animal;
     let idlePolicy=null,validatingFarmSource=null,validatingTaskSource=null,validatingStrollSource=null;
     const policy=(value,at=entry.entityTime)=>{
      // Ordinary Task assignment cancels only these semantic fields. Both
@@ -710,7 +726,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
       if(requested&&(!held||value.running!==false||value.gateWaiting!==false))return null;
       const fields=['x','z','yaw','runPhase','walkPhase','carryPhase','runRemaining'];
       const indices=[0,1,4,9,10,11,14];
-      if(!Number.isFinite(at)||spawn.simulationTime<flightSource.worldBoundary.effectiveTime||spawn.simulationTime>at||spawn.simulationTime>reference.suspendedAt)return null;
+      if(!Number.isFinite(at)||(farmBirth?!restoredBirth:spawn.simulationTime<flightSource.worldBoundary.effectiveTime)||spawn.simulationTime>at||spawn.simulationTime>reference.suspendedAt)return null;
       const sample=value[flightSampleKey];
       if(pending&&sample){
        if(sample.at!==at||spawn.id!=='event-'+sample.eventId||sample.spawnTime!==spawn.simulationTime||

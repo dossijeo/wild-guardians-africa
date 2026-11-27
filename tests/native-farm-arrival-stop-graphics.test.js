@@ -123,3 +123,37 @@ test('delayed Stop24 stages on the confirmed moving Farm sample and adopts only 
   assert.equal(f.roster.get(f.actor),rig);assert.equal(f.acquires,1);assert.deepEqual(f.errors,[]);
  }finally{f.close();}
 });
+
+test('a restored Farm rig can stop after the earlier raid birth it actually prepared for',async()=>{
+ const animal={id:'animal-22',species:'warthog'};
+ let spawn,raid;
+ const f=await fixture({peer:false,onFarmSource({state}){
+  raid={id:'raid-'+state.day+'-day',daytime:true,animals:[animal]};
+  const spawnTime=state.elapsed-.02;
+  spawn={id:'event-45',type:'RaidSpawned',simulationTime:spawnTime,
+   raidFacts:{id:raid.id,day:state.day,elapsed:spawnTime,daytime:true,actors:[{...animal}]}};
+  state.raid=raid;state.events=[spawn];
+  Object.assign(state.workers[0],{status:'fleeing',nativeRouteAdmission:'pending-farm-flight-restore',
+   idleState:null,destinationId:null,path:null,running:false,gateWaiting:false});
+ }});
+ try{
+  const {worker}=f,rig=f.roster.get(f.actor),motion=f.planner.nativeFarmArrivalRouteExecution(f.nativeActor);
+  assert(spawn.simulationTime<motion.binding.reference.worldBoundary.effectiveTime);
+  const pose={x:motion.x,z:motion.z,heading:motion.yaw,runPhase:motion.runPhase,walkPhase:motion.walkPhase,carryPhase:motion.carryPhase,
+   runRemaining:motion.runRemaining,running:motion.running,gateWaiting:!motion.arrived&&motion.currentSpeed===0};
+  const sample={at:motion.executedThrough,nativeRoute:motion.nativeRoute,bodyId:motion.bodyId,eventId:45,spawnTime:spawn.simulationTime,pose};
+  Object.assign(worker,pose,{status:'fleeing',nativeRouteAdmission:'pending-farm-flight-stop',
+   idleState:null,destinationId:null,path:null,nativeFarmFlightSample:sample});
+  f.sync();
+  const alternate={...spawn,id:'event-46'};
+  f.state.events=[alternate];worker.nativeFarmFlightSample={...sample,eventId:46};f.sync();
+  await assert.rejects(f.prepare(),/changed during preparation/);
+  f.state.events=[spawn];worker.nativeFarmFlightSample=sample;f.sync();
+  const {parts:[part]}=await f.prepare();assert(part.valid());
+  const proof=f.commitStop();assert(part.acceptNativeStopBinding(proof));
+  delete worker.nativeFarmFlightSample;
+  Object.assign(worker,{nativeRouteAdmission:'pending-raid-flight-resources',running:false,gateWaiting:false});
+  f.sync();assert(part.valid());part.activate();part.attach();const release=part.finalize();release.retire();release.notify();f.submit();f.flush();
+  assert.equal(f.roster.get(f.actor),rig);assert.equal(f.acquires,1);assert.deepEqual(f.errors,[]);
+ }finally{f.close();}
+});
