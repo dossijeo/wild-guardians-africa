@@ -114,7 +114,7 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
   });
   const activeHome=records.findLast(r=>r.committed&&(r.kind==='home-route'||r.kind==='home-arrival'));
   const gateGroups=record.gateGroups??(activeHome?.kind==='home-route'?activeHome.gateGroups:null);
-  const cropWithHome=kind==='animal-crop-route'&&activeHome?.kind==='home-route'&&
+  const cropWithHome=kind==='animal-crop-route'&&!options.encounterRetreat&&activeHome?.kind==='home-route'&&
    activeHome.resources.sourceRequest?.raidSpawnSequence;
   let packet;
   if(farmGroup){

@@ -24,12 +24,18 @@ async function setup(qualifyRaidEncounter,{captureHistoricalEvents=false,onReady
 async function advance(world,count=1){
  return await world.command({kind:'advance',steps:count,seconds:.02,nightFastForward:false});
 }
-async function reachSecondHit(world){
+async function reachSecondHit(world,draw=world){
  let snapshot=world.snapshot();
  while(snapshot.elapsed<12.60-1e-9){
   snapshot=JSON.parse((await advance(world)).snapshot);
   await world.present();
  }
+ const animal=world.records.findLast(record=>record.kind==='animal-crop-route'&&record.committed);
+ const current=draw.host.inspect().nativeRouteFrame;
+ // Publish the first impact before asking Draw to prepare the second one.
+ // The worker's old Home clock no longer belongs to the ordinary packet.
+ if(animal&&current?.bindings.some(binding=>binding.nativeHome)&&snapshot.workers[0].nativeRouteAdmission!=='native-home')
+  await presentEncounterFrame(world,snapshot,animal.cropGroup,draw);
  return snapshot;
 }
 async function until(read){
@@ -42,13 +48,16 @@ async function until(read){
 }
 async function presentDepartedEncounter(world,snapshot){
  if(!world.host.inspect().nativeRouteFrame?.bindings.some(binding=>binding.nativeAnimalCrop?.purpose==='retreat'))return;
- const nativeWorldBoundary=world.client.requiredNativeWorldBoundary();
- const {client}=world;
+ await presentEncounterFrame(world,snapshot);
+}
+async function presentEncounterFrame(world,snapshot,group=null,draw=world){
+ const {client,pipeline}=draw,nativeWorldBoundary=client.requiredNativeWorldBoundary();
  client.beginFrame({nativeWorldBoundary});
  const encoder=client.device.createCommandEncoder();
  const pass=encoder.beginRenderPass({colorAttachments:[{
   view:client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'
  }]});
+ if(group){pass.setPipeline(pipeline);pass.setBindGroup(0,group);pass.draw(3);}
  pass.end();
  client.device.queue.submit([encoder.finish()]);
  const frame=client.endFrame({nativeWorldBoundary,clock:{...world.clock,elapsed:snapshot.elapsed,
@@ -585,7 +594,7 @@ for(const phase of ['approach','retreat'])test(`terminal Draw loss preserves the
    assert.equal(next.events.some(event=>['WorkerIncapacitated','AnimalRetreating'].includes(event.type)),false);
    return;
   }
-  snapshot=await reachSecondHit(world);
+  snapshot=await reachSecondHit(world,draw);
   const secondAt=snapshot.elapsed+.02,advancing=advance(world,2);
   await until(()=>draw.host.inspect().nativeCausalClock.committedThrough===secondAt&&draw.host.inspect().pendingSequence!==null);
   await world.present();
