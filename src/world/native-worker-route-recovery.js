@@ -15,6 +15,15 @@ export function woundedHomeEndpoint(binding,at){
  return !!request?.recoveryHit&&!request.raidSpawnSequence&&gateIds?.length===0&&at>=reference.endTime;
 }
 
+export function centerRuinApproachEndpoint(ruin,world,binding,at){
+ const source=ruin?.prepared,approach=source?.approach,ref=binding?.reference;
+ return !!approach&&ref?.kind===26&&Number.isFinite(at)&&at>=ref.endTime&&
+   at>=world?.effectiveTime&&verifiesCenter(source,world,ruin)&&
+   approach.assignmentSequence===binding.assignmentSequence&&
+   sameNativeAnimalCropReference(approach.reference,ref)&&
+   sameNativeAnimalCropReference(approach.preparedReference,binding.preparedReference);
+}
+
 export function matchesNativeWoundedRefuge(world,refuge){
  const arrival=refuge?.reference;
  return !!world&&!!arrival&&sameNativeWorldBoundary(world,arrival.worldBoundary)&&

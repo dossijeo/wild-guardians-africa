@@ -4,10 +4,13 @@ import {originalRig} from './native-animal-crop-rig.js';
 import {floorFloat32} from '../../src/rendering/float32-time.js';
 import {nativeClockResourceEnd} from '../../src/rendering/native-clock-resource-end.js';
 import {copyNativeRecoveryGroup} from '../../src/world/native-worker-route-recovery.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
 
-export async function recoverRouteAfterRuin(world,proof,at,state=null){
+export async function recoverRouteAfterRuin(world,proof,at,state=null,{endpoint=false,retireFirst=true}={}){
+ const stop=()=>world.authority.quiesceNativeIntentProduction({forLostDraw:endpoint});
+ const pending=retireFirst?null:stop();pending?.catch(()=>{});
  world.gpu.device.destroy();world.retireResourceEndpoint();
- const hold=await world.authority.quiesceNativeIntentProduction();
+ const hold=await (pending??stop());
  const retired=await world.authority.flushNativeResourcePreparation({allowRetired:true});
  assert(retired.terminal&&retired.callbacksSettled);
  const source=proof.prepared.retreat??proof.prepared.approach??proof.prepared.strike;
@@ -23,6 +26,14 @@ export async function recoverRouteAfterRuin(world,proof,at,state=null){
   assert.deepEqual(q.worldBoundary,proof.acquired);
   const [{execution,resources}]=q.members;
   assert.equal(execution.executedThrough,at);
+  if(endpoint){
+   assert.equal(execution.arrived,true);
+   assert.deepEqual((await readClientAssignment(q)).members[0].execution,execution);
+   const unrelated=structuredClone(q);delete unrelated.ruin;
+   await assert.rejects(readClientAssignment(unrelated),/Invalid replacement committed assignment/);
+   const wrongPose=structuredClone(q);wrongPose.members[0].execution.x+=.01;
+   await assert.rejects(readClientAssignment(wrongPose),/Invalid replacement committed assignment/);
+  }
   assert.deepEqual(execution.binding.reference,ref);
   if(kind===27)assert.equal(execution.binding.attackId,source.attackId);
   else assert.deepEqual(resources.presentation.worldBoundary,q.worldBoundary);
@@ -37,7 +48,9 @@ export async function recoverRouteAfterRuin(world,proof,at,state=null){
     assert.deepEqual([target.x,target.z],[ref.targetX,ref.targetZ]);
    }
    rig=await originalRig(structuredClone(state),q.terrainManifest);
-   const requests=await rig.recover({resources,execution,terrainManifest:q.terrainManifest,recoveryCut:q.worldBoundary});
+   if(endpoint)await assert.rejects(rig.recover({resources,execution,terrainManifest:q.terrainManifest,recoveryCut:q.worldBoundary}),
+    /Invalid recovered crop source/);
+   const requests=await rig.recover({resources,execution,terrainManifest:q.terrainManifest,recoveryCut:q.worldBoundary,ruin:q.ruin});
    assert(requests.some(count=>count>0));
   }
   const evidence={version:2,members:[{kind,proof:execution.binding}],ruin:proof};
@@ -60,11 +73,27 @@ export async function recoverRouteAfterRuin(world,proof,at,state=null){
   const rendered=await submit;
   assert(!(rendered instanceof Error),rendered.message);
   const witness=await world.authority.checkHeldDraw(30,hold,route);
-  assert.equal(witness.members[0].relativeTime,floorFloat32(at-epoch));
+  const sampledAt=endpoint?nativeClockResourceEnd(epoch,ref.endTime):at;
+  assert.equal(witness.members[0].relativeTime,floorFloat32(sampledAt-epoch));
   rig?.presented(witness.members[0].relativeTime);
   await world.attachRecoveredResources(draw);
   world.authority.resumeNativeIntentProduction(hold);
   return draw;
  }catch(error){draw.client.dispose();await draw.host.dispose();throw error;}
  finally{rig?.close();}
+}
+
+async function readClientAssignment(source){
+ const worker={postMessage(){},terminate(){}},session='endpoint-client';
+ const client=createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session,workerFactory:()=>worker});
+ const receive=data=>worker.onmessage({data:{session,...data}});
+ try{
+  receive({kind:'ready'});await client.ready;
+  const snapshot=client.submit({kind:'snapshot'}).result;
+  receive({kind:'result',sequence:1});await snapshot;
+  const attached=client.attachNativeIntentControl({postMessage(){},close(){}},{recoveryHold:source.holdId});
+  receive({kind:'nativeIntentControlAttached',authorityEpoch:source.worldBoundary.authorityEpoch,sequence:1,
+   recoveredWorkerRoute:{...source,publicationSequence:1}});
+  return (await attached).recoveredWorkerRoute;
+ }finally{client.dispose();}
 }

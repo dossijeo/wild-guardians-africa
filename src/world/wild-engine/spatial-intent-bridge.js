@@ -1,5 +1,5 @@
 import {classifyWorkerEncounter,prepareWorkerEncounter} from '../../simulation/encounters.js';
-import {copyNativeRecoveryGroup,copyRecoveredEncounterPose,matchesNativeRefugeRecovery,matchesNativeOrdinaryRefuge,matchesNativeWoundedRefuge,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../native-worker-route-recovery.js';
+import {centerRuinApproachEndpoint,copyNativeRecoveryGroup,copyRecoveredEncounterPose,matchesNativeRefugeRecovery,matchesNativeOrdinaryRefuge,matchesNativeWoundedRefuge,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../native-worker-route-recovery.js';
 import {sameNativeFarmArrivalRouteReference} from '../native-farm-arrival-route.js';
 import {centerSource,verifiesCenter} from '../native-center-ruin-source.js';
 import {copyNativeCenterPlacement} from '../native-center-placement.js';
@@ -1541,19 +1541,20 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       live?.center===reference.centerId&&live.centerX===target.x&&live.centerZ===target.z&&
       live.targetX===target.x&&live.targetZ===target.z;
   }
-  function nativeAnimalCropRouteExecution(actorId,{sharedCut=false,flightWorker=null}={}){
+  function nativeAnimalCropRouteExecution(actorId,{sharedCut=false,flightWorker=null,ruin=null}={}){
     const proof=activeAnimalRoute,r=proof?.reference;
     if(!r||actorId!=='animal-'+r.actorId||
        !(sharedCut?nativeRecoveryCovers(nativeWorldBoundary(),r.worldBoundary):sameNativeWorldBoundary(r.worldBoundary,nativeWorldBoundary())))return null;
     const animal=owningState?.raid?.animals.find(row=>row.id===actorId);
     const live=animal&&nativeAnimalCropState(actorId),binding=live&&nativeAnimalRouteBinding(actorId);
+    const endpoint=live?.arrived&&centerRuinApproachEndpoint(ruin,nativeWorldBoundary(),proof,live.executedThrough);
     const exit=r.purpose==='retreat'?(nativeRetreatSubject(owningState,animal)??encounterRetreatOwner(owningState,animal,live)?.exit):null;
     const expected=r.purpose==='retreat'?exit?.x===r.targetX&&exit.z===r.targetZ:
       ['entering','walking'].includes(animal?.status)&&(r.purpose==='center'?
         recoveredCenterCurrent(r,animal,live,flightWorker):animal.targetId==='plant-'+r.targetId);
     if((animal?.species!=='warthog'&&!((r.purpose==='center'||r.purpose==='retreat')&&nativeShelteredSavannaCenterActor(owningState,animal)))||
-       !expected||animal.magicDown||live?.mode!==2||live.arrived||
-       live.executedThrough!==owningState.elapsed||live.executedThrough>=r.endTime||
+       !expected||animal.magicDown||live?.mode!==2||!endpoint&&(live.arrived||live.executedThrough>=r.endTime)||
+       live.executedThrough!==owningState.elapsed||
        live.purpose!==r.purpose||live.body!==r.bodyId||live.target!==r.targetId||live.requestSequence!==r.requestSequence||
        live.x!==animal.x||live.z!==animal.z||live.phase!==animal.motionPhase||live.yaw!==animal.heading||
        binding?.assignmentSequence!==proof.assignmentSequence||binding.routeHandle.slot!==r.slot||
@@ -1561,8 +1562,8 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
        !sameNativeWorldBoundary(binding.worldBoundary,r.worldBoundary)||
        !sameNativeWorldBoundary(binding.preparedWorldBoundary,proof.preparedReference.worldBoundary))return null;
     const end=readNativeRouteSample(binding.routeHandle,r.endTime,true);
-    if(!end?.arrived)return null;
-    return {kind:'native-animal-crop-route-execution',actorId:r.actorId,bodyId:r.bodyId,arrived:false,
+    if(!end?.arrived||endpoint&&['x','z','yaw','phase'].some(key=>end[key]!==live[key]))return null;
+    return {kind:'native-animal-crop-route-execution',actorId:r.actorId,bodyId:r.bodyId,arrived:!!endpoint,
       executedThrough:live.executedThrough,x:live.x,z:live.z,yaw:live.yaw,phase:live.phase,
       binding:{...proof,gateIds:[],terminal:{x:end.x,z:end.z,phase:end.phase}}};
   }
@@ -1717,7 +1718,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     if(!original)return null;
     const actorId='animal-'+original.reference.actorId;
     const execution=ruin.prepared.strike?nativeAnimalCropStrikeExecution(actorId,{sharedCut:true}):
-      nativeAnimalCropRouteExecution(actorId,{sharedCut:true});
+      nativeAnimalCropRouteExecution(actorId,{sharedCut:true,ruin});
     const binding=execution?.binding;
     if(!binding||binding.assignmentSequence!==original.assignmentSequence||binding.attackId!==original.attackId||
        !sameNativeAnimalCropReference(original.reference,binding.reference)||

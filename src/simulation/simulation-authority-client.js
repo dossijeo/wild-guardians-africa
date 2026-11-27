@@ -1,4 +1,4 @@
-import {copyNativeRecoveryGroup,matchesNativeOrdinaryRefuge,nativeWorkerRouteRecoveryProfile,woundedHomeEndpoint} from '../world/native-worker-route-recovery.js';
+import {centerRuinApproachEndpoint,copyNativeRecoveryGroup,matchesNativeOrdinaryRefuge,nativeWorkerRouteRecoveryProfile,woundedHomeEndpoint} from '../world/native-worker-route-recovery.js';
 import {copyNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {createFarVisualReplicaClient} from './far-visual-replica-client.js';
 import {createMainSnapshotDecoder} from './main-thread-snapshot-transport.js';
@@ -86,8 +86,10 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
           const members=(grouped?q.members:[q]).map(({execution,resources:input})=>{
             const profile=nativeWorkerRouteRecoveryProfile(input?.kind),resources=profile.copyResources(input,cut);
             const binding=resources[profile.bindingField],ref=binding.reference;
-            const endpoint=!grouped&&qualifyRaidEncounter&&profile.kind===18&&execution?.arrived===true&&
-              woundedHomeEndpoint(binding,execution.executedThrough);
+            const endpoint=execution?.arrived===true&&(!grouped&&qualifyRaidEncounter&&profile.kind===18&&
+              woundedHomeEndpoint(binding,execution.executedThrough)||grouped&&profile.kind===26&&
+              centerRuinApproachEndpoint(q.ruin,cut,binding,execution.executedThrough)&&
+              ['x','z','phase'].every(key=>execution[key]===binding.terminal[key]));
             if(!endpoint&&execution?.arrived!==false||!Number.isFinite(execution.executedThrough)||
                execution.kind!==profile.executionKind||resources.worldBoundary.authorityEpoch!==data.authorityEpoch||
                ref.actorId!==execution.actorId||ref.bodyId!==execution.bodyId||

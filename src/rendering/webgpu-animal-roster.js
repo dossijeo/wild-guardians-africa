@@ -6,7 +6,7 @@ import {markRemoteAnimalCropNode} from './remote-clock-bindings.js';
 import {createNativeStationaryGpuTransform} from './native-stationary-gpu-transform.js';
 import {nativeAnimalCropPublicationMatches,nativeRetreatBudgetAllowed,nativeShelteredSavannaCenterActor,raidStrikeClips} from '../simulation/raids.js';
 import {copyNativeAnimalCropReference,copyNativeAnimalCropProposal,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference,nativeAnimalCropSuccessor,nativeAnimalStrikeClipAge} from '../world/native-animal-crop-resource.js';
-import {nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
+import {centerRuinApproachEndpoint,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
 import {createBakedWalkRetry} from './baked-walk-retry.js';
 import {admitRosterActor,disposePendingRosterActor,releaseRosterActor,releaseRosterMotion} from './webgpu-roster-admission.js';
 import {bindWebGpuActorMotion} from './webgpu-actor-motion-binding.js';
@@ -176,9 +176,11 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
  async function prepareRecoveredCrop(source,terrain,{signal,isCurrent,getPickAge}){
   const profile=nativeWorkerRouteRecoveryProfile(source.resources.kind),resources=profile.copyResources(source.resources,source.recoveryCut);
   const proof=resources[profile.bindingField],ref=proof.reference,execution=source.execution;
-  if(execution?.kind!==profile.executionKind||execution.arrived!==false||execution.actorId!==ref.actorId||
+  const endpoint=execution?.arrived===true&&centerRuinApproachEndpoint(source.ruin,source.recoveryCut,proof,execution.executedThrough)&&
+    ['x','z','phase'].every(key=>execution[key]===proof.terminal[key]);
+  if(execution?.kind!==profile.executionKind||execution.arrived!==false&&!endpoint||execution.actorId!==ref.actorId||
      execution.bodyId!==ref.bodyId||!profile.sameAttestation(proof,execution.binding)||
-     execution.executedThrough<ref.worldBoundary.effectiveTime||execution.executedThrough>=ref.endTime||
+     execution.executedThrough<ref.worldBoundary.effectiveTime||execution.executedThrough>=ref.endTime&&!endpoint||
      !isCurrent()||typeof pipelineAdmission?.prepareAndPublish!=='function')throw Error('Invalid recovered crop source');
   const proposal=copyNativeAnimalCropProposal({...resources.presentation,
     version:1,kind:ref.kind===26?'native-animal-crop-route-proposal':'native-animal-crop-strike-proposal',

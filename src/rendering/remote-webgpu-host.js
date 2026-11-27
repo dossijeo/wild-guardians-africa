@@ -721,7 +721,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         const cropRecord=binding.nativeAnimalCrop?binding.motionRecord.routeRecord:null;
         const cropCeiling=cropRecord&&!cropRecord.recoveredCrop&&(cropRecord.lastDrawTime===null||cropRecord.originDrawClock===elapsed)?executionEpoch:Infinity;
         // The replacement owns the last Home sample until Home19 retires it.
-        const sampleTime=binding.nativeHome&&binding.routeRecord?.recoveredHomeEndpoint?resumeCeiling:bindingTime;
+        const cropEndpoint=cropRecord?.recoveredCropEndpoint;
+        const sampleTime=binding.nativeHome&&binding.routeRecord?.recoveredHomeEndpoint||cropEndpoint?resumeCeiling:bindingTime;
         const routeTime=terminalIdle?Math.min(sampleTime,executionEpoch+(nativeClockResourceEnd(binding.epoch,terminalRoute.endTime)-binding.epoch)):Math.min(sampleTime,binding.routeRecord?.safeUntil??binding.actionRecord?.safeUntil??binding.settlementRecord?.safeUntil??binding.initialIdleBodyRecord?.safeUntil??binding.idleCycleRecord?.safeUntil??Infinity,resumeCeiling,cropCeiling);
         const resourceCeiling=binding.resourceEnd??binding.nativeResume?.endTime??binding.nativeStart?.endTime??binding.nativeConsequence?.endTime??binding.nativeFarmArrival?.endTime??binding.nativeHome?.endTime??binding.nativeStroll?.endTime??(active.admittedMotionBinding?active.metadata.clock.safeUntil:Infinity);
         const resourceTime=Math.min(resourceCeiling,(binding.nativeResume||binding.nativeStart||binding.nativeConsequence||binding.nativeAnimalCrop||binding.nativeFarmArrival||binding.nativeHome||binding.nativeStroll||binding.executionEpoch!==undefined)?binding.epoch+Math.max(0,routeTime-executionEpoch):routeTime);
@@ -751,7 +752,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           elapsed:binding.semantic==='relative'?submittedValue+binding.epoch:submittedValue});
         if(cropRecord){
           cropDraws??=new Map();
-          cropDraws.set(cropRecord,Math.min(routeTime,executionEpoch+submittedValue));
+          cropDraws.set(cropRecord,Math.min(routeTime,executionEpoch+submittedValue,cropEndpoint?bindingTime:Infinity));
         }else if(binding.routeRecord&&binding.semantic!=='origin-modulo'&&binding.semantic!=='idle-offset')binding.routeRecord.lastDrawTime=Math.max(
           binding.routeRecord.lastDrawTime??-Infinity,
           Math.min(routeTime,idleRoute?binding.motionRecord.executionEnd:Infinity,binding.semantic==='relative'?submittedValue+executionEpoch:submittedValue));
@@ -2448,7 +2449,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
                profile:nativeWorkerRouteRecoveryProfile(kind),assignmentSequence:proof.assignmentSequence,
                ref:proof.reference,gateIds:proof.gateIds,
                install:routeControl.prepareRecoveredWorkerRoute(kind,proof,nativeWorldBoundary,
-                 {cohortSize:source.members.length,sharedCut:grouped})
+                 {cohortSize:source.members.length,sharedCut:grouped,ruin:source.ruin})
              }));
              recovered={holdId:q.holdId,consumerToken:q.consumerToken,grouped,members,at:message.clock.committedThrough,
                refuge:source.refuge,encounter:source.encounter};

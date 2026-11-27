@@ -854,7 +854,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
       if(encounter)await waitNativePublication(sequence,ownerSignal??new AbortController().signal,fallCurrent);
       if(!current())throw Error('Recovered Fall is no longer current');
       for(const {resources,execution,profile,crop,ref} of members){
-        const input={resources,execution,terrainManifest:source.terrainManifest,recoveryCut:grouped?boundary:null};
+        const input={resources,execution,terrainManifest:source.terrainManifest,recoveryCut:grouped?boundary:null,ruin};
         if(crop){
           if(profile.kind===27&&ref.purpose==='center')await settlements.prepareCenterStrike(ref.targetId,ownerSignal);
           await roster.prepareRecoveredCrop(input,terrainSupport,{signal:ownerSignal,isCurrent:current,

@@ -139,7 +139,8 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   const request=next();if(!request)return Promise.resolve(null);
   const wakeKey=request.kind==='ruined-wall-repair'?ruinedWallWakeKey?.(request.actorId):undefined;
   const transaction={controller:new AbortController(),actorId:request.actorId,kind:request.kind,requestSequence:request.requestSequence,source:sourceIdentity(request),obsolete:false,promise:null,minSequence:publicationSequence()};active=transaction;
-  const home=protectedHomeSource(request.kind,request.actorId);
+  const recoverableSource=()=>protectedHomeSource(request.kind,request.actorId)??protectedRuinStrikeSource(request.kind,request.actorId);
+  const protectsSource=recoverableSource()===transaction.source;
   let retiredBeforeReady=false;
   if(['task-start','task-action','stationary-task','task-consequence','ruined-wall-repair'].includes(request.kind))transaction.taskId=state.workers.find(worker=>worker.id===request.actorId)?.taskId;
   transaction.promise=(async()=>{
@@ -147,10 +148,10 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
     const {operation,prepare,...options}=request,result=await (request.kind==='ruined-wall-repair'?restoreRuinedWall:planner[operation])({...options,getPublication,signal:transaction.controller.signal,
      prepareResources({resources:proposal,signal,deferredStart,nativeBarrierWallEntities}){
       const preparing=resources[prepare](proposal,{signal,...(nativeBarrierWallEntities?{nativeBarrierWallEntities}:{}),...(prepare==='prepareNativeGateResources'?{}:{deferredStart}),minSequence:transaction.minSequence,terrainManifest:manifest});
-      return home?preparing.catch(error=>{
+      return protectsSource?preparing.catch(error=>{
        // Only an explicit retirement before READY can dispose this unacquired ticket.
        // The held request or acquired endpoint still owns the body and pose.
-       retiredBeforeReady=resources.retirementObserved()&&protectedHomeSource(request.kind,request.actorId)===transaction.source;
+       retiredBeforeReady=resources.retirementObserved()&&recoverableSource()===transaction.source;
        throw error;
       }):preparing;
      }});
@@ -183,7 +184,12 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   }
   return null;
  }
- function quiesce({cancelTask=null,cancelCrop=null,cancelWoundedHome=false}={}){
+ function protectedRuinStrikeSource(kind,actorId){
+  if(kind!=='animal-crop-strike')return null;
+  const execution=planner.nativeCenterRuinRouteRecovery?.()?.execution;
+  return execution?.arrived&&actorId==='animal-'+execution.actorId?execution.binding.reference.requestSequence:null;
+ }
+ function quiesce({cancelTask=null,cancelCrop=null,cancelWoundedHome=false,cancelRuinStrike=false}={}){
   if(closed||fault)return Promise.reject(Error(fault?'Native intent production failed: '+fault:'Native intent production closed'));
   if(quiescence)return quiescence.promise;
   if(active&&!active.promise)return Promise.reject(Error('Native intent production operation is not ready'));
@@ -192,7 +198,8 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   const hold={receipt:Object.freeze({}),settled:false,promise:null};quiescence=hold;
   if(cancelTask&&active?.actorId===cancelTask.actorId&&active.taskId&&active.taskId===cancelTask.taskId||
      cancelCrop&&active?.kind===cancelCrop.kind&&active.actorId===cancelCrop.actorId&&active.requestSequence===cancelCrop.requestSequence||
-     cancelWoundedHome&&active?.source&&protectedHomeSource(active.kind,active.actorId)===active.source){
+     cancelWoundedHome&&active?.source&&protectedHomeSource(active.kind,active.actorId)===active.source||
+     cancelRuinStrike&&active?.source&&protectedRuinStrikeSource(active.kind,active.actorId)===active.source){
    active.obsolete=true;active.controller.abort();
   }
   hold.promise=Promise.resolve(active?.promise).then(()=>{
