@@ -70,6 +70,19 @@ test('actual Worker retains the owner, parks without recording an unapplied worl
  f.readiness='next-frame';await f.worker.draw();assert.equal(f.recorded.length,1);
  f.readiness='ready';f.reject=false;await f.worker.draw();assert.equal(f.recorded.length,2);assert.deepEqual(f.begins.map(m=>m.nativeWorldBoundary),[old,next]);assert.equal(f.finishes,1);assert.equal(f.timers.size,0);assert.equal(f.closed,0);assert.equal(f.notices[0].kind,'firstFrame');cancelledTimeout();assert.equal(f.worker.phase,'running','a cancelled generation cannot fail a later valid frame');
 });
+
+test('actual Worker advances an already queued world adoption without another incoming message',async()=>{
+ const f=workerFixture();let sequence=91,availableThrough=109;f.reject=false;f.readiness='waiting';
+ f.surface.stream={nextTimelineBoundary:()=>availableThrough>sequence?{sequence:sequence+1}:null};
+ f.surface.timelinePump.advance=()=>{const start=sequence;sequence=Math.min(availableThrough,sequence+8);return sequence-start;};
+ const continueDraw=async()=>{const [id,task]=f.timers.entries().next().value??[];assert(task,'a queued boundary must not wait for another port message');f.timers.delete(id);await task.fn();};
+ await f.worker.draw();assert.equal(sequence,99);assert.deepEqual(f.begins,[]);
+ await continueDraw();assert.equal(sequence,107);assert.deepEqual(f.begins,[]);
+ await continueDraw();assert.equal(sequence,109);assert.equal(f.timers.size,0,'wait for new input when the queue is exhausted');assert.deepEqual(f.begins,[]);
+ availableThrough=110;const advance=f.surface.timelinePump.advance;f.surface.timelinePump.advance=()=>{const count=advance();f.readiness='ready';return count;};
+ f.worker.resumePreparation();await continueDraw();
+ assert.equal(sequence,110);assert.deepEqual(f.begins.map(frame=>frame.nativeWorldBoundary),[next]);
+});
 test('an uncompleted continuation times out through the existing failure handoff without declaring a frame presented',async()=>{
  const f=workerFixture();await f.worker.draw();const timer=[...f.timers.values()][0];assert.equal(timer.delay,10000);timer.fn();assert.equal(f.worker.phase,'failed');assert.equal(f.notices[0].kind,'failure');assert.equal(f.notices[0].code,'remote-frame-native-mutation-obsolete');assert.equal(f.notices.some(m=>m.kind==='firstFrame'),false);assert.equal(f.closed,0,'old GPU owner stays alive for its existing drained handoff');
 });

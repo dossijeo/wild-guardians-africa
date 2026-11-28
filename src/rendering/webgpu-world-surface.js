@@ -560,8 +560,15 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
       // packet. It cannot borrow a motor boundary or bypass terrain history.
       if(stop||shieldStop||cropExpiry)nativeRouteResourceRevision++;nativeRouteRejected=false;nativePickPresentation=raw.presented;onSelectableChange();
       void raw.presented.then(async()=>{
-       if(nativePickPresentation===raw.presented)nativePickPresentation=null;releasePublication();onPresentationReady();
-       await waitNativePublication(preparedSequence+1,controller.signal,()=>sameNativeWorldBoundary(preparedNativeWorldBoundary,actual));
+       if(nativePickPresentation===raw.presented)nativePickPresentation=null;
+       const adoptPublication=async()=>{
+        releasePublication();onPresentationReady();
+        await waitNativePublication(preparedSequence+1,controller.signal,()=>sameNativeWorldBoundary(preparedNativeWorldBoundary,actual));
+       };
+       // A historical interval would need another draw while recording is
+       // blocked on this acquired world. Confirm the queued publications first.
+       if(timelinePump)await timelinePump.withOrdinaryPublications(adoptPublication);
+       else await adoptPublication();
        if(nativeGateProposal===item)nativeGateProposal=null;wakeNativePublications();onPresentationReady();
       }).catch(error=>{if(nativePickPresentation===raw.presented)nativePickPresentation=null;releasePublication();if(nativeGateProposal===item)nativeGateProposal=null;wakeNativePublications(error);if(!closed)onError(error);});return true;
      }};
