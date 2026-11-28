@@ -77,11 +77,11 @@ export function parseSimulationChunkKey(key){
 // Owns the game state and a native world inside the simulation worker. Chunk
 // residency is explicit: callers must provide the confirmed simulation demand.
 export const authoritySnapshotFields=Symbol('authoritySnapshotFields');
-function shelteredCenterCheckpointSite(state,animal){
+function nativeCenterCheckpointSite(state,animal,flightWorker=null){
  if(nativeShelteredSavannaCenterActor(state,animal))return state.structures[0];
  if(!nativeDesertRefugeLayout(state)||state.raid?.daytime!==true||state.raid.animals.length!==1||
     state.raid.animals[0]!==animal||animal?.species!=='warthog'||state.workers.length!==1||
-    !nativeCenterAttackCohort(state))return null;
+    !nativeCenterAttackCohort(state,flightWorker))return null;
  const centers=state.structures.filter(structure=>structure.kind==='center');
  if(animal.targetId)return centers.find(center=>center.id===animal.targetId);
  const spawn=state.events.findLast(event=>event.type==='RaidSpawned');
@@ -95,18 +95,18 @@ function shelteredCenterCheckpointSite(state,animal){
 }
 function shelteredCenterApproach(state){
  const animal=state.raid?.animals[0];
- if(!shelteredCenterCheckpointSite(state,animal)||!['entering','walking'].includes(animal.status)||
+ if(!nativeCenterCheckpointSite(state,animal)||!['entering','walking'].includes(animal.status)||
     nativeCropRouteSubject(state,animal)?.purpose!=='center')return null;
  return animal;
 }
 function shelteredCenterStrike(state){
  const animal=state.raid?.animals[0];
- if(!shelteredCenterCheckpointSite(state,animal)||nativeCropRouteSubject(state,animal)?.purpose!=='center'||
+ if(!nativeCenterCheckpointSite(state,animal)||nativeCropRouteSubject(state,animal)?.purpose!=='center'||
     !savedRaidStrike(animal))return null;
  return animal;
 }
 function shelteredCenterRetreat(state){
- const [animal]=state.raid?.animals??[],center=shelteredCenterCheckpointSite(state,animal);
+ const [animal]=state.raid?.animals??[],center=nativeCenterCheckpointSite(state,animal);
  const intact=center?.status==='intact'&&operational(center)&&animal?.hitsRemaining===0;
  const collapse=center?.status==='collapsing'&&center.hp>0&&center.collapseRemaining>0;
  if((!intact&&!collapse&&(center?.status!=='ruined'||center.hp!==0))||
@@ -550,8 +550,12 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     return pending?{pending,gates}:null;
    }
    const owners=planner.nativeRaidFlightRecoveryExecutions();
-   if(!owners||owners[1].binding.gateIds.length)return null;
-   const [home]=owners,handle=home.nativeRoute.routeHandle,gateIds=[];
+   // The kind4 world can follow both admissions. Reuse the exact live
+   // removal proof to identify the same two bodies at that later cut.
+   const ruin=owners?null:planner.nativeCenterRuinRouteRecovery();
+   const home=owners?.[0]??ruin?.home,animal=owners?.[1]??ruin?.execution;
+   if(!home||!animal||animal.binding.gateIds.length)return null;
+   const handle=home.nativeRoute.routeHandle,gateIds=[];
    for(const id of home.binding.gateIds){
     const entity='structure-'+id,gate=gates.find(row=>row.id===entity);
     if(gate?.gateOpen!==1)return null;
@@ -826,6 +830,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
         return {version:1,kind:ref.kind,actorId:ref.actorId,worldBoundary:ref.worldBoundary,
           ...(ref.kind===27?{attackId:motion.attackId}:{})};
       }
+      // Cold readmission can leave a worker planning notice for the next tick.
+      // Freeze the removal only after applying changes from the current cut.
+      planner.flushTaskEvents();
       draft=planner.prepareNativeCenterRuin(center,end);
       const {resources}=draft,source=resources.nativeCenterRuin;
       owner.uncommitted={at,worldBoundary:source.previous,source};
@@ -1958,7 +1965,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
      if(qualifyShieldExpiry&&nativeBodies&&
         game.spells.some(spell=>spell.kind==='shield'&&spell.remaining<=command.seconds*steps*(command.nightFastForward?5:1)+1e-9))
        options.expireShield=expireNativeShield;
-     const restoredCenter=savedRaidAnimal&&game.raid?.animals[0]===savedRaidAnimal&&shelteredCenterCheckpointSite(game,savedRaidAnimal);
+     const restoredAnimal=savedRaidAnimal&&game.raid?.animals[0]===savedRaidAnimal?savedRaidAnimal:null;
+     const flight=restoredAnimal&&savedFlight?planner.nativeRaidFlightMember(game,restoredAnimal):null;
+     const restoredCenter=restoredAnimal&&nativeCenterCheckpointSite(game,restoredAnimal,flight);
      if(nativeBodies&&(qualifyAnimalCrop||restoredCenter||nativeWorkerLifecycle&&nativeShelteredSavannaCenterActor(game,game.raid?.animals[0])))
        options.prepareCenterRuin=prepareCenterRuin;
      if(qualifyRaidEncounter&&qualifyFarmFlee&&qualifyAnimalCrop&&nativeBodies)options.prepareEncounterDraft=prepareEncounterDraft;

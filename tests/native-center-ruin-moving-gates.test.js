@@ -7,6 +7,7 @@ import {prepareWorkerCheckpoint} from '../src/persistence/prepare-worker-checkpo
 import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
 import {centerServicePoint} from '../src/world/centers.js';
 import {captureSpatialPolygons} from '../src/world/wild-engine/spatial-state.js';
+import {refugeWorkerPose} from '../src/world/native-refuge-return.js';
 import {readClientAssignment,recoverRouteAfterRuin} from './helpers/native-center-ruin-recovery.js';
 import {fixture,flush,pair} from './helpers/remote-webgpu-fixture.js';
 import {nativeClockResourceEnd} from '../src/rendering/native-clock-resource-end.js';
@@ -62,7 +63,8 @@ function initialState(){
  }finally{farm.close();}
 }
 
-for(const mode of ['with all clocks','without Home clock','without animal clock','with a changed Home phase','recover after GO','recover before GO'])test(`the finished center strike admits a new corridor and reaches the occupied gate ruin (${mode})`,{timeout:45000},async t=>{
+for(const mode of ['with all clocks','without Home clock','without animal clock','with a changed Home phase','recover after GO','recover before GO',
+ 'disk before ruin','disk after ruin'])test(`the finished center strike admits a new corridor and reaches the occupied gate ruin (${mode})`,{timeout:60000},async t=>{
  const omitClock=mode==='without Home clock'?'Home':mode==='without animal clock'?'animal':null;
  const changePhase=mode==='with a changed Home phase';
  const recoverBefore=mode==='recover before GO';
@@ -86,8 +88,11 @@ for(const mode of ['with all clocks','without Home clock','without animal clock'
     if(record.kind==='home-route')record.homeOriginPhase=true;
     if(record.kind==='center-ruin'){
      ruin=record;record.omitClock=omitClock;
-     if(changePhase)record.beforeDraw=()=>world.client.registerClockBinding(world.buffer,{byteOffset:4,semantic:'origin-modulo',
-      epoch:home.preparedReference.worldBoundary.effectiveTime,period:1.5,nativeHome:home.preparedReference});
+     if(changePhase)record.beforeDraw=()=>{
+      const owning=world.records.find(row=>row.kind==='home-route'&&row.committed);
+      world.client.registerClockBinding(owning.homePhaseBuffer,{byteOffset:4,semantic:'origin-modulo',
+       epoch:home.preparedReference.worldBoundary.effectiveTime,period:1.5,nativeHome:home.preparedReference});
+     };
     }
    },
    onReady(record,{signal}={}){
@@ -166,6 +171,13 @@ for(const mode of ['with all clocks','without Home clock','without animal clock'
   const beforeRuin=state.elapsed,x=state.workers[0].x,z=state.workers[0].z;
   const polygon=session.centerPolygonId(doomed),beforeGate=state.structures.find(row=>row.id===entityId).gateOpen;
   assert(polygon>0);
+  const save=()=>{
+   const snapshot=world.command({kind:'snapshot',nativeAuthorityCheckpoint:true,visualTerrain:true});
+   const saved=prepareWorkerCheckpoint(snapshot,{slotId:initial.slotId,policy:{nativeAuthority:true},savedAt:0});
+   assert(saved.saved,'Expected the public checkpoint for the occupied crossing');
+   return saved.state;
+  };
+  let disk=mode==='disk before ruin'?save():null;
   let advancing=world.command({...command,seconds:.02,steps:1});
   assert(advancing instanceof Promise);
   let result,failure;
@@ -227,6 +239,8 @@ for(const mode of ['with all clocks','without Home clock','without animal clock'
   assert.equal(drawn.bindings.find(row=>row.nativeGate).nativeGate.gateId,gateId);
   assert.equal(drawn.bindings.find(row=>row.nativeAnimalCrop).nativeAnimalCrop.bodyId,r.bodyId);
   assert.deepEqual(world.faults,[]);assert.deepEqual(world.errors,[]);
+  if(mode==='disk after ruin')disk=save();
+  if(disk)await reloadOccupiedCrossing(t,disk,{polygon,event,previous:drawn.worldBoundary,gateId,until:lease.until,access:()=>access});
   if(mode==='recover after GO'){
    const draw=await recoverRouteAfterRuin(world,ruin.commit.nativeCenterRuin,cut.elapsed,cut);
    const recovered=draw.host.inspect().nativeRouteFrame;
@@ -263,6 +277,107 @@ for(const mode of ['with all clocks','without Home clock','without animal clock'
   releaseReady();releaseRuin();delete globalThis[owner];await world?.close();
  }
 });
+
+async function reloadOccupiedCrossing(t,disk,{polygon,event,previous,gateId,until,access}){
+ const checkpoint=disk.workerNativeAuthorityCheckpoint,marker=checkpoint.raidFlight;
+ const before=disk.structures.find(row=>row.id===doomed).status==='collapsing';
+ assert.equal(marker.gate.id,'structure-'+gateId);
+ assert.equal(marker.gate.opening,1);
+ assert.notEqual(marker.gate.reservedByHome,false);
+ assert.equal(checkpoint.spatialState.polygons.some(row=>row.id===polygon),before);
+ const forged=structuredClone(disk);
+ forged.workerNativeAuthorityCheckpoint.raidFlight.gate.id='structure-1000001';
+ assert.throws(()=>savedNativeAuthorityOptions(serialize(forged)),/saved cohort or destination/);
+ const points=state=>{
+  const [animal]=state.raid.animals;
+  return {worker:refugeWorkerPose(state.workers[0]),animal:{x:animal.x,z:animal.z,yaw:animal.heading,phase:animal.motionPhase,
+   targetId:animal.targetId,reservation:animal.reservation}};
+ };
+ const savedPose=points(disk);
+ let homeReady,animalReady,releaseHome,releaseAnimal;
+ const heldHome=new Promise(resolve=>{releaseHome=resolve;});
+ const heldAnimal=new Promise(resolve=>{releaseAnimal=resolve;});
+ const options=savedNativeAuthorityOptions(serialize(disk));
+ const cold=await nativeProductionAuthority(disk,{...options,getTerrainManifest:()=>terrainManifest,
+  onPrepare(record){if(record.kind==='home-route')record.homeOriginPhase=true;},
+  onReady(record){
+   if(record.kind==='home-route'&&!homeReady){homeReady=record;return heldHome;}
+   if(record.kind==='animal-crop-route'&&!animalReady){animalReady=record;return heldAnimal;}
+  }});
+ const {session,planner}=access();
+ async function step(seconds=.02){
+  let result,error;
+  Promise.resolve(cold.command({kind:'advance',seconds,steps:1,nightFastForward:false})).then(row=>{result=row;},reason=>{error=reason;});
+  for(let i=0;i<600&&!result&&!error;i++)await cold.present();
+  if(error)throw error;
+  assert(result,'The restored advance did not settle');
+  await cold.present();return result;
+ }
+ try{
+  assert(cold.authority.verifyNativeBootstrap(options.nativeBootstrap));
+  assert.equal(session.centerPolygonId(doomed),before?polygon:null);
+  await untilProduction(cold,()=>!!homeReady?.packet);
+  const asleep=cold.snapshot();
+  assert.equal(asleep.elapsed,disk.elapsed);
+  assert.deepEqual(asleep.structures,disk.structures);
+  assert.deepEqual(points(asleep),savedPose);
+  assert(!homeReady.committed);
+  releaseHome();
+  await untilProduction(cold,()=>homeReady.committed&&!!animalReady?.packet);
+  assert.deepEqual(points(cold.snapshot()),savedPose);
+  assert.equal(cold.snapshot().elapsed,disk.elapsed);
+  assert(!animalReady.committed);
+  releaseAnimal();
+  await untilProduction(cold,()=>animalReady.committed);
+  await cold.present();await animalReady.packet.presented;
+  const restored=cold.host.inspect().nativeRouteFrame;
+  const worker=restored.bindings.find(row=>row.nativeHome),animal=restored.bindings.find(row=>row.nativeAnimalCrop);
+  assert.notEqual(restored.worldBoundary.authorityEpoch,previous.authorityEpoch);
+  assert.equal(restored.clockElapsed,disk.elapsed);
+  assert.equal(worker.relativeTime,0);
+  assert.equal(animal.relativeTime,0);
+  assert.deepEqual(points(cold.snapshot()),savedPose);
+  assert.equal(animal.nativeAnimalCrop.targetId,Number(marker.animalPose.targetId.split('-')[1]));
+  assert.equal(restored.bindings.find(row=>row.nativeGate).nativeGate.gateId,gateId);
+  const lease=planner.nativeGateCrossings(marker.gate.id).find(row=>row.bodyId===worker.nativeHome.bodyId);
+  assert(lease&&lease.from<=disk.elapsed&&lease.until>disk.elapsed,'The cold Home18 must reserve the occupied gate');
+  assert(Math.abs(lease.until-until)<1e-9);
+  const resumed=await step();
+  assert.equal(resumed.elapsed,disk.elapsed+.02);
+  assert.deepEqual(resumed.events.filter(row=>row.type==='StructureRuined').map(row=>[row.targetId,row.simulationTime]),
+   before?[[doomed,event.simulationTime]]:[]);
+  assert.equal(session.centerPolygonId(doomed),null);
+  const replayed=cold.records.find(row=>row.kind==='center-ruin');
+  if(before){
+   assert(replayed?.committed,'The cold collapse requires its own prepared native removal');
+   await replayed.packet.presented;
+   const frame=cold.host.inspect().nativeRouteFrame;
+   assert.equal(frame.worldBoundary.ticket,replayed.commit.worldBoundary.ticket);
+   assert.equal(frame.clockElapsed,event.simulationTime);
+   assert(frame.bindings.some(row=>row.nativeGate?.gateId===gateId));
+  }else assert.equal(replayed,undefined);
+  let state=JSON.parse(resumed.snapshot);
+  for(let i=0;i<900&&(state.raid||state.workers[0].nativeRouteAdmission!=='native-idle');i++){
+   state=JSON.parse((await step(.05)).snapshot);
+   assert(!cold.faults.length&&!cold.errors.length,JSON.stringify({elapsed:state.elapsed,faults:cold.faults,draw:cold.errors,
+    recent:cold.records.slice(-4).map(({kind,committed,packet})=>({kind,committed,sequence:packet?.sequence}))}));
+  }
+  assert.equal(state.raid,null);
+  assert.equal(state.workers[0].nativeRouteAdmission,'native-idle');
+  assert.equal(state.workers[0].personId,marker.personId);
+  assert.deepEqual(state.ledger,disk.ledger);
+  assert(cold.records.some(row=>row.kind==='home-arrival'&&row.committed));
+  assert.equal(state.events.filter(row=>row.type==='RaidEnded'&&row.simulationTime>=disk.elapsed).length,1);
+  assert.deepEqual(state.events.filter(row=>row.type==='StructureRuined').map(row=>[row.targetId,row.simulationTime]),[[doomed,event.simulationTime]]);
+  const hits=state.events.filter(row=>row.type==='AnimalLogicalHit');
+  assert.deepEqual(hits.slice(0,1),disk.events.filter(row=>row.type==='AnimalLogicalHit'));
+  assert.equal(hits.length,1+disk.raid.animals[0].hitsRemaining);
+  assert(hits.slice(1).every(row=>row.targetId===marker.animalPose.targetId));
+  assert.equal(new Set(hits.map(row=>row.attackId)).size,hits.length);
+  t.diagnostic(JSON.stringify({disk:before?'before':'after',savedAt:disk.elapsed,restored:restored.clockElapsed,
+   epoch:restored.worldBoundary.authorityEpoch,lease,retiredAt:state.elapsed,ruinAt:event.simulationTime,hits:hits.length}));
+ }finally{releaseHome();releaseAnimal();await cold.close();}
+}
 
 test('Draw loss retains the arrived center approach while Home crosses its gate',{timeout:45000},async t=>{
  const initial=initialState(),gateId=gateIds[0],entityId='structure-'+gateId;

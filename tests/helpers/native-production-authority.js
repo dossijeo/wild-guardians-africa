@@ -45,7 +45,7 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
     clock:{...clock,elapsed:start,safeUntil:end,segments:[{start,end,rate:1,realDuration:end-start}]}};
    const home=center.home&&records.findLast(item=>item.kind==='home-route'&&item.committed);
    if(center.home&&!home)throw Error('Center fixture has no matching Home rig');
-   const homeGroups=home?[...(record.omitClock==='Home'?[]:[graphics.homeGroup??graphics.group]),...(home.gateGroups??[])]:[];
+   const homeGroups=home?[...(record.omitClock==='Home'?[]:[home.homeGroup??graphics.group]),...(home.gateGroups??[])]:[];
    const groups=[...(record.omitClock==='animal'?[]:[route.cropGroup]),...homeGroups,...(record.retainedGateGroups??[])];
    const packet=await prepareExistingGroup(graphics,groups,metadata,options.signal,record.beforeDraw);
    packet.presented.catch(()=>{});record.packet=packet;
@@ -111,13 +111,16 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
   let farmGroup=null;
   if(!crop&&!arrival&&!stopped&&!barrier){
    let buffer=graphics.buffer;
-   if(drawAllFarmActors&&kind==='farm-arrival'){
+   const homePhase=kind==='home-route'&&record.homeOriginPhase;
+   if(homePhase||drawAllFarmActors&&kind==='farm-arrival'){
     buffer=graphics.client.device.createBuffer({size:16,usage:72});
     graphics.client.device.queue.writeBuffer(buffer,0,new Float32Array(4));
-    farmGroup=graphics.client.device.createBindGroup({entries:[{binding:0,resource:{buffer}}]});
+    const group=graphics.client.device.createBindGroup({entries:[{binding:0,resource:{buffer}}]});
+    if(homePhase){record.homeGroup=group;record.homePhaseBuffer=buffer;}
+    else farmGroup=group;
    }
    graphics.client.registerClockBinding(buffer,{byteOffset:0,semantic:'relative',epoch:stationary?resources.worldBoundary.effectiveTime:resources.startTime,...(stationary||acting?{}:{resourceEnd:resources.endTime}),[clockField]:reference});
-   if(kind==='home-route'&&record.homeOriginPhase)
+   if(homePhase)
     graphics.client.registerClockBinding(buffer,{byteOffset:4,semantic:'origin-modulo',epoch:resources.startTime,period:1.25,nativeHome:reference});
   }
   const metadata=barrier?{nativeBarrierAdditionTemplate:reference}:undefined;
@@ -154,12 +157,12 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
    packet=await prepareExistingGroup(graphics,[graphics.group,...record.gateGroups],
     {clock,nativeWorldBoundary:resources.worldBoundary,[kind==='task-start'?'nativeTaskStartTemplate':'nativeFarmArrivalTemplate']:reference},options.signal);
   }else if(gateGroups?.length&&(kind==='home-route'||arrival)){
-   const groups=arrival?[...gateGroups]:[graphics.group,...gateGroups];
+   const groups=arrival?[...gateGroups]:[record.homeGroup??graphics.group,...gateGroups];
    if(peer)groups.push(peer.cropGroup);
    packet=await prepareExistingGroup(graphics,groups,
     {clock,nativeWorldBoundary:resources.worldBoundary,[arrival?'nativeHomeArrivalTemplate':'nativeHomeRouteTemplate']:reference},options.signal);
-  }else packet=peer?await prepareExistingGroup(graphics,arrival?peer.cropGroup:[peer.cropGroup,graphics.group],
-    {clock,nativeWorldBoundary:resources.worldBoundary,[arrival?'nativeHomeArrivalTemplate':'nativeHomeRouteTemplate']:reference},options.signal):crop?await prepareExistingGroup(graphics,cropWithHome?[cropGroup,graphics.group,...(gateGroups??[])]:cropGroup,{nativeAnimalCropTemplate:reference,nativeWorldBoundary:resources.worldBoundary,
+  }else packet=peer?await prepareExistingGroup(graphics,arrival?peer.cropGroup:[peer.cropGroup,record.homeGroup??graphics.group],
+    {clock,nativeWorldBoundary:resources.worldBoundary,[arrival?'nativeHomeArrivalTemplate':'nativeHomeRouteTemplate']:reference},options.signal):crop?await prepareExistingGroup(graphics,cropWithHome?[cropGroup,activeHome.homeGroup??graphics.group,...(gateGroups??[])]:cropGroup,{nativeAnimalCropTemplate:reference,nativeWorldBoundary:resources.worldBoundary,
    ...(options.encounterRetreat?{encounterRetreatDraft:options.encounterRetreat.source}:{}),
    clock:{...clock,safeUntil:resources.worldBoundary.effectiveTime,elapsed:resources.worldBoundary.effectiveTime,segments:[],paused:true}},options.signal):stopped?await prepareWorkerStoppedDraw(graphics,reference,records,record,options.signal):arrival?await prepareHomeAbsenceDraw({...graphics,clock},resources):previousStop?await prepareExistingGroup(graphics,previousStop.stoppedGroup,{clock,nativeWorldBoundary:resources.worldBoundary,...metadata},options.signal):await preparedWorldDraw({...graphics,clock,[template]:reference},resources.worldBoundary,0,options.signal,metadata);packet.presented.catch(()=>{});record.packet=packet;
   try{await onReady(record,options);}catch(error){packet.abort();throw error;}

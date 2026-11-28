@@ -151,7 +151,9 @@ export async function recoverRouteAfterRuin(world,proof,at,state=null,{endpoint=
    assert.equal(civil.relativeTime,floorFloat32(at-start));
    assert.deepEqual(civil.nativeGate,{gateId:home.gateIds[0],worldBoundary:home.reference.worldBoundary});
    assert.equal(civil.gateElapsed,start+civil.relativeTime);
-   world.records.findLast(row=>row.kind==='home-route'&&row.committed).gateGroups=draw.motorGroups;
+   const homeRecord=world.records.findLast(row=>row.kind==='home-route'&&row.committed);
+   homeRecord.gateGroups=draw.motorGroups;
+   homeRecord.homeGroup=draw.homeGroup;
   }
   rig?.presented(submitted.relativeTime);
   if(beforeRuin||home){
