@@ -860,7 +860,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       nativeCenterCollapseImpact(game,animal,center)===impact&&
       center.kind==='center'&&center.status==='collapsing'&&game.raid?.animals.length===1&&game.raid.animals[0]===animal&&
       (animal.status==='retreating'||['walking','attacking'].includes(animal.status)&&animal.targetId&&animal.targetId!==center.id)&&
-      nativeCenterAttackCohort(game,flight)&&nativeCropCohortCurrent(game,planner)&&
+      (nativeCenterAttackCohort(game,flight)||
+        !flight&&game.structures[0]===center&&nativeShelteredCenterActor(game,animal))&&
+      nativeCropCohortCurrent(game,planner)&&
       !game.spells.some(spell=>spell.remaining>1e-9&&spell.remaining<span);
     if(centerRuinAdvance||!eligible())throw Error('Native center ruin requires a certified animal route substep');
     const owner={controller:new AbortController(),resources:nativeResourcePreparation,consumer:nativeIntentControl,receipt:null};

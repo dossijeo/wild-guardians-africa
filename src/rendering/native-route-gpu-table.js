@@ -61,7 +61,15 @@ function packNativeMotion(support,presentation,actorId,identity){
   // The decoder clamps to the finite Float32 duration. The final row must use
   // that same endpoint; its four-ulp clock margin still prevents early arrival.
   data.set([row===count-1?duration:ceilFloat32(at-epoch),xx,yy,zz,interpolate(3),interpolate(4),source[cursor+5],source[cursor+6],source[cursor+7],interpolate(8),interpolate(9),interpolate(10),interpolate(11),interpolate(12),interpolate(13),source[cursor+14],source[cursor+15],0,0,0],offset);
-  if(!data.subarray(offset,offset+NATIVE_ROUTE_GPU_WIDTH).every(Number.isFinite)||row>0&&data[offset]<=data[offset-NATIVE_ROUTE_GPU_WIDTH])throw TypeError('Native route intervals cannot be represented on GPU');
+  if(!data.subarray(offset,offset+NATIVE_ROUTE_GPU_WIDTH).every(Number.isFinite))throw TypeError('Native route intervals cannot be represented on GPU');
+  if(row>0){
+   const previousOffset=offset-NATIVE_ROUTE_GPU_WIDTH,age=data[offset],previousAge=data[previousOffset];
+   // Two interior cuts can round up to the same age at the same packed pose.
+   // The upper-bound lookup selects their last row, preserving right continuity.
+   if(age<previousAge||age===previousAge&&(row===count-1||data[offset+1]!==data[previousOffset+1]||
+      data[offset+2]!==data[previousOffset+2]||data[offset+3]!==data[previousOffset+3]))
+    throw TypeError('Native route intervals cannot be represented on GPU');
+  }
  }
  for(let i=0;i<segments.length;i++){
   const part=segments[i];

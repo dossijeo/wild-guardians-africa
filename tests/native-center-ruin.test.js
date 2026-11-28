@@ -29,6 +29,7 @@ const shelteredDesertNights = [
  {day:3,species:'buffalo',hp:[450,415,380,345]},
  {day:4,species:'lion',hp:[305,265,225,185]},
  {day:5,species:'rhino',hp:[125],remainingHits:4},
+ {day:5,species:'rhino',hp:[125],remainingHits:4,liveCrops:['plant-3','plant-5']},
 ];
 const recorded = JSON.parse(readFileSync(recording)).timing.navigationContext;
 const {activeBounds} = recorded;
@@ -52,8 +53,8 @@ function residentSession(state) {
   return session;
 }
 
-for(const {day,species,hp,remainingHits} of shelteredDesertNights)test(`the Desert enclosure admits the planned ${species} center strikes and retreat on night ${day}`,async()=>{
- const checkpoint=new URL(`./fixtures/desierto712-d${day}-enclosed-${species}-before-raid.json.gz`,import.meta.url);
+for(const {day,species,hp,remainingHits,liveCrops} of shelteredDesertNights)test(`the Desert enclosure admits the planned ${species} center strikes and retreat on night ${day}${liveCrops?' with live crops':''}`,async()=>{
+ const checkpoint=new URL(`./fixtures/desierto712-d${day}-enclosed-${species}${liveCrops?'-live-crops':''}-before-raid.json.gz`,import.meta.url);
  const raw=gunzipSync(readFileSync(checkpoint)).toString(),initial=deserialize(raw),saved=savedNativeAuthorityOptions(raw);
  const manifest={epoch:`desert-night-${day}`,chunks:saved.chunkKeys.map(key=>{
   const [cx,cz]=key.split(',').map(Number);return {cx,cz,revision:1};
@@ -61,6 +62,7 @@ for(const {day,species,hp,remainingHits} of shelteredDesertNights)test(`the Dese
  assert(saved.nativeWorkerLifecycle);
  assert.equal(initial.day,day);
  assert.deepEqual(initial.nightPlan.group,[species]);
+ if(liveCrops)assert.deepEqual(initial.plants.filter(crop=>crop.alive).map(crop=>crop.id),liveCrops);
  assert(initial.workers.every(worker=>worker.status==='home'));
  const walls=initial.structures.filter(structure=>structure.kind==='wall');
  assert(walls.some(wall=>wall.gate&&wall.gateOpen===0));
@@ -87,7 +89,8 @@ for(const {day,species,hp,remainingHits} of shelteredDesertNights)test(`the Dese
     proofs.push(proof);
    },
   });
-  for(let i=0;i<600&&state.day===day&&!state.result;i++){
+  const maxAdvances=liveCrops?1600:600;
+  for(let i=0;i<maxAdvances&&state.day===day&&!state.result;i++){
    const advance=f.command({kind:'advance',seconds:.05,steps:4,nightFastForward:true});
    if(advance instanceof Promise){
     assert.equal(species,'rhino');
@@ -118,7 +121,7 @@ for(const {day,species,hp,remainingHits} of shelteredDesertNights)test(`the Dese
   }
   if(remainingHits!==undefined){
    assert.equal(state.day,day);
-   assert.equal(state.result,'defeat');
+   assert.equal(state.result,'defeat',`Night ${day} reached ${state.elapsed} without the expected defeat`);
    assert.deepEqual([state.structures[0].status,state.structures[0].hp],['ruined',0]);
    const ruined=events.filter(event=>event.type==='StructureRuined');
    const retreat=events.find(event=>event.type==='AnimalRetreating');
