@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+En la primera noche de Desierto 712 con un portón cerrado comprado por el jugador, NVIDIA presentó la incursión completa y la recarga en frío de Strike27. El control conserva el portón, ambos contratos y los dos impactos de Game. Los cortes de pérdida de Draw del mismo guardado están verificados en CPU. [Recibo del portón en la primera noche](performance/native-desert-paid-gate-first-night-20261128.json).
+
 En Desierto, NVIDIA confirmó la cancelación de Strike27 antes de la ruina con el facóquero ya llegado al centro sucesor. Tras la pérdida de Draw, el primer envío conservó su cuerpo y pose terminal, acreditó el picking y la misma petición aplicó un solo golpe con un ticket nuevo. [Recibo del derrumbe y el relevo](performance/native-desert-center-ruin-earlier-arrival-20261128.json).
 
 NVIDIA también confirmó la pérdida con el READY de kind4 retenido y con el fence solicitado pero su ACK retenido. El sustituto presentó el centro aún visible y la pose terminal del mismo cuerpo. Hosted ejecutó la retirada pendiente a la hora prevista, aplicó un solo golpe del sucesor y drenó. Queda el caso con motores en movimiento. [Antes del fence](performance/native-desert-pending-center-ruin-recovery-20261128.json) · [Con el fence pendiente](performance/native-desert-center-ruin-fence-loss-20261128.json).
