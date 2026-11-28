@@ -33,7 +33,7 @@ export function centerRuinApproachEndpoint(ruin,world,binding,at,pendingRuin=nul
  const source=ruin?.prepared??pendingRuin,approach=source?.approach,ref=binding?.reference;
  return !!approach&&ref?.kind===26&&Number.isFinite(at)&&at>=ref.endTime&&
    at>=world?.effectiveTime&&(ruin?verifiesCenter(source,world,ruin):
-     !!source.retainedGateIds&&sameNativeWorldBoundary(world,source.previous)&&at===source.boundary.effectiveTime)&&
+     !!(source.retainedGateIds||source.home)&&sameNativeWorldBoundary(world,source.previous)&&at===source.boundary.effectiveTime)&&
    approach.assignmentSequence===binding.assignmentSequence&&
    sameNativeAnimalCropReference(approach.reference,ref)&&
    sameNativeAnimalCropReference(approach.preparedReference,binding.preparedReference);
@@ -414,22 +414,27 @@ export function copyNativeRecoveryGroup(value,world,{awaitingIdleCyclePhase=fals
    return {members:[{kind:26,proof}],encounter};
  }
  if(value.ruin!==undefined||value.pendingRuin!==undefined){
-   const [member]=value.members,prepared=centerSource(value.ruin?.prepared??value.pendingRuin),kind=prepared.strike?27:26;
-   if(value.refuge!==undefined||value.members.length!==1||member?.kind!==kind)
+   const prepared=centerSource(value.ruin?.prepared??value.pendingRuin),kind=prepared.strike?27:26;
+   const home=prepared.home,member=value.members[home?1:0];
+   if(value.refuge!==undefined||value.members.length!==(home?2:1)||member?.kind!==kind)
      throw Error('Center ruin recovery requires its surviving animal program');
+   if(home&&(!prepared.approach||value.members[0].kind!==18||
+      !sameNativeHomeRouteAttestation(home,copyNativeHomeRouteAttestation(value.members[0].proof))))
+     throw Error('Recovered Home route differs from the center ruin');
    const proof=kind===27?copyStrikeAttestation(member.proof):copyCropAttestation(member.proof);
    const retained=prepared.retreat??prepared.approach??prepared.strike;
    const cutMatches=value.pendingRuin===undefined?verifiesCenter(prepared,world,value.ruin):
-     !!prepared.retainedGateIds&&sameNativeWorldBoundary(prepared.previous,world);
+     !!(prepared.retainedGateIds||home)&&sameNativeWorldBoundary(prepared.previous,world);
    if(!cutMatches||retained.assignmentSequence!==proof.assignmentSequence||retained.attackId!==proof.attackId||
       !sameNativeAnimalCropReference(retained.reference,proof.reference)||
       !sameNativeAnimalCropReference(retained.preparedReference,proof.preparedReference))
      throw Error('Recovered animal route differs from the acquired center ruin');
    const motors=copyNativeRuinMotors(value.ruinMotors,prepared);
-   if(value.pendingRuin!==undefined)return {members:[{kind,proof}],pendingRuin:prepared,ruinMotors:motors};
+   const members=home?[{kind:18,proof:home},{kind,proof}]:[{kind,proof}];
+   if(value.pendingRuin!==undefined)return {members,pendingRuin:prepared,...(motors?{ruinMotors:motors}:{})};
    const ruin=Object.freeze({prepared,acquired:copyNativeWorldBoundary(world),center:prepared.center,
      polygon:prepared.polygon,status:'ruined',revisions:Object.freeze([...value.ruin.revisions])});
-   return {members:[{kind,proof}],ruin,...(motors?{ruinMotors:motors}:{})};
+   return {members,ruin,...(motors?{ruinMotors:motors}:{})};
  }
  if(value.refuge!==undefined&&!ordinaryWorkers){
    const refuge=copyNativeHomeArrivalAttestation(value.refuge);

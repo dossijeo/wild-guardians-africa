@@ -1562,15 +1562,14 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       if(!civilShieldPhysicsAvailable()||game.raid.animals.length!==1)return null;
       const kind=animal.status==='attacking'?27:26;
       const workersAtRefuge=game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id));
-      if(workersAtRefuge){
-        const pending=centerRuinAdvance?.published&&centerRuinAdvance.uncommitted?.source;
-        if(pending?.retainedGateIds){
-          const source=planner.nativePendingCenterRuinRecovery(pending);
-          return source?.execution.binding.reference.kind===kind?{version:2,pendingRuin:true,members:[{kind,actorId:source.execution.actorId}]}:null;
-        }
-        const ruin=planner.nativeCenterRuinRouteRecovery();
-        if(ruin?.execution.binding.reference.kind===kind)return {version:2,ruin:true,members:[{kind,actorId:ruin.execution.actorId}]};
+      const pending=centerRuinAdvance?.published&&centerRuinAdvance.uncommitted?.source;
+      const pendingRecovery=pending?.home||workersAtRefuge&&pending?.retainedGateIds;
+      const source=pendingRecovery?planner.nativePendingCenterRuinRecovery(pending):planner.nativeCenterRuinRouteRecovery();
+      if(source?.execution.binding.reference.kind===kind&&(source.home||workersAtRefuge)){
+        const members=[...(source.home?[{kind:18,actorId:source.home.actorId}]:[]),{kind,actorId:source.execution.actorId}];
+        return {version:2,[pendingRecovery?'pendingRuin':'ruin']:true,members};
       }
+      if(pendingRecovery)return null;
       if(!workersAtRefuge&&qualifyAnimalCrop){
         const approach=animal.status!=='retreating',fall=planner.nativeEncounterFallRecovery(approach?'center':'retreat');
         if(fall)return {version:2,encounter:approach?'approach':'retreat',members:[{kind:26,actorId:fall.execution.actorId}]};
@@ -1652,13 +1651,21 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       return ordinary&&!!ordinary.refuge===!!route.refuge&&route.members.length===ordinary.members.length&&ordinary.members.every(({kind,actorId},i)=>
         kind===route.members[i].kind&&actorId===route.members[i].actorId)?ordinary:null;
     }
-    if(route.refuge||route.ruin||route.pendingRuin||route.encounter){
-      const [member]=route.members;
-      if(route.members.length!==1||(member.kind!==26&&(!(route.refuge||route.ruin||route.pendingRuin)||member.kind!==27)))return null;
+    if(route.ruin||route.pendingRuin){
       const pending=route.pendingRuin&&centerRuinAdvance?.published&&centerRuinAdvance.uncommitted?.source;
+      const source=route.ruin?planner.nativeCenterRuinRouteRecovery():pending&&planner.nativePendingCenterRuinRecovery(pending);
+      if(!source)return null;
+      const {execution,home,...evidence}=source;
+      const executions=home?[home,execution]:[execution];
+      const kinds=home?[18,execution.binding.reference.kind]:[execution.binding.reference.kind];
+      return route.members.length===executions.length&&executions.every(({actorId},i)=>
+        route.members[i].actorId===actorId&&route.members[i].kind===kinds[i])?{executions,...evidence}:null;
+    }
+    if(route.refuge||route.encounter){
+      const [member]=route.members;
+      if(route.members.length!==1||(member.kind!==26&&(!route.refuge||member.kind!==27)))return null;
       const source=route.encounter?planner.nativeEncounterFallRecovery(route.encounter==='approach'?'center':'retreat'):
-        route.ruin?planner.nativeCenterRuinRouteRecovery():route.pendingRuin?pending&&planner.nativePendingCenterRuinRecovery(pending):
-          planner.nativeRefugeCropRecovery(member.kind);
+        planner.nativeRefugeCropRecovery(member.kind);
       if(!source||member.actorId!==source.execution.actorId||member.kind!==source.execution.binding.reference.kind)return null;
       const {execution,...evidence}=source;
       return {executions:[execution],...evidence};

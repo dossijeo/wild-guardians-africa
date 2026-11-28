@@ -1328,7 +1328,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
          next.resourceEnd!==old.resourceEnd||live.resourceEnd!==old.resourceEnd||
          resource!==source&&(!source?.uniformSource||resource?.uniformSource!==source.uniformSource))throw missing();
       if(old.nativeGate){
-        if(!expected.has(id)||!sameNativeWorldBoundary(old.nativeGate.worldBoundary,gateWorld))throw missing();
+        // A replacement rebuilds Home's gate program at the acquired epoch.
+        const matchesOrigin=sameNativeWorldBoundary(old.nativeGate.worldBoundary,gateWorld)||
+          home&&recoveryGateMatches(old,id,home.reference.worldBoundary);
+        if(!expected.has(id)||!matchesOrigin)throw missing();
         seen.add(id);
       }else if(old.nativeHome){
         if(!nativeHomeRouteAttestationCovers(home,old.nativeHome)||!old.motionRecord?.isCurrent()||old.routeRecord?.assignmentSequence!==home.assignmentSequence)throw missing();

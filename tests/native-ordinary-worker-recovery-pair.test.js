@@ -8,7 +8,7 @@ import {nativeClockResourceEnd} from '../src/rendering/native-clock-resource-end
 import {nativeIdleCyclePhaseOffset} from '../src/rendering/native-farm-idle-phase.js';
 import {captureNativeRoutePickFrame} from '../src/rendering/native-route-pick-frame.js';
 import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
-import {copyNativeRecoveryGroup,nativeOrdinaryRecoveryKinds,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile} from '../src/world/native-worker-route-recovery.js';
+import {copyNativeRecoveryGroup,copyNativeRuinMotors,nativeOrdinaryRecoveryKinds,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile} from '../src/world/native-worker-route-recovery.js';
 import {sameNativeWorldBoundary} from '../src/world/native-world-boundary.js';
 import {nativeIdleCycleBodyState} from '../src/world/native-idle-cycle-body-source.js';
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
@@ -27,7 +27,7 @@ async function assertRecoveredSurfaceWaitsForGates(source,homeBoundary,ids){
  for(const outcome of ['ready','replaced','cancelled']){
   const signal=new AbortController(),ready=new Set(),installed=[];
   let replacement=false;
-  const deps={nativeOrdinaryRecoveryKinds,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile,sameNativeWorldBoundary,
+  const deps={copyNativeRuinMotors,nativeOrdinaryRecoveryKinds,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile,sameNativeWorldBoundary,
    recoveryHold:source.holdId,state:{elapsed:source.members[0].execution.executedThrough},stream:{status:()=>({sequence:source.publicationSequence})},
    remoteGpu:{requiredNativeWorldBoundary:()=>source.worldBoundary},
    settlements:{nativeGatePreparationReadiness({gates}){

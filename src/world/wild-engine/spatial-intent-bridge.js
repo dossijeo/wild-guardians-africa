@@ -802,7 +802,8 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       }else{
         const single=encounter?nativeEncounterFallRecovery(encounter.version===2?'center':'retreat'):
           ruin?nativeCenterRuinRouteRecovery():pendingRuin?nativePendingCenterRuinRecovery(pendingRuin):arrival?nativeRefugeCropRecovery(members[0].kind):null;
-        const executions=encounter||ruin||pendingRuin||arrival?single&&[single.execution]:nativeRaidFlightRecoveryExecutions();
+        const executions=encounter||ruin||pendingRuin||arrival?
+          single&&(single.home?[single.home,single.execution]:[single.execution]):nativeRaidFlightRecoveryExecutions();
         const rows=members[0].kind===27?0:members.length;
         if(count!==rows||strolls.length||farmCount||homes.length!==members.length-1||!executions||
            arrival&&JSON.stringify(arrival)!==JSON.stringify(single.refuge)||
@@ -1769,7 +1770,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
   }
   function nativePendingCenterRuinRecovery(pendingRuin){
     const game=owningState,center=game.structures.find(row=>row.id===pendingRuin.center);
-    if(!pendingRuin.retainedGateIds||!sameNativeWorldBoundary(pendingRuin.previous,nativeWorldBoundary())||
+    if(!(pendingRuin.retainedGateIds||pendingRuin.home)||!sameNativeWorldBoundary(pendingRuin.previous,nativeWorldBoundary())||
        game.elapsed!==pendingRuin.boundary.effectiveTime||center?.kind!=='center'||center.status!=='collapsing'||
        session.centerPolygonId(center.id)!==pendingRuin.polygon||wasm.nav_intent_barrier_proposal_ticket()===1)return null;
     const source=centerRuinRecoverySource(pendingRuin,{pendingRuin});
@@ -1779,14 +1780,19 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     const game=owningState,original=prepared.retreat??prepared.approach??prepared.strike;
     if(!original)return null;
     const actorId='animal-'+original.reference.actorId;
+    const animal=game.raid?.animals.find(row=>row.id===actorId);
+    const worker=prepared.home&&animal?nativeRaidFlightMember(game,animal):null;
+    const home=worker&&nativeHomeRouteExecution(worker.id);
+    if(prepared.home&&(!prepared.approach||!home||home.arrived||home.executedThrough!==game.elapsed||
+       !sameNativeHomeRouteAttestation(home.binding,prepared.home)))return null;
     const execution=prepared.strike?nativeAnimalCropStrikeExecution(actorId,{sharedCut:true}):
-      nativeAnimalCropRouteExecution(actorId,{sharedCut:true,ruin,pendingRuin});
+      nativeAnimalCropRouteExecution(actorId,{sharedCut:true,flightWorker:worker,ruin,pendingRuin});
     const binding=execution?.binding;
     if(!binding||binding.assignmentSequence!==original.assignmentSequence||binding.attackId!==original.attackId||
        !sameNativeAnimalCropReference(original.reference,binding.reference)||
        !sameNativeAnimalCropReference(original.preparedReference,binding.preparedReference))return null;
     const gateIds=prepared.retainedGateIds;
-    if(!gateIds)return {execution};
+    if(!gateIds)return {execution,...(home?{home}:{})};
     const motors=committedGateMotion?.resources;
     if(!motors||!sameNativeWorldBoundary(motors.worldBoundary,prepared.previous)||
        motors.gates.length!==gateIds.length||!motors.gates.every((motor,i)=>motor.gateId===gateIds[i]&&currentGateMotorPresentation(game,motor)))return null;

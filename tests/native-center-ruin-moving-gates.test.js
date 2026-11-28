@@ -62,7 +62,9 @@ function initialState(){
  }finally{farm.close();}
 }
 
-for(const omitClock of [null,'Home','animal'])test(`the finished center strike admits a new corridor and reaches the occupied gate ruin (${omitClock?`without ${omitClock} clock`:'with all clocks'})`,{timeout:45000},async t=>{
+for(const mode of ['with all clocks','without Home clock','without animal clock','recover after GO','recover before GO'])test(`the finished center strike admits a new corridor and reaches the occupied gate ruin (${mode})`,{timeout:45000},async t=>{
+ const omitClock=mode==='without Home clock'?'Home':mode==='without animal clock'?'animal':null;
+ const recoverBefore=mode==='recover before GO';
  const initial=initialState(),gateId=gateIds[0],entityId='structure-'+gateId;
  initial.slotId=successorFixtureSlot;
  initial.structures=initial.structures.filter(row=>row.id!=='structure-'+gateIds[1]);
@@ -72,7 +74,7 @@ for(const omitClock of [null,'Home','animal'])test(`the finished center strike a
  initial.dayPlan.at=initial.time+.8;
  firstCenter.hp=140;
  const raidView={...view,eye:{x:-18,z:-13.7},target:{x:-18,z:0}};
- let access,world,home,strike,successor,held,releaseReady,sourceAt,ruin,releaseRuin;
+ let access,world,home,homeArrival,strike,successor,held,releaseReady,sourceAt,ruin,releaseRuin;
  const heldReady=new Promise(resolve=>{releaseReady=resolve;});
  const heldRuin=new Promise(resolve=>{releaseRuin=resolve;});
  const hits=[];
@@ -80,12 +82,16 @@ for(const omitClock of [null,'Home','animal'])test(`the finished center strike a
  try{
   world=await nativeProductionAuthority(initial,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,getTerrainManifest:()=>terrainManifest,
    onPrepare(record){if(record.kind==='center-ruin'){ruin=record;record.omitClock=omitClock;}},
-   onReady(record){
-    if(record.kind==='center-ruin')return heldRuin;
+   onReady(record,{signal}={}){
+    if(record.kind==='center-ruin'){
+     if(recoverBefore)signal.addEventListener('abort',releaseRuin,{once:true});
+     return heldRuin;
+    }
     if(!held&&record.kind==='animal-crop-route'&&'structure-'+record.resources.reference.targetId===civil.id){held=record;return heldReady;}
    },
    onCommit(record,receipt){
     if(record.kind==='home-route')home=receipt.nativeHomeRouteBinding;
+    if(record.kind==='home-arrival')homeArrival=receipt.nativeHomeArrivalBinding;
     if(record.kind==='animal-crop-strike')strike=receipt.nativeAnimalCropStrikeBinding;
     if(record===held)successor=receipt.nativeAnimalCropRouteBinding;
    }});
@@ -152,10 +158,11 @@ for(const omitClock of [null,'Home','animal'])test(`the finished center strike a
   const beforeRuin=state.elapsed,x=state.workers[0].x,z=state.workers[0].z;
   const polygon=session.centerPolygonId(doomed),beforeGate=state.structures.find(row=>row.id===entityId).gateOpen;
   assert(polygon>0);
-  const advancing=world.command({...command,seconds:.02,steps:1});
+  let advancing=world.command({...command,seconds:.02,steps:1});
   assert(advancing instanceof Promise);
   let result,failure;
-  advancing.then(value=>{result=value;},reason=>{failure=reason;});
+  const watch=()=>advancing.then(value=>{result=value;},reason=>{failure=reason;});
+  watch();
   for(let i=0;i<300&&!ruin?.packet&&!failure;i++)await world.present();
   if(omitClock){
    await assert.rejects(advancing,/Center ruin lacks its acquired animal, Home or crossing clocks/);
@@ -172,17 +179,34 @@ for(const omitClock of [null,'Home','animal'])test(`the finished center strike a
   assert.equal(source.polygon,polygon);
   assert.equal(session.centerPolygonId(doomed),polygon);
   assert.equal(planner.nativeCausalClock().committedThrough,beforeRuin);
+  let replacement;
+  if(recoverBefore){
+   const abandoned=ruin;
+   replacement=await recoverRouteAfterRuin(world,source,beforeRuin,null,{beforeRuin:true,interrupted:advancing});
+   const prefix=await advancing,remainder=prefix.pendingRuinRecoveryCut.remainingSeconds;
+   assert.equal(remainder,.02);
+   assert(!prefix.events.some(row=>row.type==='StructureRuined'));
+   assert.equal(session.centerPolygonId(doomed),polygon);
+   assert(!abandoned.committed);
+   await assert.rejects(abandoned.packet.presented);
+   result=null;
+   advancing=world.command({...command,seconds:remainder,steps:1});
+   watch();
+   for(let i=0;i<300&&ruin===abandoned&&!failure;i++)await world.present();
+   assert(ruin!==abandoned,'No replacement ruin was prepared');
+   assert(ruin.resources.worldBoundary.ticket>source.boundary.ticket);
+  }
   releaseRuin();
   for(let i=0;i<300&&!(result&&ruin.committed)&&!failure;i++)await world.present();
   if(failure)throw failure;
-  assert(result&&ruin.committed,JSON.stringify({result:!!result,committed:ruin.committed,faults:world.faults,errors:world.errors}));
+  assert(result&&ruin.committed,JSON.stringify({result:!!result,committed:ruin.committed,faults:world.faults,errors:replacement?.errors??world.errors}));
   await world.present();await ruin.packet.presented;
   const [event]=result.events.filter(row=>row.type==='StructureRuined');
   assert.equal(result.events.filter(row=>row.type==='StructureRuined').length,1);
   assert.equal(event.targetId,doomed);
   assert.equal(event.simulationTime,source.end);
   assert(source.end>=collapseAt-1e-9&&source.end<=beforeRuin+.020000001);
-  const cut=JSON.parse(result.snapshot),drawn=world.host.inspect().nativeRouteFrame;
+  const cut=JSON.parse(result.snapshot),drawn=(replacement??world).host.inspect().nativeRouteFrame;
   assert.equal(cut.structures.find(row=>row.id===doomed).status,'ruined');
   assert.equal(cut.structures.find(row=>row.id===entityId).gateOpen,beforeGate);
   assert.equal(session.centerPolygonId(doomed),null);
@@ -195,6 +219,35 @@ for(const omitClock of [null,'Home','animal'])test(`the finished center strike a
   assert.equal(drawn.bindings.find(row=>row.nativeGate).nativeGate.gateId,gateId);
   assert.equal(drawn.bindings.find(row=>row.nativeAnimalCrop).nativeAnimalCrop.bodyId,r.bodyId);
   assert.deepEqual(world.faults,[]);assert.deepEqual(world.errors,[]);
+  if(mode==='recover after GO'){
+   const draw=await recoverRouteAfterRuin(world,ruin.commit.nativeCenterRuin,cut.elapsed,cut);
+   const recovered=draw.host.inspect().nativeRouteFrame;
+   assert.equal(recovered.clockElapsed,cut.elapsed);
+   assert.deepEqual(recovered.worldBoundary,drawn.worldBoundary);
+   assert.deepEqual(planner.nativeGateCrossings(entityId).find(row=>row.bodyId===h.bodyId),lease);
+   const next=await world.command({...command,seconds:.02,steps:1});
+   assert.equal(next.elapsed,cut.elapsed+.02);
+   assert(!next.events.some(row=>row.type==='StructureRuined'));
+   assert.equal(JSON.parse(next.snapshot).workers[0].nativeRouteAdmission,'native-home');
+   for(let i=0;i<90&&!homeArrival;i++){
+    const advancing=await world.command({...command,steps:1});
+    assert(!advancing.events.some(row=>row.type==='StructureRuined'));
+    await world.present();
+    assert.deepEqual(world.faults,[]);
+    assert.deepEqual(draw.errors,[]);
+   }
+   const absence=world.records.find(row=>row.kind==='home-arrival'&&row.committed);
+   assert(absence&&homeArrival,'The recovered Home18 must reach Home19');
+   assert.deepEqual(homeArrival.reference.sourceHome,home);
+   await world.present();await absence.packet.presented;
+   const settled=world.snapshot(),homeDraw=draw.host.inspect().nativeRouteFrame;
+   assert.equal(settled.workers[0].status,'home');
+   assert.equal(homeDraw.worldBoundary.ticket,homeArrival.reference.worldBoundary.ticket);
+   assert(!homeDraw.bindings.some(row=>row.nativeHome));
+   assert.equal(homeDraw.bindings.find(row=>row.nativeAnimalCrop).nativeAnimalCrop.bodyId,r.bodyId);
+   t.diagnostic(JSON.stringify({refugeAt:settled.elapsed,homeTicket:homeDraw.worldBoundary.ticket,
+    worker:settled.workers[0].id,animalBody:r.bodyId}));
+  }
   t.diagnostic(JSON.stringify({impact:hits[0].simulationTime,ready:sourceAt,go:r.worldBoundary.effectiveTime,
    gate:lease,beforeCollapse:state.elapsed,collapseDue:collapseAt,ruinAt:event.simulationTime,
    workerZ:state.workers[0].z,ruinTicket:drawn.worldBoundary.ticket}));

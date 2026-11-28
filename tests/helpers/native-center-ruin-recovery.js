@@ -24,21 +24,23 @@ export async function recoverRouteAfterRuin(world,proof,at,state=null,{endpoint=
   assert.throws(()=>world.authority.resumeNativeIntentProduction(hold),/still owns native production/);
  }
  const prepared=beforeRuin?proof:proof.prepared;
- const source=beforeRuin&&!movingMotors?proof:prepared.retreat??prepared.approach??prepared.strike;
+ const home=prepared.home,typedBeforeRuin=movingMotors||!!home;
+ const source=beforeRuin&&!typedBeforeRuin?proof:prepared.retreat??prepared.approach??prepared.strike;
  const route=await world.authority.terminalWorkerRoute(),ref=source.reference,kind=ref.kind;
- const grouped=!beforeRuin||movingMotors;
- assert.deepEqual(route,grouped?{version:2,[beforeRuin?'pendingRuin':'ruin']:true,members:[{kind,actorId:ref.actorId}]}:{kind,actorId:ref.actorId});
+ const grouped=!beforeRuin||typedBeforeRuin;
+ const members=[...(home?[{kind:18,actorId:home.reference.actorId}]:[]),{kind,actorId:ref.actorId}];
+ assert.deepEqual(route,grouped?{version:2,[beforeRuin?'pendingRuin':'ruin']:true,members}:{kind,actorId:ref.actorId});
  const [authorityPort,drawPort]=pair();
- const draw=await fixture({capabilities:{nativeAnimalCropVersion:1,nativeFarmArrivalVersion:1,nativeIdleCycleVersion:1}},
+ const draw=await fixture({capabilities:{nativeAnimalCropVersion:1,nativeFarmArrivalVersion:1,nativeIdleCycleVersion:1,nativeHomeRouteVersion:1,nativeHomeArrivalVersion:1}},
   {intentControl:{port:drawPort,session:'production-control',recoveryHold:30},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
  let rig;
  try{
   const {recoveredWorkerRoute:q}=await world.authority.attachHeldWorkerRoute(authorityPort,'production-control',30,hold,route);
-  const boundary=movingMotors?prepared.previous:beforeRuin?ref.worldBoundary:proof.acquired;
+  const boundary=beforeRuin?(typedBeforeRuin?prepared.previous:ref.worldBoundary):proof.acquired;
   assert.deepEqual(q.ruin,beforeRuin?undefined:proof);
-  assert.deepEqual(q.pendingRuin,movingMotors?prepared:undefined);
+  assert.deepEqual(q.pendingRuin,beforeRuin&&typedBeforeRuin?prepared:undefined);
   assert.deepEqual(q.worldBoundary,grouped?boundary:undefined);
-  const {execution,resources}=grouped?q.members[0]:q;
+  const {execution,resources}=grouped?q.members.at(-1):q;
   assert.equal(execution.executedThrough,at);
   if(movingMotors){
    const accepted=await readClientAssignment(q);
@@ -49,6 +51,17 @@ export async function recoverRouteAfterRuin(world,proof,at,state=null,{endpoint=
    const wrongTime=structuredClone(q);
    wrongTime.members[0].execution.executedThrough-=.01;
    await assert.rejects(readClientAssignment(wrongTime),/different times/);
+  }
+  if(home){
+   const accepted=await readClientAssignment(q);
+   const worker=state.workers.find(row=>row.id==='worker-'+home.reference.actorId);
+   assert.deepEqual(accepted.members[0].execution.binding,home);
+   assert.deepEqual(accepted.members[1].execution,execution);
+   assert.deepEqual([accepted.members[0].execution.x,accepted.members[0].execution.z],[worker.x,worker.z]);
+   const foreign=structuredClone(q);
+   const foreignSource=beforeRuin?foreign.pendingRuin:foreign.ruin.prepared;
+   foreignSource.home.assignmentSequence++;
+   await assert.rejects(readClientAssignment(foreign),/Recovered Home route differs|Invalid replacement committed assignment/);
   }
   if(endpoint){
    assert.equal(execution.arrived,true);
@@ -79,11 +92,11 @@ export async function recoverRouteAfterRuin(world,proof,at,state=null,{endpoint=
    rig=await originalRig(structuredClone(state),q.terrainManifest);
    if(endpoint)await assert.rejects(rig.recover({resources,execution,terrainManifest:q.terrainManifest,recoveryCut:boundary}),
     /Invalid recovered crop source/);
-   const requests=await rig.recover({resources,execution,terrainManifest:q.terrainManifest,recoveryCut:q.worldBoundary,ruin:q.ruin,pendingRuin:q.pendingRuin});
+   const requests=await rig.recover({resources,execution,terrainManifest:q.terrainManifest,recoveryCut:q.worldBoundary,ruin:q.ruin,pendingRuin:q.pendingRuin,flightHome:home});
    assert(requests.some(count=>count>0));
   }
   if(!beforeRuin){
-   const evidence={version:2,members:[{kind,proof:execution.binding}],ruin:proof,ruinMotors:q.ruinMotors};
+   const evidence={version:2,members:[...(home?[{kind:18,proof:home}]:[]),{kind,proof:execution.binding}],ruin:proof,ruinMotors:q.ruinMotors};
    assert.deepEqual(copyNativeRecoveryGroup(evidence,boundary).ruin,proof);
    const foreign=structuredClone(evidence);
    foreign.ruin.revisions[1]++;
@@ -109,20 +122,38 @@ export async function recoverRouteAfterRuin(world,proof,at,state=null,{endpoint=
   await assert.rejects(world.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
   const metadata={nativeWorldBoundary:boundary,
    clock:{version:1,epoch:0,elapsed:at,safeUntil:at,anchorAbsoluteMs:0,paused:true,segments:[]}};
-  if(q.ruinMotors){
-   const absent=await settleReplacementFrame(draw,draw.frame(0,metadata));
+  let motors=q.ruinMotors;
+  if(home){
+   const ref=home.reference,{device}=draw.client;
+   const buffer=device.createBuffer({size:16,usage:72});device.queue.writeBuffer(buffer,0,new Float32Array(4));
+   draw.client.registerClockBinding(buffer,{byteOffset:0,semantic:'relative',epoch:ref.worldBoundary.effectiveTime,
+    resourceEnd:nativeClockResourceEnd(ref.worldBoundary.effectiveTime,ref.endTime),nativeHome:ref});
+   draw.homeGroup=device.createBindGroup({entries:[{binding:0,resource:{buffer}}]});
+   motors={worldBoundary:ref.worldBoundary,gates:q.members[0].resources.presentation.gates};
+  }
+  const civilGroups=home?[draw.homeGroup]:[];
+  if(motors?.gates.length){
+   const noGates=submitRuinMotors(draw,{...motors,gates:[]},metadata,civilGroups);
+   const absent=await settleReplacementFrame(draw,noGates);
    assert.match(absent.message,/bound worker clock/);
    await assert.rejects(world.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
   }
-  const rendered=await settleReplacementFrame(draw,q.ruinMotors?submitRuinMotors(draw,q.ruinMotors,metadata):draw.frame(0,metadata));
+  const rendered=await settleReplacementFrame(draw,motors?submitRuinMotors(draw,motors,metadata,civilGroups):draw.frame(0,metadata));
   assert(!(rendered instanceof Error),rendered.message);
   const witness=await world.authority.checkHeldDraw(30,hold,route);
   assert(matchesRecoveredRuinMotorSamples(witness.ruinMotorSamples,q.ruinMotors,at));
   const sampledAt=endpoint?nativeClockResourceEnd(epoch,ref.endTime):at;
-  const submitted=grouped?witness.members[0]:witness;
+  const submitted=grouped?witness.members.at(-1):witness;
   assert.equal(submitted.relativeTime,floorFloat32(sampledAt-epoch));
+  if(home){
+   const civil=witness.members[0],start=home.reference.worldBoundary.effectiveTime;
+   assert.equal(civil.relativeTime,floorFloat32(at-start));
+   assert.deepEqual(civil.nativeGate,{gateId:home.gateIds[0],worldBoundary:home.reference.worldBoundary});
+   assert.equal(civil.gateElapsed,start+civil.relativeTime);
+   world.records.findLast(row=>row.kind==='home-route'&&row.committed).gateGroups=draw.motorGroups;
+  }
   rig?.presented(submitted.relativeTime);
-  if(beforeRuin){
+  if(beforeRuin||home){
    const routeRecord=world.records.findLast(row=>row.committed&&row.kind==='animal-crop-route'&&
     sameNativeAnimalCropReference(row.resources.reference,source.preparedReference));
    assert(routeRecord);
@@ -147,11 +178,12 @@ async function settleReplacementFrame(draw,pending){
  assert(settled,JSON.stringify({activeSequence,pendingSequence,errors}));return result;
 }
 
-function submitRuinMotors(draw,motors,metadata){
+function submitRuinMotors(draw,motors,metadata,groups=[]){
  const {device,context}=draw.client;
  draw.client.beginFrame(metadata);
  const encoder=device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
  pass.setPipeline(draw.pipeline);pass.setBindGroup(0,draw.group);pass.draw(3);
+ for(const group of groups){pass.setBindGroup(0,group);pass.draw(3);}
  draw.motorGroups=[];
  for(const gate of motors.gates){
   const buffer=device.createBuffer({size:16,usage:72});

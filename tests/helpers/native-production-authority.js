@@ -45,7 +45,7 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
     clock:{...clock,elapsed:start,safeUntil:end,segments:[{start,end,rate:1,realDuration:end-start}]}};
    const home=center.home&&records.findLast(item=>item.kind==='home-route'&&item.committed);
    if(center.home&&!home)throw Error('Center fixture has no matching Home rig');
-   const homeGroups=home?[...(record.omitClock==='Home'?[]:[graphics.group]),...(home.gateGroups??[])]:[];
+   const homeGroups=home?[...(record.omitClock==='Home'?[]:[graphics.homeGroup??graphics.group]),...(home.gateGroups??[])]:[];
    const groups=[...(record.omitClock==='animal'?[]:[route.cropGroup]),...homeGroups,...(record.retainedGateGroups??[])];
    const packet=await prepareExistingGroup(graphics,groups,metadata,options.signal,record.beforeDraw);
    packet.presented.catch(()=>{});record.packet=packet;
