@@ -1,5 +1,6 @@
 {
   "schema": 1,
+  "productCommit": "db87a9a6bbf46f74b36c9a6f475fc0dc7c779d94",
   "seed": 712,
   "biome": "desierto",
   "day": 2,
@@ -48,6 +49,13 @@
       "failed": 0,
       "skipped": 0
     }
+  },
+  "productBuild": {
+    "path": ".cache/desert-menu-712/hyena-product-build.log",
+    "sha256": "f74831c8352beb973a800c6794f162ea0d3915566a8b15e41e3ef2ce39ddd006",
+    "backend": "webgpu-worker",
+    "remoteDraw": true,
+    "completed": true
   },
   "hardware": {
     "path": ".cache/desert-menu-712/night-two-hyena-isolated-vite.json",
@@ -260,7 +268,45 @@
       "path": ".cache/desert-menu-712/night-two-hyena-active-strike.json",
       "sha256": "5a09aec053cf4bcf62a4610e81c196aa273850e2651248e94fff0ccf8ad4d851"
     },
-    "strikeSnapshotReloaded": false,
+    "strikeSnapshotReloaded": true,
+    "drained": true,
+    "errors": []
+  },
+  "strikeReload": {
+    "path": ".cache/desert-menu-712/night-two-hyena-reloaded-nvidia.json",
+    "sha256": "8bb43cce06aacbd1b50ed7df027c562996149c5adc87124b00bfbdd19694e53f",
+    "runner": {
+      "path": ".cache/flee-return/desert-hyena-reload-physical.mjs",
+      "sha256": "e82b2a1262ba33bef94c54d585c877227a2fa89341c34b710154aef52a767fe2"
+    },
+    "harness": {
+      "path": ".cache/flee-return/desert-hyena-reload-browser.js",
+      "sha256": "4dccc41a3cf5b864131c7090dc38e30c63d4042e6801fe692705adf5770dc511"
+    },
+    "initialTime": 1070.1365619665696,
+    "attackId": "attack-56",
+    "remaining": 1.241666705161606,
+    "firstDraw": {
+      "sequence": 27,
+      "ticket": 2,
+      "bodyId": 1,
+      "relativeTime": 0,
+      "clipAge": 0.30000001192092896
+    },
+    "hitIds": [
+      "attack-56",
+      "attack-59",
+      "attack-62"
+    ],
+    "centerHp": [
+      535,
+      510,
+      485
+    ],
+    "absence": {
+      "sequence": 321,
+      "clockElapsed": 1103.9865619665388
+    },
     "drained": true,
     "errors": []
   }
