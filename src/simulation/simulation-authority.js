@@ -58,7 +58,7 @@ import {createWorkerTutorial} from './worker-tutorial.js';
 import {dueCinematicAct,finishCinematicAct} from '../app/campaign-cinematics.js';
 import {reserveEvent,settleEvent,disableMicroEconomy,trackIncome,microState,validateMicroState} from '../microevents/economy.js';
 import {sameCenter} from '../world/native-center-ruin-source.js';
-import {assignRaidTarget,targetFor,nativeCenterAttackCohort,nativeCenterCollapseImpact,nativeCenterCollapseSite,nativeLiveCenterAttackSite,nativeLiveCenterRaidCanArm,nativeShelteredSavannaCenterActor,nativeCropCohortCurrent,nativeCropRouteSubject,nativeRetreatSubject,savedRaidStrike} from './raids.js';
+import {assignRaidTarget,targetFor,nativeCenterAttackCohort,nativeCenterCollapseImpact,nativeCenterCollapseSite,nativeLiveCenterAttackSite,nativeLiveCenterRaidCanArm,nativeShelteredCenterActor,nativeCropCohortCurrent,nativeCropRouteSubject,nativeRetreatSubject,savedRaidStrike} from './raids.js';
 import {prepareVillageIsolated,applyVillageIsolatedPlan} from './isolated-village-preflight.js';
 import {observePathMotion} from './locomotion.js';
 import {captureMotionPeers} from './worker-motion-peers.js';
@@ -78,7 +78,7 @@ export function parseSimulationChunkKey(key){
 // residency is explicit: callers must provide the confirmed simulation demand.
 export const authoritySnapshotFields=Symbol('authoritySnapshotFields');
 function nativeCenterCheckpointSite(state,animal,flightWorker=null){
- if(nativeShelteredSavannaCenterActor(state,animal))return state.structures[0];
+ if(nativeShelteredCenterActor(state,animal))return state.structures[0];
  if(!nativeDesertRefugeLayout(state)||state.raid?.daytime!==true||state.raid.animals.length!==1||
     state.raid.animals[0]!==animal||animal?.species!=='warthog'||state.workers.length!==1||
     !nativeCenterAttackCohort(state,flightWorker))return null;
@@ -402,9 +402,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     installNativeProduction();
    }finally{if(nativeBodies!==bodies)bodies.dispose();}
   }
-  function prepareShelteredSavannaCenterAttack(event){
+  function prepareShelteredCenterAttack(event){
    const animal=game.raid?.animals[0],center=game.structures[0];
-   if(!nativeWorkerLifecycle||!nativeBodies||game.raid?.daytime!==false||!nativeShelteredSavannaCenterActor(game,animal)||
+   if(!nativeWorkerLifecycle||!nativeBodies||game.raid?.daytime!==false||!nativeShelteredCenterActor(game,animal)||
       restoringPhysics||physicsInitializing||physics?.actorIds.length||
       game.raid.id!==event.raidFacts?.id||event.simulationTime!==game.elapsed||
       !game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id))||session.core.wasm.spatial_body_count()!==0)return;
@@ -636,7 +636,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    return captureNativeRaidFlightCheckpoint(state,worker,animal,home.binding.reference.sourceRequest.raidSpawnSequence,path,gates,gateIds,null,strike);
   }
   stopSettlements=observeSettlements(game.ledger,(id,n,d)=>settlements.push({id,n,d,simulationTime:game.elapsed,eventSequence:game.sequence}));
-  stopEvents=observeGameEvents(game,event=>{if(event.type==='RaidSpawned'){prepareRaidFlightAnimal(event);prepareLiveCenterAttack(event);prepareShelteredSavannaCenterAttack(event);}events.push(structuredClone(event));if(trackMicroIncome&&(event.type==='Dawn'||event.type==='CrateDelivered'))trackIncome(game,[event]);if(activeHistoricalCapture)try{activeHistoricalCapture.event(game,event,events);}catch{activeHistoricalCapture.invalidate();}});
+  stopEvents=observeGameEvents(game,event=>{if(event.type==='RaidSpawned'){prepareRaidFlightAnimal(event);prepareLiveCenterAttack(event);prepareShelteredCenterAttack(event);}events.push(structuredClone(event));if(trackMicroIncome&&(event.type==='Dawn'||event.type==='CrateDelivered'))trackIncome(game,[event]);if(activeHistoricalCapture)try{activeHistoricalCapture.event(game,event,events);}catch{activeHistoricalCapture.invalidate();}});
   const presentationJournal=createPresentationLifecycleJournal(game,observeGameEvents);
   function spellRejection(command,kind){
    if(game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id))return null;
@@ -1607,7 +1607,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       }
       if(!workersAtRefuge)return null;
       if(!qualifyAnimalCrop){
-        if(!nativeWorkerLifecycle||!nativeShelteredSavannaCenterActor(game,animal))return null;
+        if(!nativeWorkerLifecycle||!nativeShelteredCenterActor(game,animal))return null;
         if(animal.status==='retreating'){
           if(game.structures[0].status!=='intact'||!shelteredCenterRetreat(game))return null;
           const retreat=planner.nativeAnimalCropRouteExecution(animal.id);

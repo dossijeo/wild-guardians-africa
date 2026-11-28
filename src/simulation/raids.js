@@ -887,16 +887,19 @@ export function nativeCenterCollapseImpact(state,animal,center){
     Math.abs(damage.simulationTime+CENTER_COLLAPSE_SECONDS-state.elapsed-center.collapseRemaining)>1e-7)return null;
  return hit;
 }
-export function nativeShelteredSavannaCenterActor(state,animal){
- if(state.biome!=='sabana'||!nativeCenterAttackCohort(state)||state.raid.animals.length!==1||state.raid.animals[0]!==animal)return false;
- if(!state.raid.daytime)return ['warthog','hyena','buffalo','lion','rhino'].includes(animal?.species);
+export function nativeShelteredCenterActor(state,animal){
+ const raid=state.raid;
+ if(raid?.animals.length!==1||raid.animals[0]!==animal||!nativeCenterAttackCohort(state))return false;
+ if(state.biome==='desierto')return raid.daytime===false&&raid.pressureFacts?.introductory===true&&
+   raid.introCropLimit===0&&state.structures.length===1&&state.workers.length===0&&animal?.species==='warthog';
+ if(!raid.daytime)return ['warthog','hyena','buffalo','lion','rhino'].includes(animal?.species);
  const center=state.structures[0].id;
  return animal?.species==='warthog'&&(animal.targetId===center||state.events?.some(event=>
    event.type==='StructureHit'&&event.animalId===animal.id&&event.targetId===center));
 }
 export function nativeRetreatBudgetAllowed(state,animal){
  if(animal.hitsRemaining===0)return true;
- if(!nativeShelteredSavannaCenterActor(state,animal)||!animal.hitApplied||!animal.attackId||
+ if(!nativeShelteredCenterActor(state,animal)||!animal.hitApplied||!animal.attackId||
     animal.targetId||animal.reservation||animal.hitsRemaining<=0)return false;
  const center=state.structures[0],retreating=animal.status==='retreating';
  if(!retreating&&(animal.status!=='walking'||center.status!=='collapsing'||activeCrops(state.plants).length))return false;
@@ -912,7 +915,7 @@ export function nativeRetreatBudgetAllowed(state,animal){
 export function nativeAnimalCropPublicationMatches(state,{reference,attackId}){
  const animal=state.raid?.animals.find(candidate=>candidate.id==='animal-'+reference.actorId);
  const shelteredPurpose=reference.purpose==='center'||reference.purpose==='retreat';
- if(!animal||(animal.species!=='warthog'&&(!shelteredPurpose||!nativeShelteredSavannaCenterActor(state,animal))))return false;
+ if(!animal||(animal.species!=='warthog'&&(!shelteredPurpose||!nativeShelteredCenterActor(state,animal))))return false;
  if(reference.purpose==='retreat')return animal.status==='retreating'&&!animal.targetId&&nativeRetreatBudgetAllowed(state,animal)&&
   (animal.exit??animal.spawn)?.x===reference.targetX&&(animal.exit??animal.spawn)?.z===reference.targetZ;
  const targetId=(reference.purpose==='center'?'structure-':'plant-')+reference.targetId;
@@ -924,7 +927,7 @@ export function nativeCropRouteSubject(state,animal,flightWorker=null,native=nul
  const centerAttack=nativeCenterAttackCohort(state,flightWorker)&&
    (state.biome==='desierto'||animal?.targetId===state.structures[0].id);
  if((state.biome!=='sabana'&&!centerAttack)||
-    (animal?.species!=='warthog'&&!(centerAttack&&nativeShelteredSavannaCenterActor(state,animal)))||
+    (animal?.species!=='warthog'&&!(centerAttack&&nativeShelteredCenterActor(state,animal)))||
     raid?.animals.length!==1||raid.animals[0]!==animal||
     !state.workers.every(w=>w===flightWorker||w.status==='home'&&!w.raidReturn&&!w.nativeRouteAdmission)||
     !animal.approach||animal.magicDown||(animal.magicStunUntil??0)>state.elapsed||
@@ -947,7 +950,7 @@ export function nativeCropRouteSubject(state,animal,flightWorker=null,native=nul
 }
 export function nativeRetreatSubject(state,animal){
  if(!animal||(state.biome!=='sabana'&&!nativeCenterAttackCohort(state))||state.raid?.animals.length!==1||
-    state.raid.animals[0]!==animal||(animal.species!=='warthog'&&!nativeShelteredSavannaCenterActor(state,animal))||animal.status!=='retreating'||
+    state.raid.animals[0]!==animal||(animal.species!=='warthog'&&!nativeShelteredCenterActor(state,animal))||animal.status!=='retreating'||
     !nativeRetreatBudgetAllowed(state,animal)||!animal.hitApplied||animal.targetId||animal.reservation||animal.magicDown||
     (animal.magicStunUntil??0)>state.elapsed||
     !state.workers.every(w=>w.status==='home'&&!w.raidReturn&&!w.nativeRouteAdmission))return null;

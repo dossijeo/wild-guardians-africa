@@ -83,6 +83,59 @@ test('a completed Desert center strike retains the still-clear arrived approach'
   }finally{await source.close();}
 });
 
+test('ordinary Desert authority admits the first night center raid from birth through Retreat', {timeout:30000}, async()=>{
+ const waiting=new Map(),events=[];
+ const source=await nativeProductionAuthority(beforeIntroductoryDesertNight(),{
+  chunkKeys,navigationView:view,nativeWorkerLifecycle:true,emptyBeastPhysics:true,
+  onReady(record){
+   if(!waiting.has(record.kind)&&['animal-crop-route','animal-crop-strike'].includes(record.kind))
+    return new Promise(release=>waiting.set(record.kind,{record,release}));
+  }
+ });
+ const advance=async()=>{
+  const batch=await source.command({kind:'advance',seconds:.05,steps:2,nightFastForward:false});
+  events.push(...batch.events);
+  await source.present();
+  return JSON.parse(batch.snapshot);
+ };
+ const pose=animal=>[animal.x,animal.z,animal.motionPhase,animal.hitsRemaining];
+ try{
+  for(const kind of ['animal-crop-route','animal-crop-strike']){
+   for(let step=0;step<800&&!waiting.has(kind);step++)await advance();
+   const hold=waiting.get(kind);
+   assert.ok(hold,`Expected READY for ${kind}`);
+   const before=source.snapshot();
+   assert.equal(hold.record.committed,false);
+   assert.equal(before.structures[0].hp,600);
+   const held=await advance();
+   assert.deepEqual(pose(held.raid.animals[0]),pose(before.raid.animals[0]));
+   assert.equal(held.raid.animals[0].attackId,null);
+   assert.equal(held.structures[0].hp,600);
+   assert(held.elapsed>before.elapsed);
+   hold.release();
+   await untilProduction(source,()=>hold.record.committed);
+  }
+  let current;
+  for(let step=0;step<800&&!events.some(event=>event.type==='RaidEnded');step++)current=await advance();
+  assert.equal(events.filter(event=>event.type==='RaidSpawned').length,1);
+  assert.equal(events.filter(event=>event.type==='RaidEnded').length,1);
+  assert.equal(current.raid,null);
+  const acquired=source.records.filter(record=>record.committed);
+  const references=acquired.map(record=>record.resources.reference);
+  assert.deepEqual(references.map(r=>[r.kind,r.purpose]),[[26,'center'],[27,'center'],[26,'center'],[27,'center'],[26,'retreat']]);
+  assert.equal(new Set(references.map(reference=>reference.bodyId)).size,1);
+  const impacts=events.filter(event=>event.type==='AnimalLogicalHit');
+  assert.deepEqual(impacts.map(event=>event.targetId),['structure-2','structure-2']);
+  assert.notEqual(impacts[0].attackId,impacts[1].attackId);
+  assert.deepEqual(impacts[0].presentation.animal,impacts[1].presentation.animal);
+  assert.deepEqual(events.filter(event=>event.type==='StructureHit').map(event=>event.structureHit.hp),[580,560]);
+  assert.deepEqual(source.faults,[]);
+ }finally{
+  for(const hold of waiting.values())hold.release();
+  await source.close();
+ }
+});
+
 function savedAttack() {
   const state = beforeRaid();
   const session = residentSession(state);
@@ -364,12 +417,18 @@ async function restoreShelteredRetreatBeforeRuin(checkpoint,manifest,source){
  }finally{releaseRoute?.();releaseRuin?.();await restored.close();}
 }
 
-for(const savanna of [false,true])test(`center ruin spends its retained ticket inside the ordinary ${savanna?'Savanna':'Desert'} Retreat substep`, {timeout:90000}, async()=>{
- const snapshot=savanna?gunzipSync(readFileSync(new URL('./fixtures/sabana714-d5-before-rhino.json.gz',import.meta.url))).toString():savedAttack();
- const initial=deserialize(snapshot);
- const options=savanna?savedNativeAuthorityOptions(snapshot):{chunkKeys,navigationView:view,qualifyAnimalCrop:true};
- if(!savanna){initial.structures[0].hp=140;initial.raid.animals[0].hitsRemaining=1;}
- else assert.equal(options.nativeWorkerLifecycle,true);
+for(const mode of ['Desert','Savanna','introductory Desert'])test(`center ruin spends its retained ticket inside the ordinary ${mode} Retreat substep`, {timeout:90000}, async()=>{
+ const savanna=mode==='Savanna',introductory=mode==='introductory Desert';
+ const snapshot=savanna?gunzipSync(readFileSync(new URL('./fixtures/sabana714-d5-before-rhino.json.gz',import.meta.url))).toString():
+  introductory?null:savedAttack();
+ const initial=introductory?beforeIntroductoryDesertNight():deserialize(snapshot);
+ const options=savanna?savedNativeAuthorityOptions(snapshot):{chunkKeys,navigationView:view,
+  ...(introductory?{nativeWorkerLifecycle:true,emptyBeastPhysics:true}:{qualifyAnimalCrop:true})};
+ if(savanna)assert.equal(options.nativeWorkerLifecycle,true);
+ else {
+  initial.structures[0].hp=140;
+  if(!introductory)initial.raid.animals[0].hitsRemaining=1;
+ }
  let releaseReady,replacement;
  const readyGate=new Promise(resolve=>{releaseReady=resolve;});
  const manifest={epoch:'savanna-rhino-loss',chunks:options.chunkKeys.map(key=>{
@@ -381,7 +440,7 @@ for(const savanna of [false,true])test(`center ruin spends its retained ticket i
  const polygonIds=result=>result.nativeAuthorityCheckpoint.spatialState.polygons.map(row=>row.id);
  try{
   fixture.command({kind:'setNavigationView',view:options.navigationView});
-  if(!savanna)await untilProduction(fixture,()=>fixture.records.some(row=>row.kind==='animal-crop-route'&&row.committed));
+  if(mode==='Desert')await untilProduction(fixture,()=>fixture.records.some(row=>row.kind==='animal-crop-route'&&row.committed));
   const intact=checkpoint();
   let previous=JSON.parse(intact.snapshot),result,steps,beforeRuin;
   const events=[];
@@ -444,6 +503,13 @@ for(const savanna of [false,true])test(`center ruin spends its retained ticket i
   const ruins=events.filter(row=>row.type==='StructureRuined');
   assert.deepEqual(ruins.map(row=>[row.targetId,row.simulationTime]),[[source.center,source.end]]);
   assert.equal(events.filter(row=>row.type==='AnimalLogicalHit').length,1);
+  if(introductory){
+   const [animal]=state.raid.animals;
+   const departure=events.find(event=>event.type==='AnimalRetreating');
+   assert.deepEqual([animal.species,animal.hitsRemaining],['warthog',1]);
+   assert.deepEqual([departure.reason,departure.hitsRemaining],['no-reachable-unleased-target',1]);
+   assert(nativeAnimalCropPublicationMatches(state,{reference:source.retreat.reference}));
+  }
   if(savanna){
    const [animal]=state.raid.animals;
    const ref=source.retreat.reference,matching={reference:ref};

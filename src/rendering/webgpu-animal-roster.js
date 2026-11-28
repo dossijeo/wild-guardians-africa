@@ -4,7 +4,7 @@ import {attachNativeSourcePresentation} from './native-source-presentation.js';
 import {createAnimalCropGpuMotion} from './native-gpu-motion.js';
 import {markRemoteAnimalCropNode} from './remote-clock-bindings.js';
 import {createNativeStationaryGpuTransform} from './native-stationary-gpu-transform.js';
-import {nativeAnimalCropPublicationMatches,nativeRetreatBudgetAllowed,nativeShelteredSavannaCenterActor,raidStrikeClips} from '../simulation/raids.js';
+import {nativeAnimalCropPublicationMatches,nativeRetreatBudgetAllowed,nativeShelteredCenterActor,raidStrikeClips} from '../simulation/raids.js';
 import {copyNativeAnimalCropReference,copyNativeAnimalCropProposal,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference,nativeAnimalCropSuccessor,nativeAnimalStrikeClipAge} from '../world/native-animal-crop-resource.js';
 import {centerRuinApproachEndpoint,matchesNativeCenterEndpointPose,nativeCenterApproachEndpoint,nativeRaidFlightApproachEndpoint,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
 import {createBakedWalkRetry} from './baked-walk-retry.js';
@@ -218,7 +218,7 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
     entry.entity.hitsRemaining===1&&(entry.entity.exit??entry.entity.spawn)?.x===ref.targetX&&
     (entry.entity.exit??entry.entity.spawn)?.z===ref.targetZ;
   const source=()=>entry?.entity?.id===id&&(entry.entity.species==='warthog'||
-    ((center||ref.purpose==='retreat'&&!encounterRetreat)&&nativeShelteredSavannaCenterActor(state,entry.entity)))&&
+    ((center||ref.purpose==='retreat'&&!encounterRetreat)&&nativeShelteredCenterActor(state,entry.entity)))&&
     (encounterRetreat?isEncounterRetreat():ref.purpose==='retreat'?
     entry.entity.status==='retreating'&&nativeRetreatBudgetAllowed(state,entry.entity)&&!entry.entity.targetId&&
     (entry.entity.exit??entry.entity.spawn)?.x===ref.targetX&&(entry.entity.exit??entry.entity.spawn)?.z===ref.targetZ:
@@ -269,7 +269,7 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
     // crop request now owns further clip selection through GPU acquisition.
     await Promise.all([entry.runReady,entry.attackReady]);check();
     requestBakedWalk(id,entry);await entry.walkLoad;await entry.walkReady;check();
-    if(travel&&center&&entry.entity.status==='entering'&&nativeShelteredSavannaCenterActor(state,entry.entity)){
+    if(travel&&center&&entry.entity.status==='entering'&&nativeShelteredCenterActor(state,entry.entity)){
      requestBakedRun(id,entry,pending);await entry.runReady;check();
      if(!entry.runInstalled)throw Error('Native center birth lacks its original running rig');
     }
@@ -342,7 +342,7 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
     // Admit Walking with the confirmed nocturnal actor if its bake is ready
     // when the rig loads. Otherwise the existing late admission takes over.
     const prepareWalking=!selectedBake&&bakedWalkBank&&(bakedWalkSpecies===null||entry.species===bakedWalkSpecies)&&
-     entry.entity.status==='entering'&&state.raid?.daytime===false&&nativeShelteredSavannaCenterActor(state,entry.entity);
+     entry.entity.status==='entering'&&state.raid?.daytime===false&&nativeShelteredCenterActor(state,entry.entity);
     let preparedWalk=null;
     if(prepareWalking)void Promise.resolve().then(()=>bakedWalkBank.get(entry.species)).then(bake=>{preparedWalk=bake;},()=>{});
     const actor=await createAnimal({scene,residency,state,renderer,actorId:id,assetBank,bakedWalk:selectedBake,readInitialBakedWalk:prepareWalking?()=>preparedWalk:null,confirmedClock:experimentalHistoricalMotion?.clock??confirmedClock,phaseSource:entry.phase??null,resourceRegistry,experimentalPoseReconciliation:experimentalProvisionalFall,reconcileImpactPose:experimentalProvisionalFall||provisionalBakedFall,getEntity:()=>entry.entity,getPose:()=>poses.get(id)??null,getProvisional:(animal,elapsed)=>provisional.sample(animal,elapsed,{holdUntilPhysical:true}),getFalls:()=>falls,onPhysical:()=>finishTarget(id),signal:entry.controller.signal});

@@ -11,7 +11,7 @@ import {copyNativeAnimalCropAttestation,copyNativeAnimalCropProposal,sameNativeA
 import {nativeMotionPresentationMatches} from '../native-motion-presentation-match.js';
 import {copyNativeShieldWorld,nativeShieldWorldKind,shieldCropStopFromProposal,copyNativeShieldCropExpiry} from '../native-shield-world.js';
 import {spatialShieldFootprint} from './spatial-shield-mirror.js';
-import {canAttackCrop,nativeCenterAttackCohort,nativeCenterAttackSite,nativeCenterCollapseSite,nativeLiveCenterAttackSite,nativeShelteredSavannaCenterActor,nativeCropRouteSubject,nativeCropCohortCurrent,nativeRetreatBudgetAllowed,nativeRetreatSubject,reachableApproach,raidTarget,previewRaidStrike,projectAcquiredRaidStrike,savedRaidStrike} from '../../simulation/raids.js';
+import {canAttackCrop,nativeCenterAttackCohort,nativeCenterAttackSite,nativeCenterCollapseSite,nativeLiveCenterAttackSite,nativeShelteredCenterActor,nativeCropRouteSubject,nativeCropCohortCurrent,nativeRetreatBudgetAllowed,nativeRetreatSubject,reachableApproach,raidTarget,previewRaidStrike,projectAcquiredRaidStrike,savedRaidStrike} from '../../simulation/raids.js';
 import {captureRefugeReturnCheckpoint,copyRestoredRefugeReturn,refugeCheckpointGateFields,refugeWorkerPose,sameRefugePose,validateRefugeReturnState} from '../native-refuge-return.js';
 import {nativeEncounterCheckpointActors} from '../../simulation/native-encounter-checkpoint.js';
 import {farmStopCutFromNative,savedRaidFlightHomeGateIds} from '../../simulation/native-raid-flight-checkpoint.js';
@@ -1456,7 +1456,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     if(state!==owningState||!wasm.nav_animal_strike_restore_request||!Number.isSafeInteger(bodyId)||bodyId<1)return false;
     const subject=nativeCropRouteSubject(state,animal,flightWorker),saved=savedRaidStrike(animal);
     const refugeOwnsAnimal=restoredRefuge?.raid===state.raid&&restoredRefuge?.saved.animalId===numericId(animal.id);
-    if(!subject||subject.purpose==='center'&&!refugeOwnsAnimal&&!flightWorker&&!nativeShelteredSavannaCenterActor(state,animal)||!saved||saved.attackId>=state.sequence||
+    if(!subject||subject.purpose==='center'&&!refugeOwnsAnimal&&!flightWorker&&!nativeShelteredCenterActor(state,animal)||!saved||saved.attackId>=state.sequence||
        !Number.isFinite(animal.heading)||!Number.isFinite(animal.motionPhase))return false;
     syncBoundaryTime();
     return wasm.nav_animal_strike_restore_request(numericId(animal.id),wasm.nav_intent_session(),bodyId,numericId(subject.center.id),
@@ -1466,10 +1466,10 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     const peer=!retreat&&state?.biome==='desierto'&&raidFlight?.centerAttack?nativeRaidFlightMember(state,animal):null;
     const flight=peer?.nativeRouteAdmission==='native-home'?peer:null;
     if(state!==owningState||!animal?.hitApplied||animal.status!=='walking'||
-       (retreat?!nativeRetreatBudgetAllowed(state,animal):!(animal.hitsRemaining>0))||
-       (animal.species!=='warthog'&&!nativeShelteredSavannaCenterActor(state,animal))||state.raid?.animals.length!==1||
+       (animal.species!=='warthog'&&!nativeShelteredCenterActor(state,animal))||state.raid?.animals.length!==1||
        state.raid.animals[0]!==animal||animal.magicDown||(animal.magicStunUntil??0)>state.elapsed||
        !state.workers.every(w=>w===flight||w.status==='home'&&!w.raidReturn&&!w.nativeRouteAdmission))return null;
+    if(!retreat&&!(animal.hitsRemaining>0)||retreat!==nativeRetreatBudgetAllowed(state,animal))return null;
     const centerCohort=animalRouteV2&&nativeCenterAttackCohort(state,flight);
     if(state.biome!=='sabana'&&!centerCohort||
        wasm.nav_animal_finished_strike_snapshot?.(numericId(animal.id))!==1)return null;
@@ -1606,7 +1606,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     const expected=r.purpose==='retreat'?exit?.x===r.targetX&&exit.z===r.targetZ:
       ['entering','walking'].includes(animal?.status)&&(r.purpose==='center'?
         recoveredCenterCurrent(r,animal,live,flightWorker):animal.targetId==='plant-'+r.targetId);
-    if((animal?.species!=='warthog'&&!((r.purpose==='center'||r.purpose==='retreat')&&nativeShelteredSavannaCenterActor(owningState,animal)))||
+    if((animal?.species!=='warthog'&&!((r.purpose==='center'||r.purpose==='retreat')&&nativeShelteredCenterActor(owningState,animal)))||
        !expected||animal.magicDown||live?.mode!==2||!endpoint&&(live.arrived||live.executedThrough>=r.endTime)||
        live.executedThrough!==owningState.elapsed||
        live.purpose!==r.purpose||live.body!==r.bodyId||live.target!==r.targetId||live.requestSequence!==r.requestSequence||
@@ -1867,7 +1867,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
        !(sharedCut?nativeRecoveryCovers(nativeWorldBoundary(),r.worldBoundary):sameNativeWorldBoundary(r.worldBoundary,nativeWorldBoundary())))return null;
     const animal=owningState?.raid?.animals.find(value=>value.id===actorId);
     if(!animal||animal.magicDown||
-       animal.species!=='warthog'&&!(r.purpose==='center'&&nativeShelteredSavannaCenterActor(owningState,animal))||
+       animal.species!=='warthog'&&!(r.purpose==='center'&&nativeShelteredCenterActor(owningState,animal))||
        animal.hitsRemaining<=0||owningState.raid.reservations[animal.reservation]!==actorId)return null;
     const live=nativeAnimalCropState(actorId),strike=live?.strike,saved=savedRaidStrike(animal);
     if(r.purpose==='center'?!recoveredCenterCurrent(r,animal,live,flightWorker):animal.targetId!=='plant-'+r.targetId)return null;
