@@ -15,6 +15,29 @@ static const RouteSlot* animalStrikeRoute(const IntentState& s,uint64_t actor,ui
     body.z!=route.executionPose[1]||body.r!=route.radius)return nullptr;
  return &route;
 }
+// A second body can share a center strike only through the Home route that
+// admitted this approach during the same raid. The held strike pose must stay
+// clear for the Home suffix, including its endpoint and gate waits.
+static bool centerStrikeCohort(const IntentState& s,const RouteSlot& crop,
+    std::shared_ptr<const NativeHomeRouteBinding>& home){
+ const auto& animal=crop.animalRouteBinding->source;
+ if(!animal->attackCenter||spatial_body_count()==1)return true;
+ if(spatial_world_biome()!=1||spatial_body_count()!=2||s.activeIntents.size()!=2||crop.centerEncounter)return false;
+ for(const auto& [actor,intent]:s.activeIntents){
+  if(actor==crop.actor)continue;
+  if(!nativeHomeBodyCurrent(s,intent))return false;
+  const auto& route=s.routeSlots[intent.slot];
+  const auto& binding=route.homeBinding;
+  const auto& source=binding->requestSource;
+  if(!source||!source->raidSpawnSequence||source->body==animal->body||binding->centerFlight.animal!=animal)return false;
+  double contact;
+  if(reservationConflict({&route},{nullptr,crop.executionPose[0],crop.executionPose[1]},
+      animal->radius+std::max(1.1,route.radius),s.effectiveTime,contact))return false;
+  home=binding;
+  return true;
+ }
+ return false;
+}
 static bool restoredAnimalStrikeCurrent(const IntentState& s,const ActiveIntent& intent,bool acquired){
  const auto& restored=intent.restoredAnimalStrike;
  if(!restored||!intent.animal||!intent.lease||intent.generation||
@@ -88,9 +111,10 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_strike_proposal_stage(double actor,double se
  const auto& target=s.targets.at(binding->source->target);
  const double dx=target.x-body[0],dz=target.z-body[1];
  if(!std::isfinite(dx)||!std::isfinite(dz)||(dx==0&&dz==0)||!(s.effectiveTime+duration>s.effectiveTime))return -2;
+ NativeAnimalStrike draft;draft.route=binding;
+ if(!centerStrikeCohort(s,*route,draft.flightHome))return -2;
  const int result=stageWorldMutationBoundary(nullptr,0);if(result!=1)return result;
  auto& p=s.barrierProposal;p.kind=27;
- NativeAnimalStrike draft;draft.route=binding;
  draft.header={1,actor,double(binding->source->body),double(target.id),assignment,double(binding->actual.ticket),double(route->generation),
                clip,duration,target.x,target.z,body[0],body[1],body[3],std::atan2(dx,dz),p.at,p.at+duration,double(p.ticket),double(p.session)};
  p.animalStrike=std::move(draft);return 1;
@@ -106,7 +130,8 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_strike_proposal_revalidate(double session,do
  const auto old=*p.animalStrike;const auto& h=old.header;clearWorldMutationProposal(p);
  const int result=nav_animal_strike_proposal_stage(h[1],session,h[4],h[7],h[8]);if(result!=1)return result;
  auto& next=*p.animalStrike;
- if(next.route!=old.route||next.restored!=old.restored||!std::equal(h.begin(),h.begin()+15,next.header.begin())){clearWorldMutationProposal(p);return -2;}
+ if(next.route!=old.route||next.restored!=old.restored||next.flightHome!=old.flightHome||
+    !std::equal(h.begin(),h.begin()+15,next.header.begin())){clearWorldMutationProposal(p);return -2;}
  next.prepared=old.header;return 1;
 }
 EMSCRIPTEN_KEEPALIVE int nav_animal_strike_proposal_commit_bound(double session,double ticket,double sequence,double time,double clockSequence,double preparedTicket,double attackId){
@@ -119,7 +144,8 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_strike_proposal_commit_bound(double session,
   if(draft.restored!=intent.restoredAnimalStrike||draft.restored->attackId!=attackId||!restoredAnimalStrikeCurrent(s,intent,false))return -2;
  }else{
   const auto* route=animalStrikeRoute(s,uint64_t(h[1]),uint64_t(h[4]));
-  if(!route||route->animalRouteBinding!=draft.route)return -2;
+  std::shared_ptr<const NativeHomeRouteBinding> home;
+  if(!route||route->animalRouteBinding!=draft.route||!centerStrikeCohort(s,*route,home)||home!=draft.flightHome)return -2;
  }
  const auto& target=s.targets.at(uint64_t(h[3]));if(target.x!=h[9]||target.z!=h[10])return -2;
  if(preparedTicket==ticket)draft.prepared=h;

@@ -302,6 +302,7 @@ struct RestoredAnimalStrike {
 struct NativeAnimalStrike {
  std::shared_ptr<const NativeAnimalRouteBinding> route;
  std::shared_ptr<const RestoredAnimalStrike> restored;
+ std::shared_ptr<const NativeHomeRouteBinding> flightHome;
  std::array<double,19> header{};
  std::optional<std::array<double,19>> prepared;
  uint64_t attackId=0;

@@ -11,6 +11,7 @@ import {readClientAssignment,recoverRouteAfterRuin} from './helpers/native-cente
 import {fixture,flush,pair} from './helpers/remote-webgpu-fixture.js';
 import {nativeClockResourceEnd} from '../src/rendering/native-clock-resource-end.js';
 import {originalRig} from './helpers/native-animal-crop-rig.js';
+import {previewRaidStrike} from '../src/simulation/raids.js';
 
 // Open the existing causal motor entry point at a controlled Game boundary.
 // The production authority has no command for independently closing gates.
@@ -91,6 +92,31 @@ test('Draw loss retains the arrived center approach while Home crosses its gate'
   assert.equal(state.structures.find(row=>row.id===entityId).gateOpen,1);
   assert(at>ref.endTime);
 
+  const wasm=access.session.core.wasm,sid=ref.worldBoundary.nativeSession;
+  const clip=previewRaidStrike(state,animal);
+  const stage=()=>wasm.nav_animal_strike_proposal_stage(ref.actorId,sid,route.assignmentSequence,clip.index,clip.duration);
+  const ticket=()=>{
+   assert.equal(wasm.nav_intent_barrier_proposal_ticket(),1);
+   return Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6));
+  };
+  // The same physical endpoint must not authorize a strike with an unrelated
+  // body in the native cohort, even if it is far from either trajectory.
+  const foreignBody=123456;
+  assert.equal(wasm.spatial_body_upsert(foreignBody,-37,-37,.28,0,1),1);
+  try{
+   assert.equal(stage(),-2);
+   assert.equal(wasm.nav_intent_barrier_proposal_ticket(),0);
+  }finally{assert.equal(wasm.spatial_body_remove(foreignBody),1);}
+  assert.equal(stage(),1);
+  const staged=ticket();
+  assert.equal(staged[5],27);
+  assert.equal(wasm.nav_animal_strike_proposal_revalidate(...staged.slice(0,2)),1);
+  const revalidated=ticket();
+  assert(revalidated[1]>staged[1]);
+  assert.deepEqual(revalidated.slice(2),staged.slice(2));
+  assert.equal(wasm.nav_animal_strike_proposal_cancel(...revalidated.slice(0,2)),1);
+  assert.deepEqual(planner.nativeGateCrossings(entityId).find(row=>row.bodyId===crossing.bodyId),crossing);
+
   world.gpu.device.destroy();world.retireResourceEndpoint();
   const hold=await world.authority.quiesceNativeIntentProduction();
   const retirement=await world.authority.flushNativeResourcePreparation({allowRetired:true});
@@ -151,7 +177,26 @@ test('Draw loss retains the arrived center approach while Home crosses its gate'
   assert.equal(frame.bindings.find(row=>row.nativeAnimalCrop).relativeTime,terminalAge);
   assert.deepEqual(world.faults,[]);
   assert.deepEqual(draw.errors,[]);
-  t.diagnostic(JSON.stringify({at,crossing,homeAge:witness.members[0].relativeTime,terminalAge,elapsedAfterResume:next.elapsed}));
+  // Exercise acquisition in WASM at the recovered cut. The ordinary Game
+  // producer still leaves Strike27 behind Home19.
+  const activeCrossing=planner.nativeGateCrossings(entityId).find(row=>row.bodyId===crossing.bodyId);
+  assert.deepEqual(activeCrossing,crossing);
+  assert.equal(stage(),1);
+  const first=ticket();
+  const afterStage=JSON.parse(world.command(advance).snapshot);
+  assert.equal(afterStage.elapsed,next.elapsed+.05);
+  assert(afterStage.workers[0].z>next.workers[0].z);
+  assert.equal(wasm.nav_animal_strike_proposal_revalidate(...first.slice(0,2)),1);
+  const go=ticket(),attackId=afterStage.sequence;
+  assert.equal(wasm.nav_animal_strike_proposal_commit_bound(...go.slice(0,5),first[1],attackId),1);
+  assert.equal(wasm.nav_animal_strike_snapshot(ref.actorId),1);
+  const strike=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_animal_strike_snapshot_ptr(),25));
+  assert.deepEqual([strike[2],strike[4],strike[5],strike[6]],
+   [ref.bodyId,route.assignmentSequence,ref.worldBoundary.ticket,ref.generation]);
+  assert.deepEqual([strike[15],strike[17],strike[19],strike[20],strike[22],strike[23]],
+   [afterStage.elapsed,go[1],attackId,0,first[1],next.elapsed]);
+  assert.deepEqual(planner.nativeGateCrossings(entityId).find(row=>row.bodyId===crossing.bodyId),crossing);
+  t.diagnostic(JSON.stringify({at,crossing,homeAge:witness.members[0].relativeTime,terminalAge,strikeAcquiredAt:strike[15]}));
  }finally{
   delete globalThis[owner];rig?.close();draw?.client.dispose();await draw?.host.dispose();await world?.close();
  }
