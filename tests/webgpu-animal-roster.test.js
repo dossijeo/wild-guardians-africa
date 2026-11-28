@@ -165,10 +165,25 @@ test('a transient walking download is retried without a new publication',async()
  const roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank:bank,walkRetryDelay:5,pipelineAdmission:{prepare:async()=>{}},bakedWalkBank:{get(){if(++requests===1)return Promise.reject(Error('temporary'));return Promise.resolve({meta:{species:'hyena'}});}},createAnimal:()=>{created++;return {root:new Group(),update(){this.root.visible=true;},async installBakedWalk(){installed++;return true;},dispose(){}};}});
  try{roster.sync();await flush();await flush();assert.equal(requests,1);await new Promise(resolve=>setTimeout(resolve,35));await flush();assert.equal(requests,2);assert.equal(installed,1);assert.equal(created,1);}finally{roster.dispose();}
 });
-test('walking download retries are bounded and cancelled on removal',async()=>{
+test('walking download retries are bounded and cancelled on removal',async t=>{
+ let time=0;
+ t.mock.method(performance,'now',()=>time);
+ t.mock.timers.enable({apis:['setTimeout']});
  const animals=[{id:'a',species:'hyena',status:'walking'},{id:'b',species:'lion',status:'walking'}],state={raid:{animals}},calls=[],bank={tick(){},dispose(){}};
  const roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank:bank,walkRetryDelay:5,pipelineAdmission:{prepare:async()=>{}},bakedWalkBank:{get(species){calls.push(species);return Promise.reject(Error('unavailable'));}},createAnimal:()=>({root:new Group(),update(){this.root.visible=true;},dispose(){}})});
- try{roster.sync();await flush();await flush();animals.pop();roster.sync();await new Promise(resolve=>setTimeout(resolve,100));assert.equal(calls.filter(x=>x==='hyena').length,4);assert.equal(calls.filter(x=>x==='lion').length,1);assert.equal(roster.get('a').root.visible,true);}finally{roster.dispose();}
+ try{
+  roster.sync();await flush();
+  assert.deepEqual(calls,['hyena','lion']);
+  animals.pop();roster.sync();
+  for(const delay of [5,10,20,100]){
+   time+=delay;
+   t.mock.timers.tick(delay);
+   await flush();
+  }
+  assert.deepEqual(calls,['hyena','lion','hyena','hyena','hyena']);
+  assert.equal(roster.get('b'),null);
+  assert.equal(roster.get('a').root.visible,true);
+ }finally{roster.dispose();}
 });
 test('a status change during a failed animal bake is retained for one retry',async()=>{
  const entity={id:'a',species:'hyena',status:'walking'},state={raid:{animals:[entity]}},bank={tick(){},dispose(){}};let fail,requests=0,installs=0;
