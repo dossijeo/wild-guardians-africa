@@ -980,7 +980,13 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           nativeRouteFrame.bindings.some(row=>sameNativeAnimalCropReference(row.nativeAnimalCrop,crop.preparedReference)&&
             row.executionEpoch===clockElapsed&&row.relativeTime===0)?
           {version:1,sequence:active.sequence,worldBoundary:frameBoundary(active),elapsed:clockElapsed,assignment:crop.assignmentSequence}:null;
-        port.postMessage({ type: 'presented', ...(nativeSubmission?{nativeSubmission}:{}), sequence: active.sequence, metadata: active.metadata, transportTiming: active.transportTiming, absoluteTime: absoluteNow(), backend: 'webgpu', replayFrames: metrics.replayFrames });
+        const gateIds=active.metadata?.preparedGateMotorIds,world=frameBoundary(active);
+        const gateMotionSubmission=submitted&&world&&clockElapsed===world.effectiveTime&&Array.isArray(gateIds)&&gateIds.length&&
+          nativeRouteFrame.bindings.filter(row=>row.nativeGate&&sameNativeWorldBoundary(row.nativeGate.worldBoundary,world)).length===gateIds.length&&
+          gateIds.every(id=>nativeRouteFrame.bindings.some(row=>row.nativeGate?.gateId===id&&row.elapsed===clockElapsed&&row.epoch===clockElapsed&&
+            sameNativeWorldBoundary(row.nativeGate.worldBoundary,world)))?
+          {version:1,sequence:active.sequence,worldBoundary:world,elapsed:clockElapsed,gateIds}:null;
+        port.postMessage({ type: 'presented', ...(nativeSubmission?{nativeSubmission}:{}), ...(gateMotionSubmission?{gateMotionSubmission}:{}), sequence: active.sequence, metadata: active.metadata, transportTiming: active.transportTiming, absoluteTime: absoluteNow(), backend: 'webgpu', replayFrames: metrics.replayFrames });
         releaseSnapshot(previous?.resourceSnapshot);
       }
       return submitted ? 'submitted' : 'no-submission';

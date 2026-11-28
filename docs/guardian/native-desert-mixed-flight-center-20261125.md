@@ -735,7 +735,7 @@ Kind4 conserva la aproximación original cuando el único cambio posterior de mu
 
 En NVIDIA Turing, el cierre se adquirió a los 59,69 s. El dibujo 369 retiró el polígono 10 a los 59,70 s con el cuerpo 2, los dos relojes de motor a una edad de 0,01 s, la ceniza, 270 instancias de escombros y 78 de humo. Draw drenó. Una primera pasada alcanzó el fence de kind4 y rechazó la copia física de un uniforme de motor. El control de CPU reprodujo esa copia y la segunda pasada física presentó el paquete completo. [Recibo de admisión y validación](performance/native-desert-center-ruin-moving-gates-admission-20261128.json).
 
-La prueba controla el instante en que se pide el cierre. Quedan el recorrido con un civil todavía cruzando y la recarga durante el derrumbe con motores en marcha.
+La prueba controla el instante en que se pide el cierre. Queda por acreditar el derrumbe con un civil todavía cruzando.
 
 #### Sustitución de Draw después de la ruina con las hojas en marcha
 
@@ -748,3 +748,9 @@ En Edge con NVIDIA Turing, tras destruir el dispositivo original, el sustituto r
 La autoridad cancela la propuesta interrumpida y mantiene el centro en colapso y su polígono instalado. El sustituto acredita el corredor y los dos programas del mundo anterior al GO, junto con el instante exacto de la interrupción. El FIFO vuelve a preparar el subpaso pendiente en ese mismo instante. El control de CPU verifica que una respuesta sin motores o de otro instante se rechaza.
 
 En Edge con NVIDIA Turing, el fence del ticket 23 seguía sin ACK al destruir el dispositivo. El primer envío del sustituto conservó el cuerpo 2 y los dos motores del ticket 22 a los 58,84 s. El subpaso pendiente adquirió el ticket 24 y retiró el polígono 10 a los 58,85 s. El dibujo 4 mostró el avance de los dos motores, la ceniza y las instancias de humo y escombros. Hubo un solo `StructureRuined` y Draw drenó sin errores. Las 88 pruebas dirigidas pasaron. El arnés admite ambos cierres al inicio de ese subpaso y retiene el fence original para provocar la pérdida. [Recibo](performance/native-desert-center-ruin-moving-gates-fence-loss-20261128.json).
+
+#### Guardado público con las dos hojas cerrándose
+
+El marcador de refugio v3 guarda las aperturas, los tiempos de los cierres adquiridos y la pose confirmada durante el mismo avance. La sesión nueva readmite la aproximación y vuelve a certificar el tramo restante de los motores en WASM. Antes de avanzar, la autoridad exige el primer envío del paquete conjunto en el instante guardado. Los controles deterministas guardan y recargan antes y después de retirar el polígono. Rechazan duplicar un motor, alterar su plazo o aceptar una prueba de dibujo tardía.
+
+En NVIDIA Turing se guardó después de la ruina, a los 57,70 s, con las dos aperturas al 98,33 %. La recarga mantuvo la pose y las aperturas con el READY retenido. El envío 24 presentó juntos los motores y el facóquero a edad cero. El archivo anterior a la retirada se generó con el Host determinista a los 48,90 s, con ambas aperturas al 83,33 %. NVIDIA presentó los tres relojes a edad cero en el envío 14 y mantuvo los motores en el envío 18 de la ruina a los 49,25 s, junto con ceniza, humo y escombros. En ambas recargas se cerraron ambas hojas, el golpe pendiente dejó `structure-2` en 580 HP, el trabajador volvió a Idle y hubo una sola ruina y drenaje sin errores. Queda por probar la pérdida del dispositivo durante la propia readmisión de disco. [Recibo](performance/native-desert-center-ruin-moving-gates-disk-20261128.json).

@@ -8,6 +8,7 @@ import {sameNativeAnimalCropReference} from '../../src/world/native-animal-crop-
 import {pair,fixture,flush,preparedWorldDraw} from './remote-webgpu-fixture.js';
 import {prepareHomeAbsenceDraw} from './native-home-arrival-remote.js';
 import {NATIVE_STOP_POSE_FIELDS} from '../../src/world/native-worker-route-stop-codec.js';
+import {nativeClockResourceEnd} from '../../src/rendering/native-clock-resource-end.js';
 
 const module=new WebAssembly.Module(readFileSync(process.env.QA_BARRIER_WASM??new URL('../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const kinds={prepareNativeAnimalCropRouteResources:['animal-crop-route'],prepareNativeAnimalCropStrikeResources:['animal-crop-strike'],prepareNativeFarmArrivalResources:['farm-arrival','farmArrivalTemplate','nativeFarmArrival'],prepareNativeIdleStrollResources:['idle-stroll','strollTemplate','nativeStroll'],prepareNativeIdleCycleResources:['idle-cycle','cycleTemplate','nativeIdleCycle'],prepareNativeInitialIdleBodyResources:['initial-idle-body','initialBodyTemplate','nativeInitialIdleBody'],prepareNativeHomeRouteResources:['home-route','homeTemplate','nativeHome'],prepareNativeHomeArrivalResources:['home-arrival'],prepareNativeTaskStartResources:['task-start','startTemplate','nativeStart'],prepareNativeTaskActionResources:['task-action','actionTemplate','nativeAction'],prepareNativeTaskConsequenceResources:['task-consequence','consequenceTemplate','nativeConsequence'],prepareNativeTaskSettlementResources:['task-settlement','settlementTemplate','nativeSettlement']};
@@ -47,6 +48,29 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
    try{await onReady(record,options);}catch(error){packet.abort();throw error;}
    return {preparedWorldBoundary:packet.preparedWorldBoundary,preparedCenterRuin:center,valid:packet.valid,
     commit(data){record.commit=data;record.committed=packet.commit(data.worldBoundary,data.nativeCenterRuin);if(record.committed)onCommit?.(record,data);return record.committed;},
+    abort(){record.aborted=true;packet.abort();}};
+  }
+  if(method==='prepareNativeGateResources'&&resources.kind===12&&resources.phase==='proposal'&&resources.gates?.every(gate=>gate.worldBoundary)){
+   const record={kind:'gate-motion',resources,committed:false,aborted:false};records.push(record);
+   const boundary=resources.worldBoundary,at=boundary.effectiveTime;
+   const route=records.findLast(item=>item.kind==='animal-crop-route'&&item.committed);
+   await graphics.client.whenFrameSettled();
+   await onPrepare(record,options);
+   const groups=resources.gates.map(gate=>{
+    const buffer=graphics.client.device.createBuffer({size:16,usage:72});
+    graphics.client.device.queue.writeBuffer(buffer,0,new Float32Array(4));
+    graphics.client.registerClockBinding(buffer,{byteOffset:0,semantic:'relative',epoch:at,resourceEnd:nativeClockResourceEnd(at,gate.endTime),
+     nativeGate:{gateId:gate.gateId,worldBoundary:boundary}});
+    return graphics.client.device.createBindGroup({entries:[{binding:0,resource:{buffer}}]});
+   });
+   record.gateGroups=groups;
+   const packet=await prepareExistingGroup(graphics,[...(route?[route.cropGroup]:[]),...groups],
+    {nativeWorldBoundary:boundary,...(options.confirmGateMotion?{preparedGateMotorIds:resources.gates.map(gate=>gate.gateId)}:{}),
+     clock:{...clock,elapsed:at,safeUntil:at,paused:true,segments:[]}},options.signal);
+   packet.presented.catch(()=>{});record.packet=packet;
+   try{await onReady(record,options);}catch(error){packet.abort();throw error;}
+   return {preparedWorldBoundary:packet.preparedWorldBoundary,preparedFrameSequence:packet.sequence,presented:packet.presented,valid:packet.valid,
+    commit(data){record.committed=packet.commit(data.worldBoundary);if(record.committed)onCommit?.(record,data);return record.committed;},
     abort(){record.aborted=true;packet.abort();}};
   }
   if(method==='prepareNativeGateResources'&&[3,4].includes(resources.kind)){

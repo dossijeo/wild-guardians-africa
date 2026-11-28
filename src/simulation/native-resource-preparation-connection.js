@@ -87,7 +87,7 @@ export function createNativeResourcePreparationConnection({port,session,timeoutM
   }}:{}),...(typeof handle.commitAndWaitForSubmission==='function'?{
     get preparedFrameSequence(){return handle.preparedFrameSequence;},
     async commitAndWaitForSubmission(data){
-     if(refreshing||!handles.has(token)||phase!=='running')throw Error('Encounter commit unavailable');
+     if(refreshing||!handles.has(token)||phase!=='running')throw Error(options.confirmGateMotion?'Gate motor commit unavailable':'Encounter commit unavailable');
      refreshing=true;
      try{return await handle.commitAndWaitForSubmission(data);}
      finally{release();refreshing=false;}

@@ -25,6 +25,30 @@ function setup({prepare,timeoutMs=1000}={}){
  return {connection,endpoint,calls,errors,port1,port2,close(){connection.dispose();endpoint.dispose();port1.close();port2.close();live=false;}};
 }
 
+for(const [late,description] of [[false,'the exact first draw'],[true,'a draw after the saved clock']])test('gate submission receipt checks '+description,async()=>{
+ const gate={kind:'native-gate-presentation',version:1,worldBoundary:boundary,gateId:2,entityId:'structure-2',
+  mechanism:1,modelId:1,startTime:10,endTime:10.3,rootMatrix:[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
+  hinge:[0,0,0],positions:new Float32Array(9),leafFlags:new Uint8Array(3),rows:new Float64Array([10,.5,10.3,0]),authorizedAutonomy:false};
+ const proposal={...resource(),gates:[gate]},committed=deferred(),draw=deferred();
+ const f=setup({prepare:async(kind,source,options)=>{
+  assert.equal(options.confirmGateMotion,true);
+  return {preparedWorldBoundary:source.worldBoundary,preparedFrameSequence:7,presented:draw.promise,
+   valid:()=>true,commit(){committed.resolve();return true;},abort(){}};
+ }});
+ try{
+  const handle=await f.connection.prepareNativeGateResources(proposal,{confirmGateMotion:true});
+  assert.equal(handle.commit({worldBoundary:boundary}),false);
+  const done=handle.commitAndWaitForSubmission({worldBoundary:boundary,resources:{...proposal,phase:'committed'}});
+  done.catch(()=>{});await committed.promise;
+  assert.equal(f.connection.status().pending,1);
+  const receipt={version:1,sequence:7,worldBoundary:boundary,elapsed:late?10.05:10,gateIds:[2]};
+  draw.resolve({sequence:7,gateMotionSubmission:receipt});
+  if(late)await assert.rejects(done,/did not submit the acquired gate motor packet/);
+  else assert.deepEqual(await done,receipt);
+  await f.connection.flush();assert.deepEqual(f.errors,[]);
+ }finally{draw.resolve(null);f.close();}
+});
+
 test('private Shield geometry cannot commit, and a different spell cannot claim its captured slot',async()=>{
  const source={spell:{id:'spell-7',kind:'shield',x:1,z:2,radius:1.95,remaining:20},polygonId:null};
  let aborted=0;

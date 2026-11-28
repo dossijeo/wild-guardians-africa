@@ -2,6 +2,9 @@ import assert from 'node:assert/strict';
 import {register} from 'node:module';
 import test from 'node:test';
 import {floorFloat32} from '../src/rendering/float32-time.js';
+import {serialize} from '../src/persistence/snapshots.js';
+import {prepareWorkerCheckpoint} from '../src/persistence/prepare-worker-checkpoint.js';
+import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
 import {centerServicePoint} from '../src/world/centers.js';
 import {captureSpatialPolygons} from '../src/world/wild-engine/spatial-state.js';
 import {recoverRouteAfterRuin} from './helpers/native-center-ruin-recovery.js';
@@ -80,7 +83,7 @@ async function closeGates(world,{planner,nativeIntentControl},route){
  return {clocks,boundary:outcome.worldBoundary};
 }
 
-for(const [mode,name] of [['retain both','retains both motors'],['recover','can replace a retired Draw'],['recover before GO','replays an interrupted removal'],['omit a motor','rejects a missing motor'],
+for(const [mode,name] of [['retain both','retains both motors'],['recover','can replace a retired Draw'],['recover before GO','replays an interrupted removal'],['disk','round trips both motors through a public save'],['disk before ruin','can reload both motors during collapse'],['omit a motor','rejects a missing motor'],
  ['replace a motor after READY','rejects a motor changed after READY']])test('center ruin with closing gates '+name,{timeout:45000},async()=>{
  const initial=initialState();
  let access,motor,ready,releaseReady,world,replacement;
@@ -111,7 +114,13 @@ for(const [mode,name] of [['retain both','retains both motors'],['recover','can 
     motor=await closeGates(world,access,approach);
    }
    const step=world.command({kind:'advance',seconds:.05,nightFastForward:false,steps:2});
-   if(!(step instanceof Promise)){state=JSON.parse(step.snapshot);await world.present();continue;}
+   if(!(step instanceof Promise)){
+    state=JSON.parse(step.snapshot);await world.present();
+    if(mode==='disk before ruin'&&motor&&state.structures.find(row=>row.id===doomed).status==='collapsing'){
+     await reloadClosingGates(world,state,motor.boundary.authorityEpoch,{beforeRuin:true});return;
+    }
+    continue;
+   }
    assert(motor,'expected the advance to stop at the ruin after GO12');
    let result,error;
    step.then(value=>{result=value;},reason=>{error=reason;});
@@ -189,6 +198,7 @@ for(const [mode,name] of [['retain both','retains both motors'],['recover','can 
    const later=JSON.parse(result.snapshot);
    assert(later.structures.filter(row=>row.gate).every(row=>row.gateOpen===1-(later.elapsed-motor.boundary.effectiveTime)/.6));
    assert.deepEqual(world.faults,[]);assert.deepEqual(world.errors,[]);
+   if(mode==='disk')await reloadClosingGates(world,later,draw.worldBoundary.authorityEpoch);
    if(mode==='recover'){
     replacement=await recoverRouteAfterRuin(world,ready.commit.nativeCenterRuin,later.elapsed,later);
     assert.deepEqual(replacement.host.inspect().nativeRouteFrame.bindings.filter(row=>row.nativeGate).map(row=>row.nativeGate.gateId).sort(),gateIds);
@@ -203,3 +213,78 @@ for(const [mode,name] of [['retain both','retains both motors'],['recover','can 
   assert.fail('Did not reach the native ruin cut');
  }finally{delete globalThis[owner];releaseReady?.();await world?.close();await replacement?.host.dispose();}
 });
+
+async function reloadClosingGates(original,state,previousEpoch,{beforeRuin=false}={}){
+ const capture=original.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+ const saved=prepareWorkerCheckpoint(capture,{slotId:state.slotId,policy:{nativeAuthority:true},savedAt:0});
+ assert.equal(saved.saved,true);
+ const disk=saved.state;
+ const text=serialize(disk),marker=disk.workerNativeAuthorityCheckpoint.refugeReturn;
+ assert.equal(marker.version,3);assert.equal(marker.at,state.elapsed);
+ assert.deepEqual(marker.motors.map(row=>row.id),gateIds.map(id=>'structure-'+id));
+ const forged=structuredClone(disk);forged.workerNativeAuthorityCheckpoint.refugeReturn.motors[0].end+=.05;
+ assert.throws(()=>savedNativeAuthorityOptions(serialize(forged)),/Invalid saved refuge gate motors/);
+ const duplicate=structuredClone(disk),programs=duplicate.workerNativeAuthorityCheckpoint.refugeReturn.motors;
+ programs[1]={...programs[0]};
+ assert.throws(()=>savedNativeAuthorityOptions(serialize(duplicate)),/Invalid saved refuge gate motors/);
+ let gateReady,release;
+ const cold=await nativeProductionAuthority(disk,{...savedNativeAuthorityOptions(text),qualifyAnimalCrop:true,getTerrainManifest:()=>terrainManifest,
+  onPrepare(record){if(record.kind==='center-ruin')record.retainedGateGroups=gateReady.gateGroups;},
+  onReady(record,{signal}={}){if(record.kind==='gate-motion'){
+   gateReady=record;return new Promise(resolve=>{release=resolve;signal.addEventListener('abort',resolve,{once:true});});
+  }}});
+ try{
+  const held=cold.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+  assert.equal(held.saveAvailable,false);
+  const acquired=()=>cold.records.find(row=>row.kind==='animal-crop-route'&&row.committed);
+  let prefix=cold.command({kind:'advance',seconds:.05,steps:1,nightFastForward:false});
+  let stopped=false;prefix=Promise.resolve(prefix).finally(()=>{stopped=true;});prefix.catch(()=>{});
+  await untilProduction(cold,()=>stopped);
+  prefix=await prefix;
+  assert.equal(prefix.elapsed,state.elapsed);
+  assert.equal(prefix.centerMotionPublication.kind,26);
+  assert.equal(prefix.centerMotionPublication.remainingSeconds,.05);
+  await untilProduction(cold,()=>!!acquired());
+  const route=acquired();
+  assert.notEqual(route.resources.reference.worldBoundary.authorityEpoch,previousEpoch);
+  const ref=route.resources.reference,animal=state.raid.animals[0];
+  assert.deepEqual([ref.x,ref.z,ref.phase,ref.yaw],[animal.x,animal.z,animal.motionPhase,animal.heading]);
+  const step=cold.command({kind:'advance',seconds:prefix.centerMotionPublication.remainingSeconds,steps:1,nightFastForward:false});
+  step.catch(()=>{});await untilProduction(cold,()=>!!gateReady);
+  assert.deepEqual(gateReady.resources.gates.map(gate=>gate.rows[1]),marker.gates.map(gate=>gate.opening));
+  assert.deepEqual(gateReady.resources.gates.map(gate=>gate.endTime),marker.motors.map(gate=>gate.end));
+  assert.equal(gateReady.resources.worldBoundary.effectiveTime,marker.at);
+  assert.throws(()=>cold.authority.execute({kind:'snapshot',sequence:prefix.sequence+2}),/own this advance/);
+  let presented=false,advanced=false;
+  gateReady.packet.presented.then(()=>{presented=true;},()=>{});
+  const completed=step.then(result=>{assert(presented,'the advance spent time before the motor packet was submitted');return result;})
+   .finally(()=>{advanced=true;});
+  completed.catch(()=>{});
+  release();
+  await untilProduction(cold,()=>advanced);
+  const resumed=await completed;
+  await cold.present();await gateReady.packet.presented;
+  const frame=cold.host.inspect().nativeRouteFrame;
+  assert.equal(frame.worldBoundary.ticket,gateReady.resources.worldBoundary.ticket);
+  assert.equal(frame.clockElapsed,marker.at);
+  assert.deepEqual(frame.bindings.filter(row=>row.nativeGate).map(row=>row.nativeGate.gateId).sort(),gateIds);
+  assert.equal(frame.bindings.find(row=>row.nativeAnimalCrop).nativeAnimalCrop.bodyId,ref.bodyId);
+  assert.equal(resumed.elapsed,state.elapsed+.02+.02+.01);
+  assert(!resumed.events.some(row=>row.type==='StructureRuined'));
+  let settled=resumed;
+  const ruins=[];
+  for(let i=0;i<14&&JSON.parse(settled.snapshot).structures.some(row=>row.gate&&row.gateOpen>0);i++){
+   let complete=false;
+   const interval=Promise.resolve(cold.command({kind:'advance',seconds:.05,steps:2,nightFastForward:false}))
+    .finally(()=>{complete=true;});
+   interval.catch(()=>{});await untilProduction(cold,()=>complete);
+   settled=await interval;await cold.present();
+   ruins.push(...settled.events.filter(event=>event.type==='StructureRuined'));
+  }
+  assert.deepEqual(JSON.parse(settled.snapshot).structures.filter(row=>row.gate).map(row=>row.gateOpen),[0,0]);
+  assert.deepEqual(ruins.map(row=>row.targetId),beforeRuin?[doomed]:[]);
+  const final=cold.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+  assert.equal(final.nativeAuthorityCheckpoint.refugeReturn.version,2);
+  assert.deepEqual(cold.faults,[]);assert.deepEqual(cold.errors,[]);
+ }finally{release?.();await cold.close();}
+}

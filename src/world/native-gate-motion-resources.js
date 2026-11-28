@@ -8,3 +8,10 @@ export function copyNativeGateMotionResources(value){
  if(new Set(gates.map(gate=>gate.gateId)).size!==gates.length)throw TypeError('Duplicate native motor resource');
  return Object.freeze({version:1,kind:12,phase:value.phase,worldBoundary,gates:Object.freeze(gates)});
 }
+
+export function matchesNativeGateMotionSubmission(value,resources,sequence){
+ const {worldBoundary,gates}=resources;
+ return value?.version===1&&value.sequence===sequence&&sameNativeWorldBoundary(value.worldBoundary,worldBoundary)&&
+  value.elapsed===worldBoundary.effectiveTime&&Array.isArray(value.gateIds)&&value.gateIds.length===gates.length&&
+  gates.every((gate,i)=>value.gateIds[i]===gate.gateId);
+}

@@ -178,7 +178,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    throw Error('Saved daytime native raid has no refuge return');
   if(savedRefuge!==undefined&&(!savedRaidAnimal||savedCheckpoint.workerLifecycle!==1||savedEncounter))
    throw Error('Native refuge return has no restorable animal');
-  if(savedRefuge!==undefined)validateRefugeReturnState(game,savedRefuge);
+  const confirmedRefuge=savedRefuge===undefined?null:validateRefugeReturnState(game,savedRefuge);
+  let restoringRefugeMotors=confirmedRefuge?.motors?confirmedRefuge:null,refugeMotorRestore=null;
+  if(restoringRefugeMotors&&!savedRaidRoute)throw Error('Saved refuge motors require a moving animal corridor');
   // Home19 and Dawn can both leave the authority without a live body. Restore
   // its clock and registry before the next raid or hiring request is emitted.
   const inactiveNativeRoster=nativeWorkerLifecycle&&(game.biome==='desierto'||game.biome==='sabana')&&!restoringPhysics&&
@@ -455,10 +457,13 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   }
   function refugeReturnCheckpoint(){
    if(!(ordinarySavannaFlight||savedFlight||savedRefuge||mixedFlight&&game.biome==='desierto')||
-      game.raid?.daytime!==true||game.workers.length!==1||
+      restoringRefugeMotors||game.raid?.daytime!==true||game.workers.length!==1||
       game.workers[0].status!=='home'||!civilShieldPhysicsAvailable())return null;
    const gates=nativeDesertRefugeLayout(game)?.gates??[];
-   if(!gates.every(settledGateCheckpointPose))return null;
+   const moving=gates.filter(gate=>!settledGateCheckpointPose(gate));
+   const motors=moving.length?planner.nativeRefugeClosingGatePrograms():null;
+   if(motors&&(motors.length!==moving.length||gates.some(gate=>
+      !motors.some(row=>row.id===gate.id)&&(moving.includes(gate)||gate.gateOpen!==0))))return null;
    const centerRoute=shelteredCenterRetreat(game)??shelteredCenterApproach(game),crop=shelteredCropCheckpointAnimal(game);
    const route=centerRoute??(crop?.status!=='attacking'?crop:null);
    const strike=route?null:shelteredCenterStrike(game)??crop;
@@ -471,7 +476,49 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    const strikeReady=strike&&(motion.purpose==='center'||crop===strike&&!motion.purpose)&&
      (motion.mode===3&&strike.attackId==='attack-'+motion.strike.attackId||
       strike===savedStrike&&motion.mode===5&&strike.attackId==='attack-'+motion.restore.attackId);
-   return routeReady||strikeReady?planner.nativeRefugeReturnCheckpoint(gates):null;
+   return routeReady||!motors&&strikeReady?planner.nativeRefugeReturnCheckpoint(gates,motors):null;
+  }
+  async function restoreRefugeClosingGates(){
+   const cut=restoringRefugeMotors,animal=savedRaidRoute,at=game.elapsed;
+   if(refugeMotorRestore||at!==cut.at||game.raid?.animals[0]!==animal)throw Error('Saved refuge motor cut changed');
+   const owner={controller:new AbortController()};refugeMotorRestore=owner;
+   let hold,submission;
+   try{
+    if(planner.nativeAnimalCropState(animal.id)?.mode===1)await nativeProduction.wake();
+    const execution=planner.nativeAnimalCropRouteExecution(animal.id);
+    if(!execution||execution.executedThrough!==at)throw Error('Saved refuge motors await their acquired animal');
+    const unpublished=nativeProduction.unpublishedAnimalMotion(animal.id,sequence);
+    if(unpublished)return {version:1,kind:26,actorId:execution.actorId,worldBoundary:execution.binding.reference.worldBoundary};
+    hold=await nativeProduction.quiesce();
+    const expected=new Map(cut.gates.map(row=>[row.id,row.opening])),motors=new Map(cut.motors.map(row=>[row.id,row]));
+    const result=await planner.prepareNativeGateMotionAfterGpuFence({getPublication:()=>nativeIntentControl,enabled:true,staticObjects:true,
+     signal:owner.controller.signal,prepareResources:async({resources})=>{
+      if(game.elapsed!==at||resources.worldBoundary.effectiveTime!==at||resources.gates.length!==expected.size||
+         resources.gates.some(gate=>{
+          const motor=motors.get(gate.entityId),opening=expected.get(gate.entityId);
+          return opening===undefined||gate.rows[1]!==opening||(motor?
+            gate.rows.length!==4||gate.rows[3]!==motor.target||Math.abs(gate.endTime-motor.end)>1e-9:
+            gate.rows.length!==2);
+         }))throw Error('Native gate proposal differs from the saved refuge motors');
+      // The mutation owner releases its preparation signal at GO. Keep the
+      // submitted-frame wait in the enclosing advance until Draw settles it.
+      const packet=await nativeResourcePreparation.prepareNativeGateResources(resources,{signal:owner.controller.signal,
+       minSequence:sequence,confirmGateMotion:true});
+      return {preparedWorldBoundary:packet.preparedWorldBoundary,valid:packet.valid,
+       commit(data){submission=packet.commitAndWaitForSubmission(data);submission.catch(()=>{});return true;},
+       abort(){if(!submission)packet.abort();}};
+     }});
+    if(result.status!=='committed'||!submission)throw Error(result.error??'Saved refuge motor admission '+result.status);
+    const submitted=await submission;
+    if(submitted.sequence!==result.receipt.preparedFrameSequence||submitted.elapsed!==at||
+       !sameNativeWorldBoundary(submitted.worldBoundary,result.worldBoundary))
+     throw Error('Saved refuge gate submission changed the frozen clock');
+    restoringRefugeMotors=null;
+   }finally{
+    owner.controller.abort();
+    if(hold&&!closed)nativeProduction.resume(hold,{deferWake:true});
+    refugeMotorRestore=null;
+   }
   }
   function liveRaidFlightCheckpointOwners(){
    const admission=game.workers[0]?.nativeRouteAdmission;
@@ -1850,6 +1897,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    async enableBeastPhysics(actorId,{actorIds=undefined,structureTemplates=null,allowEmpty=false,checkpoint=null,shareSpeciesClips=false,shareSpeciesRigs=false,shareAdmissionSource=false}={}){if(closed||physics||physicsInitializing)throw Error('Worker physics unavailable');physicsInitializing=true;try{const {createWorkerBeastPhysics}=await import('./worker-beast-physics.js');const driver=await createWorkerBeastPhysics(game,nav,{actorId,actorIds,structureTemplates,allowEmpty,checkpoint,shareSpeciesClips,shareSpeciesRigs,shareAdmissionSource});if(closed){driver.dispose();throw Error('Simulation authority closed during physics initialization');}physics=driver;}finally{physicsInitializing=false;}},
    async prepareBeastAttack(command){if(closed||physicsInitializing||!physics)throw Error('Worker physics unavailable');if(!command||command.kind!=='castAttack'||command.sequence!==sequence+1||typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId||!Number.isFinite(command.x)||!Number.isFinite(command.z))throw TypeError('Invalid attack command');if(game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id)||spellRejection(command,'attack'))return false;if(!physics.supports(command.targetId)){physicsInitializing=true;try{return await physics.admit(command.targetId);}finally{physicsInitializing=false;}}return false;},
    execute(command){
+    if(refugeMotorRestore)throw Error('Saved refuge motors own this advance');
     if(shieldAdvance)throw shieldAdvance.failure??Error('Native shield expiry owns this advance');
     if(encounterDraftAdvance)throw encounterDraftAdvance.failure??Error('Native encounter draft owns this advance');
     if(centerRuinAdvance)throw centerRuinAdvance.failure??Error('Native center ruin owns this advance');
@@ -1941,7 +1989,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
      const finishCapture=()=>{activeHistoricalCapture=null;if(clockCapture){clockCapture.end=game.elapsed;clockCapture.endPauses=[...game.pauses];}if(worldCapture)worldMotionTrace=worldCapture.finish();if(start){const end={at:game.elapsed,x:trackedActor.x,z:trackedActor.z},segments=motionSegments;motionSegments=null;let x=start.x,z=start.z,continuous=true,timed=true,lastTime=start.at;for(const segment of segments){if(segment.x0!==x||segment.z0!==z)continuous=false;x=segment.x1;z=segment.z1;if(!Number.isFinite(segment.t0)||!Number.isFinite(segment.t1)||segment.t0<lastTime-1e-8||segment.t1<segment.t0||segment.t1>end.at+1e-8)timed=false;else lastTime=segment.t1;}if(end.x!==x||end.z!==z||!(game.raid?.animals??[]).includes(trackedActor)&&!game.workers.includes(trackedActor))continuous=false;motionTrace={actorId:trackedActor.id,start,end,segments,continuous,timed,...(peerCapture?peerCapture.finish():{})};}};
      activeHistoricalCapture=eventBoundaries;
      let pending;
-     try{pending=runSteps(0);}catch(error){finishCapture();throw error;}
+     try{pending=restoringRefugeMotors&&!game.pauses.length?restoreRefugeClosingGates().then(motion=>{
+       if(!motion)return runSteps(0);
+       stepsExecuted=0;centerMotionPublication={...motion,remainingSeconds:command.seconds};
+     }):runSteps(0);}catch(error){finishCapture();throw error;}
      if(pending){
        return pending.finally(finishCapture).then(()=>{
          // Motion acquired during the cut is outside the sampled tick tape.
@@ -1953,7 +2004,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
            result[pendingRuinRecovery?'pendingRuinRecoveryCut':'encounterRecoveryCut']=recoveryCut;
            result.stepsExecuted=stepsExecuted;
            owner.published=recoveryCut;
-         }else{
+         }else if(shieldAdvance||centerRuinAdvance||owner){
            nativeProduction.resume((shieldAdvance??centerRuinAdvance??owner).receipt);
            shieldAdvance=centerRuinAdvance=encounterDraftAdvance=null;
          }
@@ -2188,7 +2239,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     }
    },
    publishResidentTerrainForQa(publish){if(closed||typeof publish!=='function')throw TypeError('Invalid terrain bootstrap');const selected=session.core.currentChunk();try{for(const key of loaded.keys()){const [x,z]=parseSimulationChunkKey(key);if(session.core.selectChunk(x,z)<0)throw Error('Resident native chunk disappeared: '+key);publish(withMud(session.core.chunkPayload()),game.elapsed);}}finally{if(selected&&session.core.selectChunk(selected.cx,selected.cz)<0)throw Error('Could not restore selected native chunk');}},
-    dispose(){if(closed)return;closed=true;(encounterDraftAdvance??centerRuinAdvance)?.waitingForLossClaim?.(Error('Simulation authority closed'));shieldAdvance?.controller.abort();centerRuinAdvance?.controller.abort();nativeStructurePreparation?.controller.abort();nativeProduction?.dispose();nativeResourcePreparation?.dispose();nativeIntentControl?.dispose();presentationJournal.dispose();stopMotion?.();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{try{nativeBodies?.dispose();}finally{session.dispose();}}},
+    dispose(){if(closed)return;closed=true;(encounterDraftAdvance??centerRuinAdvance)?.waitingForLossClaim?.(Error('Simulation authority closed'));refugeMotorRestore?.controller.abort();shieldAdvance?.controller.abort();centerRuinAdvance?.controller.abort();nativeStructurePreparation?.controller.abort();nativeProduction?.dispose();nativeResourcePreparation?.dispose();nativeIntentControl?.dispose();presentationJournal.dispose();stopMotion?.();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{try{nativeBodies?.dispose();}finally{session.dispose();}}},
   };
   return authority;
  }catch(error){nativeProduction?.dispose();nativeResourcePreparation?.dispose();nativeIntentControl?.dispose();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{nativeBodies?.dispose();}finally{session?.dispose();}throw error;}
