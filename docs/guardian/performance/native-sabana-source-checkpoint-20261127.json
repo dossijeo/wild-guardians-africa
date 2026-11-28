@@ -125,6 +125,26 @@
     "native-source-checkpoint-integration-20261127.tap": "1928439b5a1369e20b0af166bbafce84184b4220dc8797b1979b625ed41ca8d9",
     "astra-lion-dawn-ready-20261127-2201-checkpoint.json": "a2adb1f93f9c63a0bab1f82d586b0d8c932a5d5dac63002f2ba430a15873e5f5"
   },
+  "fourthNightGameplayReplay": {
+    "scope": "Real fourth-night save, Game, WASM, original lion rig and Host with a deterministic GPU queue. The source wait replays gameplay publications with controlled delivery and a checkpoint at publication 458.",
+    "sourceRange": [401, 485],
+    "baseFramePublications": [401, 425, 449, 458, 482],
+    "integratedFramePublications": [401, 425, 449, 466],
+    "elapsedAtStrikePreparation": 2161.699999998921,
+    "actor": "animal-21",
+    "position": [82.29254150390625, 3.3601131439208984],
+    "motionPhase": 23.817064855702778,
+    "bodyId": 1,
+    "firstSubmits": [{ "kind": 26, "ticket": 2, "age": 0 }, { "kind": 27, "ticket": 4, "age": 0 }],
+    "hit": { "id": "attack-81", "target": "structure-2", "previousHp": 345, "hp": 305 },
+    "finalPublication": 519,
+    "errors": [],
+    "evidence": {
+      "live-lion-control.mjs": "c4ed89c5ef962a8c003ccfc0882de2bcec7a53cc2b4f302b91faf3bd7743b266",
+      "live-lion-base.json": "5da269bd60863847d7b6deba427c88fbbe47923d341c96630c6beb148725886d",
+      "live-lion-candidate.json": "480b8ee80f45fa803c898ed6456bb55c8d8475b8dd450176db86b731a4942798"
+    }
+  },
   "integratedLion": {
     "revision": "cc795f9890c34bd5d154150dd42763a77afc9d58",
     "gameWasmControl": {
