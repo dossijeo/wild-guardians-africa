@@ -1,6 +1,6 @@
 # Seguimiento de cierre de A6
 
-El alta ordenada de residencia en Desierto conserva el ticket entre la autoridad, Draw y el checkpoint de recuperación. El control dirigido en NVIDIA confirma la región nueva y la adopción del checkpoint por el diario. Queda la campaña continua de la quinta noche y la identificación de las respuestas de cierre. [Recibo del alta y límites](performance/native-desert-residency-checkpoint-20261128.json).
+El alta ordenada de residencia en Desierto conserva el ticket entre la autoridad, Draw y el checkpoint de recuperación en el control dirigido en NVIDIA. La campaña continua confirmó cuatro noches y el primer dibujo del rinoceronte en la quinta. El alta de la región (0, −2) llegó mientras Surface aún adoptaba esa marcha y detuvo el recorrido. Quedan ese relevo, la derrota continua y la identificación de las respuestas de cierre del control dirigido. [Recibos y límites](performance/native-desert-residency-checkpoint-20261128.json).
 
 El león y el rinoceronte completaron la cuarta y quinta noches de Desierto 712 desde guardados previos a cada incursión. NVIDIA conservó el cuerpo de Retreat durante el derrumbe, acreditó la ausencia y drenó después de la derrota. En CPU, el rig original comprueba que el primer dibujo de la retirada conserva el material preparado incluso con cuatro golpes restantes. [Recibo de las dos noches](performance/native-desert-fourth-and-fifth-nights-20261128.json).
 

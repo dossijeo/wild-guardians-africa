@@ -48,5 +48,36 @@
       "native-desert-menu-712-enclosed-campaign-residency-checkpoint-20261128-extended.json": "7d2865359ecb75d95954c2d20e34f66c82b86208bd748850429b91b76f8a641b"
     }
   },
-  "pending": [ "Continuous replay through the original fifth-night cut on NVIDIA", "Identify the draw owner in the close audit" ]
+  "continuousNvidia": {
+    "revision": "c97e21400dbc03af4b8392c25f099d9ef1627265",
+    "scope": "Desert 712 from the menu and the paid enclosure, with one authority epoch through the observed fifth-night cut on NVIDIA Turing.",
+    "completedNights": [
+      { "day": 1, "species": "warthog", "raidEndedAt": 429.7818161888272, "centerHp": 560, "absenceDraw": 2571 },
+      { "day": 2, "species": "hyena", "raidEndedAt": 1069.486561966843, "centerHp": 485, "absenceDraw": 5263 },
+      { "day": 3, "species": "buffalo", "raidEndedAt": 1696.3283308335094, "centerHp": 345, "absenceDraw": 7705 },
+      { "day": 4, "species": "lion", "raidEndedAt": 2186.9824758151217, "centerHp": 185, "absenceDraw": 10151 }
+    ],
+    "fifthNight": {
+      "elapsed": 2735.985705586674,
+      "actor": "animal-61",
+      "body": 10,
+      "preparedTicket": 126,
+      "acquiredTicket": 127,
+      "firstDraw": 12566,
+      "firstRouteAge": 0,
+      "drawInstance": "b78aef52-424a-4f9c-95e3-2d3a2133b78c",
+      "surfaceAppliedSequence": 45515,
+      "surfaceWaitingForSequence": 45516,
+      "openProposalPhase": "adopting",
+      "command": "addChunk",
+      "region": [0, -2],
+      "commandSequence": 45516,
+      "requestsVisualCheckpoint": false,
+      "error": "Native terrain addition control-failed: Native terrain commands require projected route assignments before recording moving actors"
+    },
+    "evidence": {
+      "native-desert-menu-712-enclosed-campaign-continuous-residency-20261128-extended.json": "b15b82d75fe6f6266d8b9d2484035102c00c2f906087628a45d45257578e29e8"
+    }
+  },
+  "pending": [ "Retain the ordered fifth-night terrain demand until Surface adopts Route26, then verify collapse, defeat, absence and drain in the continuous campaign", "Identify the draw owner in the standalone close audit" ]
 }
