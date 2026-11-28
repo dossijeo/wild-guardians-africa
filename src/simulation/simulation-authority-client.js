@@ -1,4 +1,4 @@
-import {centerRuinApproachEndpoint,copyNativeRecoveryGroup,matchesNativeCenterEndpointPose,matchesNativeOrdinaryRefuge,nativeCenterApproachEndpoint,nativeWorkerRouteRecoveryProfile,woundedHomeEndpoint} from '../world/native-worker-route-recovery.js';
+import {centerRuinApproachEndpoint,copyNativeRecoveryGroup,matchesNativeCenterEndpointPose,matchesNativeOrdinaryRefuge,nativeCenterApproachEndpoint,nativeRaidFlightApproachEndpoint,nativeWorkerRouteRecoveryProfile,woundedHomeEndpoint} from '../world/native-worker-route-recovery.js';
 import {nativeTaskActionActor} from '../world/native-task-action-presentation.js';
 import {copyNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {createFarVisualReplicaClient} from './far-visual-replica-client.js';
@@ -84,12 +84,14 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
           const grouped=q.version===2,cut=grouped?copyNativeWorldBoundary(q.worldBoundary):null;
           if(grouped&&(cut?.authorityEpoch!==data.authorityEpoch||!Array.isArray(q.members)||![0,1,2].includes(q.members.length)))
             throw Error('Invalid replacement world cut');
+          const flightHome=grouped&&q.members.length===2&&q.members[0]?.resources?.kind===18?q.members[0].execution?.binding:null;
           const members=(grouped?q.members:[q]).map(({execution,resources:input})=>{
             const profile=nativeWorkerRouteRecoveryProfile(input?.kind),resources=profile.copyResources(input,cut);
             const binding=resources[profile.bindingField],ref=binding.reference;
             const endpoint=execution?.arrived===true&&(!grouped&&qualifyRaidEncounter&&profile.kind===18&&
               woundedHomeEndpoint(binding,execution.executedThrough)||profile.kind===26&&(grouped?
-              centerRuinApproachEndpoint(q.ruin,cut,binding,execution.executedThrough,q.pendingRuin):
+              centerRuinApproachEndpoint(q.ruin,cut,binding,execution.executedThrough,q.pendingRuin)||
+                nativeRaidFlightApproachEndpoint(cut,binding,execution.executedThrough,flightHome):
               nativeCenterApproachEndpoint(resources.worldBoundary,binding,execution.executedThrough))&&
               matchesNativeCenterEndpointPose(execution,resources.presentation));
             const cycle=profile.kind===21,action=profile.kind===15,settlement=profile.kind===17,stopped=!!profile.stopProjectionMatches;

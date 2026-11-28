@@ -45,6 +45,13 @@ export function nativeCenterApproachEndpoint(world,binding,at){
    sameNativeWorldBoundary(world,ref.worldBoundary);
 }
 
+export function nativeRaidFlightApproachEndpoint(world,binding,at,home){
+ const peer=home?.reference,ref=binding?.reference;
+ return nativeCenterApproachEndpoint(world,binding,at)&&!!peer?.sourceRequest?.raidSpawnSequence&&
+   peer.actorId!==ref.actorId&&peer.bodyId!==ref.bodyId&&at<peer.endTime&&
+   nativeRecoveryCovers(world,peer.worldBoundary)&&!sameNativeWorldBoundary(world,peer.worldBoundary);
+}
+
 const centerEndpointPose=['x','z','phase','yaw'].map(field=>[field,NATIVE_ROUTE_PRESENTATION_FIELDS.indexOf(field)-NATIVE_ROUTE_PRESENTATION_WIDTH]);
 export function matchesNativeCenterEndpointPose(execution,presentation){
  return centerEndpointPose.every(([field,offset])=>execution[field]===presentation.rows.at(offset));

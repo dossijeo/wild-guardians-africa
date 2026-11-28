@@ -165,7 +165,7 @@ function submitRuinMotors(draw,motors,metadata){
  pass.end();device.queue.submit([encoder.finish()]);return draw.client.endFrame();
 }
 
-async function readClientAssignment(source){
+export async function readClientAssignment(source){
  const worker={postMessage(){},terminate(){}},session='endpoint-client';
  const client=createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session,workerFactory:()=>worker});
  const receive=data=>worker.onmessage({data:{session,...data}});

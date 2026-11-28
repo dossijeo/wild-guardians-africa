@@ -1658,7 +1658,9 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     const game=owningState,animal=game?.raid?.animals[0],worker=animal&&nativeRaidFlightMember(game,animal);
     if(!worker||worker.nativeRouteAdmission!=='native-home')return null;
     const home=nativeHomeRouteExecution(worker.id);
-    const crop=nativeAnimalCropRouteExecution(animal.id,{sharedCut:true,flightWorker:worker});
+    // The animal may already be waiting at its certified center endpoint
+    // while the same Home route and crossing are still in use.
+    const crop=nativeAnimalCropRouteExecution(animal.id,{sharedCut:true,flightWorker:worker,allowArrivedCenter:true});
     const cut=nativeWorldBoundary(),homeWorld=home?.binding.reference.worldBoundary,cropWorld=crop?.binding.reference.worldBoundary;
     if(!home||home.arrived||home.executedThrough!==game.elapsed||!crop||crop.binding.reference.purpose==='retreat'||
        !nativeRecoveryCovers(cut,homeWorld)||!nativeRecoveryCovers(cut,cropWorld)||

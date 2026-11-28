@@ -7,7 +7,10 @@ import {prepareWorkerCheckpoint} from '../src/persistence/prepare-worker-checkpo
 import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
 import {centerServicePoint} from '../src/world/centers.js';
 import {captureSpatialPolygons} from '../src/world/wild-engine/spatial-state.js';
-import {recoverRouteAfterRuin} from './helpers/native-center-ruin-recovery.js';
+import {readClientAssignment,recoverRouteAfterRuin} from './helpers/native-center-ruin-recovery.js';
+import {fixture,flush,pair} from './helpers/remote-webgpu-fixture.js';
+import {nativeClockResourceEnd} from '../src/rendering/native-clock-resource-end.js';
+import {originalRig} from './helpers/native-animal-crop-rig.js';
 
 // Open the existing causal motor entry point at a controlled Game boundary.
 // The production authority has no command for independently closing gates.
@@ -49,6 +52,110 @@ function initialState(){
   return state;
  }finally{farm.close();}
 }
+
+test('Draw loss retains the arrived center approach while Home crosses its gate',{timeout:45000},async t=>{
+ const initial=initialState(),gateId=gateIds[0],entityId='structure-'+gateId;
+ initial.structures=initial.structures.filter(row=>row.id!=='structure-'+gateIds[1]);
+ initial.structures.find(row=>row.id===doomed).hp=140;
+ initial.dayPlan.at=initial.time+6;
+ const raidView={...view,eye:{x:-18,z:-13.7},target:{x:-18,z:0}};
+ const receipts=new Map();let access,world,draw,rig;
+ globalThis[owner]=entry=>{access=entry;};
+ try{
+  world=await nativeProductionAuthority(initial,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,getTerrainManifest:()=>terrainManifest,
+   onCommit(record,receipt){receipts.set(record.kind,receipt);}});
+  world.command({kind:'setNavigationView',view:raidView});
+  await untilProduction(world,()=>receipts.has('farm-arrival'));
+  const advance={kind:'advance',seconds:.05,steps:1,nightFastForward:false};
+  const {planner}=access;
+  let state,crossing;
+  for(let i=0;i<220;i++){
+   state=JSON.parse(world.command(advance).snapshot);
+   await world.present();
+   const animal=state.raid?.animals[0];
+   if(!animal||!planner.nativeAnimalCropState(animal.id)?.arrived)continue;
+   const home=receipts.get('home-route')?.nativeHomeRouteBinding;
+   crossing=planner.nativeGateCrossings(entityId).find(row=>row.actorId===home?.reference.actorId&&
+    row.bodyId===home.reference.bodyId&&row.from<=state.elapsed&&state.elapsed<row.until);
+   if(crossing&&Math.abs(state.workers[0].z-state.structures.find(row=>row.id===entityId).z)<.5)break;
+   crossing=null;
+  }
+  assert(crossing,'Expected the center endpoint within the Home gate reservation');
+  const at=state.elapsed,animal=state.raid.animals[0],worker=state.workers[0];
+  const home=receipts.get('home-route').nativeHomeRouteBinding,route=receipts.get('animal-crop-route').nativeAnimalCropRouteBinding;
+  const ref=route.reference;
+  assert.deepEqual(crossing.routeHandle,home.reference.expectedRouteHandle);
+  assert.equal(worker.nativeRouteAdmission,'native-home');
+  assert.equal(animal.targetId,doomed);
+  assert.equal(animal.status,'walking');
+  assert.equal(state.structures.find(row=>row.id===entityId).gateOpen,1);
+  assert(at>ref.endTime);
+
+  world.gpu.device.destroy();world.retireResourceEndpoint();
+  const hold=await world.authority.quiesceNativeIntentProduction();
+  const retirement=await world.authority.flushNativeResourcePreparation({allowRetired:true});
+  assert(retirement.terminal&&retirement.callbacksSettled);
+  const source=await world.authority.terminalWorkerRoute();
+  assert.deepEqual(source,{version:2,members:[{kind:18,actorId:home.reference.actorId},{kind:26,actorId:ref.actorId}]});
+
+  const [authorityPort,drawPort]=pair();
+  draw=await fixture({capabilities:{nativeHomeRouteVersion:1,nativeAnimalCropVersion:1}},
+   {intentControl:{port:drawPort,session:'production-control',recoveryHold:30},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
+  const {recoveredWorkerRoute:recovered}=await world.authority.attachHeldWorkerRoute(authorityPort,'production-control',30,hold,source);
+  const [civil,center]=recovered.members;
+  assert.deepEqual((await readClientAssignment(recovered)).members.map(member=>member.execution),[civil.execution,center.execution]);
+  const wrongPose=structuredClone(recovered);
+  wrongPose.members[1].execution.phase+=.01;
+  await assert.rejects(readClientAssignment(wrongPose),/Invalid replacement committed assignment/);
+  assert.deepEqual(civil.execution.binding.reference,home.reference);
+  assert.deepEqual(center.execution.binding.reference,ref);
+  assert.equal(civil.execution.arrived,false);
+  assert.equal(center.execution.arrived,true);
+  assert.deepEqual([center.execution.x,center.execution.z,center.execution.yaw,center.execution.phase],
+   [animal.x,animal.z,animal.heading,animal.motionPhase]);
+  rig=await originalRig(structuredClone(state),recovered.terrainManifest);
+  const cropSource={...center,terrainManifest:recovered.terrainManifest,recoveryCut:recovered.worldBoundary};
+  await assert.rejects(rig.recover(cropSource),/Invalid recovered crop source/);
+  cropSource.flightHome=civil.execution.binding;
+  await assert.rejects(rig.recover({...cropSource,execution:{...center.execution,phase:center.execution.phase+.01}}),/Invalid recovered crop source/);
+  await rig.recover(cropSource);
+
+  const homeRef=home.reference,homeAt=homeRef.worldBoundary.effectiveTime,cropAt=ref.worldBoundary.effectiveTime;
+  const register=(byteOffset,epoch,end,binding)=>draw.client.registerClockBinding(draw.buffer,
+   {byteOffset,epoch,semantic:'relative',resourceEnd:nativeClockResourceEnd(epoch,end),...binding});
+  register(0,homeAt,homeRef.endTime,{nativeHome:homeRef});
+  register(4,cropAt,ref.endTime,{nativeAnimalCrop:ref});
+  register(8,homeAt,homeRef.endTime,{nativeGate:{gateId,worldBoundary:homeRef.worldBoundary}});
+  await assert.rejects(world.authority.checkHeldDraw(30,hold,source),/Missing submitted/);
+  const submit=async elapsed=>{
+   const submitted=draw.frame(0,{nativeWorldBoundary:recovered.worldBoundary,
+    clock:{version:1,epoch:0,elapsed,safeUntil:elapsed,anchorAbsoluteMs:0,paused:true,segments:[]}});
+   await flush();await draw.host.idle();draw.host.present();await submitted;
+  };
+  await submit(at);
+  const witness=await world.authority.checkHeldDraw(30,hold,source);
+  assert.equal(witness.members[0].nativeGate.gateId,gateId);
+  assert.equal(witness.members[0].relativeTime,floorFloat32(at-homeAt));
+  const terminalAge=floorFloat32(nativeClockResourceEnd(cropAt,ref.endTime)-cropAt);
+  assert.equal(witness.members[1].relativeTime,terminalAge);
+  rig.presented(terminalAge);
+  world.authority.resumeNativeIntentProduction(hold);
+  const next=JSON.parse(world.command(advance).snapshot);
+  assert.equal(next.elapsed,at+.05);
+  assert.deepEqual(next.raid.animals[0],animal);
+  assert(next.workers[0].z>worker.z);
+  await submit(next.elapsed);
+  const frame=draw.host.inspect().nativeRouteFrame;
+  assert.equal(frame.clockElapsed,next.elapsed);
+  assert.equal(frame.bindings.find(row=>row.nativeHome).relativeTime,floorFloat32(next.elapsed-homeAt));
+  assert.equal(frame.bindings.find(row=>row.nativeAnimalCrop).relativeTime,terminalAge);
+  assert.deepEqual(world.faults,[]);
+  assert.deepEqual(draw.errors,[]);
+  t.diagnostic(JSON.stringify({at,crossing,homeAge:witness.members[0].relativeTime,terminalAge,elapsedAfterResume:next.elapsed}));
+ }finally{
+  delete globalThis[owner];rig?.close();draw?.client.dispose();await draw?.host.dispose();await world?.close();
+ }
+});
 
 // The remote client and Host are real. Only the GPU queue and minimal draws
 // are fixtures. Each motor buffer belongs to the submitted kind12 packet.

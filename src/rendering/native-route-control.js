@@ -1203,8 +1203,9 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
         slot:ref.slot,generation:ref.generation}:ref.expectedRouteHandle;
       const source=ref.worldBoundary;
       const endpoint=kind===18&&cohortSize===1&&woundedHomeEndpoint(proof,clock?.committedThrough);
-      const approachEndpoint=kind===26&&cohortSize===1&&(sharedCut?
-        centerRuinApproachEndpoint(ruin,boundary,proof,clock?.committedThrough,pendingRuin):nativeCenterApproachEndpoint(boundary,proof,clock?.committedThrough));
+      const approachEndpoint=kind===26&&(cohortSize===1&&sharedCut?
+        centerRuinApproachEndpoint(ruin,boundary,proof,clock?.committedThrough,pendingRuin):
+        (cohortSize===1||cohortSize===2&&!ordinaryWorkers)&&nativeCenterApproachEndpoint(boundary,proof,clock?.committedThrough));
       if(closed||!clock||actors.size!==cohortSize||active.size!==movingCount||proof.gateIds.length>profile.maxGates||
          !record||active.get(ref.actorId)!==record||record.lastDrawTime!==null||actor.strollProof||actor.farmArrivalProof||actor.homeProof||
          kind===14&&!profile.sameAttestation(actor.startProof,proof)||
