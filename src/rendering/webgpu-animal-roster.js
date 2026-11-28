@@ -4,7 +4,7 @@ import {attachNativeSourcePresentation} from './native-source-presentation.js';
 import {createAnimalCropGpuMotion} from './native-gpu-motion.js';
 import {markRemoteAnimalCropNode} from './remote-clock-bindings.js';
 import {createNativeStationaryGpuTransform} from './native-stationary-gpu-transform.js';
-import {nativeAnimalCropPublicationMatches,nativeRetreatBudgetAllowed,nativeShelteredCenterActor,raidStrikeClips} from '../simulation/raids.js';
+import {centerSurvivesStrikes,nativeAnimalCropPublicationMatches,nativeRetreatBudgetAllowed,nativeShelteredCenterActor,raidStrikeClips} from '../simulation/raids.js';
 import {copyNativeAnimalCropReference,copyNativeAnimalCropProposal,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference,nativeAnimalCropSuccessor,nativeAnimalStrikeClipAge} from '../world/native-animal-crop-resource.js';
 import {centerRuinApproachEndpoint,matchesNativeCenterEndpointPose,nativeCenterApproachEndpoint,nativeRaidFlightApproachEndpoint,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
 import {createBakedWalkRetry} from './baked-walk-retry.js';
@@ -314,9 +314,10 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
     // Detaching the strike reinstalls the materials from its staged binding.
     // Admit that exact return on the live meshes before the strike can start.
     const materialAlternatives=binding.restorationMaterialAlternatives();
-    // A final hit may publish Retreat in the same boundary. The confirmed
-    // actor then selects its existing Running presentation before the route GO.
-    const include=entry.entity.hitsRemaining===1?[...meshes,...actor.bakedRunningMeshes()]:meshes;
+    // A last or collapsing hit may publish Retreat before the route GO.
+    const target=state.structures.find(target=>target.id===targetId);
+    const mayRetreat=entry.entity.hitsRemaining===1||!centerSurvivesStrikes(target,entry.entity,1);
+    const include=mayRetreat?[...meshes,...actor.bakedRunningMeshes()]:meshes;
     part.requests=[{object:actor.root,options:{signal,include,materialAlternatives}},part.request];
    }
    return attachNativeSourcePresentation(part,()=>activated);

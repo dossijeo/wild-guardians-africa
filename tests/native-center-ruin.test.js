@@ -27,6 +27,8 @@ const paidDesertRefuge = new URL('./fixtures/desierto712-d1-native-refuge-before
 const shelteredDesertNights = [
  {day:2,species:'hyena',hp:[535,510,485]},
  {day:3,species:'buffalo',hp:[450,415,380,345]},
+ {day:4,species:'lion',hp:[305,265,225,185]},
+ {day:5,species:'rhino',hp:[125],remainingHits:4},
 ];
 const recorded = JSON.parse(readFileSync(recording)).timing.navigationContext;
 const {activeBounds} = recorded;
@@ -50,7 +52,7 @@ function residentSession(state) {
   return session;
 }
 
-for(const {day,species,hp} of shelteredDesertNights)test(`the Desert enclosure admits the planned ${species} center strikes and retreat on night ${day}`,async()=>{
+for(const {day,species,hp,remainingHits} of shelteredDesertNights)test(`the Desert enclosure admits the planned ${species} center strikes and retreat on night ${day}`,async()=>{
  const checkpoint=new URL(`./fixtures/desierto712-d${day}-enclosed-${species}-before-raid.json.gz`,import.meta.url);
  const raw=gunzipSync(readFileSync(checkpoint)).toString(),initial=deserialize(raw),saved=savedNativeAuthorityOptions(raw);
  const manifest={epoch:`desert-night-${day}`,chunks:saved.chunkKeys.map(key=>{
@@ -63,31 +65,50 @@ for(const {day,species,hp} of shelteredDesertNights)test(`the Desert enclosure a
  const walls=initial.structures.filter(structure=>structure.kind==='wall');
  assert(walls.some(wall=>wall.gate&&wall.gateOpen===0));
  const events=[],proofs=[],draws=new Map();
- let rig,f,state=initial,cropsAtRaidEnd;
+ let rig,f,state=initial,cropsAtRaidEnd,ruinCommit,ruinFrame;
  try{
   f=await nativeProductionAuthority(initial,{...saved,emptyBeastPhysics:true,getTerrainManifest:()=>manifest,
    async onPrepare(record){
+    if(record.kind==='center-ruin')return;
     await flush();
     const source=f.snapshot();
     rig??=await originalRig(structuredClone(source),manifest);
     rig.update(structuredClone(source));
     await rig.prepare(record.resources);
    },
-   onCommit(_record,receipt){
+   onCommit(record,receipt){
+    if(record.kind==='center-ruin'){
+     assert.equal(ruinCommit,undefined);
+     ruinCommit=receipt;
+     return;
+    }
     const proof=receipt.nativeAnimalCropRouteBinding??receipt.nativeAnimalCropStrikeBinding;
     rig.commit(proof,receipt);
     proofs.push(proof);
    },
   });
-  for(let i=0;i<600&&state.day===day;i++){
-   const publication=f.command({kind:'advance',seconds:.05,steps:4,nightFastForward:true});
-   assert.equal(typeof publication.then,'undefined');
+  for(let i=0;i<600&&state.day===day&&!state.result;i++){
+   const advance=f.command({kind:'advance',seconds:.05,steps:4,nightFastForward:true});
+   if(advance instanceof Promise){
+    assert.equal(species,'rhino');
+    let settled=false;
+    advance.then(()=>{settled=true;},()=>{settled=true;});
+    for(let frame=0;frame<1000&&!settled;frame++){
+     await f.present();
+     assert.deepEqual(f.faults,[]);
+     const drawn=f.host.inspect().nativeRouteFrame;
+     if(ruinCommit&&drawn?.worldBoundary.ticket===ruinCommit.worldBoundary.ticket)ruinFrame=drawn;
+    }
+    assert(settled,'the ruin advance did not finish');
+   }
+   const publication=await advance;
    state=JSON.parse(publication.snapshot);events.push(...publication.events);
    if(publication.events.some(event=>event.type==='RaidEnded'))cropsAtRaidEnd=state.plants.map(crop=>[crop.id,crop.alive]);
    rig?.update(structuredClone(state));
    await f.present();
    assert.deepEqual(f.faults,[]);
    const frame=f.host.inspect().nativeRouteFrame;
+   if(ruinCommit&&frame?.worldBoundary.ticket===ruinCommit.worldBoundary.ticket)ruinFrame??=frame;
    const binding=frame?.bindings.find(row=>row.nativeAnimalCrop);
    const ticket=frame?.worldBoundary.ticket;
    if(binding&&!draws.has(ticket)){
@@ -95,7 +116,24 @@ for(const {day,species,hp} of shelteredDesertNights)test(`the Desert enclosure a
     if(state.raid)rig.presented(binding.relativeTime);
    }
   }
-  assert.equal(state.day,day+1);
+  if(remainingHits!==undefined){
+   assert.equal(state.day,day);
+   assert.equal(state.result,'defeat');
+   assert.deepEqual([state.structures[0].status,state.structures[0].hp],['ruined',0]);
+   const ruined=events.filter(event=>event.type==='StructureRuined');
+   const retreat=events.find(event=>event.type==='AnimalRetreating');
+   assert.deepEqual([retreat.reason,retreat.hitsRemaining],['no-reachable-unleased-target',remainingHits]);
+   assert.deepEqual(ruined.map(event=>[event.targetId,event.simulationTime]),[['structure-2',ruinCommit.worldBoundary.effectiveTime]]);
+   assert(retreat.simulationTime<ruined[0].simulationTime);
+   assert.deepEqual(ruinFrame?.worldBoundary,ruinCommit.worldBoundary);
+   assert.equal(ruinFrame.clockElapsed,ruined[0].simulationTime);
+   assert.equal(ruinFrame.bindings.find(row=>row.nativeAnimalCrop?.purpose==='retreat')?.nativeAnimalCrop.bodyId,proofs[0].reference.bodyId);
+   assert.equal(events.filter(event=>event.type==='GameOver').length,1);
+   assert.equal(rig.runningReturns,1);
+  }else{
+   assert.equal(state.day,day+1);
+   assert.equal(ruinCommit,undefined);
+  }
   for(const record of f.records)await record.packet.presented;
   assert.deepEqual(proofs.map(({reference})=>[reference.kind,reference.purpose]),
    [...hp.flatMap(()=>[[26,'center'],[27,'center']]),[26,'retreat']]);

@@ -6,6 +6,7 @@ import {Scene,MeshBasicMaterial} from 'three';
 import {MeshStandardNodeMaterial} from 'three/webgpu';
 import {actorAsset} from './actor-geometry.js';
 import {ANIMAL_ACTIONS} from '../../src/simulation/animal-actions-data.js';
+import {centerSurvivesStrikes,nativeRetreatBudgetAllowed} from '../../src/simulation/raids.js';
 import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
 import {createWebGpuAnimalRoster} from '../../src/rendering/webgpu-animal-roster.js';
 import {prepareAnimalClips} from '../../src/rendering/animal-actions.js';
@@ -141,9 +142,10 @@ export async function originalRig(state,manifest,{contention=null,onNativeCropSt
      const {object,options}=request;
      assert.equal(object,root);
      if(request!==part.request){
+      const subject=state.raid.animals[0],target=state.structures.find(item=>item.id===subject.targetId);
       for(const mesh of options.include){
        const alternate=options.materialAlternatives.find(item=>item.mesh===mesh);
-       if(!alternate)assert.equal(state.raid.animals[0].hitsRemaining,1,'only the terminal strike may prepare another clip');
+       if(!alternate)assert(subject.hitsRemaining===1||!centerSurvivesStrikes(target,subject,1),'only a last or collapsing strike may prepare Running');
        preparedReturn.set(mesh,alternate?.material??mesh.material);
       }
      }
@@ -201,7 +203,7 @@ export async function originalRig(state,manifest,{contention=null,onNativeCropSt
     const actor=roster.get(animal.id),visible=[];
     actor.root.traverseVisible(mesh=>{if(mesh.isMesh&&!mesh.userData.wgCpuPickProxy)visible.push(mesh);});
     if(actor.isBakedRunning()){
-     assert.equal(s.raid.animals[0].status,'retreating');assert.equal(s.raid.animals[0].hitsRemaining,0);runningReturns++;
+     assert.equal(s.raid.animals[0].status,'retreating');assert(nativeRetreatBudgetAllowed(s,s.raid.animals[0]));runningReturns++;
     }else assert(actor.isBakedWalking());
     assert.equal(visible.length,original.length);
     for(const mesh of visible)assert(preparedReturn.get(mesh)===mesh.material,'first ordinary draw needs the exact prepared return material');

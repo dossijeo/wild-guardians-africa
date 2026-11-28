@@ -792,7 +792,7 @@ export function nativeDesertIntroductoryRaid(state,animal){
  return animal?.species==='warthog'&&nativeDesertIntroductoryCohort(state,animal);
 }
 export function nativeDesertShelteredCenterRaid(state,animal){
- return ['warthog','hyena','buffalo'].includes(animal?.species)&&nativeDesertIntroductoryCohort(state,animal);
+ return ['warthog','hyena','buffalo','lion','rhino'].includes(animal?.species)&&nativeDesertIntroductoryCohort(state,animal);
 }
 // The first native crop cohort has one mobile body and only inactive workers.
 // A different encounter, protection or reservation requires a new admission.
@@ -816,7 +816,7 @@ export function nativeCenterAttackSite(state,target){
 function animalStructureDamage(animal){
  return validDamageProfile(animal.damageProfile)?animal.damageProfile.structureDamage:animalSpec(animal.species).structure_hit_damage;
 }
-function centerSurvivesStrikes(target,animal,hits){
+export function centerSurvivesStrikes(target,animal,hits){
  return target.hp-animalStructureDamage(animal)*hits>collapseThreshold(target)+1e-9;
 }
 function centerFootprintGap(a,b){
