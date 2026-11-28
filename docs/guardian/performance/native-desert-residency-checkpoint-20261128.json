@@ -79,5 +79,37 @@
       "native-desert-menu-712-enclosed-campaign-continuous-residency-20261128-extended.json": "b15b82d75fe6f6266d8b9d2484035102c00c2f906087628a45d45257578e29e8"
     }
   },
-  "pending": [ "Retain the ordered fifth-night terrain demand until Surface adopts Route26, then verify collapse, defeat, absence and drain in the continuous campaign", "Identify the draw owner in the standalone close audit" ]
+  "routeAdoptionControl": {
+    "scope": "The authentic fifth-night save, WASM, original rhino rig, authority, native resource and terrain channels, and the production Draw Host with a deterministic queue.",
+    "orders": [ "Terrain demand enters while Route26 READY is held", "Terrain demand enters after the first Route26 draw and before publishing its Game projection, with a visual recovery checkpoint requested" ],
+    "baseline": [ "Terrain finished while the first READY was still held", "Graphical preparation rejected terrain because the acquired route had not been published", "The runtime forwarded the private deferral to the scene instead of processing the retry" ],
+    "confirmed": "The first result publishes the acquired route and leaves the terrain unchanged. The runtime retains the demand and retries in order. The second result acquires one kind6 for (0, -2), with the same route reference, body and age at the same simulation time. The next advance moves the same actor.",
+    "testCommand": "node --test tests/native-terrain-route-adoption.test.js tests/worker-game-runtime.test.js tests/terrain-native-proposal.test.js tests/native-center-placement-authority.test.js",
+    "tests": { "baselineTargetedFail": 3, "pass": 53, "fail": 0, "skipped": 0 },
+    "evidence": {
+      "rhino-route-adoption-baseline.tap": "7a5b3645570ded3057cfe1293eb5e31a520591450e4e68cf6226b0221c6414dc",
+      "rhino-route-adoption-regression.tap": "fe63620f62c35a261319a8f4b4dd46a0787200b8c63bec04df8295f986185f26",
+      "rhino-residency-during-adoption.json": "9012470c8ed7f340e6697974cbd8546442d09e7986b8462a985fbec1f8ce4b7e"
+    }
+  },
+  "routeAdoptionNvidia": {
+    "scope": "Edge, NVIDIA Turing and the saved fifth night of the paid enclosure. The harness queues the region while Route26 READY is held and uses the ordinary runtime, terrain receiver, Surface and Draw.",
+    "region": [0, -2],
+    "deferredSequence": 44,
+    "addedSequence": 45,
+    "authorityTime": 2735.9857055868206,
+    "routeTicket": 2,
+    "terrainTicket": 3,
+    "body": 1,
+    "routeDrawSequence": 60,
+    "terrainDrawSequence": 62,
+    "routeAgeAtFirstDraw": 0,
+    "routeAgeOnTerrainDraw": 0.14999999105930328,
+    "terrainDrawClock": 2736.135705586821,
+    "scopeLimit": "The harness initially stopped on an age equality assertion. The two frames kept the same route reference and execution epoch. Presentation progressed by 0.15 s after the authority committed the terrain at the original time. This receipt ends before damage or drain.",
+    "evidence": {
+      "night-five-rhino-route-adoption-runtime-nvidia.failure.json": "089592f784e5b8ac9e09ec1aab4d6e40b30af9d7a1003d11c4f429bb7d5e7774"
+    }
+  },
+  "pending": [ "Verify collapse, defeat, absence and drain in the continuous campaign", "Identify the draw owner in the standalone close audit" ]
 }

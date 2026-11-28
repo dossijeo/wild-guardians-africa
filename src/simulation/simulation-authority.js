@@ -699,32 +699,40 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    try{return prepareStructurePlacement(game,structure,nav);}finally{nav.withCenterPreview=original;}
   }
   let nativeStructurePreparation=null,nativeStructureFailure=null,nativeResidencyAdvance=null;
-  async function admitResidentChunk(cx,cz,publish){
+  async function admitResidentChunk(key,cx,cz,publish){
     if(!prepareNativeTerrainResources||nativeStructurePreparation||
        ['quiescing','suspended'].includes(nativeProduction?.status().phase))
       throw Error('Native terrain addition requires the world resource owner');
     const controller=new AbortController();nativeResidencyAdvance=controller;
     const includeMud=mudPresentation&&session.field.c.biome==='mangrove';
     const withTerrainPayloads=proof=>({...proof,resources:{...proof.resources,chunks:proof.resources.chunks.map(withMud)}});
-    let receipt,result;
+    let receipt,added=false,needsPublication=false;
     try{
       receipt=await nativeProduction?.quiesce();
       if(closed)throw Error('Simulation authority is closed');
-      result=await planner.mutateNativeWorldAfterGpuQuiescence({mutation:{type:'addChunk',cx,cz},
-        getPublication:()=>nativeIntentControl,signal:controller.signal,prepareResources:async options=>{
-          const prepared=await prepareNativeTerrainResources(includeMud?withTerrainPayloads(options):options);
-          if(!prepared?.preparedWorldBoundary){
-            prepared?.abort?.();
-            throw Error('Native terrain addition requires a retained command packet');
-          }
-          return includeMud?{...prepared,commit:proof=>prepared.commit(withTerrainPayloads(proof))}:prepared;
-        }});
+      // The operation drained above can have acquired a body while this
+      // command was waiting. Publish that source before asking Surface to
+      // capture a new terrain ticket that must retain the acquired binding.
+      needsPublication=nativeProduction?.status().last?.publicationSequence===sequence;
+      if(!needsPublication&&!planner.nativeWorldResourceBoundary())added=addResidentChunk(key);
+      else if(!needsPublication){
+        const result=await planner.mutateNativeWorldAfterGpuQuiescence({mutation:{type:'addChunk',cx,cz},
+          getPublication:()=>nativeIntentControl,signal:controller.signal,prepareResources:async options=>{
+            const prepared=await prepareNativeTerrainResources(includeMud?withTerrainPayloads(options):options);
+            if(!prepared?.preparedWorldBoundary){
+              prepared?.abort?.();
+              throw Error('Native terrain addition requires a retained command packet');
+            }
+            return includeMud?{...prepared,commit:proof=>prepared.commit(withTerrainPayloads(proof))}:prepared;
+          }});
+        if(result.status!=='committed')throw Error('Native terrain addition '+result.status+(result.error?': '+result.error:''));
+        added=true;
+      }
     }finally{
       nativeResidencyAdvance=null;
       if(receipt&&!closed)nativeProduction.resume(receipt,{deferWake:true});
     }
-    if(result.status!=='committed')throw Error('Native terrain addition '+result.status+(result.error?': '+result.error:''));
-    return publish();
+    return publish(added,needsPublication);
   }
   const structureIdentity=command=>JSON.stringify(command.kind==='buildWallChain'?{kind:command.kind,id:command.id,material:command.material,points:command.points,options:command.options,capacityLimit:command.capacityLimit}:
     ['bless','removeWall'].includes(command.kind)?{kind:command.kind,id:command.id,targetId:command.targetId}:
@@ -2305,7 +2313,12 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     }else if(command.kind==='addChunk'){
      const [cx,cz]=parseSimulationChunkKey(command.key);
      if(loaded.has(command.key))value=false;
-     else if(planner.nativeWorldResourceBoundary())return admitResidentChunk(cx,cz,()=>{value=true;return publishResult();});
+     else if(planner.nativeWorldResourceBoundary()||nativeProduction?.status().active)return admitResidentChunk(command.key,cx,cz,(added,needsPublication)=>{
+      value=added;
+      const result=publishResult();
+      if(needsPublication)result.deferredTerrainChunk=command.key;
+      return result;
+     });
      else value=addResidentChunk(command.key);
     }else if(command.kind==='removeWall'){
      if(typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId)throw TypeError('Invalid wall removal command');

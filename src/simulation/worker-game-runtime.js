@@ -34,6 +34,12 @@ export function createWorkerGameRuntime({client,world,session,stepSeconds=.05,ni
   request.result.then(result=>{
    if(closed||fault)return;
    if(result.tutorialUpdate!==undefined)validateTutorialUpdateStatus(result.tutorialUpdate);
+   const deferredChunk=result.deferredTerrainChunk;
+   if(deferredChunk!==undefined){
+    if(item.kind!=='chunk'||deferredChunk!==item.key||result.value!==false||result.unchanged===true)
+     throw Error('Invalid deferred terrain demand');
+    delete result.deferredTerrainChunk;
+   }
    const pendingRuin=result.pendingRuinRecoveryCut!==undefined;
    const cut=pendingRuin?result.pendingRuinRecoveryCut:result.encounterRecoveryCut,motion=result.centerMotionPublication;
    if(pendingRuin&&result.encounterRecoveryCut!==undefined)throw Error('Conflicting native advance recovery cuts');
@@ -80,7 +86,11 @@ export function createWorkerGameRuntime({client,world,session,stepSeconds=.05,ni
    const accepted=publication.unchanged===true?receiver.acceptUnchanged(publication,meta):receiver.accept(publication,meta);if(!accepted.accepted)throw Error('Confirmed scene publication rejected: '+accepted.reason);
    if(motion===undefined&&cut===undefined&&planned>1&&result.stepsExecuted<planned)queue.unshift({kind:'steps',count:planned-result.stepsExecuted,fast:item.fast});
    if(diagnostics){const label=command.kind==='tutorialCommand'?`${command.kind}:${command.action}`:command.kind;completedKinds[label]=(completedKinds[label]??0)+1;if(result.diagnostics?.kind==='castAttack')lastAttackDiagnostic=result.diagnostics;}
-   confirmed=publication;if(onConfirmedState)try{onConfirmedState(result.sequence);}catch(error){try{onPresentationError(error instanceof Error?error:Error(String(error)));}catch{}}if(onConfirmedEvents&&result.events?.length)try{onConfirmedEvents(result.events);}catch(error){try{onPresentationError(error instanceof Error?error:Error(String(error)));}catch{}}if(item.kind==='chunk')pendingChunks.delete(item.key);addDemands(result);if(item.kind==='command')item.resolve(result);busy=false;activeItem=null;activeSteps=0;if(quiet&&!queue.some(queued=>queued.kind==='command')&&!pendingChunks.size)pausedQuiescent=true;pump();
+   confirmed=publication;if(onConfirmedState)try{onConfirmedState(result.sequence);}catch(error){try{onPresentationError(error instanceof Error?error:Error(String(error)));}catch{}}if(onConfirmedEvents&&result.events?.length)try{onConfirmedEvents(result.events);}catch(error){try{onPresentationError(error instanceof Error?error:Error(String(error)));}catch{}}
+   if(item.kind==='chunk'&&deferredChunk===undefined)pendingChunks.delete(item.key);
+   addDemands(result);
+   if(deferredChunk!==undefined)queue.unshift(item);
+   if(item.kind==='command')item.resolve(result);busy=false;activeItem=null;activeSteps=0;if(quiet&&!queue.some(queued=>queued.kind==='command')&&!pendingChunks.size)pausedQuiescent=true;pump();
   }).catch(error=>{busy=false;if(item.kind==='command')item.reject(error);activeItem=null;fail(error);});
  }
  function wake(){timer=null;if(!running||closed||fault)return;try{if(!clockCaptureSuspended&&!pausedQuiescent)enqueueElapsed(now());pump();if(running&&!closed&&!fault)timer=schedule(wake,stepSeconds*batchWindowSteps*1000);}catch(error){fail(error);}}

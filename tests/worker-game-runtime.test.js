@@ -63,6 +63,44 @@ test('batched steps stop for residency and preserve the pending pause order',asy
  await complete(2);assert.equal(sent[3].command.steps,3);await complete(3,{stepsExecuted:3});assert.equal(sent[4].command.kind,'pause');await complete(4);await pause;assert.equal(runtime.status().pendingSteps,0);runtime.dispose();
 });
 
+test('a deferred chunk publishes its route source and retries before later chunks and steps',async()=>{
+ let time=0,sequence=0,wake;
+ const sent=[],published=[],client={ready:Promise.resolve(),submit(command){
+  let resolve;
+  const result=new Promise(done=>{resolve=done;});
+  sent.push({command,sequence:++sequence,resolve});
+  return {accepted:true,result};
+ },dispose(){}},world={createConfirmedReceiver(){return {
+  accept(message){assert.equal(message.deferredTerrainChunk,undefined);published.push(message);return {accepted:true};},
+  status(){return {sequence:published.at(-1)?.sequence??0,lastElapsed:0};}
+ };}};
+ const runtime=createWorkerGameRuntime({client,world,session:'terrain',now:()=>time,schedule:fn=>(wake=fn,1),cancel(){}});
+ async function complete(index,missing=[],extra={}){
+  sent[index].resolve({sequence:sent[index].sequence,residency:{missing},...extra});
+  await flush();
+ }
+ try{
+  const started=runtime.start();
+  await flush();
+  await complete(0,['0,-2']);
+  await started;
+  time=50;wake();
+  await complete(1,['0,-2','1,-2'],{deferredTerrainChunk:'0,-2',value:false});
+  assert.equal(runtime.status().pendingChunks,2);
+  assert.equal(runtime.status().pendingSteps,1);
+  assert.deepEqual(published.map(x=>x.sequence),[1,2]);
+  assert.deepEqual(sent[2].command,{kind:'addChunk',key:'0,-2'});
+  await complete(2,['1,-2'],{value:true});
+  assert.deepEqual(sent[3].command,{kind:'addChunk',key:'1,-2'});
+  await complete(3,[],{value:true});
+  assert.equal(sent[4].command.kind,'advance');
+  await complete(4);
+  assert.equal(runtime.status().pendingChunks,0);
+  assert.equal(runtime.status().pendingSteps,0);
+  assert.equal(runtime.status().fault,null);
+ }finally{runtime.dispose();}
+});
+
 test('a held structure can use the FIFO while a demanded chunk and its remaining step wait',async()=>{
  let time=0,wake,sequence=0,canLoad=true;
  const sent=[],client={ready:Promise.resolve(),submit(command){
