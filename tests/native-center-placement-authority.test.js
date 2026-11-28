@@ -27,21 +27,22 @@ for(const [biome,seed] of [['sabana',714],['desierto',712]])test(`the paid cente
  const command={kind:'placeStructure',id:'first-center',structure:{kind:'center',x:point.x,z:point.z,yaw:0}};
  const {port1,port2}=new MessageChannel(),session='test-center',epoch='test-center-terrain',errors=[];
  const producer=createTerrainPublication({port:port1,session,epoch,retainRevisions:true});
- let f,retained,settleReady,captured,packet,adopted;
+ let f,retained,settleReady,captured,packet,adopted,residencyReady,omitPreparedFrame=false;
  const ready=new Promise(resolve=>{settleReady=resolve;});
  const receiver=createConfirmedTerrainReceiver({
   port:port2,session,confirmedElapsed:state.elapsed,retainRevisions:true,autoBootstrap:true,
   residency:{replace(){},remove(){}},onError:error=>errors.push(error),validateRevision(){},
   prepareGraphicalBatch:async()=>({valid:()=>true,commit:()=>true,abort(){}}),
-  async prepareGraphicalProposal(messages,{signal,proposedWorldBoundary,nativeCenterPlacement}){
-   captured={messages,boundary:proposedWorldBoundary,center:nativeCenterPlacement};
+  async prepareGraphicalProposal(messages,{signal,proposedWorldBoundary,nativeCenterPlacement,retainsNativeAssignments}){
+   captured={messages,boundary:proposedWorldBoundary,center:nativeCenterPlacement,retainsNativeAssignments};
+   if(omitPreparedFrame)return {canonicalPropsUnmasked:true,valid:()=>true,commit:()=>assert.fail('Unprepared region was adopted'),abort(){}};
    const time=proposedWorldBoundary.effectiveTime;
    packet=await preparedWorldDraw({...f,clock:{...f.clock,elapsed:time,safeUntil:time,paused:true,segments:[]}},proposedWorldBoundary,123,signal);
    packet.presented.catch(()=>{});
    retained=true;
-   await ready;
+   await (nativeCenterPlacement?ready:residencyReady);
    return {canonicalPropsUnmasked:true,preparedWorldBoundary:packet.preparedWorldBoundary,valid:packet.valid,
-    commit(proof){adopted=proof;return packet.commit(proof.worldBoundary);},abort:packet.abort};
+    commit(proof){adopted=proof;return packet.commit(proof?.worldBoundary??proposedWorldBoundary);},abort:packet.abort};
   }
  });
  const stage=(chunk,at)=>producer.stage(chunk,at);
@@ -128,6 +129,57 @@ for(const [biome,seed] of [['sabana',714],['desierto',712]])test(`the paid cente
   await publish(duplicate);
   assert.equal(duplicate.value,false);
   assert.deepEqual(JSON.parse(duplicate.snapshot).ledger,after.ledger);
+  if(biome==='desierto'){
+   const key='5,1';
+   assert(!initial.chunkKeys.includes(key));
+   let releaseResidency;
+   residencyReady=new Promise(resolve=>{releaseResidency=resolve;});
+   const priorBoundary=world.worldBoundary;
+   const priorTerrain=f.command({kind:'snapshot',visualTerrain:true,visualRecoveryOnly:true});
+   producer.commit(priorTerrain.sequence);
+   await until(()=>receiver.ready(priorTerrain.sequence));
+   const add={kind:'addChunk',key,visualTerrain:true,visualRecoveryOnly:true};
+   let loaded,rejected;
+   const pending=Promise.resolve().then(()=>f.command(add));
+   pending.then(value=>{loaded=value;},error=>{rejected=error;});
+   try{
+    for(let i=0;i<5;i++)await new Promise(resolve=>setImmediate(resolve));
+    if(rejected)throw rejected;
+    assert.equal(loaded,undefined);
+    assert.equal(captured.center.commandId,command.id);
+    receiver.confirm(priorTerrain.sequence,priorTerrain.elapsed);
+    await until(()=>!captured.center||loaded||rejected);
+    if(rejected)throw rejected;
+    assert.equal(loaded,undefined);
+    assert.equal(adopted.worldBoundary.ticket,priorBoundary.ticket);
+    assert.equal(captured.retainsNativeAssignments,true);
+    assert.deepEqual(captured.messages.map(({payload})=>[payload.cx,payload.cz]),[[5,1]]);
+   }finally{releaseResidency();}
+   const added=await pending;
+   assert.equal(added.value,true);
+   assert.equal(added.elapsed,priorTerrain.elapsed);
+   const [residency]=added.nativeWorldResources;
+   assert.equal(residency.kind,6);
+   assert.deepEqual(residency.chunks,[{cx:5,cz:1}]);
+   assert.deepEqual(added.terrainCheckpoint.nativeWorldBoundary,residency.worldBoundary);
+   assert.equal(added.terrainCheckpoint.chunks.length,priorTerrain.terrainCheckpoint.chunks.length+1);
+   await publish(added);
+   await f.present();
+   await packet.presented;
+   assert.deepEqual(reconcileNativeWorldResources({publication:added,admitted:receiver.admittedBoundary(added.sequence),previous:priorBoundary}),residency.worldBoundary);
+   const repeated=await f.command(add);
+   await publish(repeated);
+   assert.equal(repeated.value,false);
+   assert.equal(repeated.nativeWorldResources,undefined);
+   assert.deepEqual(repeated.terrainCheckpoint.nativeWorldBoundary,residency.worldBoundary);
+   omitPreparedFrame=true;
+   await assert.rejects(f.command({...add,key:'5,2'}),/requires a retained command packet/);
+   assert.equal(producer.status().staged,0);
+   const unchanged=f.authority.execute({...add,kind:'snapshot',sequence:repeated.sequence+1});
+   await publish(unchanged);
+   assert.equal(unchanged.terrainCheckpoint.chunks.some(chunk=>chunk.cx===5&&chunk.cz===2),false);
+   assert.deepEqual(unchanged.terrainCheckpoint.nativeWorldBoundary,residency.worldBoundary);
+  }
   assert.deepEqual([...f.faults,...errors],[]);
  }finally{settleReady();await f?.close();producer.dispose();receiver.dispose();}
 });

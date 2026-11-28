@@ -698,7 +698,34 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     reachCost:(start,end)=>{const result=routes.reachCost(start,end);if(result?.status==='unknown'){const missing=missingCenterRouteChunks(start,end);if(missing.length)throw new SpatialChunkUnavailable(start,end,missing);}return result;}}));
    try{return prepareStructurePlacement(game,structure,nav);}finally{nav.withCenterPreview=original;}
   }
-  let nativeStructurePreparation=null,nativeStructureFailure=null;
+  let nativeStructurePreparation=null,nativeStructureFailure=null,nativeResidencyAdvance=null;
+  async function admitResidentChunk(cx,cz,publish){
+    if(!prepareNativeTerrainResources||nativeStructurePreparation||
+       ['quiescing','suspended'].includes(nativeProduction?.status().phase))
+      throw Error('Native terrain addition requires the world resource owner');
+    const controller=new AbortController();nativeResidencyAdvance=controller;
+    const includeMud=mudPresentation&&session.field.c.biome==='mangrove';
+    const withTerrainPayloads=proof=>({...proof,resources:{...proof.resources,chunks:proof.resources.chunks.map(withMud)}});
+    let receipt,result;
+    try{
+      receipt=await nativeProduction?.quiesce();
+      if(closed)throw Error('Simulation authority is closed');
+      result=await planner.mutateNativeWorldAfterGpuQuiescence({mutation:{type:'addChunk',cx,cz},
+        getPublication:()=>nativeIntentControl,signal:controller.signal,prepareResources:async options=>{
+          const prepared=await prepareNativeTerrainResources(includeMud?withTerrainPayloads(options):options);
+          if(!prepared?.preparedWorldBoundary){
+            prepared?.abort?.();
+            throw Error('Native terrain addition requires a retained command packet');
+          }
+          return includeMud?{...prepared,commit:proof=>prepared.commit(withTerrainPayloads(proof))}:prepared;
+        }});
+    }finally{
+      nativeResidencyAdvance=null;
+      if(receipt&&!closed)nativeProduction.resume(receipt,{deferWake:true});
+    }
+    if(result.status!=='committed')throw Error('Native terrain addition '+result.status+(result.error?': '+result.error:''));
+    return publish();
+  }
   const structureIdentity=command=>JSON.stringify(command.kind==='buildWallChain'?{kind:command.kind,id:command.id,material:command.material,points:command.points,options:command.options,capacityLimit:command.capacityLimit}:
     ['bless','removeWall'].includes(command.kind)?{kind:command.kind,id:command.id,targetId:command.targetId}:
     command.kind==='castShield'?{kind:command.kind,id:command.id,x:command.x,z:command.z,selection:command.selection}:{kind:command.kind,id:command.id,structure:command.structure});
@@ -1413,7 +1440,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     },{label:'Native shield',rejection:'El Escudo cambió durante su preparación'});
   }
   async function prepareNativeStructureCommand(command){
-    if(closed||shieldAdvance||centerRuinAdvance||nativeStructurePreparation||nativeStructureFailure)throw Error('Native structure preparation unavailable');
+    if(closed||shieldAdvance||centerRuinAdvance||nativeStructurePreparation||nativeStructureFailure||nativeResidencyAdvance)throw Error('Native structure preparation unavailable');
     const captured=structuredClone(command),owner={command:captured,identity:structureIdentity(captured),receipt:null,ready:false,controller:new AbortController(),control:nativeIntentControl,resources:nativeResourcePreparation};nativeStructurePreparation=owner;
     try{
       if(captured.kind==='bless')return await prepareNativeBlessingCommand(owner);
@@ -1842,7 +1869,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
         if(!owner.fenceSettled)owner.controller.abort();
         return Promise.resolve(owner.receipt);
       }
-      if(shieldAdvance||centerRuinAdvance||nativeStructurePreparation)return Promise.reject(Error('Native production is held by a world mutation'));
+      if(shieldAdvance||centerRuinAdvance||nativeStructurePreparation||nativeResidencyAdvance)return Promise.reject(Error('Native production is held by a world mutation'));
       if(closed)return Promise.reject(Error('Simulation authority is closed'));
       return nativeProduction?.quiesce({cancelHomePreparation:forLostDraw,cancelCenterPreparation:forLostDraw,cancelIdleSuccessor:forLostDraw,cancelStoppedTask:forLostDraw,cancelStoppedHome:forLostDraw})??Promise.resolve(null);
     },
@@ -2005,6 +2032,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    async enableBeastPhysics(actorId,{actorIds=undefined,structureTemplates=null,allowEmpty=false,checkpoint=null,shareSpeciesClips=false,shareSpeciesRigs=false,shareAdmissionSource=false}={}){if(closed||physics||physicsInitializing)throw Error('Worker physics unavailable');physicsInitializing=true;try{const {createWorkerBeastPhysics}=await import('./worker-beast-physics.js');const driver=await createWorkerBeastPhysics(game,nav,{actorId,actorIds,structureTemplates,allowEmpty,checkpoint,shareSpeciesClips,shareSpeciesRigs,shareAdmissionSource});if(closed){driver.dispose();throw Error('Simulation authority closed during physics initialization');}physics=driver;}finally{physicsInitializing=false;}},
    async prepareBeastAttack(command){if(closed||physicsInitializing||!physics)throw Error('Worker physics unavailable');if(!command||command.kind!=='castAttack'||command.sequence!==sequence+1||typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId||!Number.isFinite(command.x)||!Number.isFinite(command.z))throw TypeError('Invalid attack command');if(game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id)||spellRejection(command,'attack'))return false;if(!physics.supports(command.targetId)){physicsInitializing=true;try{return await physics.admit(command.targetId);}finally{physicsInitializing=false;}}return false;},
    execute(command){
+    if(nativeResidencyAdvance)throw Error('Native terrain addition owns this command');
     if(gateMotionAdvance)throw Error('Native closing motors own this advance');
     if(shieldAdvance)throw shieldAdvance.failure??Error('Native shield expiry owns this advance');
     if(encounterDraftAdvance)throw encounterDraftAdvance.failure??Error('Native encounter draft owns this advance');
@@ -2275,7 +2303,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       if(plan){for(const key of plan.addedChunks){if(addResidentChunk(key))commandLoadedChunks.push(key);}value=applyVillageIsolatedPlan(game,nav,plan,{residentChunks:[...loaded.keys()]});if(value!==plan.value||serializeConfirmedState(game)!==plan.snapshot||JSON.stringify(events)!==JSON.stringify(plan.events))throw Error('Village preparation diverged from authority');}
      }
     }else if(command.kind==='addChunk'){
-     value=addResidentChunk(command.key);
+     const [cx,cz]=parseSimulationChunkKey(command.key);
+     if(loaded.has(command.key))value=false;
+     else if(planner.nativeWorldResourceBoundary())return admitResidentChunk(cx,cz,()=>{value=true;return publishResult();});
+     else value=addResidentChunk(command.key);
     }else if(command.kind==='removeWall'){
      if(typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId)throw TypeError('Invalid wall removal command');
      const duplicate=game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id),target=game.structures.find(s=>s.id===command.targetId&&s.kind==='wall');
@@ -2356,7 +2387,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     }
    },
    publishResidentTerrainForQa(publish){if(closed||typeof publish!=='function')throw TypeError('Invalid terrain bootstrap');const selected=session.core.currentChunk();try{for(const key of loaded.keys()){const [x,z]=parseSimulationChunkKey(key);if(session.core.selectChunk(x,z)<0)throw Error('Resident native chunk disappeared: '+key);publish(withMud(session.core.chunkPayload()),game.elapsed);}}finally{if(selected&&session.core.selectChunk(selected.cx,selected.cz)<0)throw Error('Could not restore selected native chunk');}},
-    dispose(){if(closed)return;closed=true;(encounterDraftAdvance??centerRuinAdvance)?.waitingForLossClaim?.(Error('Simulation authority closed'));gateMotionAdvance?.abort();shieldAdvance?.controller.abort();centerRuinAdvance?.controller.abort();nativeStructurePreparation?.controller.abort();nativeProduction?.dispose();nativeResourcePreparation?.dispose();nativeIntentControl?.dispose();presentationJournal.dispose();stopMotion?.();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{try{nativeBodies?.dispose();}finally{session.dispose();}}},
+    dispose(){if(closed)return;closed=true;nativeResidencyAdvance?.abort();(encounterDraftAdvance??centerRuinAdvance)?.waitingForLossClaim?.(Error('Simulation authority closed'));gateMotionAdvance?.abort();shieldAdvance?.controller.abort();centerRuinAdvance?.controller.abort();nativeStructurePreparation?.controller.abort();nativeProduction?.dispose();nativeResourcePreparation?.dispose();nativeIntentControl?.dispose();presentationJournal.dispose();stopMotion?.();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{try{nativeBodies?.dispose();}finally{session.dispose();}}},
   };
   return authority;
  }catch(error){nativeProduction?.dispose();nativeResourcePreparation?.dispose();nativeIntentControl?.dispose();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{nativeBodies?.dispose();}finally{session?.dispose();}throw error;}

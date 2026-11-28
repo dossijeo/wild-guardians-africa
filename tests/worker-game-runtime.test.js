@@ -62,6 +62,47 @@ test('batched steps stop for residency and preserve the pending pause order',asy
  const pause=runtime.submit({kind:'pause',reason:'menu'});await complete(1,{stepsExecuted:2,residency:{missing:['1,2']}});assert.deepEqual(sent[2].command,{kind:'addChunk',key:'1,2'});
  await complete(2);assert.equal(sent[3].command.steps,3);await complete(3,{stepsExecuted:3});assert.equal(sent[4].command.kind,'pause');await complete(4);await pause;assert.equal(runtime.status().pendingSteps,0);runtime.dispose();
 });
+
+test('a held structure can use the FIFO while a demanded chunk and its remaining step wait',async()=>{
+ let time=0,wake,sequence=0,canLoad=true;
+ const sent=[],client={ready:Promise.resolve(),submit(command){
+  let complete;
+  const result=new Promise(resolve=>{complete=resolve;});
+  sent.push({command,sequence:++sequence,complete});
+  return {accepted:true,result};
+ },dispose(){}},world={createConfirmedReceiver(){let confirmed=0;return {
+  accept(message){confirmed=message.sequence;return {accepted:true};},status(){return {sequence:confirmed,lastElapsed:0};}
+ };}};
+ const runtime=createWorkerGameRuntime({client,world,session:'s',now:()=>time,schedule:fn=>(wake=fn,1),cancel(){},
+  maxBatchSteps:4,canDispatchChunks:()=>canLoad});
+ const complete=async(index,fields={})=>{
+  const item=sent[index];
+  item.complete({sequence:item.sequence,residency:{missing:[]},...fields});
+  await flush();
+ };
+ try{
+  const starting=runtime.start();await flush();await complete(0);await starting;
+  time=100;wake();
+  assert.equal(sent[1].command.steps,2);
+  canLoad=false;
+  await complete(1,{stepsExecuted:1,residency:{missing:['5,1']}});
+  assert.equal(sent.length,2);
+  assert.equal(runtime.status().pendingSteps,1);
+  const placement=runtime.submit({kind:'placeStructure'});
+  assert.equal(sent[2].command.kind,'placeStructure');
+  await complete(2,{residency:{missing:['5,1']}});await placement;
+  assert.equal(sent.length,3);
+  assert.equal(runtime.status().pendingChunks,1);
+  canLoad=true;runtime.resumeDispatch();
+  assert.deepEqual(sent[3].command,{kind:'addChunk',key:'5,1'});
+  await complete(3);
+  assert.equal(sent[4].command.kind,'advance');
+  await complete(4);
+  assert.equal(runtime.status().pendingSteps,0);
+  assert.equal(runtime.status().fault,null);
+ }finally{runtime.dispose();}
+});
+
 for(const kind of [26,27])test('publishing center motion '+kind+' preserves every step before a pending pause',async()=>{
  let now=0,wake,sequence=0,elapsed=12;
  const sent=[],seen=[],client={ready:Promise.resolve(),submit(command){

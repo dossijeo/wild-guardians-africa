@@ -3,8 +3,8 @@ import {validateTutorialUpdateStatus} from '../tutorial/update-status.js';
 import {copyNativeWorldBoundary} from '../world/native-world-boundary.js';
 // Coordinates one authoritative Worker with a presentation-only WorldScene.
 // Its timer is independent of rendering; it never advances the game locally.
-export function createWorkerGameRuntime({client,world,session,stepSeconds=.05,nightFastForward=true,captureClockSegments=false,maxCommands=128,controlReserve=8,maxBatchSteps=1,batchWindowSteps=1,diagnostics=false,startupCommand=null,startupSuspended=false,now=()=>performance.now(),schedule=(fn,ms)=>setTimeout(fn,ms),cancel=id=>clearTimeout(id),onError=()=>{},onConfirmedEvents=null,onConfirmedState=null,onPresentationError=onError,canDispatch=()=>true,acceptNativeRecoveryCut=null}){
- if(!client?.ready||typeof client.submit!=='function'||typeof world?.createConfirmedReceiver!=='function'||typeof canDispatch!=='function'||typeof session!=='string'||!session||!Number.isFinite(stepSeconds)||stepSeconds<=0||stepSeconds>1||typeof nightFastForward!=='boolean'||typeof captureClockSegments!=='boolean'||!Number.isSafeInteger(maxCommands)||maxCommands<1||!Number.isSafeInteger(controlReserve)||controlReserve<1||!Number.isSafeInteger(maxBatchSteps)||maxBatchSteps<1||maxBatchSteps>256||!Number.isSafeInteger(batchWindowSteps)||batchWindowSteps<1||batchWindowSteps>maxBatchSteps||batchWindowSteps>1&&batchWindowSteps*stepSeconds>.25)throw TypeError('Invalid worker game runtime');
+export function createWorkerGameRuntime({client,world,session,stepSeconds=.05,nightFastForward=true,captureClockSegments=false,maxCommands=128,controlReserve=8,maxBatchSteps=1,batchWindowSteps=1,diagnostics=false,startupCommand=null,startupSuspended=false,now=()=>performance.now(),schedule=(fn,ms)=>setTimeout(fn,ms),cancel=id=>clearTimeout(id),onError=()=>{},onConfirmedEvents=null,onConfirmedState=null,onPresentationError=onError,canDispatch=()=>true,canDispatchChunks=()=>true,acceptNativeRecoveryCut=null}){
+ if(!client?.ready||typeof client.submit!=='function'||typeof world?.createConfirmedReceiver!=='function'||typeof canDispatch!=='function'||typeof canDispatchChunks!=='function'||typeof session!=='string'||!session||!Number.isFinite(stepSeconds)||stepSeconds<=0||stepSeconds>1||typeof nightFastForward!=='boolean'||typeof captureClockSegments!=='boolean'||!Number.isSafeInteger(maxCommands)||maxCommands<1||!Number.isSafeInteger(controlReserve)||controlReserve<1||!Number.isSafeInteger(maxBatchSteps)||maxBatchSteps<1||maxBatchSteps>256||!Number.isSafeInteger(batchWindowSteps)||batchWindowSteps<1||batchWindowSteps>maxBatchSteps||batchWindowSteps>1&&batchWindowSteps*stepSeconds>.25)throw TypeError('Invalid worker game runtime');
  if(typeof startupSuspended!=='boolean')throw TypeError('Invalid startup clock policy');
  if(startupCommand!==null&&(!['pause','resume'].includes(startupCommand?.kind)||startupCommand.reason!=='hidden'||Object.keys(startupCommand).length!==2))throw TypeError('Invalid startup visibility command');
  if(onConfirmedEvents!==null&&typeof onConfirmedEvents!=='function'||onConfirmedState!==null&&typeof onConfirmedState!=='function'||typeof onPresentationError!=='function')throw TypeError('Invalid confirmed event handler');
@@ -22,9 +22,13 @@ export function createWorkerGameRuntime({client,world,session,stepSeconds=.05,ni
  }
  function pump(){
   if(!running||busy||closed||fault||!queue.length)return;
-  const item=queue[0];if(item.kind==='barrier'){queue.shift();item.resolve();return;}const planned=item.kind==='steps'?Math.min(item.count,maxBatchSteps):0,command=item.kind==='steps'?{kind:'advance',seconds:item.seconds??stepSeconds,nightFastForward:item.fast,...(captureClockSegments?{captureClockSegments:true}:{}),...(planned>1?{steps:planned}:{})}:item.kind==='chunk'?{kind:'addChunk',key:item.key}:item.command;
+  // An earlier residency request also holds clock steps that depend on it.
+  // Foreground commands can finish the proposal that is delaying the request.
+  const index=queue[0].kind==='chunk'&&!canDispatchChunks()?queue.findIndex(item=>item.kind==='command'||item.kind==='barrier'):0;
+  if(index<0)return;
+  const item=queue[index];if(item.kind==='barrier'){queue.splice(index,1);item.resolve();return;}const planned=item.kind==='steps'?Math.min(item.count,maxBatchSteps):0,command=item.kind==='steps'?{kind:'advance',seconds:item.seconds??stepSeconds,nightFastForward:item.fast,...(captureClockSegments?{captureClockSegments:true}:{}),...(planned>1?{steps:planned}:{})}:item.kind==='chunk'?{kind:'addChunk',key:item.key}:item.command;
   if(!canDispatch(command))return;
-  if(item.kind==='steps'){item.count-=planned;if(!item.count)queue.shift();}else queue.shift();
+  if(item.kind==='steps'){item.count-=planned;if(!item.count)queue.splice(index,1);}else queue.splice(index,1);
   let request;try{request=client.submit(command);if(!request.accepted)throw Error('Worker command not admitted: '+request.reason);busy=true;activeItem=item;activeSteps=planned;}
   catch(error){if(item.kind==='command')item.reject(error);fail(error);return;}
   request.result.then(result=>{

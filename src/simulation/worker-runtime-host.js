@@ -24,7 +24,7 @@ function terrainHistorySignature(value){if(value===undefined||value===null)retur
 const inputRouter=createPresentationInputRouter({isAllowed:command=>qaPresentationInputs||isPresentationInputCommand(command),submit:(command,id)=>runtime.submit(command,{presentationInput:id})});
 function recordTerrainJournal(sequence,chunks,terrainManifest){if(!recoveryJournal)throw Error('Terrain journal before recovery initialization');recoveryJournal.appendTerrain(sequence,chunks,terrainManifest);recoveryReplay?.wake();}
 let journalClockSuspended=false;
-let nativeResourceAttached=false,nativeRecoveryHold=null,nativeStructureRelease=null;
+let nativeResourceAttached=false,nativeRecoveryHold=null,nativeStructureRelease=null,nativeStructureBlocksChunks=false;
 function reportFailedNativeAuthority(error){if(authorityClient.status().state!=='failed')return false;visualStream?.fail(error);postMessage({kind:'failure',session,message:String(error?.stack??error)});return true;}
 function resumeHostedDispatch(){considerNativeRecoveryCheckpoint();visualStream?.reconsiderBackpressure();const status=recoveryJournal?.status();if(journalClockSuspended&&(!status?.saturated||status?.checkpointRetry)){journalClockSuspended=false;if(!recoveryClockSuspended)runtime?.resumeClockCapture();}runtime?.resumeDispatch();}
 function exhaustJournalReserve(){if(journalClockSuspended)return;if(runtime?.status().running){runtime.suspendClockCapture();journalClockSuspended=true;}postMessage({kind:'viewFailure',session,message:'Presentation recovery journal reserve exhausted; simulation is paused until a checkpoint becomes available.'});}
@@ -109,7 +109,7 @@ self.onmessage=async({data})=>{
    // Attach renewal to an already ordered command. Never inject or prioritize
    // a snapshot: even sampling Rapier an extra time can affect rig state.
    const dispatchClient=recoveryJournal?{...client,submit(command){return client.submit(withPresentationRecoveryCheckpoint(command,recoveryJournal.status(),{frozen:recoveryFrozen&&!recoveryVisibilityFlushing,detached:visualStream?.status().detached===true}));}}:client;
-   runtime=createWorkerGameRuntime({...historicalPublicationRuntimeOptions(data.runtimeOptions??{},testHistoricalRecovery),captureClockSegments:presentationTimeline,client:dispatchClient,world,session,acceptNativeRecoveryCut,canDispatch:command=>!recoveryFault&&!recoverySwitching&&(!recoveryFrozen||concurrentRecovery||recoveryVisibilityFlushing)&&!visualStream?.blocked()&&!client.terrainBlocked?.()&&!(command.visualTerrain===true&&(recoveryFrozen&&!recoveryVisibilityFlushing||recoveryJournal?.status().candidate!==null&&recoveryJournal?.status().candidate!==undefined)),onError:error=>{visualStream?.fail(error);postMessage({kind:'failure',session,message:String(error?.stack??error)});}});
+   runtime=createWorkerGameRuntime({...historicalPublicationRuntimeOptions(data.runtimeOptions??{},testHistoricalRecovery),captureClockSegments:presentationTimeline,client:dispatchClient,world,session,acceptNativeRecoveryCut,canDispatchChunks:()=>!nativeStructureBlocksChunks,canDispatch:command=>!recoveryFault&&!recoverySwitching&&(!recoveryFrozen||concurrentRecovery||recoveryVisibilityFlushing)&&!visualStream?.blocked()&&!client.terrainBlocked?.()&&!(command.visualTerrain===true&&(recoveryFrozen&&!recoveryVisibilityFlushing||recoveryJournal?.status().candidate!==null&&recoveryJournal?.status().candidate!==undefined)),onError:error=>{visualStream?.fail(error);postMessage({kind:'failure',session,message:String(error?.stack??error)});}});
    const initial=await runtime.start();initializing=false;if(outbox)outbox.message({kind:'started',sequence:initial.sequence,status:runtime.status()});else postMessage({kind:'started',session,sequence:initial.sequence,status:runtime.status()});monitor=setInterval(()=>postMessage({kind:'status',session,status:{...runtime.status(),...(import.meta.env?.DEV&&authorityClient?.farQueryStatus?{farQuery:{...authorityClient.farQueryStatus(),blockers:runtime.farQueryBlockers()}}:{}),...(outbox?{outbox:outbox.status()}:{}),...(measureBacklog&&visualStream?{visualPublication:visualStream.status()}:{}),...(measureBacklog?{publicationBacklog:sequence-acknowledged,peakPublicationBacklog:peakBacklog}:{}),...(recoveryEnabled?{recoveryBaseSequence:recoveryBase?.sequence??null,recoveryBaseBytes,recoveryJournal:recoveryJournal?.status()??null,recoveryFault}:{})}}),250);return;
   }
   if(data?.session!==session||!runtime)throw Error('Invalid runtime host session');
@@ -210,7 +210,7 @@ self.onmessage=async({data})=>{
   if(data.kind==='view'){if(!outbox||data.command?.kind!=='setNavigationView')throw Error('Invalid background view');try{if(recoveryFault)throw Error(recoveryFault);await runtime.submit(data.command,{backgroundView:true});}catch(error){postMessage({kind:'viewFailure',session,message:String(error?.message??error)});}return;}
   if(data.kind==='command'){
    if(!Number.isSafeInteger(data.id)||data.id<1)throw TypeError('Invalid host command id');
-   let receiptSent=false;try{if(recoveryFault)throw Error(recoveryFault);let structurePrepared=false,result;
+   let receiptSent=false;try{if(recoveryFault)throw Error(recoveryFault);let structurePrepared=false,holdsChunks=false,result;
     try{
      // Preparation is not a command admission. The ordinary FIFO and Game
      // clock continue; purchase/placement are revalidated at the later command.
@@ -219,7 +219,16 @@ self.onmessage=async({data})=>{
         kind==='castShield'&&authorityClient.qualifiesRunningShield===true)){
       if(nativeRecoveryHold||recoveryFrozen)throw Error('Native structure preparation unavailable during recovery');
       if(nativeStructureRelease)await nativeStructureRelease;
-      await authorityClient.prepareNativeStructureCommand(data.command);structurePrepared=true;
+      if(nativeStructureBlocksChunks)throw Error('Native structure preparation unavailable');
+      // Let prior residency commands finish. Allow Game to run during READY,
+      // while new streaming requests wait for this world proposal to retire.
+      await runtime.queueBarrier();
+      if(nativeStructureBlocksChunks||nativeRecoveryHold||recoveryFrozen||recoveryFault)
+       throw Error('Native structure preparation unavailable');
+      nativeStructureBlocksChunks=holdsChunks=true;
+      const preparing=authorityClient.prepareNativeStructureCommand(data.command);
+      runtime.resumeDispatch();
+      await preparing;structurePrepared=true;
      }
      if(recoveryFault||recoveryFrozen&&structurePrepared)throw Error(recoveryFault||'Native structure preparation interrupted by recovery');
      result=await runtime.submit(data.command);
@@ -228,7 +237,10 @@ self.onmessage=async({data})=>{
       ...(receipt?{receipt}:{}),...(result.liveSnapshot===undefined?{}:{checkpointSnapshot:result.snapshot})};
      if(outbox)outbox.message(reply);else postMessage({...reply,session});
      receiptSent=true;
-    }finally{if(structurePrepared){const releasing=authorityClient.finishNativeStructureCommand(data.command);nativeStructureRelease=releasing;try{await releasing;}finally{if(nativeStructureRelease===releasing)nativeStructureRelease=null;}}}
+    }finally{
+     try{if(structurePrepared){const releasing=authorityClient.finishNativeStructureCommand(data.command);nativeStructureRelease=releasing;try{await releasing;}finally{if(nativeStructureRelease===releasing)nativeStructureRelease=null;}}}
+     finally{if(holdsChunks){nativeStructureBlocksChunks=false;runtime.resumeDispatch();}}
+    }
    }
    catch(error){if(receiptSent)throw error;const message={kind:'commandFailure',id:data.id,message:String(error?.message??error)};if(outbox)outbox.message(message);else postMessage({...message,session});}return;
   }

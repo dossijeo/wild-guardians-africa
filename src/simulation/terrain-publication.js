@@ -10,17 +10,17 @@ export function createTerrainPublication({port,session,epoch=null,initialState=n
  const pending=new Map(),history=[],sentBatches=[],staged=new Map(),stagedSizes=new Map(),revisions=new Map(),captureTimes=new Map(),removedKeys=new Set();let windowSlots=0,windowBytes=0,pumping=false,retainedBytes=0,inflight=null,serial=0,closed=false,detached=false,failure=null,failedHandoff=null,lastSequence=-1,manifestCache=null,lastBlocked=false,negotiated=null;
  const proposalIdle=()=>!closed&&!detached&&!history.length&&!inflight&&!sentBatches.length&&!staged.size;
  const proposals=createTerrainProposalPublication({port,session,epoch,snapshot:()=>({sequence:lastSequence,idle:proposalIdle(),revision:(cx,cz)=>revisions.get(`${cx},${cz}`)??0}),staged:()=>[...staged.values()],limits:()=>({bytes:Math.min(maxRetainedBytes,maxBatchBytes,negotiated?.bytes??0),count:Math.min(maxPending-2,maxBatchRevisions,negotiated?.count??0)}),available:()=>retainRevisions&&negotiated?.terrainProposals===1});
- let centerCredit=null;
+ let proposalCredit=null;
  async function prepareNativeWorldResources(options){
-  if(options?.resources?.nativeCenterPlacement!==undefined&&!proposalIdle()){
+  if((options?.resources?.nativeCenterPlacement!==undefined||options?.resources?.kind===6)&&!proposalIdle()){
    const {signal}=options,sequence=lastSequence;
-   if(!retainRevisions||closed||detached||staged.size||centerCredit)throw Error('Native center terrain credit unavailable');
+   if(!retainRevisions||closed||detached||staged.size||proposalCredit)throw Error('Native terrain proposal credit unavailable');
    await new Promise((resolve,reject)=>{
-    const cleanup=()=>{clearTimeout(timer);signal?.removeEventListener('abort',cancel);centerCredit=null;};
-    const cancel=()=>{cleanup();reject(new DOMException('Native center terrain credit cancelled','AbortError'));};
-    const timer=setTimeout(()=>{cleanup();reject(Error('Native center terrain credit timed out'));},10000);
-    centerCredit=()=>{
-     if(closed||detached||lastSequence!==sequence){cleanup();reject(Error('Native center terrain boundary changed'));return;}
+    const cleanup=()=>{clearTimeout(timer);signal?.removeEventListener('abort',cancel);proposalCredit=null;};
+    const cancel=()=>{cleanup();reject(new DOMException('Native terrain proposal credit cancelled','AbortError'));};
+    const timer=setTimeout(()=>{cleanup();reject(Error('Native terrain proposal credit timed out'));},10000);
+    proposalCredit=()=>{
+     if(closed||detached||lastSequence!==sequence){cleanup();reject(Error('Native terrain proposal boundary changed'));return;}
      if(proposalIdle()){cleanup();resolve();}
     };
     signal?.addEventListener('abort',cancel,{once:true});if(signal?.aborted)cancel();
@@ -29,9 +29,9 @@ export function createTerrainPublication({port,session,epoch=null,initialState=n
   return proposals.prepare(options);
  }
  function blocked(){return closed||detached||retainRevisions&&(!negotiated||history.length+staged.size>=Math.max(1,Math.floor(maxPending*.75))||retainedBytes>=Math.max(1,Math.floor(maxRetainedBytes*.75)));}
- function pressure(){centerCredit?.();const next=blocked();if(next!==lastBlocked||closed&&failure){lastBlocked=next;onPressure?.(next,closed?failure:null);}}
+ function pressure(){proposalCredit?.();const next=blocked();if(next!==lastBlocked||closed&&failure){lastBlocked=next;onPressure?.(next,closed?failure:null);}}
  if(initialState!==null){if(!initialState||epoch===null||initialState.epoch!==epoch||!Number.isSafeInteger(initialState.lastSequence)||initialState.lastSequence<0||!Array.isArray(initialState.chunks))throw TypeError('Invalid terrain handoff');for(const chunk of initialState.chunks){if(!Number.isSafeInteger(chunk?.cx)||!Number.isSafeInteger(chunk?.cz)||!Number.isSafeInteger(chunk?.revision)||chunk.revision<1||chunk.capturedAt!==undefined&&(!Number.isFinite(chunk.capturedAt)||chunk.capturedAt<0))throw TypeError('Invalid terrain handoff chunk');if(chunk.removed!==undefined&&chunk.removed!==true)throw TypeError('Invalid terrain handoff removal');const key=chunk.cx+','+chunk.cz;if(revisions.has(key))throw TypeError('Duplicate terrain handoff chunk');revisions.set(key,chunk.revision);if(chunk.removed)removedKeys.add(key);if(chunk.capturedAt!==undefined)captureTimes.set(key,chunk.capturedAt);}lastSequence=initialState.lastSequence;}
- function release(){centerCredit?.();proposals.dispose();sentBatches.length=0;windowSlots=windowBytes=0;pending.clear();history.length=0;staged.clear();stagedSizes.clear();retainedBytes=0;revisions.clear();captureTimes.clear();removedKeys.clear();manifestCache=null;inflight=null;onCommitted=null;port.onmessage=null;port.onmessageerror=null;}
+ function release(){proposalCredit?.();proposals.dispose();sentBatches.length=0;windowSlots=windowBytes=0;pending.clear();history.length=0;staged.clear();stagedSizes.clear();retainedBytes=0;revisions.clear();captureTimes.clear();removedKeys.clear();manifestCache=null;inflight=null;onCommitted=null;port.onmessage=null;port.onmessageerror=null;}
  function fail(error){if(closed)return;failure=error instanceof Error?error:Error(String(error));if(retainRevisions&&epoch!==null&&lastSequence>=0&&!staged.size)failedHandoff=handoffState();closed=true;release();try{pressure();}catch{}try{port.postMessage({kind:'terrainFailure',session,message:failure.message});}catch{}try{port.close();}catch{}}
  // A broken graphics port does not invalidate a journalled simulation tick.
  // Keep authority revisions, discard only delivery buffers and stop admitting
