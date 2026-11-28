@@ -74,5 +74,40 @@
       "standalone": "5fbfc4e6ed3e6d904caf71ce981041cf0f52923c68798fa985d3e1e5251da560",
       "pthread": "09ceb5e53aeea2571218f424abd4169933ae7f9d83b18a3d438637f17aeae320"
     }
+  },
+  "firstNight": {
+    "fixture": "tests/fixtures/desierto712-enclosure-before-home.json.gz",
+    "fixtureSha256": "49332d24756259ac40ad1d87c8fee8c4e1dd35902447d44bc7d5e4ad449b8862",
+    "baseWithoutClosingMotor": "Home19 must be followed by a prepared closing motor",
+    "baseWithClosingMotorAndPriorCenterAdmission": "Native task game cohort contains an unsupported mover",
+    "cpu": {
+      "heldReadyKeepsPreviousDraw": true,
+      "closingAdvanceSteps": 4,
+      "publicCheckpointRestoresPartialOpening": true,
+      "raidSpawnedAt": 370.50227023610705,
+      "raidEndedAt": 443.2199999998311,
+      "nextDawnAt": 599.9999999996885,
+      "nextDawnPause": "hiring"
+    },
+    "nvidia": {
+      "architecture": "turing",
+      "inputElapsed": 249.80000000002676,
+      "inputSha256": "7733bbe39188c3a684c723ad8fd75d13aa883d5d90e3c74791c7b734b8e089ed",
+      "receiptSha256": "f92efe9637ebab658a4dc1ead48859eb810bd1986f889a3dd418a8e7fc458f7c",
+      "home19": {"actorId": 21, "bodyId": 1, "ticket": 5, "effectiveTime": 279.3499999999801},
+      "closingGate": {"gateId": 7, "ticket": 6, "effectiveTime": 279.3999999999801, "submittedDraw": 257, "closedDraw": 261},
+      "raidSpawnedAt": 370.50227023610705,
+      "animal": {"actorId": 28, "bodyId": 2, "tickets": [8, 10, 12, 14, 16], "kinds": [26, 27, 26, 27, 26]},
+      "hitIds": ["attack-37", "attack-40"],
+      "centerHp": [600, 580, 560],
+      "liveCrops": 2,
+      "workerHits": 0,
+      "ledgerUnchangedDuringRaid": true,
+      "raidEndedAt": 451.0718161888079,
+      "lastDrawWithoutActors": 1202,
+      "lastConfirmedPublication": 2903,
+      "drained": true,
+      "errors": []
+    }
   }
 }

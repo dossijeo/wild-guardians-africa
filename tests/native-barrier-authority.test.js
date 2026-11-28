@@ -190,3 +190,84 @@ test('the paid worker finishes watering and returns through the automatic gate a
   assert.deepEqual(f.errors,[]);
  }finally{await f.close();}
 });
+
+test('the unattended enclosure closes through Draw and shelters both crops through the introductory raid',async()=>{
+ const disk=gunzipSync(readFileSync(new URL('./fixtures/desierto712-enclosure-before-home.json.gz',import.meta.url))).toString('utf8');
+ const initial=deserialize(disk),events=[];
+ let releaseClosing;
+ const f=await nativeProductionAuthority(initial,{...savedNativeAuthorityOptions(disk),emptyBeastPhysics:true,drawFarmGate:true,
+  onReady(record){if(record.kind==='gate-motion')return new Promise(resolve=>{releaseClosing=resolve;});}});
+ const advance=()=>f.command({kind:'advance',seconds:.05,steps:4,nightFastForward:false});
+ const gate=state=>state.structures.find(row=>row.id==='structure-7');
+ try{
+  let state=initial;
+  for(let i=0;i<200&&state.workers[0].status!=='home';i++){
+   state=JSON.parse((await advance()).snapshot);
+   await f.present();
+  }
+  assert.equal(state.workers[0].status,'home');
+  assert.equal(gate(state).gateOpen,1);
+  const before=state.elapsed,worker=state.workers[0];
+  const lastDraw=f.host.inspect().nativeRouteFrame;
+  const pending=Promise.resolve(advance());
+  let completed=false;
+  pending.then(()=>{completed=true;},()=>{completed=true;});
+  try{
+   for(let i=0;i<200&&!releaseClosing&&!completed;i++)await f.present();
+   assert(releaseClosing,'Home19 must be followed by a prepared closing motor');
+   const prepared=f.records.find(record=>record.kind==='gate-motion');
+   assert.equal(prepared.committed,false);
+   assert.equal(completed,false);
+   assert.deepEqual(f.host.inspect().nativeRouteFrame,lastDraw);
+   const [motor]=prepared.resources.gates;
+   assert.equal(motor.gateId,7);
+   assert.equal(motor.openingDegrees,89);
+   assert.deepEqual(Array.from(motor.rows),[before,1,before+.6,0]);
+   releaseClosing();
+   const result=await pump(f,pending);
+   state=JSON.parse(result.snapshot);
+   assert.equal(result.stepsExecuted,4);
+   assert(Math.abs(state.elapsed-before-.2)<1e-9);
+   assert(Math.abs(gate(state).gateOpen-2/3)<1e-9);
+   assert.equal(prepared.committed,true);
+   assert.equal(f.host.inspect().nativeRouteFrame.worldBoundary.ticket,prepared.resources.worldBoundary.ticket);
+  }finally{releaseClosing?.();}
+
+  const checkpoint=f.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+  const saved=prepareWorkerCheckpoint(checkpoint,{slotId:state.slotId,policy:{nativeAuthority:true},savedAt:0});
+  assert(saved.saved,'the public checkpoint must preserve the partial opening');
+  const text=serialize(saved.state);
+  const cold=await nativeProductionAuthority(deserialize(text),{...savedNativeAuthorityOptions(text),drawFarmGate:true});
+  try{
+   assert.equal(gate(cold.snapshot()).gateOpen,gate(state).gateOpen);
+   for(let i=0;i<2;i++){
+    state=JSON.parse((await advance()).snapshot);
+    const continued=JSON.parse((await pump(cold,Promise.resolve(cold.command({kind:'advance',seconds:.05,steps:4,nightFastForward:false})))).snapshot);
+    assert.equal(continued.elapsed,state.elapsed);
+    assert.equal(gate(continued).gateOpen,gate(state).gateOpen);
+   }
+   assert.equal(gate(state).gateOpen,0);
+  }finally{await cold.close();}
+
+  for(let i=0;i<1000&&!events.some(event=>event.type==='RaidEnded');i++){
+   const packet=await advance();
+   state=JSON.parse(packet.snapshot);
+   events.push(...packet.events);
+   await f.present();
+   if(state.raid)assert.equal(gate(state).gateOpen,0);
+  }
+  const [spawn]=events.filter(event=>event.type==='RaidSpawned'),hits=events.filter(event=>event.type==='AnimalLogicalHit');
+  assert.equal(spawn.raidFacts.pressureFacts.introductory,true);
+  assert.equal(spawn.raidFacts.exposedLiving,2);
+  assert.equal(events.filter(event=>event.type==='RaidEnded').length,1);
+  assert.deepEqual(hits.map(event=>[event.targetId,event.presentation.target.kind]),[['structure-2','center'],['structure-2','center']]);
+  assert.equal(new Set(hits.map(hit=>hit.attackId)).size,2);
+  assert.equal(state.structures[0].hp,560);
+  assert.equal(state.plants.filter(plant=>plant.alive).length,2);
+  assert(!state.workers[0].path?.length);
+  assert.deepEqual({...state.workers[0],path:null},{...worker,path:null});
+  assert(!events.some(event=>event.type==='CropHit'||event.type==='WorkerHit'));
+  assert.deepEqual(state.ledger,initial.ledger);
+  assert.deepEqual([...f.faults,...f.errors],[]);
+ }finally{await f.close();}
+});

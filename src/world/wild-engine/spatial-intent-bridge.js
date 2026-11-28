@@ -1472,7 +1472,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
        state.raid.animals[0]!==animal||animal.magicDown||(animal.magicStunUntil??0)>state.elapsed||
        !state.workers.every(w=>w===flight||w.status==='home'&&!w.raidReturn&&!w.nativeRouteAdmission))return null;
     if(!retreat&&!(animal.hitsRemaining>0)||retreat!==nativeRetreatBudgetAllowed(state,animal))return null;
-    const centerCohort=animalRouteV2&&nativeCenterAttackCohort(state,flight);
+    const centerCohort=animalRouteV2&&(nativeCenterAttackCohort(state,flight)||!flight&&nativeShelteredCenterActor(state,animal));
     if(state.biome!=='sabana'&&!centerCohort&&!nativeDesertIntroductoryRaid(state,animal)||
        wasm.nav_animal_finished_strike_snapshot?.(numericId(animal.id))!==1)return null;
     const [version,nativeSession,actor,body,attackId,x,z,radius,phase,yaw,at,polygon,target,
@@ -1483,7 +1483,10 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       if(!ref||!homeAssignment||home.assignmentSequence!==homeAssignment||ref.worldBoundary.ticket!==homeTicket||
          ref.actorId!==homeActor||ref.bodyId!==homeBody||ref.sourceRequest?.raidSpawnSequence!==spawn||spawn!==raidFlight.event)return null;
     }
-    const center=centerCohort&&state.structures.some(structure=>structure.kind==='center'&&numericId(structure.id)===target);
+    const subject=centerCohort&&nativeCropRouteSubject(state,animal,flight);
+    const center=centerCohort&&(subject?.purpose==='center'&&subject.target.id==='structure-'+target||
+      !animal.targetId&&state.events.some(event=>event.type==='AnimalLogicalHit'&&event.attackId===animal.attackId&&
+        event.targetId==='structure-'+target&&event.presentation?.target?.kind==='center'));
     const collapse=center&&!retreat&&state.biome==='desierto'&&wasm.nav_animal_plan_center_after_collapse&&
       !animal.targetId&&!animal.reservation&&nativeCenterCollapseSite(state,animal);
     const collapsed=collapse?.status==='collapsing'&&collapse.id==='structure-'+target;
@@ -1501,7 +1504,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       !state.spells.some(s=>s.kind==='shield'&&(s.id===stop.spell.id||s.remaining>0&&Math.hypot(s.x-crop.x,s.z-crop.z)<=s.radius))&&
       state.events.some(e=>e.attackId===animal.attackId&&e.targetId===crop.id&&e.simulationTime===at&&
         (e.type==='AnimalLogicalMiss'&&e.reason==='shield-expired'||finishedInShield(e)));
-    if(!covered&&!expired&&!collapsed&&(center&&!retreat?nativeCropRouteSubject(state,animal,flight)?.purpose!=='center':animal.targetId||animal.reservation))return null;
+    if(!covered&&!expired&&!collapsed&&(center&&!retreat?subject?.purpose!=='center':animal.targetId||animal.reservation))return null;
     if(version!==1||nativeSession!==wasm.nav_intent_session()||actor!==numericId(animal.id)||
        animal.attackId!=='attack-'+attackId||animal.x!==x||animal.z!==z||animal.heading!==yaw||
        animal.motionPhase!==phase||animal.radius!==radius||state.elapsed<at)return null;
@@ -4398,7 +4401,8 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     }
   };
   const requestNativeCenterBirth=(state,animal,{target,approach},body,pair=null)=>{
-    if(state!==owningState||!animalRouteV2||!nativeCenterAttackCohort(state,pair?.worker)||!nativeCenterAttackSite(state,target)||
+    const sheltered=!pair&&target===state.structures[0]&&nativeDesertIntroductoryRaid(state,animal);
+    if(state!==owningState||!animalRouteV2||!(sheltered||nativeCenterAttackCohort(state,pair?.worker))||!nativeCenterAttackSite(state,target)||
        state.raid?.animals[0]!==animal||animal.status!=='entering'||!approach.path?.length)return false;
     syncBoundaryTime();
     writeAttackRouteInput(animal,approach.path);
