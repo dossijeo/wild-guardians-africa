@@ -1323,7 +1323,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       if(!required(old))continue;
       const id=old.nativeGate?.gateId,key=`${old.id}:${old.byteOffset}`,next=retained.get(key),live=clockBindings.get(key);
       const source=active.resourceSnapshot.get(old.id),resource=packet.resourceSnapshot.get(old.id);
-      if(old.semantic!=='relative'||
+      const relative=old.semantic==='relative';
+      const homePhase=old.nativeHome&&old.semantic==='origin-modulo'&&old.period===next?.period&&old.period===live?.period;
+      if(!(relative||homePhase)||
          !next||next.nativeClockKey!==old.nativeClockKey||live?.nativeClockKey!==old.nativeClockKey||
          next.resourceEnd!==old.resourceEnd||live.resourceEnd!==old.resourceEnd||
          resource!==source&&(!source?.uniformSource||resource?.uniformSource!==source.uniformSource))throw missing();
@@ -1335,7 +1337,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         seen.add(id);
       }else if(old.nativeHome){
         if(!nativeHomeRouteAttestationCovers(home,old.nativeHome)||!old.motionRecord?.isCurrent()||old.routeRecord?.assignmentSequence!==home.assignmentSequence)throw missing();
-        hasHome=true;
+        hasHome||=relative;
       }else{
         if(!old.motionRecord?.matchesCenterRuinOwner(animal))throw missing();
         hasAnimal=true;

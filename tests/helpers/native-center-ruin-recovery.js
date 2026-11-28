@@ -128,6 +128,7 @@ export async function recoverRouteAfterRuin(world,proof,at,state=null,{endpoint=
    const buffer=device.createBuffer({size:16,usage:72});device.queue.writeBuffer(buffer,0,new Float32Array(4));
    draw.client.registerClockBinding(buffer,{byteOffset:0,semantic:'relative',epoch:ref.worldBoundary.effectiveTime,
     resourceEnd:nativeClockResourceEnd(ref.worldBoundary.effectiveTime,ref.endTime),nativeHome:ref});
+   draw.client.registerClockBinding(buffer,{byteOffset:4,semantic:'origin-modulo',epoch:ref.worldBoundary.effectiveTime,period:1.25,nativeHome:ref});
    draw.homeGroup=device.createBindGroup({entries:[{binding:0,resource:{buffer}}]});
    motors={worldBoundary:ref.worldBoundary,gates:q.members[0].resources.presentation.gates};
   }

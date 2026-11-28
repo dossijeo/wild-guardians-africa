@@ -62,8 +62,9 @@ function initialState(){
  }finally{farm.close();}
 }
 
-for(const mode of ['with all clocks','without Home clock','without animal clock','recover after GO','recover before GO'])test(`the finished center strike admits a new corridor and reaches the occupied gate ruin (${mode})`,{timeout:45000},async t=>{
+for(const mode of ['with all clocks','without Home clock','without animal clock','with a changed Home phase','recover after GO','recover before GO'])test(`the finished center strike admits a new corridor and reaches the occupied gate ruin (${mode})`,{timeout:45000},async t=>{
  const omitClock=mode==='without Home clock'?'Home':mode==='without animal clock'?'animal':null;
+ const changePhase=mode==='with a changed Home phase';
  const recoverBefore=mode==='recover before GO';
  const initial=initialState(),gateId=gateIds[0],entityId='structure-'+gateId;
  initial.slotId=successorFixtureSlot;
@@ -81,7 +82,14 @@ for(const mode of ['with all clocks','without Home clock','without animal clock'
  globalThis[owner]=entry=>{access=entry;};
  try{
   world=await nativeProductionAuthority(initial,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,getTerrainManifest:()=>terrainManifest,
-   onPrepare(record){if(record.kind==='center-ruin'){ruin=record;record.omitClock=omitClock;}},
+   onPrepare(record){
+    if(record.kind==='home-route')record.homeOriginPhase=true;
+    if(record.kind==='center-ruin'){
+     ruin=record;record.omitClock=omitClock;
+     if(changePhase)record.beforeDraw=()=>world.client.registerClockBinding(world.buffer,{byteOffset:4,semantic:'origin-modulo',
+      epoch:home.preparedReference.worldBoundary.effectiveTime,period:1.5,nativeHome:home.preparedReference});
+    }
+   },
    onReady(record,{signal}={}){
     if(record.kind==='center-ruin'){
      if(recoverBefore)signal.addEventListener('abort',releaseRuin,{once:true});
@@ -164,7 +172,7 @@ for(const mode of ['with all clocks','without Home clock','without animal clock'
   const watch=()=>advancing.then(value=>{result=value;},reason=>{failure=reason;});
   watch();
   for(let i=0;i<300&&!ruin?.packet&&!failure;i++)await world.present();
-  if(omitClock){
+  if(omitClock||changePhase){
    await assert.rejects(advancing,/Center ruin lacks its acquired animal, Home or crossing clocks/);
    assert.equal(session.centerPolygonId(doomed),polygon);
    assert.equal(planner.nativeCausalClock().committedThrough,beforeRuin);

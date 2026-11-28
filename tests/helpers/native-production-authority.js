@@ -117,6 +117,8 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
     farmGroup=graphics.client.device.createBindGroup({entries:[{binding:0,resource:{buffer}}]});
    }
    graphics.client.registerClockBinding(buffer,{byteOffset:0,semantic:'relative',epoch:stationary?resources.worldBoundary.effectiveTime:resources.startTime,...(stationary||acting?{}:{resourceEnd:resources.endTime}),[clockField]:reference});
+   if(kind==='home-route'&&record.homeOriginPhase)
+    graphics.client.registerClockBinding(buffer,{byteOffset:4,semantic:'origin-modulo',epoch:resources.startTime,period:1.25,nativeHome:reference});
   }
   const metadata=barrier?{nativeBarrierAdditionTemplate:reference}:undefined;
   const previousStop=barrier?records.findLast(prior=>prior.kind==='farm-arrival-stop'&&prior.committed):null;
