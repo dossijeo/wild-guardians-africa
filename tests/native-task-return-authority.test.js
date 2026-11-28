@@ -12,6 +12,7 @@ import {floorFloat32} from '../src/float32-time.js';
 import {recoveredStoppedGateSamplesMatch,stopFields} from '../src/world/native-stop24-task-recovery.js';
 import {copyTask25HomeResources} from '../src/world/native-task25-home-recovery.js';
 import {copyNativeStoppedClock} from '../src/rendering/native-stopped-clock.js';
+import {nativeHomeRequestContinuesIdleCycle,nativeHomeRequestContinuesInitialIdle} from '../src/world/native-home-request-reference.js';
 import {fixture,flush} from './helpers/remote-webgpu-fixture.js';
 
 const deferred=()=>{let resolve;const promise=new Promise(r=>{resolve=r;});return {promise,resolve};};
@@ -58,6 +59,72 @@ test('unsupported return checks the same rounded clock edge before moving native
   assert.throws(()=>tick(f.state,.05,f.nav),/unsupported return boundary/);
   assert.equal(f.state.time,at);assert.equal(f.state.elapsed,elapsed);assert.deepEqual([f.body(1),f.body(3)],bodies);assert.deepEqual(f.state.workers.map(w=>w.taskId),tasks);
  }finally{f.close();}
+});
+
+for(const kind of ['initial-idle-body','idle-cycle'])test(`shift end cancels a retained Task14 READY and returns from the stationary ${kind} owner`,async()=>{
+ const profile=PROFILES.find(p=>p.id==='youngMale');
+ const source=nativeIdleCycleGameFixture({mode:'rest',remaining:5,profile:profile.id,peer:false});
+ const taskReady=deferred(),homeReady=deferred();
+ let f,pending,home,initial,cycle;
+ try{
+  const state=structuredClone(source.state),worker=state.workers[0];
+  state.time=profile.end-.45;
+  state.villages.find(v=>v.id===worker.villageId).entry=source.point(-9,0);
+  const point=source.point(-4,6),target=createPlant(`plant-${state.nextId++}`,'mijo',point.x,point.z,worker.centerId);
+  target.growth=999999;
+  for(const water of target.water)water.status='manual';
+  state.plants.push(target);
+  f=await nativeProductionAuthority(state,{onCommit:(_record,data)=>{
+   initial??=data.nativeInitialIdleBodyBinding;
+   cycle??=data.nativeIdleCycleBinding;
+  },onReady:async record=>{
+   if(record.kind==='task-start'){pending=record;await taskReady.promise;}
+   if(record.kind==='home-route'&&!home){home=record;await homeReady.promise;}
+  }});
+  await untilProduction(f,()=>f.records.some(r=>r.kind===kind&&r.committed));
+  assert.equal(f.command({kind:'harvest',id:'harvest-with-late-task-ready',targetId:target.id}).value,true);
+  for(let i=0;i<5&&!pending;i++){f.advance(.025);await f.present();}
+  await untilProduction(f,()=>pending);
+  const before=f.snapshot(),assigned=before.workers[0],taskId=assigned.taskId;
+  assert(before.time<profile.end);
+  assert.equal(assigned.nativeRouteAdmission,'pending-resources');
+  assert.equal(before.tasks.find(row=>row.id===taskId)?.workerId,worker.id);
+  assert.equal(pending.committed,false);
+  for(let i=0;i<20&&f.snapshot().time<profile.end;i++){
+   const current=f.snapshot();
+   f.command({kind:'advance',seconds:Math.min(.025,profile.end-current.time),steps:1,nightFastForward:false});
+   await f.present();
+  }
+  const expired=f.snapshot(),held=expired.workers[0];
+  assert.equal(expired.time,profile.end);
+  assert.equal(held.nativeRouteAdmission,'pending-home-resources');
+  assert.deepEqual(pose(held),pose(assigned));
+  assert.equal(held.runRemaining,assigned.runRemaining);
+  assert.equal(held.taskId,null);
+  assert.equal(expired.tasks.find(row=>row.id===taskId)?.workerId,null);
+  assert.deepEqual(expired.ledger,before.ledger);
+  const cancelled=assert.rejects(pending.packet.presented);
+  taskReady.resolve();
+  await cancelled;
+  await untilProduction(f,()=>home);
+  assert.equal(pending.aborted,true);
+  assert.equal(home.resources.bodyId,pending.resources.bodyId);
+  if(kind==='idle-cycle')assert(nativeHomeRequestContinuesIdleCycle(home.resources.sourceRequest,cycle));
+  else{
+   assert.equal(cycle,undefined);
+   assert(nativeHomeRequestContinuesInitialIdle(home.resources.sourceRequest,initial.reference.sourceRequest));
+  }
+  f.advance(.05);
+  assert.deepEqual(pose(f.snapshot().workers[0]),pose(assigned));
+  homeReady.resolve();
+  await untilProduction(f,()=>home.committed);
+  for(let i=0;i<120&&!f.records.some(r=>r.kind==='home-arrival');i++){f.advance(.15);await f.present();}
+  await untilProduction(f,()=>f.records.some(r=>r.kind==='home-arrival'&&r.committed));
+  assert.equal(f.snapshot().workers[0].status,'home');
+  assert(f.records.every(r=>!r.committed||!['task-start','task-action','task-route-stop'].includes(r.kind)));
+  assert.deepEqual(f.faults,[]);
+  assert.deepEqual(f.errors,[]);
+ }finally{taskReady.resolve();homeReady.resolve();await f?.close();source.close();}
 });
 
 for(const profile of PROFILES)test(`${profile.id}: ordinary shift end retains Task through delayed READY25, then Home18 and absence19`,async()=>{

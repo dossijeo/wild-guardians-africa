@@ -51,9 +51,10 @@ EMSCRIPTEN_KEEPALIVE int nav_task_cancellation_source_snapshot(double actor){
  s.taskCancellationResult=q.values;return 1;
 }
 EMSCRIPTEN_KEEPALIVE const double* nav_task_cancellation_source_ptr(){return state().taskCancellationResult.data();}
-// A provisional14 has no executable successor. Restore only its still-owned
-// stationary20/21, never recreate a body or erase another actor's proposal.
-EMSCRIPTEN_KEEPALIVE int nav_intent_pending_task_cancel(double actor,double session,double requestSequence){
+// A provisional14 can give way to the retained stationary20/21. A shift
+// boundary checks the physical source before advancing and consumes it once.
+static int cancelPendingStationaryTask(double actor,double session,double requestSequence,
+    const std::array<double,7>* shiftPose,bool cancel){
  auto& s=state();if(!integer(actor)||session!=double(s.session)||!integer(requestSequence))return -1;
  if(s.worldMutationPreview||s.proposalOpen)return -4;
  const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end())return -2;
@@ -66,8 +67,16 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_pending_task_cancel(double actor,double sess
  if(!(cycle?nativeIdleCycleBodyCurrent(s,intent):body&&nativeInitialIdleBodyCurrent(s,intent)))return -2;
  const auto task=s.tasks.find(intent.task);if(task==s.tasks.end()||task->second.assigned!=intent.actor)return -2;
  const auto& p=s.barrierProposal;
- if(p.pending&&!(p.kind==14&&p.start&&p.start->route.actor==intent.actor))return -4;
- if(p.pending)clearWorldMutationProposal(s.barrierProposal);
+ const bool ownProposal=p.pending&&p.kind==14&&p.start&&p.start->route.actor==intent.actor;
+ if(shiftPose){
+  const auto& pose=cycle?static_cast<const NativeWorkerPoseResourceRequest&>(cycle->binding->source):
+    static_cast<const NativeWorkerPoseResourceRequest&>(*body->source);
+  if(*shiftPose!=std::array<double,7>{pose.x,pose.z,pose.yaw,pose.runPhase,pose.walkPhase,pose.carryPhase,pose.runRemaining})return -2;
+ }else if(p.pending&&!ownProposal)return -4;
+ if(!cancel)return 1;
+ // Only the expired task's draft is discarded. A foreign proposal keeps
+ // its ticket and still has to pass its own ordinary revalidation.
+ if(ownProposal)clearWorldMutationProposal(s.barrierProposal);
  // The receipt describes the ACTUAL retained owner, not a new grant. Original
  // finite21 time is unchanged even when the request is cancelled after its end.
  std::array<double,16> receipt={1,double(s.session),actor,double(intent.task),double(intent.target),
@@ -80,6 +89,14 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_pending_task_cancel(double actor,double sess
  intent.initialIdleBodyBinding=body;intent.idleCycle=cycle;intent.lease=false;intent.state=PlanningState::StationaryActive;
  s.tasks.at(taskId).assigned=0;auto& worker=s.workers.at(intent.actor);worker.eligible=true;worker.actionActive=false;
  receipt[13]=double(emitIntentChange(s,intent));intent.pendingTaskCancellation=receipt;s.entityRevision++;return 1;
+}
+EMSCRIPTEN_KEEPALIVE int nav_intent_pending_task_cancel(double actor,double session,double requestSequence){
+ return cancelPendingStationaryTask(actor,session,requestSequence,nullptr,true);
+}
+EMSCRIPTEN_KEEPALIVE int nav_intent_pending_task_shift_end(double actor,double session,double requestSequence,
+    double x,double z,double yaw,double runPhase,double walkPhase,double carryPhase,double runRemaining,int cancel){
+ const std::array<double,7> pose={x,z,yaw,runPhase,walkPhase,carryPhase,runRemaining};
+ return cancelPendingStationaryTask(actor,session,requestSequence,&pose,cancel==1);
 }
 // One current transition receipt, retired at the next event/release of this
 // actor. Queued stale notifications cannot recover permission from a new owner.

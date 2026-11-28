@@ -1640,13 +1640,15 @@ function expireNativeWorkerContracts(s,nav){
     if(w.status==='arriving'&&w.nativeRouteAdmission==='pending-farm-arrival-resources')planner.requestNativeFarmHome(s,w);
     else if(w.status==='arriving'&&w.nativeRouteAdmission==='native-farm-arrival'&&!nativeCompletedFarmArrival(w,planner)){if(!planner.projectNativeFarmArrivalExecution(s,w))throw Error('Expired Farm has no current native body');if(planner.nativeWorkerTaskEligible?.(w.id))notifyWorkerPlanningChange(s,w);}
     else if(w.status==='arriving'&&(w.nativeRouteAdmission==='native-farm-arrival-held'||nativeCompletedFarmArrival(w,planner)))planner.requestNativeFarmHome(s,w);
+    else if(w.status==='waiting-task'&&w.nativeRouteAdmission==='pending-resources')planner.requestNativePendingTaskHome?.(s,w);
     else if(w.status==='idle'&&(w.nativeRouteAdmission==='pending-idle-resources'||w.nativeRouteAdmission==='pending-stroll-resources'||planner.nativeInitialIdleBodyState?.(w.id)||planner.nativeIdleCycleExecution?.(w.id)||planner.nativeIdleStrollHeldExecution?.(w.id)||planner.nativeIdleStrollExecution?.(w.id)?.arrived||planner.nativeSettledWorkerExecution?.(w.id)))planner.requestNativeIdleHome(s,w);
   }
 }
-function nativeReturnBoundarySupported(w,planner){
+function nativeReturnBoundarySupported(state,w,planner){
   const settled=planner.nativeSettledWorkerExecution?.(w.id);
   return w.status==='home'&&planner.nativeWorkerHomeInactive?.(w.id)||
     !!planner.nativeHomeRouteExecution?.(w.id)||
+    w.status==='waiting-task'&&w.nativeRouteAdmission==='pending-resources'&&!!planner.nativePendingTaskHomeSource?.(state,w)||
     w.status==='walking'&&w.nativeRouteAdmission==='native-task'&&!!planner.nativeTaskReturnSource?.(w.id)||
     w.status==='acting'&&w.nativeRouteAdmission==='native-action'&&!!planner.nativeTaskActionExecution?.(w.id)||
     w.status==='carrying'&&w.nativeRouteAdmission==='native-delivery'&&!!planner.nativeDeliveryExecution?.(w.id)||
@@ -1991,7 +1993,7 @@ export function tick(s,seconds,nav,{clockRate=1,expiringShield=null,centerRuin=n
     const magicBoundaries=s.spells.filter(a=>a.remaining>1e-9).map(a=>a.remaining);
     const step=Math.min(left,.1,...boundaries,...magicBoundaries);left-=step;
     const unroundedTime=Math.min(600,s.time+step),nextTime=clockEdges.find(boundary=>Math.abs(unroundedTime-boundary)<1e-9)??unroundedTime;
-    if(s.workers.some(w=>(nativeExecution===1||w.nativeRouteAdmission==='pending-farm-arrival-resources')&&nextTime>=profile(w).end&&!nativeReturnBoundarySupported(w,nav.intentTaskPlanner)))throw Error('Native task game cohort reached an unsupported return boundary');
+    if(s.workers.some(w=>(nativeExecution===1||w.nativeRouteAdmission==='pending-farm-arrival-resources')&&nextTime>=profile(w).end&&!nativeReturnBoundarySupported(s,w,nav.intentTaskPlanner)))throw Error('Native task game cohort reached an unsupported return boundary');
 
     if(nativeExecution===1){
       nav.intentTaskPlanner.prepareHomeEncounterImpact?.(s,s.elapsed+step,nav);
