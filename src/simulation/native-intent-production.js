@@ -24,12 +24,14 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
     const flight=planner.nativeRaidFlightMember?.(state,animal);
     // An arrived worker still owns its endpoint until Home19 retires it.
     // The waiting animal must leave that preparation its turn.
-    const arrivedHome=r?.mode===1&&flight?.nativeRouteAdmission==='native-home'&&planner.nativeHomeRouteExecution(flight.id)?.arrived;
+    const strikeReady=r?.mode===2&&!r.retreat&&r.arrived;
+    const arrivedHome=(r?.mode===1||strikeReady&&r.purpose==='center')&&flight?.nativeRouteAdmission==='native-home'&&planner.nativeHomeRouteExecution(flight.id)?.arrived;
     const waitingForHome=arrivedHome||flightStopMarkers.has(flight?.nativeRouteAdmission)||
       r?.purpose==='center'&&(flight?.nativeRouteAdmission==='pending-raid-flight-resources'||
         r.mode===1&&planner.nativeCenterFlightAnimalReady?.(state,animal,r.requestSequence)===false);
     if(r?.mode===1&&!waitingForHome)return {actorId,kind:'animal-crop-route',operation:'startNativeAnimalCropRouteAfterGpuQuiescence',prepare:'prepareNativeAnimalCropRouteResources',requestSequence:r.requestSequence};
-    if(r?.mode===5||r?.mode===2&&!r.retreat&&r.arrived&&!(r.purpose==='center'&&flight))return {actorId,kind:'animal-crop-strike',operation:'startNativeAnimalCropStrikeAfterGpuQuiescence',prepare:'prepareNativeAnimalCropStrikeResources',requestSequence:r.requestSequence};
+    if(r?.mode===5||strikeReady&&(!(r.purpose==='center'&&flight)||!arrivedHome&&planner.nativeCenterFlightStrikeReady?.(state,animal,r.requestSequence)))
+      return {actorId,kind:'animal-crop-strike',operation:'startNativeAnimalCropStrikeAfterGpuQuiescence',prepare:'prepareNativeAnimalCropStrikeResources',requestSequence:r.requestSequence};
    }
   }
   const workers=state.workers,start=onlyActor===null?(workers.findIndex(w=>w.id===last?.actorId)+1)%Math.max(1,workers.length):0;
@@ -194,6 +196,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   }
   if(kind!=='animal-crop-strike')return null;
   const execution=planner.nativeCenterRuinRouteRecovery?.()?.execution??
+    planner.nativeRaidFlightRecoveryExecutions?.()?.[1]??
     planner.nativeAnimalCropRouteExecution?.(actorId,{allowArrivedCenter:true});
   return execution?.arrived&&actorId==='animal-'+execution.actorId?execution.binding.reference.requestSequence:null;
  }

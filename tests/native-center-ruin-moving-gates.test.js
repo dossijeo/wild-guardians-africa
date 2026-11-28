@@ -18,18 +18,10 @@ import {previewRaidStrike} from '../src/simulation/raids.js';
 // The production authority has no command for independently closing gates.
 const ownerKey='native-center-ruin-moving-gate-test';
 const owner=Symbol.for(ownerKey);
-const successorFixtureSlot='occupied-gate-center-successor';
 register('data:text/javascript,'+encodeURIComponent(`
  import assert from 'node:assert/strict';
  export async function load(url,context,next){
   const result=await next(url,context);
-  if(url.endsWith('/src/simulation/native-intent-production.js')){
-   const source=typeof result.source==='string'?result.source:Buffer.from(result.source).toString('utf8');
-   const guard="!(r.purpose==='center'&&flight)";
-   // Drive the mixed strike in the test before the ruin has a two-body owner.
-   assert.equal(source.split(guard).length,2);
-   return {...result,source:source.replace(guard,'(state.slotId===${JSON.stringify(successorFixtureSlot)}||'+guard+')')};
-  }
   if(!url.endsWith('/src/simulation/simulation-authority.js'))return result;
   const source=typeof result.source==='string'?result.source:Buffer.from(result.source).toString('utf8');
   const anchor='nav.intentTaskPlanner=planner;';
@@ -70,7 +62,6 @@ for(const mode of ['with all clocks','without Home clock','without animal clock'
  const changePhase=mode==='with a changed Home phase';
  const recoverBefore=mode==='recover before GO';
  const initial=initialState(),gateId=gateIds[0],entityId='structure-'+gateId;
- initial.slotId=successorFixtureSlot;
  initial.structures=initial.structures.filter(row=>row.id!=='structure-'+gateIds[1]);
  const civil=initial.structures[0],firstCenter=initial.structures.find(row=>row.id===doomed);
  civil.z+=-5-centerServicePoint(civil,initial,.8).z;
@@ -469,10 +460,14 @@ test('Draw loss retains the arrived center approach while Home crosses its gate'
  initial.structures.find(row=>row.id===doomed).hp=140;
  initial.dayPlan.at=initial.time+6;
  const raidView={...view,eye:{x:-18,z:-13.7},target:{x:-18,z:0}};
- const receipts=new Map();let access,world,draw,rig;
+ const receipts=new Map();let access,world,draw,rig,heldStrike;
  globalThis[owner]=entry=>{access=entry;};
  try{
   world=await nativeProductionAuthority(initial,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,getTerrainManifest:()=>terrainManifest,
+   onReady(record,{signal}){if(record.kind==='animal-crop-strike'&&!heldStrike){
+    heldStrike=record;
+    return new Promise((_,reject)=>signal.addEventListener('abort',()=>reject(new DOMException('Preparation cancelled','AbortError')),{once:true}));
+   }},
    onCommit(record,receipt){receipts.set(record.kind,receipt);}});
   world.command({kind:'setNavigationView',view:raidView});
   await untilProduction(world,()=>receipts.has('farm-arrival'));
@@ -508,11 +503,25 @@ test('Draw loss retains the arrived center approach while Home crosses its gate'
    assert.equal(wasm.nav_intent_barrier_proposal_ticket(),1);
    return Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6));
   };
+  await untilProduction(world,()=>!!heldStrike?.packet);
+  const originalTicket=ticket(),sequence=wasm.nav_intent_transition_sequence();
+  assert.equal(wasm.nav_center_flight_strike_ready(ref.actorId,sid,route.assignmentSequence),1);
+  assert.equal(wasm.nav_center_flight_strike_ready(ref.actorId,sid,route.assignmentSequence+1),0);
+  assert.deepEqual(ticket(),originalTicket);
+  assert.equal(wasm.nav_intent_transition_sequence(),sequence);
+  world.gpu.device.destroy();world.retireResourceEndpoint();
+  const hold=await world.authority.quiesceNativeIntentProduction({forLostDraw:true});
+  const retirement=await world.authority.flushNativeResourcePreparation({allowRetired:true,forLostDraw:true});
+  assert(retirement.terminal&&retirement.callbacksSettled);
+  await assert.rejects(heldStrike.packet.presented);
+  assert(!heldStrike.committed);
+
   // The same physical endpoint must not authorize a strike with an unrelated
   // body in the native cohort, even if it is far from either trajectory.
   const foreignBody=123456;
   assert.equal(wasm.spatial_body_upsert(foreignBody,-37,-37,.28,0,1),1);
   try{
+   assert.equal(wasm.nav_center_flight_strike_ready(ref.actorId,sid,route.assignmentSequence),0);
    assert.equal(stage(),-2);
    assert.equal(wasm.nav_intent_barrier_proposal_ticket(),0);
   }finally{assert.equal(wasm.spatial_body_remove(foreignBody),1);}
@@ -526,10 +535,6 @@ test('Draw loss retains the arrived center approach while Home crosses its gate'
   assert.equal(wasm.nav_animal_strike_proposal_cancel(...revalidated.slice(0,2)),1);
   assert.deepEqual(planner.nativeGateCrossings(entityId).find(row=>row.bodyId===crossing.bodyId),crossing);
 
-  world.gpu.device.destroy();world.retireResourceEndpoint();
-  const hold=await world.authority.quiesceNativeIntentProduction();
-  const retirement=await world.authority.flushNativeResourcePreparation({allowRetired:true});
-  assert(retirement.terminal&&retirement.callbacksSettled);
   const source=await world.authority.terminalWorkerRoute();
   assert.deepEqual(source,{version:2,members:[{kind:18,actorId:home.reference.actorId},{kind:26,actorId:ref.actorId}]});
 
@@ -586,8 +591,8 @@ test('Draw loss retains the arrived center approach while Home crosses its gate'
   assert.equal(frame.bindings.find(row=>row.nativeAnimalCrop).relativeTime,terminalAge);
   assert.deepEqual(world.faults,[]);
   assert.deepEqual(draw.errors,[]);
-  // Exercise acquisition in WASM at the recovered cut. The ordinary Game
-  // producer still leaves Strike27 behind Home19.
+  // Exercise the native retime across a live Home step while the graphical
+  // preparation port remains detached in this recovery test.
   const activeCrossing=planner.nativeGateCrossings(entityId).find(row=>row.bodyId===crossing.bodyId);
   assert.deepEqual(activeCrossing,crossing);
   assert.equal(stage(),1);

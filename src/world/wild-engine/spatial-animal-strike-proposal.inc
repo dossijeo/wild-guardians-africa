@@ -39,6 +39,14 @@ static bool centerStrikeCohort(const IntentState& s,const RouteSlot& crop,
  }
  return false;
 }
+EMSCRIPTEN_KEEPALIVE int nav_center_flight_strike_ready(double actor,double session,double assignment){
+ const auto& s=state();
+ if(session!=double(s.session)||!integer(actor)||!integer(assignment))return -1;
+ const auto* route=animalStrikeRoute(s,uint64_t(actor),uint64_t(assignment));
+ if(!route||!route->animalRouteBinding->source->attackCenter)return 0;
+ std::shared_ptr<const NativeHomeRouteBinding> home;
+ return centerStrikeCohort(s,*route,home)&&home?1:0;
+}
 static bool restoredAnimalStrikeCurrent(const IntentState& s,const ActiveIntent& intent,bool acquired){
  const auto& restored=intent.restoredAnimalStrike;
  if(!restored||!intent.animal||!intent.lease||intent.generation||
