@@ -276,6 +276,25 @@
       "regression": {"passed": 80, "failed": 0, "skipped": 0}
     }
   },
+  "physicalRerun": {
+    "productCommit": "0d5024b48f9c31d6663bef108a3b50c63b2b846d",
+    "adapter": {"vendor": "nvidia", "architecture": "turing"},
+    "profileSelection": "harness",
+    "wasm": "standalone",
+    "receipt": {"path": ".cache/desert-menu-712/native-desert-menu-712-night-after-shift-fix-extended.json", "sha256": "6450a10b095297c1063907dda176175db3fa87bcfb4cb7b638b7af4b9999f3df"},
+    "harness": {"path": ".cache/flee-mixed/qualify-desert-night-qualification.mjs", "sha256": "af1736b42d44aca55962cbb87ff15153811ad61ab9eddd62ef437aac080e97cf"},
+    "home19": {"ticket": 44, "effectiveTimeRounded": 290.20},
+    "nightStarted": {"eventId": "event-20", "applied": 7250, "acknowledged": 7250, "elapsed": 299.99999999996135},
+    "followingPublication": {"acknowledged": 7251, "elapsed": 300.2499999999614},
+    "centerHp": [600,580,560],
+    "animalAbsence": {"frame": 2700, "clockElapsed": 427.88181618882936, "bindings": 0},
+    "dawn": {"publication": 10257, "elapsed": 599.9999999999613},
+    "automaticRecoveryTriggers": 0,
+    "drawDrainedAfterExit": true,
+    "lateWateringReproduced": false,
+    "nightContinuationInSamePublication": false,
+    "unrelatedConsoleErrors": ["GET /favicon.ico returned 404", "GET /favicon.ico returned 404"]
+  },
   "deterministicLegalEnclosure": {
     "points": [
       [
