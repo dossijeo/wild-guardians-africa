@@ -1,6 +1,6 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
-En Desierto 712 desde el selector, NVIDIA presentó el recinto pagado y completó tres noches en la misma época. Los golpes del facóquero, la hiena y el búfalo dejaron el centro en 345 HP. Un control desde el mismo bootstrap confirmó sus objetivos y débitos. En la quinta noche de ese control, la autoridad rechazó el derrumbe durante Retreat con dos cultivos vivos. [Sesión física, comparación y rechazo](native-desert-mixed-flight-center-20261125.md#tercera-noche-desde-el-selector).
+En Desierto 712 desde el selector, NVIDIA completó cuatro noches en la misma época y dejó el centro en 185 HP. Un checkpoint visual detuvo la quinta noche durante la admisión de la marcha del rinoceronte. El control desde el bootstrap con WASM y Draw determinista ya llega a la derrota con los dos cultivos vivos tras corregir la guarda del derrumbe y la representación Float32 de dos cortes interiores. [Alcance de ambos recorridos](native-desert-mixed-flight-center-20261125.md#cuarta-noche-y-rinoceronte-con-cultivos-vivos).
 
 En el recinto pagado de Desierto 712, las recargas previas a la cuarta y quinta noches completaron en NVIDIA los cuatro golpes del león y el derrumbe posterior al golpe del rinoceronte. El dibujo del derrumbe conservó Retreat y la partida confirmó una sola derrota antes de drenar. [Recorrido y alcance](native-desert-mixed-flight-center-20261125.md#cuarta-y-quinta-noches-con-recinto).
 
