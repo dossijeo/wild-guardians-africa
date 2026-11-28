@@ -1113,7 +1113,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       worker.state=0;
       worker.encounterRecovery={hit:pose.hit,body:pose.workerBody,at:pose.impactAt};
     },
-    prepareRecoveredWorkerRoute(kind,input,boundary,{cohortSize=1,movingCount=cohortSize,sharedCut=false,ruin=null,ordinaryWorkers=false,idleCyclePhase=null}={}) {
+    prepareRecoveredWorkerRoute(kind,input,boundary,{cohortSize=1,movingCount=cohortSize,sharedCut=false,ruin=null,pendingRuin=null,ordinaryWorkers=false,idleCyclePhase=null}={}) {
       const profile=nativeWorkerRouteRecoveryProfile(kind),proof=profile.copyAttestation(input),ref=proof.reference;
       if(kind===15){
         const actor=actors.get(nativeTaskActionActor(ref.request)),record=actor?.actionRecord,at=clock?.committedThrough;
@@ -1204,7 +1204,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       const source=ref.worldBoundary;
       const endpoint=kind===18&&cohortSize===1&&woundedHomeEndpoint(proof,clock?.committedThrough);
       const approachEndpoint=kind===26&&cohortSize===1&&(sharedCut?
-        centerRuinApproachEndpoint(ruin,boundary,proof,clock?.committedThrough):nativeCenterApproachEndpoint(boundary,proof,clock?.committedThrough));
+        centerRuinApproachEndpoint(ruin,boundary,proof,clock?.committedThrough,pendingRuin):nativeCenterApproachEndpoint(boundary,proof,clock?.committedThrough));
       if(closed||!clock||actors.size!==cohortSize||active.size!==movingCount||proof.gateIds.length>profile.maxGates||
          !record||active.get(ref.actorId)!==record||record.lastDrawTime!==null||actor.strollProof||actor.farmArrivalProof||actor.homeProof||
          kind===14&&!profile.sameAttestation(actor.startProof,proof)||

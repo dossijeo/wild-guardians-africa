@@ -12,11 +12,11 @@ const ownerKey='native-center-ruin-moving-gate-test';
 const owner=Symbol.for(ownerKey);
 register('data:text/javascript,'+encodeURIComponent(`
  import assert from 'node:assert/strict';
- import {readFileSync} from 'node:fs';
  export async function load(url,context,next){
   const result=await next(url,context);
   if(!url.endsWith('/src/simulation/simulation-authority.js'))return result;
-  const source=readFileSync(new URL(url),'utf8'),anchor='nav.intentTaskPlanner=planner;';
+  const source=typeof result.source==='string'?result.source:Buffer.from(result.source).toString('utf8');
+  const anchor='nav.intentTaskPlanner=planner;';
   assert.equal(source.split(anchor).length,2);
   return {...result,source:source.replace(anchor,anchor+'globalThis[Symbol.for(${JSON.stringify(ownerKey)})]?.({planner,session,nativeIntentControl});')};
  }
@@ -80,7 +80,7 @@ async function closeGates(world,{planner,nativeIntentControl},route){
  return {clocks,boundary:outcome.worldBoundary};
 }
 
-for(const [mode,name] of [['retain both','retains both motors'],['recover','can replace a retired Draw'],['omit a motor','rejects a missing motor'],
+for(const [mode,name] of [['retain both','retains both motors'],['recover','can replace a retired Draw'],['recover before GO','replays an interrupted removal'],['omit a motor','rejects a missing motor'],
  ['replace a motor after READY','rejects a motor changed after READY']])test('center ruin with closing gates '+name,{timeout:45000},async()=>{
  const initial=initialState();
  let access,motor,ready,releaseReady,world,replacement;
@@ -89,11 +89,14 @@ for(const [mode,name] of [['retain both','retains both motors'],['recover','can 
   world=await nativeProductionAuthority(initial,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,getTerrainManifest:()=>terrainManifest,
    onPrepare(record){
     if(record.kind!=='center-ruin')return;
-    record.retainedGateGroups=motor.clocks.filter(({binding})=>mode!=='omit a motor'||binding.nativeGate.gateId!==gateIds[1]).map(row=>row.group);
+    record.retainedGateGroups=replacement?.motorGroups??motor.clocks.filter(({binding})=>mode!=='omit a motor'||binding.nativeGate.gateId!==gateIds[1]).map(row=>row.group);
     // A frame from Three can write other values in the same published uniform.
-    record.beforeDraw=()=>world.client.device.queue.writeBuffer(motor.clocks[0].buffer,4,new Float32Array([1]));
+    if(!replacement)record.beforeDraw=()=>world.client.device.queue.writeBuffer(motor.clocks[0].buffer,4,new Float32Array([1]));
    },
-   onReady(record){if(record.kind==='center-ruin'){ready=record;return new Promise(resolve=>{releaseReady=resolve;});}}});
+   onReady(record,{signal}={}){if(record.kind==='center-ruin'){ready=record;if(!replacement)return new Promise(resolve=>{
+    releaseReady=resolve;
+    if(mode==='recover before GO')signal.addEventListener('abort',resolve,{once:true});
+   });}}});
   assert(access);
   const native=access.session.core.wasm,polygon=access.session.centerPolygonId(doomed);
   assert(polygon>0);
@@ -129,6 +132,34 @@ for(const [mode,name] of [['retain both','retains both motors'],['recover','can 
    assert(cut>motor.boundary.effectiveTime&&proof.end<motor.clocks[0].binding.resourceEnd);
    assert.equal(native.nav_gate_motion_stage_causal(1,1),-7);
    assert.equal(captureSpatialPolygons(native,polygon).length,1);
+   if(mode==='recover before GO'){
+    const abandoned=ready;
+    replacement=await recoverRouteAfterRuin(world,proof,cut,null,{beforeRuin:true,interrupted:step,movingMotors:true});
+    releaseReady();
+    const prefix=await step,remaining=prefix.pendingRuinRecoveryCut.remainingSeconds;
+    assert(remaining>0&&remaining<=.05);
+    assert.deepEqual(prefix.pendingRuinRecoveryCut.worldBoundary,motor.boundary);
+    assert(!prefix.events.some(event=>event.type==='StructureRuined'));
+    assert.equal(JSON.parse(prefix.snapshot).structures.find(row=>row.id===doomed).status,'collapsing');
+    assert.equal(captureSpatialPolygons(native,polygon).length,1);
+    assert(!abandoned.committed);await assert.rejects(abandoned.packet.presented);
+    ready=null;result=null;
+    world.command({kind:'advance',seconds:remaining,nightFastForward:false,steps:1}).then(value=>{result=value;},reason=>{error=reason;});
+    await wait(()=>result||error||world.errors.length);
+    if(error)throw error;
+    await wait(()=>ready?.committed||world.errors.length);
+    assert(ready?.committed,world.errors.join('\n'));
+    assert(ready.commit.worldBoundary.ticket>proof.boundary.ticket);
+    assert.equal(ready.commit.worldBoundary.effectiveTime,proof.end);
+    await world.present();const drawn=await ready.packet.presented,frame=replacement.host.inspect().nativeRouteFrame;
+    assert.equal(drawn.sequence,frame.sequence);
+    assert.equal(frame.clockElapsed,proof.end);
+    assert.deepEqual(frame.bindings.filter(row=>row.nativeGate).map(row=>row.nativeGate.gateId).sort(),gateIds);
+    assert.deepEqual(result.events.filter(row=>row.type==='StructureRuined').map(row=>[row.targetId,row.simulationTime]),[[doomed,proof.end]]);
+    assert.deepEqual(captureSpatialPolygons(native,polygon),[]);
+    assert.deepEqual(world.faults,[]);assert.deepEqual(world.errors,[]);
+    return;
+   }
    if(mode==='replace a motor after READY'){
     const {buffer,binding}=motor.clocks[0];
     world.client.registerClockBinding(buffer,{...binding,resourceEnd:binding.resourceEnd-.05});

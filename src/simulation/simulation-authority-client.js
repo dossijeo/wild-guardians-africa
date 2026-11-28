@@ -89,7 +89,7 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
             const binding=resources[profile.bindingField],ref=binding.reference;
             const endpoint=execution?.arrived===true&&(!grouped&&qualifyRaidEncounter&&profile.kind===18&&
               woundedHomeEndpoint(binding,execution.executedThrough)||profile.kind===26&&(grouped?
-              centerRuinApproachEndpoint(q.ruin,cut,binding,execution.executedThrough):
+              centerRuinApproachEndpoint(q.ruin,cut,binding,execution.executedThrough,q.pendingRuin):
               nativeCenterApproachEndpoint(resources.worldBoundary,binding,execution.executedThrough))&&
               matchesNativeCenterEndpointPose(execution,resources.presentation));
             const cycle=profile.kind===21,action=profile.kind===15,settlement=profile.kind===17,stopped=!!profile.stopProjectionMatches;
@@ -109,16 +109,16 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
           let evidence={};
           if(grouped){
             const proofs=members.map(({execution,resources})=>({kind:resources.kind,proof:execution.binding}));
-            const {refuge,ruin,ruinMotors,encounter,ordinaryWorkers,idleCyclePhases}=copyNativeRecoveryGroup({version:2,members:proofs,refuge:q.refuge,ruin:q.ruin,ruinMotors:q.ruinMotors,encounter:q.encounter,idleCyclePhases:q.idleCyclePhases},cut);
+            const {refuge,ruin,pendingRuin,ruinMotors,encounter,ordinaryWorkers,idleCyclePhases}=copyNativeRecoveryGroup({...q,members:proofs},cut);
             if(ordinaryWorkers&&!nativeWorkerLifecycle)throw Error('Ordinary worker recovery is unavailable');
             if(refuge&&members.length===0){
               if(matchesNativeOrdinaryRefuge(cut,refuge)){
                 if(!nativeWorkerLifecycle)throw Error('Ordinary Home recovery is unavailable');
               }else if(!qualifyRaidEncounter)throw Error('Wounded refuge recovery is unavailable');
             }
-            evidence={...(refuge?{refuge}:{}),...(ruin?{ruin}:{}),...(ruinMotors?{ruinMotors}:{}),...(encounter?{encounter}:{}),...(idleCyclePhases?{idleCyclePhases}:{})};
+            evidence={...(refuge?{refuge}:{}),...(ruin?{ruin}:{}),...(pendingRuin?{pendingRuin}:{}),...(ruinMotors?{ruinMotors}:{}),...(encounter?{encounter}:{}),...(idleCyclePhases?{idleCyclePhases}:{})};
             const at=members[0]?.execution.executedThrough??encounter?.at??cut.effectiveTime;
-            if(at<cut.effectiveTime||!members.every(member=>member.execution.executedThrough===at))
+            if(at<cut.effectiveTime||pendingRuin&&at!==pendingRuin.boundary.effectiveTime||!members.every(member=>member.execution.executedThrough===at))
               throw Error('Replacement samples span different times');
           }
           recoveredWorkerRoute=grouped?{...q,worldBoundary:cut,members,...evidence}:{...q,...members[0]};

@@ -7,8 +7,8 @@ import {sameNativeAnimalCropReference} from '../../src/world/native-animal-crop-
 import {copyNativeRecoveryGroup,matchesRecoveredRuinMotorSamples} from '../../src/world/native-worker-route-recovery.js';
 import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
 
-export async function recoverRouteAfterRuin(world,proof,at,state=null,{endpoint=false,retireFirst=true,beforeRuin=false,interrupted=null,beforeRetiring=null}={}){
- const stop=()=>world.authority.quiesceNativeIntentProduction({forLostDraw:endpoint});
+export async function recoverRouteAfterRuin(world,proof,at,state=null,{endpoint=false,retireFirst=true,beforeRuin=false,interrupted=null,beforeRetiring=null,movingMotors=false}={}){
+ const stop=()=>world.authority.quiesceNativeIntentProduction({forLostDraw:endpoint||!!interrupted});
  const pending=retireFirst?null:stop();pending?.catch(()=>{});
  if(beforeRetiring)await beforeRetiring();
  world.gpu.device.destroy();world.retireResourceEndpoint();
@@ -23,20 +23,33 @@ export async function recoverRouteAfterRuin(world,proof,at,state=null,{endpoint=
   at=state.elapsed;
   assert.throws(()=>world.authority.resumeNativeIntentProduction(hold),/still owns native production/);
  }
- const source=beforeRuin?proof:proof.prepared.retreat??proof.prepared.approach??proof.prepared.strike;
+ const prepared=beforeRuin?proof:proof.prepared;
+ const source=beforeRuin&&!movingMotors?proof:prepared.retreat??prepared.approach??prepared.strike;
  const route=await world.authority.terminalWorkerRoute(),ref=source.reference,kind=ref.kind;
- assert.deepEqual(route,beforeRuin?{kind,actorId:ref.actorId}:{version:2,ruin:true,members:[{kind,actorId:ref.actorId}]});
+ const grouped=!beforeRuin||movingMotors;
+ assert.deepEqual(route,grouped?{version:2,[beforeRuin?'pendingRuin':'ruin']:true,members:[{kind,actorId:ref.actorId}]}:{kind,actorId:ref.actorId});
  const [authorityPort,drawPort]=pair();
  const draw=await fixture({capabilities:{nativeAnimalCropVersion:1,nativeFarmArrivalVersion:1,nativeIdleCycleVersion:1}},
   {intentControl:{port:drawPort,session:'production-control',recoveryHold:30},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
  let rig;
  try{
   const {recoveredWorkerRoute:q}=await world.authority.attachHeldWorkerRoute(authorityPort,'production-control',30,hold,route);
-  const boundary=beforeRuin?ref.worldBoundary:proof.acquired;
+  const boundary=movingMotors?prepared.previous:beforeRuin?ref.worldBoundary:proof.acquired;
   assert.deepEqual(q.ruin,beforeRuin?undefined:proof);
-  assert.deepEqual(q.worldBoundary,beforeRuin?undefined:boundary);
-  const {execution,resources}=beforeRuin?q:q.members[0];
+  assert.deepEqual(q.pendingRuin,movingMotors?prepared:undefined);
+  assert.deepEqual(q.worldBoundary,grouped?boundary:undefined);
+  const {execution,resources}=grouped?q.members[0]:q;
   assert.equal(execution.executedThrough,at);
+  if(movingMotors){
+   const accepted=await readClientAssignment(q);
+   assert.deepEqual(accepted.pendingRuin,prepared);
+   assert.deepEqual(accepted.ruinMotors,q.ruinMotors);
+   const {ruinMotors,...withoutMotors}=q;
+   await assert.rejects(readClientAssignment(withoutMotors),/needs its retained motor programs/);
+   const wrongTime=structuredClone(q);
+   wrongTime.members[0].execution.executedThrough-=.01;
+   await assert.rejects(readClientAssignment(wrongTime),/different times/);
+  }
   if(endpoint){
    assert.equal(execution.arrived,true);
    const accepted=await readClientAssignment(q);
@@ -66,7 +79,7 @@ export async function recoverRouteAfterRuin(world,proof,at,state=null,{endpoint=
    rig=await originalRig(structuredClone(state),q.terrainManifest);
    if(endpoint)await assert.rejects(rig.recover({resources,execution,terrainManifest:q.terrainManifest,recoveryCut:boundary}),
     /Invalid recovered crop source/);
-   const requests=await rig.recover({resources,execution,terrainManifest:q.terrainManifest,recoveryCut:q.worldBoundary,ruin:q.ruin});
+   const requests=await rig.recover({resources,execution,terrainManifest:q.terrainManifest,recoveryCut:q.worldBoundary,ruin:q.ruin,pendingRuin:q.pendingRuin});
    assert(requests.some(count=>count>0));
   }
   if(!beforeRuin){
@@ -106,7 +119,7 @@ export async function recoverRouteAfterRuin(world,proof,at,state=null,{endpoint=
   const witness=await world.authority.checkHeldDraw(30,hold,route);
   assert(matchesRecoveredRuinMotorSamples(witness.ruinMotorSamples,q.ruinMotors,at));
   const sampledAt=endpoint?nativeClockResourceEnd(epoch,ref.endTime):at;
-  const submitted=beforeRuin?witness:witness.members[0];
+  const submitted=grouped?witness.members[0]:witness;
   assert.equal(submitted.relativeTime,floorFloat32(sampledAt-epoch));
   rig?.presented(submitted.relativeTime);
   if(beforeRuin){
@@ -139,12 +152,14 @@ function submitRuinMotors(draw,motors,metadata){
  draw.client.beginFrame(metadata);
  const encoder=device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
  pass.setPipeline(draw.pipeline);pass.setBindGroup(0,draw.group);pass.draw(3);
+ draw.motorGroups=[];
  for(const gate of motors.gates){
   const buffer=device.createBuffer({size:16,usage:72});
   device.queue.writeBuffer(buffer,0,new Float32Array(4));
   draw.client.registerClockBinding(buffer,{byteOffset:0,semantic:'relative',epoch:gate.startTime,
    resourceEnd:nativeClockResourceEnd(gate.startTime,gate.endTime),nativeGate:{gateId:gate.gateId,worldBoundary:motors.worldBoundary}});
   const group=device.createBindGroup({entries:[{binding:0,resource:{buffer}}]});
+  draw.motorGroups.push(group);
   pass.setBindGroup(0,group);pass.draw(3);
  }
  pass.end();device.queue.submit([encoder.finish()]);return draw.client.endFrame();

@@ -2530,11 +2530,13 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
                throw Error('Encounter impact is newer than the control baseline');
              if(source.encounter?.version===3&&source.encounter.at!==message.clock.committedThrough)
                throw Error('Recovered pose differs from the held control clock');
+             if(source.pendingRuin&&source.pendingRuin.boundary.effectiveTime!==message.clock.committedThrough)
+               throw Error('Pending center ruin differs from the held control clock');
              const members=source.members.map(({kind,proof,idleCyclePhase})=>({
                profile:nativeWorkerRouteRecoveryProfile(kind),assignmentSequence:nativeRecoverySequence(proof),proof,
                ref:proof.reference,gateIds:nativeRecoveryGates(proof),
                install:routeControl.prepareRecoveredWorkerRoute(kind,proof,nativeWorldBoundary,
-                 {cohortSize:source.members.length,movingCount:source.members.length-recoveryCycles.length,sharedCut:grouped,ruin:source.ruin,
+                 {cohortSize:source.members.length,movingCount:source.members.length-recoveryCycles.length,sharedCut:grouped,ruin:source.ruin,pendingRuin:source.pendingRuin,
                    ordinaryWorkers:source.ordinaryWorkers===true,idleCyclePhase})
              }));
              recovered={holdId:q.holdId,consumerToken:q.consumerToken,grouped,members,at:message.clock.committedThrough,

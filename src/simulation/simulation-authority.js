@@ -777,7 +777,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       }
       draft=planner.prepareNativeCenterRuin(center,end);
       const {resources}=draft,source=resources.nativeCenterRuin;
-      owner.uncommitted={at,worldBoundary:source.previous};
+      owner.uncommitted={at,worldBoundary:source.previous,source};
       prepared=await owner.resources.prepareNativeGateResources(resources,{signal,minSequence:sequence});
       if(!current()||!draft.valid()||!prepared.valid()||!sameCenter(prepared.preparedCenterRuin,source)||
          !sameNativeWorldBoundary(prepared.preparedWorldBoundary,source.boundary))
@@ -1422,7 +1422,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       kind===18?planner.nativeHomeRouteExecution(actorId):kind===21?planner.nativeIdleCycleExecution(actorId):
       kind===22?planner.nativeIdleStrollExecution(actorId):planner.nativeFarmArrivalRouteExecution(actorId);
   }
-  function recoverableExecution(kind,execution,ruin){
+  function recoverableExecution(kind,execution,ruin,pendingRuin){
     if(kind===21){
       if(execution.executedThrough!==game.elapsed)return false;
       if(!execution.finished)return execution.nextStatus===0&&execution.endTime>game.elapsed;
@@ -1433,7 +1433,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     const world=planner.nativeWorldResourceBoundary();
     return (!execution.arrived||kind===18&&qualifyRaidEncounter&&game.workers.length===1&&
       woundedHomeExecutionAtEndpoint(game,game.workers[0],execution)||kind===26&&
-      (centerRuinApproachEndpoint(ruin,world,execution.binding,game.elapsed)||nativeCenterApproachEndpoint(world,execution.binding,game.elapsed)))&&
+      (centerRuinApproachEndpoint(ruin,world,execution.binding,game.elapsed,pendingRuin)||nativeCenterApproachEndpoint(world,execution.binding,game.elapsed)))&&
       recoveryGateCurrent(kind,execution);
   }
   function ordinaryWorkerRecovery(){
@@ -1512,6 +1512,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       const kind=animal.status==='attacking'?27:26;
       const workersAtRefuge=game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id));
       if(workersAtRefuge){
+        const pending=centerRuinAdvance?.published&&centerRuinAdvance.uncommitted?.source;
+        if(pending?.retainedGateIds){
+          const source=planner.nativePendingCenterRuinRecovery(pending);
+          return source?.execution.binding.reference.kind===kind?{version:2,pendingRuin:true,members:[{kind,actorId:source.execution.actorId}]}:null;
+        }
         const ruin=planner.nativeCenterRuinRouteRecovery();
         if(ruin?.execution.binding.reference.kind===kind)return {version:2,ruin:true,members:[{kind,actorId:ruin.execution.actorId}]};
       }
@@ -1591,17 +1596,19 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
         nativeWorkerLifecycle&&planner.nativeOrdinaryRefugeRecovery());
       return refuge?{executions:[],refuge}:null;
     }
-    if(!route.ruin&&!route.encounter&&nativeOrdinaryRecoveryKinds(route.members.map(({kind})=>kind),!!route.refuge)){
+    if(!route.ruin&&!route.pendingRuin&&!route.encounter&&nativeOrdinaryRecoveryKinds(route.members.map(({kind})=>kind),!!route.refuge)){
       const ordinary=ordinaryWorkerRecovery();
       return ordinary&&!!ordinary.refuge===!!route.refuge&&route.members.length===ordinary.members.length&&ordinary.members.every(({kind,actorId},i)=>
         kind===route.members[i].kind&&actorId===route.members[i].actorId)?ordinary:null;
     }
-    if(route.refuge||route.ruin||route.encounter){
+    if(route.refuge||route.ruin||route.pendingRuin||route.encounter){
       const [member]=route.members;
-      if(route.members.length!==1||(member.kind!==26&&(!(route.refuge||route.ruin)||member.kind!==27)))return null;
+      if(route.members.length!==1||(member.kind!==26&&(!(route.refuge||route.ruin||route.pendingRuin)||member.kind!==27)))return null;
+      const pending=route.pendingRuin&&centerRuinAdvance?.published&&centerRuinAdvance.uncommitted?.source;
       const source=route.encounter?planner.nativeEncounterFallRecovery(route.encounter==='approach'?'center':'retreat'):
-        route.ruin?planner.nativeCenterRuinRouteRecovery():planner.nativeRefugeCropRecovery(member.kind);
-      if(!source||member.actorId!==source.execution.actorId||route.ruin&&member.kind!==source.execution.binding.reference.kind)return null;
+        route.ruin?planner.nativeCenterRuinRouteRecovery():route.pendingRuin?pending&&planner.nativePendingCenterRuinRecovery(pending):
+          planner.nativeRefugeCropRecovery(member.kind);
+      if(!source||member.actorId!==source.execution.actorId||member.kind!==source.execution.binding.reference.kind)return null;
       const {execution,...evidence}=source;
       return {executions:[execution],...evidence};
     }
@@ -1621,12 +1628,12 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       const cut=planner.nativeWorldResourceBoundary(),routes=route.members??[route],group=recoveryGroup(route),executions=group?.executions;
       if(!executions||!sameNativeWorldBoundary(current.worldBoundary,cut)||
          !route.members&&!sameNativeWorldBoundary(cut,executions[0].binding.reference.worldBoundary)||
-         executions.some((execution,i)=>!recoverableExecution(routes[i].kind,execution,group.ruin)))return null;
+         executions.some((execution,i)=>!recoverableExecution(routes[i].kind,execution,group.ruin,group.pendingRuin)))return null;
       const retirement=await nativeIntentControl.waitForTerminalDraw();
       const live=recoveryGroup(route);
       if(nativeProduction.status().phase!=='suspended'||!sameNativeWorldBoundary(cut,planner.nativeWorldResourceBoundary())||
          !live||JSON.stringify(live)!==JSON.stringify(group)||
-         live.executions.some((execution,i)=>!recoverableExecution(routes[i].kind,execution,live.ruin)))
+         live.executions.some((execution,i)=>!recoverableExecution(routes[i].kind,execution,live.ruin,live.pendingRuin)))
         throw Error('Native assignments changed while waiting for terminal draw');
       const idleCyclePhases=retiredCyclePhases(inheritedRecoveryCycles(live,route),retirement);
       if(!idleCyclePhases)return null;
@@ -1729,7 +1736,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       const routes=route.members??[route],group=recoveryGroup(route),executions=group?.executions,cut=planner.nativeWorldResourceBoundary();
       if(!executions||!sameNativeWorldBoundary(current.worldBoundary,cut)||
          !route.members&&!sameNativeWorldBoundary(cut,executions[0].binding.reference.worldBoundary)||
-         executions.some((execution,i)=>!recoverableExecution(routes[i].kind,execution,group.ruin)))
+         executions.some((execution,i)=>!recoverableExecution(routes[i].kind,execution,group.ruin,group.pendingRuin)))
         throw Error('Expected current native recovery assignments');
       const cycles=inheritedRecoveryCycles(group,route);
       const idleCyclePhases=cycles.length?retiredCyclePhases(cycles,await nativeIntentControl.waitForTerminalDraw()):[];
@@ -1749,6 +1756,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
 
       const proofs=executions.map((execution,i)=>({kind:routes[i].kind,proof:execution.binding}));
       const evidence={...(group.refuge?{refuge:group.refuge}:{}),...(group.ruin?{ruin:group.ruin}:{}),
+        ...(group.pendingRuin?{pendingRuin:group.pendingRuin}:{}),
         ...(group.ruinMotors?{ruinMotors:group.ruinMotors}:{}),
         ...(group.encounter?{encounter:group.encounter}:{}),...(idleCyclePhases.length?{idleCyclePhases}:{})};
       const attachment=await nativeIntentControl.attach(port,transportSession,
@@ -1806,7 +1814,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
         const terminal=after.arrived&&(profile.kind===18||profile.kind===26);
         const age=profile.kind===21&&after.finished?reference.duration:
           (terminal?nativeClockResourceEnd(start,reference.endTime):elapsed)-start;
-        return row.relativeTime===recoveryFloorFloat32(age)&&recoverableExecution(profile.kind,after,live.ruin);
+        return row.relativeTime===recoveryFloorFloat32(age)&&recoverableExecution(profile.kind,after,live.ruin,live.pendingRuin);
       }
     },
     attachNativeIntentControl(port,transportSession){

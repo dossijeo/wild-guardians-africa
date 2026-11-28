@@ -177,7 +177,7 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
   const profile=nativeWorkerRouteRecoveryProfile(source.resources.kind),resources=profile.copyResources(source.resources,source.recoveryCut);
   const proof=resources[profile.bindingField],ref=proof.reference,execution=source.execution;
   const endpoint=execution?.arrived===true&&(source.recoveryCut?
-    centerRuinApproachEndpoint(source.ruin,source.recoveryCut,proof,execution.executedThrough):
+    centerRuinApproachEndpoint(source.ruin,source.recoveryCut,proof,execution.executedThrough,source.pendingRuin):
     nativeCenterApproachEndpoint(resources.worldBoundary,proof,execution.executedThrough))&&
     matchesNativeCenterEndpointPose(execution,resources.presentation);
   if(execution?.kind!==profile.executionKind||execution.arrived!==false&&!endpoint||execution.actorId!==ref.actorId||

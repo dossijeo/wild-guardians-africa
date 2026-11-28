@@ -799,7 +799,8 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
       return {resources,execution,profile,crop,ref,actorId:(crop?'animal-':'worker-')+execution.actorId};
     });
     const replayed=preparedNativeWorldBoundary,boundary=grouped?source.worldBoundary:members[0].ref.worldBoundary;
-    const ruin=source.ruin,encounter=source.encounter,ruinMotors=copyNativeRuinMotors(source.ruinMotors,ruin?.prepared);
+    const {ruin,pendingRuin,encounter}=source;
+    const ruinMotors=copyNativeRuinMotors(source.ruinMotors,ruin?.prepared??pendingRuin);
     const stationaryRefuge=!!source.refuge&&members.length===0;
     const stationary=encounter?.version===3,at=members[0]?.execution.executedThrough??encounter?.at??state.elapsed;
     const fallCurrent=()=>workers?.get('worker-'+encounter.workerId)?.recoveredFallCurrent(encounter)===true;
@@ -818,9 +819,11 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
           home.reference.bodyId===encounter.workerBody);
     });
     const ruinCurrent=()=>{
-      if(!ruin)return true;
-      const center=state.structures.find(row=>row.id===ruin.center);
-      return center?.kind==='center'&&center.status==='ruined'&&center.hp===0&&(!ruinMotors||ruinMotors.gates.every(gate=>{
+      if(!ruin&&!pendingRuin)return true;
+      const center=state.structures.find(row=>row.id===(ruin??pendingRuin).center);
+      const centerCurrent=pendingRuin?center?.status==='collapsing'&&at===pendingRuin.boundary.effectiveTime:
+        center?.status==='ruined'&&center.hp===0;
+      return center?.kind==='center'&&centerCurrent&&(!ruinMotors||ruinMotors.gates.every(gate=>{
         const wall=state.structures.find(row=>row.id===gate.entityId);
         return wall?.gate===true&&wall.status==='intact'&&wall.hp===wall.maxHp&&!wall.wallPresentation&&
           Math.abs(wall.gateOpen-sampleNativeGateOpening(gate,at))<=1e-9;
@@ -863,7 +866,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
       if(encounter)await waitNativePublication(sequence,ownerSignal??new AbortController().signal,fallCurrent);
       if(!current())throw Error('Recovered Fall is no longer current');
       for(const {resources,execution,profile,crop,ref} of members){
-        const input={resources,execution,terrainManifest:source.terrainManifest,recoveryCut:grouped?boundary:null,ruin};
+        const input={resources,execution,terrainManifest:source.terrainManifest,recoveryCut:grouped?boundary:null,ruin,pendingRuin};
         if(crop){
           if(profile.kind===27&&ref.purpose==='center')await settlements.prepareCenterStrike(ref.targetId,ownerSignal);
           await roster.prepareRecoveredCrop(input,terrainSupport,{signal:ownerSignal,isCurrent:current,
