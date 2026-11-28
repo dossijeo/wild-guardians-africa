@@ -1000,3 +1000,7 @@ En la pasada con la corrección, NVIDIA dibujó el ticket 4 en el envío 67. El 
 ### Primera noche y segundo amanecer desde el selector
 
 En esa misma sesión, el trabajador volvió al refugio y el facóquero nació a los 370,50 s. Game eligió dos golpes al centro, `attack-37` y `attack-40`. El centro quedó en 560 HP y no se registró destrucción de cultivos. Después de `RaidEnded` a 429,40 s, el dibujo 2518 acreditó la ausencia del animal y conservó el portón 7 en la misma época y sesión nativa que el dibujo de compra. Al amanecer, el arnés pagó la contratación del segundo turno por el HUD. A los 630,25 s el trabajador estaba caminando. [Recibo del avance continuo](performance/native-desert-menu-enclosure-adoption-20261128.json).
+
+### Segunda noche desde el selector
+
+El trabajador del segundo turno regó `plant-3` a los 655,35 s y volvió al refugio. La hiena nació a los 1022,61 s. Sus tres golpes distintos dejaron el centro en 535, 510 y 485 HP, los mismos débitos del control desde guardado. `RaidEnded` llegó a los 1069,94 s. El dibujo 5167 conservó el portón 7 y acreditó la ausencia de la hiena, con la misma época y sesión nativa de la compra. La sesión siguió abierta tras esta toma. [Segundo corte continuo](performance/native-desert-menu-enclosure-adoption-20261128.json) · [Control desde guardado](performance/native-desert-second-night-hyena-20261128.json).

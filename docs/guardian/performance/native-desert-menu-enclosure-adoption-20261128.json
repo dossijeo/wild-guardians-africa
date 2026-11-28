@@ -50,6 +50,20 @@
     "paidHiringElapsed": 599.9999999999613,
     "observedWalkingElapsed": 630.2499999999338
   },
+  "secondNight": {
+    "path": ".cache/desert-menu-712/enclosure-second-night-live-20261128.json",
+    "sha256": "a98880106538528788d81faedae377ce99b54e80a155fe674dc58b274949ba8d",
+    "paidHiringsThroughNight": 2,
+    "secondWater": {"target": "plant-3", "elapsed": 655.349999999911},
+    "spawn": {"actor": "animal-34", "species": "hyena", "elapsed": 1022.6082024586916},
+    "strikeTarget": "structure-2",
+    "strikeIds": ["attack-65", "attack-68", "attack-71"],
+    "centerHpAfterEachStrike": [535, 510, 485],
+    "cropDestroyedEvents": 0,
+    "endElapsed": 1069.9365619668426,
+    "absence": {"draw": 5167, "clock": 1070.8697126016082, "gateId": 7},
+    "authorityEpochMatchesEnclosure": true
+  },
   "tests": {
     "twoDirectedFailuresOnBaseSha256": "f55ed18bfb4e3f39dbb0bc97f976bdeeac90a6e78fb23cd47c8f6ca56c83187b",
     "broaderRunWithOldFixturesSha256": "76456a5a9d6bd487a0a122e372d211ec2eb20c2f95754ae160582a7752d06627",
