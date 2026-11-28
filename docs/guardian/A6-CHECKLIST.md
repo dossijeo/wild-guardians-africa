@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+En Desierto 712, la primera incursión con un portón cerrado y cuatro muros sólidos pagados pasó en NVIDIA, incluida la recarga de Strike27. Se conservaron las cinco defensas, sus siete identificadores de colisión y ambos contratos. Sigue pendiente comprar el trazado que genera el portón y los muros en una sola orden nativa. [Recibo de las defensas](performance/native-desert-paid-defenses-first-night-20261128.json).
+
 En la primera noche de Desierto 712 con un portón cerrado comprado por el jugador, NVIDIA presentó la incursión completa y la recarga en frío de Strike27. El control conserva el portón, ambos contratos y los dos impactos de Game. Los cortes de pérdida de Draw del mismo guardado están verificados en CPU. [Recibo del portón en la primera noche](performance/native-desert-paid-gate-first-night-20261128.json).
 
 En Desierto, NVIDIA confirmó la cancelación de Strike27 antes de la ruina con el facóquero ya llegado al centro sucesor. Tras la pérdida de Draw, el primer envío conservó su cuerpo y pose terminal, acreditó el picking y la misma petición aplicó un solo golpe con un ticket nuevo. [Recibo del derrumbe y el relevo](performance/native-desert-center-ruin-earlier-arrival-20261128.json).

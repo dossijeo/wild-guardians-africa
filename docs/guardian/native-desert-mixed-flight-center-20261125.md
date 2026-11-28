@@ -895,8 +895,16 @@ Edge y NVIDIA Turing presentaron los cinco tickets del facóquero sobre el cuerp
 
 #### Primera noche con un portón pagado
 
-El guardado previo a `RaidSpawned` contiene el portón cerrado `structure-7`, dos cultivos vivos y ambos trabajadores en el refugio. La autoridad conserva las pruebas nativas del cuerpo, el terreno y el corredor. Game sigue eligiendo `plant-3` y después `structure-2`, igual que en el recorrido de referencia. La validación de esta cohorte rechaza una hoja abierta y un muro fuera del contrato de portones.
+El guardado previo a `RaidSpawned` contiene el portón cerrado `structure-7`, dos cultivos vivos y ambos trabajadores en el refugio. La autoridad conserva las pruebas nativas del cuerpo, el terreno y el corredor. Game sigue eligiendo `plant-3` y después `structure-2`, igual que en el recorrido de referencia. La validación de esta cohorte rechaza una hoja abierta o una defensa en ruinas.
 
 Edge con NVIDIA Turing presentó cinco programas sobre el cuerpo 1. El portón conservó la misma malla visible, sus 60 HP y la apertura cero. En la misma sesión se escribió un guardado durante `attack-24`, con 4,292 s restantes del clip y los tres IDs originales de colisión. Otra sesión restauró la pose y el tiempo restante, adquirió un ticket nuevo y aplicó `attack-24` una sola vez. Los dos recorridos acabaron con 580 HP en el centro, `plant-5` vivo, los dos contratos intactos y 310 monedas. El último envío confirmó la ausencia del animal en ambos y Draw drenó sin errores.
 
 Los controles en CPU cubren los cinco cortes del guardado, desde la aproximación al cultivo hasta Retreat, y prueban el reemplazo de Draw durante la marcha y el golpe al cultivo. Queda acreditar en NVIDIA el reemplazo del dispositivo con este portón, además del caso con la hoja en movimiento y el arranque desde el menú. [Recibo y guardado reproducible](performance/native-desert-paid-gate-first-night-20261128.json).
+
+#### Primera noche con cuatro muros sólidos y un portón
+
+El guardado de las 370 s conserva los cuatro tramos pagados `structure-8` a `structure-11` y el portón cerrado `structure-7`. Los dos trabajadores terminaron el turno en el refugio. La autoridad admite las defensas sólidas intactas en esta incursión introductoria. El recorrido de referencia y el nativo eligen `plant-3` y `structure-2` en ese orden y dejan el centro en 580 HP, `plant-5` vivo y el saldo en 270.
+
+NVIDIA Turing presentó los cinco programas del facóquero sobre el cuerpo 1 y a edad cero. En cada sesión, las cinco defensas conservaron sus mallas visibles y su salud. El guardado público hecho durante `attack-31` conservó la pose, el tiempo restante y los siete identificadores de colisión. Otra sesión recargó ese archivo y aplicó `attack-31` una sola vez. Los dos recorridos confirmaron la ausencia del facóquero y drenaron. En CPU se verificaron cinco cortes de guardado y el reemplazo de Draw durante la marcha y el golpe al cultivo. [Recibo y guardado reproducible](performance/native-desert-paid-defenses-first-night-20261128.json).
+
+La compra en una sola orden de un trazado cerrado con portón automático sigue pendiente. En el trazado de Desierto 712, Game colocó doce muros y un portón con un solo cargo de 130. La autoridad nativa rechazó la misma orden con el saldo y el terreno intactos. [Contraste de la orden](performance/native-desert-paid-defenses-first-night-20261128.json).
