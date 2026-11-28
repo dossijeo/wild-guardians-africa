@@ -64,6 +64,38 @@
     "absence": {"draw": 5167, "clock": 1070.8697126016082, "gateId": 7},
     "authorityEpochMatchesEnclosure": true
   },
+  "thirdNight": {
+    "path": ".cache/desert-menu-712/enclosure-third-night-live-20261128.json",
+    "sha256": "02093509cc8b2b812ae27ccab7c10e75b316fb25207290e9f093ff88745420e6",
+    "paidHiringsThroughNight": 3,
+    "thirdWater": {"target": "plant-3", "elapsed": 1255.1999999994562},
+    "spawn": {"actor": "animal-43", "species": "buffalo", "elapsed": 1644.4979135421777},
+    "strikeTarget": "structure-2",
+    "strikeIds": ["attack-94", "attack-97", "attack-100", "attack-103"],
+    "centerHpAfterEachStrike": [450, 415, 380, 345],
+    "cropDestroyedEvents": 0,
+    "endElapsed": 1696.2883308335101,
+    "absence": {"draw": 7733, "clock": 1697.8383308335087, "gateId": 7},
+    "authorityEpochMatchesEnclosure": true
+  },
+  "freshCpuComparison": {
+    "path": ".cache/desert-menu-712/enclosure-first-three-night-parity-20261128.json",
+    "sha256": "0d7a0dccb00f89f27dc865893d0cb51461d07f12696e36da0fd1cd7aa489e347",
+    "inputPath": ".cache/desert-menu-712/enclosure-fresh-authority-cpu-through-fourth-20261128.json",
+    "inputSha256": "03eb01655737ea1aa66e34245cb620752ac5a3c9c3293d93ae787d52c89c9058",
+    "initialRegions": 25,
+    "initialBounds": [-24, -72, 216, 168],
+    "matchedNativeDecisionsThroughNight": 3,
+    "scope": "Fresh production bootstrap, real terrain and authority ports, deterministic draw queue. The comparison checks raid composition and quota, damage, targets and crop consequences. End times differ across the two admission schedules.",
+    "fifthNightNegative": {
+      "path": ".cache/desert-menu-712/enclosure-fresh-authority-live-crops-ruin-red.json",
+      "sha256": "aead465f9e97ccaaba0f26bf8583557623358cc733779b7d6564b1ce24ff0b6c",
+      "lastElapsed": 2782.6357055869903,
+      "animal": "rhino",
+      "centerHp": 125,
+      "error": "Native center ruin requires a certified animal route substep"
+    }
+  },
   "tests": {
     "twoDirectedFailuresOnBaseSha256": "f55ed18bfb4e3f39dbb0bc97f976bdeeac90a6e78fb23cd47c8f6ca56c83187b",
     "broaderRunWithOldFixturesSha256": "76456a5a9d6bd487a0a122e372d211ec2eb20c2f95754ae160582a7752d06627",

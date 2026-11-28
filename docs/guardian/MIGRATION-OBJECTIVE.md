@@ -1,6 +1,6 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
-En Desierto 712 desde el selector, NVIDIA presentó el recinto pagado, el primer riego con Task14 y Action15 y las retiradas del facóquero y la hiena tras los dos primeros turnos. El mismo centro quedó en 485 HP tras cinco golpes. Surface ahora consume la publicación del recinto aunque su cola ya haya recibido todos los mensajes necesarios. [Adopción y primer riego](native-desert-mixed-flight-center-20261125.md#adopción-del-recinto-y-primer-riego-desde-el-selector) · [Segunda noche](native-desert-mixed-flight-center-20261125.md#segunda-noche-desde-el-selector).
+En Desierto 712 desde el selector, NVIDIA presentó el recinto pagado y completó tres noches en la misma época. Los golpes del facóquero, la hiena y el búfalo dejaron el centro en 345 HP. Un control desde el mismo bootstrap confirmó sus objetivos y débitos. En la quinta noche de ese control, la autoridad rechazó el derrumbe durante Retreat con dos cultivos vivos. [Sesión física, comparación y rechazo](native-desert-mixed-flight-center-20261125.md#tercera-noche-desde-el-selector).
 
 En el recinto pagado de Desierto 712, las recargas previas a la cuarta y quinta noches completaron en NVIDIA los cuatro golpes del león y el derrumbe posterior al golpe del rinoceronte. El dibujo del derrumbe conservó Retreat y la partida confirmó una sola derrota antes de drenar. [Recorrido y alcance](native-desert-mixed-flight-center-20261125.md#cuarta-y-quinta-noches-con-recinto).
 

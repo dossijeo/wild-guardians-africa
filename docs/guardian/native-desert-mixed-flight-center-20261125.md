@@ -1004,3 +1004,9 @@ En esa misma sesión, el trabajador volvió al refugio y el facóquero nació a 
 ### Segunda noche desde el selector
 
 El trabajador del segundo turno regó `plant-3` a los 655,35 s y volvió al refugio. La hiena nació a los 1022,61 s. Sus tres golpes distintos dejaron el centro en 535, 510 y 485 HP, los mismos débitos del control desde guardado. `RaidEnded` llegó a los 1069,94 s. El dibujo 5167 conservó el portón 7 y acreditó la ausencia de la hiena, con la misma época y sesión nativa de la compra. La sesión siguió abierta tras esta toma. [Segundo corte continuo](performance/native-desert-menu-enclosure-adoption-20261128.json) · [Control desde guardado](performance/native-desert-second-night-hyena-20261128.json).
+
+### Tercera noche desde el selector
+
+La misma sesión pagó el tercer turno y regó `plant-3`. El búfalo nació a los 1644,50 s y dio cuatro golpes al centro, que quedó en 345 HP. El dibujo 7733 presentó la ausencia y conservó el portón 7 en la época de la compra. Después se contrató el cuarto turno en el mismo navegador. [Tercer corte continuo](performance/native-desert-menu-enclosure-adoption-20261128.json).
+
+Un nuevo control comienza en el bootstrap del selector con sus 25 regiones residentes, compra el mismo centro y recinto con los puertos de producto y usa la cola Draw determinista. Hasta la tercera noche coincide en especies, cuotas, objetivos y débitos de HP. Las admisiones de este control y las físicas ocurren en tiempos distintos. El control avanzó hasta la quinta noche, donde el rinoceronte dejó el centro en 125 HP. Al vencer el derrumbe durante Retreat, la autoridad rechazó el subpaso. El corte corresponde al recinto temprano de `(83, 0)`, con dos cultivos vivos, y está pendiente de corrección y prueba física. [Comparación y recibo del rechazo](performance/native-desert-menu-enclosure-adoption-20261128.json).
