@@ -524,13 +524,19 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
    const current=()=>!closed&&!finished&&!controller.signal.aborted&&nativeGateProposal===item&&publicationHeld&&stream.status().holding&&stream.status().sequence===preparedSequence;
    function cancel(){if(finished)return false;finished=true;controller.abort();raw?.abort();if(nativeGateProposal===item)nativeGateProposal=null;callerSignal?.removeEventListener('abort',abort);releasePublication();wakeNativePublications();onPresentationReady();return true;}
    callerSignal?.addEventListener('abort',abort,{once:true});
-   try{
+   const holdSource=async historicalSequence=>{
+    if(Number.isSafeInteger(historicalSequence))await waitNativePublication(historicalSequence,controller.signal);
     if(nativeGateProposal?.descriptor.phase==='adopting')await waitNativePublication(minSequence,controller.signal,()=>!nativeGateProposal);
     await waitNativePublication(minSequence,controller.signal);
     const status=terrain.status();
     if(closed||finished||callerSignal?.aborted||nativeGateProposal||nativeRoutePreparations||status.closed||status.nativeProposal||status.pending||status.presentationPending)throw Error('Direct native resource surface unavailable');
     if(ruin&&!sameNativeWorldBoundary(ruin.previous,preparedNativeWorldBoundary))throw Error('Center ruin lost its previous Surface boundary');
     nativeGateProposal=item;stream.holdPresentation({releaseOnInput:false});publicationHeld=true;preparedSequence=stream.status().sequence;
+   };
+   try{
+    // Finish any accepted interval before the hold hides its next boundary.
+    if(timelinePump)await timelinePump.withOrdinaryPublications(holdSource,{minSequence});
+    else await holdSource(null);
     raw=await prepareNativeTerrainProposal([],{signal:controller.signal,proposedWorldBoundary:boundary,retainsNativeAssignments:barrier||shield&&!shieldStop||!!ruin,
      ...(ruin?{nativeCenterRuin:ruin}:shield?{nativeShieldProposal:proposal,shieldGeometry}:barrier?{nativeBarrierAdditionTemplate:template,nativeBarrierWallEntities}:{stopEffects:proposal,[stop.wireTemplateField]:template}),proposalOwner:item});
     if(!current()||!raw.valid()){raw.abort();throw Error('Direct native resources became stale');}

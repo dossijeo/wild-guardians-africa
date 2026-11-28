@@ -19,7 +19,7 @@ import {createWebGpuAgricultureVfx} from '../src/rendering/webgpu-agriculture-vf
 // Execute the actual nested Surface entry and terrain preparation functions.
 // Assets, native source, roster and batch coordinator are real; GPU submission,
 // compilation and publication transport are doubles. This is not GPU evidence.
-function surface(f,{barrierTemplate,prepareNativeWallAdditions,shield=false}={}){
+function surface(f,{barrierTemplate,prepareNativeWallAdditions,shield=false,timelinePump=null,canHold=()=>true}={}){
  const source=surfaceSource;
  const span=(a,b)=>{const start=source.indexOf(a),end=source.indexOf(b,start);assert(start>=0&&end>start);return source.slice(start,end);};
  const code=span('  async function prepareNativeTerrainDependents','  const nativeFrameState=')+span('  function acceptPreparedNativeTerrain','  if(state&&pipelineAdmission)')+span('  async function prepareNativeShieldGeometry','  function prepareNativeFarmArrivalResources');
@@ -34,13 +34,14 @@ function surface(f,{barrierTemplate,prepareNativeWallAdditions,shield=false}={})
   chunkCoordinator:coordinator,pipelineAdmission:admission,renderer:{shadowMap:{}},sun:{shadow:{}},
   remoteGpu:{whenFrameSettled:async()=>{},beginFrame(){},cancelFrame(){},async prepareNativeWorldFrame(meta){prepared++;if(shield){assert.deepEqual(meta.coverage,{start:meta.boundary.effectiveTime,end:50});}else if(barrierTemplate){assert.deepEqual(meta.nativeBarrierAdditionTemplate,barrierTemplate);assert.deepEqual(meta.coverage,{start:barrierTemplate.worldBoundary.effectiveTime,end:50});}else assert.deepEqual(meta.nativeFarmArrivalStopTemplate,f.preparedStop.proposal.nativeStop);return {preparedWorldBoundary:meta.boundary,valid:()=>true,abort:()=>true,commit:(boundary,proof)=>{assert(boundaries.sameNativeWorldBoundary(boundary,shield?meta.boundary:proof.reference.worldBoundary));return true;},presented};}},
   remoteClockLease:()=>({elapsed:20,safeUntil:50}),remoteFrameMetadata:(boundary,coverage)=>({boundary,coverage}),renderScene:()=>{captures++;return true;},
-  stream:{status:()=>({sequence,holding,closed:false}),holdPresentation(){assert(!holding);holding=true;},releasePresentation(){assert(holding);holding=false;}},
+  timelinePump,stream:{status:()=>({sequence,holding,closed:false}),holdPresentation(){assert(!holding);assert(canHold(),'presentation hold conflicts with a historical interval');holding=true;},releasePresentation(){assert(holding);holding=false;}},
   terrain:{status:()=>({}),admittedBoundary:seq=>({version:1,sequence:seq,epoch:'test',canonicalPropsUnmasked:true,empty:true,changes:[]})},
   onPresentationReady(){},onSelectableChange(){},onError:e=>errors.push(e),
   prepareNativeResources(){throw Error('Motor entry reached');}
  };
  const build=new Function(...Object.keys(injected),`let closed=false,nativeGateProposal=null,nativeRoutePreparations=0,nativeRouteResourceRevision=0,nativeRouteRejected=false,nativePickPresentation=null,nativePickFrame=null,preparedNativeWorldBoundary=null;const temporal=true,recoveringPublication=false;${code}\nreturn {prepareNativeShieldGeometry,prepareNativeGateResources,prepareNativeBarrierAdditionResources,acceptPreparedNativeTerrain,wakeNativePublications,status:()=>({proposal:nativeGateProposal?.descriptor,owner:nativeGateProposal?.descriptor.phase,boundary:preparedNativeWorldBoundary,preparing:nativeRoutePreparations}),close(){closed=true;nativeGateProposal?.cancel();wakeNativePublications(Error('closed'));}};`);
  const api=build(...Object.values(injected));return {...api,errors,agricultureVfx,compiled:()=>compiled,stats:()=>({prepared,captures,holding}),present,
+  advanceSequence(next){sequence=next;api.wakeNativePublications();},
   publish(message){sequence=message.sequence;api.acceptPreparedNativeTerrain(message);api.wakeNativePublications();},
   close(){api.close();coordinator.dispose();agricultureVfx?.dispose?.();}};
 }
@@ -71,7 +72,7 @@ test('Surface direct stop rejects missing projection and foreign family, and can
  }finally{s.close();f.close();}
 });
 
-test('Surface solid additions hold the first wall slot and publish only its acquired native receipt',async()=>{
+for(const historical of [false,true])test(`Surface solid additions hold the wall slot and publish only its acquired receipt (${historical?'historical interval pending':'ordinary'})`,async()=>{
  const f=await fixture({peer:false}),wall={id:'wall-test',kind:'wall',material:'zarzas',gate:false,x:2,z:2,yaw:0,baseScaleX:1,hp:40,maxHp:40,status:'intact'};
  const [shape]=spatialStructureBarriers(wall),addition={entityId:wall.id,passMask:0,...Object.fromEntries(['x','z','halfX','halfZ','yaw'].map(key=>[key,Math.fround(shape[key])]))};
  const boundary=f.preparedStop.proposal.worldBoundary,template=barrierCodec.copyNativeBarrierAdditionReference({kind:'native-barrier-addition-reference',version:1,worldBoundary:boundary,sourceControlSequence:0,additions:[addition]});
@@ -79,12 +80,28 @@ test('Surface solid additions hold the first wall slot and publish only its acqu
  const object=new Group(),slot=createWebGpuReplacementSlot({pipelineAdmission:{prepare:async()=>{}},release:()=>{}});f.scene.add(slot.group);
  let entered,load;
  const waiting=new Promise(resolve=>{entered=resolve;}),assets=new Promise(resolve=>{load=resolve;});
- const s=surface(f,{barrierTemplate:template,async prepareNativeWallAdditions(entities){assert.deepEqual(entities,[wall]);entered();await assets;return [slot.prepareParticipant('wall',()=>object,{initial:true})];}});
+ let interval=historical?11:null,ordinary=0;
+ const timelinePump=historical?{async withOrdinaryPublications(prepare,{minSequence}){
+  assert.equal(minSequence,10);ordinary++;
+  try{return await prepare(interval);}finally{ordinary--;}
+ }}:null;
+ const s=surface(f,{barrierTemplate:template,timelinePump,canHold:()=>interval===null&&(!historical||ordinary===1),
+  async prepareNativeWallAdditions(entities){assert.deepEqual(entities,[wall]);entered();await assets;return [slot.prepareParticipant('wall',()=>object,{initial:true})];}});
  try{
   const actor=f.roster.get(f.actor),options={minSequence:10,nativeBarrierWallEntities:[wall]};
   await assert.rejects(s.prepareNativeBarrierAdditionResources(proposal,{...options,nativeBarrierWallEntities:[{...wall,x:3}]}),/differ/);
-  const pending=s.prepareNativeBarrierAdditionResources(proposal,options);
+  if(historical){
+   const controller=new AbortController(),cancelled=s.prepareNativeBarrierAdditionResources(proposal,{...options,signal:controller.signal});
+   cancelled.catch(()=>{});await flush();assert.equal(ordinary,1);assert.equal(s.stats().holding,false);
+   controller.abort();await assert.rejects(cancelled,{name:'AbortError'});assert.equal(ordinary,0);assert.equal(s.stats().holding,false);
+  }
+  const pending=s.prepareNativeBarrierAdditionResources(proposal,options);pending.catch(()=>{});
+  if(historical){
+   await flush();assert.equal(ordinary,1);assert.equal(s.stats().holding,false);
+   interval=null;s.advanceSequence(11);
+  }
   await waiting;assert.equal(s.stats().prepared,0);assert.equal(slot.active,null);assert.equal(f.roster.get(f.actor),actor);
+  assert.equal(ordinary,0,'ordinary publication ownership ends only after acquiring the hold');
   load();
   const handle=await pending;assert(handle.valid());assert.equal(slot.active,null);assert.equal(object.visible,false);
   const worldBoundary={...boundary,ticket:boundary.ticket+1,effectiveTime:boundary.effectiveTime+.1};
@@ -92,7 +109,7 @@ test('Surface solid additions hold the first wall slot and publish only its acqu
   const resources={version:1,kind:2,phase:'committed',worldBoundary,nativeSession:worldBoundary.nativeSession,ticket:worldBoundary.ticket,effectiveTime:worldBoundary.effectiveTime,chunks:[],removed:[],nativeBarrierAdditionBinding:binding};
   assert(handle.commit({worldBoundary,resources,nativeBarrierAdditionBinding:binding}));assert.equal(slot.active,object);
   const descriptor={version:1,kind:2,worldBoundary,chunks:[],removed:[],nativeBarrierAdditionBinding:binding};
-  const message={sequence:11,elapsed:worldBoundary.effectiveTime,nativeWorldResources:[descriptor]};
+  const message={sequence:historical?12:11,elapsed:worldBoundary.effectiveTime,nativeWorldResources:[descriptor]};
   assert.throws(()=>s.acceptPreparedNativeTerrain({...message,nativeWorldResources:[{...descriptor,nativeBarrierAdditionBinding:{...binding,nativeIds:[76]}}]}),/prepared proposal/);
   s.present();await flush();s.publish(message);await flush();
   assert.equal(s.status().owner,undefined);assert.deepEqual(s.status().boundary,worldBoundary);assert.equal(f.roster.get(f.actor),actor);assert.deepEqual([...s.errors,...f.errors],[]);
