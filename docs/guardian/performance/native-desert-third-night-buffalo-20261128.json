@@ -1,0 +1,266 @@
+{
+  "schema": 1,
+  "productCommit": "6ab117df2",
+  "seed": 712,
+  "biome": "desierto",
+  "day": 3,
+  "scope": "Reload of the public checkpoint after the paid worker took refuge and the paid enclosure closed. The original consumer completes the planned third-night raid and drains.",
+  "fixture": {
+    "path": "tests/fixtures/desierto712-d3-enclosed-buffalo-before-raid.json.gz",
+    "sha256": "4f48ecaeeca56a1af4d1b2acf93a811f91df1a875e652606d29c1ef810353cc0",
+    "snapshotSHA256": "9b1e7a11579f6b79b8e8d21401fb8507c122d464af4286855f22bb1f9f9b625d"
+  },
+  "base": {
+    "commit": "41e728fdd",
+    "path": ".cache/desert-menu-712/night-three-buffalo-red.tap",
+    "sha256": "7cc46664fbc185d5f17fd5f3a5a7bf2c3ab3b1b21acd81e0d22465dbd69e9c78",
+    "error": "Native task game cohort contains an unsupported mover",
+    "birthElapsed": 1644.4979135419403,
+    "actor": "animal-47",
+    "target": "structure-2",
+    "corridorNodes": 73
+  },
+  "deterministic": {
+    "path": ".cache/desert-menu-712/night-three-buffalo-regression.tap",
+    "sha256": "ba855632bfabeda9f944e77ca2cf9b915b2df3060ec45222648cae8b6879e619",
+    "pass": 96,
+    "fail": 0,
+    "skipped": 0
+  },
+  "hardware": {
+    "path": ".cache/desert-menu-712/night-three-buffalo-nvidia.json",
+    "sha256": "23b4627f61fd1d5c1a93a54017c3c80da723d363890fa45c9e29db6110beea06",
+    "runner": {
+      "path": ".cache/flee-return/desert-buffalo-night-physical.mjs",
+      "sha256": "973202d6c6c7f3ec9aee838ae7c462887c513d58712628297b952ac52210e122"
+    },
+    "harness": {
+      "path": ".cache/flee-return/desert-buffalo-night-browser.js",
+      "sha256": "e7082d7fb6101fd4ab2ef92da955b23fef54d18f14c11547072f13a2d438df0f"
+    },
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing"
+    },
+    "birth": {
+      "id": "event-95",
+      "type": "RaidSpawned",
+      "raidFacts": {
+        "id": "raid-3-night",
+        "day": 3,
+        "daytime": false,
+        "elapsed": 1644.4979135419403,
+        "waveIndex": 0,
+        "pressureFacts": {
+          "night": 3,
+          "observedValue": 267,
+          "capturedValue": 267,
+          "effectiveValue": 445,
+          "pressure": 0.07123152539792738,
+          "targetAnimals": 1,
+          "areaCap": 1,
+          "introductory": true,
+          "candidateVersion": 5,
+          "experimentId": "v1-pressure",
+          "experimentSignature": "[1500,[0.35,0.6],[0.75,0.18],[0.8,0.15]]",
+          "budget": 4,
+          "potential": 4,
+          "composition": {
+            "buffalo": 1
+          },
+          "referenceEnvelope": null,
+          "compositionAdjustments": [],
+          "qRaisedForRangeSafety": false
+        },
+        "exposedLiving": 1,
+        "exposedWounded": 0,
+        "actors": [
+          {
+            "id": "animal-47",
+            "species": "buffalo",
+            "hitsRemaining": 4,
+            "spawn": {
+              "x": 113.12636916989713,
+              "z": 33.180096204723846
+            },
+            "exit": {
+              "x": 114.56464578570974,
+              "z": 35.812843890394966
+            }
+          }
+        ]
+      },
+      "simulationTime": 1644.4979135419403
+    },
+    "hold": {
+      "approach": {
+        "heldAt": 1648.9483308333158,
+        "initial": [
+          113.12636916989713,
+          33.180096204723846,
+          null,
+          485,
+          4
+        ]
+      },
+      "strike": {
+        "heldAt": 1690.7983308332778,
+        "initial": [
+          96.81871032714844,
+          3.329123020172119,
+          39.784348370212854,
+          485,
+          4
+        ]
+      }
+    },
+    "draws": [
+      {
+        "ticket": 2,
+        "sequence": 32,
+        "kind": 26,
+        "purpose": "center",
+        "bodyId": 1,
+        "relativeTime": 0
+      },
+      {
+        "ticket": 4,
+        "sequence": 152,
+        "kind": 27,
+        "purpose": "center",
+        "bodyId": 1,
+        "relativeTime": 0
+      },
+      {
+        "ticket": 6,
+        "sequence": 158,
+        "kind": 26,
+        "purpose": "center",
+        "bodyId": 1,
+        "relativeTime": 0
+      },
+      {
+        "ticket": 8,
+        "sequence": 160,
+        "kind": 27,
+        "purpose": "center",
+        "bodyId": 1,
+        "relativeTime": 0
+      },
+      {
+        "ticket": 10,
+        "sequence": 170,
+        "kind": 26,
+        "purpose": "center",
+        "bodyId": 1,
+        "relativeTime": 0
+      },
+      {
+        "ticket": 12,
+        "sequence": 173,
+        "kind": 27,
+        "purpose": "center",
+        "bodyId": 1,
+        "relativeTime": 0
+      },
+      {
+        "ticket": 14,
+        "sequence": 185,
+        "kind": 26,
+        "purpose": "center",
+        "bodyId": 1,
+        "relativeTime": 0
+      },
+      {
+        "ticket": 16,
+        "sequence": 188,
+        "kind": 27,
+        "purpose": "center",
+        "bodyId": 1,
+        "relativeTime": 0
+      },
+      {
+        "ticket": 18,
+        "sequence": 194,
+        "kind": 26,
+        "purpose": "retreat",
+        "bodyId": 1,
+        "relativeTime": 0
+      }
+    ],
+    "strikes": [
+      {
+        "attackId": "attack-96",
+        "simulationTime": 1692.3983308332763,
+        "species": "buffalo",
+        "targetId": "structure-2",
+        "hp": 450
+      },
+      {
+        "attackId": "attack-99",
+        "simulationTime": 1697.6183308332716,
+        "species": "buffalo",
+        "targetId": "structure-2",
+        "hp": 415
+      },
+      {
+        "attackId": "attack-102",
+        "simulationTime": 1703.0183308332666,
+        "species": "buffalo",
+        "targetId": "structure-2",
+        "hp": 380
+      },
+      {
+        "attackId": "attack-105",
+        "simulationTime": 1706.3483308332636,
+        "species": "buffalo",
+        "targetId": "structure-2",
+        "hp": 345
+      }
+    ],
+    "actorRig": {
+      "root": 699,
+      "geometries": [
+        381,
+        382,
+        383
+      ],
+      "attributes": 22
+    },
+    "absence": {
+      "sequence": 257,
+      "clockElapsed": 1729.9883308332421
+    },
+    "defenses": [
+      "structure-10",
+      "structure-11",
+      "structure-12",
+      "structure-13",
+      "structure-14",
+      "structure-15",
+      "structure-16",
+      "structure-17",
+      "structure-18",
+      "structure-19",
+      "structure-7",
+      "structure-8",
+      "structure-9"
+    ],
+    "crops": [
+      {
+        "id": "plant-3",
+        "alive": false
+      },
+      {
+        "id": "plant-5",
+        "alive": true
+      }
+    ],
+    "strikeSave": {
+      "path": ".cache/desert-menu-712/night-three-buffalo-active-strike.json",
+      "sha256": "d0519d8acd3fd710d68d8d9748f911cf028cd33bc9bcfe72eea666976d2b664d"
+    },
+    "drained": true,
+    "errors": []
+  }
+}
