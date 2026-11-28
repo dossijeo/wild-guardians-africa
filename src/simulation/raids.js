@@ -783,7 +783,7 @@ export function nativeDesertIntroductoryRaid(state,animal){
  const raid=state.raid;
  return state.biome==='desierto'&&raid?.daytime===false&&raid.pressureFacts?.introductory===true&&
    Number.isSafeInteger(raid.introCropLimit)&&raid.animals.length===1&&raid.animals[0]===animal&&animal?.species==='warthog'&&
-   state.structures.length===1&&state.structures[0].kind==='center'&&state.workers.length<=1&&
+   state.structures.length===1&&state.structures[0].kind==='center'&&
    state.workers.every(worker=>worker.status==='home'&&!worker.raidReturn&&!worker.nativeRouteAdmission);
 }
 // The first native crop cohort has one mobile body and only inactive workers.
@@ -793,11 +793,13 @@ export function nativeCenterAttackCohort(state,flightWorker=null){
    (state.raid?.daytime===true?state.workers.length===1:
      !flightWorker&&state.raid?.daytime===false&&Number.isSafeInteger(state.raid.introCropLimit))&&
    state.workers.every(worker=>worker===flightWorker||worker.status==='home'&&!worker.raidReturn&&!worker.nativeRouteAdmission);
- if(state.biome!=='desierto'||state.workers.length>1||!state.workers.every(worker=>
+ if(state.biome!=='desierto')return false;
+ const introductory=!flightWorker&&nativeDesertIntroductoryRaid(state,state.raid?.animals[0]);
+ if((state.workers.length>1&&!introductory)||!state.workers.every(worker=>
    worker===flightWorker||worker.status==='home'&&!worker.raidReturn&&!worker.nativeRouteAdmission)||
    state.structures[0]?.kind!=='center'||(!state.workers.length&&state.structures.some(structure=>structure.kind!=='center')))return false;
  const crops=activeCrops(state.plants);
- return !crops.length||!flightWorker&&nativeDesertIntroductoryRaid(state,state.raid?.animals[0])&&crops.every(crop=>!canAttackCrop(state,crop));
+ return !crops.length||introductory&&crops.every(crop=>!canAttackCrop(state,crop));
 }
 export function nativeCenterAttackSite(state,target){
  return !!target&&operational(target)&&(target===state.structures[0]||

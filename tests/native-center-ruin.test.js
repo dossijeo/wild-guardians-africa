@@ -216,11 +216,13 @@ function savedAttack() {
   }
 }
 
-for(const reload of [false,true])test(`the introductory Desert raid spends one hit on a crop and one on the center${reload?' after a public strike reload':''}`, {timeout:30000}, async()=>{
- const fixture=new URL('./fixtures/desierto712-d1-two-crops-before-night.json.gz',import.meta.url);
+for(const count of [1,2])for(const reload of [false,true])test(`the introductory Desert raid spends one hit on a crop and one on the center with ${count} sheltered workers${reload?' after a public strike reload':''}`, {timeout:30000}, async()=>{
+ const fixture=new URL(count===1?'./fixtures/desierto712-d1-two-crops-before-night.json.gz':'./fixtures/desierto712-d1-two-workers-refuge-before-night.json.gz',import.meta.url);
  const disk=gunzipSync(readFileSync(fixture)).toString(),initial=deserialize(disk),options=savedNativeAuthorityOptions(disk);
  assert.deepEqual(initial.plants.map(crop=>[crop.id,crop.alive]),[['plant-3',true],['plant-5',true]]);
- assert.equal(initial.workers[0].status,'home');
+ const workerOwners=workers=>workers.map(w=>[w.id,w.personId,w.status,w.x,w.z,w.hits,w.contractDay]);
+ const sheltered=workerOwners(initial.workers);
+ assert.deepEqual(sheltered,[['worker-8','person-7','home',88,0,0,1],...(count===2?[['worker-10','person-9','home',88,0,0,1]]:[])]);
  assert.equal(options.nativeWorkerLifecycle,true);
  let release,firstRoute,replacement;
  const ready=new Promise(resolve=>{release=resolve;});
@@ -233,8 +235,8 @@ for(const reload of [false,true])test(`the introductory Desert raid spends one h
   const next=await authority.command({kind:'advance',seconds:.05,steps:2,nightFastForward:true});
   history.push(...next.events);
   await authority.present();
-  const state=JSON.parse(next.snapshot),[worker]=state.workers;
-  assert.deepEqual([worker.id,worker.personId,worker.status,worker.x,worker.z,worker.hits],['worker-8','person-7','home',88,0,0]);
+  const state=JSON.parse(next.snapshot);
+  assert.deepEqual(workerOwners(state.workers),sheltered);
   assert.deepEqual(state.ledger,initial.ledger);
   return state;
  };
