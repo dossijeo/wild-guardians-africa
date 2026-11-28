@@ -16,7 +16,7 @@ export async function createNativeAdmissionVertical({planner,elapsed,kind,retain
   const [sourcePort,drawPort]=pair();
   const graphics=await fixture({capabilities:{width:20,height:10,format:'rgba8unorm',...(idleStrollIdlePhaseCapability?{nativeIdleStrollIdlePhaseVersion:1}:{}),...(idleCycleIdlePhaseCapability?{nativeIdleCycleIdlePhaseVersion:1}:{}),
     nativeTaskStartVersion:1,nativeTaskSettlementVersion:1,nativeInitialIdleBodyVersion:1,nativeIdleCycleVersion:1,nativeTaskConsequenceVersion:1,nativeDeferredResumeVersion:1,nativeTaskActionVersion:1,nativeTaskActionRestoreVersion:1,
-    nativeTaskActionClockVersion:1,nativeResumeVersion:1,nativeSuspendedVersion:1,nativeHomeRouteVersion:1,nativeIdleStrollVersion:1,nativeIdleStrollStopVersion:1,nativeIdleStrollStopClockVersion:1,nativeHomeArrivalVersion:1}},
+    nativeTaskActionClockVersion:1,nativeResumeVersion:1,nativeSuspendedVersion:1,nativeHomeRouteVersion:1,nativeIdleStrollVersion:1,nativeIdleStrollStopVersion:1,nativeIdleStrollStopClockVersion:1,nativeIdleStrollStopGateVersion:1,nativeHomeArrivalVersion:1}},
     {intentControl:{port:drawPort,session:'admission-vertical'},absoluteNow});
   if(retainStaticBuffer){graphics.staticBuffer=graphics.client.device.createBuffer({size:36,usage:40});graphics.client.device.queue.writeBuffer(graphics.staticBuffer,0,new Float32Array([0,0,0,1,0,0,0,1,0]));}
   const {port1,port2}=new MessageChannel(),errors=[],packets=[];

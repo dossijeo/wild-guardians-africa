@@ -111,6 +111,63 @@
       "errors": []
     }
   },
+  "continuousSecondShift": {
+    "fixture": "tests/fixtures/desierto712-enclosure-before-home.json.gz",
+    "inputElapsed": 249.80000000002676,
+    "inputSha256": "7733bbe39188c3a684c723ad8fd75d13aa883d5d90e3c74791c7b734b8e089ed",
+    "baseline": {
+      "receiptSha256": "b32fb624ecf15ae00e9d893f441ab1d384f7d4d2203be45737f2117bf92ef168",
+      "requestId": 12,
+      "kind": 12,
+      "preparedTicket": 21,
+      "sourcePublication": 3869,
+      "firstError": "Native moving stop gate projection requires its prepared motor uniforms"
+    },
+    "deterministicHost": {
+      "basePassed": 0,
+      "candidatePassed": 2,
+      "cases": ["motor continues while Stop12 is prepared and its final opening is presented", "missing motor opening uniform rejects before acquisition"],
+      "preparedTicket": 8,
+      "acquiredTicket": 9,
+      "preparedAt": 10.15,
+      "acquiredAt": 10.35,
+      "gateId": 990001,
+      "gateMechanism": 1,
+      "finalOpening": 0.5333333333333309,
+      "sameFloat32InBufferAndPicking": true,
+      "regression": {"passed": 373, "failed": 0, "skipped": 0}
+    },
+    "nvidia": {
+      "architecture": "turing",
+      "receiptSha256": "71b96b82537d2e8bc1e323eefd0c6815a960ebf281765e8b3570ad102b962bfb",
+      "sameAuthorityAndDraw": true,
+      "closingGate": {"gateId": 7, "ticket": 6, "submittedAt": 278.399999999981, "submittedDraw": 264, "closedDraw": 269},
+      "hitIds": ["attack-37", "attack-40"],
+      "centerHp": [600, 580, 560],
+      "liveCrops": 2,
+      "workerHits": 0,
+      "raidEndedAt": 449.7218161888091,
+      "lastDrawWithoutActors": 1393,
+      "dawnAt": 599.9999999999613,
+      "dawnPublication": 3477,
+      "hireCommand": "second-enclosed-shift",
+      "hireCount": 1,
+      "hireCost": 40,
+      "worker": "worker-29",
+      "crossingAt": 629.5499999999345,
+      "crossingPose": [97.12669372558594, -5.076558659793234],
+      "crossingDraw": 1940,
+      "crossingTicket": 24,
+      "gateClockTicket": 23,
+      "gateOpening": 1,
+      "watered": "plant-3",
+      "wateredAt": 636.9999999999277,
+      "drained": true,
+      "errors": [],
+      "failedRequests": []
+    },
+    "remaining": ["The browser input is an existing public checkpoint before Home19.", "Terminal Draw replacement with a stopped Stop12 motor remains unqualified."]
+  },
   "secondShift": {
     "input": "Public native checkpoint taken at the hiring pause after the introductory night",
     "inputElapsed": 599.9999999996885,

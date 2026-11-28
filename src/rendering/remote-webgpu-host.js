@@ -2171,6 +2171,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
            if(message.preparedIdleStrollStopTemplate)try{
              const ref=copyNativeIdleStrollStopReference(message.preparedIdleStrollStopTemplate);if(!sameNativeIdleStrollStopReference(ref,pending?.metadata?.nativeIdleStrollStopTemplate))throw Error('Native moving stop lacks its retained template');
              const bindings=quiescenceBindings();
+             for(const gate of ref.gates)if(!bindings.some(b=>nativeStoppedGateClockMatches(b,gate,ref)))throw Error('Native moving stop lacks its prepared motor opening uniform');
              for(const owner of ref.routes){if(owner.state!==4)throw Error('Native moving stop has no suspended graphical owner');for(const field of ['age','x','z','yaw','phase','arrived','runPhase','walkPhase','carryPhase'])if(!bindings.some(b=>b.nativeStopped?.actorId===owner.nativeRoute.actorId&&b.semantic==='stop-value'&&b.stopField===field&&sameNativeIdleStrollStopReference(b.nativeStopped.stop,ref)))throw Error('Native moving stop lacks its prepared final-value uniforms');}
            }catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
            if(message.preparedFarmArrivalStopTemplate)try{

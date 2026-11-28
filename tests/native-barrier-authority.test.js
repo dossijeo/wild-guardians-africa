@@ -191,7 +191,7 @@ test('the paid worker finishes watering and returns through the automatic gate a
  }finally{await f.close();}
 });
 
-test('the unattended enclosure closes through Draw and shelters both crops through the introductory raid',async()=>{
+test('the enclosure closes for the first raid and reopens on the next paid shift in the same Draw',async()=>{
  const disk=gunzipSync(readFileSync(new URL('./fixtures/desierto712-enclosure-before-home.json.gz',import.meta.url))).toString('utf8');
  const initial=deserialize(disk),events=[];
  let releaseClosing;
@@ -268,6 +268,51 @@ test('the unattended enclosure closes through Draw and shelters both crops throu
   assert.deepEqual({...state.workers[0],path:null},{...worker,path:null});
   assert(!events.some(event=>event.type==='CropHit'||event.type==='WorkerHit'));
   assert.deepEqual(state.ledger,initial.ledger);
+
+  // Replace the fixture's last prepared Retreat with the ordinary scene after
+  // RaidEnded. An empty pass avoids retaining any worker or animal bindings.
+  const retiredDraw=f.host.inspect().nativeRouteFrame;
+  const worldBoundary=retiredDraw.worldBoundary;
+  f.client.beginFrame({nativeWorldBoundary:worldBoundary,
+   clock:{...f.clock,elapsed:state.elapsed,safeUntil:state.elapsed,paused:true,segments:[]}});
+  const encoder=f.client.device.createCommandEncoder();
+  const pass=encoder.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
+  pass.end();
+  f.client.device.queue.submit([encoder.finish()]);
+  await pump(f,f.client.endFrame());
+  const absence=f.host.inspect().nativeRouteFrame;
+  assert(absence.sequence>retiredDraw.sequence);
+  assert.deepEqual(absence.bindings,[]);
+
+  for(let i=0;i<1000&&state.day===1;i++){
+   const packet=await advance();
+   state=JSON.parse(packet.snapshot);
+   await f.present();
+  }
+  assert.equal(state.day,2);
+  assert(state.pauses.includes('hiring'));
+  assert.equal(gate(state).gateOpen,0);
+  assert.deepEqual(state.workers,[]);
+  const commandId='second-enclosed-shift';
+  const hire=f.command({kind:'hire',id:commandId,selection:{youngMale:1}});
+  const [newWorker]=JSON.parse(hire.snapshot).workers;
+  const [paid]=hire.events.filter(event=>event.type==='HiringConfirmed');
+  assert.equal(newWorker.contractDay,2);
+  assert.equal(paid.count,1);
+
+  let reopened=false,water;
+  for(let i=0;i<450&&!water;i++){
+   const packet=await advance();
+   state=JSON.parse(packet.snapshot);
+   await f.present();
+   const [current]=state.workers;
+   if(current.x>97&&current.z>-13&&current.z<-5&&gate(state).gateOpen===1)reopened=true;
+   water=packet.events.find(event=>event.type==='WaterSatisfied'&&event.workerId===newWorker.id&&event.targetId==='plant-3');
+  }
+  assert(reopened&&water,'the next paid worker must reopen the gate and water the sheltered crop');
+  const farm=f.records.findLast(record=>record.kind==='farm-arrival'&&record.committed);
+  assert.equal(farm.resources.worldBoundary.authorityEpoch,worldBoundary.authorityEpoch);
+  assert.deepEqual(state.ledger.entries[commandId],rational(-paid.cost));
   assert.deepEqual([...f.faults,...f.errors],[]);
  }finally{await f.close();}
 });

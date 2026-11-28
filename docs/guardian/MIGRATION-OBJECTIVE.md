@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+El recinto automático de Desierto 712 completó en NVIDIA el cierre, la primera incursión y el riego del segundo turno sin recargar ni sustituir Draw. Stop12 ahora admite el motor detenido del portón con el mismo contrato de uniformes que los relevos de Farm y Task. Queda el reemplazo de Draw durante ese corte con motor y la validación desde el inicio ordinario de la partida. [Prueba continua](native-desert-mixed-flight-center-20261125.md#primera-noche-y-segundo-turno-en-la-misma-sesión).
+
 En Stop24, el sustituto vuelve a presentar el mismo trabajador y los motores detenidos de hasta dos portones. NVIDIA confirmó el picking y la reanudación bajo el mismo corte antes de drenar. [Pruebas y alcance](native-terminal-resource-recovery-20261120.md#reemplazo-del-draw-con-los-motores-detenidos).
 
 Stop12 conserva el cuerpo detenido de Idle22 cuando se pierde Draw con Task14 pendiente. NVIDIA confirmó el picking del sustituto y la readmisión de Task14 en el mismo cuerpo con un solo riego. [Recorrido y límites](native-terminal-resource-recovery-20261120.md#pérdida-con-stop12-adquirido-y-task14-pendiente).

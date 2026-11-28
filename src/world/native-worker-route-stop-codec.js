@@ -86,13 +86,14 @@ function copyStoppedBody(value){
 }
 const sameStoppedBody=(a,b)=>a?.kind===stoppedBodyKind&&b?.kind===stoppedBodyKind&&a.version===1&&b.version===1&&a.actorId===b.actorId&&sameReference(a.stop,b.stop);
  return Object.freeze({kind,referenceKind,ticketKind,attestationKind,translationKind,stoppedBodyKind,
-   ...(kind===12?{}:{stoppedGateKind:prefix+'-stopped-gate'}),
+   stoppedGateKind:prefix+'-stopped-gate',
    copyReference,sameReference,successor,referenceFromProposal,copyProposal,copyTicket,ticketFromProposal,copyAttestation,attestationCovers,copyProjection,copyStoppedBody,sameStoppedBody});
 }
 export const nativeIdleStrollStopCodec=createCodec(12,'native-idle-stroll');
 export const nativeFarmArrivalStopCodec=createCodec(24,'native-farm-arrival');
 export const nativeTaskRouteStopCodec=createCodec(25,'native-task-route');
 export function nativeGateStopCodec(reference){
+ if(reference?.kind===nativeIdleStrollStopCodec.referenceKind)return nativeIdleStrollStopCodec;
  if(reference?.kind===nativeFarmArrivalStopCodec.referenceKind)return nativeFarmArrivalStopCodec;
  if(reference?.kind===nativeTaskRouteStopCodec.referenceKind)return nativeTaskRouteStopCodec;
  return null;

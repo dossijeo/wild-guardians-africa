@@ -616,7 +616,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
           farm=kind==='native-farm-arrival-stopped-gate'||kind==='native-farm-arrival-stopped-body',
           task=kind==='native-task-route-stopped-gate'||kind==='native-task-route-stopped-body';
         const clockVersion=task?capabilities.nativeTaskRouteStopClockVersion:farm?capabilities.nativeFarmArrivalStopClockVersion:capabilities.nativeIdleStrollStopClockVersion;
-        const gateVersion=task?capabilities.nativeTaskRouteStopGateVersion:capabilities.nativeFarmArrivalStopGateVersion;
+        const gateVersion=task?capabilities.nativeTaskRouteStopGateVersion:farm?capabilities.nativeFarmArrivalStopGateVersion:capabilities.nativeIdleStrollStopGateVersion;
         if(gate&&gateVersion!==1||clockVersion!==1||task&&capabilities.nativeTaskRouteStopVersion!==1||farm&&capabilities.nativeFarmArrivalStopVersion!==1)throw Error('Draw owner does not support native final stopped values');
         copyNativeStoppedClock(binding);
       }

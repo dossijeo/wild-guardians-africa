@@ -1361,7 +1361,8 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     },
     admitStoppedGate(value,{preparingWorldBoundary=null}={}){
       const reference=copyNativeStoppedGateSelector(value),actorId=reference.stop.sourceRoute.actorId,actor=actors.get(actorId);
-      const family=reference.kind===nativeTaskRouteStopCodec.stoppedGateKind?taskStopFamily:farmStopFamily;
+      const family=reference.kind===nativeIdleStrollStopCodec.stoppedGateKind?strollStopFamily:
+        reference.kind===nativeFarmArrivalStopCodec.stoppedGateKind?farmStopFamily:taskStopFamily;
       // Task or Home can request the same stopped body before its first draw.
       // The motor uses that exact projection until the GPU has submitted it.
       const lease=admitRouteStoppedBody(family,{kind:family.codec.stoppedBodyKind,version:1,

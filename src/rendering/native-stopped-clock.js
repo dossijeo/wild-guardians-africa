@@ -12,7 +12,7 @@ export function copyNativeStoppedBodySelector(value){
 // A motor is owned independently of the actor after the acquired stop. Its
 // selector still names the exact stop family and mechanism that may freeze it.
 export function isNativeStoppedGate(value){
- return value?.kind===nativeFarmArrivalStopCodec.stoppedGateKind||value?.kind===nativeTaskRouteStopCodec.stoppedGateKind;
+ return stoppedCodecs.some(codec=>value?.kind===codec.stoppedGateKind);
 }
 export function copyNativeStoppedGateSelector(value){
  const codec=nativeGateStopCodec(value?.stop);
