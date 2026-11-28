@@ -42,6 +42,13 @@
     "skippedByFilter": 31,
     "scope": "Real rig, WASM, resource ports and Draw. Deterministic queue, pipeline admission double."
   },
+  "regression": {
+    "path": ".cache/desert-menu-712/live-crops-center-ruin-regression.tap",
+    "sha256": "67de1b7b5ca7f086ca3a341a3379aa135835d85e6a5aff88880aec5e753348da",
+    "passed": 130,
+    "failed": 0,
+    "skipped": 0
+  },
   "freshCpuThroughDefeat": {
     "path": ".cache/desert-menu-712/enclosure-fresh-authority-cpu.json",
     "sha256": "b6eb36baaaa0b1976372c5947e1a673b55433c49c6e331a9c0b42c59afbc6400",
@@ -59,5 +66,12 @@
     "preparedKind": 26,
     "readiness": "READY recorded and held by the test. Authority timed out before acquisition.",
     "error": "Native resource preparation timed out"
+  },
+  "coldPhysicalImmediateReadyAttempt": {
+    "path": ".cache/desert-menu-712/fresh-enclosure-rhino-live-crops-nvidia-fast-ready.failure.json",
+    "sha256": "cffb0f4a3441348c9362d4e4bb7c15a8b82a80a1f7c2a0ca3919badb3a3f383d",
+    "requestId": 1,
+    "reachedReady": false,
+    "error": "Native gate resource surface unavailable"
   }
 }
