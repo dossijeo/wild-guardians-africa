@@ -489,6 +489,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     }
     const value = device.createBuffer(descriptor);
     device.queue.writeBuffer(value, 0, shadow);
+    // The Host alone assigns the source shared by these physical generations.
+    entry.uniformSource??=Symbol();
     setResource(key, { ...entry, value, descriptor, uniformShadow: shadow });
     metrics.uniformForks++; metrics.uniformForkBytes += descriptor.size; metrics.uniformForkLastAt = absoluteNow();
     // Bind groups are immutable native objects. Recreate just the groups that
@@ -1295,8 +1297,27 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     if(packet.metadata.nativeResumeTemplate){const ref=copyNativeResumeReference(packet.metadata.nativeResumeTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid deferred native resume template');}
     return boundary;
   }
+  function requireCenterRuinGates(packet,bindings,ruin){
+    if(!ruin?.retainedGateIds)return;
+    const missing=()=>Error('Center ruin lacks its acquired motor clocks');
+    if(!active||!sameNativeWorldBoundary(frameBoundary(active),ruin.previous))throw missing();
+    const retained=new Map(bindings.filter(b=>b.nativeGate).map(b=>[`${b.id}:${b.byteOffset}`,b]));
+    const expected=new Set(ruin.retainedGateIds),seen=new Set();
+    for(const old of active.admittedClockBindings){
+      if(!old.nativeGate)continue;
+      const id=old.nativeGate.gateId,key=`${old.id}:${old.byteOffset}`,next=retained.get(key),live=clockBindings.get(key);
+      const source=active.resourceSnapshot.get(old.id),resource=packet.resourceSnapshot.get(old.id);
+      if(!expected.has(id)||!sameNativeWorldBoundary(old.nativeGate.worldBoundary,ruin.previous)||old.semantic!=='relative'||
+         !next||next.nativeClockKey!==old.nativeClockKey||live?.nativeClockKey!==old.nativeClockKey||
+         next.resourceEnd!==old.resourceEnd||live.resourceEnd!==old.resourceEnd||
+         resource!==source&&(!source?.uniformSource||resource?.uniformSource!==source.uniformSource))throw missing();
+      retained.delete(key);seen.add(id);
+    }
+    if(retained.size||seen.size!==expected.size)throw missing();
+  }
   function admitClockBindings(packet,preparing=false){
     const preparedBindings=(packet.preparedClockBindings??Array.from(clockBindings.values())).filter(binding=>packet.resourceSnapshot.has(binding.id));
+    if(preparing)requireCenterRuinGates(packet,preparedBindings,packet.metadata.preparedCenterRuin);
     if(recovered) {
       const missing=recovered.members.find(({profile,ref,gateIds,proof})=>{
         const stopped=!!profile.stopProjectionMatches,epoch=stopped?ref.epoch:ref.worldBoundary.effectiveTime;
@@ -2243,6 +2264,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
                   status.clock.clockSequence!==hold.clockSequence+1||status.sequence!==hold.sequence||
                   !sameNativeWorldBoundary(hold.preparedCenterRuin.previous,nativeWorldBoundary))
                  throw Error('Center ruin GO lacks the reserved packet or clock');
+               requireCenterRuinGates(pending,pending.preparedClockBindings,hold.preparedCenterRuin);
                pending.admittedWorldBoundary=boundary;
              }
              if(hold.preparedWorldBoundary&&!hold.preparedCenterRuin&&!hold.preparedAnimalCropRouteTemplate&&!hold.preparedAnimalCropStrikeTemplate&&!hold.preparedBarrierAdditionTemplate&&!hold.preparedResumeTemplate&&!hold.preparedTaskStartTemplate&&!hold.preparedTaskActionTemplate&&!hold.preparedTaskConsequenceTemplate&&!hold.preparedTaskSettlementTemplate&&!hold.preparedInitialIdleBodyTemplate&&!hold.preparedIdleCycleTemplate&&!hold.preparedFarmArrivalTemplate&&!hold.preparedHomeRouteTemplate&&!hold.preparedTaskRouteStopTemplate&&!hold.preparedFarmArrivalStopTemplate&&!hold.preparedIdleStrollStopTemplate&&!hold.preparedIdleStrollTemplate&&!hold.preparedHomeArrivalTemplate&&!sameNativeWorldBoundary(hold.preparedWorldBoundary,boundary))throw Error('Native release differs from its prepared command receipt');

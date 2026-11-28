@@ -42,7 +42,7 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
    if(!route)throw Error('Center fixture has no matching animal rig');
    const metadata={nativeWorldBoundary:center.boundary,preparedCenterRuin:center,
     clock:{...clock,elapsed:start,safeUntil:end,segments:[{start,end,rate:1,realDuration:end-start}]}};
-   const packet=await prepareExistingGroup(graphics,route.cropGroup,metadata,options.signal);
+   const packet=await prepareExistingGroup(graphics,[route.cropGroup,...(record.retainedGateGroups??[])],metadata,options.signal,record.beforeDraw);
    packet.presented.catch(()=>{});record.packet=packet;
    try{await onReady(record,options);}catch(error){packet.abort();throw error;}
    return {preparedWorldBoundary:packet.preparedWorldBoundary,preparedCenterRuin:center,valid:packet.valid,
@@ -185,8 +185,9 @@ function prepareWorkerStoppedDraw(g,stop,records,record,signal){
  return prepareExistingGroup(g,[group,...motorGroups,...settled],{nativeWorldBoundary:stop.worldBoundary,[task?'nativeTaskRouteStopTemplate':stroll?'nativeIdleStrollStopTemplate':'nativeFarmArrivalStopTemplate']:stop,clock:{version:1,epoch:0,elapsed:stop.worldBoundary.effectiveTime,safeUntil:Number.MAX_SAFE_INTEGER,anchorAbsoluteMs:0,paused:true,segments:[]}},signal);
 }
 
-function prepareExistingGroup(g,group,metadata,signal){
+function prepareExistingGroup(g,group,metadata,signal,beforeDraw){
  g.client.beginFrame({nativeWorldBoundary:metadata.nativeWorldBoundary});
+ beforeDraw?.();
  const encoder=g.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:g.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});pass.setPipeline(g.pipeline);for(const item of Array.isArray(group)?group:[group]){pass.setBindGroup(0,item);pass.draw(3);}pass.end();g.client.device.queue.submit([encoder.finish()]);
  return g.client.prepareNativeWorldFrame(metadata,{signal});
 }
