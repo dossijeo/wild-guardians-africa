@@ -55,7 +55,7 @@ function initialState(){
  }finally{farm.close();}
 }
 
-for(const mode of ['with all clocks','without Home clock','without animal clock','with a changed Home phase','recover after GO','recover before GO',
+for(const mode of ['ordinary authority with all clocks','without Home clock','without animal clock','with a changed Home phase','recover after GO','recover before GO',
  'disk before ruin','disk after ruin','disk loss before ruin','disk loss after ruin',
  'disk Home18 loss before ruin','disk Home18 loss after ruin'])test(`the finished center strike admits a new corridor and reaches the occupied gate ruin (${mode})`,{timeout:60000},async t=>{
  const omitClock=mode==='without Home clock'?'Home':mode==='without animal clock'?'animal':null;
@@ -75,7 +75,8 @@ for(const mode of ['with all clocks','without Home clock','without animal clock'
  const hits=[];
  globalThis[owner]=entry=>{access=entry;};
  try{
-  world=await nativeProductionAuthority(initial,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,getTerrainManifest:()=>terrainManifest,
+  const lifecycle=mode==='ordinary authority with all clocks'?{nativeWorkerLifecycle:true,emptyBeastPhysics:true}:{qualifyFarmFlee:true,qualifyAnimalCrop:true};
+  world=await nativeProductionAuthority(initial,{chunkKeys,...lifecycle,getTerrainManifest:()=>terrainManifest,
    onPrepare(record){
     if(record.kind==='home-route')record.homeOriginPhase=true;
     if(record.kind==='center-ruin'){

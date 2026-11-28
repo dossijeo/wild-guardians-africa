@@ -145,8 +145,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   let nativeBodies=null,nativeProduction=null,nativeBirthRevision=null,nativeBirthsPending=false,gateBindings=null;
   let repairFlightProposal=null;
   let liveCenterClockArmed=false;
-  const ordinarySavannaFlight=nativeWorkerLifecycle&&game.biome==='sabana';
-  const mixedFlight=ordinarySavannaFlight||qualifyFarmFlee&&qualifyAnimalCrop;
+  const ordinaryRaidFlight=nativeWorkerLifecycle&&(game.biome==='sabana'||game.biome==='desierto');
+  const mixedFlight=ordinaryRaidFlight||qualifyFarmFlee&&qualifyAnimalCrop;
   const nativeMarkers=new Set(['native-idle','pending-idle-resources','native-idle-stroll','pending-stroll-resources','native-home','pending-home-resources','native-task','pending-resources','native-action','pending-action-resources','pending-farm-arrival-resources','native-farm-arrival','native-farm-arrival-held']);
   const nativeRestoration=game.workers.some(worker=>nativeMarkers.has(worker.nativeRouteAdmission));
   const nativeGateOwners=game.structures.filter(s=>s.gate&&s.status!=='ruined');
@@ -200,7 +200,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   // Binding never republishes or upserts a body after native execution owns it.
   if(nativeRosterSupported)nativeBodies=createSpatialDynamicBodies(session.core.wasm);
   if(restoringFarmFlight)savedFlight.worker.nativeRouteAdmission='pending-farm-flight-restore';
-  const planner=createEventDrivenTaskPlanner(session,{qualifyFarmFlee:qualifyFarmFlee||ordinarySavannaFlight||!!savedFlight||!!savedRefuge,nativeWorkerLifecycle,
+  const planner=createEventDrivenTaskPlanner(session,{qualifyFarmFlee:qualifyFarmFlee||ordinaryRaidFlight||!!savedFlight||!!savedRefuge,nativeWorkerLifecycle,
     qualifyRaidEncounter:qualifyRaidEncounter&&qualifyFarmFlee&&qualifyAnimalCrop,repairFlightTicket:source=>{
     const repair=repairFlightProposal;
     return repair?.actorId===source.actorId&&repair.actionSequence===source.sourceSequence&&repair.targetId===source.targetId&&
@@ -456,7 +456,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     pose.opening===gate.gateOpen&&pose.target===gate.gateOpen&&pose.endsAt<=game.elapsed;
   }
   function refugeReturnCheckpoint(){
-   if(!(ordinarySavannaFlight||savedFlight||savedRefuge||mixedFlight&&game.biome==='desierto')||
+   if(!(ordinaryRaidFlight||savedFlight||savedRefuge||mixedFlight&&game.biome==='desierto')||
       restoringRefugeMotors||game.raid?.daytime!==true||game.workers.length!==1||
       game.workers[0].status!=='home'||!civilShieldPhysicsAvailable())return null;
    const gates=nativeDesertRefugeLayout(game)?.gates??[];
@@ -1993,7 +1993,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
      const restoredAnimal=savedRaidAnimal&&game.raid?.animals[0]===savedRaidAnimal?savedRaidAnimal:null;
      const flight=restoredAnimal&&savedFlight?planner.nativeRaidFlightMember(game,restoredAnimal):null;
      const restoredCenter=restoredAnimal&&nativeCenterCheckpointSite(game,restoredAnimal,flight);
-     if(nativeBodies&&(qualifyAnimalCrop||restoredCenter||nativeWorkerLifecycle&&nativeShelteredSavannaCenterActor(game,game.raid?.animals[0])))
+     const animal=game.raid?.animals[0],ordinaryPeer=ordinaryRaidFlight&&animal&&planner.nativeRaidFlightMember(game,animal);
+     const ordinaryCenter=ordinaryRaidFlight&&animal&&nativeCenterCheckpointSite(game,animal,ordinaryPeer||null);
+     if(nativeBodies&&(qualifyAnimalCrop||restoredCenter||ordinaryCenter))
        options.prepareCenterRuin=prepareCenterRuin;
      if(nativeBodies&&(mixedFlight||savedFlight)&&game.raid)options.settleHomeBeforeCenterSuccessor=settleHomeBeforeCenterSuccessor;
      if(qualifyRaidEncounter&&qualifyFarmFlee&&qualifyAnimalCrop&&nativeBodies)options.prepareEncounterDraft=prepareEncounterDraft;
