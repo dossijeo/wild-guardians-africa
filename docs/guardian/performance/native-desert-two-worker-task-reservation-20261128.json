@@ -1,0 +1,134 @@
+{
+  "schema": 1,
+  "product": "09f828d12663ded61462b769a9cf542f84c34bcd",
+  "fixture": "Desierto 712 with two paid bananas and two paid young workers",
+  "source": "docs/qa/raid-spawn-navigation/prepared-complete-browser-desert.json",
+  "snapshotSHA256": "77a001ef7b9ace5e20659749abc58c5795b9f21537a834f9fbb15e7e9b408c48",
+  "binaries": {
+    "standalone": "8954631e3650fd0de8867fcc4730ad3e63b33747bd1a3b122963b581f2da952f",
+    "pthread": "d14de497813a7bf7e39e9e2c8cc7ac80abcf973cdab4ade3c3dd0ba25b949184"
+  },
+  "cpu": {
+    "originalRequestAtFirstFailure": 2.4999999999999996,
+    "originalWitness": [
+      1,
+      1,
+      0,
+      2.9814813888877176,
+      0,
+      0
+    ],
+    "staleWitnessReadAt": 20.99999999999981,
+    "baselineFailure": "Native task game cohort reached an unsupported return boundary",
+    "fullDayReachedShelterWithTwoWorkers": 277.99999999998136,
+    "bothWorkersStayedHomeAtPublicCheckpoint": 369.99999999997726,
+    "baselineReceiptSHA256": "6a4ad71e396788c64849617393359328e7afd2fa9e96ffea08e2a4184bc43b41",
+    "witnessReceiptSHA256": "efd87c3d1395524cc1643436595719b9ddad3af4a827faf3b584e5840d667a49",
+    "correctedDayReceiptSHA256": "4c296c27ad331792589984c9c8189a4aa6637ea80e10e8c533dd579b002ecedc",
+    "targetedTestsPassed": 75,
+    "testedBothWasmVariants": true
+  },
+  "physical": {
+    "browser": "Edge",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing"
+    },
+    "rawReceipt": ".cache/desert-two-worker-task-nvidia.json",
+    "receiptSHA256": "b5745a0cef590069d8c0e2b6c19de41f3bc4f5f2de5c8fdf7e0d29d052e0f5bd",
+    "source": "Public pre-hire checkpoint, real Hosted, authority, Surface and Draw; two hires submitted through the ordinary command.",
+    "hireCost": 80,
+    "balance": {
+      "n": "320",
+      "d": "1"
+    },
+    "secondRequest": {
+      "actor": 10,
+      "body": 2,
+      "sequence": 4,
+      "conflictCount": 93,
+      "firstConflict": {
+        "actor": 10,
+        "request": 4,
+        "task": 11,
+        "bodyId": 2,
+        "result": 0,
+        "at": 6.199999999999948,
+        "witness": [
+          1,
+          1,
+          0,
+          6.231481388887659,
+          0,
+          0
+        ]
+      },
+      "latestConflict": {
+        "actor": 10,
+        "request": 4,
+        "task": 11,
+        "bodyId": 2,
+        "result": 0,
+        "at": 10.79999999999985,
+        "witness": [
+          1,
+          1,
+          0,
+          15.837061826168435,
+          0,
+          0
+        ]
+      },
+      "firstAdmission": {
+        "actor": 10,
+        "request": 4,
+        "task": 11,
+        "bodyId": 2,
+        "result": 1,
+        "at": 10.849999999999849,
+        "witness": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "firstDraws": [
+      {
+        "ticket": 3,
+        "bodyId": 1,
+        "actorId": 8,
+        "frame": 14,
+        "age": 0,
+        "elapsed": 5.6499999999999595
+      },
+      {
+        "ticket": 5,
+        "bodyId": 2,
+        "actorId": 10,
+        "frame": 64,
+        "age": 0.04999999701976776,
+        "elapsed": 11.499999999999835
+      }
+    ],
+    "waters": [
+      {
+        "workerId": "worker-8",
+        "targetId": "plant-5",
+        "simulationTime": 26.249999999999886
+      },
+      {
+        "workerId": "worker-10",
+        "targetId": "plant-3",
+        "simulationTime": 28.69999999999992
+      }
+    ],
+    "drained": true,
+    "applicationErrors": [],
+    "menuStartupExercised": false,
+    "cadenceMeasured": false
+  }
+}
