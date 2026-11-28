@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+En Desierto 712 desde el selector, NVIDIA presentó el recinto pagado y completó la contratación y el primer riego con Task14 y Action15 en el mismo cuerpo. Surface ahora consume la publicación del recinto aunque su cola ya haya recibido todos los mensajes necesarios. La captura intermedia llega a 150,30 s del primer turno. [Adopción y primer riego](native-desert-mixed-flight-center-20261125.md#adopción-del-recinto-y-primer-riego-desde-el-selector).
+
 En el recinto pagado de Desierto 712, las recargas previas a la cuarta y quinta noches completaron en NVIDIA los cuatro golpes del león y el derrumbe posterior al golpe del rinoceronte. El dibujo del derrumbe conservó Retreat y la partida confirmó una sola derrota antes de drenar. [Recorrido y alcance](native-desert-mixed-flight-center-20261125.md#cuarta-y-quinta-noches-con-recinto).
 
 En la tercera noche del recinto pagado de Desierto 712, el búfalo completó cuatro golpes al centro y Retreat. NVIDIA presentó los nueve programas en un solo cuerpo, la retirada y el drenaje desde el guardado anterior a la incursión. El recorrido con WASM llegó al cuarto amanecer. [Recorrido de la tercera noche](native-desert-mixed-flight-center-20261125.md#tercera-noche-con-recinto-y-un-búfalo).

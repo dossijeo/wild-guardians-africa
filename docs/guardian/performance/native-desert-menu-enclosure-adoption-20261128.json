@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "productCommit": "608f7f8e1",
+  "testFixtureCommit": "b0d6bd367",
+  "baselineCommit": "06b9d5b16",
+  "hardware": "NVIDIA WebGPU in Edge",
+  "baselineOrdering": {
+    "path": ".cache/desert-menu-712/native-desert-menu-712-enclosed-campaign-adoption-trace-20261128-extended.json",
+    "sha256": "1acad0f4eaf7fc6454dbb2be503f7ee038ea256f90cd7f1651342cb2b4ec757b",
+    "confirmedWhenPresented": 91,
+    "receivedWhenPresented": 123,
+    "firstParkAfterRelease": {"appliedThrough": 99, "receivedThrough": 123, "remaining": 24, "requiredTicket": 4, "appliedTicket": 1},
+    "eventualAdoption": {"publication": 131, "ticket": 4, "direct": true},
+    "tutorialState": {"step": "hire", "tool": "plant", "pausedForHiring": false}
+  },
+  "candidateSetup": {
+    "path": ".cache/desert-menu-712/native-desert-menu-712-enclosed-campaign-adoption-and-hiring-20261128-setup.json",
+    "sha256": "54353c9ae29cd9b09a67d79e04a1a2848000e4d9e9a57944e29991057b8341ec",
+    "center": [83, 0],
+    "enclosurePublication": 149,
+    "submitSequence": 67,
+    "ticket": 4,
+    "elapsed": 4.799999999999978
+  },
+  "firstShiftProgress": {
+    "path": ".cache/desert-menu-712/enclosure-first-paid-water-20261128.log",
+    "sha256": "ffa20470ebffa43fdb4268bf5d9bb74c82b3b3647708e2c5c727cbfbc686bd86",
+    "hiring": "Escape dismissed the actual placement tool. The game opened hiring and accepted one paid contract through its HUD.",
+    "firstWater": "The harness enters the continuous campaign only after observing submitted Task14 and Action15 on the same body, a WaterSatisfied event and exactly one HiringConfirmed.",
+    "observedElapsed": 150.30000000000413,
+    "scope": "Intermediate capture. Home, raids and final drain are not covered by this receipt."
+  },
+  "tests": {
+    "twoDirectedFailuresOnBaseSha256": "f55ed18bfb4e3f39dbb0bc97f976bdeeac90a6e78fb23cd47c8f6ca56c83187b",
+    "broaderRunWithOldFixturesSha256": "76456a5a9d6bd487a0a122e372d211ec2eb20c2f95754ae160582a7752d06627",
+    "sameTwoFixtureFailuresOnBaseSha256": "8ef42e26e30e1671d7f7a41083689b4eb09cb037947d4baf78de9d0b954c3d20",
+    "regressionSha256": "bbe53328a820dc13ca5aaafc26c18b976810374cdea94e0ed856e7bede128601",
+    "passed": 75,
+    "failed": 0,
+    "skipped": 0
+  }
+}
