@@ -30,6 +30,26 @@
     "observedElapsed": 150.30000000000413,
     "scope": "Intermediate capture. Home, raids and final drain are not covered by this receipt."
   },
+  "firstNight": {
+    "path": ".cache/desert-menu-712/enclosure-first-night-live-20261128.json",
+    "sha256": "35f53ae8feafe039c96ae140cea4fb5994482e2647322871463f2606513c0a1f",
+    "paidHiringElapsed": 5.949999999999953,
+    "firstWater": {"target": "plant-3", "elapsed": 66.20000000000258},
+    "spawn": {"actor": "animal-25", "species": "warthog", "elapsed": 370.50227023610705},
+    "strikeTarget": "structure-2",
+    "strikeIds": ["attack-37", "attack-40"],
+    "centerHpAfterEachStrike": [580, 560],
+    "cropDestroyedEvents": 0,
+    "end": {"event": "event-44", "elapsed": 429.4018161888275},
+    "absence": {"draw": 2518, "clock": 430.0518161888277, "gateId": 7},
+    "authorityEpochMatchesEnclosure": true
+  },
+  "secondDawn": {
+    "path": ".cache/desert-menu-712/enclosure-first-dawn-live-20261128.log",
+    "sha256": "44932c49d78c13bef3a6f4ef1c1f92f651aba09bd8d9e6c434fb1628529591ee",
+    "paidHiringElapsed": 599.9999999999613,
+    "observedWalkingElapsed": 630.2499999999338
+  },
   "tests": {
     "twoDirectedFailuresOnBaseSha256": "f55ed18bfb4e3f39dbb0bc97f976bdeeac90a6e78fb23cd47c8f6ca56c83187b",
     "broaderRunWithOldFixturesSha256": "76456a5a9d6bd487a0a122e372d211ec2eb20c2f95754ae160582a7752d06627",
