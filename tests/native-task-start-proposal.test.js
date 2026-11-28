@@ -64,6 +64,31 @@ test('readiness data are owned copies, and cancellation preserves both task requ
  }finally{f.close();}
 });
 
+for(const threaded of [false,true])test(`a Task14 conflict is recomputed when the obstructing body leaves (${threaded?'pthread':'standalone'})`,async()=>{
+ const runtime=threaded?await createThreadedSpatialWorld((await import('../public/wild-engine/spatial-threaded.mjs')).default):null;
+ const f=fixture(runtime?{core:runtime.core}:{});
+ try{
+  const request=f.request(),held=f.body(1),policy={bodyId:1,radius:.28};
+  const stage=()=>f.planner.prepareNativeTaskStartProposal(request,policy);
+  const witness=()=>Array.from(new Float64Array(f.w.memory.buffer,f.w.nav_intent_route_reservation_result_ptr(),6));
+  assert.equal(f.w.spatial_body_upsert(77,held.x,held.z,.28,0,1),1);
+  for(let i=0;i<2;i++){
+   assert.equal(stage().status,'conflict');
+   assert.deepEqual(witness().slice(0,3),[1,77,0]);
+   assert.equal(f.w.nav_intent_barrier_proposal_ticket(),0);
+   assert.deepEqual(f.request(),request);
+  }
+  assert.equal(f.w.spatial_body_remove(77),1);
+  const outcome=stage();
+  assert.equal(outcome.status,'proposed');
+  assert.deepEqual(witness(),[0,0,0,0,0,0]);
+  assert.deepEqual(outcome.proposal.sourceRequestHandle,request.requestHandle);
+  assert.deepEqual(f.body(1),held);
+  assert.equal(commit(f),1);
+  assert.equal(f.planner.pendingTaskRoute(request.actorId),null);
+ }finally{f.close();await runtime?.dispose();}
+});
+
 test('the current-frontier native commit issues the first real assignment once while the independent worker keeps executing',()=>{
  const f=fixture();try{const p=prepare(f),before=f.body(2),held=f.body(1),workers=JSON.stringify(f.state.workers);f.advance(12);assert(f.body(2).x-before.x>2);assert.deepEqual(f.body(1),held);const refreshed=f.planner.revalidateNativeTaskStartProposal(p.ticket);assert.equal(refreshed.status,'revalidated');const next=refreshed.proposal;assert.equal(next.startTime,12);assert.equal(next.requestedAt,10);assert.deepEqual(next.sourceRequestHandle,p.sourceRequestHandle);assert(refreshed.timeTranslation.sameFloat32Motion);assert(refreshed.timeTranslation.sameFloat32Gates);assert.equal(f.planner.nativeRouteTiming(next.expectedRouteHandle),null);const t=ticket(f);assert.equal(commit(f,t),1);const events=f.planner.intentChanges();assert.equal(events.length,1);const issued=events[0];assert.equal(issued.type,'RouteAssigned');assert.equal(issued.revokedRouteHandle,null);assert.deepEqual(issued.routeHandle,next.expectedRouteHandle);assert(issued.sequence>next.sourceControlSequence);f.control.accept(issued);assert.equal(f.planner.pendingTaskRoute(next.actorId),null);const actual=f.planner.captureNativeRoutePresentation(issued.routeHandle);assert.equal(actual.nativeRoute.assignmentSequence,issued.sequence);assert.equal(actual.startTime,12);assert.deepEqual(actual.rows,next.rows);assert.deepEqual(f.body(1),held);assert.equal(commit(f,t),-1);f.advance(12.2);assert(Math.hypot(f.body(1).x-held.x,f.body(1).z-held.z)>.1);const expected=f.planner.sampleNativeRoute(issued.routeHandle,12.2);assert.equal(f.body(1).x,expected.x);assert.equal(f.body(1).z,expected.z);assert(f.body(2).x-before.x>2);assert.equal(JSON.stringify(f.state.workers),workers);
  }finally{f.close();}

@@ -40,6 +40,7 @@ static int stageNativeTaskStartProposal(double session,double slot,double genera
   // First admission changes ownership, not the worker's accumulated clip time.
   // Seed the one native timetable before capturing immutable resource samples.
   for(size_t i=0;i<phaseSeed.size();i++)draft.route.motionOffset[i+2]=phaseSeed[i];
+  s.reservationResult.fill(0);
   draft.gates=s.gates;result=proveGateRouteAdmission(s,intent,draft.route,draft.body,body,draft.gates,draft.boundaries,false,nullptr,draft.stationarySource.get(),nullptr,draft.initialIdleBodySource.get(),draft.idleCycleSource?draft.idleCycleSource->binding.get():nullptr,draft.heldIdleTaskSource.get());
   if(result!=1)return result;
   const int staged=stageWorldMutationBoundary(nullptr,0);if(staged!=1)return staged;
