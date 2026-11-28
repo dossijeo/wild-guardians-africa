@@ -189,6 +189,31 @@
     },
     "remaining": ["The browser input is an existing public checkpoint before Home19.", "Terminal Draw replacement with a stopped Stop12 motor remains unqualified."]
   },
+  "terminalStop12Recovery": {
+    "fixture": "tests/fixtures/desierto712-enclosure-day2.json.gz",
+    "fixtureSha256": "4cd7bf804cdde5464bebe997a87b98c5660d2bda2d87f9a41234015262f57abd",
+    "baseline": "Native intent production failed: Native resource preparer closed",
+    "baselineTestSha256": "f8168441e53a93aef09dea38c1c86edbe87b786fbc24766774be85610412d46e",
+    "deterministicHost": {
+      "elapsed": 619.9999999996703,
+      "actorId": 29,
+      "bodyId": 1,
+      "gateId": 7,
+      "opening": 0,
+      "mechanism": 1,
+      "rejectsMissingMotorInFirstFrame": true,
+      "rejectsFenceBeforeFirstSubmit": true,
+      "resubmitsUnchangedStopAndMotor": true,
+      "reacquiresTaskWithSameBody": true,
+      "singleWaterEffectAndUnchangedLedger": true,
+      "passed": 56,
+      "testSha256": "da857585693a0b4db9ec1719a208bd2e080a0279d2b63fa5180b513239012fa9"
+    },
+    "coldNvidiaAttempt": {
+      "scope": "The ordinary task became due during Farm arrival. No Idle22 or Stop12 was acquired, so this attempt did not reach the recovery cut.",
+      "receiptSha256": "0cfad183717e18463f10566564c9ab6a787e121e1eaa6bd4a24d6f5368f1155c"
+    }
+  },
   "secondShift": {
     "input": "Public native checkpoint taken at the hiring pause after the introductory night",
     "inputElapsed": 599.9999999996885,

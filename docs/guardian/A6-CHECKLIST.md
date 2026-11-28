@@ -1,6 +1,6 @@
 # Seguimiento de cierre de A6
 
-Desierto 712 ya cruza la primera noche y el riego del segundo turno en la misma autoridad y el mismo Draw. Stop12 admite el uniforme de la hoja junto con el cuerpo detenido y usa la apertura final del motor que acredita WASM. El control de omisión rechaza el paquete antes de detener el cuerpo. Queda la pérdida de Draw con Stop12 y un motor detenido. [Recorrido y límites](native-desert-mixed-flight-center-20261125.md#primera-noche-y-segundo-turno-en-la-misma-sesión).
+Desierto 712 ya cruza la primera noche y el riego del segundo turno en la misma autoridad y el mismo Draw. Stop12 admite el uniforme de la hoja junto con el cuerpo detenido y usa la apertura final que acredita WASM. CPU comprobó que el sustituto exige ambos recursos y readmite el mismo cuerpo para regar una vez. Queda acreditar el reemplazo con motor detenido en NVIDIA. [Recorrido](native-desert-mixed-flight-center-20261125.md#primera-noche-y-segundo-turno-en-la-misma-sesión) · [Recuperación](native-terminal-resource-recovery-20261120.md#stop12-con-el-portón-del-recinto-automático).
 
 En Desierto 712, la primera incursión con un portón cerrado y cuatro muros sólidos pagados pasó en NVIDIA, incluida la recarga de Strike27. Se conservaron las cinco defensas, sus siete identificadores de colisión y ambos contratos. [Recibo de las defensas](performance/native-desert-paid-defenses-first-night-20261128.json).
 

@@ -897,7 +897,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
           await workers.prepareRecoveredTaskSettlement(input,support,{signal:ownerSignal,isCurrent:current,
             getPickAge:reference=>nativePickFrame.getSettlementElapsed(reference)});
         }else if(profile.stopProjectionMatches){
-          const template=resources.farmTemplate??resources.taskTemplate;
+          const template=resources.strollTemplate??resources.farmTemplate??resources.taskTemplate;
           const gates=template?.gates.length?
             settlements.recoveredStoppedGateOwners(template,resources[profile.bindingField],{
               getStoppedProjection:(selector,epoch)=>nativePickFrame.getStoppedGate(selector,epoch)

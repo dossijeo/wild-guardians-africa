@@ -2691,7 +2691,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       revalidate(){if(!current())return {status:'stale'};const result=revalidateNativeWorkerRouteStopProposal(kind,sourceTicket);if(result.status==='revalidated'){candidate=result.proposal;sourceTicket=result.ticket;translation=result.timeTranslation;}return result;},
       binding(reference,preparedReference){
         const proof=nativeWorkerRouteStopBinding(kind,reference,preparedReference,{projection:{version:1,routeEffects:candidate.routeEffects,gateEffects:candidate.gateEffects}});
-        if(proof&&proof.reference.routes.length===1&&(kind!==12||!proof.reference.gates.length)){
+        if(proof&&proof.reference.routes.length===1){
           const revoked=readIntentChanges(stopControlFloor).find(change=>change.type==='RouteInvalidated'&&change.actorId===actor&&
             change.state===4&&change.effectiveTime===proof.reference.worldBoundary.effectiveTime&&
             JSON.stringify(change.revokedRouteHandle)===JSON.stringify(proof.reference.sourceRoute.routeHandle));
@@ -2728,7 +2728,9 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     const h=request.requestHandle,args=[h.session,h.slot,h.generation,pending.requestSequence,r.actorId,predecessor.assignmentSequence,r.bodyId,
       p[7],q.profile,q.bodyFlags,q.pose.radius,p[0],p[1],p[4],p[9],p[10],p[11],p[14]];
     if(wasm.nav_intent_pending_task_body_matches(...args)!==1)return null;
-    return {...value,request,
+    const settledGates=stoppedRouteGateSources(value.proof,predecessor,value.farmTemplate??value.strollTemplate);
+    if(!settledGates)return null;
+    return {...value,request,settledGates,
       pose:{x:p[0],z:p[1],yaw:p[4],radius:q.pose.radius,runPhase:p[9],walkPhase:p[10],carryPhase:p[11],runRemaining:p[14]}};
   };
   function stoppedRouteGateSources(proof,predecessor,template){
@@ -2751,12 +2753,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     }
     return settledGates;
   }
-  const stoppedFarmTaskRecovery=actor=>{
-    const source=stoppedTaskRecovery(committedWorkerFarmStop,actor);
-    if(!source)return null;
-    const settledGates=stoppedRouteGateSources(source.proof,source.farm,source.farmTemplate);
-    return settledGates?{...source,settledGates}:null;
-  };
+  const stoppedFarmTaskRecovery=actor=>stoppedTaskRecovery(committedWorkerFarmStop,actor);
   const stoppedStrollTaskRecovery=actor=>stoppedTaskRecovery(committedStrollStop,actor);
   const stoppedTaskHomeRecovery=actorId=>{
     const source=committedTaskStop,clock=nativeCausalClock(),world=nativeWorldBoundary();
@@ -4138,7 +4135,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     return commitNativeWorldProposal(getPublication,()=>{if(!current())return -2;const p=prepareNativeIdleStrollProposal(actor);return p.status==='proposed'?1:p.status==='busy'?-4:p.status==='conflict'?0:-2;},(mark,...boundary)=>{
       if(!current())return {status:-2};const status=wasm.nav_idle_stroll_proposal_commit_bound(...boundary,preparedTicket);if(status!==1)return {status};mark();if(beginNativeRouteExecution().status!=='started')throw Error('Native Idle stroll could not establish its execution boundary');
       const binding=nativeIdleStrollBinding(actor),nativeRoute=Object.freeze({actorId:actor,routeHandle:binding.reference.expectedRouteHandle,assignmentSequence:binding.assignmentSequence}),resources=Object.freeze({version:1,kind:22,phase:'committed',worldBoundary:nativeWorldBoundary(),nativeRoute,nativeIdleStrollBinding:binding,presentation:captureNativeRoutePresentation(binding.reference.expectedRouteHandle)});
-      preparedStrollForStop=nativeWorkerLifecycle&&owningState?.workers.length===1&&!owningState.raid&&!binding.gateIds.length?
+      preparedStrollForStop=nativeWorkerLifecycle&&owningState?.workers.length===1&&!owningState.raid?
         {assignmentSequence:binding.assignmentSequence,template:copyNativeIdleStrollProposal(prepared)}:null;
       mark({resources,nativeRoute,nativeIdleStrollBinding:binding});return {status:1,value:{resources,nativeRoute,nativeIdleStrollBinding:binding}};
     },prepareResources,signal,protocol);

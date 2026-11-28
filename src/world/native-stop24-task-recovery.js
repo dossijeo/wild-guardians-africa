@@ -44,7 +44,7 @@ function copyStoppedTaskSource(kind,input){
  const stop=codec.copyAttestation(input?.proof),previous=(farm?copyNativeFarmArrivalRouteAttestation:copyNativeIdleStrollAttestation)(input[field]),
    request=copyNativeTaskRequestReference(input.request),revokedSequence=input.revokedSequence;
  const r=stop.reference,boundary=r.worldBoundary,source=previous.reference,owner=r.routes[0];
- if(!stop.projection||r.routes.length!==1||!farm&&(r.gates.length||previous.gateIds.length||input.settledGates!==undefined)||
+ if(!stop.projection||r.routes.length!==1||
     !sameNativeRouteReference(r.sourceRoute,{actorId:source.actorId,assignmentSequence:previous.assignmentSequence,routeHandle:source.expectedRouteHandle})||
     owner.state!==4||owner.bodyId!==source.bodyId||source.actorId!==request.actorId||
     boundary.nativeSession!==request.requestHandle.session||boundary.authorityEpoch!==request.requestHandle.authorityEpoch||
@@ -57,7 +57,7 @@ function copyStoppedTaskSource(kind,input){
    worldBoundary:boundary,bodyId:owner.bodyId,resumeGeneration:owner.resumeGeneration,suspendedAt:boundary.effectiveTime});
  const reference=Object.freeze({actorId:source.actorId,bodyId:source.bodyId,worldBoundary:boundary,selector,
    epoch:previous.preparedReference.worldBoundary.effectiveTime});
- const settledGates=farm?copySettledStopGates(input.settledGates,stop,previous):[];
+ const settledGates=copySettledStopGates(input.settledGates,stop,previous);
  return Object.freeze({kind:`native-stop${kind}-task-recovery`,version:1,proof:stop,[field]:previous,request,revokedSequence,reference,bodyReference,
    ...(settledGates.length?{settledGates}:{})});
 }
@@ -82,8 +82,10 @@ export function copyStop12Resources(value){
     Object.keys(value).some(k=>!['version','kind','phase','worldBoundary','stoppedTaskBinding','strollTemplate'].includes(k)))throw Error('Invalid Stop12 recovery resources');
  const stoppedTaskBinding=copyStop12Source(value.stoppedTaskBinding),worldBoundary=copyNativeWorldBoundary(value.worldBoundary),
    strollTemplate=copyNativeIdleStrollProposal(value.strollTemplate);
- if(!sameNativeWorldBoundary(worldBoundary,stoppedTaskBinding.reference.worldBoundary)||strollTemplate.gates.length||
-    !sameNativeIdleStrollReference(strollTemplate.nativeIdleStroll,stoppedTaskBinding.stroll.preparedReference))throw Error('Stop12 recovery lost its admitted Idle table');
+ const {stroll,proof,settledGates=[]}=stoppedTaskBinding;
+ if(!sameNativeWorldBoundary(worldBoundary,stoppedTaskBinding.reference.worldBoundary)||
+    !sameNativeIdleStrollReference(strollTemplate.nativeIdleStroll,stroll.preparedReference)||
+    !stoppedGateSourcesMatch(strollTemplate.gates,proof,stroll,settledGates))throw Error('Stop12 recovery lost its admitted Idle table');
  return Object.freeze({kind:12,version:1,phase:'committed',worldBoundary,stoppedTaskBinding,strollTemplate});
 }
 export const sameStop24Clock=(selector,ref)=>nativeFarmArrivalStopCodec.sameStoppedBody(selector?.selector??selector,ref?.selector??ref);

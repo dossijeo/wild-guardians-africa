@@ -1362,7 +1362,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         if(stopped&&(!preparedBindings.some(b=>recoveryBindingMatches(b,profile,ref)&&b.epoch===epoch)||
            stopFields.some(field=>!preparedBindings.some(b=>b.semantic==='stop-value'&&b.stopField===field&&b.epoch===epoch&&
              profile.sameReference(b.nativeStopped,ref)))))return true;
-        const predecessor=proof.farm??proof.task;
+        const predecessor=proof.stroll??proof.farm??proof.task;
         if(stopped&&predecessor){
           const stoppedGates=proof.proof.reference.gates;
           if(stoppedGates.some(gate=>!preparedBindings.some(binding=>nativeStoppedGateClockMatches(binding,gate,proof.proof.preparedReference)))||
