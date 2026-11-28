@@ -150,3 +150,43 @@ test('cancelling the automatic gate batch leaves its ledger, gate and solid barr
   assert.deepEqual(f.faults,[]);
  }finally{await f.close();}
 });
+
+test('the paid worker finishes watering and returns through the automatic gate at shift end',async()=>{
+ const f=await enclosureAuthority();
+ try{
+  await pump(f,f.authority.prepareNativeStructureCommand(enclosureCommand));
+  const purchase=await pump(f,f.structureCommand(enclosureCommand));
+  assert.equal(purchase.value,true,purchase.rejection);
+  await pump(f,f.authority.finishNativeStructureCommand(enclosureCommand));
+  f.command({kind:'openInitialHiring'});
+  f.command({kind:'hire',id:'enclosed-first-worker',selection:{youngMale:1}});
+  const [hired]=f.snapshot().workers;
+  assert(hired);
+
+  let homeRoute,returned,clearedGate=false;
+  const waters=[];
+  for(let i=0;i<1500&&!returned;i++){
+   const packet=await f.command({kind:'advance',seconds:.05,steps:4,nightFastForward:false});
+   const state=JSON.parse(packet.snapshot),[worker]=state.workers;
+   waters.push(...packet.events.filter(event=>event.type==='WaterSatisfied'));
+   await f.present();
+   assert.deepEqual(f.faults,[]);
+   homeRoute??=f.records.find(record=>record.kind==='home-route'&&record.committed);
+   if(homeRoute&&worker.nativeRouteAdmission==='native-home'&&worker.z>-5&&worker.x<=97.2)clearedGate=true;
+   if(worker.status==='home')returned=worker;
+  }
+
+  assert.equal(waters.length,6);
+  assert(homeRoute,JSON.stringify(f.authority.nativeIntentProductionStatus()));
+  assert.equal(homeRoute.resources.gates.length,1);
+  assert.equal(homeRoute.resources.gates[0].entityId,'structure-7');
+  assert.equal(homeRoute.resources.gates[0].openingDegrees,89);
+  assert(clearedGate,'the homeward route must pass through the gate');
+  await untilProduction(f,()=>f.records.some(record=>record.kind==='home-arrival'&&record.committed));
+  const arrival=f.records.find(record=>record.kind==='home-arrival'&&record.committed);
+  assert.equal(arrival.resources.nativeHomeArrival.bodyId,homeRoute.resources.bodyId);
+  assert.deepEqual([returned.id,returned.x,returned.z],[hired.id,88,0]);
+  assert.deepEqual(f.snapshot().ledger.entries[enclosureCommand.id],rational(-130));
+  assert.deepEqual(f.errors,[]);
+ }finally{await f.close();}
+});

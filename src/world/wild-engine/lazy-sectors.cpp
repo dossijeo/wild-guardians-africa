@@ -290,7 +290,9 @@ void appendPoint(const Sector& sector,int cell){
   routePoints.push_back(sector.sx*sectorSize+cell%sectorSize);
   routePoints.push_back(sector.sz*sectorSize+cell/sectorSize);
 }
-bool localPath(const Sector& sector,int from,int to){
+using RouteEdgeClear=bool(*)(double,double,double,double);
+
+bool localPath(const Sector& sector,int from,int to,RouteEdgeClear clear){
 #ifdef WILD_ROUTE_TRACE
   localSearchTrace.insert(localSearchTrace.end(),{sector.sx,sector.sz,from,to,int32_t(localRouteTrace.size()/2)});
 #endif
@@ -310,10 +312,11 @@ bool localPath(const Sector& sector,int from,int to){
       if(!(sector.steps[at]&(1<<d)))continue;
       const int nx=x+dx[d],nz=z+dz[d];
       if(nx<0||nz<0||nx>=sectorSize||nz>=sectorSize)continue;
-      if(rejectedRouteEdges.count({sector.sx*sectorSize+x,sector.sz*sectorSize+z,
-        sector.sx*sectorSize+nx,sector.sz*sectorSize+nz}))continue;
       const int next=cellIndex(nx,nz);
       if(localParent[next]>=0||sector.component[next]!=sector.component[from])continue;
+      const RejectedEdge edge{sector.sx*sectorSize+x,sector.sz*sectorSize+z,
+        sector.sx*sectorSize+nx,sector.sz*sectorSize+nz};
+      if(rejectedRouteEdges.count(edge)||(clear&&!clear(edge.x,edge.z,edge.nx,edge.nz)))continue;
       localParent[next]=at;queueBuffer.push_back(next);
     }
   }
@@ -838,7 +841,7 @@ int lazy_local_crop_cut_cells(){return active().cutCells;}
 #define sectorSize (active().sectorSize)
 #define portals (active().portals)
 // -1: unloaded/uncertain; 0: known impossible; positive: coordinate pairs.
-int lazy_route(int fromX,int fromZ,int toX,int toZ){
+int lazy_route_filtered(int fromX,int fromZ,int toX,int toZ,RouteEdgeClear clear){
   routePoints.clear();
   connectivityReason=0;
   if(!sectorSize){connectivityReason=1;return -1;}
@@ -854,7 +857,7 @@ int lazy_route(int fromX,int fromZ,int toX,int toZ){
 #ifdef WILD_ROUTE_TRACE
     routeTrace.insert(routeTrace.end(),{first.sx,first.sz,source%stride});
 #endif
-    const bool found=localPath(first,firstCell,lastCell);
+    const bool found=localPath(first,firstCell,lastCell,clear);
     connectivityReason=found?4:9;
     return found?static_cast<int>(routePoints.size()/2):-1;
   }
@@ -871,14 +874,21 @@ int lazy_route(int fromX,int fromZ,int toX,int toZ){
 #endif
     if(sector.unknown[local])unknown=true;
     for(const Arc& arc:sector.edges[local]){
-      if(arc.portal<0){
-        const Sector& next=*byId[arc.to/stride];
-        if(rejectedRouteEdges.count({sector.sx*sectorSize+arc.fromCell%sectorSize,
-          sector.sz*sectorSize+arc.fromCell/sectorSize,
-          next.sx*sectorSize+arc.toCell%sectorSize,
-          next.sz*sectorSize+arc.toCell/sectorSize}))continue;
-      }
       if(visited[arc.to]==generation)continue;
+      const Sector& next=*byId[arc.to/stride];
+      const RejectedEdge edge{sector.sx*sectorSize+arc.fromCell%sectorSize,
+        sector.sz*sectorSize+arc.fromCell/sectorSize,
+        next.sx*sectorSize+arc.toCell%sectorSize,
+        next.sz*sectorSize+arc.toCell/sectorSize};
+      if(arc.portal<0){
+        if(rejectedRouteEdges.count(edge)||(clear&&!clear(edge.x,edge.z,edge.nx,edge.nz)))continue;
+      }else if(clear){
+        float points[4];
+        if(!lazy_portal_world_points(arc.portal,points)||
+           !clear(edge.x,edge.z,points[0],points[1])||
+           !clear(points[0],points[1],points[2],points[3])||
+           !clear(points[2],points[3],edge.nx,edge.nz))continue;
+      }
       visited[arc.to]=generation;previousNode[arc.to]=node;previousArc[arc.to]=arc;
       queueBuffer.push_back(arc.to);
     }
@@ -892,7 +902,7 @@ int lazy_route(int fromX,int fromZ,int toX,int toZ){
   int currentNode=source,currentCell=firstCell;
   for(auto it=arcChain.rbegin();it!=arcChain.rend();++it){
     const Sector& sector=*byId[currentNode/stride];
-    if(!localPath(sector,currentCell,it->fromCell)){
+    if(!localPath(sector,currentCell,it->fromCell,clear)){
       routePoints.clear();connectivityReason=9;return -1;
     }
     const Sector& next=*byId[it->to/stride];
@@ -900,11 +910,14 @@ int lazy_route(int fromX,int fromZ,int toX,int toZ){
     appendPoint(next,it->toCell);
     currentNode=it->to;currentCell=it->toCell;
   }
-  if(!localPath(last,currentCell,lastCell)){
+  if(!localPath(last,currentCell,lastCell,clear)){
     routePoints.clear();connectivityReason=9;return -1;
   }
   connectivityReason=5;
   return static_cast<int>(routePoints.size()/2);
+}
+int lazy_route(int fromX,int fromZ,int toX,int toZ){
+  return lazy_route_filtered(fromX,fromZ,toX,toZ,nullptr);
 }
 int32_t* lazy_route_ptr(){return routePoints.data();}
 #ifdef WILD_ROUTE_TRACE

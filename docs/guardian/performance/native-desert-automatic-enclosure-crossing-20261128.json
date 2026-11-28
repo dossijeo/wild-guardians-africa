@@ -44,5 +44,35 @@
     "abstractGraphAtHomeRequest": {"pointCount": 27, "usesGatePortal": true},
     "independentLegPointCountsAtHomeRequest": [7, 5, 2],
     "homeRetirementQualified": false
+  },
+  "homeReturn": {
+    "rejectedGraphEdges": [[[96, -3], [96, -4]], [[96, -4], [95, -4]]],
+    "bothCachedAndUncachedBlockedBeforeFix": true,
+    "directedRegression": {"passed": 61, "failed": 0, "skipped": 0},
+    "continuousCpuShift": {"waters": 6, "gateId": 7, "sameWorkerAndBodyAtHomeRetirement": true, "destination": [88, 0]},
+    "cpuReload": {"inputElapsed": 249.80000000002676, "arrivedElapsed": 274.9999999999841},
+    "nvidiaReload": {
+      "architecture": "turing",
+      "inputSha256": "7733bbe39188c3a684c723ad8fd75d13aa883d5d90e3c74791c7b734b8e089ed",
+      "receiptSha256": "b56c51b494f2485ff0c5560977ffbb122d71b43d92333395759d89c88907e3f0",
+      "home": {"actorId": 21, "bodyId": 1, "preparedTicket": 2, "acquiredTicket": 3, "acquiredElapsed": 254.30000000000098},
+      "crossing": {"draw": 78, "observedElapsed": 259.9999999999977, "pose": [97.12669372558594, -4.963969980111631], "gateId": 7, "homeBindingRelativeTime": 5.649999618530273},
+      "retirement": {"bodyId": 1, "preparedTicket": 4, "acquiredTicket": 5, "acquiredElapsed": 278.6999999999807, "draw": 265, "confirmedPublication": 582, "homeBindingAbsent": true},
+      "destination": [88, 0],
+      "gateOpeningAfterRetirement": 1,
+      "contractAndLedgerUnchanged": true,
+      "initialIdlePreparationRetiredAtShiftChange": true,
+      "drained": true,
+      "errors": []
+    },
+    "remaining": {
+      "suspendedReloadBeforeClockActivation": "An independent attempt acquired Idle20 and Idle21 at the saved time, then waited for an Idle publication that did not arrive while the clock was suspended.",
+      "nightCpuLastCompletedAdvance": 370.3999999998973,
+      "nightCpuNextAdvance": "Native task game cohort contains an unsupported mover"
+    },
+    "wasmSha256": {
+      "standalone": "5fbfc4e6ed3e6d904caf71ce981041cf0f52923c68798fa985d3e1e5251da560",
+      "pthread": "09ceb5e53aeea2571218f424abd4169933ae7f9d83b18a3d438637f17aeae320"
+    }
   }
 }
