@@ -118,7 +118,7 @@ function shelteredCropCheckpointAnimal(state,daytimeRefuge=false){
  const savanna=daytimeRefuge&&state.biome==='sabana'&&state.raid?.daytime===true&&state.workers.length===1;
  if((!savanna&&!nativeDesertIntroductoryRaid(state,animal))||state.raid.animals.length!==1||
     state.workers.some(worker=>worker.status!=='home'||worker.hits!==0||worker.incapacitated)||
-    state.structures.length!==1||!operational(state.structures[0])||state.spells.length||animal.species!=='warthog')return null;
+    (savanna&&state.structures.length!==1)||!operational(state.structures[0])||state.spells.length||animal.species!=='warthog')return null;
  if(animal.status==='retreating'){
   const spawn=state.events.findLast(event=>event.type==='RaidSpawned');
   return spawn?.raidFacts?.id===state.raid.id&&nativeRetreatSubject(state,animal)&&state.events.some(event=>

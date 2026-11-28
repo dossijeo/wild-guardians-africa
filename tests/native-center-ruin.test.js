@@ -11,7 +11,7 @@ import {createSimulationAuthority} from '../src/simulation/simulation-authority.
 import {createWorkerGameRuntime} from '../src/simulation/worker-game-runtime.js';
 import {validateConfirmedMotion} from '../src/rendering/confirmed-motion-validation.js';
 import {nativeAnimalStrikeClipAge} from '../src/world/native-animal-crop-resource.js';
-import {nativeAnimalCropPublicationMatches,nativeCenterAttackCohort,nativeRetreatBudgetAllowed,planNight} from '../src/simulation/raids.js';
+import {nativeAnimalCropPublicationMatches,nativeCenterAttackCohort,nativeDesertIntroductoryRaid,nativeRetreatBudgetAllowed,planNight} from '../src/simulation/raids.js';
 import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
 import {createEventDrivenTaskPlanner} from '../src/world/wild-engine/spatial-intent-bridge.js';
@@ -216,13 +216,27 @@ function savedAttack() {
   }
 }
 
-for(const count of [1,2])for(const reload of [false,true])test(`the introductory Desert raid spends one hit on a crop and one on the center with ${count} sheltered workers${reload?' after a public strike reload':''}`, {timeout:30000}, async()=>{
- const fixture=new URL(count===1?'./fixtures/desierto712-d1-two-crops-before-night.json.gz':'./fixtures/desierto712-d1-two-workers-refuge-before-night.json.gz',import.meta.url);
- const disk=gunzipSync(readFileSync(fixture)).toString(),initial=deserialize(disk),options=savedNativeAuthorityOptions(disk);
+const introductoryDesertCases=[
+ {count:1,fixture:'desierto712-d1-two-crops-before-night'},
+ {count:2,fixture:'desierto712-d1-two-workers-refuge-before-night'},
+ {count:2,fixture:'desierto712-d1-paid-gate-before-night',gateId:'structure-7'},
+];
+for(const {count,fixture,gateId} of introductoryDesertCases)
+for(const reload of gateId?[null,'crop approach','crop strike','center approach','center strike','retreat']:[null,'crop strike'])
+test(`the introductory Desert raid spends one hit on a crop and one on the center with ${count} sheltered workers${gateId?' and a paid gate':''}${reload?' after a public '+reload+' reload':''}`, {timeout:30000}, async()=>{
+ const path=new URL(`./fixtures/${fixture}.json.gz`,import.meta.url);
+ const disk=gunzipSync(readFileSync(path)).toString(),initial=deserialize(disk),options=savedNativeAuthorityOptions(disk);
  assert.deepEqual(initial.plants.map(crop=>[crop.id,crop.alive]),[['plant-3',true],['plant-5',true]]);
  const workerOwners=workers=>workers.map(w=>[w.id,w.personId,w.status,w.x,w.z,w.hits,w.contractDay]);
  const sheltered=workerOwners(initial.workers);
- assert.deepEqual(sheltered,[['worker-8','person-7','home',88,0,0,1],...(count===2?[['worker-10','person-9','home',88,0,0,1]]:[])]);
+ assert.deepEqual(sheltered,gateId?[['worker-9','person-8','home',88,0,0,1],['worker-11','person-10','home',88,0,0,1]]:
+  [['worker-8','person-7','home',88,0,0,1],...(count===2?[['worker-10','person-9','home',88,0,0,1]]:[])]);
+ const originalGate=gateId&&initial.structures.find(row=>row.id===gateId);
+ if(gateId){
+  assert.equal(originalGate.gateOpen,0);
+  assert.deepEqual(initial.workerNativeAuthorityCheckpoint.wallOwners,[{entityId:gateId,ids:[1,2,3]}]);
+  assert.equal(initial.ledger.balance.n,'310');
+ }
  assert.equal(options.nativeWorkerLifecycle,true);
  let release,firstRoute,replacement;
  const ready=new Promise(resolve=>{release=resolve;});
@@ -238,6 +252,7 @@ for(const count of [1,2])for(const reload of [false,true])test(`the introductory
   const state=JSON.parse(next.snapshot);
   assert.deepEqual(workerOwners(state.workers),sheltered);
   assert.deepEqual(state.ledger,initial.ledger);
+  if(gateId)assert.deepEqual(state.structures.find(row=>row.id===gateId),originalGate);
   return state;
  };
  try{
@@ -249,29 +264,46 @@ for(const count of [1,2])for(const reload of [false,true])test(`the introductory
   const [held]=(await advance()).raid.animals;
   assert.equal(firstRoute.committed,false);
   assert.deepEqual([held.x,held.z,held.hitsRemaining],[birth.x,birth.z,2]);
+  if(gateId&&!reload){
+   const scene=source.snapshot(),gate=scene.structures.find(row=>row.id===gateId),[animal]=scene.raid.animals;
+   assert(nativeDesertIntroductoryRaid(scene,animal));
+   gate.gateOpen=.5;
+   assert.equal(nativeDesertIntroductoryRaid(scene,animal),false);
+   gate.gateOpen=0;gate.gate=false;
+   assert.equal(nativeDesertIntroductoryRaid(scene,animal),false);
+  }
   release();
   await untilProduction(source,()=>firstRoute.committed);
-  let cutAttack;
+  let cutAnimal;
   if(reload){
-   for(let i=0;i<900&&!cutAttack;i++){
+   const strike=reload.endsWith('strike');
+   const targetId=reload.startsWith('crop ')?'plant-3':'structure-2';
+   for(let i=0;i<1200&&!cutAnimal;i++){
     const [animal]=(await advance()).raid.animals;
-    if(animal.status==='attacking'&&animal.attackRemaining<animal.attackDuration-.15&&animal.attackRemaining>.5)cutAttack=animal;
+    const midStrike=animal.status==='attacking'&&animal.attackRemaining<animal.attackDuration-.15&&animal.attackRemaining>.5;
+    const retreating=animal.status==='retreating'&&authority.records.some(row=>row.committed&&row.resources.reference.purpose==='retreat');
+    if(reload==='retreat'?retreating:animal.targetId===targetId&&(strike?midStrike:animal.status==='walking'))cutAnimal=animal;
    }
-   assert(cutAttack);
+   assert(cutAnimal);
    const checkpoint=source.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
    assert.equal(checkpoint.nativeAuthorityCheckpoint.workerLifecycle,1);
+   if(gateId){
+    const original=initial.workerNativeAuthorityCheckpoint,current=checkpoint.nativeAuthorityCheckpoint;
+    assert.deepEqual(current.wallOwners,original.wallOwners);
+    assert.deepEqual(current.spatialState.barriers,original.spatialState.barriers);
+   }
    const stored=prepareWorkerCheckpoint(checkpoint,{slotId:initial.slotId,policy:{nativeAuthority:true},savedAt:0});
    assert(stored.saved);
    const saved=serialize(stored.state);
    replacement=await nativeProductionAuthority(deserialize(saved),{...savedNativeAuthorityOptions(saved),emptyBeastPhysics:true});
    authority=replacement;
    const [same]=replacement.snapshot().raid.animals;
-   assert.deepEqual([same.attackId,same.attackRemaining,same.x,same.z,same.motionPhase],
-    [cutAttack.attackId,cutAttack.attackRemaining,cutAttack.x,cutAttack.z,cutAttack.motionPhase]);
-   await untilProduction(replacement,()=>replacement.records.some(record=>record.kind==='animal-crop-strike'&&record.committed));
+   for(const key of ['id','targetId','attackId','attackRemaining','hitsRemaining','x','z','motionPhase'])assert.equal(same[key],cutAnimal[key],key);
+   const firstResource=strike?'animal-crop-strike':'animal-crop-route';
+   await untilProduction(replacement,()=>replacement.records.some(record=>record.kind===firstResource&&record.committed));
   }
   let final;
-  for(let i=0;i<1200&&!history.some(event=>event.type==='RaidEnded');i++)final=await advance();
+  for(let i=0;i<1300&&!history.some(event=>event.type==='RaidEnded');i++)final=await advance();
   assert.equal(final.raid,null);
   assert.deepEqual(final.plants.map(crop=>[crop.id,crop.alive,crop.attackHits??0]),
    [['plant-3',false,1],['plant-5',true,0]]);
@@ -281,11 +313,12 @@ for(const count of [1,2])for(const reload of [false,true])test(`the introductory
    [['CropDestroyed','plant-3'],['AnimalLogicalHit','plant-3'],['StructureHit','structure-2'],['AnimalLogicalHit','structure-2'],['RaidEnded',undefined]]);
   const [cropHit,centerHit]=history.filter(event=>event.type==='AnimalLogicalHit');
   assert.notEqual(cropHit.attackId,centerHit.attackId);
-  if(reload)assert.equal(cropHit.attackId,cutAttack.attackId);
+  if(reload==='crop strike')assert.equal(cropHit.attackId,cutAnimal.attackId);
+  if(reload==='center strike'||reload==='retreat')assert.equal(centerHit.attackId,cutAnimal.attackId);
   const programs=authority.records.filter(record=>record.committed).map(record=>record.resources.reference);
-  assert.deepEqual(programs.map(r=>[r.kind,r.purpose]),[
-   ...(reload?[]:[[26,undefined]]),[27,undefined],[26,'center'],[27,'center'],[26,'retreat']
-  ]);
+  const suffix=['crop approach','crop strike','center approach','center strike','retreat'].indexOf(reload);
+  assert.deepEqual(programs.map(r=>[r.kind,r.purpose]),
+   [[26,undefined],[27,undefined],[26,'center'],[27,'center'],[26,'retreat']].slice(Math.max(suffix,0)));
   assert.equal(new Set(programs.map(r=>r.bodyId)).size,1);
   assert.deepEqual(source.faults,[]);
   if(reload)assert.deepEqual(replacement.faults,[]);

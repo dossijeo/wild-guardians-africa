@@ -29,6 +29,7 @@ import {actorBlockers,actorSegmentClear} from './actor-motion.js';
 import {activeChunkRegion,validActiveBounds} from '../world/active-region.js';
 import {defensiveGroups} from './defensive-groups.js';
 import {wallCollisionFrame} from '../world/wall-collision-frame.js';
+import {nativeGateModelId} from '../world/gate-passages.js';
 import {targetReservationKey,targetReserved,reservedApproachClear,reconcileTargetReservations} from './raid-target-reservations.js';
 import {applyCropImpact,cropImpactDamage,CROP_HIT_POINTS} from './crop-impact-health.js';
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z),entrySelections=new WeakMap();
@@ -783,7 +784,8 @@ export function nativeDesertIntroductoryRaid(state,animal){
  const raid=state.raid;
  return state.biome==='desierto'&&raid?.daytime===false&&raid.pressureFacts?.introductory===true&&
    Number.isSafeInteger(raid.introCropLimit)&&raid.animals.length===1&&raid.animals[0]===animal&&animal?.species==='warthog'&&
-   state.structures.length===1&&state.structures[0].kind==='center'&&
+   state.structures[0]?.kind==='center'&&state.structures.slice(1).every(gate=>gate.kind==='wall'&&gate.gate===true&&
+     gate.status==='intact'&&gate.gateOpen===0&&nativeGateModelId(gate.material))&&
    state.workers.every(worker=>worker.status==='home'&&!worker.raidReturn&&!worker.nativeRouteAdmission);
 }
 // The first native crop cohort has one mobile body and only inactive workers.
@@ -797,7 +799,7 @@ export function nativeCenterAttackCohort(state,flightWorker=null){
  const introductory=!flightWorker&&nativeDesertIntroductoryRaid(state,state.raid?.animals[0]);
  if((state.workers.length>1&&!introductory)||!state.workers.every(worker=>
    worker===flightWorker||worker.status==='home'&&!worker.raidReturn&&!worker.nativeRouteAdmission)||
-   state.structures[0]?.kind!=='center'||(!state.workers.length&&state.structures.some(structure=>structure.kind!=='center')))return false;
+   state.structures[0]?.kind!=='center'||(!introductory&&!state.workers.length&&state.structures.some(structure=>structure.kind!=='center')))return false;
  const crops=activeCrops(state.plants);
  return !crops.length||introductory&&crops.every(crop=>!canAttackCrop(state,crop));
 }

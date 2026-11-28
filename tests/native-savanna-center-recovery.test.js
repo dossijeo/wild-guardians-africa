@@ -15,7 +15,8 @@ import {captureNativeRoutePickFrame} from '../src/rendering/native-route-pick-fr
 const phases=[{phase:'moving-approach',kind:26},{phase:'acquired-strike',kind:27}];
 const cases=phases.flatMap(phase=>[
  {...phase,name:'Savanna center',fixture:'sabana714-d5-center-'+phase.phase,targetId:'structure-2'},
- {...phase,name:'Desert crop',fixture:'desierto712-d1-two-crops-before-night',targetId:'plant-3'}
+ {...phase,name:'Desert crop',fixture:'desierto712-d1-two-crops-before-night',targetId:'plant-3'},
+ {...phase,name:'Desert crop with a paid gate',fixture:'desierto712-d1-paid-gate-before-night',targetId:'plant-3',gateId:'structure-7'},
 ]);
 
 for(const stage of cases)test('terminal Draw recovers the ordinary '+stage.name+' '+stage.phase,{timeout:30000},async()=>{
@@ -98,6 +99,11 @@ for(const stage of cases)test('terminal Draw recovers the ordinary '+stage.name+
    assert.deepEqual(events.filter(e=>e.type==='CropDestroyed').map(e=>e.targetId),[stage.targetId]);
    assert.deepEqual(next.plants.map(crop=>[crop.id,crop.alive]),[['plant-3',false],['plant-5',true]]);
    assert.deepEqual(next.workers,held.workers);
+   if(stage.gateId){
+    const gate=state.structures.find(row=>row.id===stage.gateId);
+    assert.equal(gate.gateOpen,0);
+    assert.deepEqual(next.structures.find(row=>row.id===gate.id),gate);
+   }
   }else assert.deepEqual(events.filter(e=>e.type==='StructureHit').map(e=>e.structureHit.hp),[125]);
   assert.deepEqual(next.ledger,state.ledger);
   assert.deepEqual(f.faults,[]);
