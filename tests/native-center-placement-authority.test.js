@@ -20,8 +20,8 @@ const until=async(predicate)=>{
  throw Error('Native work-center test did not reach its boundary');
 };
 
-test('the paid center takes one world ticket at the live FIFO head',async()=>{
- const {initial}=await prepareFreshWorkerBootstrapFromOptions(wasm,{seed:714,biome:'sabana',culture:'mapungubwe',slotId:'native-center-fifo'},
+for(const [biome,seed] of [['sabana',714],['desierto',712]])test(`the paid center takes one world ticket at the live FIFO head (${biome})`,async()=>{
+ const {initial}=await prepareFreshWorkerBootstrapFromOptions(wasm,{seed,biome,culture:'mapungubwe',slotId:'native-center-fifo'},
   catalog.find(row=>row.id==='mapungubwe'));
  const state=deserialize(initial.snapshot),point=state.villages[0].center;
  const command={kind:'placeStructure',id:'first-center',structure:{kind:'center',x:point.x,z:point.z,yaw:0}};
@@ -62,6 +62,17 @@ test('the paid center takes one world ticket at the live FIFO head',async()=>{
   const start=f.command({kind:'tutorialStart',seen:[]});
   await publish(start);
   await publish(f.command({kind:'tutorialCommand',action:'dismiss',automatic:false,messageId:start.value.presentation.id,variant:start.value.presentation.variant??null}));
+  if(biome==='desierto'){
+   const far={...command,id:'outside-initial-radius',structure:{...command.structure,x:95}};
+   await f.authority.prepareNativeStructureCommand(far);
+   const rejected=await f.structureCommand(far);
+   await f.authority.finishNativeStructureCommand(far);
+   await publish(rejected);
+   assert.match(rejected.rejection,/primer centro cerca del poblado/);
+   assert.equal(JSON.parse(rejected.snapshot).structures.length,0);
+   assert.equal(JSON.parse(rejected.snapshot).ledger.balance.n,'1500');
+   assert.equal(captured,undefined);
+  }
   await f.authority.prepareNativeStructureCommand(command);
   await f.authority.finishNativeStructureCommand(command);
   assert.equal(captured,undefined);
