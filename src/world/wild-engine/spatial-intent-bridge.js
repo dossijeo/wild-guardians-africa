@@ -5789,6 +5789,15 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,nati
         animal.targetId&&numericId(animal.targetId)===change.targetId){
         pendingAttackRoutes.delete(change.actorId);
         const target=targetFor(animal.targetId);
+        // Finishing a stationary strike releases the action without revoking a route.
+        // Game can use the same arrived approach for its next strike on this center.
+        const approach=animal.approach;
+        if(change.type==='IntentChanged'&&!change.revokedRouteHandle&&animal.status==='walking'&&
+          animal.hitsRemaining>0&&target?.kind==='center'&&target.status==='intact'&&target.hp>0&&
+          animal.path?.length===0&&approach&&animal.destinationId===approach.id&&animal.pathVersion===navVersion&&
+          animal.x===approach.x&&animal.z===approach.z&&animal.reservation&&state.raid.reservations[animal.reservation]===animal.id&&
+          state.events.some(event=>event.type==='AnimalLogicalHit'&&event.attackId===animal.attackId&&
+            event.targetId===target.id&&event.simulationTime===change.effectiveTime&&event.presentation?.shield===null))continue;
         // The native route was invalidated by a confirmed world change.
         // Retain a still-valid target and lease; the raid controller will
         // request one replacement route at its next action boundary.

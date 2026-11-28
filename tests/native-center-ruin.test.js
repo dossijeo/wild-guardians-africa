@@ -11,7 +11,7 @@ import {createSimulationAuthority} from '../src/simulation/simulation-authority.
 import {createWorkerGameRuntime} from '../src/simulation/worker-game-runtime.js';
 import {validateConfirmedMotion} from '../src/rendering/confirmed-motion-validation.js';
 import {nativeAnimalStrikeClipAge} from '../src/world/native-animal-crop-resource.js';
-import {nativeAnimalCropPublicationMatches,nativeRetreatBudgetAllowed} from '../src/simulation/raids.js';
+import {nativeAnimalCropPublicationMatches,nativeRetreatBudgetAllowed,planNight} from '../src/simulation/raids.js';
 import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
 import {createEventDrivenTaskPlanner} from '../src/world/wild-engine/spatial-intent-bridge.js';
@@ -51,6 +51,37 @@ function beforeRaid() {
   state.dayPlan = {done:false, at:state.time+.05, group:['warthog']};
   return state;
 }
+
+function beforeIntroductoryDesertNight() {
+  const state = deserialize(recorded.state);
+  state.initialPreparation = false;
+  state.nightPlan = null;
+  planNight(state);
+  assert.deepEqual(state.nightPlan.group,['warthog']);
+  assert.equal(state.nightPlan.introductory,true);
+  state.elapsed = state.time = state.nightPlan.at-.05;
+  return state;
+}
+
+test('a completed Desert center strike retains the still-clear arrived approach', {timeout:30000}, async()=>{
+  const source = await nativeProductionAuthority(beforeIntroductoryDesertNight(),{chunkKeys,navigationView:view});
+  const damage=[], hits=[];
+  try {
+    for(let i=0;i<1000&&hits.length<2;i++){
+      const result=await source.command({kind:'advance',seconds:.05,steps:2,nightFastForward:false});
+      for(const event of result.events){
+        if(event.type==='StructureHit')damage.push(event.structureHit);
+        if(event.type==='AnimalLogicalHit')hits.push(event);
+        assert.notEqual(event.type,'AnimalRouteUnavailable','completing a strike must not invalidate its arrived approach');
+      }
+    }
+    assert.deepEqual(damage.map(event=>[event.previousHp,event.hp]),[[600,580],[580,560]]);
+    assert.deepEqual(hits[0].presentation.animal,hits[1].presentation.animal);
+    assert.deepEqual(hits.map(event=>event.targetId),['structure-2','structure-2']);
+    assert.notEqual(hits[0].attackId,hits[1].attackId);
+    assert.deepEqual(source.faults,[]);
+  }finally{await source.close();}
+});
 
 function savedAttack() {
   const state = beforeRaid();
