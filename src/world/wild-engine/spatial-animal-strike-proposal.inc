@@ -29,7 +29,8 @@ static bool centerStrikeCohort(const IntentState& s,const RouteSlot& crop,
   const auto& route=s.routeSlots[intent.slot];
   const auto& binding=route.homeBinding;
   const auto& source=binding->requestSource;
-  if(!source||!source->raidSpawnSequence||source->body==animal->body||binding->centerFlight.animal!=animal)return false;
+  if(!source||!source->raidSpawnSequence||source->body==animal->body||
+     (binding->centerFlight.animal!=animal&&crop.animalRouteBinding->flightHome!=binding))return false;
   double contact;
   if(reservationConflict({&route},{nullptr,crop.executionPose[0],crop.executionPose[1]},
       animal->radius+std::max(1.1,route.radius),s.effectiveTime,contact))return false;
@@ -176,6 +177,14 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_finished_strike_snapshot(double actor){
     body.x!=h.x||body.z!=h.z||body.r!=h.radius)return 0;
  s.animalStrikeResult={1.,double(h.session),actor,double(h.body),double(h.attack),
    h.x,h.z,h.radius,h.phase,h.yaw,h.at,double(h.covered?h.covered->shieldPolygon:0),double(h.target)};
+ if(h.flightHome){
+  const auto& home=*h.flightHome;const auto& source=*home.requestSource;
+  s.animalStrikeResult[13]=double(home.assignmentSequence);
+  s.animalStrikeResult[14]=double(home.actual.ticket);
+  s.animalStrikeResult[15]=double(source.actor);
+  s.animalStrikeResult[16]=double(source.body);
+  s.animalStrikeResult[17]=double(source.raidSpawnSequence);
+ }
  return 1;
 }
 EMSCRIPTEN_KEEPALIVE const double* nav_animal_strike_snapshot_ptr(){return state().animalStrikeResult.data();}

@@ -207,6 +207,11 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       source.endTime<=r.worldBoundary.effectiveTime&&t&&['x','z','phase'].every(k=>r[k]===t[k])&&
       ['bodyId','targetId','centerId','slot','generation','radius','requestSequence','targetX','targetZ','centerX','centerZ'].every(k=>r[k]===source[k]);
   }
+  function liveCenterFlightHome(birth){
+    const peer=actors.get(birth?.workerActor),proof=peer?.homeProof,r=proof?.reference,q=r?.sourceRequest;
+    return q&&homeRecordCurrent(r,peer)&&r.bodyId===birth.workerBody&&q.raidSpawnSequence===birth.raidSpawnSequence&&
+      q.requestSequence>=birth.sourceSequence?proof:null;
+  }
   function installAnimalCrop(boundary,input){
     const proof=copyNativeAnimalCropAttestation(input,input?.reference?.kind),r=proof.reference,p=proof.preparedReference;
     const actor=actors.get(r.actorId),rec=actor?.current,e=rec?.issuedCrop;
@@ -447,7 +452,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     }
     const successor=event.pendingAnimalCrop==null?null:copyPendingAnimalCrop(event.pendingAnimalCrop);
     if(successor?.restoredWorkerImpact)throw Error('Restored worker impact requires a fresh baseline');
-    let continuedEncounter=false;
+    let continuedEncounter=false,continuedFlight=null;
     const birth=event.raidFlightBirth;
     const centerBirth=successor?.purpose==='center'&&!event.pendingAnimalCrop.previousStrike;
     if(birth!==undefined){
@@ -505,8 +510,11 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
          ![successor.x,successor.z,successor.yaw,successor.phase].every(Number.isFinite)||successor.phase<old.phase)
         throw Error('Shield crop request lacks its revoked approach');
     }else if(successor){
+      const flight=finishedCrop?.flight;
+      if(successor.purpose==='center'&&flight&&actors.size===1&&active.size===1&&liveCenterFlightHome(flight.birth)===flight.home)
+        continuedFlight=flight.birth;
       if(!finishedCrop||event.pendingAnimalCrop.previousStrike?.attackId!==finishedCrop.attackId||
-         event.pendingAnimalCrop.previousStrike?.ticket!==finishedCrop.reference.worldBoundary.ticket||current||active.size||actors.size||event.type!=='IntentChanged'||event.state!==6||
+         event.pendingAnimalCrop.previousStrike?.ticket!==finishedCrop.reference.worldBoundary.ticket||current||!continuedFlight&&(active.size||actors.size)||event.type!=='IntentChanged'||event.state!==6||
          revoked||handle||event.taskId||event.targetId!==successor.targetId||event.sequence!==successor.requestSequence||
          successor.actorId!==event.actorId||successor.authorityEpoch!==authorityEpoch||
          successor.nativeSession!==finishedCrop.reference.worldBoundary.nativeSession||event.effectiveTime<finishedCrop.reference.endTime||
@@ -679,10 +687,12 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       worker.encounterRecovery={hit:exhaustion.hit,body:exhaustion.workerBody,at:exhaustion.at};
     }
     if(homeRequest?.recoveryHit)delete actor.encounterRecovery;
-    if(successor){actor.cropRequest=successor;actor.encounterRetreatRequest=continuedEncounter?successor:null;actor.cropPredecessor=birth||centerBirth||continuedEncounter||event.pendingAnimalCrop.previousShieldCrop?null:finishedCrop.reference;if(birth)actor.raidFlightBirth=Object.freeze({...birth});}
+    if(successor){actor.cropRequest=successor;actor.encounterRetreatRequest=continuedEncounter?successor:null;actor.cropPredecessor=birth||centerBirth||continuedEncounter||event.pendingAnimalCrop.previousShieldCrop?null:finishedCrop.reference;if(birth)actor.raidFlightBirth=Object.freeze({...birth});else if(continuedFlight)actor.raidFlightBirth=continuedFlight;}
     if(current?.cropBinding?.reference.kind===27&&(restoredStrikeEnd||revoked&&event.type==='RouteInvalidated')&&
         event.effectiveTime>=current.cropBinding.reference.endTime){
-      finishedCrop={...current.cropBinding,retiredSequence:event.sequence,retiredAt:event.effectiveTime};
+      const birth=current.actor.raidFlightBirth;
+      const home=current.cropBinding.reference.purpose==='center'&&liveCenterFlightHome(birth);
+      finishedCrop={...current.cropBinding,retiredSequence:event.sequence,retiredAt:event.effectiveTime,...(home?{flight:{birth,home}}:{})};
     }else if(!successor&&!(event.type==='IntentChanged'&&actor?.cropRequest&&event.state===5)){
       finishedCrop=null;
     }

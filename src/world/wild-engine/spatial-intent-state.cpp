@@ -292,7 +292,11 @@ struct NativeAnimalRouteRequest {
  double shieldX=0,shieldZ=0,shieldRadius=0;
 };
 struct NativeAnimalRouteOrigin {std::array<double,24> header{};uint64_t ticket=0;};
-struct NativeAnimalRouteBinding {NativeAnimalRouteOrigin prepared,actual;uint64_t assignmentSequence=0;std::shared_ptr<const NativeAnimalRouteRequest> source;};
+struct NativeAnimalRouteBinding {
+ NativeAnimalRouteOrigin prepared,actual;uint64_t assignmentSequence=0;
+ std::shared_ptr<const NativeAnimalRouteRequest> source;
+ std::shared_ptr<const NativeHomeRouteBinding> flightHome;
+};
 struct RestoredAnimalStrike {
  std::shared_ptr<const NativeAnimalRouteRequest> source;
  uint64_t attackId=0;
@@ -451,6 +455,7 @@ struct PendingNativeMotionDraft {
   std::shared_ptr<const NativeTaskSettlementBinding> strollSettlementSource;
   std::shared_ptr<const NativeHomeResourceRequest> homeRequestSource;
   CenterFlightClearance centerFlight;
+  std::shared_ptr<const NativeHomeRouteBinding> animalFlightHome;
   std::shared_ptr<const NativeFarmArrivalResourceRequest> farmArrivalRequestSource;
   std::shared_ptr<const NativeFarmArrivalRouteBinding> farmArrivalHeldBinding;
   std::optional<NativeFarmArrivalHeldSource> farmArrivalHeldSource;
@@ -542,6 +547,7 @@ struct FinishedAnimalStrike {
   uint64_t session,actor,body,target,center,attack,ticket;
   double x,z,radius,phase,yaw,at;
   std::shared_ptr<const NativeAnimalRouteRequest> covered;
+  std::shared_ptr<const NativeHomeRouteBinding> flightHome;
 };
 
 // Disposable first-impact experiment. No qualification or generated artefact in the product.
@@ -4825,7 +4831,8 @@ int nav_intent_attack_finished(double actorId){
     const auto& source=*strike.source();
     if(s.effectiveTime<h[16]||nav_animal_strike_snapshot(actorId)!=1)return -1;
     s.finishedAnimalStrike=FinishedAnimalStrike{s.session,actor,source.body,source.target,source.center,
-      strike.attackId,uint64_t(h[17]),h[11],h[12],source.radius,h[13],h[14],s.effectiveTime,source.shieldPolygon?strike.source():nullptr};
+      strike.attackId,uint64_t(h[17]),h[11],h[12],source.radius,h[13],h[14],s.effectiveTime,
+      source.shieldPolygon?strike.source():nullptr,strike.flightHome};
   }
   const int tactical=found->second.tacticalPending?1:0;
 #ifdef WILD_DECLARATIVE_ATTACK

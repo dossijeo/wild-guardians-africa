@@ -23,6 +23,15 @@ static bool animalRouteRequestCurrent(const IntentState& s,const ActiveIntent& i
   spatialReadBody(q->body,body)&&body.kind==1&&body.flags==1&&body.x==q->x&&body.z==q->z&&body.r==q->radius&&
   !s.reservedBodies.count(q->body)&&!s.suspendedBodies.count(q->body);
 }
+// A successor inherits the acquired Home identity from the strike that
+// finished on this body. Its new corridor needs its own clearance proof.
+static bool finishedCenterFlightSource(const IntentState& s,const NativeAnimalRouteRequest& q,
+    const NativeHomeRouteBinding* home){
+ const auto& h=s.finishedAnimalStrike;
+ return home&&h&&h->flightHome.get()==home&&h->session==s.session&&h->actor==q.actor&&h->body==q.body&&
+   h->at<=q.at&&h->x==q.x&&h->z==q.z&&h->radius==q.radius&&h->yaw==q.heading&&h->phase==q.phase&&
+   q.attackCenter&&!q.entering;
+}
 EMSCRIPTEN_KEEPALIVE int nav_animal_route_version(){return 2;}
 EMSCRIPTEN_KEEPALIVE int nav_animal_route_request(double actor,double bodyId,double centerId,double entering,double heading,double phase){
  auto& s=state();if(!integer(actor)||!integer(bodyId)||!integer(centerId)||(entering!=0&&entering!=1)||!std::isfinite(heading)||!std::isfinite(phase)||phase<0)return -1;
@@ -389,7 +398,21 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_route_proposal_commit_bound(double session,d
     clearWorldMutationProposal(s.barrierProposal);return -2;
   }
  }
+ const auto& source=*pending.animalRouteSource;
+ const auto& home=pending.animalFlightHome;
+ if(home){
+  const auto w=s.activeIntents.find(home->requestSource->actor);
+  if(spatial_body_count()!=2||w==s.activeIntents.end()||!nativeHomeBodyCurrent(s,w->second)||
+     s.routeSlots[w->second.slot].homeBinding!=home||
+     (home->centerFlight.animal!=pending.animalRouteSource&&!finishedCenterFlightSource(s,source,home.get()))){
+   clearWorldMutationProposal(s.barrierProposal);return -2;
+  }
+ }else if(spatial_body_count()>1&&s.finishedAnimalStrike&&
+     finishedCenterFlightSource(s,source,s.finishedAnimalStrike->flightHome.get())){
+  clearWorldMutationProposal(s.barrierProposal);return -2;
+ }
  auto binding=std::make_shared<NativeAnimalRouteBinding>();binding->actual={pending.header,uint64_t(ticket)};binding->source=pending.animalRouteSource;
+ binding->flightHome=home;
  if(preparedTicket==ticket)binding->prepared=binding->actual;
  else if(pending.previousAnimal&&preparedTicket==double(pending.previousAnimal->ticket)&&pending.timeTranslation[9]==1)binding->prepared=*pending.previousAnimal;
  else return -9;
@@ -548,10 +571,13 @@ EMSCRIPTEN_KEEPALIVE int nav_center_flight_animal_ready(double worker,double ani
  if(!integer(worker)||!integer(animal)||!integer(request)||!integer(event))return -1;
  const auto w=s.activeIntents.find(uint64_t(worker)),a=s.activeIntents.find(uint64_t(animal));
  if(w==s.activeIntents.end()||a==s.activeIntents.end()||!nativeHomeBodyCurrent(s,w->second)||!animalRouteRequestCurrent(s,a->second))return -1;
- const auto& home=*s.routeSlots[w->second.slot].homeBinding;const auto& clearance=home.centerFlight;
- if(!home.requestSource||home.requestSource->raidSpawnSequence!=uint64_t(event)||!clearance.animal||
-    clearance.animal!=a->second.animalRouteRequest||clearance.animal->sequence!=uint64_t(request))return -1;
- return s.effectiveTime>=clearance.readyAt?1:0;
+ const auto& homeRoute=s.routeSlots[w->second.slot];const auto& home=*homeRoute.homeBinding;
+ const auto& clearance=home.centerFlight;const auto& q=a->second.animalRouteRequest;
+ if(!home.requestSource||home.requestSource->raidSpawnSequence!=uint64_t(event)||q->sequence!=uint64_t(request))return -1;
+ if(clearance.animal==q)return s.effectiveTime>=clearance.readyAt?1:0;
+ if(spatial_body_count()!=2||!finishedCenterFlightSource(s,*q,&home))return -1;
+ const auto& crop=s.routeSlots[a->second.slot];const double reach=q->radius+std::max(1.1,homeRoute.radius);
+ return centerFlightClearAt(homeRoute,crop,{q->x,q->z},reach,s.effectiveTime)<=s.effectiveTime?1:0;
 }
 EMSCRIPTEN_KEEPALIVE int nav_flight_crop_proposal_clear(double session,double ticket,double worker,double animal,double event){
  auto& s=state();auto& p=s.barrierProposal;
@@ -598,7 +624,9 @@ EMSCRIPTEN_KEEPALIVE int nav_flight_crop_proposal_clear(double session,double ti
   }
   if(center&&hr){
    if(nav_center_flight_animal_ready(worker,animal,double(ai.animalRouteRequest->sequence),event)!=1)return 0;
-   return centerFlightClearAt(*hr,*crop.route,{crop.route->originX,crop.route->originZ},reach,s.effectiveTime)<=s.effectiveTime?1:0;
+   if(centerFlightClearAt(*hr,*crop.route,{crop.route->originX,crop.route->originZ},reach,s.effectiveTime)>s.effectiveTime)return 0;
+   p.animalRoute->animalFlightHome=hr->homeBinding;
+   return 1;
   }
  }
  return separatedFlightRoutes(home,crop,reach)?1:0;

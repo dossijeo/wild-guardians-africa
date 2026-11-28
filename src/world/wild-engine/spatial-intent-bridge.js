@@ -1451,16 +1451,24 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       saved.attackId,saved.clip,saved.duration,saved.remaining,animal.motionPhase,animal.heading)===1;
   };
   const finishedAnimalStrike=(state,animal,retreat)=>{
+    const peer=!retreat&&state?.biome==='desierto'&&raidFlight?.centerAttack?nativeRaidFlightMember(state,animal):null;
+    const flight=peer?.nativeRouteAdmission==='native-home'?peer:null;
     if(state!==owningState||!animal?.hitApplied||animal.status!=='walking'||
        (retreat?!nativeRetreatBudgetAllowed(state,animal):!(animal.hitsRemaining>0))||
        (animal.species!=='warthog'&&!nativeShelteredSavannaCenterActor(state,animal))||state.raid?.animals.length!==1||
        state.raid.animals[0]!==animal||animal.magicDown||(animal.magicStunUntil??0)>state.elapsed||
-       !state.workers.every(w=>w.status==='home'&&!w.raidReturn&&!w.nativeRouteAdmission))return null;
-    const centerCohort=animalRouteV2&&nativeCenterAttackCohort(state);
+       !state.workers.every(w=>w===flight||w.status==='home'&&!w.raidReturn&&!w.nativeRouteAdmission))return null;
+    const centerCohort=animalRouteV2&&nativeCenterAttackCohort(state,flight);
     if(state.biome!=='sabana'&&!centerCohort||
        wasm.nav_animal_finished_strike_snapshot?.(numericId(animal.id))!==1)return null;
-    const [version,nativeSession,actor,body,attackId,x,z,radius,phase,yaw,at,polygon,target]=
-      new Float64Array(wasm.memory.buffer,wasm.nav_animal_strike_snapshot_ptr(),wasm.nav_animal_repeat_protected_strike?13:11);
+    const [version,nativeSession,actor,body,attackId,x,z,radius,phase,yaw,at,polygon,target,
+      homeAssignment,homeTicket,homeActor,homeBody,spawn]=
+      new Float64Array(wasm.memory.buffer,wasm.nav_animal_strike_snapshot_ptr(),flight?18:wasm.nav_animal_repeat_protected_strike?13:11);
+    if(flight){
+      const home=nativeHomeRouteBinding(flight.id),ref=home?.reference;
+      if(!ref||!homeAssignment||home.assignmentSequence!==homeAssignment||ref.worldBoundary.ticket!==homeTicket||
+         ref.actorId!==homeActor||ref.bodyId!==homeBody||ref.sourceRequest?.raidSpawnSequence!==spawn||spawn!==raidFlight.event)return null;
+    }
     const center=centerCohort&&(state.biome==='desierto'||target===numericId(state.structures[0].id));
     const collapse=center&&!retreat&&state.biome==='desierto'&&wasm.nav_animal_plan_center_after_collapse&&
       !animal.targetId&&!animal.reservation&&nativeCenterCollapseSite(state,animal);
@@ -1479,7 +1487,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       !state.spells.some(s=>s.kind==='shield'&&(s.id===stop.spell.id||s.remaining>0&&Math.hypot(s.x-crop.x,s.z-crop.z)<=s.radius))&&
       state.events.some(e=>e.attackId===animal.attackId&&e.targetId===crop.id&&e.simulationTime===at&&
         (e.type==='AnimalLogicalMiss'&&e.reason==='shield-expired'||finishedInShield(e)));
-    if(!covered&&!expired&&!collapsed&&(center&&!retreat?nativeCropRouteSubject(state,animal)?.purpose!=='center':animal.targetId||animal.reservation))return null;
+    if(!covered&&!expired&&!collapsed&&(center&&!retreat?nativeCropRouteSubject(state,animal,flight)?.purpose!=='center':animal.targetId||animal.reservation))return null;
     if(version!==1||nativeSession!==wasm.nav_intent_session()||actor!==numericId(animal.id)||
        animal.attackId!=='attack-'+attackId||animal.x!==x||animal.z!==z||animal.heading!==yaw||
        animal.motionPhase!==phase||animal.radius!==radius||state.elapsed<at)return null;
