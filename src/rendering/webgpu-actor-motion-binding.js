@@ -27,6 +27,10 @@ export function bindWebGpuActorMotion({root,renderer,motion,actorId,getPickTime,
   finally{for(const item of assigned)item.mesh.material=item.expectedMaterial;}
   if(changed||!canActivate())throw Error('Motion capture ownership changed');return result;
  },
+ restorationMaterialAlternatives(){
+  if(!canActivate())throw Error('Motion restoration ownership changed');
+  return assigned.map(({mesh,original})=>({mesh,material:original}));
+ },
  rollbackActivation(){
   if(closed||!active||!_replacement||!_replacement.previous[replacementLive]()||assigned.some(item=>item.mesh.material!==item.bound||item.mesh.raycast!==item.raycast))throw Error('Motion activation cannot be rolled back');
   for(const item of assigned){item.mesh.material=item.expectedMaterial;item.mesh.raycast=item.expectedRaycast;}active=false;

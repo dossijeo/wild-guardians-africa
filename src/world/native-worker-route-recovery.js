@@ -468,7 +468,7 @@ export function copyNativeRecoveryGroup(value,world,{awaitingIdleCyclePhase=fals
      throw Error('Crop recovery differs from the acquired refuge cut');
    return {members:[{kind,proof}],refuge};
  }
- if(!ordinaryWorkers&&(value.members.length!==2||value.members[0]?.kind!==18||value.members[1]?.kind!==26))
+ if(!ordinaryWorkers&&(value.members.length!==2||value.members[0]?.kind!==18||![26,27].includes(value.members[1]?.kind)))
    throw Error('Invalid mixed recovery membership');
  const members=value.members.map(({kind,proof})=>({kind,proof:nativeWorkerRouteRecoveryProfile(kind).copyAttestation(proof)}));
  const refuge=value.refuge===undefined?null:copyNativeHomeArrivalAttestation(value.refuge);
@@ -491,11 +491,14 @@ export function copyNativeRecoveryGroup(value,world,{awaitingIdleCyclePhase=fals
      throw Error('Single Idle recovery needs its acquired world cut');
  }
  const refs=members.map(member=>member.proof.reference);
+ const strike=!ordinaryWorkers&&members[1].kind===27;
  // In a live civil pair, Home18 is the only member that can own motor
  // programs. Its submitted gate clocks stay tied to its acquired boundary.
  if((ordinaryWorkers?members.some(({kind,proof})=>(nativeRecoveryGates(proof).length&&(kind!==18||!!refuge))||kind===18&&
     (proof.reference.sourceRequest?.raidSpawnSequence||proof.reference.sourceRequest?.recoveryHit)):
     !refs[0].sourceRequest?.raidSpawnSequence||refs[1].purpose==='retreat')||
+    strike&&(refs[1].purpose!=='center'||refs[1].restore||!sameNativeWorldBoundary(world,refs[1].worldBoundary)||
+      members[0].proof.assignmentSequence>=members[1].proof.assignmentSequence)||
     new Set(refs.map(ref=>ref.actorId)).size!==members.length||new Set(refs.map(ref=>ref.bodyId)).size!==members.length||
     new Set(members.map(({proof})=>nativeRecoverySequence(proof))).size!==members.length||
     !members.every(({proof})=>nativeRecoveryCovers(world,proof.reference.worldBoundary))||

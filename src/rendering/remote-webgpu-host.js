@@ -2569,12 +2569,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
                 message.routes.length||message.pendingHomeRequests?.length!==1||
                 !samePendingFlightRecovery({...source.pendingFlight,home:message.pendingHomeRequests[0],animal:message.pendingAnimalCrop},source.pendingFlight)))
                throw Error('Pending flight differs from the direct control baseline');
+             const strikeHome=source.members.length===2&&source.members[1].kind===27?source.members[0].proof:null;
+             const movingCount=source.members.length-recoveryCycles.length-Number(!!strikeHome);
              const members=source.members.map(({kind,proof,idleCyclePhase})=>({
                profile:nativeWorkerRouteRecoveryProfile(kind),assignmentSequence:nativeRecoverySequence(proof),proof,
                ref:proof.reference,gateIds:nativeRecoveryGates(proof),
                install:routeControl.prepareRecoveredWorkerRoute(kind,proof,nativeWorldBoundary,
-                 {cohortSize:source.members.length,movingCount:source.members.length-recoveryCycles.length,sharedCut:grouped,ruin:source.ruin,pendingRuin:source.pendingRuin,
-                   ordinaryWorkers:source.ordinaryWorkers===true,idleCyclePhase})
+                 {cohortSize:source.members.length,movingCount,sharedCut:grouped,ruin:source.ruin,pendingRuin:source.pendingRuin,
+                   ordinaryWorkers:source.ordinaryWorkers===true,idleCyclePhase,strikeHome})
              }));
              recovered={holdId:q.holdId,consumerToken:q.consumerToken,grouped,members,at:message.clock.committedThrough,
                refuge:source.refuge,refugeWorker:source.refuge&&source.ordinaryWorkers?source.members[0].proof:null,

@@ -616,6 +616,88 @@ test('Draw loss retains the arrived center approach while Home crosses its gate'
  }
 });
 
+test('Draw loss retains an acquired center strike and the moving Home gate',{timeout:45000},async()=>{
+ const initial=initialState(),gateId=gateIds[0];
+ initial.structures=initial.structures.filter(row=>row.id!=='structure-'+gateIds[1]);
+ const civil=initial.structures[0];
+ civil.z+=-5-centerServicePoint(civil,initial,.8).z;
+ initial.workers[0].z=-5;
+ initial.dayPlan.at=initial.time+.8;
+ initial.structures.find(row=>row.id===doomed).hp=140;
+ const raidView={...view,eye:{x:-18,z:-13.7},target:{x:-18,z:0}};
+ const advance={kind:'advance',seconds:.05,steps:1,nightFastForward:false};
+ let home,strike,world,draw,rig;
+ try{
+  world=await nativeProductionAuthority(initial,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,getTerrainManifest:()=>terrainManifest,
+   onCommit(_record,receipt){
+    home??=receipt.nativeHomeRouteBinding;strike??=receipt.nativeAnimalCropStrikeBinding;
+   }});
+  world.command({kind:'setNavigationView',view:raidView});
+  await untilProduction(world,()=>world.records.some(row=>row.kind==='farm-arrival'&&row.committed));
+  for(let i=0;i<160&&!strike;i++){
+   await world.command({...advance,steps:2});await world.present();
+  }
+  assert(home&&strike,'Expected both acquisitions');
+  const step=await world.command({...advance,seconds:.02}),state=JSON.parse(step.snapshot),at=state.elapsed;
+  const [animal]=state.raid.animals,[worker]=state.workers;
+  const ref=strike.reference,homeRef=home.reference,homeAt=homeRef.worldBoundary.effectiveTime,strikeAt=ref.worldBoundary.effectiveTime;
+  assert(at>strikeAt&&at<ref.endTime);
+  assert.equal(animal.attackId,'attack-'+strike.attackId);
+  assert.equal(animal.status,'attacking');assert.equal(worker.nativeRouteAdmission,'native-home');
+  assert(!state.events.some(row=>row.attackId===animal.attackId&&row.type==='AnimalLogicalHit'));
+
+  world.gpu.device.destroy();world.retireResourceEndpoint();
+  const hold=await world.authority.quiesceNativeIntentProduction({forLostDraw:true});
+  const retirement=await world.authority.flushNativeResourcePreparation({allowRetired:true,forLostDraw:true});
+  assert(retirement.terminal&&retirement.callbacksSettled);
+  const source=await world.authority.terminalWorkerRoute();
+  assert.deepEqual(source,{version:2,members:[{kind:18,actorId:homeRef.actorId},{kind:27,actorId:ref.actorId}]});
+  const [authorityPort,drawPort]=pair();
+  draw=await fixture({capabilities:{nativeHomeRouteVersion:1,nativeAnimalCropVersion:1}},
+   {intentControl:{port:drawPort,session:'production-control',recoveryHold:30},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
+  const foreignHome=structuredClone(source);foreignHome.members[0].actorId=ref.actorId;
+  await assert.rejects(world.authority.attachHeldWorkerRoute(authorityPort,'production-control',30,hold,foreignHome),
+   /Expected current native recovery assignments/);
+  const {recoveredWorkerRoute:recovered}=await world.authority.attachHeldWorkerRoute(authorityPort,'production-control',30,hold,source);
+  const [civilMember,center]=recovered.members;
+  assert.deepEqual((await readClientAssignment(recovered)).members.map(member=>member.execution),[civilMember.execution,center.execution]);
+  const foreignAttack=structuredClone(recovered);foreignAttack.members[1].execution.binding.attackId++;
+  await assert.rejects(readClientAssignment(foreignAttack),/Invalid replacement committed assignment/);
+  assert.deepEqual(civilMember.execution.binding,home);assert.equal(center.execution.binding.attackId,strike.attackId);
+  assert.deepEqual(center.execution.binding.reference,ref);
+  assert.deepEqual([center.execution.x,center.execution.z,center.execution.yaw,center.execution.phase],
+   [animal.x,animal.z,animal.heading,animal.motionPhase]);
+  rig=await originalRig(structuredClone(state),recovered.terrainManifest);
+  await rig.recover({...center,terrainManifest:recovered.terrainManifest,recoveryCut:recovered.worldBoundary,flightHome:home});
+
+  draw.client.registerClockBinding(draw.buffer,{byteOffset:0,epoch:homeAt,semantic:'relative',
+   resourceEnd:nativeClockResourceEnd(homeAt,homeRef.endTime),nativeHome:homeRef});
+  draw.client.registerClockBinding(draw.buffer,{byteOffset:4,epoch:strikeAt,semantic:'relative',resourceEnd:ref.endTime,nativeAnimalCrop:ref});
+  draw.client.registerClockBinding(draw.buffer,{byteOffset:8,epoch:homeAt,semantic:'relative',
+   resourceEnd:nativeClockResourceEnd(homeAt,homeRef.endTime),nativeGate:{gateId,worldBoundary:homeRef.worldBoundary}});
+  await assert.rejects(world.authority.checkHeldDraw(30,hold,source),/Missing submitted/);
+  const submitted=draw.frame(0,{nativeWorldBoundary:recovered.worldBoundary,
+   clock:{version:1,epoch:0,elapsed:at,safeUntil:at,anchorAbsoluteMs:0,paused:true,segments:[]}});
+  await flush();await draw.host.idle();draw.host.present();await submitted;
+  const witness=await world.authority.checkHeldDraw(30,hold,source);
+  assert.equal(witness.members[0].nativeGate.gateId,gateId);
+  assert.deepEqual(witness.members.map(row=>row.relativeTime),[floorFloat32(at-homeAt),floorFloat32(at-strikeAt)]);
+  rig.presented(witness.members[1].relativeTime);
+
+  await world.attachRecoveredResources(draw);
+  assert.equal(world.authority.resumeNativeIntentProduction(hold),true);
+  const hits=[];
+  for(let i=0;i<45&&!hits.length;i++){
+   const result=await world.command(advance);
+   hits.push(...result.events.filter(row=>row.type==='AnimalLogicalHit'));
+   await world.present();
+  }
+  assert.deepEqual(hits.map(row=>[row.attackId,row.targetId]),[[animal.attackId,doomed]]);
+  assert.equal(world.snapshot().structures.find(row=>row.id===doomed).hp,120);
+  assert.deepEqual(world.faults,[]);assert.deepEqual(draw.errors,[]);
+ }finally{rig?.close();draw?.client.dispose();await draw?.host.dispose();await world?.close();}
+});
+
 // The remote client and Host are real. Only the GPU queue and minimal draws
 // are fixtures. Each motor buffer belongs to the submitted kind12 packet.
 async function closeGates(world,{planner,nativeIntentControl},route){

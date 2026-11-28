@@ -37,5 +37,14 @@ test('explicit mesh scope leaves inactive sources untouched and rejects foreign,
 
 for(const scoped of [false,true])test(`scoped replacement from ${scoped?'selected':'whole'} meshes preserves fenced resources`,()=>{
  const root=new THREE.Group(),original=new MeshBasicNodeMaterial(),geometry=new THREE.BoxGeometry(),a=new THREE.Mesh(geometry,original),b=new THREE.Mesh(geometry,original),m=motion('a'),next=motion('a');root.add(a,b);const first=bindWebGpuActorMotion({root,renderer,motion:m,actorId:'a',getPickTime:()=>0,...(scoped?{meshes:[a]}:{})}),previous=a.material,replacement=first.prepareReplacement({motion:next,meshes:[b]});let retired=0;previous.addEventListener('dispose',()=>retired++);
- try{assert.equal(a.material,previous);assert.equal(b.material,scoped?original:previous);replacement.activate();const live=b.material;first.detach();assert.equal(a.material,original);assert.equal(b.material,live);assert.equal(retired,0);first.dispose();assert.equal(retired,1);assert.equal(b.material,live);replacement.dispose();assert.equal(b.material,original);}finally{replacement.dispose();first.dispose();m.dispose();next.dispose();geometry.dispose();original.dispose();}
+ try{
+  assert.equal(a.material,previous);assert.equal(b.material,scoped?original:previous);
+  const [restored]=replacement.restorationMaterialAlternatives();
+  assert.equal(restored.mesh,b);assert.equal(restored.material,original);
+  replacement.activate();const live=b.material;first.detach();
+  assert.throws(()=>replacement.restorationMaterialAlternatives(),/ownership changed/);
+  assert.equal(a.material,original);assert.equal(b.material,live);assert.equal(retired,0);
+  first.dispose();assert.equal(retired,1);assert.equal(b.material,live);
+  replacement.dispose();assert.equal(b.material,restored.material);
+ }finally{replacement.dispose();first.dispose();m.dispose();next.dispose();geometry.dispose();original.dispose();}
 });

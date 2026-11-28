@@ -1586,8 +1586,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
           const sheltered=planner.nativeRefugeCropRecovery(kind);
           if(sheltered)return {version:2,refuge:true,members:[{kind,actorId:sheltered.execution.actorId}]};
         }else{
-          const pair=planner.nativeRaidFlightRecoveryExecutions();
-          if(pair)return {version:2,members:pair.map(({actorId},i)=>({kind:i===0?18:26,actorId}))};
+          const pair=planner.nativeRaidFlightRecoveryExecutions(kind);
+          if(pair)return {version:2,members:pair.map(({actorId},i)=>({kind:i===0?18:kind,actorId}))};
           const waiting=savedFlight&&planner.nativeRestoredFlightApproach();
           if(waiting)return {kind:18,actorId:waiting.home.actorId};
           if(savedFlight&&planner.nativeRestoredPendingFlight())return {version:2,pendingFlight:true,members:[]};
@@ -1688,9 +1688,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       const {execution,...evidence}=source;
       return {executions:[execution],...evidence};
     }
-    const pair=planner.nativeRaidFlightRecoveryExecutions();
-    return pair&&route.members.length===2&&pair.every((row,i)=>
-      row.actorId===route.members[i].actorId&&route.members[i].kind===(i===0?18:26))?{executions:pair}:null;
+    if(route.members.length!==2||route.members[0].kind!==18||![26,27].includes(route.members[1].kind))return null;
+    const pair=planner.nativeRaidFlightRecoveryExecutions(route.members[1].kind);
+    return pair&&pair.every((row,i)=>row.actorId===route.members[i].actorId)?{executions:pair}:null;
   }
   const authority={
     prepareNativeStructureCommand,beginNativeStructureCommand,finishNativeStructureCommand,

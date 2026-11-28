@@ -806,8 +806,8 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
         const single=encounter?nativeEncounterFallRecovery(encounter.version===2?'center':'retreat'):
           ruin?nativeCenterRuinRouteRecovery():pendingRuin?nativePendingCenterRuinRecovery(pendingRuin):arrival?nativeRefugeCropRecovery(members[0].kind):null;
         const executions=encounter||ruin||pendingRuin||arrival?
-          single&&(single.home?[single.home,single.execution]:[single.execution]):nativeRaidFlightRecoveryExecutions();
-        const rows=members[0].kind===27?0:members.length;
+          single&&(single.home?[single.home,single.execution]:[single.execution]):nativeRaidFlightRecoveryExecutions(members[1].kind);
+        const rows=members.filter(({kind})=>kind!==27).length;
         if(count!==rows||strolls.length||farmCount||homes.length!==members.length-1||!executions||
            arrival&&JSON.stringify(arrival)!==JSON.stringify(single.refuge)||
            ruin&&JSON.stringify(ruin)!==JSON.stringify(single.ruin)||
@@ -1674,17 +1674,20 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       x:worker.x,z:worker.z,heading:home?worker.heading:worker.downHeading,remaining:worker.fallRemaining??0,getUp:worker.recovery??null,
       ...(home?{home}:{})});
   }
-  function nativeRaidFlightRecoveryExecutions(){
+  function nativeRaidFlightRecoveryExecutions(kind=26){
     const game=owningState,animal=game?.raid?.animals[0],worker=animal&&nativeRaidFlightMember(game,animal);
     if(!worker||worker.nativeRouteAdmission!=='native-home')return null;
     const home=nativeHomeRouteExecution(worker.id);
     // The animal may already be waiting at its certified center endpoint
     // while the same Home route and crossing are still in use.
-    const crop=nativeAnimalCropRouteExecution(animal.id,{sharedCut:true,flightWorker:worker,allowArrivedCenter:true});
+    const crop=kind===27?nativeAnimalCropStrikeExecution(animal.id,{flightWorker:worker}):
+      nativeAnimalCropRouteExecution(animal.id,{sharedCut:true,flightWorker:worker,allowArrivedCenter:true});
     const cut=nativeWorldBoundary(),homeWorld=home?.binding.reference.worldBoundary,cropWorld=crop?.binding.reference.worldBoundary;
     if(!home||home.arrived||home.executedThrough!==game.elapsed||!crop||crop.binding.reference.purpose==='retreat'||
        !nativeRecoveryCovers(cut,homeWorld)||!nativeRecoveryCovers(cut,cropWorld)||
        sameNativeWorldBoundary(cut,homeWorld)===sameNativeWorldBoundary(cut,cropWorld))return null;
+    if(kind===27&&(crop.binding.reference.purpose!=='center'||crop.binding.reference.restore||
+       home.binding.assignmentSequence>=crop.binding.assignmentSequence||home.bodyId===crop.bodyId))return null;
     return [home,crop];
   }
   function nativeRestoredFlightApproach(){

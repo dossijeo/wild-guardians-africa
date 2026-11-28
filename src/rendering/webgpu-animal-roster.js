@@ -311,9 +311,9 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
       else if(oldBinding||oldMotion){const release=()=>{oldBinding?.dispose();oldMotion?.dispose();};pipelineAdmission.deferRelease(actor.root,release);}
       onSelectableChange();}};
    if(center&&!travel){
-    // Detaching the strike reinstalls the route binding's original materials.
+    // Detaching the strike reinstalls the materials from its staged binding.
     // Admit that exact return on the live meshes before the strike can start.
-    const materialAlternatives=meshes.map(mesh=>({mesh,material:oldBinding?oldBinding.originalMaterial(mesh):mesh.material}));
+    const materialAlternatives=binding.restorationMaterialAlternatives();
     // A final hit may publish Retreat in the same boundary. The confirmed
     // actor then selects its existing Running presentation before the route GO.
     const include=entry.entity.hitsRemaining===1?[...meshes,...actor.bakedRunningMeshes()]:meshes;

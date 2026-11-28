@@ -1131,7 +1131,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       worker.state=0;
       worker.encounterRecovery={hit:pose.hit,body:pose.workerBody,at:pose.impactAt};
     },
-    prepareRecoveredWorkerRoute(kind,input,boundary,{cohortSize=1,movingCount=cohortSize,sharedCut=false,ruin=null,pendingRuin=null,ordinaryWorkers=false,idleCyclePhase=null}={}) {
+    prepareRecoveredWorkerRoute(kind,input,boundary,{cohortSize=1,movingCount=cohortSize,sharedCut=false,ruin=null,pendingRuin=null,ordinaryWorkers=false,idleCyclePhase=null,strikeHome=null}={}) {
       const profile=nativeWorkerRouteRecoveryProfile(kind),proof=profile.copyAttestation(input),ref=proof.reference;
       if(kind===15){
         const actor=actors.get(nativeTaskActionActor(ref.request)),record=actor?.actionRecord,at=clock?.committedThrough;
@@ -1195,7 +1195,15 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
         };
       }
       if(kind===27){
-        const current=()=>!closed&&!!clock&&actors.size===0&&active.size===0&&
+        const home=strikeHome?.reference,peer=home&&actors.get(home.actorId),peerRecord=peer?.current;
+        const peerCurrent=()=>!home?actors.size===0&&active.size===0:
+          sharedCut&&cohortSize===2&&movingCount===1&&actors.size===1&&active.size===1&&
+          !!peerRecord&&actors.get(home.actorId)===peer&&peer.current===peerRecord&&active.get(home.actorId)===peerRecord&&
+          peer.latestSequence===strikeHome.assignmentSequence&&matches(peerRecord,{actorId:home.actorId,
+            assignmentSequence:strikeHome.assignmentSequence,routeHandle:home.expectedRouteHandle})&&
+          !!home.sourceRequest?.raidSpawnSequence&&nativeRecoveryCovers(boundary,home.worldBoundary)&&
+          home.actorId!==ref.actorId&&home.bodyId!==ref.bodyId&&ref.purpose==='center'&&!ref.restore;
+        const current=()=>!closed&&!!clock&&peerCurrent()&&
           proof.assignmentSequence===sequence&&clock.intentSequence===sequence&&clock.nativeSession===boundary.nativeSession&&
           clock.committedThrough>=boundary.effectiveTime&&clock.committedThrough<ref.endTime;
         if(!(sharedCut?nativeRecoveryCovers(boundary,ref.worldBoundary):sameNativeWorldBoundary(boundary,ref.worldBoundary))||
@@ -1213,6 +1221,11 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
             cropStrikeRecord:{startTime,safeUntil:Infinity,lastDrawTime:null,recoveredCrop:true}};
           actor.state=2;actor.latestSequence=proof.assignmentSequence;actor.targetId=ref.targetId;
           actor.cropRequest=copyPendingAnimalCrop({...ref,authorityEpoch,nativeSession:boundary.nativeSession});
+          if(home){
+            const {requestSequence,raidSpawnSequence}=home.sourceRequest;
+            actor.raidFlightBirth=Object.freeze({workerActor:home.actorId,workerBody:home.bodyId,
+              sourceSequence:requestSequence,raidSpawnSequence});
+          }
           actor.current=record;active.set(ref.actorId,record);
         };
       }
@@ -1225,7 +1238,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       const approachEndpoint=kind===26&&(sharedCut&&(cohortSize===1||ruin||pendingRuin)?
         centerRuinApproachEndpoint(ruin,boundary,proof,clock?.committedThrough,pendingRuin):
         (cohortSize===1||cohortSize===2&&!ordinaryWorkers)&&nativeCenterApproachEndpoint(boundary,proof,clock?.committedThrough));
-      if(closed||!clock||actors.size!==cohortSize+Number(pendingFlight)||active.size!==movingCount||proof.gateIds.length>profile.maxGates||
+      if(closed||!clock||actors.size!==cohortSize+Number(pendingFlight)-Number(!!strikeHome)||active.size!==movingCount||proof.gateIds.length>profile.maxGates||
          !record||active.get(ref.actorId)!==record||record.lastDrawTime!==null||actor.strollProof||actor.farmArrivalProof||actor.homeProof||
          kind===14&&!profile.sameAttestation(actor.startProof,proof)||
          kind===16&&!profile.sameAttestation(actor.consequenceProof,proof)||

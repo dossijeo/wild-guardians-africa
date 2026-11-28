@@ -384,6 +384,13 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
    // nativePending prevents another historical binding from being started here.
    if(recovery&&entry.motionPreparing?.ready){await entry.motionPreparing.ready;check();}
    await entry.runRequestPromise;check();requestBakedWalk(actorId,entry);await entry.bakeResourcePromise;check();requestBakedWalk(actorId,entry);await entry.bakeRequestPromise;check();await entry.idleRequestPromise;check();requestBakedWalk(actorId,entry);await entry.bakeRequestPromise;check();
+   if(recovery?.binding.nativeHome){
+    // A fresh Walking install can start Running for the replayed Home pose.
+    while(entry.runPending||entry.idlePending||entry.bakePending||entry.bakeLoading){
+     await Promise.all([entry.runRequestPromise,entry.idleRequestPromise,entry.bakeRequestPromise,entry.bakeResourcePromise]);
+     check();requestBakedWalk(actorId,entry);
+    }
+   }
    if(carrying){requestBakedCarry(actorId,entry);await entry.carryRequestPromise;check();requestBakedWalk(actorId,entry);await entry.bakeRequestPromise;check();}
    if((carrying?!entry.actor?.hasBakedCarrying?.():!(entry.actor?.isBakedWalking?.()||entry.actor?.isBakedRunning?.()||entry.actor?.isBakedIdle?.()||(entry.nativeState||recovery)&&entry.actor?.hasBakedWalking?.()))||entry.motionPreparing||entry.bakePending||entry.bakeLoading||entry.runPending||entry.carryPending||entry.idlePending)throw Error('Native worker locomotion materials not ready');
    const needsRunning=!carrying&&(requiresRun||entry.actor.isBakedRunning?.()||previous?.preparedRun),needsIdle=!carrying&&(requiresIdle||entry.actor.isBakedIdle?.()||previous?.preparedIdle);if(needsIdle&&!bakedIdleBank)throw Error('Native worker idle resource unavailable');if(needsRunning&&!bakedRunBank)throw Error('Native worker running resource unavailable');
