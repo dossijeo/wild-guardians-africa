@@ -43,7 +43,11 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
    if(!route)throw Error('Center fixture has no matching animal rig');
    const metadata={nativeWorldBoundary:center.boundary,preparedCenterRuin:center,
     clock:{...clock,elapsed:start,safeUntil:end,segments:[{start,end,rate:1,realDuration:end-start}]}};
-   const packet=await prepareExistingGroup(graphics,[route.cropGroup,...(record.retainedGateGroups??[])],metadata,options.signal,record.beforeDraw);
+   const home=center.home&&records.findLast(item=>item.kind==='home-route'&&item.committed);
+   if(center.home&&!home)throw Error('Center fixture has no matching Home rig');
+   const homeGroups=home?[...(record.omitClock==='Home'?[]:[graphics.group]),...(home.gateGroups??[])]:[];
+   const groups=[...(record.omitClock==='animal'?[]:[route.cropGroup]),...homeGroups,...(record.retainedGateGroups??[])];
+   const packet=await prepareExistingGroup(graphics,groups,metadata,options.signal,record.beforeDraw);
    packet.presented.catch(()=>{});record.packet=packet;
    try{await onReady(record,options);}catch(error){packet.abort();throw error;}
    return {preparedWorldBoundary:packet.preparedWorldBoundary,preparedCenterRuin:center,valid:packet.valid,

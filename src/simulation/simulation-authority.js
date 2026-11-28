@@ -793,11 +793,15 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   }
   async function prepareCenterRuin(center,span,advanceSubstep){
     const animal=game.raid?.animals[0],impact=nativeCenterCollapseImpact(game,animal,center);
+    const peer=animal&&planner.nativeRaidFlightMember(game,animal);
+    const flight=peer?.nativeRouteAdmission==='native-home'?peer:null;
     const eligible=()=>impact&&!closed&&!shieldAdvance&&!nativeStructurePreparation&&nativeProduction&&nativeResourcePreparation&&
-      civilShieldPhysicsAvailable()&&game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id))&&nativeCenterCollapseImpact(game,animal,center)===impact&&
+      civilShieldPhysicsAvailable()&&game.workers.every(worker=>worker===flight?planner.nativeRaidFlightMember(game,animal)===worker&&
+        planner.nativeHomeRouteExecution(worker.id)?.executedThrough===game.elapsed:planner.nativeWorkerHomeInactive(worker.id))&&
+      nativeCenterCollapseImpact(game,animal,center)===impact&&
       center.kind==='center'&&center.status==='collapsing'&&game.raid?.animals.length===1&&game.raid.animals[0]===animal&&
       (animal.status==='retreating'||['walking','attacking'].includes(animal.status)&&animal.targetId&&animal.targetId!==center.id)&&
-      nativeCenterAttackCohort(game)&&nativeCropCohortCurrent(game,planner)&&
+      nativeCenterAttackCohort(game,flight)&&nativeCropCohortCurrent(game,planner)&&
       !game.spells.some(spell=>spell.remaining>1e-9&&spell.remaining<span);
     if(centerRuinAdvance||!eligible())throw Error('Native center ruin requires a certified animal route substep');
     const owner={controller:new AbortController(),resources:nativeResourcePreparation,consumer:nativeIntentControl,receipt:null};

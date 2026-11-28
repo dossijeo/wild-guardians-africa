@@ -499,6 +499,7 @@ struct PendingBarrierProposal {
     double end;
     std::shared_ptr<const NativeAnimalRouteBinding> binding;
     std::shared_ptr<const NativeAnimalStrike> strike;
+    std::shared_ptr<const NativeHomeRouteBinding> home;
   };
   std::optional<CenterCollapse> centerCollapse;
   std::optional<NativeAnimalStrike> animalStrike;
@@ -1953,11 +1954,31 @@ extern "C" EMSCRIPTEN_KEEPALIVE int nav_gate_addition_proposal_pose(double sessi
  std::copy(root.begin(),root.end(),out.begin()+8);std::copy(leaf.begin(),leaf.end(),out.begin()+24);return 1;
 }
 
+static const RouteSlot* centerRuinHomeRoute(const IntentState& s,const PendingBarrierProposal::CenterCollapse& c){
+  if(!c.home||!c.home->requestSource)return nullptr;
+  const auto& source=*c.home->requestSource;
+  const auto worker=s.activeIntents.find(source.actor);
+  if(!source.raidSpawnSequence||source.body==c.body||worker==s.activeIntents.end()||!nativeHomeBodyCurrent(s,worker->second))return nullptr;
+  const auto& route=s.routeSlots[worker->second.slot];
+  return route.homeBinding==c.home?&route:nullptr;
+}
 static bool centerRuinSourceCurrent(IntentState& s,const PendingBarrierProposal::CenterCollapse& c){
-  if(s.activeIntents.size()!=1||spatial_body_count()!=1||s.gateMotionProposal.pending||
+  const size_t bodies=c.home?2:1;
+  if(s.activeIntents.size()!=bodies||spatial_body_count()!=bodies||s.gateMotionProposal.pending||
      !s.executionEnabled||s.clockPaused||!s.causalClock)return false;
+  const auto* home=centerRuinHomeRoute(s,c);
+  if(c.home&&!home)return false;
   for(const auto& [id,gate]:s.gates){
-    if(!gate.defined||!gate.mesh||gate.status!=0||gate.occupied||!gate.crossings.empty())return false;
+    if(!gate.defined||!gate.mesh||gate.status!=0)return false;
+    if(!gate.crossings.empty()){
+      if(!home||gate.crossings.size()!=1||
+         std::find(home->gateReservations.begin(),home->gateReservations.end(),id)==home->gateReservations.end())return false;
+      const auto& [actor,crossing]=*gate.crossings.begin();
+      if(actor!=home->actor||crossing.body!=home->reservationBody||crossing.generation!=home->generation||
+         crossing.slot!=c.home->actual.header[20])return false;
+      continue;
+    }
+    if(gate.occupied)return false;
     // Keep only independent, already certified closing programs.
     if(gateMotionPending(gate,s.clockThrough)||gateMotionEnd(gate)>s.clockThrough||
        gateOpening(gate,s.clockThrough)!=gate.target){
@@ -1977,12 +1998,12 @@ static bool centerRuinSourceCurrent(IntentState& s,const PendingBarrierProposal:
        h[17]!=double(c.routeTicket)||h[15]>s.effectiveTime||c.end>=h[16]||target==s.targets.end()||
        !target->second.active||target->second.kind!=4||target->second.x!=source.targetX||target->second.z!=source.targetZ||
        !spatialReadBody(c.body,body)||body.kind!=1||body.flags!=1||body.r!=source.radius||body.x!=h[11]||body.z!=h[12])return false;
-    if(strike.restored)return s.reservedBodies.empty();
-    return s.reservedBodies.size()==1&&intent.slot<s.routeSlots.size()&&
+    if(strike.restored)return !home&&s.reservedBodies.empty();
+    return s.reservedBodies.size()==bodies&&intent.slot<s.routeSlots.size()&&
       s.routeSlots[intent.slot].gateReservations.empty()&&executionBindingCoherent(s,c.body,intent.slot)&&
       s.routeSlots[intent.slot].executionPose[6]==1;
   }
-  if(s.reservedBodies.size()!=1||c.slot>=s.routeSlots.size()||intent.animalStrike||
+  if(s.reservedBodies.size()!=bodies||c.slot>=s.routeSlots.size()||intent.animalStrike||
      intent.slot!=c.slot||intent.generation!=c.generation)return false;
   const auto& r=s.routeSlots[c.slot];
   if(!(r.generation==c.generation&&r.actor==c.actor&&r.reservationBody==c.body&&r.hasExecution&&
@@ -2000,8 +2021,10 @@ int stageCenterRuin(const SpatialWorldProposalInput& input,const SpatialStaticMu
   auto& s=state();
   if(!integer(actor)||!integer(body)||!integer(slot,true)||slot>=s.routeSlots.size()||!integer(gen)||
      !integer(assignment)||!integer(routeTicket)||!std::isfinite(end)||end<=s.effectiveTime||end>s.effectiveTime+.020000001)return -1;
+  const auto& binding=s.routeSlots[size_t(slot)].animalRouteBinding;
   const PendingBarrierProposal::CenterCollapse c{uint64_t(actor),uint64_t(body),uint64_t(slot),uint64_t(gen),
-    uint64_t(assignment),uint64_t(routeTicket),end,s.routeSlots[size_t(slot)].animalRouteBinding,nullptr};
+    uint64_t(assignment),uint64_t(routeTicket),end,binding,nullptr,
+    binding&&spatial_body_count()==2?binding->flightHome:nullptr};
   if(!centerRuinSourceCurrent(s,c)||c.binding->source->target==uint64_t(center))return -2;
   const int ok=spatialIntentStageWorld(input,&shape,1,true);
   if(ok==1)s.barrierProposal.centerCollapse=c;
@@ -2016,7 +2039,7 @@ int stageCenterRuinStrike(const SpatialWorldProposalInput& input,const SpatialSt
   if(it==s.activeIntents.end()||!it->second.animalStrike)return -2;
   const auto& strike=it->second.animalStrike;
   const PendingBarrierProposal::CenterCollapse c{uint64_t(actor),uint64_t(body),0,0,
-    uint64_t(assignment),uint64_t(strikeTicket),end,nullptr,strike};
+    uint64_t(assignment),uint64_t(strikeTicket),end,nullptr,strike,spatial_body_count()==2?strike->flightHome:nullptr};
   if(strike->attackId!=uint64_t(attackId)||!centerRuinSourceCurrent(s,c)||strike->source()->target==uint64_t(center))return -2;
   const int ok=spatialIntentStageWorld(input,&shape,1,true);
   if(ok==1)s.barrierProposal.centerCollapse=c;
@@ -2036,7 +2059,13 @@ int takeCenterRuin(double session,double ticket,double end,SpatialWorldProposalI
     if(route.executionPose!=expected)return -2;
     moved=(start[0]!=expected[0]||start[1]!=expected[1])?1:0;
   }
-  if(s.entityRevision!=p.entities+moved||spatialBodiesMutationRevision()!=p.bodies+moved)return -2;
+  if(const auto* home=centerRuinHomeRoute(s,c);home){
+    const auto start=sampleRouteTiming(*home,p.at),expected=sampleRouteTiming(*home,end);
+    if(home->executionPose!=expected)return -2;
+    moved+=(start[0]!=expected[0]||start[1]!=expected[1])?1:0;
+  }
+  // Route execution advances the entity cohort once and revises each moved body.
+  if(s.entityRevision!=p.entities+(moved!=0)||spatialBodiesMutationRevision()!=p.bodies+moved)return -2;
   out=std::move(p.worldInput);clearWorldMutationProposal(p);return 1;
 }
 int spatialIntentStageShieldCrop(const SpatialWorldProposalInput& input,const SpatialStaticMutation* shape,

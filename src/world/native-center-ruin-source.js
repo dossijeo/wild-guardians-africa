@@ -1,5 +1,6 @@
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from './native-world-boundary.js';
 import {copyNativeAnimalCropAttestation} from './native-animal-crop-resource.js';
+import {copyNativeHomeRouteAttestation} from './native-home-route.js';
 const nat=n=>Number.isSafeInteger(n)&&n>=0;
 const precedes=(a,b)=>a.authorityEpoch===b.authorityEpoch&&a.nativeSession===b.nativeSession&&a.ticket<b.ticket&&a.effectiveTime<=b.effectiveTime;
 const copyArray=(a,n,valid)=>{
@@ -16,6 +17,13 @@ export function centerSource(s){
  const retained=gateIds!==undefined;
  if(retained&&(!Array.isArray(gateIds)||!gateIds.length||gateIds.length>1024||
     !gateIds.every((id,i)=>nat(id)&&id>0&&(!i||gateIds[i-1]<id))))throw Error('Invalid center removal gate owners');
+ const home=s.home===undefined?null:copyNativeHomeRouteAttestation(s.home);
+ if(home){
+   const h=home.reference,r=route.reference;
+   if(retained||field==='retreat'||!h.sourceRequest?.raidSpawnSequence||h.actorId===r.actorId||h.bodyId===r.bodyId||
+      !precedes(h.worldBoundary,r.worldBoundary)||home.assignmentSequence>=route.assignmentSequence||s.end>h.endTime)
+     throw Error('Invalid center removal Home owner');
+ }
  if(!boundary||!previous||!precedes(previous,boundary)||
    (retained?!precedes(route.reference.worldBoundary,previous):!sameNativeWorldBoundary(route.reference.worldBoundary,previous))||
    route.reference.purpose!==(field==='retreat'?'retreat':'center')||field!=='retreat'&&'structure-'+route.reference.targetId===s.center||
@@ -23,7 +31,7 @@ export function centerSource(s){
    !/^structure-[1-9]\d*$/.test(s.center)||!nat(s.polygon)||!s.polygon||
    !Number.isFinite(s.end)||s.end<=boundary.effectiveTime||s.end>boundary.effectiveTime+.020000001||
    field!=='approach'&&s.end>=route.reference.endTime)throw Error('Invalid center removal source');
- return Object.freeze({boundary,previous,[field]:route,...(retained?{retainedGateIds:Object.freeze([...gateIds])}:{}),initialClock:s.initialClock,intent:s.intent,
+ return Object.freeze({boundary,previous,[field]:route,...(home?{home}:{}),...(retained?{retainedGateIds:Object.freeze([...gateIds])}:{}),initialClock:s.initialClock,intent:s.intent,
    center:s.center,polygon:s.polygon,end:s.end,revisions:copyArray(s.revisions,3,nat),
    footprint:copyArray(s.footprint,48,x=>Number.isFinite(x)&&x===Math.fround(x))});
 }
