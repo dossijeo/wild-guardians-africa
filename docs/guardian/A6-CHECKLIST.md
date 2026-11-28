@@ -2,7 +2,7 @@
 
 En Desierto 712, la primera incursión con un portón cerrado y cuatro muros sólidos pagados pasó en NVIDIA, incluida la recarga de Strike27. Se conservaron las cinco defensas, sus siete identificadores de colisión y ambos contratos. [Recibo de las defensas](performance/native-desert-paid-defenses-first-night-20261128.json).
 
-La compra del recinto automático instala en una sola orden un portón y doce muros. NVIDIA confirmó las trece piezas visibles después de liberar READY, el guardado público y la recarga con los mismos quince identificadores de colisión. El cruce de este recinto por un trabajador sigue pendiente. [Recibo del recinto automático](performance/native-desert-automatic-enclosure-20261128.json).
+La compra del recinto automático instala en una sola orden un portón y doce muros. NVIDIA confirmó las trece piezas, la recarga con los mismos quince identificadores de colisión y el cruce por `structure-7` con apertura de 89°. El trabajador regó `plant-3` después del cruce. Home18 sigue pendiente al cierre del turno. [Cruce y riego del recinto automático](performance/native-desert-automatic-enclosure-crossing-20261128.json).
 
 En la primera noche de Desierto 712 con un portón cerrado comprado por el jugador, NVIDIA presentó la incursión completa y la recarga en frío de Strike27. El control conserva el portón, ambos contratos y los dos impactos de Game. Los cortes de pérdida de Draw del mismo guardado están verificados en CPU. [Recibo del portón en la primera noche](performance/native-desert-paid-gate-first-night-20261128.json).
 

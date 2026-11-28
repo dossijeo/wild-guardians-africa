@@ -1,0 +1,48 @@
+{
+  "scenario": "Desierto 712, automatic zarzas enclosure with two paid plants and no workers in the input save",
+  "fixture": "tests/fixtures/desierto712-two-crops-prehire.json.gz",
+  "commandId": "paid-sheltered-crops-enclosure",
+  "previousPurchaseReceipt": "native-desert-automatic-enclosure-20261128.json",
+  "aperture": {
+    "priorGate": "structure-19",
+    "priorOpenedWidthApproxM": 0.319,
+    "requiredWorkerDiameterM": 0.56,
+    "selectedGate": "structure-7",
+    "selectedTravelDegrees": 89,
+    "reason": "Native proof of complete leaf sweep, opened worker connection and existing supports",
+    "paidWallPieces": 13,
+    "currencyDebit": 130
+  },
+  "nvidia": {
+    "architecture": "turing",
+    "inputSha256": "77a001ef7b9ace5e20659749abc58c5795b9f21537a834f9fbb15e7e9b408c48",
+    "saveSha256": "bfda0bd57cd8bf4e4176a74974455a777b78bcf4816782acb2b3dfbc7f4a5ccb",
+    "receiptSha256": "cf0a8024a9d337b00d17d884646f4de788d5ee444d431f28b210b3270f9b453a",
+    "purchase": {"preparedTicket": 2, "acquiredTicket": 3, "draw": 21, "visiblePieces": 13, "drained": true},
+    "coldReload": {"draw": 17, "visiblePieces": 13, "identicalWallOwners": true, "drained": true},
+    "crossing": {
+      "worker": "worker-21",
+      "confirmedElapsed": 29.499999999999932,
+      "confirmedPose": [97.12669372558594, -5.061065060864955],
+      "confirmedGateOpening": 1,
+      "observedDraw": 269,
+      "observedDrawGateId": 7,
+      "observedDrawGateClockElapsed": 28.6499992370603,
+      "admission": "native-task"
+    },
+    "water": {"kind": "WaterSatisfied", "target": "plant-3", "worker": "worker-21", "elapsed": 39.80000000000063},
+    "errors": []
+  },
+  "directedRegression": {"passed": 36, "failed": 0, "skipped": 0},
+  "cpuFullShift": {
+    "waters": 6,
+    "homeRequestedAt": 250,
+    "homeOrigin": [99.14408111572266, -8.980127334594727],
+    "homeDestination": [88, 0],
+    "homeRoutePointCountAtRequest": 0,
+    "homeRoutePointCountAtColdLoadBeforeHiring": 28,
+    "abstractGraphAtHomeRequest": {"pointCount": 27, "usesGatePortal": true},
+    "independentLegPointCountsAtHomeRequest": [7, 5, 2],
+    "homeRetirementQualified": false
+  }
+}
