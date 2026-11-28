@@ -858,3 +858,13 @@ Edge y NVIDIA Turing ejecutaron el plan original de Desierto 712 con la física 
 Pasaron 80 pruebas de ataques, retirada, recuperación y roster, y la compilación de producción transformó 755 módulos. Los fixtures de reservas y turnos registran ahora el mismo plan que entregan al nacimiento, con su marca de completado. Pasaron las 35 pruebas de esos dos archivos, incluidas las cinco que antes se detenían en la validación de guardado.
 
 El control sitúa el reloj justo antes del nacimiento. El arranque desde el menú, los demás perfiles nocturnos y C4 quedan pendientes. [Recibos de NVIDIA](performance/native-desert-first-night-20261128.json).
+
+### Primera noche con contratación y cultivo protegido
+
+La autoridad admite el ataque al centro cuando el facóquero introductorio está solo, el único trabajador ya completó Home19 y la regla de cuota protege todos los cultivos vivos. La selección de Game conserva sus candidatos. Si hay un cultivo elegible para el daño, la cohorte de ataque al centro no lo admite.
+
+El control continuo de Desierto 712 compra el plátano por 150 y contrata un trabajador por 40. Game riega el mismo plátano tres veces y a los 263,50 s el trabajador ya está en el refugio. El guardado público toma el corte a los 370,00 s. El código anterior llega a Home19 y rechaza el nacimiento del facóquero. El candidato conserva el trabajador y los pagos hasta `RaidEnded`.
+
+Edge y NVIDIA Turing recargaron ese archivo con las opciones del guardado. La incursión nació a los 370,502270 s con un solo cultivo vivo y cuota de destrucción cero. Los cinco programas del facóquero conservaron su cuerpo y empezaron a edad cero. Los golpes `attack-15` y `attack-18` dejaron el centro en 560 HP desde la misma pose. El dibujo 742 acreditó la ausencia del animal y Draw drenó sin errores. El trabajador conservó el contrato, las fases y la pose (88, 0) sin heridas. El plátano quedó intacto y el saldo en 510.
+
+La pasada física empieza en el guardado posterior a Home19. La contratación y el turno completo se comprobaron en CPU con los puertos y WASM de producción. Otro control de CPU derrumba el centro durante Retreat y conserva un golpe sin gastar, el trabajador y el plátano. Pasaron 118 pruebas dirigidas y la compilación de producción. Siguen pendientes el arranque predeterminado del menú, las incursiones con cultivos elegibles y C4. [Recibo y guardado reproducible](performance/native-desert-paid-refuge-first-night-20261128.json).
