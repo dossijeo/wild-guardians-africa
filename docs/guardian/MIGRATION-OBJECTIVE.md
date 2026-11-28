@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+En la segunda noche del recinto pagado de Desierto 712, una hiena admitió sus tres golpes al centro y Retreat. NVIDIA confirmó la edad cero en los siete programas, el mismo cuerpo, la conservación de las defensas y el drenaje. El control físico parte del guardado anterior a la incursión. [Recorrido de la segunda noche](native-desert-mixed-flight-center-20261125.md#segunda-noche-con-recinto-y-una-hiena).
+
 Una partida nueva de Desierto 712 completó en NVIDIA el primer turno y la primera incursión desde el selector. El Draw original presentó la retirada y drenó al llegar a la contratación del segundo día. El control de fin de turno con WASM conserva el cuerpo de Action15 al aplicar el riego tardío, publica Idle20 y adquiere Home18. El perfil nativo de la partida sigue seleccionado por el arnés. [Recorrido desde el menú](native-desert-mixed-flight-center-20261125.md#primera-partida-de-desierto-desde-el-selector).
 
 El recinto automático de Desierto 712 completó en NVIDIA el cierre, la primera incursión y el riego del segundo turno sin recargar ni sustituir Draw. En otra pasada, el sustituto recuperó Stop12 con el portón detenido en cero. Certificó el picking antes de activar, readmitió Task14 con el mismo cuerpo y drenó después de un solo riego. [Prueba continua](native-desert-mixed-flight-center-20261125.md#primera-noche-y-segundo-turno-en-la-misma-sesión) · [Recuperación](native-terminal-resource-recovery-20261120.md#stop12-con-el-portón-del-recinto-automático).

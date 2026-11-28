@@ -780,13 +780,19 @@ export function interruptAnimalAttack(s,a,nav) {
 export function retreatAnimal(s,a,reason='magic',nav={}) {
  release(s,a,nav);a.hitApplied=true;a.attackRemaining=0;beginRetreat(s,a,nav,reason);
 }
-export function nativeDesertIntroductoryRaid(state,animal){
+function nativeDesertIntroductoryCohort(state,animal){
  const raid=state.raid;
  return state.biome==='desierto'&&raid?.daytime===false&&raid.pressureFacts?.introductory===true&&
-   Number.isSafeInteger(raid.introCropLimit)&&raid.animals.length===1&&raid.animals[0]===animal&&animal?.species==='warthog'&&
+   Number.isSafeInteger(raid.introCropLimit)&&raid.animals.length===1&&raid.animals[0]===animal&&
    state.structures[0]?.kind==='center'&&state.structures.slice(1).every(wall=>wall.kind==='wall'&&wall.status==='intact'&&
      (!wall.gate||wall.gateOpen===0&&nativeGateModelId(wall.material)))&&
    state.workers.every(worker=>worker.status==='home'&&!worker.raidReturn&&!worker.nativeRouteAdmission);
+}
+export function nativeDesertIntroductoryRaid(state,animal){
+ return animal?.species==='warthog'&&nativeDesertIntroductoryCohort(state,animal);
+}
+export function nativeDesertShelteredCenterRaid(state,animal){
+ return (animal?.species==='warthog'||animal?.species==='hyena')&&nativeDesertIntroductoryCohort(state,animal);
 }
 // The first native crop cohort has one mobile body and only inactive workers.
 // A different encounter, protection or reservation requires a new admission.
@@ -905,7 +911,7 @@ export function nativeShelteredCenterActor(state,animal){
  if(raid?.animals.length!==1||raid.animals[0]!==animal)return false;
  if(state.biome==='desierto'){
   const center=state.structures[0];
-  return nativeDesertIntroductoryRaid(state,animal)&&(animal.targetId===center.id||
+  return nativeDesertShelteredCenterRaid(state,animal)&&(animal.targetId===center.id||
    !animal.targetId&&state.events.some(event=>event.type==='AnimalLogicalHit'&&event.attackId===animal.attackId&&
     event.targetId===center.id&&event.presentation?.target?.kind==='center'));
  }
@@ -969,7 +975,7 @@ export function nativeCropRouteSubject(state,animal,flightWorker=null,native=nul
  return centerAttack?{target,center:target,purpose:'center'}:{target,center:state.structures.find(operational)??target};
 }
 export function nativeRetreatSubject(state,animal){
- if(!animal||(state.biome!=='sabana'&&!nativeCenterAttackCohort(state)&&!nativeDesertIntroductoryRaid(state,animal))||state.raid?.animals.length!==1||
+ if(!animal||(state.biome!=='sabana'&&!nativeCenterAttackCohort(state)&&!nativeDesertIntroductoryRaid(state,animal)&&!nativeShelteredCenterActor(state,animal))||state.raid?.animals.length!==1||
     state.raid.animals[0]!==animal||(animal.species!=='warthog'&&!nativeShelteredCenterActor(state,animal))||animal.status!=='retreating'||
     !nativeRetreatBudgetAllowed(state,animal)||!animal.hitApplied||animal.targetId||animal.reservation||animal.magicDown||
     (animal.magicStunUntil??0)>state.elapsed||

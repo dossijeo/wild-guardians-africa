@@ -17,11 +17,14 @@ import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-
 import {createEventDrivenTaskPlanner} from '../src/world/wild-engine/spatial-intent-bridge.js';
 import {nativeProductionAuthority, untilProduction} from './helpers/native-production-authority.js';
 import {recoverRouteAfterRuin} from './helpers/native-center-ruin-recovery.js';
+import {originalRig} from './helpers/native-animal-crop-rig.js';
+import {flush} from './helpers/remote-webgpu-fixture.js';
 
 const binary = process.env.QA_BARRIER_WASM ?? new URL('../src/world/wild-engine/spatial-savanna.wasm', import.meta.url);
 const module = new WebAssembly.Module(readFileSync(binary));
 const recording = new URL('../docs/qa/raid-spawn-navigation/prepared-complete-browser-desert.json', import.meta.url);
 const paidDesertRefuge = new URL('./fixtures/desierto712-d1-native-refuge-before-night.json.gz', import.meta.url);
+const secondDesertNight = new URL('./fixtures/desierto712-d2-enclosed-hyena-before-raid.json.gz', import.meta.url);
 const recorded = JSON.parse(readFileSync(recording)).timing.navigationContext;
 const {activeBounds} = recorded;
 const view = {bounds: activeBounds, ...recorded.raidView};
@@ -43,6 +46,71 @@ function residentSession(state) {
   }
   return session;
 }
+
+test('the Desert enclosure admits the planned hyena center strike and retreat on the second night',async()=>{
+ const raw=gunzipSync(readFileSync(secondDesertNight)).toString(),initial=deserialize(raw),saved=savedNativeAuthorityOptions(raw);
+ const manifest={epoch:'desert-second-night',chunks:saved.chunkKeys.map(key=>{
+  const [cx,cz]=key.split(',').map(Number);return {cx,cz,revision:1};
+ })};
+ assert(saved.nativeWorkerLifecycle);
+ assert.deepEqual(initial.nightPlan.group,['hyena']);
+ assert(initial.workers.every(worker=>worker.status==='home'));
+ const walls=initial.structures.filter(structure=>structure.kind==='wall');
+ assert(walls.some(wall=>wall.gate&&wall.gateOpen===0));
+ const events=[],proofs=[],draws=new Map();
+ let rig,f,state=initial;
+ try{
+  f=await nativeProductionAuthority(initial,{...saved,emptyBeastPhysics:true,getTerrainManifest:()=>manifest,
+   async onPrepare(record){
+    await flush();
+    const source=f.snapshot();
+    rig??=await originalRig(structuredClone(source),manifest);
+    rig.update(structuredClone(source));
+    await rig.prepare(record.resources);
+   },
+   onCommit(_record,receipt){
+    const proof=receipt.nativeAnimalCropRouteBinding??receipt.nativeAnimalCropStrikeBinding;
+    rig.commit(proof,receipt);
+    proofs.push(proof);
+   },
+  });
+  for(let i=0;i<600&&state.day===2;i++){
+   const publication=f.command({kind:'advance',seconds:.05,steps:4,nightFastForward:true});
+   assert.equal(typeof publication.then,'undefined');
+   state=JSON.parse(publication.snapshot);events.push(...publication.events);
+   rig?.update(structuredClone(state));
+   await f.present();
+   assert.deepEqual(f.faults,[]);
+   const frame=f.host.inspect().nativeRouteFrame;
+   const binding=frame?.bindings.find(row=>row.nativeAnimalCrop);
+   const ticket=frame?.worldBoundary.ticket;
+   if(binding&&!draws.has(ticket)){
+    draws.set(ticket,binding);
+    if(state.raid)rig.presented(binding.relativeTime);
+   }
+  }
+  assert.equal(state.day,3);
+  for(const record of f.records)await record.packet.presented;
+  assert.deepEqual(proofs.map(({reference})=>[reference.kind,reference.purpose]),
+   [[26,'center'],[27,'center'],[26,'center'],[27,'center'],[26,'center'],[27,'center'],[26,'retreat']]);
+  for(const {reference} of proofs){
+   assert.equal(reference.bodyId,proofs[0].reference.bodyId);
+   const draw=draws.get(reference.worldBoundary.ticket);
+   assert.equal(draw?.relativeTime,0);
+   assert.equal(draw.nativeAnimalCrop.bodyId,reference.bodyId);
+  }
+  assert.deepEqual(events.filter(event=>event.type==='StructureHit').map(event=>[event.targetId,event.structureHit.hp]),
+   [['structure-2',535],['structure-2',510],['structure-2',485]]);
+  const hits=events.filter(event=>event.type==='AnimalLogicalHit');
+  assert.deepEqual(hits.map(event=>event.attackId),proofs.filter(proof=>proof.reference.kind===27).map(proof=>'attack-'+proof.attackId));
+  assert(hits.every(event=>event.species==='hyena'));
+  assert.equal(events.filter(event=>event.type==='RaidEnded').length,1);
+  assert.deepEqual(state.structures.filter(structure=>structure.kind==='wall'),walls);
+  assert.deepEqual(state.plants.map(crop=>[crop.id,crop.alive]),initial.plants.map(crop=>[crop.id,crop.alive]));
+  assert.deepEqual(state.ledger,initial.ledger);
+  assert.deepEqual(f.errors,[]);
+ }finally{rig?.close();await f?.close();}
+});
 
 function beforeRaid() {
   const state = deserialize(recorded.state);

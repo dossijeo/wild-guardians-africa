@@ -11,7 +11,7 @@ import {copyNativeAnimalCropAttestation,copyNativeAnimalCropProposal,sameNativeA
 import {nativeMotionPresentationMatches} from '../native-motion-presentation-match.js';
 import {copyNativeShieldWorld,nativeShieldWorldKind,shieldCropStopFromProposal,copyNativeShieldCropExpiry} from '../native-shield-world.js';
 import {spatialShieldFootprint} from './spatial-shield-mirror.js';
-import {canAttackCrop,nativeCenterAttackCohort,nativeCenterAttackSite,nativeCenterCollapseSite,nativeLiveCenterAttackSite,nativeShelteredCenterActor,nativeDesertIntroductoryRaid,nativeCropRouteSubject,nativeCropCohortCurrent,nativeRetreatBudgetAllowed,nativeRetreatSubject,reachableApproach,raidTarget,previewRaidStrike,projectAcquiredRaidStrike,savedRaidStrike} from '../../simulation/raids.js';
+import {canAttackCrop,nativeCenterAttackCohort,nativeCenterAttackSite,nativeCenterCollapseSite,nativeLiveCenterAttackSite,nativeShelteredCenterActor,nativeDesertIntroductoryRaid,nativeDesertShelteredCenterRaid,nativeCropRouteSubject,nativeCropCohortCurrent,nativeRetreatBudgetAllowed,nativeRetreatSubject,reachableApproach,raidTarget,previewRaidStrike,projectAcquiredRaidStrike,savedRaidStrike} from '../../simulation/raids.js';
 import {captureRefugeReturnCheckpoint,copyRestoredRefugeReturn,refugeCheckpointGateFields,refugeWorkerPose,sameRefugePose,validateRefugeReturnState} from '../native-refuge-return.js';
 import {nativeEncounterCheckpointActors} from '../../simulation/native-encounter-checkpoint.js';
 import {farmStopCutFromNative,savedRaidFlightHomeGateIds} from '../../simulation/native-raid-flight-checkpoint.js';
@@ -4398,7 +4398,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     }
   };
   const requestNativeCenterBirth=(state,animal,{target,approach},body,pair=null)=>{
-    const sheltered=!pair&&target===state.structures[0]&&nativeDesertIntroductoryRaid(state,animal);
+    const sheltered=!pair&&target===state.structures[0]&&nativeDesertShelteredCenterRaid(state,animal);
     if(state!==owningState||!animalRouteV2||!(sheltered||nativeCenterAttackCohort(state,pair?.worker))||!nativeCenterAttackSite(state,target)||
        state.raid?.animals[0]!==animal||animal.status!=='entering'||!approach.path?.length)return false;
     syncBoundaryTime();
