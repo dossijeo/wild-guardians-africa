@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "product": "399234ca104e40cad34da412a9fceca01ed2302d",
+  "fixture": "Desierto 712, first introductory night, one center, no workers or crops",
+  "launch": {
+    "browser": "Edge",
+    "adapter": {"vendor": "nvidia", "architecture": "turing"},
+    "nativeWorkerLifecycle": true,
+    "dynamicPhysics": true,
+    "qualificationFlags": [],
+    "heldFirstReady": [26, 27],
+    "menuStartupExercised": false,
+    "cadenceMeasured": false
+  },
+  "native": {
+    "standaloneSHA256": "7c88c162fe748976833c566b247aa5ce3c6366f6a547e6884d062b038268e64c",
+    "pthreadSHA256": "4e705c296893c4393d7457e8a553c0852f02434c76cdc7095d3231eed0b5ac54"
+  },
+  "intactCenter": {
+    "rawReceipt": ".cache/desert-first-night-nvidia.json",
+    "receiptSHA256": "fbbe44686099673cd440229edd9a4715020cab1b4b33638d0dadfe00422140de",
+    "snapshotSHA256": "312577ecfcb1797e137a10e921545205a09890733c222cf4691d69d411491db2",
+    "capturedBeforeRetreatArbitrationFix": true,
+    "emptyClock": 333.03465515915303,
+    "birthAt": 333.08465515915304,
+    "actor": "animal-3",
+    "bodyId": 1,
+    "programs": [
+      {"ticket": 2, "kind": 26, "purpose": "center", "firstDraw": 12, "age": 0},
+      {"ticket": 4, "kind": 27, "purpose": "center", "firstDraw": 414, "age": 0},
+      {"ticket": 6, "kind": 26, "purpose": "center", "firstDraw": 431, "age": 0},
+      {"ticket": 8, "kind": 27, "purpose": "center", "firstDraw": 433, "age": 0},
+      {"ticket": 10, "kind": 26, "purpose": "retreat", "firstDraw": 452, "age": 0}
+    ],
+    "impactPose": {"x": 96.88103485107422, "z": 3.443208694458008, "heading": -2.6415923475521557},
+    "impacts": [
+      {"id": "attack-5", "at": 381.3746551591091, "beforeHp": 600, "afterHp": 580},
+      {"id": "attack-8", "at": 384.42465515910635, "beforeHp": 580, "afterHp": 560}
+    ],
+    "firstDrawWithoutAnimal": 677,
+    "reusedGeometries": 4,
+    "reusedAttributeBuffers": 26,
+    "drained": true,
+    "applicationErrors": []
+  },
+  "collapsingCenter": {
+    "rawReceipt": ".cache/desert-first-night-collapse-nvidia.json",
+    "receiptSHA256": "69083db953a4e683647aaea0c666384c8c6e5bec42876d28a0b838e3836facdf",
+    "snapshotSHA256": "e56b7ad8aabf3e3a2b5758c30cbc84813a78d25174c7f5f523bd5ec2b5fe064c",
+    "actor": "animal-3",
+    "bodyId": 1,
+    "programs": [
+      {"ticket": 2, "kind": 26, "purpose": "center", "firstDraw": 16, "age": 0},
+      {"ticket": 4, "kind": 27, "purpose": "center", "firstDraw": 413, "age": 0},
+      {"ticket": 6, "kind": 26, "purpose": "retreat", "firstDraw": 430, "age": 0}
+    ],
+    "impact": {"id": "attack-5", "at": 380.2746551591101, "beforeHp": 140, "afterHp": 120},
+    "ruin": {"at": 383.4746551591072, "ticket": 7, "polygon": 9, "draw": 455, "retreatAge": 2.3499999046325684},
+    "hitsRemainingOnRetreat": 1,
+    "firstDrawWithoutAnimal": 655,
+    "drained": true,
+    "applicationErrors": []
+  },
+  "verification": {
+    "candidateTestsPassed": 80,
+    "contentionAndReservationTestsPassedWithValidFixtures": 35,
+    "productionBuildModules": 755
+  }
+}
