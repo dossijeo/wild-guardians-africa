@@ -64,7 +64,8 @@ function initialState(){
 }
 
 for(const mode of ['with all clocks','without Home clock','without animal clock','with a changed Home phase','recover after GO','recover before GO',
- 'disk before ruin','disk after ruin','disk loss before ruin','disk loss after ruin'])test(`the finished center strike admits a new corridor and reaches the occupied gate ruin (${mode})`,{timeout:60000},async t=>{
+ 'disk before ruin','disk after ruin','disk loss before ruin','disk loss after ruin',
+ 'disk Home18 loss before ruin','disk Home18 loss after ruin'])test(`the finished center strike admits a new corridor and reaches the occupied gate ruin (${mode})`,{timeout:60000},async t=>{
  const omitClock=mode==='without Home clock'?'Home':mode==='without animal clock'?'animal':null;
  const changePhase=mode==='with a changed Home phase';
  const recoverBefore=mode==='recover before GO';
@@ -241,7 +242,8 @@ for(const mode of ['with all clocks','without Home clock','without animal clock'
   assert.equal(drawn.bindings.find(row=>row.nativeAnimalCrop).nativeAnimalCrop.bodyId,r.bodyId);
   assert.deepEqual(world.faults,[]);assert.deepEqual(world.errors,[]);
   if(diskMode&&mode.endsWith('after ruin'))disk=save();
-  if(disk)await reloadOccupiedCrossing(t,disk,{polygon,event,previous:drawn.worldBoundary,gateId,until:lease.until,access:()=>access,recover:mode.startsWith('disk loss')});
+  if(disk)await reloadOccupiedCrossing(t,disk,{polygon,event,previous:drawn.worldBoundary,gateId,until:lease.until,access:()=>access,
+   recover:mode.startsWith('disk Home18 loss')?'home':mode.startsWith('disk loss')?'approach':null});
   if(mode==='recover after GO'){
    const draw=await recoverRouteAfterRuin(world,ruin.commit.nativeCenterRuin,cut.elapsed,cut);
    const recovered=draw.host.inspect().nativeRouteFrame;
@@ -298,23 +300,40 @@ async function reloadOccupiedCrossing(t,disk,{polygon,event,previous,gateId,unti
  let homeReady,animalReady,releaseHome,releaseAnimal;
  const heldHome=new Promise(resolve=>{releaseHome=resolve;});
  const heldAnimal=new Promise(resolve=>{releaseAnimal=resolve;});
+ const holdUnlessCancelled=(held,signal)=>new Promise((resolve,reject)=>{
+  const abort=()=>reject(new DOMException('Preparation cancelled','AbortError'));
+  signal.addEventListener('abort',abort,{once:true});
+  held.then(()=>{signal.removeEventListener('abort',abort);resolve();});
+ });
  const options=savedNativeAuthorityOptions(serialize(disk));
  const cold=await nativeProductionAuthority(disk,{...options,getTerrainManifest:()=>terrainManifest,
   onPrepare(record){if(record.kind==='home-route')record.homeOriginPhase=true;},
   onReady(record,{signal}){
-   if(record.kind==='home-route'&&!homeReady){homeReady=record;return heldHome;}
+   if(record.kind==='home-route'&&!homeReady){homeReady=record;return recover==='home'?holdUnlessCancelled(heldHome,signal):heldHome;}
    if(record.kind==='animal-crop-route'&&!animalReady){
     animalReady=record;
-    if(recover)return new Promise((resolve,reject)=>{
-      const abort=()=>reject(new DOMException('Preparation cancelled','AbortError'));
-      signal.addEventListener('abort',abort,{once:true});
-      heldAnimal.then(()=>{signal.removeEventListener('abort',abort);resolve();});
-    });
-    return heldAnimal;
+    return recover==='approach'?holdUnlessCancelled(heldAnimal,signal):heldAnimal;
    }
   }});
  const {session,planner}=access();
  let draw=cold;
+ const frozenClock={version:1,epoch:0,elapsed:disk.elapsed,safeUntil:disk.elapsed,anchorAbsoluteMs:0,paused:true,segments:[]};
+ async function replaceDraw(held,expectedRoute){
+  cold.gpu.device.destroy();cold.retireResourceEndpoint();
+  const hold=await cold.authority.quiesceNativeIntentProduction({forLostDraw:true});
+  assert((await cold.authority.flushNativeResourcePreparation({allowRetired:true,forLostDraw:true})).terminal);
+  await assert.rejects(held.packet.presented);
+  assert(!held.committed);
+  const route=await cold.authority.terminalWorkerRoute();
+  assert.deepEqual(route,expectedRoute);
+  const [authorityPort,drawPort]=pair();
+  draw=await fixture({capabilities:{nativeHomeRouteVersion:1,nativeHomeArrivalVersion:1,nativeAnimalCropVersion:1,
+   nativeFarmArrivalVersion:1,nativeIdleCycleVersion:1}},
+   {intentControl:{port:drawPort,session:'production-control',recoveryHold:30},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
+  const {recoveredWorkerRoute:q}=await cold.authority.attachHeldWorkerRoute(authorityPort,'production-control',30,hold,route);
+  await assert.rejects(cold.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
+  return {hold,route,q};
+ }
  async function step(seconds=.02){
   let result,error;
   Promise.resolve(cold.command({kind:'advance',seconds,steps:1,nightFastForward:false})).then(row=>{result=row;},reason=>{error=reason;});
@@ -332,26 +351,40 @@ async function reloadOccupiedCrossing(t,disk,{polygon,event,previous,gateId,unti
   assert.deepEqual(asleep.structures,disk.structures);
   assert.deepEqual(points(asleep),savedPose);
   assert(!homeReady.committed);
+  if(recover==='home'){
+   const held=homeReady,source=planner.nativeRestoredPendingFlight();
+   const {hold,route,q}=await replaceDraw(held,{version:2,pendingFlight:true,members:[]});
+   assert.equal(q.worldBoundary,null);
+   assert.deepEqual(q.members,[]);
+   assert.deepEqual(q.pendingFlight,source);
+   assert.deepEqual((await readClientAssignment(q)).pendingFlight,source);
+   await assert.rejects(readClientAssignment({...q,worldBoundary:held.resources.worldBoundary}),/requires an unacquired world/);
+   const metadata={nativeWorldBoundary:null,clock:frozenClock};
+   await assert.rejects(draw.frame(0,metadata),/Replacement requires its bound worker clock/);
+   const foreign={...source,animal:{...source.animal,requestSequence:source.animal.requestSequence+1}};
+   await assert.rejects(draw.frame(0,{...metadata,recoveredPendingFlight:foreign}),/Replacement requires its bound worker clock/);
+   const submitted=draw.frame(0,{...metadata,recoveredPendingFlight:source});
+   await flush();await draw.host.idle();draw.host.present();await submitted;
+   const witness=await cold.authority.checkHeldDraw(30,hold,route);
+   assert.deepEqual(witness.pendingFlight,source);
+   assert.deepEqual(draw.host.inspect().nativeRouteFrame.bindings,[]);
+   assert.deepEqual(points(cold.snapshot()),savedPose);
+   await cold.attachRecoveredResources(draw);
+   cold.authority.resumeNativeIntentProduction(hold);
+   await untilProduction(cold,()=>cold.records.some(row=>row.kind==='home-route'&&row.committed));
+   homeReady=cold.records.find(row=>row.kind==='home-route'&&row.committed);
+   assert.notEqual(homeReady.resources.worldBoundary.ticket,held.resources.worldBoundary.ticket);
+   assert.deepEqual(homeReady.resources.sourceRequest,source.home);
+  }
   releaseHome();
   await untilProduction(cold,()=>homeReady.committed&&!!animalReady?.packet);
   assert.deepEqual(points(cold.snapshot()),savedPose);
   assert.equal(cold.snapshot().elapsed,disk.elapsed);
   assert(!animalReady.committed);
-  if(recover){
+  if(recover==='approach'){
    const held=animalReady,home=planner.nativeHomeRouteExecution(disk.workers[0].id);
    const originalLease=planner.nativeGateCrossings(marker.gate.id);
-   cold.gpu.device.destroy();cold.retireResourceEndpoint();
-   const hold=await cold.authority.quiesceNativeIntentProduction({forLostDraw:true});
-   assert((await cold.authority.flushNativeResourcePreparation({allowRetired:true,forLostDraw:true})).terminal);
-   await assert.rejects(held.packet.presented);
-   assert(!held.committed);
-   const route=await cold.authority.terminalWorkerRoute();
-   assert.deepEqual(route,{kind:18,actorId:home.actorId});
-   const [authorityPort,drawPort]=pair();
-   draw=await fixture({capabilities:{nativeHomeRouteVersion:1,nativeHomeArrivalVersion:1,nativeAnimalCropVersion:1,
-    nativeFarmArrivalVersion:1,nativeIdleCycleVersion:1}},
-    {intentControl:{port:drawPort,session:'production-control',recoveryHold:30},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
-   const {recoveredWorkerRoute:q}=await cold.authority.attachHeldWorkerRoute(authorityPort,'production-control',30,hold,route);
+   const {hold,route,q}=await replaceDraw(held,{kind:18,actorId:home.actorId});
    assert.deepEqual(q.execution,home);
    const ref=q.execution.binding.reference,epoch=ref.worldBoundary.effectiveTime;
    draw.client.registerClockBinding(draw.buffer,{byteOffset:0,semantic:'relative',epoch,
@@ -360,9 +393,7 @@ async function reloadOccupiedCrossing(t,disk,{polygon,event,previous,gateId,unti
    const gateGroup=draw.client.device.createBindGroup({entries:[{binding:0,resource:{buffer:gateBuffer}}]});
    draw.client.registerClockBinding(gateBuffer,{byteOffset:0,semantic:'relative',epoch,resourceEnd:nativeClockResourceEnd(epoch,ref.endTime),
     nativeGate:{gateId,worldBoundary:ref.worldBoundary}});
-   await assert.rejects(cold.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
-   const metadata={nativeWorldBoundary:ref.worldBoundary,
-    clock:{version:1,epoch:0,elapsed:disk.elapsed,safeUntil:disk.elapsed,anchorAbsoluteMs:0,paused:true,segments:[]}};
+   const metadata={nativeWorldBoundary:ref.worldBoundary,clock:frozenClock};
    await assert.rejects(draw.frame(0,metadata),/Replacement requires its bound worker clock/);
    const submitted=draw.frame(0,metadata,[draw.group,gateGroup]);
    await flush();await draw.host.idle();draw.host.present();await submitted;

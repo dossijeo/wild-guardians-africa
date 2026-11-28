@@ -2,7 +2,7 @@ import {stoppedGatePlateau,sameStop12Source,sameStop24Source} from "../native-st
 import {copyTask25HomeSource,sameTask25HomeSource} from '../native-task25-home-recovery.js';
 import {copyNativeTaskStartProposal} from '../native-task-start-presentation.js';
 import {classifyWorkerEncounter,prepareWorkerEncounter} from '../../simulation/encounters.js';
-import {centerRuinApproachEndpoint,copyNativeRecoveryGroup,copyRecoveredEncounterPose,matchesNativeRefugeRecovery,matchesNativeOrdinaryRefuge,matchesNativeWoundedRefuge,nativeCenterApproachEndpoint,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../native-worker-route-recovery.js';
+import {centerRuinApproachEndpoint,copyNativeRecoveryGroup,copyPendingFlightRecovery,copyRecoveredEncounterPose,matchesNativeRefugeRecovery,matchesNativeOrdinaryRefuge,matchesNativeWoundedRefuge,nativeCenterApproachEndpoint,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile,samePendingFlightRecovery,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../native-worker-route-recovery.js';
 import {sameNativeFarmArrivalRouteReference} from '../native-farm-arrival-route.js';
 import {centerSource,verifiesCenter} from '../native-center-ruin-source.js';
 import {copyNativeCenterPlacement} from '../native-center-placement.js';
@@ -784,8 +784,11 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     const strolls=nativeIdleStrollBindings(),farmCount=wasm.nav_farm_arrival_route_binding_actors?.()??0,
       homes=nativeHomeRouteBindings();
     if(recoveredWorkerRoute?.version===2){
-      const {members,refuge:arrival,ruin,pendingRuin,ruinMotors,encounter,ordinaryWorkers}=copyNativeRecoveryGroup(recoveredWorkerRoute,nativeWorldBoundary());
-      if(encounter?.version===3){
+      const {members,refuge:arrival,ruin,pendingRuin,ruinMotors,encounter,ordinaryWorkers,pendingFlight}=copyNativeRecoveryGroup(recoveredWorkerRoute,nativeWorldBoundary());
+      if(pendingFlight){
+        if(count||strolls.length||farmCount||homes.length||!samePendingFlightRecovery(pendingFlight,nativeRestoredPendingFlight()))
+          throw Error('Held flight requests changed before bootstrap');
+      }else if(encounter?.version===3){
         if(count||strolls.length||farmCount||homes.length||!sameRecoveredEncounter(encounter,nativeStationaryEncounterRecovery()))
           throw Error('Held stationary encounter changed before bootstrap');
       }else if(arrival&&members.length===0){
@@ -1690,6 +1693,15 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
        pending.x!==animal.x||pending.z!==animal.z||pending.yaw!==(animal.heading??0)||pending.phase!==(animal.motionPhase??0)||
        !recoveredCenterCurrent({targetId:pending.target,centerId:pending.center,targetX:pending.targetX,targetZ:pending.targetZ},animal,pending,worker))return null;
     return {home,pending};
+  }
+  function nativeRestoredPendingFlight(){
+    const f=raidFlight;
+    if(!f?.cold||!f.centerAttack||nativeWorldBoundary()!==null)return null;
+    const state=owningState,animal=f.animal,live=nativeAnimalCropState(animal.id);
+    if(live?.mode!==1||live.purpose!=='center'||live.previousStrike||live.restore)return null;
+    const home=nativeRaidFlightPendingCheckpoint();
+    if(!home||!recoveredCenterCurrent({targetId:live.target,centerId:live.center,targetX:live.targetX,targetZ:live.targetZ},animal,live,f.worker))return null;
+    return copyPendingFlightRecovery({version:1,at:state.elapsed,home,animal:readPendingAnimalCrop()});
   }
   function nativeRaidFlightFarmCheckpoint(){
     const game=owningState,animal=game?.raid?.animals[0],worker=animal&&nativeRaidFlightMember(game,animal);
@@ -4727,7 +4739,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     structureFor:id=>structuresById.get(numericId(id))??null,
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    nativeRaidFlightPendingCheckpoint,nativeRaidFlightFarmCheckpoint,declareRestoredRaidFlightFarm,nativePendingCenterRuinRecovery,nativeRefugeClosingGatePrograms,
+    nativeRaidFlightPendingCheckpoint,nativeRestoredPendingFlight,nativeRaidFlightFarmCheckpoint,declareRestoredRaidFlightFarm,nativePendingCenterRuinRecovery,nativeRefugeClosingGatePrograms,
     stoppedTaskHomeRecovery,stoppedStrollTaskRecovery,stoppedFarmTaskRecovery,prepareNativeCenterRuin,takeRefugeReturn,nativeRefugeReturnCheckpoint,intentChanges,routePoints,replanNativeShieldCrop,startNativeAnimalCropRouteAfterGpuQuiescence:options=>acquireNativeAnimalCrop(options,26),startNativeAnimalCropStrikeAfterGpuQuiescence:options=>acquireNativeAnimalCrop(options,27),requestNativeAnimalCropRoute,requestRestoredAnimalStrike,requestNativeProtectedSuccessor,requestNativeCenterSuccessor,acquireEncounterRetreat,prepareEncounterRetreat,observeRetreatEncounter,hasRetreatEncounter,applyRetreatEncounter,prepareEncounterExhaustion,consumeEncounterExhaustion,confirmEncounterExhaustion,encounterRetreatOwner,requestEncounterRetreat,encounterCheckpoint,restoreEncounterWorker,restoreEncounterApproach,encounterApproachPending,encounterCheckpointBlocked,encounterRecoveryCurrent,finishEncounterRecovery,requestEncounterHome,prepareHomeEncounterImpact,prepareCenterEncounterStep,consumeHomeEncounterImpact,verifyEncounterBoundary,declareRaidFlightPair,declareRestoredRaidFlightHome,restoreRaidFlightPair,nativeRaidFlightMember,nativeCenterFlightAnimalReady,requestNativeRetreat,requestRestoredAnimalRetreat,finishNativeRetreat,nativeFinishedAnimalRetreat,nativeFinishedAnimalCrop,nativeAnimalCropState,nativeAnimalCropRouteExecution,nativeEncounterFallRecovery,nativeStationaryEncounterRecovery,nativeRaidFlightRecoveryExecutions,nativeRestoredFlightApproach,nativeRefugeCropRecovery,nativeCenterRuinRouteRecovery,nativeAnimalCropStrikeExecution,nativeAnimalRouteBinding,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,inspectNativeStructureStops,inspectNativeGateAdditionStops,inspectNativeGateRemovalStops,addNativeBarriersAfterGpuQuiescence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence,stopNativeFarmArrivalAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal,captureNativeGateResumeProposal,cancelNativeGateResumeProposal,revalidateNativeGateResumeProposal,prepareNativeTaskStartProposal,captureNativeTaskStartProposal,revalidateNativeTaskStartProposal,cancelNativeTaskStartProposal,
     beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,nativeGameExecutionState,advanceNativeGameExecution,nativeTaskExecution,nativeTaskCancellationSource,nativeTaskCancellationSupported,cancelNativePendingTask,requestNativeTaskActionResources,nativeTaskActionRequest,
     startNativeTaskActionAfterGpuQuiescence,prepareNativeTaskActionProposal,captureNativeTaskActionProposal,revalidateNativeTaskActionProposal,cancelNativeTaskActionProposal,cancelNativeTaskActionForRaidFlight,
@@ -6313,7 +6325,7 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,nati
       return result;
     },routePoints:bridge.routePoints,
     prepareNativeCenterRuin:bridge.prepareNativeCenterRuin,replanNativeShieldCrop:bridge.replanNativeShieldCrop,startNativeAnimalCropRouteAfterGpuQuiescence:bridge.startNativeAnimalCropRouteAfterGpuQuiescence,startNativeAnimalCropStrikeAfterGpuQuiescence:bridge.startNativeAnimalCropStrikeAfterGpuQuiescence,requestNativeAnimalCropRoute:bridge.requestNativeAnimalCropRoute,requestRestoredAnimalStrike:bridge.requestRestoredAnimalStrike,declareRaidFlightPair:bridge.declareRaidFlightPair,declareRestoredRaidFlightHome:bridge.declareRestoredRaidFlightHome,restoreRaidFlightPair:bridge.restoreRaidFlightPair,acquireEncounterRetreat:bridge.acquireEncounterRetreat,prepareEncounterRetreat:bridge.prepareEncounterRetreat,observeRetreatEncounter:bridge.observeRetreatEncounter,hasRetreatEncounter:bridge.hasRetreatEncounter,applyRetreatEncounter:bridge.applyRetreatEncounter,prepareEncounterExhaustion:bridge.prepareEncounterExhaustion,consumeEncounterExhaustion:bridge.consumeEncounterExhaustion,confirmEncounterExhaustion:bridge.confirmEncounterExhaustion,encounterRetreatOwner:bridge.encounterRetreatOwner,requestEncounterRetreat:bridge.requestEncounterRetreat,encounterCheckpoint:bridge.encounterCheckpoint,restoreEncounterWorker:bridge.restoreEncounterWorker,restoreEncounterApproach:bridge.restoreEncounterApproach,encounterApproachPending:bridge.encounterApproachPending,encounterCheckpointBlocked:bridge.encounterCheckpointBlocked,nativeRefugeReturnCheckpoint:bridge.nativeRefugeReturnCheckpoint,encounterRecoveryCurrent:bridge.encounterRecoveryCurrent,finishEncounterRecovery:bridge.finishEncounterRecovery,requestEncounterHome:(state,w)=>bridge.requestEncounterHome(state,w)&&projectNativeHomeExecution(state,w),prepareHomeEncounterImpact:bridge.prepareHomeEncounterImpact,prepareCenterEncounterStep:bridge.prepareCenterEncounterStep,consumeHomeEncounterImpact:bridge.consumeHomeEncounterImpact,verifyEncounterBoundary:bridge.verifyEncounterBoundary,nativeRaidFlightMember:bridge.nativeRaidFlightMember,nativeCenterFlightAnimalReady:bridge.nativeCenterFlightAnimalReady,nativeFinishedAnimalRetreat:bridge.nativeFinishedAnimalRetreat,nativeFinishedAnimalCrop:bridge.nativeFinishedAnimalCrop,nativeAnimalCropState:bridge.nativeAnimalCropState,nativeAnimalRouteBinding:bridge.nativeAnimalRouteBinding,nativeAnimalCropRouteExecution:bridge.nativeAnimalCropRouteExecution,nativeEncounterFallRecovery:bridge.nativeEncounterFallRecovery,nativeStationaryEncounterRecovery:bridge.nativeStationaryEncounterRecovery,nativeRaidFlightRecoveryExecutions:bridge.nativeRaidFlightRecoveryExecutions,nativeRestoredFlightApproach:bridge.nativeRestoredFlightApproach,nativeRefugeCropRecovery:bridge.nativeRefugeCropRecovery,nativeCenterRuinRouteRecovery:bridge.nativeCenterRuinRouteRecovery,nativeAnimalCropStrikeExecution:bridge.nativeAnimalCropStrikeExecution,nativeRouteTiming:bridge.nativeRouteTiming,nativeRouteTimeKnots:bridge.nativeRouteTimeKnots,sampleNativeRoute:bridge.sampleNativeRoute,captureNativeRoutePresentation:bridge.captureNativeRoutePresentation,
-    nativeRaidFlightPendingCheckpoint:bridge.nativeRaidFlightPendingCheckpoint,nativePendingCenterRuinRecovery:bridge.nativePendingCenterRuinRecovery,
+    nativeRaidFlightPendingCheckpoint:bridge.nativeRaidFlightPendingCheckpoint,nativeRestoredPendingFlight:bridge.nativeRestoredPendingFlight,nativePendingCenterRuinRecovery:bridge.nativePendingCenterRuinRecovery,
     nativeRefugeClosingGatePrograms:bridge.nativeRefugeClosingGatePrograms,
     nativeRaidFlightFarmCheckpoint:bridge.nativeRaidFlightFarmCheckpoint,declareRestoredRaidFlightFarm:bridge.declareRestoredRaidFlightFarm,
     finishRestoredRaidFlightFarm(state,saved,workerBody,animalBody){

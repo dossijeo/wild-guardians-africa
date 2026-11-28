@@ -202,14 +202,15 @@ function submitRuinMotors(draw,motors,metadata,groups=[]){
 
 export async function readClientAssignment(source){
  const worker={postMessage(){},terminate(){}},session='endpoint-client';
- const client=createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session,workerFactory:()=>worker});
+ const client=createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session,nativeWorkerLifecycle:!!source.pendingFlight,workerFactory:()=>worker});
  const receive=data=>worker.onmessage({data:{session,...data}});
  try{
   receive({kind:'ready'});await client.ready;
   const snapshot=client.submit({kind:'snapshot'}).result;
   receive({kind:'result',sequence:1});await snapshot;
   const attached=client.attachNativeIntentControl({postMessage(){},close(){}},{recoveryHold:source.holdId});
-  receive({kind:'nativeIntentControlAttached',authorityEpoch:(source.worldBoundary??source.resources.worldBoundary).authorityEpoch,sequence:1,
+  const authorityEpoch=source.pendingFlight?.home.authorityEpoch??(source.worldBoundary??source.resources.worldBoundary).authorityEpoch;
+  receive({kind:'nativeIntentControlAttached',authorityEpoch,sequence:1,
    recoveredWorkerRoute:{...source,publicationSequence:1}});
   return (await attached).recoveredWorkerRoute;
  }finally{client.dispose();}

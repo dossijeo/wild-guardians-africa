@@ -3,10 +3,10 @@ import {waitGpuPreparation} from './wait-gpu-preparation.js';
 
 // One structural admission while a native boundary is being recovered. It
 // neither advances time nor repeatedly checks navigation during locomotion.
-export async function prepareNativeWorldFrameBoundary({worldBoundary,scene,admission,isReady,assertCurrent,signal,
+export async function prepareNativeWorldFrameBoundary({worldBoundary,scene,admission,isReady,assertCurrent,signal,unacquiredFlight=false,
  now=()=>performance.now(),timeoutMs=30000,nextTask=()=>new Promise(resolve=>setTimeout(resolve,16))}={}){
  const boundary=copyNativeWorldBoundary(worldBoundary);
- if(!boundary||!scene?.isScene||typeof admission?.prepareTicket!=='function'||typeof isReady!=='function'||typeof assertCurrent!=='function'||
+ if((boundary===null)!==unacquiredFlight||!scene?.isScene||typeof admission?.prepareTicket!=='function'||typeof isReady!=='function'||typeof assertCurrent!=='function'||
     typeof now!=='function'||!Number.isFinite(timeoutMs)||timeoutMs<=0||typeof nextTask!=='function')throw TypeError('Invalid native world frame admission');
  const deadline=now()+timeoutMs;
  function current(){

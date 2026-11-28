@@ -82,7 +82,7 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
              !Number.isSafeInteger(q.publicationSequence)||q.publicationSequence<1||q.publicationSequence!==next-queue.length-1||
              !Array.isArray(q.terrainManifest?.chunks))throw Error('Invalid replacement publication');
           const grouped=q.version===2,cut=grouped?copyNativeWorldBoundary(q.worldBoundary):null;
-          if(grouped&&(cut?.authorityEpoch!==data.authorityEpoch||!Array.isArray(q.members)||![0,1,2].includes(q.members.length)))
+          if(grouped&&(!q.pendingFlight&&cut?.authorityEpoch!==data.authorityEpoch||!Array.isArray(q.members)||![0,1,2].includes(q.members.length)))
             throw Error('Invalid replacement world cut');
           const flightHome=grouped&&q.members.length===2&&q.members[0]?.resources?.kind===18?q.members[0].execution?.binding:null;
           const members=(grouped?q.members:[q]).map(({execution,resources:input})=>{
@@ -111,16 +111,18 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
           let evidence={};
           if(grouped){
             const proofs=members.map(({execution,resources})=>({kind:resources.kind,proof:execution.binding}));
-            const {refuge,ruin,pendingRuin,ruinMotors,encounter,ordinaryWorkers,idleCyclePhases}=copyNativeRecoveryGroup({...q,members:proofs},cut);
+            const {refuge,ruin,pendingRuin,ruinMotors,encounter,ordinaryWorkers,idleCyclePhases,pendingFlight}=copyNativeRecoveryGroup({...q,members:proofs},cut);
             if(ordinaryWorkers&&!nativeWorkerLifecycle)throw Error('Ordinary worker recovery is unavailable');
+            if(pendingFlight&&(!nativeWorkerLifecycle||pendingFlight.home.authorityEpoch!==data.authorityEpoch))
+              throw Error('Pending flight belongs to another authority');
             if(refuge&&members.length===0){
               if(matchesNativeOrdinaryRefuge(cut,refuge)){
                 if(!nativeWorkerLifecycle)throw Error('Ordinary Home recovery is unavailable');
               }else if(!qualifyRaidEncounter)throw Error('Wounded refuge recovery is unavailable');
             }
-            evidence={...(refuge?{refuge}:{}),...(ruin?{ruin}:{}),...(pendingRuin?{pendingRuin}:{}),...(ruinMotors?{ruinMotors}:{}),...(encounter?{encounter}:{}),...(idleCyclePhases?{idleCyclePhases}:{})};
-            const at=members[0]?.execution.executedThrough??encounter?.at??cut.effectiveTime;
-            if(at<cut.effectiveTime||pendingRuin&&at!==pendingRuin.boundary.effectiveTime||!members.every(member=>member.execution.executedThrough===at))
+            evidence={...(refuge?{refuge}:{}),...(ruin?{ruin}:{}),...(pendingRuin?{pendingRuin}:{}),...(ruinMotors?{ruinMotors}:{}),...(encounter?{encounter}:{}),...(idleCyclePhases?{idleCyclePhases}:{}),...(pendingFlight?{pendingFlight}:{})};
+            const at=members[0]?.execution.executedThrough??encounter?.at??pendingFlight?.at??cut.effectiveTime;
+            if(cut&&at<cut.effectiveTime||pendingRuin&&at!==pendingRuin.boundary.effectiveTime||!members.every(member=>member.execution.executedThrough===at))
               throw Error('Replacement samples span different times');
           }
           recoveredWorkerRoute=grouped?{...q,worldBoundary:cut,members,...evidence}:{...q,...members[0]};

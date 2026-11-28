@@ -8,7 +8,7 @@ import {nativeTaskActionProjectionMatches} from '../world/native-task-action-att
 import {nativeTaskActionActor} from '../world/native-task-action-presentation.js';
 import {nativeDeliveryProjectionMatches} from '../world/native-task-consequence.js';
 import {nativeTaskSettlementProjectionMatches} from '../world/native-task-settlement.js';
-import {centerRuinApproachEndpoint,copyNativeRecoveryGroup,matchesRecoveredRuinMotorSamples,nativeCenterApproachEndpoint,nativeIdleCycleRecoveryPhaseMatches,nativeOrdinaryRecoveryKinds,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../world/native-worker-route-recovery.js';
+import {centerRuinApproachEndpoint,copyNativeRecoveryGroup,matchesRecoveredRuinMotorSamples,nativeCenterApproachEndpoint,nativeIdleCycleRecoveryPhaseMatches,nativeOrdinaryRecoveryKinds,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,samePendingFlightRecovery,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../world/native-worker-route-recovery.js';
 import {nativeClockResourceEnd} from '../rendering/native-clock-resource-end.js';
 import {sameNativeHomeArrivalAttestation} from '../world/native-home-arrival.js';
 import {nativeEncounterCheckpointActors} from './native-encounter-checkpoint.js';
@@ -1590,6 +1590,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
           if(pair)return {version:2,members:pair.map(({actorId},i)=>({kind:i===0?18:26,actorId}))};
           const waiting=savedFlight&&planner.nativeRestoredFlightApproach();
           if(waiting)return {kind:18,actorId:waiting.home.actorId};
+          if(savedFlight&&planner.nativeRestoredPendingFlight())return {version:2,pendingFlight:true,members:[]};
         }
       }
       if(!workersAtRefuge)return null;
@@ -1647,6 +1648,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
         return waiting?.home.actorId===route.actorId?{executions:[waiting.home],pendingApproach:waiting.pending}:null;
       }
       return execution?{executions:[execution]}:null;
+    }
+    if(route.pendingFlight){
+      const pendingFlight=savedFlight&&planner.nativeRestoredPendingFlight();
+      return pendingFlight&&route.members.length===0?{executions:[],pendingFlight}:null;
     }
     if(route.encounter==='stationary'){
       const encounter=planner.nativeStationaryEncounterRecovery();
@@ -1762,7 +1767,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       }
       if(shieldAdvance||centerRuinAdvance||nativeStructurePreparation)return Promise.reject(Error('Native production is held by a world mutation'));
       if(closed)return Promise.reject(Error('Simulation authority is closed'));
-      return nativeProduction?.quiesce({cancelWoundedHome:forLostDraw&&qualifyRaidEncounter,cancelCenterPreparation:forLostDraw,cancelIdleSuccessor:forLostDraw,cancelStoppedTask:forLostDraw,cancelStoppedHome:forLostDraw})??Promise.resolve(null);
+      return nativeProduction?.quiesce({cancelHomePreparation:forLostDraw,cancelCenterPreparation:forLostDraw,cancelIdleSuccessor:forLostDraw,cancelStoppedTask:forLostDraw,cancelStoppedHome:forLostDraw})??Promise.resolve(null);
     },
     resumeNativeIntentProduction(receipt){
       if(closed)throw Error('Simulation authority is closed');
@@ -1828,6 +1833,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       const proofs=executions.map((execution,i)=>({kind:routes[i].kind,proof:execution.binding}));
       const evidence={...(group.refuge?{refuge:group.refuge}:{}),...(group.ruin?{ruin:group.ruin}:{}),
         ...(group.pendingRuin?{pendingRuin:group.pendingRuin}:{}),
+        ...(group.pendingFlight?{pendingFlight:group.pendingFlight}:{}),
         ...(group.ruinMotors?{ruinMotors:group.ruinMotors}:{}),
         ...(group.encounter?{encounter:group.encounter}:{}),...(idleCyclePhases.length?{idleCyclePhases}:{})};
       const attachment=await nativeIntentControl.attach(port,transportSession,
@@ -1857,6 +1863,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
          !previous||JSON.stringify(previous)!==JSON.stringify(live)||
          !matchesRecoveredRuinMotorSamples(draw.ruinMotorSamples,live.ruinMotors,draw.elapsed)||
          route.encounter&&!sameRecoveredEncounter(draw.encounter,live.encounter)||
+         route.pendingFlight&&(!samePendingFlightRecovery(draw.pendingFlight,live.pendingFlight)||draw.worldBoundary!==null)||
          route.refuge&&(!routes.length||nativeOrdinaryRecoveryKinds(routes.map(({kind})=>kind),true))&&
            !sameNativeHomeArrivalAttestation(draw.refuge,live.refuge)||
          !rows.every((row,i)=>sameHeld(nativeWorkerRouteRecoveryProfile(routes[i].kind),live.executions[i],row,draw.elapsed)))

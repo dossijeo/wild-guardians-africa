@@ -34,3 +34,15 @@ test('driver failure and malformed admission tickets are never converted into re
 test('admitted identities are owned copies and lose validity when their dependencies change',async()=>{
  const f=fixture(),prepared=await prepareNativeWorldFrameBoundary(f.options);f.options.worldBoundary.ticket=99;assert.equal(prepared.worldBoundary.ticket,2);assert(Object.isFrozen(prepared.worldBoundary));f.ready=false;assert.equal(prepared.valid(),false);
 });
+
+test('a pending flight can admit a real scene with zero acquired world tickets',async()=>{
+ const f=fixture();
+ await assert.rejects(prepareNativeWorldFrameBoundary({...f.options,worldBoundary:null}),/Invalid native world frame/);
+ await assert.rejects(prepareNativeWorldFrameBoundary({...f.options,unacquiredFlight:true}),/Invalid native world frame/);
+ const prepared=await prepareNativeWorldFrameBoundary({...f.options,worldBoundary:null,unacquiredFlight:true});
+ assert.equal(f.issued,1);
+ assert.equal(prepared.worldBoundary,null);
+ assert.equal(prepared.valid(),true);
+ f.current=false;
+ assert.equal(prepared.valid(),false);
+});

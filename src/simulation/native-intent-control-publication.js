@@ -1,6 +1,6 @@
 import {copyNativeShieldCropExpiry,sameNativeShieldCropExpiry} from '../world/native-shield-world.js';
 import {centerSource,sameCenter,verifiesCenter} from '../world/native-center-ruin-source.js';
-import {copyNativeIdleCycleRecoveryPhase,copyNativeRecoveryGroup,matchesRecoveredRuinMotorSamples,nativeOrdinaryRecoveryKinds,nativeRecoveryCovers,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,recoveredNativeGateSamples,sameRecoveredEncounter} from '../world/native-worker-route-recovery.js';
+import {copyNativeIdleCycleRecoveryPhase,copyNativeRecoveryGroup,matchesRecoveredRuinMotorSamples,nativeOrdinaryRecoveryKinds,nativeRecoveryCovers,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,recoveredNativeGateSamples,samePendingFlightRecovery,sameRecoveredEncounter} from '../world/native-worker-route-recovery.js';
 import {copyNativeBarrierAdditionReference,sameNativeBarrierAdditionReference,copyNativeBarrierAdditionAttestation} from '../world/native-barrier-addition.js';
 import {copyNativeTaskRouteStopAttestation,copyNativeTaskRouteStopReference,sameNativeTaskRouteStopReference} from '../world/native-task-route-stop.js';
 import {copyNativeFarmArrivalStopReference,sameNativeFarmArrivalStopReference,copyNativeFarmArrivalStopAttestation} from '../world/native-farm-arrival-stop.js';
@@ -164,12 +164,14 @@ export function createNativeIntentControlPublication({port,session,observe,
         const members=recoveryMembers;
         const rows=recoveryBaseline?.version===2?draw.members:[draw];
         const refuge=recoveryBaseline?.refuge&&(members?.length===0||nativeOrdinaryRecoveryKinds(members?.map(({kind})=>kind)??[],true));
+        const pendingFlight=recoveryBaseline?.pendingFlight;
         if(!members||draw.holdId!==recoveryBaseline.holdId||draw.consumerToken!==consumerToken||
            !Number.isSafeInteger(draw.frameSequence)||draw.frameSequence<1||draw.elapsed!==fence.effectiveTime||
            !matchesRecoveredRuinMotorSamples(draw.ruinMotorSamples,recoveryBaseline.ruinMotors,draw.elapsed)||
            (recoveryBaseline.encounter?!sameRecoveredEncounter(draw.encounter,recoveryBaseline.encounter):draw.encounter!==undefined)||
+           (pendingFlight?!samePendingFlightRecovery(draw.pendingFlight,pendingFlight)||draw.worldBoundary!==null:draw.pendingFlight!==undefined)||
            (refuge?(!sameNativeHomeArrivalAttestation(draw.refuge,recoveryBaseline.refuge)||!sameNativeWorldBoundary(draw.worldBoundary,worldBoundary)):
-             draw.refuge!==undefined||draw.worldBoundary!==undefined)||
+             draw.refuge!==undefined||!pendingFlight&&draw.worldBoundary!==undefined)||
            !Array.isArray(rows)||rows.length!==members.length||!members.every(({kind,proof,idleCyclePhase},i)=>{
              const row=rows[i],profile=nativeWorkerRouteRecoveryProfile(kind);
              if(row?.kind!==kind)return false;

@@ -6,7 +6,7 @@ import {copyNativeIdleStrollAttestation,copyNativeIdleStrollResources,sameNative
 import {copyNativeIdleCycleAttestation,copyNativeIdleCycleResources,sameNativeIdleCycleAttestation,sameNativeIdleCycleReference} from './native-idle-cycle.js';
 import {copyNativeHomeRouteAttestation,copyNativeHomeRouteResources,sameNativeHomeRouteAttestation,sameNativeHomeRouteReference} from './native-home-route.js';
 import {copyNativeHomeArrivalAttestation} from './native-home-arrival.js';
-import {copyNativeAnimalCropAttestation,sameNativeAnimalCropReference} from './native-animal-crop-resource.js';
+import {copyNativeAnimalCropAttestation,copyPendingAnimalCrop,sameNativeAnimalCropReference} from './native-animal-crop-resource.js';
 import {copyNativeRoutePresentation,NATIVE_ROUTE_PRESENTATION_FIELDS,NATIVE_ROUTE_PRESENTATION_WIDTH} from './native-route-presentation.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from './native-world-boundary.js';
 import {centerSource,verifiesCenter} from './native-center-ruin-source.js';
@@ -383,9 +383,31 @@ export function copyRecoveredEncounterPose(value){
  return Object.freeze({version,workerId,workerBody,animalId,profile,hit,impactAt,raidEnded,endedAt,at,x,z,heading,remaining,getUp:recovery,phase,...(home?{home}:{})});
 }
 
+export function copyPendingFlightRecovery(value){
+ const home=copyNativeHomeRequestReference(value?.home),animal=copyPendingAnimalCrop(value?.animal);
+ const at=value.at;
+ if(value.version!==1||Object.keys(value).some(key=>!['version','at','home','animal'].includes(key))||
+    !Number.isFinite(at)||at<home.requestedAt||home.version!==2||animal.purpose!=='center'||
+    animal.authorityEpoch!==home.authorityEpoch||animal.nativeSession!==home.nativeSession||
+    animal.actorId===home.actorId||animal.bodyId===home.bodyId||animal.requestSequence<=home.requestSequence||
+    animal.restore||animal.restoredWorkerImpact||value.animal.previousStrike||value.animal.previousShieldCrop)
+   throw Error('Invalid pending flight recovery');
+ return Object.freeze({version:1,at,home,animal});
+}
+
+export function samePendingFlightRecovery(a,b){
+ try{return JSON.stringify(copyPendingFlightRecovery(a))===JSON.stringify(copyPendingFlightRecovery(b));}catch{return false;}
+}
+
 // The current world can include an exact later mutation that retained the
 // moving actor's acquisition. Each surviving clock keeps its origin.
 export function copyNativeRecoveryGroup(value,world,{awaitingIdleCyclePhase=false}={}){
+ if(value.pendingFlight!==undefined){
+   if(value.version!==2||world!==null||!Array.isArray(value.members)||value.members.length||
+      ['ruin','pendingRuin','ruinMotors','encounter','refuge','idleCyclePhases'].some(key=>value[key]!==undefined))
+     throw Error('Pending flight recovery requires an unacquired world');
+   return {members:[],pendingFlight:copyPendingFlightRecovery(value.pendingFlight)};
+ }
  if(value.ruinMotors!==undefined&&value.ruin===undefined&&value.pendingRuin===undefined)throw Error('Recovered motors require their center ruin');
  if(value.pendingRuin!==undefined&&(value.ruin!==undefined||value.encounter!==undefined||value.refuge!==undefined))
    throw Error('Pending center ruin recovery needs its own cut');

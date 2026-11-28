@@ -177,7 +177,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
  }
  function protectedHomeSource(kind,actorId){
   if(kind==='home-route'){
-   const home=planner.nativeStationaryEncounterRecovery?.()?.home;
+   const home=planner.nativeStationaryEncounterRecovery?.()?.home??planner.nativeRestoredPendingFlight?.()?.home;
    return home&&actorId==='worker-'+home.actorId?JSON.stringify(home):null;
   }
   if(kind==='home-arrival'&&state.workers.length===1){
@@ -211,7 +211,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   const proof=recoverableStoppedHomeSource(actorId);
   return proof?JSON.stringify(proof.request):null;
  }
- function quiesce({cancelStoppedTask=false,cancelStoppedHome=false,cancelTask=null,cancelCrop=null,cancelWoundedHome=false,cancelCenterPreparation=false,cancelIdleSuccessor=false}={}){
+ function quiesce({cancelStoppedTask=false,cancelStoppedHome=false,cancelTask=null,cancelCrop=null,cancelHomePreparation=false,cancelCenterPreparation=false,cancelIdleSuccessor=false}={}){
   if(closed||fault)return Promise.reject(Error(fault?'Native intent production failed: '+fault:'Native intent production closed'));
   if(quiescence)return quiescence.promise;
   if(active&&!active.promise)return Promise.reject(Error('Native intent production operation is not ready'));
@@ -220,7 +220,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   const hold={receipt:Object.freeze({}),settled:false,promise:null};quiescence=hold;
   if(cancelTask&&active?.actorId===cancelTask.actorId&&active.taskId&&active.taskId===cancelTask.taskId||
      cancelCrop&&active?.kind===cancelCrop.kind&&active.actorId===cancelCrop.actorId&&active.requestSequence===cancelCrop.requestSequence||
-     cancelWoundedHome&&active?.source&&protectedHomeSource(active.kind,active.actorId)===active.source||
+     cancelHomePreparation&&active?.source&&protectedHomeSource(active.kind,active.actorId)===active.source||
      cancelCenterPreparation&&active?.source&&protectedCenterPreparationSource(active.kind,active.actorId)===active.source||
      cancelIdleSuccessor&&active?.source&&protectedIdleSuccessorSource(active.kind,active.actorId)===active.source||
      cancelStoppedHome&&active?.source&&protectedStoppedHomeSource(active.kind,active.actorId)===active.source||

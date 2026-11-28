@@ -1,6 +1,6 @@
 import {nativeHomeWorkerStatus,sameNativeHomeRequestReference} from '../world/native-home-request-reference.js';
 import {centerSource,matchesCenterRuinCommit,verifiesCenter} from '../world/native-center-ruin-source.js';
-import {copyNativeRuinMotors,nativeOrdinaryRecoveryKinds,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
+import {copyNativeRuinMotors,copyPendingFlightRecovery,nativeOrdinaryRecoveryKinds,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
 import {copyNativeAnimalCropReference,copyNativeAnimalCropProposal,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference,nativeAnimalCropSuccessor} from '../world/native-animal-crop-resource.js';
 import {nativeAnimalCropPublicationMatches} from '../simulation/raids.js';
 import {nativeMotionPresentationMatches} from '../world/native-motion-presentation-match.js';
@@ -155,15 +155,15 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
  async function temporalSuppression(sequence,abortSignal,initial){if(sequence===0)return [...initial];if(!stream){await new Promise((resolve,reject)=>{if(abortSignal?.aborted){reject(new DOMException('Temporal terrain cancelled','AbortError'));return;}const abort=()=>reject(new DOMException('Temporal terrain cancelled','AbortError'));abortSignal?.addEventListener('abort',abort,{once:true});temporalStreamReady.then(()=>{abortSignal?.removeEventListener('abort',abort);resolve();});});}return stream.waitForTerrainSuppression(sequence,{signal:abortSignal});}
  const abortBootstrap=()=>biomePackAbort?.abort();signal?.addEventListener('abort',abortBootstrap,{once:true});
  function checkBootstrap(){if(signal?.aborted)throw new DOMException('WebGPU startup cancelled','AbortError');}
- async function admitRecoveredNativeWorld(boundary,sequence,recoverySignal,presentationState){
-  if(!boundary){nativeWorldFrameAdmission=null;return null;}
+ async function admitRecoveredNativeWorld(boundary,sequence,recoverySignal,presentationState,{unacquiredFlight=false}={}){
+  if(!boundary&&!unacquiredFlight){nativeWorldFrameAdmission=null;return null;}
   const current=()=>{if(closed||stream.status().sequence!==sequence)throw Error('Native world replay boundary changed');};
   if(recoverySignal?.aborted)throw new DOMException('Native world admission cancelled','AbortError');
   current();
   // Retain the existing full-scene admission proof, not a cached native permit.
   // Its own owner, readiness, material, geometry and pass read sets stay live.
-  if(sameNativeWorldBoundary(boundary,nativeWorldFrameAdmission?.worldBoundary??null)&&nativeWorldFrameAdmission.valid())return nativeWorldFrameAdmission.worldBoundary;
-  const prepared=await prepareNativeWorldFrameBoundary({worldBoundary:boundary,scene,admission:pipelineAdmission,signal:recoverySignal,
+  if(nativeWorldFrameAdmission?.valid()&&sameNativeWorldBoundary(boundary,nativeWorldFrameAdmission.worldBoundary))return nativeWorldFrameAdmission.worldBoundary;
+  const prepared=await prepareNativeWorldFrameBoundary({worldBoundary:boundary,scene,admission:pipelineAdmission,signal:recoverySignal,unacquiredFlight,
    assertCurrent:current,isReady:()=>webGpuPickerReady(presentationState,{animals:roster?.status(),workers:workers?.status(),settlements:settlements?.status(),
     crops:crops?.status(),crates:crates?.status(),biome:biomeProps?.status(),terrain:terrain.status()})});
   if(!prepared.valid())throw Error('Native world frame admission became stale');nativeWorldFrameAdmission=prepared;return prepared.worldBoundary;
@@ -790,7 +790,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
    }},frame=>{const previous=nativePickFrame;nativePickFrame=frame;try{return operation();}finally{nativePickFrame=previous;}});
   }
 
-  let firstReplacementFrame=null,recoveredFall=null;
+  let firstReplacementFrame=null,recoveredFall=null,recoveredPendingFlight=null;
   async function prepareRecoveredWorkerRoute(source,ownerSignal){
     const grouped=source?.version===2,inputs=grouped?source.members:[source],sequence=source?.publicationSequence;
     const members=inputs.map(({resources,execution})=>{
@@ -800,13 +800,15 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
     });
     const replayed=preparedNativeWorldBoundary,boundary=grouped?source.worldBoundary:members[0].ref.worldBoundary;
     const flightHome=members.length===2&&members[0].profile.kind===18?members[0].execution.binding:null;
+    const unacquiredFlight=source.pendingFlight===undefined?null:copyPendingFlightRecovery(source.pendingFlight);
+    if(unacquiredFlight&&(!grouped||members.length||boundary!==null))throw Error('Pending flight has an acquired route');
     const {ruin,pendingRuin,encounter}=source;
     const ruinMotors=copyNativeRuinMotors(source.ruinMotors,ruin?.prepared??pendingRuin);
     const stationaryRefuge=!!source.refuge&&members.length===0;
-    const stationary=encounter?.version===3,at=members[0]?.execution.executedThrough??encounter?.at??state.elapsed;
+    const stationary=encounter?.version===3,at=members[0]?.execution.executedThrough??encounter?.at??unacquiredFlight?.at??state.elapsed;
     const fallCurrent=()=>workers?.get('worker-'+encounter.workerId)?.recoveredFallCurrent(encounter)===true;
     const approach=encounter?.version===2;
-    const hitAt=approach||stationary?encounter.impactAt:boundary.effectiveTime;
+    const hitAt=approach||stationary?encounter.impactAt:boundary?.effectiveTime;
     const encounterCurrent=()=>!encounter||(!stationary||!state.raid&&state.events.some(event=>
       event.id==='event-'+encounter.raidEnded&&event.type==='RaidEnded'&&event.simulationTime===encounter.endedAt))&&state.events.some(fact=>{
       if(fact.id!=='event-'+encounter.hit||fact.type!==(approach?'WorkerHit':'WorkerIncapacitated')||
@@ -845,6 +847,17 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
         worker.villageId==='village-'+destination.villageId&&worker.x===destination.x&&worker.z===destination.z&&
         ['runPhase','walkPhase','carryPhase','runRemaining'].every(key=>worker[key]===arrival.pose[key]);
     };
+    const unacquiredFlightCurrent=()=>{
+      if(!unacquiredFlight)return true;
+      const {home,animal}=unacquiredFlight,worker=state.workers[0],beast=state.raid?.animals[0];
+      return state.elapsed===unacquiredFlight.at&&state.workers.length===1&&state.raid?.animals.length===1&&
+        worker.id==='worker-'+home.actorId&&worker.nativeRouteAdmission==='pending-raid-flight-resources'&&
+        worker.status==='fleeing'&&worker.running===false&&worker.gateWaiting===false&&worker.heading===home.pose.yaw&&
+        ['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(key=>worker[key]===home.pose[key])&&
+        beast.id==='animal-'+animal.actorId&&['entering','walking'].includes(beast.status)&&
+        beast.targetId==='structure-'+animal.targetId&&beast.x===animal.x&&beast.z===animal.z&&
+        (beast.heading??0)===animal.yaw&&(beast.motionPhase??0)===animal.phase;
+    };
     // A motion-only GO can postdate the retained terrain checkpoint without
     // writing a terrain record into the journal. The frozen source, current
     // Draw and terrain support must all attest the route before publishing it.
@@ -856,7 +869,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
       (!replayed||nativeRecoveryCovers(boundary,replayed));
     let recoveredStoppedGatesCurrent=()=>true;
     const current=()=>!closed&&timelineRecovering&&firstReplacementFrame===null&&recoveryHold!==null&&recoveryHold===source.holdId&&
-      stream.status().sequence===sequence&&state.elapsed===at&&refugeCurrent()&&ruinCurrent()&&encounterCurrent()&&
+      stream.status().sequence===sequence&&state.elapsed===at&&refugeCurrent()&&ruinCurrent()&&encounterCurrent()&&unacquiredFlightCurrent()&&
       replayMatches&&recoveredStoppedGatesCurrent()&&sameNativeWorldBoundary(preparedNativeWorldBoundary,replayed)&&
       sameNativeWorldBoundary(remoteGpu.requiredNativeWorldBoundary(),boundary);
     if(!Number.isSafeInteger(recoveryHold)||recoveryHold<1||!remoteGpu||
@@ -939,12 +952,13 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
       // The static replay may already have admitted the scene without the typed rig.
       // Re-establish the full-scene proof against the newly installed materials.
       nativeWorldFrameAdmission=null;
-      const admitted=await admitRecoveredNativeWorld(boundary,sequence,ownerSignal,state);
+      const admitted=await admitRecoveredNativeWorld(boundary,sequence,ownerSignal,state,{unacquiredFlight:!!unacquiredFlight});
       if(!current())throw Error('Recovered route changed during frame admission');
       preparedNativeWorldBoundary=admitted;
       const retained=ruin?.prepared.retreat??ruin?.prepared.strike;
       if(retained)retainedCenterRuin={worldBoundary:admitted,binding:retained};
       if(encounter)recoveredFall={at,sequence,sample:encounter,current:fallCurrent,witness:null};
+      if(unacquiredFlight)recoveredPendingFlight={sequence,proof:unacquiredFlight,current:unacquiredFlightCurrent};
       nativeRouteResourceRevision++;nativeRouteRejected=false;
       firstReplacementFrame={at:state.elapsed,sequence,worldBoundary:preparedNativeWorldBoundary,revision:nativeRouteResourceRevision};
     }finally{nativeRoutePreparations--;onPresentationReady();}
@@ -977,7 +991,9 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
    retireRecoveredPose();
    const pose=recoveredFall?.sample.home&&!sameNativeWorldBoundary(boundary,preparedNativeWorldBoundary)?null:recoveredFall;
    if(pose&&!pose.current())throw Error('Recovered frame lost its encounter pose');
+   const flight=boundary===null&&recoveredPendingFlight?.sequence===stream?.status().sequence&&recoveredPendingFlight?.current()?recoveredPendingFlight.proof:null;
    return {nativeWorldBoundary:boundary,...(pose?{recoveredEncounterFall:pose.sample}:{}),
+    ...(flight?{recoveredPendingFlight:flight}:{}),
     ...(pose?.witness?{recoveryPoseWitness:pose.witness}:{}),nativeRouteResourceRevision,preparedInterval:timelinePump?.preparedInterval?.()??null,clock:remoteClockLease(preparedNative),cameraSafe:cameraBlockers.length===0,cameraBlockers,cameraEnvelope:remoteEnvelope};}
   function renderCurrentScene(){
    retireRecoveredPose();

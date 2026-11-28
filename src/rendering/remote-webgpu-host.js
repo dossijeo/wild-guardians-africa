@@ -1,7 +1,7 @@
 import {recoveredStoppedGateSamplesMatch,stopFields} from "../world/native-stop24-task-recovery.js";
 import {nativeStoppedGateClockMatches} from '../world/native-worker-route-stop-codec.js';
 import {centerSource,sameCenter,verifiesCenter} from '../world/native-center-ruin-source.js';
-import {copyNativeRecoveryGroup,matchesRecoveredRuinMotorSamples,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,recoveredNativeGateSamples,sameRecoveredEncounter} from '../world/native-worker-route-recovery.js';
+import {copyNativeRecoveryGroup,matchesRecoveredRuinMotorSamples,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,recoveredNativeGateSamples,samePendingFlightRecovery,sameRecoveredEncounter} from '../world/native-worker-route-recovery.js';
 import {submittedRecoveryPose} from './remote-recovery-pose.js';
 import {copyNativeAnimalCropReference,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference} from '../world/native-animal-crop-resource.js';
 import {copyAnimalCropClock} from './remote-clock-bindings.js';
@@ -952,6 +952,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
             ...(samples.length===1?samples[0]:samples.length?{nativeGates:samples}:{})};
         });
         if((encounter?.version!==3||recoveredPose)&&members.every(Boolean)&&
+           (!recovered.pendingFlight||nativeRouteFrame.bindings.length===0)&&
            matchesRecoveredRuinMotorSamples(ruinMotorSamples,recovered.ruinMotors,recovered.at)){
           if(recovered.refuge)routeControl.installRecoveredRefuge(recovered.refuge,frameBoundary(active),recovered.refugeWorker);
           if(encounter?.version===3)routeControl.installRecoveredEncounterPose(encounter);
@@ -963,6 +964,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
             elapsed:recovered.at,...(recovered.grouped?{members}:members[0]),
             ...(ruinMotorSamples?{ruinMotorSamples}:{}),
             ...(proveAbsence?{refuge:recovered.refuge,worldBoundary:frameBoundary(active)}:{}),
+            ...(recovered.pendingFlight?{pendingFlight:recovered.pendingFlight,worldBoundary:null}:{}),
             ...(recovered.encounter?{encounter:recovered.encounter}:{})};
           recovered=null;
         }
@@ -1374,13 +1376,15 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       });
       if(preparing||!sameNativeWorldBoundary(packet.metadata.nativeWorldBoundary,nativeWorldBoundary)||
          packet.metadata.clock?.elapsed!==recovered.at||packet.metadata.clock?.safeUntil!==recovered.at||
+         recovered.pendingFlight&&(!samePendingFlightRecovery(packet.metadata.recoveredPendingFlight,recovered.pendingFlight)||
+           preparedBindings.some(binding=>binding.nativeClockKey||binding.nativeBarrierAddition||binding.nativeRestoredWallRepair))||
          recovered.refuge&&includesRecoveredWorkerClock(preparedBindings,recovered.refuge.reference.actorId)||
          recovered.encounter&&(!sameRecoveredEncounter(packet.metadata.recoveredEncounterFall,recovered.encounter)||
            preparedBindings.some(({nativeHome,nativeRoute})=>
              (nativeHome?.actorId??nativeRoute?.actorId)===recovered.encounter.workerId))||
          missingRuinMotors||missing)
         throw Object.assign(Error('Replacement requires its bound worker clock at the loss cut'),
-          {code:missingRuinMotors?'native-route-admission-obsolete':(missing??recovered.members[0])?.profile.obsoleteCode});
+          {code:missingRuinMotors||recovered.pendingFlight?'native-route-admission-obsolete':(missing??recovered.members[0])?.profile.obsoleteCode});
       for(const member of recovered.members)if(member.install){member.install();member.install=null;}
     }
     assertTerminalGateClocks(packet.metadata.nativeHomeArrivalTemplate??packet.metadata.nativeTaskSettlementTemplate,preparedBindings);
@@ -2469,6 +2473,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
               sameNativeWorldBoundary(nativeRouteFrame.worldBoundary,recoveredSubmission.worldBoundary)&&
               !includesRecoveredWorkerClock(nativeRouteFrame.bindings,recoveredSubmission.refuge.reference.actorId))&&
             (!recoveredSubmission.encounter||sameRecoveredEncounter(active?.metadata.recoveredEncounterFall,recoveredSubmission.encounter))&&
+            (!recoveredSubmission.pendingFlight||nativeRouteFrame?.clockElapsed===message.effectiveTime&&
+              nativeRouteFrame.worldBoundary===null&&nativeRouteFrame.bindings.length===0&&
+              samePendingFlightRecovery(active?.metadata.recoveredPendingFlight,recoveredSubmission.pendingFlight))&&
             (recoveredSubmission.encounter?.version!==3||sameRecoveredEncounter(nativeRouteFrame?.recoveredEncounterPose,recoveredSubmission.encounter))&&rows.every(row=>{
             const profile=nativeWorkerRouteRecoveryProfile(row.kind);
             return nativeRouteFrame?.bindings.some(b=>recoveryBindingMatches(b,profile,row[profile.clockField])&&b.relativeTime===row.relativeTime&&(row.kind!==24||JSON.stringify(b.projection)===JSON.stringify(row.projection)))&&
@@ -2558,6 +2565,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
                throw Error('Recovered pose differs from the held control clock');
              if(source.pendingRuin&&source.pendingRuin.boundary.effectiveTime!==message.clock.committedThrough)
                throw Error('Pending center ruin differs from the held control clock');
+             if(source.pendingFlight&&(source.pendingFlight.at!==message.clock.committedThrough||!message.restoredFlight||
+                message.routes.length||message.pendingHomeRequests?.length!==1||
+                !samePendingFlightRecovery({...source.pendingFlight,home:message.pendingHomeRequests[0],animal:message.pendingAnimalCrop},source.pendingFlight)))
+               throw Error('Pending flight differs from the direct control baseline');
              const members=source.members.map(({kind,proof,idleCyclePhase})=>({
                profile:nativeWorkerRouteRecoveryProfile(kind),assignmentSequence:nativeRecoverySequence(proof),proof,
                ref:proof.reference,gateIds:nativeRecoveryGates(proof),
@@ -2567,7 +2578,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
              }));
              recovered={holdId:q.holdId,consumerToken:q.consumerToken,grouped,members,at:message.clock.committedThrough,
                refuge:source.refuge,refugeWorker:source.refuge&&source.ordinaryWorkers?source.members[0].proof:null,
-               encounter:source.encounter,ruinMotors:source.ruinMotors};
+               encounter:source.encounter,ruinMotors:source.ruinMotors,pendingFlight:source.pendingFlight};
            }
            if(worldBoundaryRequired)publishWorldBoundary();
            if(pending&&!frameWorldCurrent(pending)||admittingFrame&&!frameWorldCurrent(admittingFrame.packet))invalidatePendingNativeWorld('Prepared resources precede the native world baseline');
