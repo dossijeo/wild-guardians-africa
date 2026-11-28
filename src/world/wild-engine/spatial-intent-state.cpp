@@ -1860,6 +1860,18 @@ extern "C" EMSCRIPTEN_KEEPALIVE int nav_gate_addition_inspect_stops(double id,in
  return int(s.gateResult.size());
 }
 extern "C" EMSCRIPTEN_KEEPALIVE const double* nav_gate_addition_stop_actors_ptr(){return state().gateResult.data();}
+
+// Cold restore uses the same authored projection as the prepared purchase.
+// This query only writes scratch rows and needs no installed gate or intent.
+extern "C" EMSCRIPTEN_KEEPALIVE const double* nav_gate_addition_proxy_geometry(int modelId,double x,double z,double yaw,double sx,double sz){
+ const auto* model=nativeGateMeshModel(modelId);
+ if(!model||!coordinate(x)||!coordinate(z)||!std::isfinite(yaw)||!std::isfinite(sx)||!std::isfinite(sz)||
+    sx<=0||sz<=0||sx>100||sz>100)return nullptr;
+ NativeGate gate;gate.x=x;gate.z=z;gate.yaw=yaw;gate.sx=sx;gate.sz=sz;gate.mesh=model;
+ const auto proxies=gateAdditionProxies(gate);if(proxies.size()!=18)return nullptr;
+ auto& rows=state().gateResult;rows.assign(proxies.begin(),proxies.end());return rows.data();
+}
+
 int spatialIntentStageGateAddition(const std::array<double,7>& value,int firstBarrier,std::vector<float>& proxies){
  auto& s=state();if(s.barrierProposal.pending)return -4;
  if(firstBarrier<1||firstBarrier>std::numeric_limits<int>::max()-3)return -1;

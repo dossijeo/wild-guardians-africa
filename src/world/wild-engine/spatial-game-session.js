@@ -107,7 +107,7 @@ export function createSpatialGameSession(module,state,streamOptions){
     const saved=validateSpatialState(bootstrap.spatialState),actual=core.snapshot(),serialized=JSON.stringify(saved),
       matches=JSON.stringify(actual)===serialized;
     if(bootstrap.version!==1||!matches){
-      const wallPlan=walls.prepareBootstrap(actual,bootstrap),shieldPlan=shields.prepareBootstrap(actual,bootstrap);
+      const wallPlan=walls.prepareBootstrap(actual,bootstrap,state.structures),shieldPlan=shields.prepareBootstrap(actual,bootstrap);
       const authorized={...actual,barriers:wallPlan.barriers,nextBarrierId:saved.nextBarrierId,
         polygons:shieldPlan.polygons,nextPolygonId:saved.nextPolygonId};
       if(JSON.stringify(authorized)!==serialized)throw Error('Native world bootstrap reconstruction mismatch');

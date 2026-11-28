@@ -1,5 +1,5 @@
 import {wallCollisionFrame} from '../wall-collision-frame.js';
-import {gateFrameFootprints} from '../gate-passages.js';
+import {gateFrameFootprints,gateScale,nativeGateModelId} from '../gate-passages.js';
 
 // Only rigid wall modules are representable by one oriented rectangle. Native
 // gates have separate articulated frame/leaf polygons and need their own
@@ -54,6 +54,20 @@ export function spatialGateBarriers(gate){
 
 export function addSpatialGate(core,gate){
   return core.addBarriersBatch(spatialGateBarriers(gate));
+}
+
+// Purchases project the frame directly from the native mesh. A world/local
+// round trip through the legacy footprint can change the final Float32 values.
+export function nativeGateCollisionProxies(core,gate){
+  const wasm=core.wasm,model=nativeGateModelId(gate.material),scale=gateScale(gate);
+  if(!gate.gate||!model||typeof wasm.nav_gate_addition_proxy_geometry!=='function')return null;
+  const pointer=wasm.nav_gate_addition_proxy_geometry(model,gate.x,gate.z,gate.yaw??0,scale*(gate.baseScaleX??1),scale);
+  if(!pointer)return null;
+  const values=new Float64Array(wasm.memory.buffer,pointer,18);
+  return Array.from({length:3},(_,i)=>{
+    const [x,z,halfX,halfZ,yaw,passMask]=values.subarray(i*6,i*6+6);
+    return {x,z,halfX,halfZ,yaw,passMask};
+  });
 }
 
 export function spatialStructureBarriers(structure){

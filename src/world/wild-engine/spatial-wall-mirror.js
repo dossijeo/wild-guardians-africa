@@ -1,4 +1,4 @@
-import {spatialStructureBarriers,removeSpatialStructure} from './spatial-wall-bridge.js';
+import {nativeGateCollisionProxies,spatialStructureBarriers,removeSpatialStructure} from './spatial-wall-bridge.js';
 import {gateScale,nativeGateModelId} from '../gate-passages.js';
 import {copyNativeBarrierAdditionAttestation} from '../native-barrier-addition.js';
 import {sameNativeWorldBoundary} from '../native-world-boundary.js';
@@ -15,6 +15,11 @@ function boundsForNativeBarriers(barriers){
     bounds[3]=Math.max(bounds[3],barrier.z+dz);
   }
   return bounds;
+}
+
+function sameNativeWallShape(expected,actual){
+  return !!actual&&['x','z','halfX','halfZ','yaw'].every(key=>Number.isFinite(expected[key])&&Math.fround(expected[key])===actual[key])&&
+    (expected.passMask??0)===actual.passMask;
 }
 
 // Experimental state-to-topology seam. The game remains responsible for
@@ -125,10 +130,9 @@ export function createSpatialWallMirror(core){
       // footprint here can differ by one float32 ULP after world/local transforms.
       // Adopt the exact prepared triplet; solid walls retain their original check.
       const wall=structures[i],parts=gate?gate.proxies:spatialStructureBarriers(wall),partIds=gate?[...ids]:[ids[i]];
-      const sameShape=(expected,actual)=>actual&&['x','z','halfX','halfZ','yaw'].every(key=>Number.isFinite(expected[key])&&Math.fround(expected[key])===actual[key])&&(expected.passMask??0)===actual.passMask;
       if(parts.length!==partIds.length||parts.some((part,index)=>{
         const actual=physical.get(partIds[index]);
-        return !sameShape(part,actual);
+        return !sameNativeWallShape(part,actual);
       }))throw Error('Native wall footprint differs from its committed ID');
       records.push([wall.id,{signature:signature(wall),bounds:boundsForNativeBarriers(parts),ids:partIds}]);
     }
@@ -185,7 +189,7 @@ export function createSpatialWallMirror(core){
   }
   // Constructor only: no bodies, intent bindings, routes or published chunks
   // exist yet. Normal Repair keeps its acquired resources and never calls this.
-  function prepareBootstrap(actual,expected){
+  function prepareBootstrap(actual,expected,structures){
     const actualOwners=captureOwners();
     validateSpatialWallOwners(actualOwners,actual);
     let owners=expected.wallOwners;
@@ -204,13 +208,27 @@ export function createSpatialWallMirror(core){
     }
     validateSpatialWallOwners(owners,expected.spatialState);
     if(owners.length!==installed.size)throw Error('Native wall owners differ from Game');
-    const actualById=new Map(actual.barriers.map(row=>[row.id,row])),remapped=[];
+    const actualById=new Map(actual.barriers.map(row=>[row.id,row]));
+    const savedById=new Map(expected.spatialState.barriers.map(row=>[row.id,row]));
+    const gates=new Map(structures.filter(structure=>structure.kind==='wall'&&structure.gate).map(gate=>[gate.id,gate]));
+    const remapped=[];
     const nextRecords=[];
     for(const row of owners){
       const record=installed.get(row.entityId);
       if(!record||record.ids.length!==row.ids.length)throw Error('Native wall owner differs from Game');
-      for(let i=0;i<row.ids.length;i++)remapped.push({...actualById.get(record.ids[i]),id:row.ids[i]});
-      nextRecords.push([row.entityId,{...record,ids:[...row.ids]}]);
+      const saved=row.ids.map(id=>savedById.get(id));
+      let parts=record.ids.map(id=>actualById.get(id));
+      const matches=geometry=>geometry?.length===saved.length&&geometry.every((part,i)=>sameNativeWallShape(part,saved[i]));
+      if(!matches(parts)){
+        const gate=gates.get(row.entityId);
+        parts=expected.version>=2&&gate?nativeGateCollisionProxies(core,gate):null;
+        if(!matches(parts))throw Error('Native world bootstrap reconstruction mismatch');
+      }
+      for(let i=0;i<parts.length;i++){
+        const {x,z,halfX,halfZ,yaw,passMask}=parts[i];
+        remapped.push({id:row.ids[i],x,z,halfX,halfZ,yaw,passMask});
+      }
+      nextRecords.push([row.entityId,{...record,ids:[...row.ids],bounds:boundsForNativeBarriers(parts)}]);
     }
     remapped.sort((a,b)=>a.id-b.id);
     return {barriers:remapped,adopt(){for(const [id,record] of nextRecords)installed.set(id,record);}};

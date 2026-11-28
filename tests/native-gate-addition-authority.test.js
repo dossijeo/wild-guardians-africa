@@ -1,8 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
 import {nativeFarmArrivalRouteFixture} from './helpers/native-farm-arrival-route.js';
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
 import {rational} from '../src/simulation/money.js';
+import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
+import {deserialize,serialize} from '../src/persistence/snapshots.js';
+import {spatialStructureBarriers} from '../src/world/wild-engine/spatial-wall-bridge.js';
 
 async function withFarm(operation){
  const source=nativeFarmArrivalRouteFixture({peer:false});
@@ -85,3 +90,47 @@ test('cancelling a gate after resource preparation keeps the previous world and 
  assert.notDeepEqual([after.workers[0].x,after.workers[0].z],[before.workers[0].x,before.workers[0].z]);
  assert.deepEqual(f.faults,[]);
 }));
+
+test('cold restore honors the native proxy triplet of a purchased rotated gate',async()=>{
+ const snapshot=gunzipSync(readFileSync(new URL('./fixtures/desierto712-native-gate-prehire.json.gz',import.meta.url))).toString();
+ const state=deserialize(snapshot),before=state.workerNativeAuthorityCheckpoint;
+ const [owner]=before.wallOwners,gate=state.structures.find(row=>row.id===owner.entityId);
+ assert.deepEqual(owner.ids,[1,2,3]);
+ assert.equal(gate.gateOpen,0);
+ const js=spatialStructureBarriers(gate).map((row,i)=>({id:owner.ids[i],...Object.fromEntries(
+  Object.entries(row).map(([key,value])=>[key,Math.fround(value)]))}));
+ assert.notEqual(js[0].halfX,before.spatialState.barriers[0].halfX);
+ const f=await nativeProductionAuthority(state,{...savedNativeAuthorityOptions(snapshot),emptyBeastPhysics:true});
+ try{
+  const after=f.command({kind:'snapshot',nativeAuthorityCheckpoint:true}).nativeAuthorityCheckpoint;
+  assert.deepEqual(after.spatialState,before.spatialState);
+  assert.deepEqual(after.wallOwners,before.wallOwners);
+  assert.deepEqual(f.snapshot().structures,state.structures);
+  assert.deepEqual(f.snapshot().ledger,state.ledger);
+  const command={kind:'removeWall',id:'remove-restored-paid-gate',targetId:gate.id};
+  await withPreparedFrame(f,f.authority.prepareNativeStructureCommand(command));
+  const result=await withPreparedFrame(f,f.structureCommand(command));
+  await withPreparedFrame(f,f.authority.finishNativeStructureCommand(command));
+  assert.equal(result.value,true,result.rejection);
+  assert.deepEqual(result.nativeWorldResources[0].nativeBarrierAdditionBinding.nativeIds,owner.ids);
+  const removed=f.command({kind:'snapshot',nativeAuthorityCheckpoint:true}).nativeAuthorityCheckpoint;
+  assert.deepEqual(removed.wallOwners,[]);
+  assert.deepEqual(removed.spatialState.barriers,[]);
+  assert.equal(removed.spatialState.nextBarrierId,before.spatialState.nextBarrierId);
+  assert.deepEqual(f.faults,[]);
+ }finally{await f.close();}
+ const legacy=structuredClone(state);
+ legacy.workerNativeAuthorityCheckpoint.spatialState.barriers=js;
+ const legacyOptions=savedNativeAuthorityOptions(serialize(legacy)),old=await nativeProductionAuthority(legacy,legacyOptions);
+ try{assert.deepEqual(old.command({kind:'snapshot',nativeAuthorityCheckpoint:true}).nativeAuthorityCheckpoint.spatialState.barriers,js);}
+ finally{await old.close();}
+ for(const alter of [
+  checkpoint=>{checkpoint.spatialState.barriers[1].halfX+=.01;},
+  checkpoint=>{checkpoint.spatialState.barriers[2].passMask=0;},
+  checkpoint=>{checkpoint.wallOwners[0].ids.reverse();}
+ ]){
+  const broken=structuredClone(state);
+  alter(broken.workerNativeAuthorityCheckpoint);
+  await assert.rejects(nativeProductionAuthority(broken,savedNativeAuthorityOptions(serialize(broken))),/Native world bootstrap reconstruction mismatch/);
+ }
+});
