@@ -1,0 +1,184 @@
+{
+  "schema": 1,
+  "product": "89396c799e7965b56f0e2ec038f08fa214b8005b",
+  "fixture": "Desierto 712, first night after two paid crops and a paid shift",
+  "fixturePath": "tests/fixtures/desierto712-d1-two-crops-before-night.json.gz",
+  "fixtureSHA256": "68115300943beb8c1ad6c790ce50a0d12f2dd5e0a6b46edab3f922f83572fe62",
+  "snapshotSHA256": "8f6940dff401754c3fa0813a51769da5222b8c52dd8770c12b0090f15f366fc9",
+  "binaries": {
+    "standalone": "3713488d05ee053f80d1a1b3c33a5c8f00f38a7ddf847f9b825044cda8433238",
+    "pthread": "5212144deb1abaa8e82925b4948b885d2b4f05dc55ad2e47b8cfb413721fa8a0",
+    "loader": "8c3e0e5fe6870100a5d76a77ae91edafa9ace114d2ab11dcebfaadf4747ab2af"
+  },
+  "cpu": {
+    "baselineReceiptSHA256": "ed2f9c855a756325155d1653e25aab062b8decf5f340c5eb011a37bcbf2bab69",
+    "legacyReceiptSHA256": "f450961324245c6c8f37c01581ebf950f1a5434cca05d2604e234009779f4538",
+    "nativeReceiptSHA256": "f49449ea283a314ed724192d0c6937f1272a6c63957bba5b6d80b1434580d416",
+    "baselineFailure": "Native task game cohort contains an unsupported mover",
+    "purchases": [
+      {
+        "plantId": "plant-3",
+        "cost": 150
+      },
+      {
+        "plantId": "plant-5",
+        "cost": 150
+      }
+    ],
+    "hiring": {
+      "workerId": "worker-8",
+      "cost": 40
+    },
+    "observedHomeAt": 265,
+    "checkpointAt": 370,
+    "sameSelection": [
+      "plant-3",
+      "structure-2"
+    ],
+    "coldStrikeReload": "Saved public checkpoint after acquiring Strike27; reload preserves pose, phase, attackId, remaining time, worker and ledger, applies each impact once and completes Retreat with one body for the new route and strike admissions.",
+    "targetedTestsPassed": 144,
+    "productionBuildModules": 755
+  },
+  "physical": {
+    "browser": "Edge",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing"
+    },
+    "startup": "Public checkpoint after Home19, native authority options from the save, empty Rapier registry",
+    "rawReceipt": ".cache/desert-two-crop-night-nvidia.json",
+    "receiptSHA256": "731a9c08bd83a8d2b6d2f574c0a8f408077339a4b77c2f7ff6d49b8409542e63",
+    "heldFirstReady": [
+      26,
+      27
+    ],
+    "startupDraw": 3,
+    "birthAt": 370.50227023610705,
+    "exposedLiving": 2,
+    "introCropLimit": 1,
+    "animal": {
+      "id": "animal-15",
+      "bodyId": 1
+    },
+    "programs": [
+      {
+        "ticket": 2,
+        "kind": 26,
+        "purpose": "crop",
+        "targetId": 3,
+        "firstDraw": 16,
+        "age": 0,
+        "executionEpoch": 374.3018161888777,
+        "bodyId": 1,
+        "x": 113.18869448991569,
+        "z": 33.294181937769594,
+        "phase": 0
+      },
+      {
+        "ticket": 4,
+        "kind": 27,
+        "purpose": "crop",
+        "targetId": 3,
+        "firstDraw": 603,
+        "age": 0,
+        "executionEpoch": 436.8518161888208,
+        "bodyId": 1,
+        "x": 99.56463623046875,
+        "z": -5.396507263183594,
+        "phase": 61.081039626760855
+      },
+      {
+        "ticket": 6,
+        "kind": 26,
+        "purpose": "center",
+        "targetId": 2,
+        "firstDraw": 650,
+        "age": 0,
+        "executionEpoch": 442.7018161888155,
+        "bodyId": 1,
+        "x": 99.56463623046875,
+        "z": -5.396507263183594,
+        "phase": 61.081039626760855
+      },
+      {
+        "ticket": 8,
+        "kind": 27,
+        "purpose": "center",
+        "targetId": 2,
+        "firstDraw": 687,
+        "age": 0,
+        "executionEpoch": 446.8518161888117,
+        "bodyId": 1,
+        "x": 97.75355529785156,
+        "z": -3.2553746700286865,
+        "phase": 63.996513657887164
+      },
+      {
+        "ticket": 10,
+        "kind": 26,
+        "purpose": "retreat",
+        "targetId": null,
+        "firstDraw": 733,
+        "age": 0,
+        "executionEpoch": 452.65181618880644,
+        "bodyId": 1,
+        "x": 97.75355529785156,
+        "z": -3.2553746700286865,
+        "phase": 63.996513657887164
+      }
+    ],
+    "hits": [
+      {
+        "attackId": "attack-23",
+        "targetId": "plant-3",
+        "simulationTime": 441.40181618881667
+      },
+      {
+        "attackId": "attack-27",
+        "targetId": "structure-2",
+        "simulationTime": 451.4018161888076
+      }
+    ],
+    "crops": [
+      {
+        "id": "plant-3",
+        "alive": false
+      },
+      {
+        "id": "plant-5",
+        "alive": true
+      }
+    ],
+    "centers": [
+      {
+        "id": "structure-2",
+        "hp": 580
+      }
+    ],
+    "worker": {
+      "id": "worker-8",
+      "personId": "person-7",
+      "contractDay": 1,
+      "x": 88,
+      "z": 0,
+      "status": "home",
+      "hits": 0
+    },
+    "balance": {
+      "n": "360",
+      "d": "1"
+    },
+    "rig": {
+      "geometries": 4,
+      "unchangedAttributes": 26
+    },
+    "firstDrawWithoutAnimal": 1028,
+    "clockAtFirstDrawWithoutAnimal": 483.2918161887786,
+    "drained": true,
+    "applicationErrors": [],
+    "menuStartupExercised": false,
+    "strikeReloadExercised": false,
+    "terminalDrawReplacementExercised": false,
+    "cadenceMeasured": false
+  }
+}
