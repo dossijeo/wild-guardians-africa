@@ -1,0 +1,605 @@
+{
+  "schema": 1,
+  "product": "bbdf5669349959ddafee44cb3d109b2835fa5dfc",
+  "fixture": "Desierto 983",
+  "qualification": "Public disk reload followed by explicit GPUDevice.destroy while Route26 READY is retained. Game, WASM, Hosted recovery, Edge and NVIDIA. Recovery publishes at the saved clock before automatic dispatch resumes.",
+  "rejectionBeforeFix": {
+    "product": "1c22f6942cf4c9c3a060af91fe0a34c350c44de3",
+    "at": 16.939999999999852,
+    "ready": {
+      "version": 1,
+      "authorityEpoch": "5cf2e320-811d-4b7e-b518-b4cc9a656ead/1",
+      "nativeSession": 1,
+      "ticket": 3,
+      "effectiveTime": 16.939999999999852
+    },
+    "message": "page.evaluate: Error: Error: Native production control unavailable"
+  },
+  "before": {
+    "sourceSHA256": "b2e9b32820ac4553d2d53076cbce4a872fd7b17d49954b289105d8febca9c739",
+    "snapshotSHA256": "35624759f4826d0ed445fe30d5896c8d20d08a05c3dedf8b339c0b4828df820e",
+    "at": 16.939999999999852,
+    "elapsed": 19.3399999999998,
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 95.09999999403954
+      }
+    },
+    "cancelled": {
+      "requestSequence": 4,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "f3ce6396-63a3-4c4c-b1a6-c73c21da7939/1",
+        "nativeSession": 1,
+        "ticket": 3,
+        "effectiveTime": 16.939999999999852
+      },
+      "actorId": 1000003,
+      "bodyId": 2,
+      "targetId": 2
+    },
+    "recovered": {
+      "sequence": 1,
+      "clockElapsed": 16.939999999999852,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "f3ce6396-63a3-4c4c-b1a6-c73c21da7939/1",
+        "nativeSession": 1,
+        "ticket": 2,
+        "effectiveTime": 16.939999999999852
+      },
+      "bindings": [
+        {
+          "kind": 18,
+          "actorId": 900011,
+          "bodyId": 1,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "f3ce6396-63a3-4c4c-b1a6-c73c21da7939/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 16.939999999999852
+          },
+          "relativeTime": 0
+        },
+        {
+          "kind": "gate",
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "f3ce6396-63a3-4c4c-b1a6-c73c21da7939/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 16.939999999999852
+          },
+          "elapsed": 16.939999999999852
+        }
+      ]
+    },
+    "readmitted": {
+      "ready": {
+        "version": 1,
+        "authorityEpoch": "f3ce6396-63a3-4c4c-b1a6-c73c21da7939/1",
+        "nativeSession": 1,
+        "ticket": 4,
+        "effectiveTime": 16.939999999999852
+      },
+      "go": {
+        "version": 1,
+        "authorityEpoch": "f3ce6396-63a3-4c4c-b1a6-c73c21da7939/1",
+        "nativeSession": 1,
+        "ticket": 5,
+        "effectiveTime": 16.939999999999852
+      },
+      "firstSubmit": {
+        "sequence": 2,
+        "clockElapsed": 16.939999999999852,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f3ce6396-63a3-4c4c-b1a6-c73c21da7939/1",
+          "nativeSession": 1,
+          "ticket": 5,
+          "effectiveTime": 16.939999999999852
+        },
+        "bindings": [
+          {
+            "kind": 18,
+            "actorId": 900011,
+            "bodyId": 1,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "f3ce6396-63a3-4c4c-b1a6-c73c21da7939/1",
+              "nativeSession": 1,
+              "ticket": 2,
+              "effectiveTime": 16.939999999999852
+            },
+            "relativeTime": 0
+          },
+          {
+            "kind": "gate",
+            "gateId": 1000000,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "f3ce6396-63a3-4c4c-b1a6-c73c21da7939/1",
+              "nativeSession": 1,
+              "ticket": 2,
+              "effectiveTime": 16.939999999999852
+            },
+            "elapsed": 16.939999999999852
+          },
+          {
+            "kind": 26,
+            "actorId": 1000003,
+            "bodyId": 2,
+            "requestSequence": 4,
+            "targetId": 2,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "f3ce6396-63a3-4c4c-b1a6-c73c21da7939/1",
+              "nativeSession": 1,
+              "ticket": 4,
+              "effectiveTime": 16.939999999999852
+            },
+            "relativeTime": 0
+          }
+        ]
+      }
+    },
+    "pick": {
+      "entityId": "animal-1000003",
+      "hitPoint": {
+        "x": -21.69745820509218,
+        "y": 19.330530497299243,
+        "z": -16.607873513153297
+      },
+      "point": {
+        "x": -22.231882249774355,
+        "z": -15.683966899005233
+      },
+      "sequence": 3
+    },
+    "pickSamples": [
+      {
+        "age": 0,
+        "actorId": 1000003,
+        "bodyId": 2,
+        "at": 16.939999999999852
+      },
+      {
+        "age": 0,
+        "actorId": 1000003,
+        "bodyId": 2,
+        "at": 16.939999999999852
+      },
+      {
+        "age": 0,
+        "actorId": 1000003,
+        "bodyId": 2,
+        "at": 16.939999999999852
+      },
+      {
+        "age": 0,
+        "actorId": 1000003,
+        "bodyId": 2,
+        "at": 16.939999999999852
+      },
+      {
+        "age": 0,
+        "actorId": 1000003,
+        "bodyId": 2,
+        "at": 16.939999999999852
+      },
+      {
+        "age": 0,
+        "actorId": 1000003,
+        "bodyId": 2,
+        "at": 16.939999999999852
+      }
+    ],
+    "ruin": {
+      "event": {
+        "id": "event-29212",
+        "type": "StructureRuined",
+        "targetId": "structure-1000002",
+        "structureKind": "center",
+        "presentation": {
+          "x": -18,
+          "z": -12
+        },
+        "simulationTime": 16.95999999999985
+      },
+      "frame": {
+        "sequence": 5,
+        "clockElapsed": 16.95999999999985,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f3ce6396-63a3-4c4c-b1a6-c73c21da7939/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 16.95999999999985
+        },
+        "bindings": [
+          {
+            "kind": 18,
+            "actorId": 900011,
+            "bodyId": 1,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "f3ce6396-63a3-4c4c-b1a6-c73c21da7939/1",
+              "nativeSession": 1,
+              "ticket": 2,
+              "effectiveTime": 16.939999999999852
+            },
+            "relativeTime": 0.019999999552965164
+          },
+          {
+            "kind": "gate",
+            "gateId": 1000000,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "f3ce6396-63a3-4c4c-b1a6-c73c21da7939/1",
+              "nativeSession": 1,
+              "ticket": 2,
+              "effectiveTime": 16.939999999999852
+            },
+            "elapsed": 16.959999999552817
+          },
+          {
+            "kind": 26,
+            "actorId": 1000003,
+            "bodyId": 2,
+            "requestSequence": 4,
+            "targetId": 2,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "f3ce6396-63a3-4c4c-b1a6-c73c21da7939/1",
+              "nativeSession": 1,
+              "ticket": 4,
+              "effectiveTime": 16.939999999999852
+            },
+            "relativeTime": 0.019999999552965164
+          }
+        ]
+      },
+      "meshes": [
+        {
+          "mesh": 731,
+          "geometry": 330,
+          "material": 250,
+          "visible": false,
+          "instances": null
+        },
+        {
+          "mesh": 732,
+          "geometry": 331,
+          "material": 249,
+          "visible": true,
+          "instances": null
+        },
+        {
+          "mesh": 734,
+          "geometry": 332,
+          "material": 251,
+          "visible": true,
+          "instances": 270
+        },
+        {
+          "mesh": 735,
+          "geometry": 333,
+          "material": 252,
+          "visible": true,
+          "instances": 66
+        }
+      ]
+    },
+    "homeArrival": {
+      "sequence": 18,
+      "clockElapsed": 19.079999999999806,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "f3ce6396-63a3-4c4c-b1a6-c73c21da7939/1",
+        "nativeSession": 1,
+        "ticket": 8,
+        "effectiveTime": 19.059999999999807
+      },
+      "bindings": [
+        {
+          "kind": "gate",
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "f3ce6396-63a3-4c4c-b1a6-c73c21da7939/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 16.939999999999852
+          },
+          "elapsed": 18.500313344001622
+        },
+        {
+          "kind": 26,
+          "actorId": 1000003,
+          "bodyId": 2,
+          "requestSequence": 4,
+          "targetId": 2,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "f3ce6396-63a3-4c4c-b1a6-c73c21da7939/1",
+            "nativeSession": 1,
+            "ticket": 4,
+            "effectiveTime": 16.939999999999852
+          },
+          "relativeTime": 2.1399998664855957
+        }
+      ]
+    },
+    "drain": {
+      "generation": 1,
+      "kind": "production-gpu-drained",
+      "receipt": {
+        "disposed": true
+      }
+    },
+    "errors": []
+  },
+  "after": {
+    "sourceSHA256": "10390ea3e8d65ff0c95607fed19180a97170a8b2ba360091ec911e796083fdbe",
+    "snapshotSHA256": "60535e84734030b934d0687ddb4a0e58b7e2cc8333d85c049a8e7d3ba4c225d8",
+    "at": 16.95999999999985,
+    "elapsed": 19.499999999999797,
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 89.59999999403954
+      }
+    },
+    "cancelled": {
+      "requestSequence": 4,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "73b9f32f-3b0f-4b14-b178-6cb01fe93886/1",
+        "nativeSession": 1,
+        "ticket": 3,
+        "effectiveTime": 16.95999999999985
+      },
+      "actorId": 1000003,
+      "bodyId": 2,
+      "targetId": 2
+    },
+    "recovered": {
+      "sequence": 1,
+      "clockElapsed": 16.95999999999985,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "73b9f32f-3b0f-4b14-b178-6cb01fe93886/1",
+        "nativeSession": 1,
+        "ticket": 2,
+        "effectiveTime": 16.95999999999985
+      },
+      "bindings": [
+        {
+          "kind": 18,
+          "actorId": 900011,
+          "bodyId": 1,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "73b9f32f-3b0f-4b14-b178-6cb01fe93886/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 16.95999999999985
+          },
+          "relativeTime": 0
+        },
+        {
+          "kind": "gate",
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "73b9f32f-3b0f-4b14-b178-6cb01fe93886/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 16.95999999999985
+          },
+          "elapsed": 16.95999999999985
+        }
+      ]
+    },
+    "readmitted": {
+      "ready": {
+        "version": 1,
+        "authorityEpoch": "73b9f32f-3b0f-4b14-b178-6cb01fe93886/1",
+        "nativeSession": 1,
+        "ticket": 4,
+        "effectiveTime": 16.95999999999985
+      },
+      "go": {
+        "version": 1,
+        "authorityEpoch": "73b9f32f-3b0f-4b14-b178-6cb01fe93886/1",
+        "nativeSession": 1,
+        "ticket": 5,
+        "effectiveTime": 16.95999999999985
+      },
+      "firstSubmit": {
+        "sequence": 2,
+        "clockElapsed": 16.95999999999985,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "73b9f32f-3b0f-4b14-b178-6cb01fe93886/1",
+          "nativeSession": 1,
+          "ticket": 5,
+          "effectiveTime": 16.95999999999985
+        },
+        "bindings": [
+          {
+            "kind": 18,
+            "actorId": 900011,
+            "bodyId": 1,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "73b9f32f-3b0f-4b14-b178-6cb01fe93886/1",
+              "nativeSession": 1,
+              "ticket": 2,
+              "effectiveTime": 16.95999999999985
+            },
+            "relativeTime": 0
+          },
+          {
+            "kind": "gate",
+            "gateId": 1000000,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "73b9f32f-3b0f-4b14-b178-6cb01fe93886/1",
+              "nativeSession": 1,
+              "ticket": 2,
+              "effectiveTime": 16.95999999999985
+            },
+            "elapsed": 16.95999999999985
+          },
+          {
+            "kind": 26,
+            "actorId": 1000003,
+            "bodyId": 2,
+            "requestSequence": 4,
+            "targetId": 2,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "73b9f32f-3b0f-4b14-b178-6cb01fe93886/1",
+              "nativeSession": 1,
+              "ticket": 4,
+              "effectiveTime": 16.95999999999985
+            },
+            "relativeTime": 0
+          }
+        ]
+      }
+    },
+    "pick": {
+      "entityId": "animal-1000003",
+      "hitPoint": {
+        "x": -21.72405023483905,
+        "y": 19.3332345436313,
+        "z": -16.609251174676924
+      },
+      "point": {
+        "x": -22.263227795972043,
+        "z": -15.68398214011457
+      },
+      "sequence": 3
+    },
+    "pickSamples": [
+      {
+        "age": 0,
+        "actorId": 1000003,
+        "bodyId": 2,
+        "at": 16.95999999999985
+      },
+      {
+        "age": 0,
+        "actorId": 1000003,
+        "bodyId": 2,
+        "at": 16.95999999999985
+      },
+      {
+        "age": 0,
+        "actorId": 1000003,
+        "bodyId": 2,
+        "at": 16.95999999999985
+      },
+      {
+        "age": 0,
+        "actorId": 1000003,
+        "bodyId": 2,
+        "at": 16.95999999999985
+      },
+      {
+        "age": 0,
+        "actorId": 1000003,
+        "bodyId": 2,
+        "at": 16.95999999999985
+      },
+      {
+        "age": 0,
+        "actorId": 1000003,
+        "bodyId": 2,
+        "at": 16.95999999999985
+      }
+    ],
+    "savedRuin": {
+      "id": "event-29212",
+      "type": "StructureRuined",
+      "targetId": "structure-1000002",
+      "structureKind": "center",
+      "presentation": {
+        "x": -18,
+        "z": -12
+      },
+      "simulationTime": 16.95999999999985
+    },
+    "homeArrival": {
+      "sequence": 16,
+      "clockElapsed": 19.219999999999803,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "73b9f32f-3b0f-4b14-b178-6cb01fe93886/1",
+        "nativeSession": 1,
+        "ticket": 7,
+        "effectiveTime": 19.219999999999803
+      },
+      "bindings": [
+        {
+          "kind": "gate",
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "73b9f32f-3b0f-4b14-b178-6cb01fe93886/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 16.95999999999985
+          },
+          "elapsed": 18.500313363075108
+        },
+        {
+          "kind": 26,
+          "actorId": 1000003,
+          "bodyId": 2,
+          "requestSequence": 4,
+          "targetId": 2,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "73b9f32f-3b0f-4b14-b178-6cb01fe93886/1",
+            "nativeSession": 1,
+            "ticket": 4,
+            "effectiveTime": 16.95999999999985
+          },
+          "relativeTime": 2.259999990463257
+        }
+      ]
+    },
+    "drain": {
+      "generation": 1,
+      "kind": "production-gpu-drained",
+      "receipt": {
+        "disposed": true
+      }
+    },
+    "errors": []
+  }
+}
