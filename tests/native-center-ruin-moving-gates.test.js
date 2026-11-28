@@ -616,13 +616,17 @@ test('Draw loss retains the arrived center approach while Home crosses its gate'
  }
 });
 
-test('Draw loss retains an acquired center strike and the moving Home gate',{timeout:45000},async()=>{
+for(const restore of ['Draw loss','Public save','Public save with loss before Home','Public save with loss before Strike','Public save with loss after Strike'])
+ test(`${restore} retains an acquired center strike and the moving Home gate`,{timeout:45000},async()=>{
  const initial=initialState(),gateId=gateIds[0];
  initial.structures=initial.structures.filter(row=>row.id!=='structure-'+gateIds[1]);
  const civil=initial.structures[0];
- civil.z+=-5-centerServicePoint(civil,initial,.8).z;
- initial.workers[0].z=-5;
- initial.dayPlan.at=initial.time+.8;
+ if(restore!=='Draw loss')initial.dayPlan.at=initial.time+6;
+ else{
+  civil.z+=-5-centerServicePoint(civil,initial,.8).z;
+  initial.workers[0].z=-5;
+  initial.dayPlan.at=initial.time+.8;
+ }
  initial.structures.find(row=>row.id===doomed).hp=140;
  const raidView={...view,eye:{x:-18,z:-13.7},target:{x:-18,z:0}};
  const advance={kind:'advance',seconds:.05,steps:1,nightFastForward:false};
@@ -645,6 +649,10 @@ test('Draw loss retains an acquired center strike and the moving Home gate',{tim
   assert.equal(animal.attackId,'attack-'+strike.attackId);
   assert.equal(animal.status,'attacking');assert.equal(worker.nativeRouteAdmission,'native-home');
   assert(!state.events.some(row=>row.attackId===animal.attackId&&row.type==='AnimalLogicalHit'));
+  if(restore!=='Draw loss'){
+   await reloadAcquiredFlightStrike(world,state,home,strike,advance,restore);
+   return;
+  }
 
   world.gpu.device.destroy();world.retireResourceEndpoint();
   const hold=await world.authority.quiesceNativeIntentProduction({forLostDraw:true});
@@ -697,6 +705,162 @@ test('Draw loss retains an acquired center strike and the moving Home gate',{tim
   assert.deepEqual(world.faults,[]);assert.deepEqual(draw.errors,[]);
  }finally{rig?.close();draw?.client.dispose();await draw?.host.dispose();await world?.close();}
 });
+
+async function reloadAcquiredFlightStrike(world,state,home,strike,advance,restore){
+ const [animal]=state.raid.animals;
+ const captured=world.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+ const saved=prepareWorkerCheckpoint(captured,{slotId:state.slotId,policy:{nativeAuthority:true},savedAt:0});
+ assert.equal(saved.saved,true);
+ const disk=saved.state,marker=disk.workerNativeAuthorityCheckpoint.raidFlight;
+ assert.deepEqual(marker.strike,{attackId:strike.attackId,clip:strike.reference.clip,
+  duration:animal.attackDuration,remaining:animal.attackRemaining});
+ const text=serialize(disk),options=savedNativeAuthorityOptions(text);
+ for(const key of ['attackId','remaining']){
+  const forged=structuredClone(disk);
+  forged.workerNativeAuthorityCheckpoint.raidFlight.strike[key]+=key==='attackId'?1:.01;
+  assert.throws(()=>savedNativeAuthorityOptions(serialize(forged)),/differs from the saved cohort/);
+ }
+ let homeReady,strikeReady,homeGO,strikeGO,releaseHome,releaseStrike,draw,arrival;
+ const loseHome=restore.endsWith('before Home'),loseStrike=restore.endsWith('before Strike');
+ const race=restore==='Public save';
+ const heldHome=new Promise(resolve=>{releaseHome=resolve;}),heldStrike=new Promise(resolve=>{releaseStrike=resolve;});
+ const cold=await nativeProductionAuthority(disk,{...options,getTerrainManifest:()=>terrainManifest,
+  async onPrepare(record){
+   if(record.kind!=='home-arrival'||!arrival)return;
+   const at=record.resources.worldBoundary.effectiveTime,world=cold.host.inspect().nativeRouteFrame.worldBoundary;
+   const frame=cold.frame(0,{nativeWorldBoundary:world,
+    clock:{version:1,epoch:0,elapsed:at,safeUntil:at,anchorAbsoluteMs:0,paused:true,segments:[]}},[homeReady.homeGroup,...homeReady.gateGroups]);
+   await cold.present();await frame;
+  },
+  onReady(record,{signal}){
+   if(record.kind==='home-route'&&!homeReady){homeReady=record;return holdReady(heldHome,signal,loseHome);}
+   if(record.kind==='animal-crop-strike'&&!strikeReady){strikeReady=record;return holdReady(heldStrike,signal,loseStrike);}
+   if(race&&record.kind==='home-arrival'&&!arrival){arrival=record;return holdReady(null,signal,true);}
+  },onCommit(_record,receipt){
+   if(receipt.nativeHomeRouteBinding)homeGO=receipt.nativeHomeRouteBinding;
+   if(receipt.nativeAnimalCropStrikeBinding)strikeGO=receipt.nativeAnimalCropStrikeBinding;
+  }});
+ function holdReady(ready,signal,retiring){
+  if(!retiring)return ready;
+  return new Promise((_,reject)=>signal.addEventListener('abort',()=>reject(new DOMException('Preparation cancelled','AbortError')),{once:true}));
+ }
+ function frozen(step){
+  assert.equal(step.elapsed,disk.elapsed);
+  assert.equal(step.stepsExecuted,0);
+  const snapshot=JSON.parse(step.snapshot);
+  assert.equal(snapshot.rng,disk.rng);
+  assert.equal(snapshot.raid.animals[0].attackRemaining,marker.strike.remaining);
+  assert.deepEqual(snapshot.structures,disk.structures);
+  assert.deepEqual(step.events,[]);
+  const {yaw,...pose}=refugeWorkerPose(snapshot.workers[0]),{yaw:savedYaw,...savedPose}=marker.workerPose;
+  assert.deepEqual(pose,savedPose);
+  assert(Math.abs(yaw-savedYaw)<1e-12);
+ }
+ async function replace(held,route){
+  cold.gpu.device.destroy();cold.retireResourceEndpoint();
+  const hold=await cold.authority.quiesceNativeIntentProduction({forLostDraw:true});
+  assert((await cold.authority.flushNativeResourcePreparation({allowRetired:true,forLostDraw:true})).terminal);
+  if(held){await assert.rejects(held.packet.presented);assert(!held.committed);}
+  assert.deepEqual(await cold.authority.terminalWorkerRoute(),route);
+  const [authorityPort,drawPort]=pair();
+  draw=await fixture({capabilities:{nativeHomeRouteVersion:1,nativeAnimalCropVersion:1,nativeHomeArrivalVersion:1}},
+   {intentControl:{port:drawPort,session:'production-control',recoveryHold:30},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
+  const {recoveredWorkerRoute:q}=await cold.authority.attachHeldWorkerRoute(authorityPort,'production-control',30,hold,route);
+  const clock={version:1,epoch:0,elapsed:disk.elapsed,safeUntil:disk.elapsed,anchorAbsoluteMs:0,paused:true,segments:[]};
+  let packet;
+  if(route.pendingFlight){
+   assert.deepEqual(q.pendingFlight.animal.restore,{...marker.strike,requestedAt:disk.elapsed});
+   packet=draw.frame(0,{clock,nativeWorldBoundary:null,recoveredPendingFlight:q.pendingFlight});
+  }else{
+   const ref=(q.members?.[0]??q).execution.binding.reference,epoch=ref.worldBoundary.effectiveTime,gateId=Number(marker.gate.id.split('-')[1]);
+   draw.client.registerClockBinding(draw.buffer,{byteOffset:0,semantic:'relative',epoch,
+    resourceEnd:nativeClockResourceEnd(epoch,ref.endTime),nativeHome:ref});
+   if(q.members){
+    const actual=q.members[1].execution.binding;
+    assert.equal(actual.attackId,marker.strike.attackId);
+    assert.deepEqual(actual.reference.restore,{...marker.strike,requestedAt:disk.elapsed});
+    draw.client.registerClockBinding(draw.buffer,{byteOffset:4,semantic:'relative',epoch:actual.reference.worldBoundary.effectiveTime,
+     resourceEnd:actual.reference.endTime,nativeAnimalCrop:actual.reference});
+   }
+   const gateBuffer=draw.client.device.createBuffer({size:16,usage:72});
+   const gateGroup=draw.client.device.createBindGroup({entries:[{binding:0,resource:{buffer:gateBuffer}}]});
+   draw.client.registerClockBinding(gateBuffer,{byteOffset:0,semantic:'relative',epoch,
+    resourceEnd:nativeClockResourceEnd(epoch,ref.endTime),nativeGate:{gateId,worldBoundary:ref.worldBoundary}});
+   packet=draw.frame(0,{clock,nativeWorldBoundary:q.worldBoundary??ref.worldBoundary},[draw.group,gateGroup]);
+   homeReady.homeGroup=draw.group;homeReady.gateGroups=[gateGroup];
+  }
+  await flush();await draw.host.idle();draw.host.present();await packet;
+  const witness=await cold.authority.checkHeldDraw(30,hold,route);
+  if(route.pendingFlight)assert.deepEqual(witness.pendingFlight,q.pendingFlight);
+  else if(route.members)assert.deepEqual(witness.members.map(row=>row.relativeTime),[0,0]);
+  else assert.equal(witness.relativeTime,0);
+  await cold.attachRecoveredResources(draw);
+  assert.equal(cold.authority.resumeNativeIntentProduction(hold),true);
+ }
+ try{
+  await untilProduction(cold,()=>!!homeReady?.packet);
+  frozen(await cold.command({...advance,steps:2}));
+  assert.equal(strikeReady,undefined);
+  if(loseHome)await replace(homeReady,{version:2,pendingFlight:true,members:[]});
+  releaseHome();
+  await untilProduction(cold,()=>!!strikeReady?.packet);
+  assert(homeGO);
+  frozen(await cold.command({...advance,steps:2}));
+  if(loseStrike)await replace(strikeReady,{kind:18,actorId:homeGO.reference.actorId});
+  releaseStrike();
+  await untilProduction(cold,()=>!!strikeGO);
+  const ref=strikeGO.reference;
+  assert.notEqual(ref.worldBoundary.authorityEpoch,strike.reference.worldBoundary.authorityEpoch);
+  assert.deepEqual(ref.restore,{...marker.strike,requestedAt:disk.elapsed});
+  assert.equal(ref.worldBoundary.effectiveTime,disk.elapsed);
+  assert.equal(homeGO.reference.sourceRequest.raidSpawnSequence,home.reference.sourceRequest.raidSpawnSequence);
+  const host=(draw??cold).host;
+  await untilProduction(cold,()=>host.inspect().nativeRouteFrame?.worldBoundary.ticket===ref.worldBoundary.ticket);
+  const frame=host.inspect().nativeRouteFrame;
+  assert.equal(frame.clockElapsed,disk.elapsed);
+  assert.equal(frame.bindings.find(row=>row.nativeAnimalCrop).relativeTime,0);
+  assert(frame.bindings.some(row=>row.nativeHome));
+  assert(frame.bindings.some(row=>row.nativeGate));
+  const again=cold.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+  assert.equal(again.saveAvailable,true);
+  assert.deepEqual(again.nativeAuthorityCheckpoint.raidFlight.strike,marker.strike);
+  if(restore.endsWith('after Strike'))await replace(null,{version:2,members:[
+   {kind:18,actorId:homeGO.reference.actorId},{kind:27,actorId:ref.actorId}]});
+  const hits=[];
+  const step={...advance,seconds:.02};
+  for(let i=0;i<95&&!hits.length;i++){
+   const result=await cold.command(step);
+   hits.push(...result.events.filter(row=>row.type==='AnimalLogicalHit'));
+   await cold.present();
+  }
+  assert.deepEqual(hits.map(row=>[row.attackId,row.targetId]),[[animal.attackId,doomed]]);
+  assert.equal(cold.snapshot().structures.find(row=>row.id===doomed).hp,120);
+  if(race){
+   assert(arrival&&!arrival.committed);
+   let done=false;
+   const next=Promise.resolve(cold.command(step)).finally(()=>{done=true;});next.catch(()=>{});
+   await untilProduction(cold,()=>done);
+   const continued=await next;
+   assert.equal(continued.stepsExecuted,1);
+   assert.equal(continued.elapsed,hits[0].simulationTime+step.seconds);
+   await assert.rejects(arrival.packet.presented);
+   assert(!arrival.committed);
+   await untilProduction(cold,()=>cold.records.some(row=>row.kind==='home-arrival'&&row!==arrival&&row.committed));
+   const ruins=[];
+   for(let i=0;i<180&&!ruins.length;i++){
+    let complete=false;
+    const slice=Promise.resolve(cold.command(step)).finally(()=>{complete=true;});slice.catch(()=>{});
+    await untilProduction(cold,()=>complete);
+    const result=await slice;
+    ruins.push(...result.events.filter(row=>row.type==='StructureRuined'));
+    hits.push(...result.events.filter(row=>row.type==='AnimalLogicalHit'));
+   }
+   assert.deepEqual(ruins.map(row=>row.targetId),[doomed]);
+   assert.equal(hits.filter(row=>row.attackId===animal.attackId).length,1);
+  }
+  assert.deepEqual(cold.faults,[]);assert.deepEqual(cold.errors,[]);assert.deepEqual(draw?.errors??[],[]);
+ }finally{releaseHome();releaseStrike();await cold.close();await draw?.host.dispose();}
+}
 
 // The remote client and Host are real. Only the GPU queue and minimal draws
 // are fixtures. Each motor buffer belongs to the submitted kind12 packet.

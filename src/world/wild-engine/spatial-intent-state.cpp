@@ -302,6 +302,7 @@ struct RestoredAnimalStrike {
  uint64_t attackId=0;
  int clip=0;
  double duration=0,remaining=0;
+ std::shared_ptr<const NativeHomeResourceRequest> flightHome;
 };
 struct NativeAnimalStrike {
  std::shared_ptr<const NativeAnimalRouteBinding> route;
@@ -1978,12 +1979,13 @@ static bool centerRuinSourceCurrent(IntentState& s,const PendingBarrierProposal:
          crossing.slot!=c.home->actual.header[20])return false;
       continue;
     }
-    if(gate.occupied)return false;
+    const auto facts=gateFacts(s,gate);
+    if(!facts.complete||facts.occupied)return false;
     // Keep only independent, already certified closing programs.
     if(gateMotionPending(gate,s.clockThrough)||gateMotionEnd(gate)>s.clockThrough||
        gateOpening(gate,s.clockThrough)!=gate.target){
       if(!gate.mechanism||!gate.bodySweepCertified||!gate.staticSweepCertified||!gateStaticProofCurrent(s)||
-         gate.precedingMotor||gate.requested||gate.target!=0)return false;
+         gate.precedingMotor||facts.requested||gate.target!=0)return false;
     }
   }
   const auto it=s.activeIntents.find(c.actor);

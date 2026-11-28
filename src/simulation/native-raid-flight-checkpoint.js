@@ -1,4 +1,4 @@
-import {nativeCropRouteSubject} from './raids.js';
+import {nativeCropRouteSubject,savedRaidStrike} from './raids.js';
 import {checkpointGateOpenings,nativeDesertRefugeLayout,refugeWorkerPose,sameCheckpointGateOpenings,sameRefugePose,validCheckpointGateOpening} from '../world/native-refuge-return.js';
 import {validGateOpening} from '../world/gate-passages.js';
 
@@ -57,13 +57,16 @@ export function nativeRaidFlightCheckpointLayout(state){
 }
 
 export function copyNativeRaidFlightCheckpoint(value){
- const {version,at,spawnSequence,actorId,animalId,personId,contractDay,villageId,centerId,workerPose,animalPose,homePath,homePending,farmStop,gate,gates}=value??{};
+ const {version,at,spawnSequence,actorId,animalId,personId,contractDay,villageId,centerId,workerPose,animalPose,homePath,homePending,farmStop,gate,gates,strike}=value??{};
  const reserved=homePath!==undefined;
  if(![1,2].includes(version)||!Number.isFinite(at)||at<0||![spawnSequence,actorId,animalId].every(positive)||actorId===animalId||
     ![personId,villageId,centerId].every(id=>typeof id==='string'&&id)||!Number.isSafeInteger(contractDay)||contractDay<0||
     !workerPose||!poseFields.every(key=>Number.isFinite(workerPose[key]))||poseFields.slice(3).some(key=>workerPose[key]<0)||
     !animalPose||![animalPose.x,animalPose.z,animalPose.yaw,animalPose.phase].every(Number.isFinite)||animalPose.phase<0||
     typeof animalPose.targetId!=='string'||!animalPose.targetId||typeof animalPose.reservation!=='string'||!animalPose.reservation||
+    strike!==undefined&&(!reserved||!strike||!positive(strike.attackId)||![0,1,2,3].includes(strike.clip)||
+      !Number.isFinite(strike.duration)||strike.duration<=0||strike.duration>120||
+      !Number.isFinite(strike.remaining)||strike.remaining<=0||strike.remaining>strike.duration)||
     homePending!==undefined&&(homePending!==true||farmStop!==undefined)||
     (version===1?gates!==undefined||gate!==undefined&&(!validCheckpointGateOpening(gate)||
       gate.reservedByHome!==undefined&&(gate.reservedByHome!==false||!reserved)||reserved&&gate.reservedByHome!==false&&gate.opening!==1):
@@ -77,6 +80,7 @@ export function copyNativeRaidFlightCheckpoint(value){
  const animal={x:animalPose.x,z:animalPose.z,yaw:animalPose.yaw,phase:animalPose.phase,
   targetId:animalPose.targetId,reservation:animalPose.reservation};
  return {version,at,spawnSequence,actorId,animalId,personId,contractDay,villageId,centerId,workerPose:pose,animalPose:animal,
+  ...(strike?{strike:{attackId:strike.attackId,clip:strike.clip,duration:strike.duration,remaining:strike.remaining}}:{}),
   ...(farmStop!==undefined?{farmStop:copyFarmStopCut(farmStop,at,gate,gates)}:homePending?{homePending}:{homePath:homePath.map(({x,z})=>({x,z}))}),
   ...(gates?{gates:gates.map(({id,opening,reservedByHome})=>({id,opening,reservedByHome}))}:
     gate?{gate:{id:gate.id,opening:gate.opening,...(gate.reservedByHome===false?{reservedByHome:false}:{})}}:{})};
@@ -93,10 +97,15 @@ export function nativeRaidFlightCheckpointActors(state,marker){
  const admission=value.farmStop?'pending-farm-flight-stop':value.homePending?'pending-raid-flight-resources':'native-home';
  const layout=nativeRaidFlightCheckpointLayout(state);
  const subject=animal&&nativeCropRouteSubject(state,animal,worker);
+ const strike=value.strike,action=strike&&animal&&savedRaidStrike(animal);
  if(!layout||!sameCheckpointGateOpenings(layout.gates,value)||
     state.elapsed!==value.at||state.raid?.daytime!==true||state.raid.animals.length!==1||
     state.workers.length!==1||animal?.species!=='warthog'||
-    !['entering','walking'].includes(animal.status)||value.farmStop&&(state.biome!=='desierto'||animal.status!=='entering'||subject?.purpose!=='center')||
+    (strike?state.biome!=='desierto'||subject?.purpose!=='center'||!action||
+      !Object.keys(strike).every(key=>strike[key]===action[key])||strike.attackId>=state.sequence||
+      state.events.some(event=>event.attackId===animal.attackId&&['AnimalLogicalHit','AnimalLogicalMiss'].includes(event.type))||
+      animal.x!==Math.fround(animal.approach.x)||animal.z!==Math.fround(animal.approach.z):
+      !['entering','walking'].includes(animal.status))||value.farmStop&&(state.biome!=='desierto'||animal.status!=='entering'||subject?.purpose!=='center')||
     worker?.status!=='fleeing'||worker.hits!==0||
     worker.incapacitated||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining||worker.raidReturn||
     worker.taskId||worker.crateId||worker.path!==null||worker.gateWaiting!==(value.farmStop?.waiting??false)||
@@ -108,8 +117,7 @@ export function nativeRaidFlightCheckpointActors(state,marker){
     !sameRefugePose(refugeWorkerPose(worker),value.workerPose)||
     animal.x!==value.animalPose.x||animal.z!==value.animalPose.z||animal.heading!==value.animalPose.yaw||
     animal.motionPhase!==value.animalPose.phase||animal.targetId!==value.animalPose.targetId||animal.reservation!==value.animalPose.reservation||
-    !subject||!approachEnd||
-    approachEnd.x!==Math.fround(animal.approach.x)||approachEnd.z!==Math.fround(animal.approach.z)||
+    !subject||!strike&&(!approachEnd||approachEnd.x!==Math.fround(animal.approach.x)||approachEnd.z!==Math.fround(animal.approach.z))||
     spawn?.id!=='event-'+value.spawnSequence||spawn.raidFacts?.daytime!==true||spawn.raidFacts.id!==state.raid.id||
     spawn.raidFacts.day!==state.day||spawn.simulationTime>value.at||
     !spawn.raidFacts.actors?.some(item=>item.id===animal.id&&item.species===animal.species)||
@@ -118,7 +126,7 @@ export function nativeRaidFlightCheckpointActors(state,marker){
  return {marker:value,worker,animal,home};
 }
 
-export function captureNativeRaidFlightCheckpoint(state,worker,animal,spawnSequence,homePath,gates=[],homeGateIds=[],farmStop=null){
+export function captureNativeRaidFlightCheckpoint(state,worker,animal,spawnSequence,homePath,gates=[],homeGateIds=[],farmStop=null,strike=null){
  const [gate]=gates,multiple=gates.length>1;
  if(farmStop&&!multiple){
   const {motors,...program}=farmStop;
@@ -128,6 +136,7 @@ export function captureNativeRaidFlightCheckpoint(state,worker,animal,spawnSeque
   personId:worker.personId,contractDay:worker.contractDay,villageId:worker.villageId,centerId:worker.centerId,
   workerPose:refugeWorkerPose(worker),animalPose:{x:animal.x,z:animal.z,yaw:animal.heading,phase:animal.motionPhase,
    targetId:animal.targetId,reservation:animal.reservation},...(farmStop?{farmStop}:homePath?{homePath}:{homePending:true}),
+  ...(strike?{strike}:{}),
   ...(multiple?{gates:gates.map(({id,gateOpen})=>({id,opening:gateOpen,reservedByHome:homeGateIds.includes(numberFromId(id))}))}:
     gate?{gate:{id:gate.id,opening:gate.gateOpen,...(homePath&&!homeGateIds.length?{reservedByHome:false}:{})}}:{})};
  return nativeRaidFlightCheckpointActors(state,marker).marker;

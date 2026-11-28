@@ -30,7 +30,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
       r?.purpose==='center'&&(flight?.nativeRouteAdmission==='pending-raid-flight-resources'||
         r.mode===1&&planner.nativeCenterFlightAnimalReady?.(state,animal,r.requestSequence)===false);
     if(r?.mode===1&&!waitingForHome)return {actorId,kind:'animal-crop-route',operation:'startNativeAnimalCropRouteAfterGpuQuiescence',prepare:'prepareNativeAnimalCropRouteResources',requestSequence:r.requestSequence};
-    if(r?.mode===5||strikeReady&&(!(r.purpose==='center'&&flight)||!arrivedHome&&planner.nativeCenterFlightStrikeReady?.(state,animal,r.requestSequence)))
+    if(r?.mode===5&&!waitingForHome||strikeReady&&(!(r.purpose==='center'&&flight)||!arrivedHome&&planner.nativeCenterFlightStrikeReady?.(state,animal,r.requestSequence)))
       return {actorId,kind:'animal-crop-strike',operation:'startNativeAnimalCropStrikeAfterGpuQuiescence',prepare:'prepareNativeAnimalCropStrikeResources',requestSequence:r.requestSequence};
    }
   }
@@ -191,10 +191,12 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
  }
  function protectedCenterPreparationSource(kind,actorId){
   if(kind==='animal-crop-route'){
-   const pending=planner.nativeRestoredFlightApproach?.()?.pending;
+   const pending=planner.nativeRestoredFlightMotion?.()?.pending;
    return pending&&actorId==='animal-'+pending.actor?pending.requestSequence:null;
   }
   if(kind!=='animal-crop-strike')return null;
+  const pending=planner.nativeRestoredFlightMotion?.()?.pending;
+  if(pending?.mode===5&&actorId==='animal-'+pending.actor)return pending.requestSequence;
   const execution=planner.nativeCenterRuinRouteRecovery?.()?.execution??
     planner.nativeRaidFlightRecoveryExecutions?.()?.[1]??
     planner.nativeAnimalCropRouteExecution?.(actorId,{allowArrivedCenter:true});
@@ -214,7 +216,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   const proof=recoverableStoppedHomeSource(actorId);
   return proof?JSON.stringify(proof.request):null;
  }
- function quiesce({cancelStoppedTask=false,cancelStoppedHome=false,cancelTask=null,cancelCrop=null,cancelHomePreparation=false,cancelCenterPreparation=false,cancelIdleSuccessor=false}={}){
+ function quiesce({cancelStoppedTask=false,cancelStoppedHome=false,cancelTask=null,cancelCrop=null,cancelHomeArrival=null,cancelHomePreparation=false,cancelCenterPreparation=false,cancelIdleSuccessor=false}={}){
   if(closed||fault)return Promise.reject(Error(fault?'Native intent production failed: '+fault:'Native intent production closed'));
   if(quiescence)return quiescence.promise;
   if(active&&!active.promise)return Promise.reject(Error('Native intent production operation is not ready'));
@@ -223,6 +225,8 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   const hold={receipt:Object.freeze({}),settled:false,promise:null};quiescence=hold;
   if(cancelTask&&active?.actorId===cancelTask.actorId&&active.taskId&&active.taskId===cancelTask.taskId||
      cancelCrop&&active?.kind===cancelCrop.kind&&active.actorId===cancelCrop.actorId&&active.requestSequence===cancelCrop.requestSequence||
+     cancelHomeArrival&&active?.kind==='home-arrival'&&active.actorId===cancelHomeArrival&&
+       active.source===sourceIdentity({kind:'home-arrival',actorId:cancelHomeArrival})||
      cancelHomePreparation&&active?.source&&protectedHomeSource(active.kind,active.actorId)===active.source||
      cancelCenterPreparation&&active?.source&&protectedCenterPreparationSource(active.kind,active.actorId)===active.source||
      cancelIdleSuccessor&&active?.source&&protectedIdleSuccessorSource(active.kind,active.actorId)===active.source||

@@ -390,7 +390,8 @@ export function copyPendingFlightRecovery(value){
     !Number.isFinite(at)||at<home.requestedAt||home.version!==2||animal.purpose!=='center'||
     animal.authorityEpoch!==home.authorityEpoch||animal.nativeSession!==home.nativeSession||
     animal.actorId===home.actorId||animal.bodyId===home.bodyId||animal.requestSequence<=home.requestSequence||
-    animal.restore||animal.restoredWorkerImpact||value.animal.previousStrike||value.animal.previousShieldCrop)
+    animal.restore&&(animal.restore.requestedAt!==at||animal.restore.requestedAt!==home.requestedAt)||
+    animal.restoredWorkerImpact||value.animal.previousStrike||value.animal.previousShieldCrop)
    throw Error('Invalid pending flight recovery');
  return Object.freeze({version:1,at,home,animal});
 }
@@ -497,7 +498,8 @@ export function copyNativeRecoveryGroup(value,world,{awaitingIdleCyclePhase=fals
  if((ordinaryWorkers?members.some(({kind,proof})=>(nativeRecoveryGates(proof).length&&(kind!==18||!!refuge))||kind===18&&
     (proof.reference.sourceRequest?.raidSpawnSequence||proof.reference.sourceRequest?.recoveryHit)):
     !refs[0].sourceRequest?.raidSpawnSequence||refs[1].purpose==='retreat')||
-    strike&&(refs[1].purpose!=='center'||refs[1].restore||!sameNativeWorldBoundary(world,refs[1].worldBoundary)||
+    strike&&(refs[1].purpose!=='center'||refs[1].restore&&refs[1].restore.requestedAt!==refs[0].sourceRequest?.requestedAt||
+      !sameNativeWorldBoundary(world,refs[1].worldBoundary)||
       members[0].proof.assignmentSequence>=members[1].proof.assignmentSequence)||
     new Set(refs.map(ref=>ref.actorId)).size!==members.length||new Set(refs.map(ref=>ref.bodyId)).size!==members.length||
     new Set(members.map(({proof})=>nativeRecoverySequence(proof))).size!==members.length||

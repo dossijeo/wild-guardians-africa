@@ -124,7 +124,8 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
        actors.size!==1||!home||home.version!==2||!id(restoredFlight.raidSpawnSequence)||
        home.raidSpawnSequence!==restoredFlight.raidSpawnSequence||home.nativeSession!==initialNativeSession||
        q.nativeSession!==initialNativeSession||q.actorId!==restoredFlight.animalActor||q.actorId===home.actorId||
-       q.bodyId===home.bodyId||q.requestSequence<=home.requestSequence||q.purpose==='retreat'||q.restore||
+       q.bodyId===home.bodyId||q.requestSequence<=home.requestSequence||q.purpose==='retreat'||
+       q.restore&&(q.purpose!=='center'||q.restore.requestedAt!==home.requestedAt)||
        q.previousStrike||q.previousShieldCrop||q.restoredWorkerImpact||
        flightHome&&(q.purpose!=='center'||q.requestSequence>=flightHome.assignmentSequence||!matches(peer?.current,{actorId:flightRef.actorId,
          assignmentSequence:flightHome.assignmentSequence,routeHandle:flightRef.expectedRouteHandle}))))
@@ -173,6 +174,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     }else{
       if(issued.restore){
         if(issued.kind!==27||current||actor.state!==6||actor.latestSequence!==q.requestSequence||!sameRestoredAnimalStrike(issued.restore,q.restore)||
+           actor.raidFlightBirth&&!liveCenterFlightHome(actor.raidFlightBirth)||
            event.type!=='IntentChanged'||event.state!==2||event.routeHandle||issued.routeAssignment||issued.routeTicket||issued.generation||
            issued.at!==event.effectiveTime||issued.session!==q.nativeSession||issued.attackId!==q.restore.attackId||issued.clip!==q.restore.clip||
            issued.duration!==q.restore.duration||issued.endTime!==issued.at+q.restore.remaining||
@@ -191,7 +193,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
   }
   function sameCropSource(r,actor){
     if(!actor?.cropRequest)return false;
-    if(r.restore)return animalCropMatchesRequest(r,actor.cropRequest);
+    if(r.restore)return animalCropMatchesRequest(r,actor.cropRequest)&&(!actor.raidFlightBirth||!!liveCenterFlightHome(actor.raidFlightBirth));
 
     if(r.kind===26){
       if(r.purpose==='retreat'&&actor.encounterRetreatRequest===actor.cropRequest)
@@ -1202,7 +1204,8 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
           peer.latestSequence===strikeHome.assignmentSequence&&matches(peerRecord,{actorId:home.actorId,
             assignmentSequence:strikeHome.assignmentSequence,routeHandle:home.expectedRouteHandle})&&
           !!home.sourceRequest?.raidSpawnSequence&&nativeRecoveryCovers(boundary,home.worldBoundary)&&
-          home.actorId!==ref.actorId&&home.bodyId!==ref.bodyId&&ref.purpose==='center'&&!ref.restore;
+          home.actorId!==ref.actorId&&home.bodyId!==ref.bodyId&&ref.purpose==='center'&&
+          (!ref.restore||ref.restore.requestedAt===home.sourceRequest.requestedAt);
         const current=()=>!closed&&!!clock&&peerCurrent()&&
           proof.assignmentSequence===sequence&&clock.intentSequence===sequence&&clock.nativeSession===boundary.nativeSession&&
           clock.committedThrough>=boundary.effectiveTime&&clock.committedThrough<ref.endTime;

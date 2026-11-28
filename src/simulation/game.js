@@ -2057,6 +2057,8 @@ export function advanceReal(s,seconds,nav,options={}) {
   if(onClockSegment!==null&&typeof onClockSegment!=='function')throw TypeError('Invalid simulation clock observer');
   let left=seconds;
   while(left>1e-9 && !s.pauses.length&&!s.result) {
+    const retirement=options.settleHomeBeforeCenterSuccessor?.();
+    if(retirement)return retirement.then(()=>advanceReal(s,left,nav,options));
       prepareClockEvents(s,nav);
     const speed=nightFastForward&&s.time>=300&&!s.raid?5:1;
     const untilBoundary=Math.min(...clockBoundaries(s).filter(t=>t>s.time+1e-9).map(t=>(t-s.time)/speed));

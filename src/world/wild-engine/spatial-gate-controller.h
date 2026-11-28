@@ -77,7 +77,12 @@ GateFacts gateFacts(IntentState& s,const NativeGate& gate){
       if(worker==q.s.workers.end()||!worker->second.bodyBound||worker->second.body!=id)q.facts.complete=false;
     },&nearby);
   for(const auto& [id,worker]:s.workers){SpatialBodyView body;
-    if(!gateBody(worker,body)){if(std::hypot(worker.x-gate.x,worker.z-gate.z)<=gate.trigger)out.complete=false;continue;}
+    if(!gateBody(worker,body)){
+      const bool retired=worker.inactiveSequence&&!worker.bodyBound&&!worker.body&&!worker.eligible&&
+        !worker.actionActive&&!s.activeIntents.count(id);
+      if(!retired&&std::hypot(worker.x-gate.x,worker.z-gate.z)<=gate.trigger)out.complete=false;
+      continue;
+    }
     if(!(body.flags&1)||std::hypot(body.x-gate.x,body.z-gate.z)>gate.trigger)continue;
     s.gateWorkerChecks++;
     out.occupied|=spatialNativePolygonDistance(gate.swing.data(),24,body.x,body.z,body.x,body.z)<body.r;

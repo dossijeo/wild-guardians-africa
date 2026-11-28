@@ -73,10 +73,18 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_strike_restore_request(double actor,double s
   return -1;
  if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
  const auto found=s.activeIntents.find(uint64_t(actor)),end=s.activeIntents.end();
- if(found==end||s.activeIntents.size()!=1||spatial_body_count()!=1)return -2;
+ if(found==end)return -2;
  auto& intent=found->second;
  const auto center=s.targets.find(uint64_t(centerId)),target=s.targets.find(intent.target);
  const bool attackCenter=target!=s.targets.end()&&target->first==uint64_t(centerId)&&intactAttackCenter(target->second);
+ std::shared_ptr<const NativeHomeResourceRequest> flightHome;
+ if(s.activeIntents.size()==2&&spatial_body_count()==2&&attackCenter&&spatial_world_biome()==1){
+  for(const auto& [key,peer]:s.activeIntents){
+   if(key==uint64_t(actor))continue;
+   if(!nativeHomeRequestBodyCurrent(s,peer)||!peer.homeRequest->raidSpawnSequence||peer.homeRequest->body==uint64_t(bodyId))return -2;
+   flightHome=peer.homeRequest;
+  }
+ }else if(s.activeIntents.size()!=1||spatial_body_count()!=1)return -2;
  SpatialBodyView body;
  if(!intent.animal||!intent.lease||!intent.approachKnown||intent.state!=PlanningState::ActionActive||
     intent.generation||intent.requiresResources||intent.restoredAnimalStrike||intent.animalStrike||
@@ -87,17 +95,33 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_strike_restore_request(double actor,double s
  const auto q=std::make_shared<NativeAnimalRouteRequest>(NativeAnimalRouteRequest{
   intent.actor,intent.target,uint64_t(bodyId),uint64_t(centerId),0,s.effectiveTime,body.x,body.z,yaw,body.r,phase,
   center->second.x,center->second.z,false,target->second.x,target->second.z,attackCenter});
- intent.restoredAnimalStrike=std::make_shared<RestoredAnimalStrike>(RestoredAnimalStrike{q,uint64_t(attackId),int(clip),duration,remaining});
+ intent.restoredAnimalStrike=std::make_shared<RestoredAnimalStrike>(RestoredAnimalStrike{
+  q,uint64_t(attackId),int(clip),duration,remaining,flightHome});
  intent.state=PlanningState::AwaitingResources;intent.requiresResources=true;
  q->sequence=emitIntentChange(s,intent);
  s.entityRevision++;return 1;
+}
+static bool restoredStrikeFlightHome(const IntentState& s,const RestoredAnimalStrike& strike,
+    std::shared_ptr<const NativeHomeRouteBinding>& home){
+ const auto& request=strike.flightHome;
+ if(!request)return true;
+ const auto peer=s.activeIntents.find(request->actor);
+ if(s.activeIntents.size()!=2||spatial_body_count()!=2||peer==s.activeIntents.end()||!nativeHomeBodyCurrent(s,peer->second))return false;
+ const auto& route=s.routeSlots[peer->second.slot];
+ const auto& binding=route.homeBinding;const auto& q=*strike.source;
+ double contact;
+ if(binding->requestSource!=request||binding->centerFlight.animal!=strike.source||
+    reservationConflict({&route},{nullptr,q.x,q.z},q.radius+std::max(1.1,route.radius),s.effectiveTime,contact))return false;
+ home=binding;
+ return true;
 }
 static int stageRestoredAnimalStrike(IntentState& s,uint64_t actor,double clip,double duration){
  const auto found=s.activeIntents.find(actor);
  if(found==s.activeIntents.end()||!restoredAnimalStrikeCurrent(s,found->second,false))return -2;
  const auto& r=found->second.restoredAnimalStrike;
  const auto& q=*r->source;
- if(clip!=r->clip||duration!=r->duration||!(s.effectiveTime+r->remaining>s.effectiveTime))return -2;
+ std::shared_ptr<const NativeHomeRouteBinding> home;
+ if(clip!=r->clip||duration!=r->duration||!(s.effectiveTime+r->remaining>s.effectiveTime)||!restoredStrikeFlightHome(s,*r,home))return -2;
  const int previous=lazy_selected_context(),profile=found->second.profile;
  if(previous!=profile)spatial_select_nav_profile_index(profile);
  const int clear=spatial_animal_attack_segment_clear(q.x,q.z,q.x,q.z,q.radius);
@@ -105,7 +129,7 @@ static int stageRestoredAnimalStrike(IntentState& s,uint64_t actor,double clip,d
  if(clear!=1)return -7;
  const int result=stageWorldMutationBoundary(nullptr,0);if(result!=1)return result;
  auto& p=s.barrierProposal;p.kind=27;
- NativeAnimalStrike draft;draft.restored=r;
+ NativeAnimalStrike draft;draft.restored=r;draft.flightHome=home;
  draft.header={1,double(actor),double(q.body),double(q.target),0,0,0,
   clip,duration,q.targetX,q.targetZ,q.x,q.z,q.phase,q.heading,p.at,p.at+r->remaining,double(p.ticket),double(p.session)};
  p.animalStrike=std::move(draft);return 1;
@@ -150,7 +174,9 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_strike_proposal_commit_bound(double session,
  if(preparedTicket!=ticket&&(!draft.prepared||(*draft.prepared)[17]!=preparedTicket))return -9;
  auto& intent=s.activeIntents.at(uint64_t(h[1]));
  if(draft.restored){
-  if(draft.restored!=intent.restoredAnimalStrike||draft.restored->attackId!=attackId||!restoredAnimalStrikeCurrent(s,intent,false))return -2;
+  std::shared_ptr<const NativeHomeRouteBinding> home;
+  if(draft.restored!=intent.restoredAnimalStrike||draft.restored->attackId!=attackId||!restoredAnimalStrikeCurrent(s,intent,false)||
+     !restoredStrikeFlightHome(s,*draft.restored,home)||draft.flightHome!=home)return -2;
  }else{
   const auto* route=animalStrikeRoute(s,uint64_t(h[1]),uint64_t(h[4]));
   std::shared_ptr<const NativeHomeRouteBinding> home;

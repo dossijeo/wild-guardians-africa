@@ -589,10 +589,12 @@ EMSCRIPTEN_KEEPALIVE int nav_flight_crop_proposal_clear(double session,double ti
  if(w==s.activeIntents.end()||a==s.activeIntents.end()||!w->second.home||w->second.animal||!a->second.animal||a->second.retreat)return -2;
  const auto& wi=w->second;const auto& ai=a->second;
  const int mode=nav_animal_crop_state(animal);
- if(mode<1||mode>3||s.animalCropState[4]<=0||s.animalCropState[8]!=1.1)return -2;
+ const auto& restored=ai.restoredAnimalStrike;
+ if((mode<1||mode>3)&&!(p.kind==18&&mode==5&&restored)||s.animalCropState[4]<=0||s.animalCropState[8]!=1.1)return -2;
  const bool center=s.animalCropState[22]==1;
  if(biome==1&&!center)return -2;
- const auto& ar=s.routeSlots[ai.slot];ReservationPath crop{mode==1&&!center?nullptr:&ar,s.animalCropState[9],s.animalCropState[10]};
+ const auto* ar=restored?nullptr:&s.routeSlots[ai.slot];
+ ReservationPath crop{mode==1&&!center?nullptr:ar,s.animalCropState[9],s.animalCropState[10]};
  const RouteSlot* hr=nullptr;auto source=std::shared_ptr<const NativeHomeResourceRequest>(wi.homeRequest);
  if(source){if(!nativeHomeRequestBodyCurrent(s,wi))return -2;}
  else{
@@ -606,12 +608,19 @@ EMSCRIPTEN_KEEPALIVE int nav_flight_crop_proposal_clear(double session,double ti
  if(p.kind==18){
   if(!p.home||p.home->homeRequestSource!=source||p.home->route.actor!=wi.actor||p.home->body!=source->body)return -2;
   home.route=&p.home->route;
+  if(mode==5){
+   if(!center||restored->flightHome!=source)return -2;
+   double contact;
+   if(reservationConflict(home,crop,reach,s.effectiveTime,contact))return 0;
+   p.home->centerFlight={restored->source,s.effectiveTime};
+   return 1;
+  }
   if(center&&mode==1){
    if(!ai.animalRouteRequest||!animalRouteRequestCurrent(s,ai))return -2;
    // Only Home can acquire now. The animal is stationary until its own GO.
    double contact;
    if(reservationConflict(home,{nullptr,crop.x,crop.z},reach,s.effectiveTime,contact))return 0;
-   p.home->centerFlight={ai.animalRouteRequest,centerFlightClearAt(*home.route,ar,{crop.x,crop.z},reach,s.effectiveTime)};
+   p.home->centerFlight={ai.animalRouteRequest,centerFlightClearAt(*home.route,*ar,{crop.x,crop.z},reach,s.effectiveTime)};
    return 1;
   }
  }else{

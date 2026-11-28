@@ -162,7 +162,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   const savedCrop=savedWorkerLifecycle===1&&savedRefuge!==undefined?shelteredCropCheckpointAnimal(game):null;
   const savedRetreat=savedWorkerLifecycle===1?shelteredCenterRetreat(game)??(savedCrop?.status==='retreating'?savedCrop:null):null;
   if(savedRetreat&&(!savedRetreat.path?.length||savedEncounter))throw Error('Saved native Retreat has no restorable corridor');
-  const savedApproach=savedWorkerLifecycle===1?savedFlight?.animal??shelteredCenterApproach(game)??(['entering','walking'].includes(savedCrop?.status)?savedCrop:null):null;
+  const savedApproach=savedWorkerLifecycle===1?(!savedFlight?.marker.strike?savedFlight?.animal:null)??shelteredCenterApproach(game)??(['entering','walking'].includes(savedCrop?.status)?savedCrop:null):null;
   const savedApproachPath=savedApproach?.path;
   if(savedApproach&&(!savedApproachPath?.length||savedEncounter))throw Error('Saved native approach has no restorable corridor');
   if(savedApproach){
@@ -170,7 +170,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    if(endpoint.x!==Math.fround(savedApproach.approach.x)||endpoint.z!==Math.fround(savedApproach.approach.z))
     throw Error('Saved native approach corridor ends at another site');
   }
-  const savedStrike=savedWorkerLifecycle===1?shelteredCenterStrike(game)??(savedCrop?.status==='attacking'?savedCrop:null):null;
+  const savedStrike=savedWorkerLifecycle===1?(savedFlight?.marker.strike?savedFlight.animal:null)??shelteredCenterStrike(game)??(savedCrop?.status==='attacking'?savedCrop:null):null;
   if(savedStrike&&savedEncounter)throw Error('Saved native strike has another owner');
   const savedRaidRoute=savedRetreat??savedApproach;
   const savedRaidAnimal=savedRaidRoute??savedStrike;
@@ -549,7 +549,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     const pending=planner.nativeRaidFlightPendingCheckpoint();
     return pending?{pending,gates}:null;
    }
-   const owners=planner.nativeRaidFlightRecoveryExecutions();
+   const strike=game.biome==='desierto'&&savedRaidStrike(game.raid.animals[0]);
+   const owners=planner.nativeRaidFlightRecoveryExecutions(strike?27:26);
+   if(strike&&!owners)return null;
    // The kind4 world can follow both admissions. Reuse the exact live
    // removal proof to identify the same two bodies at that later cut.
    const ruin=owners?null:planner.nativeCenterRuinRouteRecovery();
@@ -565,7 +567,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     if(!crossing)return null;
     if(crossing.until>=game.elapsed)gateIds.push(id);
    }
-   return {home,gates,gateIds};
+   return {home,gates,gateIds,...(strike&&owners?{strike}:{})};
   }
   function saveAvailable(refugeReturn=refugeReturnCheckpoint(),flight=null){return !game.pauses.includes('campaign-cinematic')&&(!savedEncounter||!!nativeBodies)&&
     !planner.encounterCheckpointBlocked(!!refugeReturn,!!flight)&&confirmedStateSaveAvailable(game,{allowNativeRaidFlight:!!flight,allowNativeFarmStop:!!flight?.farmStop});}
@@ -623,7 +625,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    }
    return {...game,raid:{...game.raid,animals:[{...animal,path}]}};
   }
-  function captureRaidFlightCheckpoint(state,{pending,home,gates,gateIds,farmStop}){
+  function captureRaidFlightCheckpoint(state,{pending,home,gates,gateIds,farmStop,strike}){
    const [worker]=state.workers,[animal]=state.raid.animals;
    if(pending)return captureNativeRaidFlightCheckpoint(state,worker,animal,pending.raidSpawnSequence,null,gates,[],farmStop);
    const handle=home.nativeRoute.routeHandle,points=planner.routePoints(handle),sample=planner.sampleNativeRoute(handle,state.elapsed);
@@ -631,7 +633,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       sample.firstRemainingPoint*2>=points.length)throw Error('Native raid flight checkpoint lost its Home corridor');
    const path=[];
    for(let i=sample.firstRemainingPoint*2;i<points.length;i+=2)path.push({x:points[i],z:points[i+1]});
-   return captureNativeRaidFlightCheckpoint(state,worker,animal,home.binding.reference.sourceRequest.raidSpawnSequence,path,gates,gateIds);
+   return captureNativeRaidFlightCheckpoint(state,worker,animal,home.binding.reference.sourceRequest.raidSpawnSequence,path,gates,gateIds,null,strike);
   }
   stopSettlements=observeSettlements(game.ledger,(id,n,d)=>settlements.push({id,n,d,simulationTime:game.elapsed,eventSequence:game.sequence}));
   stopEvents=observeGameEvents(game,event=>{if(event.type==='RaidSpawned'){prepareRaidFlightAnimal(event);prepareLiveCenterAttack(event);prepareShelteredSavannaCenterAttack(event);}events.push(structuredClone(event));if(trackMicroIncome&&(event.type==='Dawn'||event.type==='CrateDelivered'))trackIncome(game,[event]);if(activeHistoricalCapture)try{activeHistoricalCapture.event(game,event,events);}catch{activeHistoricalCapture.invalidate();}});
@@ -794,6 +796,16 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
         }
       }};
     }).catch(error=>{abort();throw error;});
+  }
+  function settleHomeBeforeCenterSuccessor(){
+    const active=nativeProduction?.status().active;
+    if(active?.kind!=='home-arrival')return null;
+    const animal=game.raid?.animals[0],peer=animal&&planner.nativeRaidFlightMember(game,animal);
+    if(peer?.id!==active.actorId||planner.nativeFinishedAnimalCrop(game,animal)?.purpose!=='center')return null;
+    // The in-flight arrival may describe the just-revoked strike. Free its
+    // proposal before declaring the successor. The next confirmed publication
+    // lets the producer prepare Home19 again against the current owners.
+    return nativeProduction.quiesce({cancelHomeArrival:peer.id}).then(receipt=>nativeProduction.resume(receipt,{deferWake:true}));
   }
   async function prepareCenterRuin(center,span,advanceSubstep){
     const animal=game.raid?.animals[0],impact=nativeCenterCollapseImpact(game,animal,center);
@@ -1588,7 +1600,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
         }else{
           const pair=planner.nativeRaidFlightRecoveryExecutions(kind);
           if(pair)return {version:2,members:pair.map(({actorId},i)=>({kind:i===0?18:kind,actorId}))};
-          const waiting=savedFlight&&planner.nativeRestoredFlightApproach();
+          const waiting=savedFlight&&planner.nativeRestoredFlightMotion();
           if(waiting)return {kind:18,actorId:waiting.home.actorId};
           if(savedFlight&&planner.nativeRestoredPendingFlight())return {version:2,pendingFlight:true,members:[]};
         }
@@ -1644,7 +1656,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     if(route.version!==2){
       const execution=recoveryExecution(route);
       if(route.kind===18&&execution?.binding.reference.sourceRequest?.raidSpawnSequence){
-        const waiting=savedFlight&&planner.nativeRestoredFlightApproach();
+        const waiting=savedFlight&&planner.nativeRestoredFlightMotion();
         return waiting?.home.actorId===route.actorId?{executions:[waiting.home],pendingApproach:waiting.pending}:null;
       }
       return execution?{executions:[execution]}:null;
@@ -1983,6 +1995,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
      const restoredCenter=restoredAnimal&&nativeCenterCheckpointSite(game,restoredAnimal,flight);
      if(nativeBodies&&(qualifyAnimalCrop||restoredCenter||nativeWorkerLifecycle&&nativeShelteredSavannaCenterActor(game,game.raid?.animals[0])))
        options.prepareCenterRuin=prepareCenterRuin;
+     if(nativeBodies&&(mixedFlight||savedFlight)&&game.raid)options.settleHomeBeforeCenterSuccessor=settleHomeBeforeCenterSuccessor;
      if(qualifyRaidEncounter&&qualifyFarmFlee&&qualifyAnimalCrop&&nativeBodies)options.prepareEncounterDraft=prepareEncounterDraft;
      const completeStep=i=>{
        peerCapture?.checkpoint();worldCapture?.checkpoint();if(trackMicroIncome)trackIncome(game,[]);
@@ -1992,6 +2005,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
      let recoveryCut=null,centerMotionPublication=null,pendingRuinRecovery=false;
      const runSteps=first=>{
        if(restoringFarmFlight){stepsExecuted=0;return;}
+       if(savedFlight?.marker.strike&&restoredAnimal&&planner.nativeAnimalCropState(restoredAnimal.id)?.mode===5){stepsExecuted=0;return;}
        for(let i=first;i<steps;i++){
          const boundary=advanceReal(game,command.seconds,nav,options);
          if(boundary)return boundary.then(stopped=>{
