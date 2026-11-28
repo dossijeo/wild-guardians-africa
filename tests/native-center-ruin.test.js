@@ -216,6 +216,83 @@ function savedAttack() {
   }
 }
 
+for(const reload of [false,true])test(`the introductory Desert raid spends one hit on a crop and one on the center${reload?' after a public strike reload':''}`, {timeout:30000}, async()=>{
+ const fixture=new URL('./fixtures/desierto712-d1-two-crops-before-night.json.gz',import.meta.url);
+ const disk=gunzipSync(readFileSync(fixture)).toString(),initial=deserialize(disk),options=savedNativeAuthorityOptions(disk);
+ assert.deepEqual(initial.plants.map(crop=>[crop.id,crop.alive]),[['plant-3',true],['plant-5',true]]);
+ assert.equal(initial.workers[0].status,'home');
+ assert.equal(options.nativeWorkerLifecycle,true);
+ let release,firstRoute,replacement;
+ const ready=new Promise(resolve=>{release=resolve;});
+ const source=await nativeProductionAuthority(initial,{...options,emptyBeastPhysics:true,onReady(record){
+  if(!firstRoute&&record.kind==='animal-crop-route'){firstRoute=record;return ready;}
+ }});
+ let authority=source;
+ const history=[];
+ const advance=async()=>{
+  const next=await authority.command({kind:'advance',seconds:.05,steps:2,nightFastForward:true});
+  history.push(...next.events);
+  await authority.present();
+  const state=JSON.parse(next.snapshot),[worker]=state.workers;
+  assert.deepEqual([worker.id,worker.personId,worker.status,worker.x,worker.z,worker.hits],['worker-8','person-7','home',88,0,0]);
+  assert.deepEqual(state.ledger,initial.ledger);
+  return state;
+ };
+ try{
+  for(let i=0;i<70&&!firstRoute;i++)await advance();
+  assert(firstRoute);
+  assert.equal(firstRoute.resources.reference.targetId,3);
+  assert.equal(firstRoute.resources.reference.purpose,undefined);
+  const [birth]=source.snapshot().raid.animals;
+  const [held]=(await advance()).raid.animals;
+  assert.equal(firstRoute.committed,false);
+  assert.deepEqual([held.x,held.z,held.hitsRemaining],[birth.x,birth.z,2]);
+  release();
+  await untilProduction(source,()=>firstRoute.committed);
+  let cutAttack;
+  if(reload){
+   for(let i=0;i<900&&!cutAttack;i++){
+    const [animal]=(await advance()).raid.animals;
+    if(animal.status==='attacking'&&animal.attackRemaining<animal.attackDuration-.15&&animal.attackRemaining>.5)cutAttack=animal;
+   }
+   assert(cutAttack);
+   const checkpoint=source.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+   assert.equal(checkpoint.nativeAuthorityCheckpoint.workerLifecycle,1);
+   const stored=prepareWorkerCheckpoint(checkpoint,{slotId:initial.slotId,policy:{nativeAuthority:true},savedAt:0});
+   assert(stored.saved);
+   const saved=serialize(stored.state);
+   replacement=await nativeProductionAuthority(deserialize(saved),{...savedNativeAuthorityOptions(saved),emptyBeastPhysics:true});
+   authority=replacement;
+   const [same]=replacement.snapshot().raid.animals;
+   assert.deepEqual([same.attackId,same.attackRemaining,same.x,same.z,same.motionPhase],
+    [cutAttack.attackId,cutAttack.attackRemaining,cutAttack.x,cutAttack.z,cutAttack.motionPhase]);
+   await untilProduction(replacement,()=>replacement.records.some(record=>record.kind==='animal-crop-strike'&&record.committed));
+  }
+  let final;
+  for(let i=0;i<1200&&!history.some(event=>event.type==='RaidEnded');i++)final=await advance();
+  assert.equal(final.raid,null);
+  assert.deepEqual(final.plants.map(crop=>[crop.id,crop.alive,crop.attackHits??0]),
+   [['plant-3',false,1],['plant-5',true,0]]);
+  assert.equal(final.structures[0].hp,580);
+  assert.deepEqual(history.filter(event=>['CropDestroyed','AnimalLogicalHit','StructureHit','RaidEnded'].includes(event.type))
+    .map(event=>[event.type,event.targetId]),
+   [['CropDestroyed','plant-3'],['AnimalLogicalHit','plant-3'],['StructureHit','structure-2'],['AnimalLogicalHit','structure-2'],['RaidEnded',undefined]]);
+  const [cropHit,centerHit]=history.filter(event=>event.type==='AnimalLogicalHit');
+  assert.notEqual(cropHit.attackId,centerHit.attackId);
+  if(reload)assert.equal(cropHit.attackId,cutAttack.attackId);
+  const programs=authority.records.filter(record=>record.committed).map(record=>record.resources.reference);
+  assert.deepEqual(programs.map(r=>[r.kind,r.purpose]),[
+   ...(reload?[]:[[26,undefined]]),[27,undefined],[26,'center'],[27,'center'],[26,'retreat']
+  ]);
+  assert.equal(new Set(programs.map(r=>r.bodyId)).size,1);
+  assert.deepEqual(source.faults,[]);
+  if(reload)assert.deepEqual(replacement.faults,[]);
+ }finally{
+  release();
+  try{await source.close();}finally{await replacement?.close();}
+ }
+});
+
 import {copyPublishedNativeWorldBoundary} from '../src/world/native-world-boundary.js';
 
 for(const scenario of ['saved corridor','terminal pose','pending source'])test(`the sheltered Savanna center approach reacquires its ${scenario}`, {timeout:30000}, async()=>{

@@ -4083,13 +4083,13 @@ int nav_intent_register_attack_site(double actorId,double targetId,
                                     double radius,int timingMode=0){
   return registerAttackSite(actorId,targetId,startX,startZ,count,approachX,approachZ,radius,timingMode,true);
 }
-static int requestAttackCenterRoute(double actor,double target,const SpatialBodyView& origin,
+static int requestAnimalAttackRoute(double actor,double target,double center,const SpatialBodyView& origin,
                                    double body,int count,double approachX,double approachZ,
                                    double entering,double yaw,double phase){
   const int site=registerAttackSite(actor,target,origin.x,origin.z,count,
     approachX,approachZ,origin.r,0,false);
   if(site!=1)return site;
-  const int request=nav_animal_route_request(actor,body,target,entering,yaw,phase);
+  const int request=nav_animal_route_request(actor,body,center,entering,yaw,phase);
   if(request!=1){
     auto& s=state();
     releaseIntent(s,uint64_t(actor),PlanningState::Cancelled,false);
@@ -4114,7 +4114,7 @@ EMSCRIPTEN_KEEPALIVE int nav_restore_encounter_approach(double session,double wo
      !intactAttackCenter(target->second)||!spatialReadBody(uint64_t(bodyId),origin)||origin.kind!=1||origin.flags!=1||
      s.attackRouteInput.size()!=size_t(count)*2||s.attackRouteInput.back()!=float(approachZ)||
      s.attackRouteInput[size_t(count)*2-2]!=float(approachX))return -2;
-  const int status=requestAttackCenterRoute(actor,targetId,origin,bodyId,count,approachX,approachZ,entering,yaw,phase);
+  const int status=requestAnimalAttackRoute(actor,targetId,targetId,origin,bodyId,count,approachX,approachZ,entering,yaw,phase);
   if(status==1){
     source->spawn=uint64_t(spawn);
     source->approach=s.activeIntents.at(uint64_t(actor)).animalRouteRequest;
@@ -4134,7 +4134,24 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_plan_center_birth(double session,double acto
   if(s.session!=session||!s.activeIntents.empty()||s.finishedAnimalStrike||
      target==s.targets.end()||!intactAttackCenter(target->second)||spatial_body_count()!=1||
      !spatialReadBody(uint64_t(bodyId),origin)||origin.kind!=1||origin.flags!=1)return -2;
-  return requestAttackCenterRoute(actor,targetId,origin,bodyId,count,approachX,approachZ,1,yaw,phase);
+  return requestAnimalAttackRoute(actor,targetId,targetId,origin,bodyId,count,approachX,approachZ,1,yaw,phase);
+}
+EMSCRIPTEN_KEEPALIVE int nav_animal_plan_crop_birth(double session,double actor,double targetId,double centerId,
+    double bodyId,int count,double approachX,double approachZ,double yaw,double phase){
+  auto& s=state();
+  if(!integer(session)||!integer(actor)||!integer(targetId)||!integer(centerId)||!integer(bodyId)||
+     count<1||count>4096||!coordinate(approachX)||!coordinate(approachZ)||
+     !std::isfinite(yaw)||!std::isfinite(phase)||phase<0)return -1;
+  if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
+  const auto target=s.targets.find(uint64_t(targetId)),center=s.targets.find(uint64_t(centerId));
+  SpatialBodyView origin;
+  if(spatial_world_biome()!=1||s.session!=session||!s.causalClock||!s.activeIntents.empty()||
+     s.finishedAnimalStrike||target==s.targets.end()||!target->second.active||target->second.kind>=3||
+     center==s.targets.end()||!intactAttackCenter(center->second)||spatial_body_count()!=1||
+     !spatialReadBody(uint64_t(bodyId),origin)||origin.kind!=1||origin.flags!=1||
+     s.attackRouteInput.size()!=size_t(count)*2||s.attackRouteInput.back()!=float(approachZ)||
+     s.attackRouteInput[size_t(count)*2-2]!=float(approachX))return -2;
+  return requestAnimalAttackRoute(actor,targetId,centerId,origin,bodyId,count,approachX,approachZ,1,yaw,phase);
 }
 EMSCRIPTEN_KEEPALIVE int nav_animal_plan_flight_center(double session,double actor,double targetId,double bodyId,
     int count,double approachX,double approachZ,double yaw,double phase,double worker,double sourceSequence){
@@ -4150,7 +4167,7 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_plan_flight_center(double session,double act
      target==s.targets.end()||!intactAttackCenter(target->second)||
      !spatialReadBody(uint64_t(bodyId),origin)||origin.kind!=1||origin.flags!=1||
      flightCropOriginClear(session,worker,sourceSequence,origin.x,origin.z,origin.r,2,biome)!=1)return -2;
-  return requestAttackCenterRoute(actor,targetId,origin,bodyId,count,approachX,approachZ,1,yaw,phase);
+  return requestAnimalAttackRoute(actor,targetId,targetId,origin,bodyId,count,approachX,approachZ,1,yaw,phase);
 }
 // A center can survive a strike. Its next action starts at the same validated
 // site, with a fresh preparation and the previous action's same physical body.
@@ -4167,7 +4184,7 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_plan_finished_center(double actorId,double a
      finished.x!=float(approachX)||finished.z!=float(approachZ))return -2;
   SpatialBodyView origin;
   if(!spatialReadBody(finished.body,origin))return -2;
-  return requestAttackCenterRoute(actorId,targetId,origin,double(finished.body),0,
+  return requestAnimalAttackRoute(actorId,targetId,targetId,origin,double(finished.body),0,
     approachX,approachZ,0,finished.yaw,finished.phase);
 }
 EMSCRIPTEN_KEEPALIVE int nav_animal_plan_center_after_collapse(double actor,double attack,double targetId,int count,
@@ -4185,7 +4202,25 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_plan_center_after_collapse(double actor,doub
      target==s.targets.end()||!intactAttackCenter(target->second)||
      s.attackRouteInput.size()!=size_t(count)*2||s.attackRouteInput.back()!=float(approachZ)||
      s.attackRouteInput[size_t(count)*2-2]!=float(approachX)||!spatialReadBody(finished.body,origin))return -2;
-  return requestAttackCenterRoute(actor,targetId,origin,double(finished.body),count,approachX,approachZ,0,finished.yaw,finished.phase);
+  return requestAnimalAttackRoute(actor,targetId,targetId,origin,double(finished.body),count,approachX,approachZ,0,finished.yaw,finished.phase);
+}
+EMSCRIPTEN_KEEPALIVE int nav_animal_plan_center_after_crop(double actor,double attack,double centerId,
+    int count,double approachX,double approachZ){
+  auto& s=state();
+  if(!integer(actor)||!integer(attack)||!integer(centerId)||count<1||count>4096||
+     !coordinate(approachX)||!coordinate(approachZ))return -1;
+  if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
+  if(spatial_world_biome()!=1||!s.activeIntents.empty()||spatial_body_count()!=1||
+     nav_animal_finished_strike_snapshot(actor)!=1)return 0;
+  const auto& finished=*s.finishedAnimalStrike;
+  const auto center=s.targets.find(uint64_t(centerId));
+  SpatialBodyView origin;
+  if(finished.attack!=attack||finished.center!=centerId||finished.target==finished.center||finished.covered||
+     s.targets.count(finished.target)||center==s.targets.end()||!intactAttackCenter(center->second)||
+     s.attackRouteInput.size()!=size_t(count)*2||s.attackRouteInput.back()!=float(approachZ)||
+     s.attackRouteInput[size_t(count)*2-2]!=float(approachX)||!spatialReadBody(finished.body,origin))return -2;
+  return requestAnimalAttackRoute(actor,centerId,centerId,origin,double(finished.body),count,
+    approachX,approachZ,0,finished.yaw,finished.phase);
 }
 // Both continuations start from the finished strike's exact body and lease.
 // Only an installed matching Shield permits another strike at the old site.

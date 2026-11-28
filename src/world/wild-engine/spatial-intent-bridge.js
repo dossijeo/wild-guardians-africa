@@ -11,7 +11,7 @@ import {copyNativeAnimalCropAttestation,copyNativeAnimalCropProposal,sameNativeA
 import {nativeMotionPresentationMatches} from '../native-motion-presentation-match.js';
 import {copyNativeShieldWorld,nativeShieldWorldKind,shieldCropStopFromProposal,copyNativeShieldCropExpiry} from '../native-shield-world.js';
 import {spatialShieldFootprint} from './spatial-shield-mirror.js';
-import {canAttackCrop,nativeCenterAttackCohort,nativeCenterAttackSite,nativeCenterCollapseSite,nativeLiveCenterAttackSite,nativeShelteredCenterActor,nativeCropRouteSubject,nativeCropCohortCurrent,nativeRetreatBudgetAllowed,nativeRetreatSubject,reachableApproach,raidTarget,previewRaidStrike,projectAcquiredRaidStrike,savedRaidStrike} from '../../simulation/raids.js';
+import {canAttackCrop,nativeCenterAttackCohort,nativeCenterAttackSite,nativeCenterCollapseSite,nativeLiveCenterAttackSite,nativeShelteredCenterActor,nativeDesertIntroductoryRaid,nativeCropRouteSubject,nativeCropCohortCurrent,nativeRetreatBudgetAllowed,nativeRetreatSubject,reachableApproach,raidTarget,previewRaidStrike,projectAcquiredRaidStrike,savedRaidStrike} from '../../simulation/raids.js';
 import {captureRefugeReturnCheckpoint,copyRestoredRefugeReturn,refugeCheckpointGateFields,refugeWorkerPose,sameRefugePose,validateRefugeReturnState} from '../native-refuge-return.js';
 import {nativeEncounterCheckpointActors} from '../../simulation/native-encounter-checkpoint.js';
 import {farmStopCutFromNative,savedRaidFlightHomeGateIds} from '../../simulation/native-raid-flight-checkpoint.js';
@@ -664,8 +664,10 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
           hit:q.hit,spawn:raidFlight.event,from:q.from,at:q.at,x:q.x,z:q.z,yaw:q.yaw,phase:q.phase,first:q.first,exit:q.exit}:null;
       const encounterRetreat=q?.confirmed&&pendingCrop?.purpose==='retreat'&&pendingCrop.requestSequence===q.retreatRequest&&
         pendingCrop.actorId===q.animal&&pendingCrop.bodyId===q.animalBody;
+      const desertCropBirth=pendingCrop&&!pendingCrop.purpose&&!pendingCrop.previousStrike&&
+        nativeDesertIntroductoryRaid(owningState,owningState.raid?.animals[0]);
       return {...(exhausted?{nativeEncounterExhaustion:exhausted}:{}),
-        ...(encounterRetreat?{pendingAnimalCrop:pendingCrop,previousWorkerEncounter:q.hit}:{}),...(strollFlightSequence?{strollFlightSequence}:{}),...(initialIdleFlightSequence?{initialIdleFlightSequence}:{}),...(repairFlightSequence?{repairFlightSequence}:{}),...(shieldCropStop?{nativeShieldCropStop:shieldCropStop,nativeShieldCropPolygon:shieldCropStop.polygonId}:{}),...((pendingCrop?.previousStrike||pendingCrop?.previousShieldCrop||pendingCrop?.purpose==='center'||birth)&&pendingCrop.requestSequence===data[at+8]?
+        ...(encounterRetreat?{pendingAnimalCrop:pendingCrop,previousWorkerEncounter:q.hit}:{}),...(strollFlightSequence?{strollFlightSequence}:{}),...(initialIdleFlightSequence?{initialIdleFlightSequence}:{}),...(repairFlightSequence?{repairFlightSequence}:{}),...(shieldCropStop?{nativeShieldCropStop:shieldCropStop,nativeShieldCropPolygon:shieldCropStop.polygonId}:{}),...((pendingCrop?.previousStrike||pendingCrop?.previousShieldCrop||pendingCrop?.purpose==='center'||birth||desertCropBirth)&&pendingCrop.requestSequence===data[at+8]?
         {pendingAnimalCrop:pendingCrop,...(birth?{raidFlightBirth:birth}:{})}:{}),...(crop?{nativeAnimalCrop:crop}:{}),actorId:data[at],state:data[at+1],taskId:data[at+2]||null,
         targetId:data[at+3]||null,routeHandle:data[at+6]?
           routeHandle(data[at+4],data[at+5],data[at+6]):null,
@@ -1471,7 +1473,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
        !state.workers.every(w=>w===flight||w.status==='home'&&!w.raidReturn&&!w.nativeRouteAdmission))return null;
     if(!retreat&&!(animal.hitsRemaining>0)||retreat!==nativeRetreatBudgetAllowed(state,animal))return null;
     const centerCohort=animalRouteV2&&nativeCenterAttackCohort(state,flight);
-    if(state.biome!=='sabana'&&!centerCohort||
+    if(state.biome!=='sabana'&&!centerCohort&&!nativeDesertIntroductoryRaid(state,animal)||
        wasm.nav_animal_finished_strike_snapshot?.(numericId(animal.id))!==1)return null;
     const [version,nativeSession,actor,body,attackId,x,z,radius,phase,yaw,at,polygon,target,
       homeAssignment,homeTicket,homeActor,homeBody,spawn]=
@@ -1481,7 +1483,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       if(!ref||!homeAssignment||home.assignmentSequence!==homeAssignment||ref.worldBoundary.ticket!==homeTicket||
          ref.actorId!==homeActor||ref.bodyId!==homeBody||ref.sourceRequest?.raidSpawnSequence!==spawn||spawn!==raidFlight.event)return null;
     }
-    const center=centerCohort&&(state.biome==='desierto'||target===numericId(state.structures[0].id));
+    const center=centerCohort&&state.structures.some(structure=>structure.kind==='center'&&numericId(structure.id)===target);
     const collapse=center&&!retreat&&state.biome==='desierto'&&wasm.nav_animal_plan_center_after_collapse&&
       !animal.targetId&&!animal.reservation&&nativeCenterCollapseSite(state,animal);
     const collapsed=collapse?.status==='collapsing'&&collapse.id==='structure-'+target;
@@ -1534,6 +1536,15 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     }
     return wasm.nav_animal_plan_finished_center(numericId(animal.id),finished.attackId,numericId(animal.targetId),
       animal.approach.x,animal.approach.z)===1;
+  };
+  const requestNativeCenterAfterCrop=(state,animal,source,selected)=>{
+    const finished=nativeFinishedAnimalCrop(state,animal),approach=selected?.approach,center=state.structures[0];
+    if(!finished||finished.purpose||finished.shieldPolygon||source?.attackId!==finished.attackId||source.body!==finished.body||
+       !nativeDesertIntroductoryRaid(state,animal)||!nativeCenterAttackCohort(state)||
+       selected?.target!==center||!nativeCenterAttackSite(state,center)||selected.native||selected.shieldId||!approach?.path?.length)return false;
+    writeAttackRouteInput(animal,approach.path);
+    return wasm.nav_animal_plan_center_after_crop?.(numericId(animal.id),finished.attackId,numericId(center.id),
+      approach.path.length,approach.point.x,approach.point.z)===1;
   };
   const requestNativeRetreat=(state,animal)=>{
     const finished=nativeFinishedAnimalRetreat(state,animal),exit=animal.exit??animal.spawn;
@@ -4377,6 +4388,15 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       numericId(target.id),body,approach.path.length,approach.point.x,approach.point.z,
       animal.heading??0,animal.motionPhase??0,...(pair?[pair.birth.workerActor,pair.birth.sourceSequence]:[]))===1;
   };
+  const requestNativeCropBirth=(state,animal,{target,approach,shieldId},body)=>{
+    const center=state.structures[0];
+    if(state!==owningState||!nativeDesertIntroductoryRaid(state,animal)||!nativeCenterAttackSite(state,center)||
+       animal.status!=='entering'||!target?.alive||!canAttackCrop(state,target)||shieldId||!approach?.path?.length)return false;
+    syncBoundaryTime();
+    writeAttackRouteInput(animal,approach.path);
+    return wasm.nav_animal_plan_crop_birth?.(wasm.nav_intent_session(),numericId(animal.id),numericId(target.id),
+      numericId(center.id),body,approach.path.length,approach.point.x,approach.point.z,animal.heading??0,animal.motionPhase??0)===1;
+  };
   const registerAttackIntent=(state,animal,target,path)=>{
     if(!initialized||!state.raid||animal.targetId!==target.id||
       !animal.reservation||state.raid.reservations[animal.reservation]!==animal.id)
@@ -4773,7 +4793,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     startNativeTaskSettlementAfterGpuQuiescence,nativeTaskSettlementBinding,nativeTaskSettlementBindings,nativeSettledWorkerExecution,prepareNativeTaskSettlementProposal,captureNativeTaskSettlementProposal,revalidateNativeTaskSettlementProposal,cancelNativeTaskSettlementProposal,
     nativeTaskConsequenceBinding,nativeDeliveryExecution,startNativeTaskConsequenceAfterGpuQuiescence,prepareNativeTaskConsequenceProposal,captureNativeTaskConsequenceProposal,revalidateNativeTaskConsequenceProposal,cancelNativeTaskConsequenceProposal,
     projectRouteProgress,processEventBoundary,requestReroute,
-    registerAttackIntent,requestNativeCenterBirth,planAttackCrop,planAttackWall,replanAttackRoute,
+    registerAttackIntent,requestNativeCenterBirth,requestNativeCropBirth,requestNativeCenterAfterCrop,planAttackCrop,planAttackWall,replanAttackRoute,
     planRetreatRoute,planHomeRoute,
     cancelHomeIntent:actorId=>wasm.nav_intent_cancel_home(numericId(actorId))===1,
     reconsiderWallOpportunity,wallOpportunityCandidates,
@@ -6168,6 +6188,11 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,nati
       pendingNativeChanges=true;
       return true;
     },
+    requestNativeCropBirth:(state,animal,selection,body)=>{
+      const requested=bridge.requestNativeCropBirth(state,animal,selection,body);
+      if(requested)pendingNativeChanges=true;
+      return requested;
+    },
     planAttackCrop:(state,animal)=>{
       if(state!==observedTaskState&&state!==sourceState)return null;
       // A preceding strike or harvest may have removed a crop earlier in this
@@ -6304,6 +6329,11 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,nati
     },
     requestNativeCenterSuccessor:(...args)=>{
       const requested=bridge.requestNativeCenterSuccessor(...args);
+      if(requested)pendingNativeChanges=true;
+      return requested;
+    },
+    requestNativeCenterAfterCrop:(...args)=>{
+      const requested=bridge.requestNativeCenterAfterCrop(...args);
       if(requested)pendingNativeChanges=true;
       return requested;
     },

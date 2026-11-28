@@ -489,7 +489,8 @@ export function targetFor(s,a,nav,nativeCropOnly=false) {
   const started=stats?performance.now():0;
   if(stats)stats.selections=(stats.selections??0)+1;
   try{
-    const native=nav.intentTaskPlanner?.planAttackCrop?.(s,a);
+    const protectedDesertFarm=nativeDesertIntroductoryRaid(s,a)&&nativeCenterAttackCohort(s);
+    const native=protectedDesertFarm?null:nav.intentTaskPlanner?.planAttackCrop?.(s,a);
     if(native&&stats){
       stats.nativeCropPlans=(stats.nativeCropPlans??0)+1;
       stats.nativeCropRegionQueries=(stats.nativeCropRegionQueries??0)+
@@ -778,10 +779,12 @@ export function interruptAnimalAttack(s,a,nav) {
 export function retreatAnimal(s,a,reason='magic',nav={}) {
  release(s,a,nav);a.hitApplied=true;a.attackRemaining=0;beginRetreat(s,a,nav,reason);
 }
-function nativeDesertIntroductoryCenterRaid(state){
+export function nativeDesertIntroductoryRaid(state,animal){
  const raid=state.raid;
  return state.biome==='desierto'&&raid?.daytime===false&&raid.pressureFacts?.introductory===true&&
-   raid.introCropLimit===0&&raid.animals.length===1&&raid.animals[0].species==='warthog'&&state.structures.length===1;
+   Number.isSafeInteger(raid.introCropLimit)&&raid.animals.length===1&&raid.animals[0]===animal&&animal?.species==='warthog'&&
+   state.structures.length===1&&state.structures[0].kind==='center'&&state.workers.length<=1&&
+   state.workers.every(worker=>worker.status==='home'&&!worker.raidReturn&&!worker.nativeRouteAdmission);
 }
 // The first native crop cohort has one mobile body and only inactive workers.
 // A different encounter, protection or reservation requires a new admission.
@@ -794,7 +797,7 @@ export function nativeCenterAttackCohort(state,flightWorker=null){
    worker===flightWorker||worker.status==='home'&&!worker.raidReturn&&!worker.nativeRouteAdmission)||
    state.structures[0]?.kind!=='center'||(!state.workers.length&&state.structures.some(structure=>structure.kind!=='center')))return false;
  const crops=activeCrops(state.plants);
- return !crops.length||!flightWorker&&nativeDesertIntroductoryCenterRaid(state)&&crops.every(crop=>!canAttackCrop(state,crop));
+ return !crops.length||!flightWorker&&nativeDesertIntroductoryRaid(state,state.raid?.animals[0])&&crops.every(crop=>!canAttackCrop(state,crop));
 }
 export function nativeCenterAttackSite(state,target){
  return !!target&&operational(target)&&(target===state.structures[0]||
@@ -896,7 +899,7 @@ export function nativeCenterCollapseImpact(state,animal,center){
 export function nativeShelteredCenterActor(state,animal){
  const raid=state.raid;
  if(raid?.animals.length!==1||raid.animals[0]!==animal||!nativeCenterAttackCohort(state))return false;
- if(state.biome==='desierto')return nativeDesertIntroductoryCenterRaid(state);
+ if(state.biome==='desierto')return nativeDesertIntroductoryRaid(state,animal);
  if(!raid.daytime)return ['warthog','hyena','buffalo','lion','rhino'].includes(animal?.species);
  const center=state.structures[0].id;
  return animal?.species==='warthog'&&(animal.targetId===center||state.events?.some(event=>
@@ -933,7 +936,8 @@ export function nativeCropRouteSubject(state,animal,flightWorker=null,native=nul
  const raid=state.raid;
  const centerAttack=nativeCenterAttackCohort(state,flightWorker)&&
    (state.biome==='desierto'||animal?.targetId===state.structures[0].id);
- if((state.biome!=='sabana'&&!centerAttack)||
+ const desertCrop=!centerAttack&&nativeDesertIntroductoryRaid(state,animal)&&operational(state.structures[0]);
+ if((state.biome!=='sabana'&&!centerAttack&&!desertCrop)||
     (animal?.species!=='warthog'&&!(centerAttack&&nativeShelteredCenterActor(state,animal)))||
     raid?.animals.length!==1||raid.animals[0]!==animal||
     !state.workers.every(w=>w===flightWorker||w.status==='home'&&!w.raidReturn&&!w.nativeRouteAdmission)||
@@ -956,7 +960,7 @@ export function nativeCropRouteSubject(state,animal,flightWorker=null,native=nul
  return centerAttack?{target,center:target,purpose:'center'}:{target,center:state.structures.find(operational)??target};
 }
 export function nativeRetreatSubject(state,animal){
- if(!animal||(state.biome!=='sabana'&&!nativeCenterAttackCohort(state))||state.raid?.animals.length!==1||
+ if(!animal||(state.biome!=='sabana'&&!nativeCenterAttackCohort(state)&&!nativeDesertIntroductoryRaid(state,animal))||state.raid?.animals.length!==1||
     state.raid.animals[0]!==animal||(animal.species!=='warthog'&&!nativeShelteredCenterActor(state,animal))||animal.status!=='retreating'||
     !nativeRetreatBudgetAllowed(state,animal)||!animal.hitApplied||animal.targetId||animal.reservation||animal.magicDown||
     (animal.magicStunUntil??0)>state.elapsed||
@@ -1074,6 +1078,20 @@ export function updateRaid(s,dt,nav) {
       const selected=successor.collapsed?targetFor(s,a,nav):null;
       if(!nav.intentTaskPlanner.requestNativeCenterSuccessor(s,a,successor,selected))throw Error('Native center strike lost its successor');
       if(selected)assignRaidTarget(s,a,{...selected,approach:{point:selected.approach.point,path:null}},nav);
+      continue;
+    }
+    if(successor&&nativeDesertIntroductoryRaid(s,a)&&nativeCenterAttackCohort(s)){
+      const epoch=waitEpoch(s,nav,a);
+      if(a.raidWait?.epoch===epoch&&s.elapsed<a.raidWait.retryAt)continue;
+      const selected=targetFor(s,a,nav);
+      if(!selected||selected.unknown){
+        a.raidWait={since:a.raidWait?.since??s.elapsed,epoch,retryAt:s.elapsed+8};
+        continue;
+      }
+      if(!nav.intentTaskPlanner.requestNativeCenterAfterCrop(s,a,successor,selected))
+        throw Error('Native crop strike lost its center successor');
+      leaveWait(s.raid,a);
+      assignRaidTarget(s,a,{...selected,approach:{point:selected.approach.point,path:null}},nav);
       continue;
     }
     if(!crop&&a.hitApplied&&nav.intentTaskPlanner?.nativeFinishedAnimalRetreat?.(s,a)){

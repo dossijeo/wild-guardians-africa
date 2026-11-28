@@ -465,6 +465,8 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     let continuedEncounter=false,continuedFlight=null;
     const birth=event.raidFlightBirth;
     const centerBirth=successor?.purpose==='center'&&!event.pendingAnimalCrop.previousStrike;
+    const cropBirth=successor&&!successor.purpose&&!successor.restore&&
+      !event.pendingAnimalCrop.previousStrike&&!event.pendingAnimalCrop.previousShieldCrop;
     if(birth!==undefined){
       const peer=actors.get(birth?.workerActor),record=peer?.current,home=peer?.pendingHomeRequest;
       const prior=birth?.taskTicket!=null?record?.issuedStart:birth?.strollTicket!=null?record?.issuedStroll:record?.issuedFarmArrival;
@@ -481,13 +483,13 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
          [event.nativeAnimalCrop,event.taskRequest,event.actionRequest,event.initialIdleRequest,event.idleStrollRequest,event.homeRequest,
           event.farmArrivalRequest,event.idleCycle,event.idleCycleNext,event.nativeFarmArrival,event.nativeIdleStroll].some(Boolean))
         throw Error('Crop birth lacks its current raid flight peer');
-    }else if(centerBirth){
+    }else if(centerBirth||cropBirth){
       if(!clock||finishedCrop||actors.size||active.size||event.type!=='IntentChanged'||event.state!==6||
          revoked||handle||event.taskId||event.targetId!==successor.targetId||event.sequence!==successor.requestSequence||
          successor.actorId!==event.actorId||successor.authorityEpoch!==authorityEpoch||successor.nativeSession!==clock.nativeSession||
          [event.nativeAnimalCrop,event.taskRequest,event.actionRequest,event.homeRequest,event.initialIdleRequest,event.idleStrollRequest,
           event.farmArrivalRequest,event.idleCycle,event.idleCycleNext,event.nativeFarmArrival,event.nativeIdleStroll].some(Boolean))
-        throw Error('Center birth requires an empty causal cohort');
+        throw Error(centerBirth?'Center birth requires an empty causal cohort':'Crop birth requires an empty causal cohort');
 
     }else if(event.previousWorkerEncounter!==undefined){
       const owner=actors.get(event.actorId),cut=owner?.revoked,prior=cut?.nativeEncounterExhaustion;
@@ -697,7 +699,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       worker.encounterRecovery={hit:exhaustion.hit,body:exhaustion.workerBody,at:exhaustion.at};
     }
     if(homeRequest?.recoveryHit)delete actor.encounterRecovery;
-    if(successor){actor.cropRequest=successor;actor.encounterRetreatRequest=continuedEncounter?successor:null;actor.cropPredecessor=birth||centerBirth||continuedEncounter||event.pendingAnimalCrop.previousShieldCrop?null:finishedCrop.reference;if(birth)actor.raidFlightBirth=Object.freeze({...birth});else if(continuedFlight)actor.raidFlightBirth=continuedFlight;}
+    if(successor){actor.cropRequest=successor;actor.encounterRetreatRequest=continuedEncounter?successor:null;actor.cropPredecessor=birth||centerBirth||cropBirth||continuedEncounter||event.pendingAnimalCrop.previousShieldCrop?null:finishedCrop.reference;if(birth)actor.raidFlightBirth=Object.freeze({...birth});else if(continuedFlight)actor.raidFlightBirth=continuedFlight;}
     if(current?.cropBinding?.reference.kind===27&&(restoredStrikeEnd||revoked&&event.type==='RouteInvalidated')&&
         event.effectiveTime>=current.cropBinding.reference.endTime){
       const birth=current.actor.raidFlightBirth;
