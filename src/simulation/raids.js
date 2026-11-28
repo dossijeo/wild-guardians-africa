@@ -778,6 +778,11 @@ export function interruptAnimalAttack(s,a,nav) {
 export function retreatAnimal(s,a,reason='magic',nav={}) {
  release(s,a,nav);a.hitApplied=true;a.attackRemaining=0;beginRetreat(s,a,nav,reason);
 }
+function nativeDesertIntroductoryCenterRaid(state){
+ const raid=state.raid;
+ return state.biome==='desierto'&&raid?.daytime===false&&raid.pressureFacts?.introductory===true&&
+   raid.introCropLimit===0&&raid.animals.length===1&&raid.animals[0].species==='warthog'&&state.structures.length===1;
+}
 // The first native crop cohort has one mobile body and only inactive workers.
 // A different encounter, protection or reservation requires a new admission.
 export function nativeCenterAttackCohort(state,flightWorker=null){
@@ -785,10 +790,11 @@ export function nativeCenterAttackCohort(state,flightWorker=null){
    (state.raid?.daytime===true?state.workers.length===1:
      !flightWorker&&state.raid?.daytime===false&&Number.isSafeInteger(state.raid.introCropLimit))&&
    state.workers.every(worker=>worker===flightWorker||worker.status==='home'&&!worker.raidReturn&&!worker.nativeRouteAdmission);
- return state.biome==='desierto'&&state.workers.length<=1&&state.workers.every(worker=>
-   worker===flightWorker||worker.status==='home'&&!worker.raidReturn&&!worker.nativeRouteAdmission)&&
-   state.structures[0]?.kind==='center'&&activeCrops(state.plants).length===0&&
-   (state.workers.length>0||state.structures.every(structure=>structure.kind==='center'));
+ if(state.biome!=='desierto'||state.workers.length>1||!state.workers.every(worker=>
+   worker===flightWorker||worker.status==='home'&&!worker.raidReturn&&!worker.nativeRouteAdmission)||
+   state.structures[0]?.kind!=='center'||(!state.workers.length&&state.structures.some(structure=>structure.kind!=='center')))return false;
+ const crops=activeCrops(state.plants);
+ return !crops.length||!flightWorker&&nativeDesertIntroductoryCenterRaid(state)&&crops.every(crop=>!canAttackCrop(state,crop));
 }
 export function nativeCenterAttackSite(state,target){
  return !!target&&operational(target)&&(target===state.structures[0]||
@@ -890,8 +896,7 @@ export function nativeCenterCollapseImpact(state,animal,center){
 export function nativeShelteredCenterActor(state,animal){
  const raid=state.raid;
  if(raid?.animals.length!==1||raid.animals[0]!==animal||!nativeCenterAttackCohort(state))return false;
- if(state.biome==='desierto')return raid.daytime===false&&raid.pressureFacts?.introductory===true&&
-   raid.introCropLimit===0&&state.structures.length===1&&state.workers.length===0&&animal?.species==='warthog';
+ if(state.biome==='desierto')return nativeDesertIntroductoryCenterRaid(state);
  if(!raid.daytime)return ['warthog','hyena','buffalo','lion','rhino'].includes(animal?.species);
  const center=state.structures[0].id;
  return animal?.species==='warthog'&&(animal.targetId===center||state.events?.some(event=>
@@ -902,7 +907,9 @@ export function nativeRetreatBudgetAllowed(state,animal){
  if(!nativeShelteredCenterActor(state,animal)||!animal.hitApplied||!animal.attackId||
     animal.targetId||animal.reservation||animal.hitsRemaining<=0)return false;
  const center=state.structures[0],retreating=animal.status==='retreating';
- if(!retreating&&(animal.status!=='walking'||center.status!=='collapsing'||activeCrops(state.plants).length))return false;
+ // In the Desert introductory cohort, the raid cannot damage any remaining crop.
+ if(!retreating&&(animal.status!=='walking'||center.status!=='collapsing'||
+   state.biome!=='desierto'&&activeCrops(state.plants).length))return false;
  const hit=state.events.findLast(event=>event.type==='AnimalLogicalHit'&&event.attackId===animal.attackId&&
    event.targetId===center.id&&event.presentation?.target?.kind==='center'&&event.presentation.shield===null);
  if(!hit||!state.events.some(event=>event.type==='StructureHit'&&event.simulationTime===hit.simulationTime&&
