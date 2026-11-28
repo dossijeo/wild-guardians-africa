@@ -50,7 +50,7 @@ import {nativeInitialIdleDeclaration,nativeInitialIdleInitialization,nativeIniti
 import {cancelIdle,createIdleState} from '../../simulation/idle.js';
 import {copyNativeTaskSettlementReference,copyNativeTaskSettlementProposal,copyNativeTaskSettlementAttestation} from '../native-task-settlement.js';
 import {nativeEntityNumericId as numericId} from '../native-entity-id.js';
-import {copyNativeGatePresentation} from '../native-gate-presentation.js';
+import {copyNativeGatePresentation,sameNativeGatePresentations,sampleNativeGateOpening} from '../native-gate-presentation.js';
 import {centerGeometry,centerServicePoint,centerDeliveryPoint} from '../centers.js';
 import {contractExpired,PROFILES} from '../../simulation/workforce.js';
 import {observeGameEvents,idleFarmAnchor,repairCost,prepareHarvestConsequence,harvestConsequenceCurrent,projectNativeHarvestConsequence,prepareNativeStationaryTaskConsequence,projectNativeStationaryTaskConsequence,prepareCrateDeliveryConsequence,crateDeliveryConsequenceCurrent,projectNativeCrateDeliveryConsequence,projectNativeHomeRouteExecution,projectNativeFarmArrivalRouteExecution} from '../../simulation/game.js';
@@ -784,7 +784,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     const strolls=nativeIdleStrollBindings(),farmCount=wasm.nav_farm_arrival_route_binding_actors?.()??0,
       homes=nativeHomeRouteBindings();
     if(recoveredWorkerRoute?.version===2){
-      const {members,refuge:arrival,ruin,encounter,ordinaryWorkers}=copyNativeRecoveryGroup(recoveredWorkerRoute,nativeWorldBoundary());
+      const {members,refuge:arrival,ruin,ruinMotors,encounter,ordinaryWorkers}=copyNativeRecoveryGroup(recoveredWorkerRoute,nativeWorldBoundary());
       if(encounter?.version===3){
         if(count||strolls.length||farmCount||homes.length||!sameRecoveredEncounter(encounter,nativeStationaryEncounterRecovery()))
           throw Error('Held stationary encounter changed before bootstrap');
@@ -806,7 +806,8 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
         const rows=members[0].kind===27?0:members.length;
         if(count!==rows||strolls.length||farmCount||homes.length!==members.length-1||!executions||
            arrival&&JSON.stringify(arrival)!==JSON.stringify(single.refuge)||
-           ruin&&JSON.stringify(ruin)!==JSON.stringify(single.ruin)||
+           ruin&&(JSON.stringify(ruin)!==JSON.stringify(single.ruin)||
+             ruinMotors&&!sameNativeGatePresentations(ruinMotors.gates,single.ruinMotors?.gates))||
            encounter&&JSON.stringify(encounter)!==JSON.stringify(single.encounter)||
            members.some(({kind,proof},i)=>!nativeWorkerRouteRecoveryProfile(kind).sameAttestation(executions[i].binding,proof)))
           throw Error('Held raid routes changed before bootstrap');
@@ -1747,7 +1748,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
   }
   function nativeCenterRuinRouteRecovery(){
     const game=owningState,ruin=committedCenterRuin,cut=nativeWorldBoundary();
-    if(!ruin||ruin.prepared.retainedGateIds||!sameNativeWorldBoundary(ruin.acquired,cut)||wasm.spatial_world_resource_snapshot()!==1)return null;
+    if(!ruin||!sameNativeWorldBoundary(ruin.acquired,cut)||wasm.spatial_world_resource_snapshot()!==1)return null;
     const center=game.structures.find(row=>row.id===ruin.center);
     if(center?.kind!=='center'||center.status!=='ruined'||center.hp!==0||session.centerPolygonId(ruin.center))return null;
     const header=new Float64Array(wasm.memory.buffer,wasm.spatial_world_resource_header_ptr(),9);
@@ -1762,7 +1763,21 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     if(!binding||binding.assignmentSequence!==original.assignmentSequence||binding.attackId!==original.attackId||
        !sameNativeAnimalCropReference(original.reference,binding.reference)||
        !sameNativeAnimalCropReference(original.preparedReference,binding.preparedReference))return null;
-    return {execution,ruin};
+    const gateIds=ruin.prepared.retainedGateIds;
+    if(!gateIds)return {execution,ruin};
+    const motors=committedGateMotion?.resources;
+    if(!motors||!sameNativeWorldBoundary(motors.worldBoundary,ruin.prepared.previous)||
+       motors.gates.length!==gateIds.length||!motors.gates.every((motor,i)=>{
+         if(motor.gateId!==gateIds[i]||wasm.nav_gate_state(motor.gateId)!==1)return false;
+         const row=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_result_ptr(),14));
+         const wall=game.structures.find(item=>item.id===motor.entityId),pose=nativeGateMechanismPose(motor.entityId);
+         return !!pose&&wall?.gate===true&&wall.status==='intact'&&wall.hp===wall.maxHp&&!wall.wallPresentation&&
+           pose.mechanism===motor.mechanism&&pose.modelId===motor.modelId&&pose.sampledAt===game.elapsed&&
+           pose.rootMatrix.every((value,i)=>value===motor.rootMatrix[i])&&pose.opening===wall.gateOpen&&
+           row[2]===motor.rows.at(-1)&&row[3]===motor.startTime&&row[4]===motor.endTime&&row[11]===motor.rows[1]&&
+           Math.abs(sampleNativeGateOpening(motor,game.elapsed)-pose.opening)<=1e-9;
+       }))return null;
+    return {execution,ruin,ruinMotors:motors};
   }
   function nativeAnimalCropStrikeExecution(actorId,{sharedCut=false}={}){
     const proof=activeAnimalStrike,r=proof?.reference;
@@ -2139,7 +2154,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       const outcome=await commitNativeWorldProposal(getPublication,()=>wasm.nav_gate_motion_stage_causal((enabled??(!owningState.pauses?.length&&!owningState.result&&!owningState.initialPreparation))?1:0,staticObjects?1:0),
         (mark,...boundary)=>{const result=wasm.nav_gate_motion_commit_causal(...boundary);if(result!==1)return {status:result};const committed=Object.freeze({...resources,phase:'committed'});mark({resources:committed});return {status:1,value:{resources:committed}};},prepareResources,signal,protocol);
       if(outcome.status==='committed'&&outcome.resources.gates.length&&sameNativeWorldBoundary(outcome.worldBoundary,nativeWorldBoundary()))
-        committedGateMotion={previous,boundary:outcome.worldBoundary,gateIds:outcome.resources.gates.map(gate=>gate.gateId).sort((a,b)=>a-b)};
+        committedGateMotion={previous,boundary:outcome.worldBoundary,resources:outcome.resources,gateIds:outcome.resources.gates.map(gate=>gate.gateId).sort((a,b)=>a-b)};
       return outcome;
     }
     if(typeof getPublication!=='function'||enabled!==undefined&&typeof enabled!=='boolean'||typeof staticObjects!=='boolean')

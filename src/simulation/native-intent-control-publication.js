@@ -1,6 +1,6 @@
 import {copyNativeShieldCropExpiry,sameNativeShieldCropExpiry} from '../world/native-shield-world.js';
 import {centerSource,sameCenter,verifiesCenter} from '../world/native-center-ruin-source.js';
-import {copyNativeIdleCycleRecoveryPhase,copyNativeRecoveryGroup,nativeOrdinaryRecoveryKinds,nativeRecoveryCovers,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,recoveredNativeGateSamples,sameRecoveredEncounter} from '../world/native-worker-route-recovery.js';
+import {copyNativeIdleCycleRecoveryPhase,copyNativeRecoveryGroup,matchesRecoveredRuinMotorSamples,nativeOrdinaryRecoveryKinds,nativeRecoveryCovers,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,recoveredNativeGateSamples,sameRecoveredEncounter} from '../world/native-worker-route-recovery.js';
 import {copyNativeBarrierAdditionReference,sameNativeBarrierAdditionReference,copyNativeBarrierAdditionAttestation} from '../world/native-barrier-addition.js';
 import {copyNativeTaskRouteStopAttestation,copyNativeTaskRouteStopReference,sameNativeTaskRouteStopReference} from '../world/native-task-route-stop.js';
 import {copyNativeFarmArrivalStopReference,sameNativeFarmArrivalStopReference,copyNativeFarmArrivalStopAttestation} from '../world/native-farm-arrival-stop.js';
@@ -166,6 +166,7 @@ export function createNativeIntentControlPublication({port,session,observe,
         const refuge=recoveryBaseline?.refuge&&(members?.length===0||nativeOrdinaryRecoveryKinds(members?.map(({kind})=>kind)??[],true));
         if(!members||draw.holdId!==recoveryBaseline.holdId||draw.consumerToken!==consumerToken||
            !Number.isSafeInteger(draw.frameSequence)||draw.frameSequence<1||draw.elapsed!==fence.effectiveTime||
+           !matchesRecoveredRuinMotorSamples(draw.ruinMotorSamples,recoveryBaseline.ruinMotors,draw.elapsed)||
            (recoveryBaseline.encounter?!sameRecoveredEncounter(draw.encounter,recoveryBaseline.encounter):draw.encounter!==undefined)||
            (refuge?(!sameNativeHomeArrivalAttestation(draw.refuge,recoveryBaseline.refuge)||!sameNativeWorldBoundary(draw.worldBoundary,worldBoundary)):
              draw.refuge!==undefined||draw.worldBoundary!==undefined)||

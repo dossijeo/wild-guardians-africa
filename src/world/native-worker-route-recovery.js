@@ -10,6 +10,9 @@ import {copyNativeAnimalCropAttestation,sameNativeAnimalCropReference} from './n
 import {copyNativeRoutePresentation,NATIVE_ROUTE_PRESENTATION_FIELDS,NATIVE_ROUTE_PRESENTATION_WIDTH} from './native-route-presentation.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from './native-world-boundary.js';
 import {centerSource,verifiesCenter} from './native-center-ruin-source.js';
+import {copyNativeGateMotionResources} from './native-gate-motion-resources.js';
+import {nativeClockResourceEnd} from '../rendering/native-clock-resource-end.js';
+import {floorFloat32} from '../rendering/float32-time.js';
 import {LOCOMOTION} from '../simulation/locomotion-calibration.js';
 import {RECOVERY_EXIT_SECONDS,WORKER_RECOVERY,woundedHomeSourceCurrent} from '../simulation/worker-recovery.js';
 import {copyNativeHomeRequestReference,sameNativeHomeRequestReference} from './native-home-request-reference.js';
@@ -255,6 +258,25 @@ export function recoveredNativeGateSamples(row){
  return row.nativeGate===undefined?[]:[{nativeGate:row.nativeGate,gateElapsed:row.gateElapsed}];
 }
 
+export function matchesRecoveredRuinMotorSamples(samples,motors,at){
+ if(!motors)return samples===undefined;
+ return Array.isArray(samples)&&samples.length===motors.gates.length&&motors.gates.every((gate,i)=>{
+  const sample=samples[i],epoch=gate.startTime,end=nativeClockResourceEnd(epoch,gate.endTime);
+  return sample?.nativeGate?.gateId===gate.gateId&&sameNativeWorldBoundary(sample.nativeGate.worldBoundary,motors.worldBoundary)&&
+   sample.gateElapsed===epoch+floorFloat32(Math.min(at,end)-epoch);
+ });
+}
+
+export function copyNativeRuinMotors(value,prepared){
+ if((value!==undefined)!==!!prepared?.retainedGateIds)throw Error('Center ruin recovery needs its retained motor programs');
+ if(value===undefined)return null;
+ const motors=copyNativeGateMotionResources(value);
+ if(motors.phase!=='committed'||!sameNativeWorldBoundary(motors.worldBoundary,prepared.previous)||
+    motors.gates.length!==prepared.retainedGateIds.length||motors.gates.some((gate,i)=>gate.gateId!==prepared.retainedGateIds[i]))
+  throw Error('Recovered motors differ from the acquired center ruin');
+ return motors;
+}
+
 export const nativeRecoverySequence=proof=>proof.cycleSequence??proof.actionSequence??proof.settlementSequence??proof.revokedSequence??proof.assignmentSequence;
 export const nativeRecoveryGates=proof=>proof.gateIds??[];
 export function nativeOrdinaryRecoveryKinds(kinds,withRefuge=false){
@@ -356,6 +378,7 @@ export function copyRecoveredEncounterPose(value){
 // The current world can include an exact later mutation that retained the
 // moving actor's acquisition. Each surviving clock keeps its origin.
 export function copyNativeRecoveryGroup(value,world,{awaitingIdleCyclePhase=false}={}){
+ if(value.ruinMotors!==undefined&&value.ruin===undefined)throw Error('Recovered motors require their center ruin');
  const ordinaryWorkers=value.version===2&&Array.isArray(value.members)&&value.ruin===undefined&&
    value.encounter===undefined&&nativeOrdinaryRecoveryKinds(value.members.map(member=>member?.kind),value.refuge!==undefined);
  if(value.idleCyclePhases!==undefined&&!ordinaryWorkers)throw Error('Idle cycle phases require their recovered cycles');
@@ -392,7 +415,8 @@ export function copyNativeRecoveryGroup(value,world,{awaitingIdleCyclePhase=fals
      throw Error('Recovered animal route differs from the acquired center ruin');
    const ruin=Object.freeze({prepared,acquired:copyNativeWorldBoundary(world),center:prepared.center,
      polygon:prepared.polygon,status:'ruined',revisions:Object.freeze([...value.ruin.revisions])});
-   return {members:[{kind,proof}],ruin};
+   const motors=copyNativeRuinMotors(value.ruinMotors,prepared);
+   return {members:[{kind,proof}],ruin,...(motors?{ruinMotors:motors}:{})};
  }
  if(value.refuge!==undefined&&!ordinaryWorkers){
    const refuge=copyNativeHomeArrivalAttestation(value.refuge);

@@ -4,6 +4,7 @@ import test from 'node:test';
 import {floorFloat32} from '../src/rendering/float32-time.js';
 import {centerServicePoint} from '../src/world/centers.js';
 import {captureSpatialPolygons} from '../src/world/wild-engine/spatial-state.js';
+import {recoverRouteAfterRuin} from './helpers/native-center-ruin-recovery.js';
 
 // Open the existing causal motor entry point at a controlled Game boundary.
 // The production authority has no command for independently closing gates.
@@ -26,6 +27,9 @@ const {nativeFarmArrivalRouteFixture}=await import('./helpers/native-farm-arriva
 const gateIds=[1000000,1000001],doomed='structure-1000002';
 const view={bounds:[-48,-48,48,48],eye:{x:-10,z:-24},target:{x:-10,z:0}};
 const chunkKeys=Array.from({length:25},(_,i)=>`${i%5-2},${Math.floor(i/5)-2}`);
+const terrainManifest={epoch:'closing-gates-recovery',chunks:chunkKeys.map(key=>{
+ const [cx,cz]=key.split(',').map(Number);return {cx,cz,revision:1};
+})};
 
 function initialState(){
  const farm=nativeFarmArrivalRouteFixture({peer:false});
@@ -76,13 +80,13 @@ async function closeGates(world,{planner,nativeIntentControl},route){
  return {clocks,boundary:outcome.worldBoundary};
 }
 
-for(const [mode,name] of [['retain both','retains both motors'],['omit a motor','rejects a missing motor'],
+for(const [mode,name] of [['retain both','retains both motors'],['recover','can replace a retired Draw'],['omit a motor','rejects a missing motor'],
  ['replace a motor after READY','rejects a motor changed after READY']])test('center ruin with closing gates '+name,{timeout:45000},async()=>{
  const initial=initialState();
- let access,motor,ready,releaseReady,world;
+ let access,motor,ready,releaseReady,world,replacement;
  globalThis[owner]=value=>{access=value;};
  try{
-  world=await nativeProductionAuthority(initial,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,
+  world=await nativeProductionAuthority(initial,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,getTerrainManifest:()=>terrainManifest,
    onPrepare(record){
     if(record.kind!=='center-ruin')return;
     record.retainedGateGroups=motor.clocks.filter(({binding})=>mode!=='omit a motor'||binding.nativeGate.gateId!==gateIds[1]).map(row=>row.group);
@@ -154,8 +158,17 @@ for(const [mode,name] of [['retain both','retains both motors'],['omit a motor',
    const later=JSON.parse(result.snapshot);
    assert(later.structures.filter(row=>row.gate).every(row=>row.gateOpen===1-(later.elapsed-motor.boundary.effectiveTime)/.6));
    assert.deepEqual(world.faults,[]);assert.deepEqual(world.errors,[]);
+   if(mode==='recover'){
+    replacement=await recoverRouteAfterRuin(world,ready.commit.nativeCenterRuin,later.elapsed,later);
+    assert.deepEqual(replacement.host.inspect().nativeRouteFrame.bindings.filter(row=>row.nativeGate).map(row=>row.nativeGate.gateId).sort(),gateIds);
+    const next=await world.command({kind:'advance',seconds:.05,steps:1,nightFastForward:false});
+    const continued=JSON.parse(next.snapshot);
+    assert(continued.elapsed>later.elapsed);
+    assert(continued.structures.filter(row=>row.gate).every(row=>row.gateOpen===1-(continued.elapsed-motor.boundary.effectiveTime)/.6));
+    assert(!next.events.some(row=>row.type==='StructureRuined'));
+   }
    return;
   }
   assert.fail('Did not reach the native ruin cut');
- }finally{delete globalThis[owner];releaseReady?.();await world?.close();}
+ }finally{delete globalThis[owner];releaseReady?.();await world?.close();await replacement?.host.dispose();}
 });

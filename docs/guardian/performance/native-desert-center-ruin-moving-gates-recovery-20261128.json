@@ -1,0 +1,56 @@
+{
+  "scope": "Desert 983, two closing gates after Home19, acquired successor approach. The browser harness schedules the closing command and suspends the Hosted clock when it observes the ruin, then exercises actual GPUDevice destruction and the production Hosted visual handoff. Continuation uses the ordinary resumed clock.",
+  "inputSha256": "e03507bbdc17aff0bcac3cc87730f941eacd0d8236a26638b7488555343289b3",
+  "adapter": { "vendor": "nvidia", "architecture": "turing" },
+  "original": {
+    "motorTicket": 22,
+    "motorOrigin": 58.14000000000233,
+    "gateIds": [1000000, 1000001],
+    "ruinTicket": 23,
+    "firstRuinFrame": 394,
+    "ruinElapsed": 58.15000000000233,
+    "centerId": "structure-1000002",
+    "polygonId": 10,
+    "confirmedRuinEvents": 1,
+    "loss": "GPUDevice destroyed"
+  },
+  "replacement": {
+    "checkpointSequence": 911,
+    "replayedThrough": 977,
+    "activationSequence": 978,
+    "firstFrame": 1,
+    "heldElapsed": 58.700000000002376,
+    "worldTicket": 23,
+    "approachTicket": 21,
+    "actorId": 1000003,
+    "bodyId": 2,
+    "slot": 0,
+    "generation": 18,
+    "firstApproachAge": 3.1499998569488525,
+    "firstGateClockSamples": [58.69999994278187, 58.69999994278187],
+    "followUpFrame": 5,
+    "followUpClock": 58.77000000000238,
+    "followUpApproachAge": 3.2199997901916504,
+    "followUpGateClockSamples": [58.74000187158818, 58.74000187158818],
+    "drained": true,
+    "errors": [],
+    "resourceErrors": []
+  },
+  "regression": {
+    "tests": 66,
+    "passed": 66,
+    "skipped": 0,
+    "build": "Vite WebGPU worker with remote Draw, 755 modules",
+    "negative": "An acquired center ruin with closing gates had no terminal route recovery source before this change. The replacement still cannot authenticate a held cut without both submitted gate clocks."
+  },
+  "openCases": ["Device loss before the ruin GO with moving gates", "Occupied gate crossing", "Disk reload with moving gates"],
+  "evidenceSha256": {
+    "center-ruin-motor-recovery-final-nvidia.json": "254c8f369ae8cacd48f1628d7c9ad4f41fe427dab09db4c678d0b3d15ad1089a",
+    "center-ruin-motor-recovery-final-nvidia.log": "62a169ec5c39169c6a295221fbd1d8f71fa54f1747a311240e6a48d2a92d48a9",
+    "center-ruin-motor-recovery-impact.tap": "be8ad3a3e111b551ba8c1ad8332b29d77e1babc45f4ab03fd0e8903c2d96e438",
+    "center-ruin-motor-recovery-before.tap": "6f5a52cc4d6e86f207dd20c9c4749777ea782ca44f85875f17ef47c8d01f5561",
+    "center-ruin-motor-recovery-build.log": "56bcc81cd29eb5e4629e2e4b631d3ad0ccde89e6a6fedd66ccc74026d9ab388a",
+    "center-ruin-motor-recovery-driver.mjs": "d266225959565c8c79afdf62eebd19f6a337adb40e5d38337f1fa078a23cffff",
+    "center-ruin-motor-recovery-browser.mjs": "fda00f50ddf3b510ba1341edc8731afe987795418fa7519b31ced40626ca0b1b"
+  }
+}

@@ -8,7 +8,7 @@ import {nativeTaskActionProjectionMatches} from '../world/native-task-action-att
 import {nativeTaskActionActor} from '../world/native-task-action-presentation.js';
 import {nativeDeliveryProjectionMatches} from '../world/native-task-consequence.js';
 import {nativeTaskSettlementProjectionMatches} from '../world/native-task-settlement.js';
-import {centerRuinApproachEndpoint,copyNativeRecoveryGroup,nativeCenterApproachEndpoint,nativeIdleCycleRecoveryPhaseMatches,nativeOrdinaryRecoveryKinds,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../world/native-worker-route-recovery.js';
+import {centerRuinApproachEndpoint,copyNativeRecoveryGroup,matchesRecoveredRuinMotorSamples,nativeCenterApproachEndpoint,nativeIdleCycleRecoveryPhaseMatches,nativeOrdinaryRecoveryKinds,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../world/native-worker-route-recovery.js';
 import {nativeClockResourceEnd} from '../rendering/native-clock-resource-end.js';
 import {sameNativeHomeArrivalAttestation} from '../world/native-home-arrival.js';
 import {nativeEncounterCheckpointActors} from './native-encounter-checkpoint.js';
@@ -1749,6 +1749,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
 
       const proofs=executions.map((execution,i)=>({kind:routes[i].kind,proof:execution.binding}));
       const evidence={...(group.refuge?{refuge:group.refuge}:{}),...(group.ruin?{ruin:group.ruin}:{}),
+        ...(group.ruinMotors?{ruinMotors:group.ruinMotors}:{}),
         ...(group.encounter?{encounter:group.encounter}:{}),...(idleCyclePhases.length?{idleCyclePhases}:{})};
       const attachment=await nativeIntentControl.attach(port,transportSession,
         route.members?{version:2,holdId,members:proofs,...evidence}:{holdId,...proofs[0]});
@@ -1775,6 +1776,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       if(!draw||draw.holdId!==holdId||nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt||
          draw.elapsed!==planner.nativeCausalClock().committedThrough||!Array.isArray(rows)||rows.length!==routes.length||
          !previous||JSON.stringify(previous)!==JSON.stringify(live)||
+         !matchesRecoveredRuinMotorSamples(draw.ruinMotorSamples,live.ruinMotors,draw.elapsed)||
          route.encounter&&!sameRecoveredEncounter(draw.encounter,live.encounter)||
          route.refuge&&(!routes.length||nativeOrdinaryRecoveryKinds(routes.map(({kind})=>kind),true))&&
            !sameNativeHomeArrivalAttestation(draw.refuge,live.refuge)||

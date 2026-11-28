@@ -1,6 +1,6 @@
 import {nativeHomeWorkerStatus,sameNativeHomeRequestReference} from '../world/native-home-request-reference.js';
 import {centerSource,matchesCenterRuinCommit,verifiesCenter} from '../world/native-center-ruin-source.js';
-import {nativeOrdinaryRecoveryKinds,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
+import {copyNativeRuinMotors,nativeOrdinaryRecoveryKinds,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
 import {copyNativeAnimalCropReference,copyNativeAnimalCropProposal,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference,nativeAnimalCropSuccessor} from '../world/native-animal-crop-resource.js';
 import {nativeAnimalCropPublicationMatches} from '../simulation/raids.js';
 import {nativeMotionPresentationMatches} from '../world/native-motion-presentation-match.js';
@@ -30,7 +30,7 @@ import {nativeResumeSuccessor} from '../world/native-resume-reference.js';
 import {nativeFrameReadiness,rejectedNativeFrameTarget,rejectedHistoricalIntervalTarget} from './webgpu-frame-recovery.js';
 import {withNativeRoutePickFrame} from './native-route-pick-frame.js';
 import {copyNativeGateMotionResources} from '../world/native-gate-motion-resources.js';
-import {sameNativeGatePresentations} from '../world/native-gate-presentation.js';
+import {sameNativeGatePresentations,sampleNativeGateOpening} from '../world/native-gate-presentation.js';
 import {installRemoteTexturePreparation} from './remote-texture-preparation.js';
 import {assertNativeTerrainPresentationSupport} from './native-terrain-presentation-support.js';
 import {copyNativeWorldBoundary,reconcileNativeWorldResources,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
@@ -799,7 +799,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
       return {resources,execution,profile,crop,ref,actorId:(crop?'animal-':'worker-')+execution.actorId};
     });
     const replayed=preparedNativeWorldBoundary,boundary=grouped?source.worldBoundary:members[0].ref.worldBoundary;
-    const ruin=source.ruin,encounter=source.encounter;
+    const ruin=source.ruin,encounter=source.encounter,ruinMotors=copyNativeRuinMotors(source.ruinMotors,ruin?.prepared);
     const stationaryRefuge=!!source.refuge&&members.length===0;
     const stationary=encounter?.version===3,at=members[0]?.execution.executedThrough??encounter?.at??state.elapsed;
     const fallCurrent=()=>workers?.get('worker-'+encounter.workerId)?.recoveredFallCurrent(encounter)===true;
@@ -820,7 +820,11 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
     const ruinCurrent=()=>{
       if(!ruin)return true;
       const center=state.structures.find(row=>row.id===ruin.center);
-      return center?.kind==='center'&&center.status==='ruined'&&center.hp===0;
+      return center?.kind==='center'&&center.status==='ruined'&&center.hp===0&&(!ruinMotors||ruinMotors.gates.every(gate=>{
+        const wall=state.structures.find(row=>row.id===gate.entityId);
+        return wall?.gate===true&&wall.status==='intact'&&wall.hp===wall.maxHp&&!wall.wallPresentation&&
+          Math.abs(wall.gateOpen-sampleNativeGateOpening(gate,at))<=1e-9;
+      }));
     };
     const arrival=source.refuge?.reference;
     const ordinaryWorkers=grouped&&nativeOrdinaryRecoveryKinds(members.map(({profile})=>profile.kind),!!arrival);
@@ -907,6 +911,20 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
             prepareGateParticipants:({signal})=>settlements.prepareNativeGateMotors({gates},{signal,
               getPickTime:(gate,epoch)=>nativePickFrame.getGateTime(gate,epoch)})});
         }
+      }
+      if(ruinMotors){
+        const gatesReady=settlements.nativeGatePreparationReadiness(ruinMotors);
+        await waitNativePublication(sequence,ownerSignal??new AbortController().signal,gatesReady);
+        if(!current()||ownerSignal?.aborted)throw Error('Recovered center ruin motors are stale');
+        const parts=settlements.prepareNativeGateMotors(ruinMotors,{signal:ownerSignal,
+          getPickTime:(gate,epoch)=>nativePickFrame.getGateTime(gate,epoch)});
+        try{
+          await pipelineAdmission.prepareManyAndPublish(parts.map(part=>part.request),()=>{
+            if(!current()||parts.some(part=>!part.valid()))throw Error('Recovered center ruin motor owners changed');
+            for(const part of parts)part.activate();
+            for(const part of parts)part.finalize();
+          });
+        }catch(error){for(const part of parts.reverse())part.cancel();throw error;}
       }
       if(!current()||!members.every(({crop,actorId,resources,profile,ref})=>
         crop?roster.hasNativeCropOwner():profile.kind===15?workers.recoveredTaskActionCurrent(actorId,ref):

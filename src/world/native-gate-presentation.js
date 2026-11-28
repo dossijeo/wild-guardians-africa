@@ -1,6 +1,12 @@
 import {copyNativeRouteReference} from './native-route-reference.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from './native-world-boundary.js';
 
+export function sampleNativeGateOpening(gate,at){
+ const rows=gate.rows,last=rows.length-2;
+ let i=0;while(i<last&&rows[i+2]<=at)i+=2;
+ return i===last||at<=rows[i]?rows[i+1]:rows[i+1]+(rows[i+3]-rows[i+1])*(at-rows[i])/(rows[i+2]-rows[i]);
+}
+
 export function sameNativeGatePresentations(a,b){
  return Array.isArray(a)&&Array.isArray(b)&&a.length===b.length&&a.every((gate,i)=>{
   const other=b[i];return other&&['gateId','entityId','mechanism','modelId','startTime','endTime'].every(key=>gate[key]===other[key])&&['rootMatrix','hinge','positions','leafFlags','rows'].every(key=>gate[key].length===other[key]?.length&&gate[key].every((value,index)=>Object.is(value,other[key][index])));

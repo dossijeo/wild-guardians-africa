@@ -735,4 +735,10 @@ Kind4 conserva la aproximación original cuando el único cambio posterior de mu
 
 En NVIDIA Turing, el cierre se adquirió a los 59,69 s. El dibujo 369 retiró el polígono 10 a los 59,70 s con el cuerpo 2, los dos relojes de motor a una edad de 0,01 s, la ceniza, 270 instancias de escombros y 78 de humo. Draw drenó. Una primera pasada alcanzó el fence de kind4 y rechazó la copia física de un uniforme de motor. El control de CPU reprodujo esa copia y la segunda pasada física presentó el paquete completo. [Recibo de admisión y validación](performance/native-desert-center-ruin-moving-gates-admission-20261128.json).
 
-La prueba controla el instante en que se pide el cierre. Quedan el recorrido con un civil todavía cruzando, la sustitución de Draw y la recarga durante el derrumbe con motores en marcha.
+La prueba controla el instante en que se pide el cierre. Quedan el recorrido con un civil todavía cruzando, la pérdida de Draw antes del GO de ruina y la recarga durante el derrumbe con motores en marcha.
+
+#### Sustitución de Draw después de la ruina con las hojas en marcha
+
+Tras retirarse el primer Draw, la autoridad vuelve a comprobar los dos mecanismos en WASM contra sus programas adquiridos y contra la apertura del snapshot retenido. La Surface prepara los mismos materiales sobre las hojas reconstruidas. El sustituto debe presentar la aproximación y los dos relojes de motor al mismo tiempo de autoridad y acreditar esa muestra por fence antes de reanudar. El control con la cola GPU determinista rechaza un primer paquete sin los dos relojes, confirma la retirada del consumidor viejo y continúa tras presentar el paquete completo, sin duplicar `StructureRuined`.
+
+En Edge con NVIDIA Turing, tras destruir el dispositivo original, el sustituto reprodujo desde el checkpoint 911. Su primer envío conservó el cuerpo 2 y los dos motores a los 58,70 s, con las mismas adquisiciones del mundo, del corredor y de las hojas. Tras la activación, un envío ordinario llegó a 58,77 s con los dos relojes y el cuerpo. Hubo un solo `StructureRuined` y el sustituto drenó sin errores. Pasaron 66 pruebas dirigidas y el build del Worker WebGPU con Draw remoto. [Recibo](performance/native-desert-center-ruin-moving-gates-recovery-20261128.json).

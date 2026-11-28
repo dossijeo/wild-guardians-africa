@@ -1,7 +1,7 @@
 import {recoveredStoppedGateSamplesMatch,stopFields} from "../world/native-stop24-task-recovery.js";
 import {nativeStoppedGateClockMatches} from '../world/native-worker-route-stop-codec.js';
 import {centerSource,sameCenter,verifiesCenter} from '../world/native-center-ruin-source.js';
-import {copyNativeRecoveryGroup,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,recoveredNativeGateSamples,sameRecoveredEncounter} from '../world/native-worker-route-recovery.js';
+import {copyNativeRecoveryGroup,matchesRecoveredRuinMotorSamples,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,recoveredNativeGateSamples,sameRecoveredEncounter} from '../world/native-worker-route-recovery.js';
 import {submittedRecoveryPose} from './remote-recovery-pose.js';
 import {copyNativeAnimalCropReference,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference} from '../world/native-animal-crop-resource.js';
 import {copyAnimalCropClock} from './remote-clock-bindings.js';
@@ -928,6 +928,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       if(submitted)nativeRouteFrame={sequence:active.sequence,clockElapsed,...(recoveredPose?{recoveredEncounterPose:{...pose,...recoveredPose}}:{}),...(active.admittedRestoredRepairCoverageEnd!=null?{authorityEpoch:routeControl.status().authorityEpoch}:{}),...(clockElapsed===null?{}:{presentationElapsed:floorFloat32((active.admittedMotionBinding||active.admittedBarrierAdditionBinding||active.admittedBarrierClockCoverageEnd!=null||active.admittedRestoredRepairCoverageEnd!=null)?Math.min(clockElapsed,active.metadata.clock.safeUntil):clockElapsed)}),worldBoundary:frameBoundary(active),bindings:Array.from(nativeTimes.values())};
       metrics.nativeFrames++;
       if(recovered&&submitted&&nativeRouteFrame?.sequence===active.sequence&&nativeRouteFrame.clockElapsed===recovered.at){
+        const ruinMotorSamples=recovered.ruinMotors?.gates.map(gate=>{
+          const row=nativeRouteFrame.bindings.find(b=>recoveryGateMatches(b,gate.gateId,gate.worldBoundary));
+          return row&&{nativeGate:row.nativeGate,gateElapsed:row.elapsed};
+        });
         const members=recovered.members.map(({profile,ref,assignmentSequence,gateIds,proof})=>{
           const row=nativeRouteFrame.bindings.find(b=>recoveryBindingMatches(b,profile,ref));
           if(!row||profile.stopProjectionMatches&&!profile.stopProjectionMatches(row,proof))return null;
@@ -947,7 +951,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
             ...(stoppedGates.length?{stoppedGates}:{}),
             ...(samples.length===1?samples[0]:samples.length?{nativeGates:samples}:{})};
         });
-        if((encounter?.version!==3||recoveredPose)&&members.every(Boolean)){
+        if((encounter?.version!==3||recoveredPose)&&members.every(Boolean)&&
+           matchesRecoveredRuinMotorSamples(ruinMotorSamples,recovered.ruinMotors,recovered.at)){
           if(recovered.refuge)routeControl.installRecoveredRefuge(recovered.refuge,frameBoundary(active),recovered.refugeWorker);
           if(encounter?.version===3)routeControl.installRecoveredEncounterPose(encounter);
           else if(recovered.encounter)routeControl.installRecoveredEncounterFall(recovered.encounter,recovered.members[0].ref);
@@ -956,6 +961,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           const proveAbsence=recovered.refuge&&(members.length===0||recovered.refugeWorker);
           recoveredSubmission={holdId:recovered.holdId,consumerToken:recovered.consumerToken,frameSequence:active.sequence,
             elapsed:recovered.at,...(recovered.grouped?{members}:members[0]),
+            ...(ruinMotorSamples?{ruinMotorSamples}:{}),
             ...(proveAbsence?{refuge:recovered.refuge,worldBoundary:frameBoundary(active)}:{}),
             ...(recovered.encounter?{encounter:recovered.encounter}:{})};
           recovered=null;
@@ -1319,6 +1325,11 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     const preparedBindings=(packet.preparedClockBindings??Array.from(clockBindings.values())).filter(binding=>packet.resourceSnapshot.has(binding.id));
     if(preparing)requireCenterRuinGates(packet,preparedBindings,packet.metadata.preparedCenterRuin);
     if(recovered) {
+      const motors=recovered.ruinMotors;
+      const requiredGate=(b,gate)=>recoveryGateMatches(b,gate.gateId,gate.worldBoundary)&&
+        b.resourceEnd===nativeClockResourceEnd(gate.startTime,gate.endTime);
+      const missingRuinMotors=motors&&(!motors.gates.every(gate=>preparedBindings.some(b=>requiredGate(b,gate)))||
+        preparedBindings.some(b=>b.nativeGate&&!motors.gates.some(gate=>requiredGate(b,gate))));
       const missing=recovered.members.find(({profile,ref,gateIds,proof})=>{
         const stopped=!!profile.stopProjectionMatches,epoch=stopped?ref.epoch:ref.worldBoundary.effectiveTime;
         if(stopped&&(!preparedBindings.some(b=>recoveryBindingMatches(b,profile,ref)&&b.epoch===epoch)||
@@ -1342,9 +1353,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
          recovered.encounter&&(!sameRecoveredEncounter(packet.metadata.recoveredEncounterFall,recovered.encounter)||
            preparedBindings.some(({nativeHome,nativeRoute})=>
              (nativeHome?.actorId??nativeRoute?.actorId)===recovered.encounter.workerId))||
-         missing)
+         missingRuinMotors||missing)
         throw Object.assign(Error('Replacement requires its bound worker clock at the loss cut'),
-          {code:(missing??recovered.members[0])?.profile.obsoleteCode});
+          {code:missingRuinMotors?'native-route-admission-obsolete':(missing??recovered.members[0])?.profile.obsoleteCode});
       for(const member of recovered.members)if(member.install){member.install();member.install=null;}
     }
     assertTerminalGateClocks(packet.metadata.nativeHomeArrivalTemplate??packet.metadata.nativeTaskSettlementTemplate,preparedBindings);
@@ -2426,6 +2437,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           lastNativeGpuFence=message.fenceId;nativeGpuFences.add(message.fenceId);
           const rows=recoveredSubmission?.members??[recoveredSubmission];
           const recoveredAtFence=recoveredSubmission?.elapsed===message.effectiveTime&&
+            (!recoveredSubmission.ruinMotorSamples||recoveredSubmission.ruinMotorSamples.every(gate=>
+              nativeRouteFrame?.bindings.some(b=>recoveryGateMatches(b,gate.nativeGate.gateId,gate.nativeGate.worldBoundary)&&
+                b.elapsed===gate.gateElapsed)))&&
             (!recoveredSubmission.refuge||nativeRouteFrame?.clockElapsed===message.effectiveTime&&
               sameNativeWorldBoundary(nativeRouteFrame.worldBoundary,recoveredSubmission.worldBoundary)&&
               !includesRecoveredWorkerClock(nativeRouteFrame.bindings,recoveredSubmission.refuge.reference.actorId))&&
@@ -2524,7 +2538,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
                    ordinaryWorkers:source.ordinaryWorkers===true,idleCyclePhase})
              }));
              recovered={holdId:q.holdId,consumerToken:q.consumerToken,grouped,members,at:message.clock.committedThrough,
-               refuge:source.refuge,refugeWorker:source.refuge&&source.ordinaryWorkers?source.members[0].proof:null,encounter:source.encounter};
+               refuge:source.refuge,refugeWorker:source.refuge&&source.ordinaryWorkers?source.members[0].proof:null,
+               encounter:source.encounter,ruinMotors:source.ruinMotors};
            }
            if(worldBoundaryRequired)publishWorldBoundary();
            if(pending&&!frameWorldCurrent(pending)||admittingFrame&&!frameWorldCurrent(admittingFrame.packet))invalidatePendingNativeWorld('Prepared resources precede the native world baseline');

@@ -4,7 +4,7 @@ import {originalRig} from './native-animal-crop-rig.js';
 import {floorFloat32} from '../../src/rendering/float32-time.js';
 import {nativeClockResourceEnd} from '../../src/rendering/native-clock-resource-end.js';
 import {sameNativeAnimalCropReference} from '../../src/world/native-animal-crop-resource.js';
-import {copyNativeRecoveryGroup} from '../../src/world/native-worker-route-recovery.js';
+import {copyNativeRecoveryGroup,matchesRecoveredRuinMotorSamples} from '../../src/world/native-worker-route-recovery.js';
 import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
 
 export async function recoverRouteAfterRuin(world,proof,at,state=null,{endpoint=false,retireFirst=true,beforeRuin=false,interrupted=null,beforeRetiring=null}={}){
@@ -70,12 +70,21 @@ export async function recoverRouteAfterRuin(world,proof,at,state=null,{endpoint=
    assert(requests.some(count=>count>0));
   }
   if(!beforeRuin){
-   const evidence={version:2,members:[{kind,proof:execution.binding}],ruin:proof};
+   const evidence={version:2,members:[{kind,proof:execution.binding}],ruin:proof,ruinMotors:q.ruinMotors};
    assert.deepEqual(copyNativeRecoveryGroup(evidence,boundary).ruin,proof);
    const foreign=structuredClone(evidence);
    foreign.ruin.revisions[1]++;
    assert.throws(()=>copyNativeRecoveryGroup(foreign,boundary),/differs from the acquired center ruin/);
    assert.throws(()=>copyNativeRecoveryGroup(evidence,ref.worldBoundary),/differs from the acquired center ruin/);
+   if(q.ruinMotors){
+    const {ruinMotors,...absent}=evidence;
+    assert.throws(()=>copyNativeRecoveryGroup(absent,boundary),/needs its retained motor programs/);
+    const mismatched=structuredClone(evidence);
+    mismatched.ruinMotors.gates.pop();
+    assert.throws(()=>copyNativeRecoveryGroup(mismatched,boundary),/motors differ from the acquired center ruin/);
+    const accepted=await readClientAssignment(q);
+    assert.deepEqual(accepted.ruinMotors,ruinMotors);
+   }
    if(kind===27){
     const wrongAttack=structuredClone(evidence);wrongAttack.members[0].proof.attackId++;
     assert.throws(()=>copyNativeRecoveryGroup(wrongAttack,boundary),/differs from the acquired center ruin/);
@@ -85,12 +94,17 @@ export async function recoverRouteAfterRuin(world,proof,at,state=null,{endpoint=
   draw.client.registerClockBinding(draw.buffer,{byteOffset:0,epoch,semantic:'relative',nativeAnimalCrop:ref,
    resourceEnd:kind===27?ref.endTime:nativeClockResourceEnd(epoch,ref.endTime)});
   await assert.rejects(world.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
-  const submit=draw.frame(0,{nativeWorldBoundary:boundary,
-   clock:{version:1,epoch:0,elapsed:at,safeUntil:at,anchorAbsoluteMs:0,paused:true,segments:[]}}).catch(e=>e);
-  await flush();await draw.host.idle();draw.host.present();
-  const rendered=await submit;
+  const metadata={nativeWorldBoundary:boundary,
+   clock:{version:1,epoch:0,elapsed:at,safeUntil:at,anchorAbsoluteMs:0,paused:true,segments:[]}};
+  if(q.ruinMotors){
+   const absent=await settleReplacementFrame(draw,draw.frame(0,metadata));
+   assert.match(absent.message,/bound worker clock/);
+   await assert.rejects(world.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
+  }
+  const rendered=await settleReplacementFrame(draw,q.ruinMotors?submitRuinMotors(draw,q.ruinMotors,metadata):draw.frame(0,metadata));
   assert(!(rendered instanceof Error),rendered.message);
   const witness=await world.authority.checkHeldDraw(30,hold,route);
+  assert(matchesRecoveredRuinMotorSamples(witness.ruinMotorSamples,q.ruinMotors,at));
   const sampledAt=endpoint?nativeClockResourceEnd(epoch,ref.endTime):at;
   const submitted=beforeRuin?witness:witness.members[0];
   assert.equal(submitted.relativeTime,floorFloat32(sampledAt-epoch));
@@ -107,6 +121,33 @@ export async function recoverRouteAfterRuin(world,proof,at,state=null,{endpoint=
   return draw;
  }catch(error){draw.client.dispose();await draw.host.dispose();throw error;}
  finally{rig?.close();}
+}
+
+async function settleReplacementFrame(draw,pending){
+ let settled=false,result;
+ const finish=value=>{settled=true;result=value;};
+ pending.then(finish,finish);
+ for(let i=0;i<1000&&!settled;i++){
+  await flush();await draw.host.idle();draw.host.present();await new Promise(resolve=>setImmediate(resolve));
+ }
+ const {activeSequence,pendingSequence,errors}=draw.host.inspect();
+ assert(settled,JSON.stringify({activeSequence,pendingSequence,errors}));return result;
+}
+
+function submitRuinMotors(draw,motors,metadata){
+ const {device,context}=draw.client;
+ draw.client.beginFrame(metadata);
+ const encoder=device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
+ pass.setPipeline(draw.pipeline);pass.setBindGroup(0,draw.group);pass.draw(3);
+ for(const gate of motors.gates){
+  const buffer=device.createBuffer({size:16,usage:72});
+  device.queue.writeBuffer(buffer,0,new Float32Array(4));
+  draw.client.registerClockBinding(buffer,{byteOffset:0,semantic:'relative',epoch:gate.startTime,
+   resourceEnd:nativeClockResourceEnd(gate.startTime,gate.endTime),nativeGate:{gateId:gate.gateId,worldBoundary:motors.worldBoundary}});
+  const group=device.createBindGroup({entries:[{binding:0,resource:{buffer}}]});
+  pass.setBindGroup(0,group);pass.draw(3);
+ }
+ pass.end();device.queue.submit([encoder.finish()]);return draw.client.endFrame();
 }
 
 async function readClientAssignment(source){
