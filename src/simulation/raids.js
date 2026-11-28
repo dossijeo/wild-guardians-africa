@@ -784,8 +784,8 @@ export function nativeDesertIntroductoryRaid(state,animal){
  const raid=state.raid;
  return state.biome==='desierto'&&raid?.daytime===false&&raid.pressureFacts?.introductory===true&&
    Number.isSafeInteger(raid.introCropLimit)&&raid.animals.length===1&&raid.animals[0]===animal&&animal?.species==='warthog'&&
-   state.structures[0]?.kind==='center'&&state.structures.slice(1).every(gate=>gate.kind==='wall'&&gate.gate===true&&
-     gate.status==='intact'&&gate.gateOpen===0&&nativeGateModelId(gate.material))&&
+   state.structures[0]?.kind==='center'&&state.structures.slice(1).every(wall=>wall.kind==='wall'&&wall.status==='intact'&&
+     (!wall.gate||wall.gateOpen===0&&nativeGateModelId(wall.material)))&&
    state.workers.every(worker=>worker.status==='home'&&!worker.raidReturn&&!worker.nativeRouteAdmission);
 }
 // The first native crop cohort has one mobile body and only inactive workers.

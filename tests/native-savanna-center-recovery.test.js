@@ -17,6 +17,7 @@ const cases=phases.flatMap(phase=>[
  {...phase,name:'Savanna center',fixture:'sabana714-d5-center-'+phase.phase,targetId:'structure-2'},
  {...phase,name:'Desert crop',fixture:'desierto712-d1-two-crops-before-night',targetId:'plant-3'},
  {...phase,name:'Desert crop with a paid gate',fixture:'desierto712-d1-paid-gate-before-night',targetId:'plant-3',gateId:'structure-7'},
+ {...phase,name:'Desert crop with paid defenses',fixture:'desierto712-d1-paid-defenses-before-night',targetId:'plant-3',gateId:'structure-7'},
 ]);
 
 for(const stage of cases)test('terminal Draw recovers the ordinary '+stage.name+' '+stage.phase,{timeout:30000},async()=>{
@@ -102,7 +103,7 @@ for(const stage of cases)test('terminal Draw recovers the ordinary '+stage.name+
    if(stage.gateId){
     const gate=state.structures.find(row=>row.id===stage.gateId);
     assert.equal(gate.gateOpen,0);
-    assert.deepEqual(next.structures.find(row=>row.id===gate.id),gate);
+    assert.deepEqual(next.structures.filter(row=>row.kind==='wall'),state.structures.filter(row=>row.kind==='wall'));
    }
   }else assert.deepEqual(events.filter(e=>e.type==='StructureHit').map(e=>e.structureHit.hp),[125]);
   assert.deepEqual(next.ledger,state.ledger);

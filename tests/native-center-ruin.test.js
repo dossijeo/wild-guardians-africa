@@ -220,22 +220,30 @@ const introductoryDesertCases=[
  {count:1,fixture:'desierto712-d1-two-crops-before-night'},
  {count:2,fixture:'desierto712-d1-two-workers-refuge-before-night'},
  {count:2,fixture:'desierto712-d1-paid-gate-before-night',gateId:'structure-7'},
+ {count:2,fixture:'desierto712-d1-paid-defenses-before-night',gateId:'structure-7',wallCount:4},
 ];
-for(const {count,fixture,gateId} of introductoryDesertCases)
+for(const {count,fixture,gateId,wallCount=0} of introductoryDesertCases)
 for(const reload of gateId?[null,'crop approach','crop strike','center approach','center strike','retreat']:[null,'crop strike'])
-test(`the introductory Desert raid spends one hit on a crop and one on the center with ${count} sheltered workers${gateId?' and a paid gate':''}${reload?' after a public '+reload+' reload':''}`, {timeout:30000}, async()=>{
+test(`the introductory Desert raid spends one hit on a crop and one on the center with ${count} sheltered workers${wallCount?' and paid defenses':gateId?' and a paid gate':''}${reload?' after a public '+reload+' reload':''}`, {timeout:30000}, async()=>{
  const path=new URL(`./fixtures/${fixture}.json.gz`,import.meta.url);
  const disk=gunzipSync(readFileSync(path)).toString(),initial=deserialize(disk),options=savedNativeAuthorityOptions(disk);
  assert.deepEqual(initial.plants.map(crop=>[crop.id,crop.alive]),[['plant-3',true],['plant-5',true]]);
  const workerOwners=workers=>workers.map(w=>[w.id,w.personId,w.status,w.x,w.z,w.hits,w.contractDay]);
  const sheltered=workerOwners(initial.workers);
- assert.deepEqual(sheltered,gateId?[['worker-9','person-8','home',88,0,0,1],['worker-11','person-10','home',88,0,0,1]]:
-  [['worker-8','person-7','home',88,0,0,1],...(count===2?[['worker-10','person-9','home',88,0,0,1]]:[])]);
- const originalGate=gateId&&initial.structures.find(row=>row.id===gateId);
+ const firstWorker=wallCount?13:gateId?9:8;
+ assert.deepEqual(sheltered,Array.from({length:count},(_,i)=>[
+  `worker-${firstWorker+2*i}`,`person-${firstWorker+2*i-1}`,'home',88,0,0,1
+ ]));
+ const defenses=state=>state.structures.filter(row=>row.kind==='wall');
+ const originalDefenses=defenses(initial);
  if(gateId){
-  assert.equal(originalGate.gateOpen,0);
-  assert.deepEqual(initial.workerNativeAuthorityCheckpoint.wallOwners,[{entityId:gateId,ids:[1,2,3]}]);
-  assert.equal(initial.ledger.balance.n,'310');
+  assert.equal(originalDefenses.length,wallCount+1);
+  assert.equal(originalDefenses.find(row=>row.id===gateId).gateOpen,0);
+  const expectedOwners=[{entityId:gateId,ids:[1,2,3]}];
+  for(let i=0;i<wallCount;i++)expectedOwners.push({entityId:`structure-${8+i}`,ids:[4+i]});
+  expectedOwners.sort((a,b)=>a.entityId.localeCompare(b.entityId));
+  assert.deepEqual(initial.workerNativeAuthorityCheckpoint.wallOwners,expectedOwners);
+  assert.equal(initial.ledger.balance.n,wallCount?'270':'310');
  }
  assert.equal(options.nativeWorkerLifecycle,true);
  let release,firstRoute,replacement;
@@ -252,7 +260,7 @@ test(`the introductory Desert raid spends one hit on a crop and one on the cente
   const state=JSON.parse(next.snapshot);
   assert.deepEqual(workerOwners(state.workers),sheltered);
   assert.deepEqual(state.ledger,initial.ledger);
-  if(gateId)assert.deepEqual(state.structures.find(row=>row.id===gateId),originalGate);
+  assert.deepEqual(defenses(state),originalDefenses);
   return state;
  };
  try{
@@ -269,7 +277,7 @@ test(`the introductory Desert raid spends one hit on a crop and one on the cente
    assert(nativeDesertIntroductoryRaid(scene,animal));
    gate.gateOpen=.5;
    assert.equal(nativeDesertIntroductoryRaid(scene,animal),false);
-   gate.gateOpen=0;gate.gate=false;
+   gate.gateOpen=0;gate.status='ruined';
    assert.equal(nativeDesertIntroductoryRaid(scene,animal),false);
   }
   release();
