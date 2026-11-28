@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "product": "6d3748faab05b26c34edc99cb4093a096fccd83c",
+  "fixture": "Desierto 983, dawn, two centers and one gate",
+  "snapshotSHA256": "3d5f06f0f8ca7c873bdd22b4c787e5a6b735073774a64bef4613fc14964405cd",
+  "rawReceipt": ".cache/desert-ordinary-flight-nvidia.json",
+  "receiptSHA256": "9b883567131db957f3415398590f6cfd4018b4595ea943ab8d008c6d78c3e127",
+  "native": {
+    "standaloneSHA256": "7c88c162fe748976833c566b247aa5ce3c6366f6a547e6884d062b038268e64c",
+    "pthreadSHA256": "4e705c296893c4393d7457e8a553c0852f02434c76cdc7095d3231eed0b5ac54"
+  },
+  "qualification": {
+    "browser": "Edge",
+    "adapter": {"vendor": "nvidia", "architecture": "turing"},
+    "nativeWorkerLifecycle": true,
+    "qualificationFlags": [],
+    "heldReady": ["first animal Route26", "first center Strike27"],
+    "menuStartupExercised": false,
+    "cadenceMeasured": false
+  },
+  "replacement": {
+    "lostAt": 12.019999999999957,
+    "firstDraw": 1,
+    "gateId": 1000000,
+    "home": {"bodyId": 1, "relativeTime": 1.21999990940094},
+    "strike": {"bodyId": 2, "ticket": 9, "epoch": 11.999999999999957, "relativeTime": 0.019999999552965164},
+    "picking": {"entityId": "animal-1000003", "matchingClockSamples": 5}
+  },
+  "impacts": [
+    {"id": "attack-29209", "at": 13.559999999999924, "target": "structure-1000002", "beforeHp": 140, "afterHp": 120},
+    {"id": "attack-29213", "at": 28.31999999999969, "target": "structure-2"},
+    {"id": "attack-29216", "at": 34.68000000000003, "target": "structure-2"},
+    {"id": "attack-29219", "at": 40.220000000000894, "target": "structure-2"}
+  ],
+  "ruin": {"at": 16.759999999999938, "ticket": 12},
+  "homeArrival": {"at": 19.279999999999884, "ticket": 14, "retiredSequence": 12},
+  "raidEndedAt": 44.840000000001616,
+  "civilFarmReturn": {"at": 47.300000000002, "ticket": 28, "refugeSequence": 12},
+  "worker": {"id": "worker-900011", "personId": "person-5", "contractDay": 15, "hits": 0, "state": "native-idle"},
+  "drainedAt": 63.16000000000448,
+  "applicationErrors": [],
+  "expectedDeviceLossNotifications": 2,
+  "threeMissingAttributeWarnings": 8,
+  "cpu": {"selected": 9, "passed": 9, "ordinaryTestUsedEmptyRapierDriver": true, "productionBuildModules": 755}
+}
