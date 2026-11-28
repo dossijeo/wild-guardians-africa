@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "productCommit": "5e2bb6d09",
+  "baselineCommit": "b6c7a70fd",
+  "scenario": {
+    "biome": "desierto",
+    "seed": 712,
+    "center": [83, 0],
+    "paidCropPublications": [97, 98]
+  },
+  "staleRevalidation": {
+    "path": ".cache/desert-menu-712/native-desert-menu-712-enclosed-campaign-native-revisions-20261128-extended.json",
+    "sha256": "fb00ff0714b9023241915b2b77d36542762815239547093dc6eddebb4a86c7b3",
+    "result": -2,
+    "nativeFactsBeforeAndAfter": [2, 3],
+    "residencyRevisionBoth": 25,
+    "residentRegionCountBoth": 25,
+    "terrainRevisionBoth": 3,
+    "nativeIntentSequenceBoth": 0,
+    "bodyCountBoth": 0
+  },
+  "physicalAcquisition": {
+    "path": ".cache/desert-menu-712/native-desert-menu-712-enclosed-campaign-paid-facts-20261128-setup.json",
+    "sha256": "a06571261d6f94d3e5f43da70be1060558577f0769e992d42424b4a53b6249b4",
+    "adapter": "nvidia",
+    "prepared": {"ticket": 3, "elapsed": 2.899999999999998},
+    "acquired": {"ticket": 4, "elapsed": 4.8499999999999766},
+    "commandPublication": 142,
+    "submitSequence": 59,
+    "wallPieces": 13,
+    "gates": 1,
+    "gateEntity": "structure-7",
+    "gateOpening": 0,
+    "balance": 270,
+    "nativeIds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+  },
+  "remainingBoundary": {
+    "path": ".cache/desert-menu-712/native-desert-menu-712-enclosed-campaign-paid-facts-20261128-extended.json",
+    "sha256": "31cf0ded15c8c423e43520d3b2702afd30bbfc5b6d4e54f435fe1b46bcfb18f7",
+    "stage": "hire",
+    "surfaceError": "Native publication boundary did not arrive",
+    "recoveryTriggered": true
+  },
+  "tests": {
+    "focalBaselineSha256": "a377c4ec44bb122214509168706632e04a365de681d461d554c63412dbcccb44",
+    "focalCandidateSha256": "5dae756db50d23778880421bcf11d618f51635f26048d837f7bf142f2599a604",
+    "regressionSha256": "07411afdbbff25a17bcb5a5f0b1f0d0a1e02f59a397a5ee0e4078dc213c4a98e",
+    "passed": 100,
+    "failed": 0,
+    "skipped": 0
+  }
+}
