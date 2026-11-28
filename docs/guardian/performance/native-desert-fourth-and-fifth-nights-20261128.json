@@ -1,0 +1,861 @@
+{
+  "schema": 1,
+  "productCommit": "f8885ef6a",
+  "baseCommit": "0a100e1f9",
+  "biome": "desierto",
+  "seed": 712,
+  "scope": "NVIDIA reloads the respective public checkpoints with the paid enclosure closed. The CPU replay uses the existing authority, WASM, and deterministic Draw. Menu selection and continuous physical verification are separate.",
+  "tests": {
+    "baseline": {
+      "path": ".cache/desert-menu-712/terrestrial-late-nights-red.tap",
+      "sha256": "8eb4aa786228dd5fa942da55a04963b0eb698e57d10dee9732119a4a59abd231",
+      "pass": 0,
+      "fail": 2,
+      "skipped": 29
+    },
+    "returnWithoutRunning": {
+      "path": ".cache/desert-menu-712/desert-rhino-return-red.tap",
+      "sha256": "534722367c235817dc5bdd37d4b2de4491b8d0683378e3927aa1cb14de907a70",
+      "pass": 0,
+      "fail": 1,
+      "skipped": 30
+    },
+    "lifecycle": {
+      "path": ".cache/desert-menu-712/late-nights-lifecycle-regression.tap",
+      "sha256": "0192366cec303e5cfe13d297467cb97c7d9845659dfaf0ebc5fa155a510fbb5b",
+      "pass": 8,
+      "fail": 0,
+      "skipped": 23
+    },
+    "roster": {
+      "path": ".cache/desert-menu-712/late-nights-roster-regression.tap",
+      "sha256": "f8ecffebceff32d68460511fbc0e076d66150df2e6901894296003e0dab95506",
+      "pass": 73,
+      "fail": 0,
+      "skipped": 0
+    }
+  },
+  "build": {
+    "path": ".cache/desert-menu-712/late-nights-product-build.log",
+    "sha256": "ec8faaf0376302d141c2cc207f6ef2286138587506e92071e7970210f6ead702",
+    "backend": "webgpu-worker",
+    "remoteDraw": true
+  },
+  "continuousCpu": {
+    "path": ".cache/desert-menu-712/late-nights-single-authority-with-current-gates-cpu.json",
+    "sha256": "0bdc62f814a0e04dda2c2a040d2574198483c76c62502a22ad4b7de1aa5074c3",
+    "initialSave": {
+      "path": ".cache/mixed-enclosure-day2-saved.json",
+      "sha256": "a0f93c11f232bd0c761b166d305ddbce253afcb9a57db2a3b56abd5781de7dee"
+    },
+    "last": {
+      "elapsed": 2789.8757055867645,
+      "time": 389.8757055864754,
+      "day": 5,
+      "result": "defeat",
+      "nightPlan": {
+        "pressureVersion": 1,
+        "night": 5,
+        "at": 335.9821319831535,
+        "attraction": 0,
+        "group": [
+          "rhino"
+        ],
+        "actors": [
+          {
+            "species": "rhino",
+            "hits": 5
+          }
+        ],
+        "waves": [
+          [
+            {
+              "species": "rhino",
+              "hits": 5
+            }
+          ]
+        ],
+        "done": true,
+        "introductory": true,
+        "pressureFacts": {
+          "night": 5,
+          "observedValue": 0,
+          "capturedValue": 0,
+          "effectiveValue": 197.7777777777778,
+          "pressure": 0.0486466593310073,
+          "targetAnimals": 1,
+          "areaCap": 1,
+          "introductory": true,
+          "candidateVersion": 5,
+          "experimentId": "v1-pressure",
+          "experimentSignature": "[1500,[0.35,0.6],[0.75,0.18],[0.8,0.15]]",
+          "budget": 5,
+          "potential": 5,
+          "composition": {
+            "rhino": 1
+          },
+          "referenceEnvelope": null,
+          "compositionAdjustments": [],
+          "qRaisedForRangeSafety": false
+        }
+      },
+      "raid": null,
+      "centers": [
+        {
+          "id": "structure-2",
+          "hp": 0,
+          "status": "ruined"
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-54",
+          "status": "home"
+        }
+      ],
+      "gate": 0
+    },
+    "completedRaids": [
+      1095.7865619665463,
+      1721.3883308332431,
+      2210.6124758149904,
+      2789.8757055867645
+    ],
+    "shots": [
+      {
+        "elapsed": 1065.236561966574,
+        "target": "structure-2",
+        "hp": 535
+      },
+      {
+        "elapsed": 1069.5065619665702,
+        "target": "structure-2",
+        "hp": 510
+      },
+      {
+        "elapsed": 1072.2365619665677,
+        "target": "structure-2",
+        "hp": 485
+      },
+      {
+        "elapsed": 1686.7483308332746,
+        "target": "structure-2",
+        "hp": 450
+      },
+      {
+        "elapsed": 1691.0183308332707,
+        "target": "structure-2",
+        "hp": 415
+      },
+      {
+        "elapsed": 1695.9183308332663,
+        "target": "structure-2",
+        "hp": 380
+      },
+      {
+        "elapsed": 1698.548330833264,
+        "target": "structure-2",
+        "hp": 345
+      },
+      {
+        "elapsed": 2175.292475814862,
+        "target": "structure-2",
+        "hp": 305
+      },
+      {
+        "elapsed": 2180.0624758148792,
+        "target": "structure-2",
+        "hp": 265
+      },
+      {
+        "elapsed": 2182.692475814889,
+        "target": "structure-2",
+        "hp": 225
+      },
+      {
+        "elapsed": 2186.9624758149043,
+        "target": "structure-2",
+        "hp": 185
+      },
+      {
+        "elapsed": 2770.405705586694,
+        "target": "structure-2",
+        "hp": 125
+      }
+    ],
+    "ordinaryAbsences": [
+      {
+        "day": 2,
+        "elapsed": 1096.2865619665458,
+        "previous": 16,
+        "sequence": 17,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "438eff9f-339a-4798-8254-ba84901f524a/1",
+          "nativeSession": 1,
+          "ticket": 31,
+          "effectiveTime": 1072.6865619665673
+        }
+      },
+      {
+        "day": 3,
+        "elapsed": 1721.438330833243,
+        "previous": 61,
+        "sequence": 62,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "438eff9f-339a-4798-8254-ba84901f524a/1",
+          "nativeSession": 1,
+          "ticket": 119,
+          "effectiveTime": 1698.9983308332635
+        }
+      },
+      {
+        "day": 4,
+        "elapsed": 2211.2624758149905,
+        "previous": 82,
+        "sequence": 83,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "438eff9f-339a-4798-8254-ba84901f524a/1",
+          "nativeSession": 1,
+          "ticket": 159,
+          "effectiveTime": 2187.5424758149065
+        }
+      },
+      {
+        "day": 5,
+        "elapsed": 2789.8757055867645,
+        "previous": 94,
+        "sequence": 95,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "438eff9f-339a-4798-8254-ba84901f524a/1",
+          "nativeSession": 1,
+          "ticket": 180,
+          "effectiveTime": 2773.6057055867054
+        }
+      }
+    ],
+    "faults": [],
+    "firstError": null,
+    "beforeOrdinaryAbsence": {
+      "path": ".cache/desert-menu-712/late-nights-single-authority-cpu.json",
+      "sha256": "e8324b74a17582133fa39dc0366a05d0a7dcc4bf91a40e8f86727392e2d49dc1",
+      "last": {
+        "elapsed": 1200.399999999262,
+        "time": 0.40000000000000013,
+        "day": 3,
+        "result": null,
+        "nightPlan": null,
+        "raid": null,
+        "centers": [
+          {
+            "id": "structure-2",
+            "hp": 485,
+            "status": "intact"
+          }
+        ],
+        "workers": [
+          {
+            "id": "worker-38",
+            "status": "waiting-task",
+            "nativeRouteAdmission": "pending-resources"
+          }
+        ],
+        "gate": 0
+      },
+      "faults": [
+        "Error: Native mutation fence closed: consumer-retired"
+      ],
+      "drawError": "Error: Error: Invalid or unsafe native mutation quiescence boundary"
+    },
+    "withStaleGateBinding": {
+      "path": ".cache/desert-menu-712/late-nights-single-authority-with-absence-cpu.json",
+      "sha256": "af28c62a8f9f3b8b59f784f1ec4440e5d6d7c727cbabd2dff0b816e12a795e9c",
+      "last": {
+        "elapsed": 1474.1999999989862,
+        "time": 274.1999999999848,
+        "day": 3,
+        "result": null,
+        "nightPlan": null,
+        "raid": null,
+        "centers": [
+          {
+            "id": "structure-2",
+            "hp": 485,
+            "status": "intact"
+          }
+        ],
+        "workers": [
+          {
+            "id": "worker-38",
+            "status": "home"
+          }
+        ],
+        "gate": 1
+      },
+      "firstError": "Animal crop preparation lacks its current native source"
+    },
+    "runner": {
+      "path": ".cache/desert-menu-712/check-night-two.mjs",
+      "sha256": "3f5f167ce7fc0903629c0f8aed79e7ebc19aeb5f91f77223c32aa09fbb6889a2"
+    },
+    "fixtureAdaptation": {
+      "path": ".cache/desert-menu-712/observe-second-night-selection.mjs",
+      "sha256": "fc0c6a17d43a146b2bdb78633a2dbf31c8485aaea57fb2cc22700626d820eea2"
+    }
+  },
+  "nights": [
+    {
+      "day": 4,
+      "species": "lion",
+      "checkpoint": {
+        "path": "tests/fixtures/desierto712-d4-enclosed-lion-before-raid.json.gz",
+        "sha256": "f00739bb756e9bc3b3722daa75305161addd54489606fed1b04048022380b133",
+        "snapshotSHA256": "4259176d403aedc9d6e6cf34671d8d0d54571eb1e19da8c37cc53bf54bd368d1"
+      },
+      "hardware": {
+        "path": ".cache/desert-menu-712/night-four-lion-nvidia.json",
+        "sha256": "25fe7a8e5d3d8ff3b94e521773f632dd6a8d2916b63cb6a76ed09efb418a9f90",
+        "runner": {
+          "path": ".cache/flee-return/desert-lion-night-physical.mjs",
+          "sha256": "06c633967b515a27d3f6b309682a0fc9f50dfb852d4d2a31264949917cbf610c"
+        },
+        "harness": {
+          "path": ".cache/flee-return/desert-buffalo-night-browser.js",
+          "sha256": "e7082d7fb6101fd4ab2ef92da955b23fef54d18f14c11547072f13a2d438df0f"
+        },
+        "adapter": {
+          "vendor": "nvidia",
+          "architecture": "turing"
+        },
+        "birth": {
+          "id": "event-121",
+          "type": "RaidSpawned",
+          "raidFacts": {
+            "id": "raid-4-night",
+            "day": 4,
+            "daytime": false,
+            "elapsed": 2132.678094768724,
+            "waveIndex": 0,
+            "pressureFacts": {
+              "night": 4,
+              "observedValue": 0,
+              "capturedValue": 0,
+              "effectiveValue": 296.6666666666667,
+              "pressure": 0.05749273077028702,
+              "targetAnimals": 1,
+              "areaCap": 1,
+              "introductory": true,
+              "candidateVersion": 5,
+              "experimentId": "v1-pressure",
+              "experimentSignature": "[1500,[0.35,0.6],[0.75,0.18],[0.8,0.15]]",
+              "budget": 4,
+              "potential": 4,
+              "composition": {
+                "lion": 1
+              },
+              "referenceEnvelope": null,
+              "compositionAdjustments": [],
+              "qRaisedForRangeSafety": false
+            },
+            "exposedLiving": 0,
+            "exposedWounded": 0,
+            "actors": [
+              {
+                "id": "animal-53",
+                "species": "lion",
+                "hitsRemaining": 4,
+                "spawn": {
+                  "x": 113.06883810526463,
+                  "z": 33.074786297297
+                },
+                "exit": {
+                  "x": 114.50711472107724,
+                  "z": 35.70753398296812
+                }
+              }
+            ]
+          },
+          "simulationTime": 2132.678094768724
+        },
+        "hold": {
+          "approach": {
+            "heldAt": 2137.9424758147325,
+            "initial": [
+              113.06883810526463,
+              33.074786297297,
+              null,
+              345,
+              4
+            ]
+          },
+          "strike": {
+            "heldAt": 2180.942475814889,
+            "initial": [
+              96.76117706298828,
+              3.223813056945801,
+              40.17477665761166,
+              345,
+              4
+            ]
+          }
+        },
+        "draws": [
+          {
+            "sequence": 28,
+            "ticket": 2,
+            "kind": 26,
+            "purpose": "center",
+            "bodyId": 1,
+            "relativeTime": 0
+          },
+          {
+            "sequence": 151,
+            "ticket": 4,
+            "kind": 27,
+            "purpose": "center",
+            "bodyId": 1,
+            "relativeTime": 0
+          },
+          {
+            "sequence": 158,
+            "ticket": 6,
+            "kind": 26,
+            "purpose": "center",
+            "bodyId": 1,
+            "relativeTime": 0
+          },
+          {
+            "sequence": 160,
+            "ticket": 8,
+            "kind": 27,
+            "purpose": "center",
+            "bodyId": 1,
+            "relativeTime": 0
+          },
+          {
+            "sequence": 171,
+            "ticket": 10,
+            "kind": 26,
+            "purpose": "center",
+            "bodyId": 1,
+            "relativeTime": 0
+          },
+          {
+            "sequence": 173,
+            "ticket": 12,
+            "kind": 27,
+            "purpose": "center",
+            "bodyId": 1,
+            "relativeTime": 0
+          },
+          {
+            "sequence": 180,
+            "ticket": 14,
+            "kind": 26,
+            "purpose": "center",
+            "bodyId": 1,
+            "relativeTime": 0
+          },
+          {
+            "sequence": 182,
+            "ticket": 16,
+            "kind": 27,
+            "purpose": "center",
+            "bodyId": 1,
+            "relativeTime": 0
+          },
+          {
+            "sequence": 192,
+            "ticket": 18,
+            "kind": 26,
+            "purpose": "retreat",
+            "bodyId": 1,
+            "relativeTime": 0
+          }
+        ],
+        "hits": [
+          {
+            "attackId": "attack-122",
+            "simulationTime": 2182.592475814895,
+            "species": "lion",
+            "targetId": "structure-2",
+            "hp": 305
+          },
+          {
+            "attackId": "attack-125",
+            "simulationTime": 2188.8624758149176,
+            "species": "lion",
+            "targetId": "structure-2",
+            "hp": 265
+          },
+          {
+            "attackId": "attack-128",
+            "simulationTime": 2192.0424758149293,
+            "species": "lion",
+            "targetId": "structure-2",
+            "hp": 225
+          },
+          {
+            "attackId": "attack-131",
+            "simulationTime": 2198.262475814952,
+            "species": "lion",
+            "targetId": "structure-2",
+            "hp": 185
+          }
+        ],
+        "drawnAbsence": {
+          "sequence": 257,
+          "clockElapsed": 2222.312475815039
+        },
+        "rig": {
+          "root": 697,
+          "geometries": [
+            340,
+            341,
+            342,
+            343,
+            344
+          ],
+          "attributes": 34
+        },
+        "defenses": [
+          "structure-10",
+          "structure-11",
+          "structure-12",
+          "structure-13",
+          "structure-14",
+          "structure-15",
+          "structure-16",
+          "structure-17",
+          "structure-18",
+          "structure-19",
+          "structure-7",
+          "structure-8",
+          "structure-9"
+        ],
+        "crops": [
+          {
+            "id": "plant-5",
+            "alive": false
+          }
+        ],
+        "centers": [
+          {
+            "id": "structure-2",
+            "hp": 185
+          },
+          {
+            "id": "structure-7",
+            "hp": 60
+          },
+          {
+            "id": "structure-8",
+            "hp": 100
+          },
+          {
+            "id": "structure-9",
+            "hp": 100
+          },
+          {
+            "id": "structure-10",
+            "hp": 100
+          },
+          {
+            "id": "structure-11",
+            "hp": 100
+          },
+          {
+            "id": "structure-12",
+            "hp": 100
+          },
+          {
+            "id": "structure-13",
+            "hp": 100
+          },
+          {
+            "id": "structure-14",
+            "hp": 100
+          },
+          {
+            "id": "structure-15",
+            "hp": 100
+          },
+          {
+            "id": "structure-16",
+            "hp": 100
+          },
+          {
+            "id": "structure-17",
+            "hp": 100
+          },
+          {
+            "id": "structure-18",
+            "hp": 100
+          },
+          {
+            "id": "structure-19",
+            "hp": 100
+          }
+        ],
+        "drained": true,
+        "strikeSave": {
+          "path": ".cache/desert-menu-712/night-four-lion-active-strike.json",
+          "sha256": "5787664bbf05763291ca239ab9d525c2914276a6caa79b7bb74a68fd81c48732"
+        }
+      }
+    },
+    {
+      "day": 5,
+      "species": "rhino",
+      "checkpoint": {
+        "path": "tests/fixtures/desierto712-d5-enclosed-rhino-before-raid.json.gz",
+        "sha256": "7f22024dfeeec242889712aaee7d90ed5b89fcf4ca5a4e292a43673432679c1d",
+        "snapshotSHA256": "4c8bd3f0f113ca07953d28c71a75c58f699dcff0aa9e71311088b48f96195efb"
+      },
+      "hardware": {
+        "path": ".cache/desert-menu-712/night-five-rhino-nvidia.json",
+        "sha256": "60446d0d412fe8a3b2fdb5e3d482564ccf4de269f80121c9e8a2deadc10fc329",
+        "runner": {
+          "path": ".cache/flee-return/desert-rhino-night-physical.mjs",
+          "sha256": "9318ef4ef52ebadf0c80072f951447544fcc95db8560ecd3b1c692c2d8648cdc"
+        },
+        "harness": {
+          "path": ".cache/flee-return/desert-rhino-night-browser.js",
+          "sha256": "53442a83731b8562a644add136bd39e9b64a4e2860d14726de69749f2ecd8467"
+        },
+        "adapter": {
+          "vendor": "nvidia",
+          "architecture": "turing"
+        },
+        "birth": {
+          "id": "event-142",
+          "type": "RaidSpawned",
+          "raidFacts": {
+            "id": "raid-5-night",
+            "day": 5,
+            "daytime": false,
+            "elapsed": 2735.9821319832104,
+            "waveIndex": 0,
+            "pressureFacts": {
+              "night": 5,
+              "observedValue": 0,
+              "capturedValue": 0,
+              "effectiveValue": 197.7777777777778,
+              "pressure": 0.0486466593310073,
+              "targetAnimals": 1,
+              "areaCap": 1,
+              "introductory": true,
+              "candidateVersion": 5,
+              "experimentId": "v1-pressure",
+              "experimentSignature": "[1500,[0.35,0.6],[0.75,0.18],[0.8,0.15]]",
+              "budget": 5,
+              "potential": 5,
+              "composition": {
+                "rhino": 1
+              },
+              "referenceEnvelope": null,
+              "compositionAdjustments": [],
+              "qRaisedForRangeSafety": false
+            },
+            "exposedLiving": 0,
+            "exposedWounded": 0,
+            "actors": [
+              {
+                "id": "animal-55",
+                "species": "rhino",
+                "hitsRemaining": 5,
+                "spawn": {
+                  "x": 106.03274246240845,
+                  "z": 37.71626861489557
+                },
+                "exit": {
+                  "x": 107.47101907822106,
+                  "z": 40.34901630056669
+                }
+              }
+            ]
+          },
+          "simulationTime": 2735.9821319832104
+        },
+        "hold": {
+          "approach": {
+            "heldAt": 2741.5857055866018,
+            "initial": [
+              106.03274246240845,
+              37.71626861489557,
+              null,
+              185,
+              5
+            ]
+          },
+          "strike": {
+            "heldAt": 2775.3357055867245,
+            "initial": [
+              96.17201232910156,
+              4.006625175476074,
+              30.371478068599174,
+              185,
+              5
+            ]
+          }
+        },
+        "draws": [
+          {
+            "sequence": 35,
+            "ticket": 2,
+            "kind": 26,
+            "purpose": "center",
+            "bodyId": 1,
+            "relativeTime": 0
+          },
+          {
+            "sequence": 132,
+            "ticket": 4,
+            "kind": 27,
+            "purpose": "center",
+            "bodyId": 1,
+            "relativeTime": 0
+          },
+          {
+            "sequence": 142,
+            "ticket": 6,
+            "kind": 26,
+            "purpose": "retreat",
+            "bodyId": 1,
+            "relativeTime": 0
+          }
+        ],
+        "hits": [
+          {
+            "attackId": "attack-143",
+            "simulationTime": 2778.6057055867363,
+            "species": "rhino",
+            "targetId": "structure-2",
+            "hp": 125
+          }
+        ],
+        "drawnAbsence": {
+          "sequence": 197,
+          "clockElapsed": 2798.275705586808
+        },
+        "rig": {
+          "root": 691,
+          "geometries": [
+            340,
+            341,
+            342,
+            343,
+            344
+          ],
+          "attributes": 37
+        },
+        "defenses": [
+          "structure-10",
+          "structure-11",
+          "structure-12",
+          "structure-13",
+          "structure-14",
+          "structure-15",
+          "structure-16",
+          "structure-17",
+          "structure-18",
+          "structure-19",
+          "structure-7",
+          "structure-8",
+          "structure-9"
+        ],
+        "crops": [],
+        "centers": [
+          {
+            "id": "structure-2",
+            "hp": 0
+          },
+          {
+            "id": "structure-7",
+            "hp": 60
+          },
+          {
+            "id": "structure-8",
+            "hp": 100
+          },
+          {
+            "id": "structure-9",
+            "hp": 100
+          },
+          {
+            "id": "structure-10",
+            "hp": 100
+          },
+          {
+            "id": "structure-11",
+            "hp": 100
+          },
+          {
+            "id": "structure-12",
+            "hp": 100
+          },
+          {
+            "id": "structure-13",
+            "hp": 100
+          },
+          {
+            "id": "structure-14",
+            "hp": 100
+          },
+          {
+            "id": "structure-15",
+            "hp": 100
+          },
+          {
+            "id": "structure-16",
+            "hp": 100
+          },
+          {
+            "id": "structure-17",
+            "hp": 100
+          },
+          {
+            "id": "structure-18",
+            "hp": 100
+          },
+          {
+            "id": "structure-19",
+            "hp": 100
+          }
+        ],
+        "drained": true,
+        "strikeSave": {
+          "path": ".cache/desert-menu-712/night-five-rhino-active-strike.json",
+          "sha256": "0a462939e2db72545a427339b265acf0923d95799bab9ef795306431769cea6a"
+        },
+        "ruin": {
+          "id": "event-148",
+          "type": "StructureRuined",
+          "targetId": "structure-2",
+          "structureKind": "center",
+          "presentation": {
+            "x": 95,
+            "z": 0
+          },
+          "simulationTime": 2781.805705586748,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "d5fdad92-9f41-4f62-83f9-adf356d74e48/1",
+            "nativeSession": 1,
+            "ticket": 7,
+            "effectiveTime": 2781.805705586748
+          },
+          "sequence": 151,
+          "retreatBodyId": 1,
+          "retreatAge": 2.419999837875366,
+          "departureAt": 2778.6257055867363,
+          "hitsRemaining": 4
+        },
+        "result": "defeat"
+      }
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+El león y el rinoceronte completaron la cuarta y quinta noches de Desierto 712 desde guardados previos a cada incursión. NVIDIA conservó el cuerpo de Retreat durante el derrumbe, acreditó la ausencia y drenó después de la derrota. En CPU, el rig original comprueba que el primer dibujo de la retirada conserva el material preparado incluso con cuatro golpes restantes. [Recibo de las dos noches](performance/native-desert-fourth-and-fifth-nights-20261128.json).
+
 El búfalo de la tercera noche de Desierto 712 conserva su cuerpo con el recinto pagado y el trabajador en casa. NVIDIA comprobó los nueve programas, los cuatro golpes, la retirada y el drenaje. El guardado acreditado en físico es el previo a la incursión. [Recibo de la tercera noche](performance/native-desert-third-night-buffalo-20261128.json).
 
 La hiena de la segunda noche de Desierto 712 conserva el cuerpo en Route26, Strike27 y Retreat26 con el recinto pagado y el trabajador en casa. El control en NVIDIA retuvo los primeros READY, comprobó los tres impactos, acreditó la retirada y drenó. La recarga durante Strike27 mantuvo el identificador y la edad del golpe, y el consumidor nuevo completó los impactos y la retirada. [Recibo de admisión, recarga y retirada](performance/native-desert-second-night-hyena-20261128.json).

@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+En el recinto pagado de Desierto 712, las recargas previas a la cuarta y quinta noches completaron en NVIDIA los cuatro golpes del león y el derrumbe posterior al golpe del rinoceronte. El dibujo del derrumbe conservó Retreat y la partida confirmó una sola derrota antes de drenar. [Recorrido y alcance](native-desert-mixed-flight-center-20261125.md#cuarta-y-quinta-noches-con-recinto).
+
 En la tercera noche del recinto pagado de Desierto 712, el búfalo completó cuatro golpes al centro y Retreat. NVIDIA presentó los nueve programas en un solo cuerpo, la retirada y el drenaje desde el guardado anterior a la incursión. El recorrido con WASM llegó al cuarto amanecer. [Recorrido de la tercera noche](native-desert-mixed-flight-center-20261125.md#tercera-noche-con-recinto-y-un-búfalo).
 
 En la segunda noche del recinto pagado de Desierto 712, una hiena admitió sus tres golpes al centro y Retreat. NVIDIA confirmó la edad cero en los siete programas, el mismo cuerpo, la conservación de las defensas y el drenaje. El control físico parte del guardado anterior a la incursión. [Recorrido de la segunda noche](native-desert-mixed-flight-center-20261125.md#segunda-noche-con-recinto-y-una-hiena).
