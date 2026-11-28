@@ -187,7 +187,7 @@
       "drained": true,
       "errors": []
     },
-    "remaining": ["The browser input is an existing public checkpoint before Home19.", "Terminal Draw replacement with a stopped Stop12 motor remains unqualified."]
+    "remaining": ["The browser input is an existing public checkpoint before Home19."]
   },
   "terminalStop12Recovery": {
     "fixture": "tests/fixtures/desierto712-enclosure-day2.json.gz",
@@ -212,6 +212,34 @@
     "coldNvidiaAttempt": {
       "scope": "The ordinary task became due during Farm arrival. No Idle22 or Stop12 was acquired, so this attempt did not reach the recovery cut.",
       "receiptSha256": "0cfad183717e18463f10566564c9ab6a787e121e1eaa6bd4a24d6f5368f1155c"
+    },
+    "continuousNvidia": {
+      "productCommit": "eb9780da6",
+      "architecture": "turing",
+      "receiptSha256": "9daf4f89891a55f1f9f1de12a94446a9b102f4a161a50dd08d3982b547e65db7",
+      "deviceDestroyed": true,
+      "checkpoint": 3861,
+      "replayedThrough": 3909,
+      "hold": 5,
+      "stopTicket": 22,
+      "actorId": 29,
+      "bodyId": 3,
+      "assignmentSequence": 20,
+      "gateId": 7,
+      "mechanism": 1,
+      "opening": 0,
+      "priorDraw": 1826,
+      "replacementFirstDraw": 1,
+      "replacementHeldClock": 620.8999999999423,
+      "sameGateUniformAndBodyProjection": true,
+      "pickedBeforeActivation": "worker-29",
+      "heldTaskTicket": 23,
+      "reacquiredTaskTicket": 25,
+      "watered": "plant-3",
+      "wateredAt": 637.2499999999275,
+      "singleWaterEffectAndUnchangedLedger": true,
+      "replacementDrained": true,
+      "errors": []
     }
   },
   "secondShift": {
