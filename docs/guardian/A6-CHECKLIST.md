@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+En NVIDIA, una partida nueva de Desierto 712 desde el selector completó la primera contratación y el primer amanecer con la autoridad nativa activada por el arnés. La Surface aplicó `NightStarted` y agotó la espera del certificado de efectos para los 250 ms siguientes. El Draw original conservó el último ACK completo y el sustituto presentó la incursión hasta la retirada. El recorrido con el perfil automático y sin ese timeout sigue pendiente. [Prueba desde el selector y corte exacto](native-desert-mixed-flight-center-20261125.md#primera-partida-de-desierto-desde-el-selector).
+
 Desierto 712 ya cruza la primera noche y el riego del segundo turno en la misma autoridad y el mismo Draw. Stop12 admite el uniforme de la hoja junto con el cuerpo detenido y usa la apertura final que acredita WASM. Tras una pérdida real de dispositivo, NVIDIA confirmó el primer envío del sustituto con el portón detenido en cero, el picking y la readmisión del mismo cuerpo para regar una vez. [Recorrido](native-desert-mixed-flight-center-20261125.md#primera-noche-y-segundo-turno-en-la-misma-sesión) · [Recuperación](native-terminal-resource-recovery-20261120.md#stop12-con-el-portón-del-recinto-automático).
 
 En Desierto 712, la primera incursión con un portón cerrado y cuatro muros sólidos pagados pasó en NVIDIA, incluida la recarga de Strike27. Se conservaron las cinco defensas, sus siete identificadores de colisión y ambos contratos. [Recibo de las defensas](performance/native-desert-paid-defenses-first-night-20261128.json).
