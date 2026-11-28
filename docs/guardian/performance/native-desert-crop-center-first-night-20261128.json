@@ -180,5 +180,73 @@
     "strikeReloadExercised": false,
     "terminalDrawReplacementExercised": false,
     "cadenceMeasured": false
+  },
+  "terminalRecovery": {
+    "product": "ebc7fd7d6069803293628048fdde341fd3d1c934",
+    "baselineMissingDescriptors": [
+      26,
+      27
+    ],
+    "deterministicControls": [
+      {
+        "kind": 26,
+        "phase": "moving-approach"
+      },
+      {
+        "kind": 27,
+        "phase": "acquired-strike"
+      }
+    ],
+    "targetedTestsPassed": 41,
+    "productionBuildModules": 755,
+    "physical": {
+      "browser": "Edge",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing"
+      },
+      "rawReceipt": ".cache/desert-crop-terminal-nvidia.json",
+      "receiptSHA256": "cdcb7c49150f36c1c11f9aae040ceb9e684d16c2b7dfa60642cc9b3aed7527d5",
+      "expectedDeviceLosses": 1,
+      "checkpointPublication": 1301,
+      "recoveryHold": 6,
+      "firstDraw": 1,
+      "firstDrawClock": 436.5518161888211,
+      "goTicket": 4,
+      "executionEpoch": 435.90181618882167,
+      "relativeTime": 0.6499999761581421,
+      "pose": {
+        "x": 99.56463623046875,
+        "z": -5.396507263183594,
+        "yaw": -2.803022470662233,
+        "phase": 61.081039626760855
+      },
+      "assignmentSequence": 4,
+      "bodyId": 1,
+      "acquiredAttack": "attack-23",
+      "remaining": 3.891666824371214,
+      "resumedClock": 436.8518161888208,
+      "hits": [
+        {
+          "attackId": "attack-23",
+          "targetId": "plant-3",
+          "simulationTime": 440.45181618881753
+        },
+        {
+          "attackId": "attack-27",
+          "targetId": "structure-2",
+          "simulationTime": 450.7018161888082
+        }
+      ],
+      "centerHp": 580,
+      "balance": {
+        "n": "360",
+        "d": "1"
+      },
+      "firstDrawWithoutAnimal": 436,
+      "firstDrawWithoutAnimalClock": 482.49181618877935,
+      "drained": true,
+      "applicationErrors": []
+    }
   }
 }
