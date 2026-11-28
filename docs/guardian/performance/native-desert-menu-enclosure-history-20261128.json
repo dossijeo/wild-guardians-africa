@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "productCommit": "8d7b60cfb",
+  "baselineCommit": "a5dd0645e",
+  "scenario": {
+    "biome": "desierto",
+    "seed": 712,
+    "center": [
+      83,
+      0
+    ],
+    "runtime": "nativeWorkerLifecycle"
+  },
+  "baseline": {
+    "path": ".cache/desert-menu-712/native-desert-menu-712-enclosed-campaign-full-20261128-extended.json",
+    "sha256": "4b46afc2e4ed6205fb97af567ae30f50e8208b96d400acf35b70dfe2e508c4a1",
+    "invalidated": {
+      "sequence": 99,
+      "message": "Error: Historical presentation invalidated at sequence 99: reconciliation\n    at Object.onInvalidated (http://127.0.0.1:5247/src/rendering/webgpu-world-surface.js:389:1606)\n    at holdPending (http://127.0.0.1:5247/src/rendering/confirmed-timeline-pump.js:32:467)\n    at Object.advance (http://127.0.0.1:5247/src/rendering/confirmed-timeline-pump.js:35:79)\n    at draw (http://127.0.0.1:5247/src/rendering/webgpu-world-worker.js?worker_file&type=module:50:12)"
+    },
+    "recoveryError": "Native production is held by a world mutation"
+  },
+  "orderedSurface": {
+    "path": ".cache/desert-menu-712/native-desert-menu-712-enclosed-campaign-history-fix-20261128-extended.json",
+    "sha256": "1e380ae6114a7579ca0aa1e232d5b85ff0e6c41371c347ae52ba1de92bcd6f8f",
+    "adapter": "nvidia",
+    "confirmedBefore": 108,
+    "pendingHistorical": 109,
+    "requestedPublication": 124,
+    "heldAtPublication": 124,
+    "heldHistorical": null,
+    "readyTicket": 3,
+    "recoveryTriggered": false
+  },
+  "stalePreflight": {
+    "path": ".cache/desert-menu-712/native-desert-menu-712-enclosed-campaign-wall-source-cut-20261128-extended.json",
+    "sha256": "c16542f32bf4d7dabcc40d3b48ac2d2ace78529d06d6e6fc6a93af42010c1c80",
+    "gateBeforeCropCommit": "structure-3",
+    "gateAfterCropCommit": "structure-7",
+    "signedGeometry": [
+      85.07692307692307,
+      -5,
+      89
+    ],
+    "descriptorChanged": [
+      "pieces",
+      "updates"
+    ],
+    "semantics": "The audit submitted the wall before two queued plant commands had committed. Their new IDs changed the exact prepared owner. Authority rejected the purchase and left the balance at 400."
+  },
+  "orderedStaleRevalidation": {
+    "path": ".cache/desert-menu-712/native-desert-menu-712-enclosed-campaign-ordered-20261128-extended.json",
+    "sha256": "f6be4b327a28a4a5232746a09ca2dc99f94a82d0a2b34c7acbbfa5d3d2a31db4",
+    "retainedTicket": 3,
+    "preparedAt": 2.649999999999999,
+    "revalidationAt": 4.449999999999985,
+    "status": "stale"
+  },
+  "tests": {
+    "base": {
+      "path": ".cache/desert-menu-712/direct-wall-history-red.tap",
+      "sha256": "20c74388d0793d1432ccdd536d31ce5a0ccda910668b0550b439ab45d10688ef"
+    },
+    "candidate": {
+      "path": ".cache/desert-menu-712/direct-wall-history-focal.tap",
+      "sha256": "d652c47935ea0331caf0519d31d680d866d693d54364e06dd6fc7b2aa16b2a58",
+      "passed": 50,
+      "failed": 0,
+      "skipped": 0
+    }
+  }
+}
