@@ -1612,14 +1612,16 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       }
       if(!workersAtRefuge)return null;
       if(!qualifyAnimalCrop){
-        if(!nativeWorkerLifecycle||!nativeShelteredCenterActor(game,animal))return null;
+        if(!nativeWorkerLifecycle)return null;
+        const crop=animal.status!=='retreating'&&shelteredCropCheckpointAnimal(game)===animal;
+        if(!crop&&!nativeShelteredCenterActor(game,animal))return null;
         if(animal.status==='retreating'){
           if(game.structures[0].status!=='intact'||!shelteredCenterRetreat(game))return null;
           const retreat=planner.nativeAnimalCropRouteExecution(animal.id);
           return retreat?.binding.reference.purpose==='retreat'?{kind:26,actorId:retreat.actorId}:null;
         }
-        const execution=kind===27?planner.nativeAnimalCropStrikeExecution(animal.id):planner.nativeAnimalCropRouteExecution(animal.id,{allowArrivedCenter:true});
-        return execution?.binding.reference.purpose==='center'?{kind,actorId:execution.actorId}:null;
+        const execution=kind===27?planner.nativeAnimalCropStrikeExecution(animal.id):planner.nativeAnimalCropRouteExecution(animal.id,{allowArrivedCenter:!crop});
+        return execution&&execution.binding.reference.purpose===(crop?undefined:'center')?{kind,actorId:execution.actorId}:null;
       }
       const execution=kind===27?planner.nativeAnimalCropStrikeExecution(animal.id):planner.nativeAnimalCropRouteExecution(animal.id,{allowArrivedCenter:true});
       return execution?{kind,actorId:execution.actorId}:null;

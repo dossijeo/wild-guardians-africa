@@ -12,24 +12,34 @@ import {floorFloat32} from '../src/rendering/float32-time.js';
 import {nativeClockResourceEnd} from '../src/rendering/native-clock-resource-end.js';
 import {captureNativeRoutePickFrame} from '../src/rendering/native-route-pick-frame.js';
 
-const cases=[{phase:'moving-approach',kind:26},{phase:'acquired-strike',kind:27}];
+const phases=[{phase:'moving-approach',kind:26},{phase:'acquired-strike',kind:27}];
+const cases=phases.flatMap(phase=>[
+ {...phase,name:'Savanna center',fixture:'sabana714-d5-center-'+phase.phase,targetId:'structure-2'},
+ {...phase,name:'Desert crop',fixture:'desierto712-d1-two-crops-before-night',targetId:'plant-3'}
+]);
 
-for(const stage of cases)test('terminal Draw recovers the ordinary Savanna center '+stage.phase,{timeout:30000},async()=>{
- const raw=gunzipSync(readFileSync(new URL('./fixtures/sabana714-d5-center-'+stage.phase+'.json.gz',import.meta.url))).toString();
+for(const stage of cases)test('terminal Draw recovers the ordinary '+stage.name+' '+stage.phase,{timeout:30000},async()=>{
+ const raw=gunzipSync(readFileSync(new URL('./fixtures/'+stage.fixture+'.json.gz',import.meta.url))).toString();
  const state=JSON.parse(raw),options=savedNativeAuthorityOptions(raw);
  assert.equal(options.nativeWorkerLifecycle,true);
- const manifest={epoch:'sheltered-savanna-center-'+stage.phase,chunks:options.chunkKeys.map(key=>{
+ const beforeBirth=state.raid===null;
+ const manifest={epoch:stage.fixture,chunks:options.chunkKeys.map(key=>{
   const [cx,cz]=key.split(',').map(Number);return {cx,cz,revision:1};
  })};
- const f=await nativeProductionAuthority(state,{...options,getTerrainManifest:()=>manifest});
+ const f=await nativeProductionAuthority(state,{...options,emptyBeastPhysics:beforeBirth,getTerrainManifest:()=>manifest});
  let replacement,attached=false,rig,control,draw;
  try{
   f.command({kind:'setNavigationView',view:options.navigationView});
-  const a=state.raid.animals[0],type=stage.kind===26?'animal-crop-route':'animal-crop-strike';
-  let record;
-  await untilProduction(f,()=>record=f.records.find(r=>r.kind===type&&r.committed));
+  const type=stage.kind===26?'animal-crop-route':'animal-crop-strike';
+  const tick=()=>f.command({kind:'advance',seconds:.05,steps:2,nightFastForward:beforeBirth});
+  const acquired=()=>f.records.find(r=>r.kind===type&&r.committed);
+  if(beforeBirth){
+   for(let i=0;i<950&&!acquired();i++){await tick();await f.present();}
+  }else await untilProduction(f,acquired);
+  const record=acquired(),a=f.snapshot().raid.animals[0];
+  assert(record);
+  assert.equal(a.targetId,stage.targetId);
   await f.present();await record.packet.presented;
-  const tick=()=>f.command({kind:'advance',seconds:.05,steps:2,nightFastForward:false});
   const held=JSON.parse((await tick()).snapshot);
   assert.equal(held.raid.animals[0].id,a.id);
   assert(held.elapsed>state.elapsed);
@@ -75,16 +85,20 @@ for(const stage of cases)test('terminal Draw recovers the ordinary Savanna cente
   assert.equal(f.authority.resumeNativeIntentProduction(receipt),true);
   const events=[];
   let next=held;
-  for(let i=0;i<500&&!events.some(event=>event.type==='AnimalLogicalHit');i++){
+  for(let i=0;i<950&&!events.some(event=>event.type==='AnimalLogicalHit');i++){
    const p=await tick();events.push(...p.events);next=JSON.parse(p.snapshot);await f.present();
   }
   const [impact,...duplicates]=events.filter(e=>e.type==='AnimalLogicalHit');
   assert(impact&&!duplicates.length);
-  assert.equal(impact.targetId,'structure-2');
+  assert.equal(impact.targetId,stage.targetId);
   if(stage.kind===27)assert.equal(impact.attackId,animal.attackId);
   const following=await tick();
   assert.equal(following.events.filter(event=>event.attackId===impact.attackId&&event.type==='AnimalLogicalHit').length,0);
-  assert.deepEqual(events.filter(e=>e.type==='StructureHit').map(e=>e.structureHit.hp),[125]);
+  if(beforeBirth){
+   assert.deepEqual(events.filter(e=>e.type==='CropDestroyed').map(e=>e.targetId),[stage.targetId]);
+   assert.deepEqual(next.plants.map(crop=>[crop.id,crop.alive]),[['plant-3',false],['plant-5',true]]);
+   assert.deepEqual(next.workers,held.workers);
+  }else assert.deepEqual(events.filter(e=>e.type==='StructureHit').map(e=>e.structureHit.hp),[125]);
   assert.deepEqual(next.ledger,state.ledger);
   assert.deepEqual(f.faults,[]);
  }finally{
