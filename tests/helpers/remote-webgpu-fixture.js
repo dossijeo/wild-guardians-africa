@@ -82,12 +82,14 @@ async function fixture(clientOptions = {}, hostOptions = {}) {
   const group = client.device.createBindGroup({ entries: [{ binding: 0, resource: { buffer } }] });
   const pipeline = client.device.createRenderPipeline({ label: 'test' });
   await flush(); await host.idle();
-  function frame(value, metadata = {}) {
+  function frame(value, metadata = {}, groups = [group]) {
     client.beginFrame(metadata);
     client.device.queue.writeBuffer(buffer, 0, new Float32Array([value]));
     const encoder = client.device.createCommandEncoder();
     const pass = encoder.beginRenderPass({ colorAttachments: [{ view: client.context.getCurrentTexture().createView(), loadOp: 'clear', storeOp: 'store' }] });
-    pass.setPipeline(pipeline); pass.setBindGroup(0, group); pass.draw(3); pass.end();
+    pass.setPipeline(pipeline);
+    for (const boundGroup of groups) { pass.setBindGroup(0, boundGroup); pass.draw(3); }
+    pass.end();
     client.device.queue.submit([encoder.finish()]);
     return client.endFrame();
   }

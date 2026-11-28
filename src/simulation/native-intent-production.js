@@ -139,7 +139,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   const request=next();if(!request)return Promise.resolve(null);
   const wakeKey=request.kind==='ruined-wall-repair'?ruinedWallWakeKey?.(request.actorId):undefined;
   const transaction={controller:new AbortController(),actorId:request.actorId,kind:request.kind,requestSequence:request.requestSequence,source:sourceIdentity(request),obsolete:false,promise:null,minSequence:publicationSequence()};active=transaction;
-  const recoverableSource=()=>protectedHomeSource(request.kind,request.actorId)??protectedCenterStrikeSource(request.kind,request.actorId)??
+  const recoverableSource=()=>protectedHomeSource(request.kind,request.actorId)??protectedCenterPreparationSource(request.kind,request.actorId)??
     protectedIdleSuccessorSource(request.kind,request.actorId)??protectedStoppedTaskSource(request.kind,request.actorId)??
     protectedStoppedHomeSource(request.kind,request.actorId);
   const protectsSource=recoverableSource()===transaction.source;
@@ -187,7 +187,11 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   }
   return null;
  }
- function protectedCenterStrikeSource(kind,actorId){
+ function protectedCenterPreparationSource(kind,actorId){
+  if(kind==='animal-crop-route'){
+   const pending=planner.nativeRestoredFlightApproach?.()?.pending;
+   return pending&&actorId==='animal-'+pending.actor?pending.requestSequence:null;
+  }
   if(kind!=='animal-crop-strike')return null;
   const execution=planner.nativeCenterRuinRouteRecovery?.()?.execution??
     planner.nativeAnimalCropRouteExecution?.(actorId,{allowArrivedCenter:true});
@@ -207,7 +211,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   const proof=recoverableStoppedHomeSource(actorId);
   return proof?JSON.stringify(proof.request):null;
  }
- function quiesce({cancelStoppedTask=false,cancelStoppedHome=false,cancelTask=null,cancelCrop=null,cancelWoundedHome=false,cancelCenterStrike=false,cancelIdleSuccessor=false}={}){
+ function quiesce({cancelStoppedTask=false,cancelStoppedHome=false,cancelTask=null,cancelCrop=null,cancelWoundedHome=false,cancelCenterPreparation=false,cancelIdleSuccessor=false}={}){
   if(closed||fault)return Promise.reject(Error(fault?'Native intent production failed: '+fault:'Native intent production closed'));
   if(quiescence)return quiescence.promise;
   if(active&&!active.promise)return Promise.reject(Error('Native intent production operation is not ready'));
@@ -217,7 +221,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   if(cancelTask&&active?.actorId===cancelTask.actorId&&active.taskId&&active.taskId===cancelTask.taskId||
      cancelCrop&&active?.kind===cancelCrop.kind&&active.actorId===cancelCrop.actorId&&active.requestSequence===cancelCrop.requestSequence||
      cancelWoundedHome&&active?.source&&protectedHomeSource(active.kind,active.actorId)===active.source||
-     cancelCenterStrike&&active?.source&&protectedCenterStrikeSource(active.kind,active.actorId)===active.source||
+     cancelCenterPreparation&&active?.source&&protectedCenterPreparationSource(active.kind,active.actorId)===active.source||
      cancelIdleSuccessor&&active?.source&&protectedIdleSuccessorSource(active.kind,active.actorId)===active.source||
      cancelStoppedHome&&active?.source&&protectedStoppedHomeSource(active.kind,active.actorId)===active.source||
      cancelStoppedTask&&active?.source&&protectedStoppedTaskSource(active.kind,active.actorId)===active.source){

@@ -52,7 +52,7 @@ function validHandle(handle,epoch){return handle?.authorityEpoch===epoch&&
 // movement model. It owns no independent body motion or collision simulation.
 // Admission resolves a stable record once. Revocation updates that exact record
 // even if preparation has not finished; drawing only reads its time limit.
-export function createNativeRouteControl({authorityEpoch,initialSequence=0,initialTime=null,routes=[],pendingTaskRequests=[],pendingActionRequests=[],pendingHomeRequests=[],pendingInitialIdleRequests=[],pendingIdleStrollRequests=[],pendingFarmArrivalRequests=[],pendingAnimalCrop=null,nativeIdleCycles=[],pendingIdleCycleRequests=[],restoredWallRepairs=[],restoredRefugeReturn=null,restoredFlight=null,initialNativeSession=null,recoveredAnimalId=null}={}){
+export function createNativeRouteControl({authorityEpoch,initialSequence=0,initialTime=null,routes=[],pendingTaskRequests=[],pendingActionRequests=[],pendingHomeRequests=[],pendingInitialIdleRequests=[],pendingIdleStrollRequests=[],pendingFarmArrivalRequests=[],pendingAnimalCrop=null,nativeIdleCycles=[],pendingIdleCycleRequests=[],restoredWallRepairs=[],restoredRefugeReturn=null,restoredFlight=null,recoveredFlightHome=null,initialNativeSession=null,recoveredAnimalId=null}={}){
   if(typeof authorityEpoch!=='string'||!authorityEpoch||
      !Number.isSafeInteger(initialSequence)||initialSequence<0||
      initialTime!==null&&(!Number.isFinite(initialTime)||initialTime<0)||!Array.isArray(routes)||!Array.isArray(pendingTaskRequests)||!Array.isArray(pendingActionRequests)||!Array.isArray(pendingHomeRequests)||!Array.isArray(pendingInitialIdleRequests)||!Array.isArray(pendingIdleStrollRequests)||!Array.isArray(pendingFarmArrivalRequests)||!Array.isArray(nativeIdleCycles)||!Array.isArray(pendingIdleCycleRequests))
@@ -112,15 +112,23 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     actor.pendingIdleCycleRequest=request;actor.latestSequence=request.requestSequence;assignments.add(request.requestSequence);
   }
   if(restoredFlight!==null&&pendingAnimalCrop===null)throw Error('Restored flight lacks its crop request');
+  // The original cold request survives Draw. Only its acquired Home peer
+  // can be installed from the recovery receipt before that request retries.
+  const flightHome=recoveredFlightHome===null?null:copyNativeHomeRouteAttestation(recoveredFlightHome);
+  if(flightHome&&!restoredFlight)throw Error('Recovered flight Home lacks its pending cohort');
   if(pendingAnimalCrop!==null){
     const q=copyPendingAnimalCrop(pendingAnimalCrop);
-    const home=actors.get(restoredFlight?.workerActor)?.pendingHomeRequest;
+    const peer=actors.get(restoredFlight?.workerActor),flightRef=flightHome?.reference;
+    const home=flightRef?.sourceRequest??peer?.pendingHomeRequest;
     if(restoredFlight!==null&&(restoredFlight.version!==1||restoredRefugeReturn!==null||recoveredAnimalId!=null||
        actors.size!==1||!home||home.version!==2||!id(restoredFlight.raidSpawnSequence)||
        home.raidSpawnSequence!==restoredFlight.raidSpawnSequence||home.nativeSession!==initialNativeSession||
        q.nativeSession!==initialNativeSession||q.actorId!==restoredFlight.animalActor||q.actorId===home.actorId||
        q.bodyId===home.bodyId||q.requestSequence<=home.requestSequence||q.purpose==='retreat'||q.restore||
-       q.previousStrike||q.previousShieldCrop||q.restoredWorkerImpact))throw Error('Invalid restored native flight cohort');
+       q.previousStrike||q.previousShieldCrop||q.restoredWorkerImpact||
+       flightHome&&(q.purpose!=='center'||q.requestSequence>=flightHome.assignmentSequence||!matches(peer?.current,{actorId:flightRef.actorId,
+         assignmentSequence:flightHome.assignmentSequence,routeHandle:flightRef.expectedRouteHandle}))))
+      throw Error('Invalid restored native flight cohort');
     if((actors.size&&restoredFlight===null)||q.authorityEpoch!==authorityEpoch||initialTime===null||q.requestSequence>initialSequence||
        q.restore?.requestedAt>initialTime||q.restoredWorkerImpact?.at>initialTime)
       throw Error('Crop request conflicts with its native cohort or baseline');
@@ -1209,6 +1217,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
         };
       }
       const actor=actors.get(ref.actorId),record=actor?.current;
+      const pendingFlight=kind===18&&cohortSize===1&&!sharedCut&&profile.sameAttestation(flightHome,proof);
       const handle=kind===26?{authorityEpoch:ref.worldBoundary.authorityEpoch,session:ref.worldBoundary.nativeSession,
         slot:ref.slot,generation:ref.generation}:ref.expectedRouteHandle;
       const source=ref.worldBoundary;
@@ -1216,11 +1225,11 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       const approachEndpoint=kind===26&&(sharedCut&&(cohortSize===1||ruin||pendingRuin)?
         centerRuinApproachEndpoint(ruin,boundary,proof,clock?.committedThrough,pendingRuin):
         (cohortSize===1||cohortSize===2&&!ordinaryWorkers)&&nativeCenterApproachEndpoint(boundary,proof,clock?.committedThrough));
-      if(closed||!clock||actors.size!==cohortSize||active.size!==movingCount||proof.gateIds.length>profile.maxGates||
+      if(closed||!clock||actors.size!==cohortSize+Number(pendingFlight)||active.size!==movingCount||proof.gateIds.length>profile.maxGates||
          !record||active.get(ref.actorId)!==record||record.lastDrawTime!==null||actor.strollProof||actor.farmArrivalProof||actor.homeProof||
          kind===14&&!profile.sameAttestation(actor.startProof,proof)||
          kind===16&&!profile.sameAttestation(actor.consequenceProof,proof)||
-         kind===18&&Boolean(ref.sourceRequest?.raidSpawnSequence)!==(cohortSize===2&&!ordinaryWorkers)||
+         kind===18&&Boolean(ref.sourceRequest?.raidSpawnSequence)!==(pendingFlight||cohortSize===2&&!ordinaryWorkers)||
          actor.latestSequence!==proof.assignmentSequence||!matches(record,{actorId:ref.actorId,assignmentSequence:proof.assignmentSequence,routeHandle:handle})||
          !(sharedCut?nativeRecoveryCovers(boundary,source):sameNativeWorldBoundary(boundary,source))||record.startTime!==source.effectiveTime||
          clock.nativeSession!==boundary.nativeSession||clock.intentSequence!==sequence||

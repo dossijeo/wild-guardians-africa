@@ -1588,6 +1588,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
         }else{
           const pair=planner.nativeRaidFlightRecoveryExecutions();
           if(pair)return {version:2,members:pair.map(({actorId},i)=>({kind:i===0?18:26,actorId}))};
+          const waiting=savedFlight&&planner.nativeRestoredFlightApproach();
+          if(waiting)return {kind:18,actorId:waiting.home.actorId};
         }
       }
       if(!workersAtRefuge)return null;
@@ -1640,6 +1642,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   function recoveryGroup(route){
     if(route.version!==2){
       const execution=recoveryExecution(route);
+      if(route.kind===18&&execution?.binding.reference.sourceRequest?.raidSpawnSequence){
+        const waiting=savedFlight&&planner.nativeRestoredFlightApproach();
+        return waiting?.home.actorId===route.actorId?{executions:[waiting.home],pendingApproach:waiting.pending}:null;
+      }
       return execution?{executions:[execution]}:null;
     }
     if(route.encounter==='stationary'){
@@ -1756,7 +1762,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       }
       if(shieldAdvance||centerRuinAdvance||nativeStructurePreparation)return Promise.reject(Error('Native production is held by a world mutation'));
       if(closed)return Promise.reject(Error('Simulation authority is closed'));
-      return nativeProduction?.quiesce({cancelWoundedHome:forLostDraw&&qualifyRaidEncounter,cancelCenterStrike:forLostDraw,cancelIdleSuccessor:forLostDraw,cancelStoppedTask:forLostDraw,cancelStoppedHome:forLostDraw})??Promise.resolve(null);
+      return nativeProduction?.quiesce({cancelWoundedHome:forLostDraw&&qualifyRaidEncounter,cancelCenterPreparation:forLostDraw,cancelIdleSuccessor:forLostDraw,cancelStoppedTask:forLostDraw,cancelStoppedHome:forLostDraw})??Promise.resolve(null);
     },
     resumeNativeIntentProduction(receipt){
       if(closed)throw Error('Simulation authority is closed');
