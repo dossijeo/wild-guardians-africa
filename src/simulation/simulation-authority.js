@@ -236,7 +236,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    if(active.length!==nativeGateOwners.length||active.some(gate=>!nativeGateOwners.includes(gate)))throw Error('Native gate projection has another structure owner');
    for(const gate of nativeGateOwners){
     const pose=planner.nativeGateMechanismPose(gate.id);
-    if(!pose||pose.sampledAt!==game.elapsed||gate.status!=='intact'||!Number.isFinite(gate.maxHp)||!(gate.hp>0&&gate.hp<=gate.maxHp))throw Error('Native gate projection lost its current mechanism');
+    if(!pose||pose.sampledAt!==game.elapsed||pose.openingDirection!==gate.gateOpenDirection||gate.status!=='intact'||!Number.isFinite(gate.maxHp)||!(gate.hp>0&&gate.hp<=gate.maxHp))throw Error('Native gate projection lost its current mechanism');
     gate.gateOpen=pose.opening;
    }
   }
@@ -253,7 +253,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     for(const gate of nativeGateOwners)if(!bindings.register(gate))throw Error('Native restored gate registration rejected');
     if(bindings.reconcile({enabled:true}).status!=='updated'||bindings.reconcile({enabled:false}).status!=='updated')throw Error('Native restored gate occupancy unavailable');
     for(const gate of nativeGateOwners){
-     const installed=bindings.installMechanism(gate.id,gate.material,{navigationBarriers:session.wallBarrierIds(gate.id)});
+     const installed=bindings.installMechanism(gate.id,gate.material,{navigationBarriers:session.wallBarrierIds(gate.id),openingDirection:gate.gateOpenDirection});
      if(installed.status!=='installed')throw Error('Native restored gate mechanism rejected: '+installed.status);
     }
     nav.projectNativeGateLeaves=projectNativeGateLeaves;
@@ -725,21 +725,28 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     const pieces=plan.pieces??[plan.entity],barriers=pieces.flatMap(spatialStructureBarriers);
     return planner.inspectNativeStructureStops(2,barriers.flatMap(b=>[b.x,b.z,b.halfX,b.halfZ,b.yaw,b.passMask??0]));
   }
-  // Initial native scope: an ordinary, resident batch of new solid walls.
-  // Preview remains Game's existing quote; no placement rules are reimplemented.
-  function nativeSolidWallQuote(quoted){
-    const plan=quoted.plan;
-    if(!plan||!Array.isArray(plan.pieces)||!plan.pieces.length||plan.pieces.length>256||plan.pieces.some(p=>p.kind!=='wall'||p.gate||p.status!=='intact')||plan.updates.length||plan.gates||plan.repairableRuins.length||plan.suppressed.some(key=>!game.suppressed.includes(key)))return null;
-    const additions=plan.pieces.map(piece=>{const parts=spatialStructureBarriers(piece);if(parts.length!==1||(parts[0].passMask??0)!==0)throw Error('Native solid wall quote changed shape class');const p=parts[0];return {entityId:piece.id,x:Math.fround(p.x),z:Math.fround(p.z),halfX:Math.fround(p.halfX),halfZ:Math.fround(p.halfZ),yaw:Math.fround(p.yaw),passMask:0};});
-    return {quoted,additions,signature:JSON.stringify({pieces:plan.pieces,cost:plan.cost,updates:plan.updates,suppressed:plan.suppressed,repairableRuins:plan.repairableRuins})};
-  }
+  const nativeGatePlacement=entity=>{
+    const scale=gateScale(entity);
+    return {entityId:entity.id,modelId:nativeGateModelId(entity.material),x:entity.x,z:entity.z,yaw:entity.yaw??0,sx:scale*(entity.baseScaleX??1),sz:scale};
+  };
   function nativeStructureQuote(quoted){
     const plan=quoted.plan,entity=plan?.entity;
-    if(!entity?.gate)return nativeSolidWallQuote(quoted);
-    const modelId=nativeGateModelId(entity.material);
-    if(entity.kind!=='wall'||entity.status!=='intact'||!modelId||plan.suppression.some(key=>!game.suppressed.includes(key))||coincidentRuins(game,[entity]).length)return null;
-    const scale=gateScale(entity),gate={entityId:entity.id,modelId,x:entity.x,z:entity.z,yaw:entity.yaw??0,sx:scale*(entity.baseScaleX??1),sz:scale};
-    return {quoted,gate,signature:JSON.stringify({entity,gate,cost:plan.cost,suppression:plan.suppression})};
+    if(entity){
+      if(!entity.gate||entity.kind!=='wall'||entity.status!=='intact'||!nativeGateModelId(entity.material)||plan.suppression.some(key=>!game.suppressed.includes(key))||coincidentRuins(game,[entity]).length)return null;
+      return {quoted,gates:[nativeGatePlacement(entity)],solids:[],additions:[],signature:JSON.stringify({entity,cost:plan.cost,suppression:plan.suppression})};
+    }
+    // Game has already selected which new pieces become gates. Replacing a
+    // previously installed wall would also need to retire its old proxy.
+    if(!plan||!plan.pieces.length||plan.pieces.length>256||plan.pieces.some(p=>p.kind!=='wall'||p.status!=='intact')||plan.repairableRuins.length||plan.suppressed.some(key=>!game.suppressed.includes(key)))return null;
+    const gatePieces=plan.pieces.filter(piece=>piece.gate),solids=plan.pieces.filter(piece=>!piece.gate),gates=gatePieces.map(nativeGatePlacement);
+    if(plan.gates!==gates.length||plan.updates.length!==gates.length||plan.updates.some(update=>!gatePieces.some(piece=>piece.id===update.id))||gates.some(gate=>!gate.modelId))return null;
+    const additions=solids.map(piece=>{
+      const parts=spatialStructureBarriers(piece);
+      if(parts.length!==1||(parts[0].passMask??0)!==0)throw Error('Native solid wall quote changed shape class');
+      const {x,z,halfX,halfZ,yaw}=parts[0];
+      return {entityId:piece.id,x:Math.fround(x),z:Math.fround(z),halfX:Math.fround(halfX),halfZ:Math.fround(halfZ),yaw:Math.fround(yaw),passMask:0};
+    });
+    return {quoted,gates,solids,additions,signature:JSON.stringify({pieces:plan.pieces,cost:plan.cost,updates:plan.updates,suppressed:plan.suppressed,repairableRuins:plan.repairableRuins})};
   }
   const nativeCommandOwnerCurrent=owner=>!closed&&nativeStructurePreparation===owner&&!owner.controller.signal.aborted&&
     owner.control===nativeIntentControl&&owner.resources===nativeResourcePreparation&&!!owner.control&&!owner.control.status().closed&&owner.resources?.status().phase==='running';
@@ -1121,12 +1128,18 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       }
       return true;
     };
+    const additions=first.additions.length?{additions:first.additions}:{},gateCount=first.gates.length;
+    const input=gateCount===1&&!first.additions.length?{gate:first.gates[0]}:gateCount?{gates:first.gates,...additions}:additions;
+    const preparedOwners=(quote,reference)=>{
+      const gates=reference.gates??(reference.gate?[reference.gate]:[]);
+      if(gates.length!==gateCount||gates.some((gate,index)=>Object.entries(first.gates[index]).some(([key,value])=>gate[key]!==value)))throw Error('Native gate preparation changed the placement quote');
+      const pieces=quote.quoted.plan.pieces??[quote.quoted.plan.entity];
+      return [...gates.map(gate=>({...pieces.find(piece=>piece.id===gate.entityId),gateOpen:gate.opening,...(gate.openingDirection===-1?{gateOpenDirection:-1}:{})})),...quote.solids];
+    };
     return prepareNativeCommandCommit(owner,({retain,atCommitBoundary})=>
-      planner.addNativeBarriersAfterGpuQuiescence({...(first.gate?{gate:first.gate}:{additions:first.additions}),getPublication:()=>nativeIntentControl,signal:owner.controller.signal,validate,
+      planner.addNativeBarriersAfterGpuQuiescence({...input,getPublication:()=>nativeIntentControl,signal:owner.controller.signal,validate,
         prepareResources:async({resources:proposal,signal})=>{
-          const plan=first.quoted.plan,gate=proposal.nativeBarrierAddition.gate;
-          if(gate&&Object.entries(first.gate).some(([key,value])=>gate[key]!==value))throw Error('Native gate preparation changed the placement quote');
-          const entities=gate?[{...plan.entity,gateOpen:gate.opening}]:plan.pieces;
+          const entities=preparedOwners(first,proposal.nativeBarrierAddition);
           const handle=await resources.prepareNativeBarrierAdditionResources(proposal,{signal,minSequence,terrainManifest:manifest,nativeBarrierWallEntities:structuredClone(entities)});
           return retain(handle,signal);
         },
@@ -1134,19 +1147,25 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
         project:proof=>{
           // Check the native result before charging, but apply the mirror only
           // at Game's normal nav.setState seam, after quote validation.
-          const quoted=current.quoted,plan=quoted.plan,gate=proof.nativeBarrierAdditionBinding.reference.gate,entity=gate?plan.entity:null;
-          if(gate)entity.gateOpen=gate.opening;
-          const adopt=session.prepareNativeWallAdditionAdoption(gate?[entity]:plan.pieces,proof),original=nav.setState;
+          const quoted=current.quoted,plan=quoted.plan,entities=preparedOwners(current,proof.nativeBarrierAdditionBinding.reference);
+          const adopt=session.prepareNativeWallAdditionAdoption(entities,proof),original=nav.setState;
           let adopted=false;
           nav.setState=next=>{
             if(next!==game||adopted)throw Error('Native wall Game projection changed owner');
+            for(let index=0;index<gateCount;index++){
+              const prepared=entities[index],gate=game.structures.find(piece=>piece.id===prepared.id);
+              if(!gate?.gate)throw Error('Native gate projection lost its Game wall');
+              gate.gateOpen=prepared.gateOpen;
+              if(prepared.gateOpenDirection===-1)gate.gateOpenDirection=-1;
+              nativeGateOwners.push(gate);
+            }
             adopt();
             adopted=true;
-            if(gate){nativeGateOwners.push(entity);nav.projectNativeGateLeaves=projectNativeGateLeaves;}
+            if(gateCount)nav.projectNativeGateLeaves=projectNativeGateLeaves;
             return original(next);
           };
           try{
-            const placed=gate?commitStructurePlacement(game,owner.command.id,plan,nav):
+            const placed=plan.entity?commitStructurePlacement(game,owner.command.id,plan,nav):
               buildWallChain(game,owner.command.id,owner.command.material,owner.command.points,nav,{...quoted.options,preparedPlan:plan});
             return placed===true&&adopted;
           }finally{nav.setState=original;}
@@ -1380,7 +1399,12 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       // A new gate changes the certified corridor even when its passage proxy
       // permits workers. Query the native mechanism; reuse the existing Stop24
       // handoff and kind2 acquisition, retaining the same body throughout.
-      const impact=nativeQuote?.gate?planner.inspectNativeGateAdditionStops(nativeQuote.gate):inspectStructureStops(plan);
+      let impact;
+      if(nativeQuote?.gates.length){
+        const inspections=nativeQuote.gates.map(planner.inspectNativeGateAdditionStops);
+        if(nativeQuote.solids.length)inspections.push(inspectStructureStops({pieces:nativeQuote.solids}));
+        impact=inspections.find(result=>result.status!=='ready')??{status:'ready',actors:[...new Set(inspections.flatMap(result=>result.actors))]};
+      }else impact=inspectStructureStops(plan);
       if(impact.status!=='ready')throw Error('Native structure preflight '+impact.status);
       await stopNativeStructureActors(owner,impact);
       if(closed||nativeStructurePreparation!==owner)throw Error('Native structure preparation retired');

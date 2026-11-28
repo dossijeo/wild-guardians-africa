@@ -48,7 +48,7 @@ int spatialIntentStageShieldCrop(const SpatialWorldProposalInput&,const SpatialS
 int spatialIntentTakeWorld(double,double,double,double,double,SpatialWorldProposalInput&,bool allowGate=false);
 int spatialIntentRevalidateBarrierAddition(double,double,const SpatialStaticMutation*,int,std::array<double,8>&);
 int spatialIntentTakeBarrierAddition(double,double,double,double,double,double,SpatialWorldProposalInput&,std::array<double,5>&,bool allowGate=false);
-int spatialIntentStageGateAddition(const std::array<double,7>&,int,std::vector<float>&);
+int spatialIntentStageGateAdditions(const std::vector<std::array<double,7>>&,int,const std::vector<float>&,std::vector<float>&);
 int spatialIntentCommitGateAddition(double,double,double,double,double,double,int,SpatialWorldProposalInput&,std::array<double,5>&,int(*)(const SpatialWorldProposalInput&));
 int spatialIntentBeginWorldPreview();
 void spatialIntentEndWorldPreview();

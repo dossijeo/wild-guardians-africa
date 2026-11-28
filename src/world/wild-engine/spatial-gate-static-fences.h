@@ -24,7 +24,7 @@ bool gateStaticOverlayPreflight(IntentState& s,const SpatialStaticMutation* shap
       if(b.maxX+.001<c.minX||b.minX-.001>c.maxX||b.maxZ+.001<c.minZ||b.minZ-.001>c.maxZ)continue;
       const auto answer=gateSweepStaticPair(s,gate,c,s.effectiveTime,std::max(s.effectiveTime,gateMotionEnd(gate)));
       if(!answer.clear){s.gateStaticRejected++;gateStaticWitness(s,id,5,0,0,0,answer);return false;}
-      if(!gateFixedPartsClear(s,gate,c)){s.gateStaticRejected++;gateStaticWitness(s,id,5,0,0,0,{false,1,s.effectiveTime,s.effectiveTime});return false;}
+      if(!gateWallEndJoint(gate,c)&&!gateFixedPartsClear(s,gate,c)){s.gateStaticRejected++;gateStaticWitness(s,id,5,0,0,0,{false,1,s.effectiveTime,s.effectiveTime});return false;}
     }
   }
   return true;

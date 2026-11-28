@@ -1,6 +1,6 @@
 import {nativeGateCollisionProxies,spatialStructureBarriers,removeSpatialStructure} from './spatial-wall-bridge.js';
 import {gateScale,nativeGateModelId} from '../gate-passages.js';
-import {copyNativeBarrierAdditionAttestation} from '../native-barrier-addition.js';
+import {copyNativeBarrierAdditionAttestation,nativeBarrierAdditionGates,nativeBarrierAdditionOwners} from '../native-barrier-addition.js';
 import {sameNativeWorldBoundary} from '../native-world-boundary.js';
 
 function boundsForNativeBarriers(barriers){
@@ -99,12 +99,13 @@ export function createSpatialWallMirror(core){
   // Called synchronously after the existing native kind2 commit, before the
   // Game mirror is published. This adopts physical IDs; it never creates them.
   function prepareNativeAdditionAdoption(structures,{worldBoundary,ids,nativeBarrierAdditionBinding}={}){
-    const binding=nativeBarrierAdditionBinding?copyNativeBarrierAdditionAttestation(nativeBarrierAdditionBinding):null,gate=binding?.reference.gate??null;
-    if(gate&&(!sameNativeWorldBoundary(worldBoundary,binding.reference.worldBoundary)||!Array.isArray(ids)||ids.length!==binding.nativeIds.length||ids.some((id,index)=>id!==binding.nativeIds[index])))throw Error('Native gate adoption receipt differs from its acquired boundary');
+    const binding=nativeBarrierAdditionBinding?copyNativeBarrierAdditionAttestation(nativeBarrierAdditionBinding):null;
+    const gates=binding?nativeBarrierAdditionGates(binding.reference):[],owners=binding?nativeBarrierAdditionOwners(binding.reference):null;
+    if(binding&&(binding.reference.removal||!sameNativeWorldBoundary(worldBoundary,binding.reference.worldBoundary)||!Array.isArray(ids)||ids.length!==binding.nativeIds.length||ids.some((id,index)=>id!==binding.nativeIds[index])))throw Error('Native wall adoption receipt differs from its acquired boundary');
     if(!Array.isArray(structures)||!structures.length||structures.length>256||
-       structures.some(w=>!w||w.kind!=='wall'||w.status==='ruined'||typeof w.id!=='string'||!w.id||installed.has(w.id)||
-         (gate?structures.length!==1||w.gate!==true||w.id!==gate.entityId:Boolean(w.gate)))||
-       new Set(structures.map(w=>w.id)).size!==structures.length||!Array.isArray(ids)||ids.length!==(gate?3:structures.length)||
+       owners&&owners.length!==structures.length||structures.some((w,index)=>!w||w.kind!=='wall'||w.status==='ruined'||typeof w.id!=='string'||!w.id||installed.has(w.id)||
+         Boolean(w.gate)!==(index<gates.length)||owners&&owners[index].entityId!==w.id)||
+       new Set(structures.map(w=>w.id)).size!==structures.length||!Array.isArray(ids)||ids.length!==structures.length+2*gates.length||
        ids.some(id=>!Number.isSafeInteger(id)||id<=0)||new Set(ids).size!==ids.length)throw TypeError('Invalid native wall additions');
     const resources=core.captureNativeWorldResources(worldBoundary);
     if(resources.kind!==2||resources.chunks.length||resources.removed.length)throw Error('Native wall adoption requires its empty terrain commit');
@@ -117,19 +118,20 @@ export function createSpatialWallMirror(core){
     if(!Number.isSafeInteger(barrierCount)||barrierCount<ids.length)throw Error('Native wall registry unavailable');
     const pointer=wasm.spatial_barrier_state_ptr(),view=new DataView(wasm.memory.buffer,pointer,barrierCount*28);
     for(let i=0;i<barrierCount;i++){const at=i*28,id=view.getInt32(at,true);if(wanted.has(id))physical.set(id,{x:view.getFloat32(at+4,true),z:view.getFloat32(at+8,true),halfX:view.getFloat32(at+12,true),halfZ:view.getFloat32(at+16,true),yaw:view.getFloat32(at+20,true),passMask:view.getInt32(at+24,true)});}
-    if(gate){
-      const wall=structures[0],scale=gateScale(wall),numeric=Number(gate.entityId.slice('structure-'.length));
+    for(let i=0;i<gates.length;i++){
+      const gate=gates[i],wall=structures[i],scale=gateScale(wall),numeric=Number(gate.entityId.slice('structure-'.length));
       if(wall.status!=='intact'||wall.hp!==wall.maxHp||nativeGateModelId(wall.material)!==gate.modelId||wall.x!==gate.x||wall.z!==gate.z||(wall.yaw??0)!==gate.yaw||scale*(wall.baseScaleX??1)!==gate.sx||scale!==gate.sz)throw Error('Native gate adoption differs from its quoted placement');
       if(wasm.nav_gate_mechanism_pose(numeric)!==1)throw Error('Native gate adoption lost its acquired mechanism');
-      const pose=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_mechanism_pose_ptr(),40));
-      if(pose[0]!==numeric||pose[1]!==gate.modelId||pose[2]!==gate.mechanismId||pose[6]!==worldBoundary.effectiveTime||pose[7]!==gate.opening||!pose.slice(8,24).every((value,index)=>value===gate.rootMatrix[index])||!pose.slice(24,40).every((value,index)=>value===gate.leafMatrix[index]))throw Error('Native gate adoption pose differs from its prepared mechanism');
+      const pose=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_mechanism_pose_ptr(),typeof wasm.nav_gate_mechanism_install_reverse==='function'?41:40));
+      if(pose[0]!==numeric||pose[1]!==gate.modelId||pose[2]!==gate.mechanismId||pose[6]!==worldBoundary.effectiveTime||pose[7]!==gate.opening||(pose[40]===-1?-1:undefined)!==gate.openingDirection||!pose.slice(8,24).every((value,index)=>value===gate.rootMatrix[index])||!pose.slice(24,40).every((value,index)=>value===gate.leafMatrix[index]))throw Error('Native gate adoption pose differs from its prepared mechanism');
     }
-    const records=[];
+    const records=[];let offset=0;
     for(let i=0;i<structures.length;i++){
       // Gate geometry is prepared by WASM. Reprojecting the legacy JS
       // footprint here can differ by one float32 ULP after world/local transforms.
       // Adopt the exact prepared triplet; solid walls retain their original check.
-      const wall=structures[i],parts=gate?gate.proxies:spatialStructureBarriers(wall),partIds=gate?[...ids]:[ids[i]];
+      const wall=structures[i],gate=gates[i],parts=gate?gate.proxies:spatialStructureBarriers(wall),size=gate?3:1;
+      const partIds=ids.slice(offset,offset+size);offset+=size;
       if(parts.length!==partIds.length||parts.some((part,index)=>{
         const actual=physical.get(partIds[index]);
         return !sameNativeWallShape(part,actual);

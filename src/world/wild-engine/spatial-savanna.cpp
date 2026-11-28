@@ -3220,12 +3220,29 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_gate_removal_revalidate(double session,do
  auto& h=worldResourcePreview->header;h[2]=identity[1];h[3]=identity[3];return 1;
 }
 EMSCRIPTEN_KEEPALIVE int spatial_world_gate_addition_version(){return 1;}
-EMSCRIPTEN_KEEPALIVE int spatial_world_gate_addition_stage(double id,int model,double x,double z,double yaw,double sx,double sz){
+static int stageGateAdditions(const std::vector<std::array<double,7>>& gates,const std::vector<float>& solids){
  WorldResourcePreview preview;preview.gateAddition=true;
- const int result=spatialIntentStageGateAddition({id,double(model),x,z,yaw,sx,sz},nextBarrierId,preview.barrierAdditions);if(result!=1)return result;
+ const int result=spatialIntentStageGateAdditions(gates,nextBarrierId,solids,preview.barrierAdditions);if(result!=1)return result;
  std::array<double,6> identity{};if(spatialIntentWorldProposalSnapshot(identity)!=1)return -2;
  preview.header={1,identity[0],identity[1],identity[3],2,0,double(terrainInputRevision),double(overlayRevision),double(residencyRevision)};
  worldResourcePreview=std::make_shared<WorldResourcePreview>(std::move(preview));return 1;
+}
+EMSCRIPTEN_KEEPALIVE int spatial_world_gate_addition_stage(double id,int model,double x,double z,double yaw,double sx,double sz){
+ return stageGateAdditions({{id,double(model),x,z,yaw,sx,sz}},{});
+}
+static std::vector<std::array<double,7>> worldGateAdditionInputs;
+EMSCRIPTEN_KEEPALIVE double* spatial_world_gate_additions_input(int count){
+ if(count<1||count>256)return nullptr;
+ worldGateAdditionInputs.resize(count);return worldGateAdditionInputs.front().data();
+}
+EMSCRIPTEN_KEEPALIVE int spatial_world_gate_additions_stage(int count,int floatCount){
+ if(count<1||size_t(count)!=worldGateAdditionInputs.size()||floatCount<0||floatCount%6||
+    size_t(floatCount)!=worldProposalFloatInput.size()||count+floatCount/6>256)return -1;
+ for(int i=0;i<floatCount;i+=6){
+  const auto* p=worldProposalFloatInput.data()+i;
+  if(!std::all_of(p,p+5,[](float v){return std::isfinite(v);})||p[2]<=0||p[2]>100||p[3]<=0||p[3]>100||p[5]!=0)return -1;
+ }
+ return stageGateAdditions(worldGateAdditionInputs,worldProposalFloatInput);
 }
 EMSCRIPTEN_KEEPALIVE const float* spatial_world_gate_addition_proxies_ptr(double session,double ticket){
  if(!worldResourcePreview||!worldResourcePreview->gateAddition||worldResourcePreview->header[1]!=session||worldResourcePreview->header[2]!=ticket)return nullptr;

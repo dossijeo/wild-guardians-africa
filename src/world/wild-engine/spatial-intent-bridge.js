@@ -2203,10 +2203,10 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
   const nativeGateMechanismPose=gateId=>{
     if(wasm.nav_gate_mechanism_version?.()!==1)throw Error('Rebuild native gate mechanism service');
     if(wasm.nav_gate_mechanism_pose(numericId(gateId))!==1)return null;
-    const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_mechanism_pose_ptr(),40));
+    const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_mechanism_pose_ptr(),typeof wasm.nav_gate_mechanism_install_reverse==='function'?41:40));
     return Object.freeze({version:1,authorityEpoch:epoch(),nativeSession:wasm.nav_intent_session(),entityId:gateId,gateId:a[0],modelId:a[1],mechanism:a[2],
       collisionModel:'kinematic-union',supportClass:'flat-native-datum',visualClass:'intact-full-health',baseY:a[3],supportMin:a[4],supportMax:a[5],sampledAt:a[6],opening:a[7],
-      rootMatrix:Object.freeze(a.slice(8,24)),leafMatrix:Object.freeze(a.slice(24,40)),authorizedPassage:false,authorizedAutonomy:false});
+      ...(a[40]===-1?{openingDirection:-1}:{}),rootMatrix:Object.freeze(a.slice(8,24)),leafMatrix:Object.freeze(a.slice(24,40)),authorizedPassage:false,authorizedAutonomy:false});
   };
   const nativeGateMechanism=gateId=>{
     const pose=nativeGateMechanismPose(gateId);if(!pose)return null;
@@ -2246,7 +2246,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
             if(!mesh||knots<1||knots>6)throw Error('Native gate proposal curve unavailable');
             const data=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_result_ptr(),21+knots*2)),rows=Float64Array.from(data.slice(21)),endTime=rows.at(-2);
             if(data[0]!==id||data[1]!==mesh.mechanism||data[2]!==mesh.modelId)throw Error('Native gate proposal identity mismatch');
-            return copyNativeGatePresentation({kind:'native-gate-presentation',version:1,worldBoundary:boundary,gateId:id,entityId,mechanism:data[1],modelId:data[2],startTime:effectiveTime,endTime,rootMatrix:data.slice(5,21),hinge:[data[3],0,data[4]],positions:mesh.positions,leafFlags:mesh.leafFlags,rows,authorizedAutonomy:false},{worldBoundary:boundary,startTime:effectiveTime,endTime});
+            return copyNativeGatePresentation({kind:'native-gate-presentation',version:1,worldBoundary:boundary,gateId:id,entityId,mechanism:data[1],modelId:data[2],openingDirection:mesh.openingDirection,startTime:effectiveTime,endTime,rootMatrix:data.slice(5,21),hinge:[data[3],0,data[4]],positions:mesh.positions,leafFlags:mesh.leafFlags,rows,authorizedAutonomy:false},{worldBoundary:boundary,startTime:effectiveTime,endTime});
           });
           resources=Object.freeze({version:1,kind:12,phase:'proposal',worldBoundary:boundary,gates:Object.freeze(gates)});return resources;
         }
@@ -2348,37 +2348,44 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     if(actors.some(id=>!Number.isSafeInteger(id)||id<1)||new Set(actors).size!==actors.length)throw Error('Invalid removal stop owners');
     return {status:'ready',actors};
   };
-  // Both addition classes use the existing world transaction. A gate keeps
-  // its mechanism, three proxies and initial pose in a single native proposal.
-  const addNativeBarriersAfterGpuQuiescence=({additions,gate=null,removal=null,getPublication,prepareResources,signal=null,validate,project,atCommitBoundary=null,onProposal=null}={})=>{
-    if(removal!==null&&(gate!==null||additions!==undefined))throw TypeError('Removal must use its own kind2 batch');
-    if(gate!==null&&additions!==undefined)throw TypeError('Native gate and solid additions require separate proposals');
-    const shapes=gate===null&&removal===null?copyNativeBarrierAdditions(additions):null,count=shapes?.length??3;
+  // Gate triplets precede the solid rows in the native batch and receipt.
+  const addNativeBarriersAfterGpuQuiescence=({additions,gate=null,gates=null,removal=null,getPublication,prepareResources,signal=null,validate,project,atCommitBoundary=null,onProposal=null}={})=>{
+    if(removal!==null&&(gate!==null||gates!==null||additions!==undefined))throw TypeError('Removal must use its own kind2 batch');
+    if(gate!==null&&(gates!==null||additions!==undefined))throw TypeError('Invalid singleton gate addition');
+    if(gates!==null&&(!Array.isArray(gates)||!gates.length||gates.length+(additions?.length??0)<2))throw TypeError('Invalid native gate batch');
+    const gatePlacements=gates??(gate?[gate]:[]),hasGates=gatePlacements.length>0;
+    const shapes=additions===undefined&&hasGates||removal?[]:copyNativeBarrierAdditions(additions);
+    const count=removal?3:shapes.length+3*gatePlacements.length;
     const removalId=removal&&numericId(removal.entityId);
     if(removal&&(!removalId||removal.entityId!==`structure-${removalId}`||wasm.spatial_world_gate_removal_version?.()!==1))throw Error('Native gate removal unavailable');
-    const gateId=gate&&numericId(gate.entityId);
-    if(gate!==null&&(!gateId||gate.entityId!==`structure-${gateId}`||![1,2,3].includes(gate.modelId)||![gate.x,gate.z,gate.yaw,gate.sx,gate.sz].every(Number.isFinite)||gate.sx<=0||gate.sz<=0))throw TypeError('Invalid native gate placement');
+    if(gatePlacements.length+shapes.length>256||new Set([...gatePlacements,...shapes].map(p=>p?.entityId)).size!==gatePlacements.length+shapes.length||gatePlacements.some(p=>{
+      const id=p&&numericId(p.entityId);
+      return !id||p.entityId!==`structure-${id}`||![1,2,3].includes(p.modelId)||![p.x,p.z,p.yaw,p.sx,p.sz].every(Number.isFinite)||p.sx<=0||p.sz<=0;
+    }))throw TypeError('Invalid native gate placement');
     if(typeof prepareResources!=='function'||typeof validate!=='function'||typeof project!=='function')throw TypeError('Native solid addition requires preparation and synchronous Game adoption');
     if(atCommitBoundary!==null&&typeof atCommitBoundary!=='function')throw TypeError('Invalid native command boundary');
     if(onProposal!==null&&typeof onProposal!=='function')throw TypeError('Invalid native solid addition proposal observer');
     if(wasm.spatial_world_barrier_addition_version?.()!==1)throw Error('Rebuild native solid addition association');
-    if(gate&&wasm.spatial_world_gate_addition_version?.()!==1)throw Error('Rebuild native gate addition association');
+    if(hasGates&&wasm.spatial_world_gate_addition_version?.()!==1||gates&&typeof wasm.spatial_world_gate_additions_stage!=='function')throw Error('Rebuild native gate addition association');
     let candidate=null,preparedReference=null,translation=null,issued=null;
     const tuple=()=>{if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Native solid addition lost its ticket');const row=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6));if(row[5]!==2)throw Error('Native solid addition changed family');return row;};
     const capture=boundary=>{
       const resources=session.core.captureNativeWorldProposalResources(boundary),row=tuple();
       if(resources.kind!==2||resources.chunks.length||resources.removed.length||resources.retainsNativeAssignments!==true||resources.routeEffects.rows.length||resources.gateEffects.rows.length||row[0]!==boundary.nativeSession||row[1]!==boundary.ticket||row[3]!==boundary.effectiveTime)throw Error('Native solid addition lacks its unchanged-owner proof');
       let shape={additions:shapes};
-      if(gate){
+      if(hasGates){
         const pointer=wasm.spatial_world_gate_addition_proxies_ptr(row[0],row[1]);
         if(!pointer)throw Error('Native gate proposal lost its proxy geometry');
-        const proxies=Array.from(new Float32Array(wasm.memory.buffer,pointer,18));
-        if(wasm.nav_gate_addition_proposal_pose(row[0],row[1])!==1)throw Error('Native gate proposal lost its initial pose');
-        const pose=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_mechanism_pose_ptr(),40));
-        if(pose[0]!==gateId||pose[1]!==gate.modelId||pose[6]!==boundary.effectiveTime)throw Error('Native gate proposal changed its identity');
-        shape={gate:{entityId:gate.entityId,modelId:pose[1],x:gate.x,z:gate.z,yaw:gate.yaw,sx:gate.sx,sz:gate.sz,
-          mechanismId:pose[2],opening:pose[7],rootMatrix:pose.slice(8,24),leafMatrix:pose.slice(24,40),
-          proxies:Array.from({length:3},(_,index)=>{const [x,z,halfX,halfZ,yaw,passMask]=proxies.slice(index*6,index*6+6);return {x,z,halfX,halfZ,yaw,passMask};})}};
+        const proxies=Array.from(new Float32Array(wasm.memory.buffer,pointer,gatePlacements.length*18));
+        const preparedGates=gatePlacements.map((placement,index)=>{
+          const id=numericId(placement.entityId),sample=gates?wasm.nav_gate_additions_proposal_pose(row[0],row[1],id):wasm.nav_gate_addition_proposal_pose(row[0],row[1]);
+          if(sample!==1)throw Error('Native gate proposal lost its initial pose');
+          const pose=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_mechanism_pose_ptr(),gates?41:40));
+          if(pose[0]!==id||pose[1]!==placement.modelId||pose[6]!==boundary.effectiveTime)throw Error('Native gate proposal changed its identity');
+          return {...placement,mechanismId:pose[2],opening:pose[7],...(pose[40]===-1?{openingDirection:-1}:{}),rootMatrix:pose.slice(8,24),leafMatrix:pose.slice(24,40),
+            proxies:Array.from({length:3},(_,part)=>{const start=index*18+part*6,[x,z,halfX,halfZ,yaw,passMask]=proxies.slice(start,start+6);return {x,z,halfX,halfZ,yaw,passMask};})};
+        });
+        shape=gates?{gates:preparedGates,additions:shapes}:{gate:preparedGates[0]};
       }
       if(removal){
         const pointer=wasm.spatial_world_gate_removal_ids_ptr(row[0],row[1]);if(!pointer||wasm.nav_gate_mechanism_pose(removalId)!==1)throw Error('Native removal lost its owner');
@@ -2386,7 +2393,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
         shape={removal:{entityId:removal.entityId,mechanismId:pose[2],nativeIds:ids}};
       }
       return copyNativeBarrierAdditionProposal({kind:'native-barrier-addition-proposal',version:1,worldBoundary:boundary,
-        nativeBarrierAddition:{kind:'native-barrier-addition-reference',version:removal?3:gate?2:1,worldBoundary:boundary,sourceControlSequence:row[2],...shape},
+        nativeBarrierAddition:{kind:'native-barrier-addition-reference',version:removal?3:gates?4:gate?2:1,worldBoundary:boundary,sourceControlSequence:row[2],...shape},
         authorizedAutonomy:false,authorizedConsequences:false});
     };
     const protocol={motionKind:'barrier-addition',preparedFrameRequired:true,deferred:true,atCommitBoundary,
@@ -2395,7 +2402,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       retained(session,ticket){if(validate()!==true||wasm.nav_intent_barrier_proposal_ticket()!==1)return false;const row=tuple();return row[0]===session&&row[1]===ticket;},
       revalidate(session,ticket){
         if(validate()!==true)return {status:'stale'};
-        const result=removal?wasm.spatial_world_gate_removal_revalidate(session,ticket):gate?wasm.spatial_world_gate_addition_revalidate(session,ticket):wasm.spatial_world_proposal_revalidate_barriers(session,ticket);
+        const result=removal?wasm.spatial_world_gate_removal_revalidate(session,ticket):hasGates?wasm.spatial_world_gate_addition_revalidate(session,ticket):wasm.spatial_world_proposal_revalidate_barriers(session,ticket);
         if(result!==1)return {status:result===0?'blocked':'stale'};
         const row=tuple(),boundary=copyNativeWorldBoundary({version:1,authorityEpoch:epoch(),nativeSession:row[0],ticket:row[1],effectiveTime:row[3]});
         let retained=false;
@@ -2419,12 +2426,21 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     return commitNativeWorldProposal(getPublication,()=>{
       if(validate()!==true)return -2;
       if(removal)return wasm.spatial_world_gate_removal_stage(removalId);
-      if(gate)return wasm.spatial_world_gate_addition_stage(gateId,gate.modelId,gate.x,gate.z,gate.yaw,gate.sx,gate.sz);
-      const values=shapes.flatMap(p=>[p.x,p.z,p.halfX,p.halfZ,p.yaw,0]),pointer=wasm.spatial_world_proposal_float_ptr(values.length);if(!pointer)throw Error('Native solid addition input allocation failed');
-      new Float32Array(wasm.memory.buffer,pointer,values.length).set(values);wasm.spatial_world_proposal_int_ptr(0);return wasm.spatial_world_proposal_stage_resources(2,0,values.length,0);
+      if(gate)return wasm.spatial_world_gate_addition_stage(numericId(gate.entityId),gate.modelId,gate.x,gate.z,gate.yaw,gate.sx,gate.sz);
+      const values=shapes.flatMap(p=>[p.x,p.z,p.halfX,p.halfZ,p.yaw,0]),pointer=wasm.spatial_world_proposal_float_ptr(values.length);
+      if(values.length&&!pointer)throw Error('Native solid addition input allocation failed');
+      if(values.length)new Float32Array(wasm.memory.buffer,pointer,values.length).set(values);
+      if(gates){
+        const input=wasm.spatial_world_gate_additions_input(gates.length);
+        if(!input)throw Error('Native gate batch input allocation failed');
+        const values=gates.flatMap(p=>[numericId(p.entityId),p.modelId,p.x,p.z,p.yaw,p.sx,p.sz]);
+        new Float64Array(wasm.memory.buffer,input,values.length).set(values);
+        return wasm.spatial_world_gate_additions_stage(gates.length,shapes.length*6);
+      }
+      wasm.spatial_world_proposal_int_ptr(0);return wasm.spatial_world_proposal_stage_resources(2,0,values.length,0);
     },(mark,...boundary)=>{
       if(validate()!==true)return {status:-2};
-      const commit=removal?wasm.spatial_world_gate_removal_commit_bound:gate?wasm.spatial_world_gate_addition_commit_bound:wasm.spatial_world_proposal_barriers_commit_bound;
+      const commit=removal?wasm.spatial_world_gate_removal_commit_bound:hasGates?wasm.spatial_world_gate_addition_commit_bound:wasm.spatial_world_proposal_barriers_commit_bound;
       const status=commit(...boundary,preparedReference.worldBoundary.ticket);if(status!==1)return {status};mark();
       const pointer=wasm.spatial_world_barrier_binding_ptr();if(!pointer||wasm.spatial_world_proposal_result_count()!==count)throw Error('Native addition receipt unavailable');
       const proof=Array.from(new Float64Array(wasm.memory.buffer,pointer,5)),expected=[1,preparedReference.worldBoundary.ticket,preparedReference.worldBoundary.effectiveTime,boundary[1],boundary[3]];
@@ -2797,7 +2813,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       const data=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_result_ptr(),21+knots*2));
       if(data[0]!==id||data[1]!==mechanism.mechanism||data[2]!==mechanism.modelId)throw Error('Native gate presentation identity mismatch');
       return copyNativeGatePresentation({kind:'native-gate-presentation',version:1,nativeRoute,gateId:id,entityId,mechanism:data[1],modelId:data[2],
-        startTime,endTime:plan.endTime,rootMatrix:data.slice(5,21),hinge:[data[3],0,data[4]],
+        openingDirection:mechanism.openingDirection,startTime,endTime:plan.endTime,rootMatrix:data.slice(5,21),hinge:[data[3],0,data[4]],
         positions:mechanism.positions,leafFlags:mechanism.leafFlags,rows:Float64Array.from(data.slice(21)),authorizedAutonomy:false},
         {nativeRoute,startTime,endTime:plan.endTime});
     });
@@ -3059,7 +3075,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       if(!mechanism||knots<1||knots>6)throw Error('Native motion gate curve unavailable');
       const data=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_result_ptr(),21+knots*2));
       if(data[0]!==id||data[1]!==mechanism.mechanism||data[2]!==mechanism.modelId)throw Error('Native motion gate identity mismatch');
-      return copyNativeGatePresentation({kind:'native-gate-presentation',version:1,worldBoundary,gateId:id,entityId,mechanism:data[1],modelId:data[2],startTime:h[10],endTime:h[11],rootMatrix:data.slice(5,21),hinge:[data[3],0,data[4]],positions:mechanism.positions,leafFlags:mechanism.leafFlags,rows:Float64Array.from(data.slice(21)),authorizedAutonomy:false},{worldBoundary,startTime:h[10],endTime:h[11]});
+      return copyNativeGatePresentation({kind:'native-gate-presentation',version:1,worldBoundary,gateId:id,entityId,mechanism:data[1],modelId:data[2],openingDirection:mechanism.openingDirection,startTime:h[10],endTime:h[11],rootMatrix:data.slice(5,21),hinge:[data[3],0,data[4]],positions:mechanism.positions,leafFlags:mechanism.leafFlags,rows:Float64Array.from(data.slice(21)),authorizedAutonomy:false},{worldBoundary,startTime:h[10],endTime:h[11]});
     });
     const task=starting?Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_task_start_proposal_task_ptr(),2)):null;
     const motion={expectedRouteHandle:routeHandle(ticket.session,h[20],h[4]),actorId:h[1],bodyId:h[2],sourceControlSequence:h[23],profile:h[5],motionFlags:h[6],radius:h[7],origin:Object.freeze({x:h[8],z:h[9]}),startTime:h[10],endTime:h[11],distance:h[12],speed:h[13],runDistance:h[14],runSpeed:h[15],runBudget:h[16],motionMode:'worker',rowWidth:16,rows,points,gates:Object.freeze(gates),authorizedAutonomy:false};

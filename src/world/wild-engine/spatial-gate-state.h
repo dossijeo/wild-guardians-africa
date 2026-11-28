@@ -14,7 +14,7 @@ struct NativeGate {
   bool defined=false,requested=false,occupied=false;
   bool bodySweepCertified=false;
   bool staticSweepCertified=false;
-  int status=0;
+  int status=0,openingDirection=1;
   std::vector<double> local,closed,swing;
   SpatialStaticMutation unsupported;
   const NativeGateMeshModel* mesh=nullptr;

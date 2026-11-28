@@ -38,6 +38,22 @@ bool gateFixedPartsClear(IntentState& s,const NativeGate& gate,const SpatialStat
     if(spatialGateShapeDistance(polygon.data(),int(polygon.size()/2),shape)<=gateStaticError(gate,std::max(std::abs(gate.x),std::abs(gate.z))))return false;
   }return true;
 }
+// Wall strokes meet at the authored ends of each module. The post can
+// overlap the adjoining rigid wall there; the leaf is still tested separately.
+bool gateWallEndJoint(const NativeGate& gate,const SpatialStaticMutation& wall){
+  if(!gate.mesh||wall.passMask!=0||wall.halfZ!=float(.22))return false;
+  const double c=std::cos(gate.yaw),s=std::sin(gate.yaw),dx=wall.x-gate.x,dz=wall.z-gate.z;
+  const double spine=dx*c-dz*s,along=std::abs(wall.c*c+wall.s*s),across=std::abs(wall.c*s-wall.s*c);
+  const double end=1.09*gate.sx,nearest=std::abs(spine)-wall.halfX*along;
+  const double tolerance=8*std::numeric_limits<float>::epsilon()*std::max({1.0,std::abs(gate.x),std::abs(gate.z),std::abs(wall.x),std::abs(wall.z)});
+  if(nearest+tolerance<end||nearest-wall.halfZ*across<=0)return false;
+  const double side=spine<0?-1:1;
+  for(size_t i=0;i<gate.physicalLeaf.size();i+=2)
+    if(side*gate.physicalLeaf[i]*gate.sx+tolerance>=nearest-wall.halfZ*across)return false;
+  const double ex=gate.x+side*end*c-wall.x,ez=gate.z-side*end*s-wall.z;
+  const double u=ex*wall.c-ez*wall.s,v=ex*wall.s+ez*wall.c;
+  return std::hypot(std::max(0.0,std::abs(u)-wall.halfX),v)<=tolerance;
+}
 void gateStaticWitness(IntentState& s,uint64_t gate,int kind,double id,int gx,int gz,const GateSweepAnswer& answer){
   s.gateStaticResult={double(gate),double(kind),double(id),double(gx),double(gz),answer.from,answer.to,double(answer.reason)};
 }
@@ -58,7 +74,7 @@ int gateSweepStaticObjects(IntentState& s,const std::map<uint64_t,NativeGate>& g
           std::max(q.s.effectiveTime,gateMotionEnd(q.gate)));
         if(!answer.clear)gateStaticWitness(q.s,q.gate.id,object.kind,object.id,object.gx,object.gz,answer);
         if(!answer.clear)return false;
-        if(!gateFixedPartsClear(q.s,q.gate,object.shape)){gateStaticWitness(q.s,q.gate.id,object.kind,object.id,object.gx,object.gz,{false,1,q.s.effectiveTime,q.s.effectiveTime});return false;}
+        if(!(object.kind==1&&gateWallEndJoint(q.gate,object.shape))&&!gateFixedPartsClear(q.s,q.gate,object.shape)){gateStaticWitness(q.s,q.gate.id,object.kind,object.id,object.gx,object.gz,{false,1,q.s.effectiveTime,q.s.effectiveTime});return false;}
         return true;
       },&query);
     if(status!=1){

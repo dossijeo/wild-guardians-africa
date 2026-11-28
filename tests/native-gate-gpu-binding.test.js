@@ -10,6 +10,7 @@ import {createNativeGateGpuBinding} from '../src/rendering/native-gate-gpu-bindi
 import {copyNativeRoutePresentation} from '../src/world/native-route-presentation.js';
 import {createNativeGateGpuClock} from '../src/rendering/native-gate-gpu-clock.js';
 import {installRemoteClockBindings} from '../src/rendering/remote-clock-bindings.js';
+import {nativeGateCollisionProxies} from '../src/world/wild-engine/spatial-wall-bridge.js';
 
 function fixture({material='zarzas',reversing=false,yaw=0}={}){
  const f=nativeGateCrossingFixture({materials:[material],opening:reversing?1:0,yaw});
@@ -65,6 +66,36 @@ for(const material of ['zarzas','empalizada','reforzado'])test(`${material}: the
   }
   assert.deepEqual(position.array,bytes);assert.equal(position.version,version);
  }finally{f.close();}
+});
+
+test('the reverse swing material and pick surface use the native saved orientation',()=>{
+ const f=nativeGateCrossingFixture({opening:1,yaw:.37,install:false}),gate=f.gates[0],prototype=gateMeshPrototype('zarzas');
+ let wall,binding;
+ try{
+  gate.gateOpenDirection=-1;
+  const navigationBarriers=f.session.core.addBarriersBatch(nativeGateCollisionProxies(f.session.core,gate));
+  assert.equal(f.service.installMechanism(gate.id,gate.material,{navigationBarriers,openingDirection:-1}).status,'installed');
+  const pose=f.bridge.nativeGateMechanism(gate.id),at=pose.sampledAt;
+  assert.equal(pose.openingDirection,-1);assert.equal(pose.opening,1);
+  const worldBoundary={version:1,authorityEpoch:pose.authorityEpoch,nativeSession:pose.nativeSession,ticket:42,effectiveTime:at};
+  const packet={kind:'native-gate-presentation',version:1,worldBoundary,gateId:pose.gateId,entityId:gate.id,mechanism:pose.mechanism,modelId:pose.modelId,
+   openingDirection:pose.openingDirection,rootMatrix:pose.rootMatrix,hinge:[-.62,0,0],startTime:at,endTime:at,rows:Float64Array.of(at,pose.opening),
+   positions:pose.positions,leafFlags:pose.leafFlags,authorizedAutonomy:false};
+  prototype.material.dispose();prototype.material=new MeshStandardNodeMaterial({side:DoubleSide});
+  wall=new NativeWall({zarzas_puerta:prototype},{...gate,hp:1,maxHp:1},at);
+  const parent=new Group();new Matrix4().fromArray(packet.rootMatrix).decompose(parent.position,parent.quaternion,parent.scale);parent.scale.divide(wall.scale);parent.add(wall);
+  const motion=createNativeGateGpuClock(packet);
+  assert.throws(()=>createNativeGateGpuBinding({wall,presentation:{...packet,openingDirection:undefined},motion,getPickTime:()=>at}),/direction/);
+  binding=createNativeGateGpuBinding({wall,presentation:packet,motion,getPickTime:()=>at});binding.activate();
+  const vertices=f.bridge.nativeGateMechanismWorldVertices(gate.id),index=packet.leafFlags.findIndex((value,i)=>i%3===0&&value&&
+   new Vector3().fromArray(vertices,(i+1)*3).sub(new Vector3().fromArray(vertices,i*3))
+    .cross(new Vector3().fromArray(vertices,(i+2)*3).sub(new Vector3().fromArray(vertices,i*3))).lengthSq()>1e-8);
+  assert(index>=0);
+  const a=new Vector3().fromArray(vertices,index*3),b=new Vector3().fromArray(vertices,(index+1)*3),c=new Vector3().fromArray(vertices,(index+2)*3);
+  const normal=b.clone().sub(a).cross(c.clone().sub(a)).normalize(),center=a.add(b).add(c).multiplyScalar(1/3),hits=[];
+  binding.raycast(new Raycaster(center.clone().addScaledVector(normal,.2),normal.negate()),hits);
+  assert(hits.some(hit=>hit.object===binding.mesh&&hit.point.distanceTo(center)<2e-5));
+ }finally{binding?.dispose();wall?.dispose();prototype.material.dispose();f.session.dispose();}
 });
 
 test('gate placement and immutable geometry mismatch reject before publishing a material',()=>{

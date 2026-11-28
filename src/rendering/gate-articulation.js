@@ -31,9 +31,9 @@ export function splitGateBridge(source,leaf){
   for(const [key] of attributes)result[key]=new Float32Array(result[key]);
   return {...result,leafFlags:new Uint8Array(flags),leaf,lastMorph:NaN,morphed:null};
 }
-export function articulateGate(bridge,amount,positions,normals){
+export function articulateGate(bridge,amount,positions,normals,direction=1){
   const result=positions.slice();if(!bridge.leafFlags||!amount)return result;
-  const angle=Math.max(0,Math.min(1,amount))*Math.PI/2,c=Math.cos(angle),s=Math.sin(angle),[hx,hz]=bridge.leaf.hinge;
+  const angle=direction*Math.max(0,Math.min(1,amount))*Math.PI/2,c=Math.cos(angle),s=Math.sin(angle),[hx,hz]=bridge.leaf.hinge;
   for(let i=0;i<bridge.leafFlags.length;i++)if(bridge.leafFlags[i]){
     const at=i*3,x=result[at]-hx,z=result[at+2]-hz;result[at]=hx+x*c-z*s;result[at+2]=hz+x*s+z*c;
     const nx=normals[at],nz=normals[at+2];normals[at]=nx*c-nz*s;normals[at+2]=nx*s+nz*c;

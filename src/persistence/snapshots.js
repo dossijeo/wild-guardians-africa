@@ -105,7 +105,10 @@ export function validateSnapshot(state,{livePhysics=false}={}) {
   }
   const workers=new Map(state.workers.map(w=>[w.id,w])),crates=new Map(state.crates.map(c=>[c.id,c])),plants=new Map(state.plants.map(p=>[p.id,p]));
   for(const structure of state.structures)if(structure.kind==='wall'&&(structure.baseScaleX!==undefined&&(!Number.isFinite(structure.baseScaleX)||structure.baseScaleX<=0)||structure.autoGate!==undefined&&typeof structure.autoGate!=='boolean'))throw new Error('Módulo de defensa inválido');
-  for(const structure of state.structures)if(structure.gateOpen!==undefined&&(!structure.gate||!Number.isFinite(structure.gateOpen)||structure.gateOpen<0||structure.gateOpen>1))throw new Error('Apertura de puerta inválida');
+  for(const structure of state.structures){
+   if(structure.gateOpen!==undefined&&(!structure.gate||!Number.isFinite(structure.gateOpen)||structure.gateOpen<0||structure.gateOpen>1))throw new Error('Apertura de puerta inválida');
+   if(structure.gateOpenDirection!==undefined&&(!structure.gate||structure.gateOpenDirection!==-1))throw new Error('Sentido de puerta inválido');
+  }
   for(const structure of state.structures)if(structure.wallPresentation!==undefined){
     const p=structure.wallPresentation,ratio=value=>Number.isFinite(value)&&value>=0&&value<=1;
     if(structure.kind!=='wall'||!p||!ratio(p.from)||!ratio(p.to)||!Number.isFinite(p.at)||p.at<0||!Number.isFinite(state.elapsed)||p.at>state.elapsed||p.collapseFrom!==undefined&&!ratio(p.collapseFrom)||structure.status==='collapsing'&&p.collapseFrom===undefined||structure.status==='intact'&&p.collapseFrom!==undefined)throw new Error('Wall presentation invalid');

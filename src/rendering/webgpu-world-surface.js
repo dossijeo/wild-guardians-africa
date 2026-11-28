@@ -4,7 +4,7 @@ import {copyNativeRuinMotors,copyPendingFlightRecovery,nativeOrdinaryRecoveryKin
 import {copyNativeAnimalCropReference,copyNativeAnimalCropProposal,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference,nativeAnimalCropSuccessor} from '../world/native-animal-crop-resource.js';
 import {nativeAnimalCropPublicationMatches} from '../simulation/raids.js';
 import {nativeMotionPresentationMatches} from '../world/native-motion-presentation-match.js';
-import {copyNativeBarrierAdditionProposal,copyNativeBarrierAdditionReference,copyNativeBarrierAdditionAttestation,nativeBarrierAdditionPresentationMatches} from '../world/native-barrier-addition.js';
+import {copyNativeBarrierAdditionProposal,copyNativeBarrierAdditionReference,copyNativeBarrierAdditionAttestation,nativeBarrierAdditionOwners,nativeBarrierAdditionPresentationMatches} from '../world/native-barrier-addition.js';
 import {spatialStructureBarriers} from '../world/wild-engine/spatial-wall-bridge.js';
 import {gateScale,nativeGateModelId} from '../world/gate-passages.js';
 import {terrainStopProposalProtocol,terrainStopWireProtocol,hasOtherTerrainStopField} from '../simulation/terrain-stop-reservation.js';
@@ -235,7 +235,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
    if(!messages.length&&(stopEffects?.routeEffects.rows.length||barrierTemplate||nativeShieldProposal||nativeCenterRuin||center)){
     const view={get:(cx,cz)=>(residency.getVisible??residency.get).call(residency,cx,cz),changedKeys:new Set()};
     const parts=nativeCenterRuin?[settlements.prepareCenterRuin(nativeCenterRuin,{signal:proposalSignal})]:options.shieldGeometry?[options.shieldGeometry.part]:nativeShieldProposal?[await agricultureVfx.prepareNativeShield(nativeShieldProposal.nativeShield.spell,{camera,signal:proposalSignal,removing:nativeShieldProposal.kind===4})]:
-     barrierTemplate?(barrierTemplate.removal?settlements.prepareNativeWallRemoval(options.nativeBarrierWallEntities,{signal:proposalSignal,template:barrierTemplate}):await settlements.prepareNativeWallAdditions(options.nativeBarrierWallEntities,{signal:proposalSignal,gate:barrierTemplate.gate,template:barrierTemplate})):await dependents(view,{signal:proposalSignal});
+     barrierTemplate?(barrierTemplate.removal?settlements.prepareNativeWallRemoval(options.nativeBarrierWallEntities,{signal:proposalSignal,template:barrierTemplate}):await settlements.prepareNativeWallAdditions(options.nativeBarrierWallEntities,{signal:proposalSignal,template:barrierTemplate})):await dependents(view,{signal:proposalSignal});
     stoppedParts=parts;try{
      const cropExpiry=nativeShieldProposal?.nativeShieldCropExpiry;
      const shieldStop=nativeShieldProposal?.nativeShieldCropStop??(cropExpiry?.completionSequence===undefined?null:cropExpiry);
@@ -503,14 +503,14 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
    if(shield&&(!emptyResources(proposal,proposal.kind,boundary)||proposal.phase!=='proposal'||!shieldStop&&(
       proposal.retainsNativeAssignments!==true||proposal.routeEffects?.rows?.length!==0)||proposal.gateEffects?.rows?.length!==0))throw Error('Native shield changed unprepared terrain or routes');
    if(barrier){
-    const gate=template.gate,removal=template.removal,targets=removal?[removal]:gate?[gate]:template.additions;
+    const removal=template.removal,targets=nativeBarrierAdditionOwners(template);
     if(!Array.isArray(nativeBarrierWallEntities)||nativeBarrierWallEntities.length!==targets.length||nativeBarrierWallEntities.some((wall,index)=>{
-     const expected=targets[index];
+     const expected=targets[index],gate=expected.proxies?expected:null;
      if(!wall||wall.id!==expected.entityId||wall.kind!=='wall'||Boolean(wall.gate)!==Boolean(gate||removal))return true;
      if(removal)return false;
      if(gate){
       const scale=gateScale(wall);
-      return nativeGateModelId(wall.material)!==gate.modelId||wall.gateOpen!==gate.opening||wall.x!==gate.x||wall.z!==gate.z||
+      return nativeGateModelId(wall.material)!==gate.modelId||wall.gateOpen!==gate.opening||wall.gateOpenDirection!==gate.openingDirection||wall.x!==gate.x||wall.z!==gate.z||
        (wall.yaw??0)!==gate.yaw||scale!==gate.sz||scale*(wall.baseScaleX??1)!==gate.sx;
      }
      const parts=spatialStructureBarriers(wall);
