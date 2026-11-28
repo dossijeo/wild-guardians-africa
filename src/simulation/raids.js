@@ -792,7 +792,7 @@ export function nativeDesertIntroductoryRaid(state,animal){
  return animal?.species==='warthog'&&nativeDesertIntroductoryCohort(state,animal);
 }
 export function nativeDesertShelteredCenterRaid(state,animal){
- return (animal?.species==='warthog'||animal?.species==='hyena')&&nativeDesertIntroductoryCohort(state,animal);
+ return ['warthog','hyena','buffalo'].includes(animal?.species)&&nativeDesertIntroductoryCohort(state,animal);
 }
 // The first native crop cohort has one mobile body and only inactive workers.
 // A different encounter, protection or reservation requires a new admission.

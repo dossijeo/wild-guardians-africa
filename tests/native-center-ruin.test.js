@@ -24,7 +24,10 @@ const binary = process.env.QA_BARRIER_WASM ?? new URL('../src/world/wild-engine/
 const module = new WebAssembly.Module(readFileSync(binary));
 const recording = new URL('../docs/qa/raid-spawn-navigation/prepared-complete-browser-desert.json', import.meta.url);
 const paidDesertRefuge = new URL('./fixtures/desierto712-d1-native-refuge-before-night.json.gz', import.meta.url);
-const secondDesertNight = new URL('./fixtures/desierto712-d2-enclosed-hyena-before-raid.json.gz', import.meta.url);
+const shelteredDesertNights = [
+ {day:2,species:'hyena',hp:[535,510,485]},
+ {day:3,species:'buffalo',hp:[450,415,380,345]},
+];
 const recorded = JSON.parse(readFileSync(recording)).timing.navigationContext;
 const {activeBounds} = recorded;
 const view = {bounds: activeBounds, ...recorded.raidView};
@@ -47,18 +50,20 @@ function residentSession(state) {
   return session;
 }
 
-test('the Desert enclosure admits the planned hyena center strike and retreat on the second night',async()=>{
- const raw=gunzipSync(readFileSync(secondDesertNight)).toString(),initial=deserialize(raw),saved=savedNativeAuthorityOptions(raw);
- const manifest={epoch:'desert-second-night',chunks:saved.chunkKeys.map(key=>{
+for(const {day,species,hp} of shelteredDesertNights)test(`the Desert enclosure admits the planned ${species} center strikes and retreat on night ${day}`,async()=>{
+ const checkpoint=new URL(`./fixtures/desierto712-d${day}-enclosed-${species}-before-raid.json.gz`,import.meta.url);
+ const raw=gunzipSync(readFileSync(checkpoint)).toString(),initial=deserialize(raw),saved=savedNativeAuthorityOptions(raw);
+ const manifest={epoch:`desert-night-${day}`,chunks:saved.chunkKeys.map(key=>{
   const [cx,cz]=key.split(',').map(Number);return {cx,cz,revision:1};
  })};
  assert(saved.nativeWorkerLifecycle);
- assert.deepEqual(initial.nightPlan.group,['hyena']);
+ assert.equal(initial.day,day);
+ assert.deepEqual(initial.nightPlan.group,[species]);
  assert(initial.workers.every(worker=>worker.status==='home'));
  const walls=initial.structures.filter(structure=>structure.kind==='wall');
  assert(walls.some(wall=>wall.gate&&wall.gateOpen===0));
  const events=[],proofs=[],draws=new Map();
- let rig,f,state=initial;
+ let rig,f,state=initial,cropsAtRaidEnd;
  try{
   f=await nativeProductionAuthority(initial,{...saved,emptyBeastPhysics:true,getTerrainManifest:()=>manifest,
    async onPrepare(record){
@@ -74,10 +79,11 @@ test('the Desert enclosure admits the planned hyena center strike and retreat on
     proofs.push(proof);
    },
   });
-  for(let i=0;i<600&&state.day===2;i++){
+  for(let i=0;i<600&&state.day===day;i++){
    const publication=f.command({kind:'advance',seconds:.05,steps:4,nightFastForward:true});
    assert.equal(typeof publication.then,'undefined');
    state=JSON.parse(publication.snapshot);events.push(...publication.events);
+   if(publication.events.some(event=>event.type==='RaidEnded'))cropsAtRaidEnd=state.plants.map(crop=>[crop.id,crop.alive]);
    rig?.update(structuredClone(state));
    await f.present();
    assert.deepEqual(f.faults,[]);
@@ -89,10 +95,10 @@ test('the Desert enclosure admits the planned hyena center strike and retreat on
     if(state.raid)rig.presented(binding.relativeTime);
    }
   }
-  assert.equal(state.day,3);
+  assert.equal(state.day,day+1);
   for(const record of f.records)await record.packet.presented;
   assert.deepEqual(proofs.map(({reference})=>[reference.kind,reference.purpose]),
-   [[26,'center'],[27,'center'],[26,'center'],[27,'center'],[26,'center'],[27,'center'],[26,'retreat']]);
+   [...hp.flatMap(()=>[[26,'center'],[27,'center']]),[26,'retreat']]);
   for(const {reference} of proofs){
    assert.equal(reference.bodyId,proofs[0].reference.bodyId);
    const draw=draws.get(reference.worldBoundary.ticket);
@@ -100,13 +106,14 @@ test('the Desert enclosure admits the planned hyena center strike and retreat on
    assert.equal(draw.nativeAnimalCrop.bodyId,reference.bodyId);
   }
   assert.deepEqual(events.filter(event=>event.type==='StructureHit').map(event=>[event.targetId,event.structureHit.hp]),
-   [['structure-2',535],['structure-2',510],['structure-2',485]]);
+   hp.map(remaining=>['structure-2',remaining]));
   const hits=events.filter(event=>event.type==='AnimalLogicalHit');
   assert.deepEqual(hits.map(event=>event.attackId),proofs.filter(proof=>proof.reference.kind===27).map(proof=>'attack-'+proof.attackId));
-  assert(hits.every(event=>event.species==='hyena'));
+  assert(hits.every(event=>event.species===species));
   assert.equal(events.filter(event=>event.type==='RaidEnded').length,1);
   assert.deepEqual(state.structures.filter(structure=>structure.kind==='wall'),walls);
-  assert.deepEqual(state.plants.map(crop=>[crop.id,crop.alive]),initial.plants.map(crop=>[crop.id,crop.alive]));
+  assert.deepEqual(cropsAtRaidEnd,initial.plants.map(crop=>[crop.id,crop.alive]));
+  assert.deepEqual(state.plants.filter(crop=>crop.alive).map(crop=>crop.id),initial.plants.filter(crop=>crop.alive).map(crop=>crop.id));
   assert.deepEqual(state.ledger,initial.ledger);
   assert.deepEqual(f.errors,[]);
  }finally{rig?.close();await f?.close();}
