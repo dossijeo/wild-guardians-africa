@@ -248,5 +248,152 @@
       "drained": true,
       "applicationErrors": []
     }
+  },
+  "twoShelteredWorkers": {
+    "product": "9f2478f17f6c350c433fa6f2b32e7226d60063fd",
+    "fixturePath": "tests/fixtures/desierto712-d1-two-workers-refuge-before-night.json.gz",
+    "fixtureSHA256": "20b284532df0d3f115c099492877851e5da747ae309bb1c6adb2b688322eebd2",
+    "snapshotSHA256": "4ad806159055a7f786e72fd582c0a3b52dafe10811fd3c34dc2d581419629502",
+    "taskReservationCorrection": "09f828d12663ded61462b769a9cf542f84c34bcd",
+    "cpu": {
+      "baselineFailure": "Native task game cohort contains an unsupported mover",
+      "baselineReceiptSHA256": "7b8ab273f5ff44485a5e7681c07b46fa982dc0b626df1154ee778676105b959f",
+      "legacyReceiptSHA256": "eef7268c5a501841a073d185283afb9c68514f4319bd97a9376be5ac6666da42",
+      "nativeReceiptSHA256": "dcf91c310ecf35ada0c87aa7386e953bfd253f36dff1b3b6e6bb237b8223a829",
+      "sameLegacyTargets": [
+        "plant-3",
+        "structure-2"
+      ],
+      "latestObservedHomeAt": 277.99999999998136,
+      "checkpointAt": 369.99999999997726,
+      "coldStrikeReloadPreservedAttackId": true,
+      "targetedTestsPassed": 69,
+      "productionBuildModules": 755
+    },
+    "physical": {
+      "browser": "Edge",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing"
+      },
+      "rawReceipt": ".cache/desert-two-paid-refuge-nvidia.json",
+      "receiptSHA256": "2375fb88916d05f7d3cb5de1fad4df990b9290eeb7d3d9784b5862ed4b2f4a18",
+      "startupDraw": 3,
+      "birthAt": 370.50227023610705,
+      "heldFirstReady": [
+        26,
+        27
+      ],
+      "animal": {
+        "id": "animal-17",
+        "bodyId": 1
+      },
+      "programs": [
+        {
+          "ticket": 2,
+          "kind": 26,
+          "purpose": "crop",
+          "targetId": 3,
+          "firstDraw": 16,
+          "age": 0,
+          "bodyId": 1
+        },
+        {
+          "ticket": 4,
+          "kind": 27,
+          "purpose": "crop",
+          "targetId": 3,
+          "firstDraw": 625,
+          "age": 0,
+          "bodyId": 1
+        },
+        {
+          "ticket": 6,
+          "kind": 26,
+          "purpose": "center",
+          "targetId": 2,
+          "firstDraw": 671,
+          "age": 0,
+          "bodyId": 1
+        },
+        {
+          "ticket": 8,
+          "kind": 27,
+          "purpose": "center",
+          "targetId": 2,
+          "firstDraw": 709,
+          "age": 0,
+          "bodyId": 1
+        },
+        {
+          "ticket": 10,
+          "kind": 26,
+          "purpose": "retreat",
+          "targetId": null,
+          "firstDraw": 757,
+          "age": 0,
+          "bodyId": 1
+        }
+      ],
+      "hits": [
+        {
+          "attackId": "attack-23",
+          "targetId": "plant-3",
+          "simulationTime": 441.10181618881694
+        },
+        {
+          "attackId": "attack-27",
+          "targetId": "structure-2",
+          "simulationTime": 451.0518161888079
+        }
+      ],
+      "crops": [
+        {
+          "id": "plant-3",
+          "alive": false
+        },
+        {
+          "id": "plant-5",
+          "alive": true
+        }
+      ],
+      "centers": [
+        {
+          "id": "structure-2",
+          "hp": 580
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-8",
+          "personId": "person-7",
+          "contractDay": 1,
+          "x": 88,
+          "z": 0,
+          "status": "home",
+          "hits": 0
+        },
+        {
+          "id": "worker-10",
+          "personId": "person-9",
+          "contractDay": 1,
+          "x": 88,
+          "z": 0,
+          "status": "home",
+          "hits": 0
+        }
+      ],
+      "balance": {
+        "n": "320",
+        "d": "1"
+      },
+      "firstDrawWithoutAnimal": 1063,
+      "clockAtFirstDrawWithoutAnimal": 483.04181618877885,
+      "drained": true,
+      "applicationErrors": [],
+      "scope": "Ordinary saved authority from the public pre-raid checkpoint, after Home19 removed both workers. The paid daytime shift is a separate CPU control.",
+      "menuStartupExercised": false,
+      "cadenceMeasured": false
+    }
   }
 }
