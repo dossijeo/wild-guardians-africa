@@ -1141,9 +1141,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   }
 
   function prepareNativeBarrierCommit(owner){
-    // The preceding stop projected a held Game owner and queued its existing
-    // planning notice. Flush that consequence before capturing a new proposal;
-    // the next ordinary tick must not discover an older semantic boundary.
+    // Capture the facts from paid world commands and any preceding worker stop
+    // before staging. The next tick must not introduce either old fact batch.
+    planner.flushWorldEvents();
     planner.flushTaskEvents();planner.flushNativeIntentControl();
     const first=nativeStructureQuote(quoteStructureCommand(owner.command,[]));
     if(!first)throw Error('Native construction requires an unchanged resident addition quote');

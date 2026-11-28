@@ -9,6 +9,7 @@ import {rational} from '../src/simulation/money.js';
 import {wallSpec} from '../src/simulation/rules.js';
 import {nativeFarmArrivalRouteFixture} from './helpers/native-farm-arrival-route.js';
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
+import {createSpatialCampaignOpening} from '../tools/experiments/spatial-campaign-opening.mjs';
 async function pump(f,promise){let done=false,result,error;promise.then(value=>{done=true;result=value;},value=>{done=true;error=value;});for(let i=0;i<2000&&!done;i++)await f.present();if(!done)throw Error('Native Build directed test timed out');if(error)throw error;return result;}
 async function setup(away=false){
  const source=nativeFarmArrivalRouteFixture({peer:false}),saved=structuredClone(source.state),a=source.point(0,away?8:-3),b=source.point(0,away?14:3);saved.ledger.balance=rational(100000);
@@ -54,6 +55,44 @@ const enclosureCommand={kind:'buildWallChain',id:'paid-sheltered-crops-enclosure
 const enclosureStart=()=>deserialize(gunzipSync(readFileSync(new URL('./fixtures/desierto712-two-crops-prehire.json.gz',import.meta.url))).toString('utf8'));
 const wallOwners=reply=>reply.nativeAuthorityCheckpoint.wallOwners;
 const enclosureAuthority=(state=enclosureStart())=>nativeProductionAuthority(state,{...savedNativeAuthorityOptions(serialize(state)),drawFarmGate:true});
+
+test('the live Desert enclosure captures already paid crop facts before its READY',async()=>{
+ const opening=await createSpatialCampaignOpening({seed:712,biome:'desierto',culture:'mapungubwe'});
+ const {state,loaded}=opening;
+ await opening.dispose();
+ const f=await nativeProductionAuthority(state,{chunkKeys:[...loaded.keys()],nativeWorkerLifecycle:true,drawFarmGate:true});
+ const command={...enclosureCommand,id:'live-enclosure-after-crops',points:[[84,-5],[90,-5],[90,-13],[84,-13],[84,-5]],capacityLimit:true};
+ try{
+  for(const [index,z] of [-7,-10].entries()){
+   const paid=f.command({kind:'plant',id:'enclosed-crop-'+index,species:'platano',x:87,z});
+   assert.equal(paid.value,true);
+   assert.equal(paid.events.filter(event=>event.type==='CropPlaced').length,1);
+  }
+  await pump(f,f.authority.prepareNativeStructureCommand(command));
+  const ready=f.records.find(record=>record.kind==='barrier-addition');
+  assert.equal(ready.resources.nativeBarrierAddition.gates[0].entityId,'structure-7');
+  for(let i=0;i<9;i++){
+   const intermediate=f.command({kind:'advance',seconds:.05,steps:4,nightFastForward:false});
+   assert.equal(intermediate.events.some(event=>event.type==='WallChainBuilt'),false);
+   assert.equal(JSON.parse(intermediate.snapshot).ledger.entries[command.id],undefined);
+   await f.present();
+  }
+  const reply=await pump(f,f.structureCommand(command));
+  assert.equal(reply.value,true,reply.rejection);
+  const state=JSON.parse(reply.snapshot);
+  assert.deepEqual(state.ledger.entries[command.id],rational(-130));
+  assert.deepEqual(state.plants.map(plant=>plant.id),['plant-3','plant-5']);
+  assert.deepEqual(reply.events.filter(event=>event.type==='WallChainBuilt').map(({count,gates})=>[count,gates]),[[13,1]]);
+  const committed=reply.nativeWorldResources.find(row=>row.nativeBarrierAdditionBinding);
+  assert(committed.worldBoundary.effectiveTime>ready.resources.worldBoundary.effectiveTime);
+  assert.equal(committed.nativeBarrierAdditionBinding.preparedReference.worldBoundary.ticket,ready.resources.worldBoundary.ticket);
+  assert(committed.worldBoundary.ticket>ready.resources.worldBoundary.ticket);
+  await pump(f,f.authority.finishNativeStructureCommand(command));
+  await f.present();
+  assert(ready.committed);
+  assert.deepEqual([...f.faults,...f.errors],[]);
+ }finally{await f.close();}
+});
 
 test('one native Build installs the automatic gate and twelve solid walls together across a disk reload',async()=>{
  const f=await enclosureAuthority();let reloaded;
