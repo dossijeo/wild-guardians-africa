@@ -111,5 +111,32 @@
       "night-five-rhino-route-adoption-runtime-nvidia.failure.json": "089592f784e5b8ac9e09ec1aab4d6e40b30af9d7a1003d11c4f429bb7d5e7774"
     }
   },
+  "savedNightCompletionNvidia": {
+    "revision": "e7b400032",
+    "scope": "Same fifth-night save and demand injected during Route26 READY. The frame assertion requires the same route and execution epoch with elapsed age derived from the presented clock.",
+    "authoritySequences": [44, 45],
+    "authorityTime": 2735.9857055868206,
+    "routeTicket": 2,
+    "terrainTicket": 3,
+    "routeDraw": 60,
+    "terrainDraw": 63,
+    "terrainDrawAge": 0.09999999403953552,
+    "bodyAcrossApproachStrikeRetreat": 1,
+    "motionTickets": [2, 5, 7],
+    "centerHitAt": 2782.5057055869897,
+    "centerHpAfterHit": 125,
+    "retreatHitsRemaining": 4,
+    "ruinAt": 2785.7057055870014,
+    "ruinTicket": 8,
+    "ruinDraw": 196,
+    "absenceDraw": 236,
+    "result": "defeat",
+    "gameOverEvents": 1,
+    "drained": true,
+    "errors": [],
+    "evidence": {
+      "night-five-rhino-route-adoption-retained-nvidia.json": "937bac08d5d67cee7020b6a7f2d9771ba3db28ea41e5393e3e1f71833ad6bdd4"
+    }
+  },
   "pending": [ "Verify collapse, defeat, absence and drain in the continuous campaign", "Identify the draw owner in the standalone close audit" ]
 }
