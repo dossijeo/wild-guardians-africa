@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import {wallVisualAt} from '../simulation/structure-presentation.js';
 import {wallStages,morphedWallPositions} from './walls-native.js';
 import {nativeGateLeaves} from '../world/gate-frames-native.js';
+import {gateTravelRadians} from '../world/gate-passages.js';
 import {splitGateBridge,articulateGate} from './gate-articulation.js';
 import {structureMaterialReplica} from './structure-material-replica.js';
 
@@ -64,9 +65,9 @@ export class NativeWall extends THREE.Group {
     this.lastStatus=entity.status;
     if(entity.status!=='intact'||seconds===undefined){this.target=target;this.from=visual;this.damageAge=.48;}
     const opening=entity.status==='ruined'?0:Math.max(0,Math.min(1,entity.gateOpen??0));
-    const shapeChanged=this.visual!==visual||this.gate!==entity.gate,direction=entity.gateOpenDirection??1;
-    if(!shapeChanged&&this.gateOpen===opening&&this.gateOpenDirection===direction)return;
-    this.visual=visual;this.gate=entity.gate;this.gateOpen=opening;this.gateOpenDirection=direction;
+    const shapeChanged=this.visual!==visual||this.gate!==entity.gate,travel=gateTravelRadians(entity.gateOpenDirection,entity.gateOpenDegrees);
+    if(!shapeChanged&&this.gateOpen===opening&&this.gateTravel===travel)return;
+    this.visual=visual;this.gate=entity.gate;this.gateOpen=opening;this.gateTravel=travel;
     const scale=entity.gate?({adobe:1.4,piedra:1.4,reforzado:1.6}[entity.material]??1):1;
     this.scale.set((entity.baseScaleX??1)*scale,scale,scale);
     const stages=wallStages({material:entity.material,kind:entity.gate?'gate':'wall',visual});
@@ -107,7 +108,7 @@ export class NativeWall extends THREE.Group {
       // attributes unrotated; canonical mechanism geometry stays in bridge.pos.
       const gatePosition=mesh.geometry.attributes.wgGatePosition,gateNormal=mesh.geometry.attributes.wgGateNormal;
       if(shapeChanged&&gatePosition){gatePosition.array.set(positions);gatePosition.needsUpdate=true;gateNormal.array.set(normals);gateNormal.needsUpdate=true;}
-      mesh.geometry.attributes.position.array.set(articulateGate(bridge,opening,positions,normals,direction));mesh.geometry.attributes.position.needsUpdate=true;mesh.geometry.attributes.normal.needsUpdate=true;
+      mesh.geometry.attributes.position.array.set(articulateGate(bridge,opening,positions,normals,travel));mesh.geometry.attributes.position.needsUpdate=true;mesh.geometry.attributes.normal.needsUpdate=true;
       const ao=mesh.geometry.attributes.ambientVisibility;if(ao){const release=Math.sin(Math.PI*t);for(let k=0;k<ao.count;k++){const fade=Math.max(release,bridge.leafFlags?.[k]?opening:0);ao.array[k]=bridge.visibility[k]+(1-bridge.visibility[k])*fade;}ao.needsUpdate=true;}
       mesh.geometry.computeBoundingBox();mesh.geometry.computeBoundingSphere();
     });

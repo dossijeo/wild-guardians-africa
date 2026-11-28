@@ -280,6 +280,7 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
   const wallSettings=Object.fromEntries(B.walls.map(w=>[w.id,w.hp]));
   let layout=wallLayout([...s.structures,...newPieces],wallSettings);
   const originals=new Map([...s.structures,...newPieces].map(p=>[p.created,p]));
+  const gateMounts=new Map();
   const suppressedForGates=new Set(nav.suppressed);
   for(const piece of newPieces)for(const id of nav.wallPlacement(piece).suppress??[])suppressedForGates.add(id);
   const overlayUnavailable=Symbol('local wall overlay unavailable');
@@ -288,6 +289,11 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
     const original=originals.get(p.id);if(!original)return false;
     const candidate={...original,gate:true},check=nav.wallPlacement(candidate);
     if(!check.valid||cropOverlap(candidate))return false;
+    if(nav.certifyWallGate){
+      const mount=nav.certifyWallGate(candidate,newPieces);
+      if(!mount)return false;
+      Object.assign(candidate,mount);gateMounts.set(p.id,mount);
+    }
     const points=gatePortalPoints(candidate);if(points.length!==2)return false;
     if(nav.wallWorkerReachability){
       const overlay=localOverlay??nav.wallLocalOverlay?.(newPieces,
@@ -379,7 +385,7 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
     }
   }else ensure((x,z)=>interior.walkable(x,z,.28,null,true));
   const converted=layout.pieces.filter(p=>newIds.has(p.id)&&p.autoGate&&!s.structures.some(e=>e.id===p.entityId&&e.autoGate));
-  const updates=converted.map(p=>({id:p.entityId,gate:true,autoGate:true,maxHp:p.maxHp,hp:p.hp})).filter(update=>{const piece=[...s.structures,...newPieces].find(p=>p.id===update.id),candidate={...piece,...update};return nav.wallPlacement(candidate).valid&&!cropOverlap(candidate);});
+  const updates=converted.map(p=>({id:p.entityId,gate:true,autoGate:true,maxHp:p.maxHp,hp:p.hp,...gateMounts.get(p.id)})).filter(update=>{const piece=[...s.structures,...newPieces].find(p=>p.id===update.id),candidate={...piece,...update};return nav.wallPlacement(candidate).valid&&!cropOverlap(candidate);});
   if(nav.wallWorkerReachability){
     // One shared native connectivity query per village and direction replaces
     // the old route-before/route-after loop over every worker and center.

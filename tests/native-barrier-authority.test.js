@@ -53,7 +53,7 @@ const enclosureCommand={kind:'buildWallChain',id:'paid-sheltered-crops-enclosure
  points:[[96,-5],[102,-5],[102,-13],[96,-13],[96,-5]],options:{smooth:false,snap:false,requireComplete:true}};
 const enclosureStart=()=>deserialize(gunzipSync(readFileSync(new URL('./fixtures/desierto712-two-crops-prehire.json.gz',import.meta.url))).toString('utf8'));
 const wallOwners=reply=>reply.nativeAuthorityCheckpoint.wallOwners;
-const enclosureAuthority=(state=enclosureStart())=>nativeProductionAuthority(state,savedNativeAuthorityOptions(serialize(state)));
+const enclosureAuthority=(state=enclosureStart())=>nativeProductionAuthority(state,{...savedNativeAuthorityOptions(serialize(state)),drawFarmGate:true});
 
 test('one native Build installs the automatic gate and twelve solid walls together across a disk reload',async()=>{
  const f=await enclosureAuthority();let reloaded;
@@ -68,8 +68,8 @@ test('one native Build installs the automatic gate and twelve solid walls togeth
   assert.equal(f.snapshot().ledger.entries[enclosureCommand.id],undefined);
   const {gates,additions,version}=ready.resources.nativeBarrierAddition;
   assert.equal(version,4);assert.equal(gates.length,1);assert.equal(additions.length,12);
-  assert.equal(gates[0].entityId,'structure-19');assert.equal(gates[0].opening,0);
-  assert.equal(gates[0].openingDirection,-1);
+  assert.equal(gates[0].entityId,'structure-7');assert.equal(gates[0].opening,0);
+  assert.equal(gates[0].openingDirection,undefined);assert.equal(gates[0].openingDegrees,89);
   assert.deepEqual(gates[0].proxies.map(proxy=>proxy.passMask),[0,0,1]);
   assert.deepEqual(ready.nativeBarrierWallEntities.map(piece=>piece.id),[gates[0].entityId,...additions.map(piece=>piece.entityId)]);
 
@@ -85,13 +85,13 @@ test('one native Build installs the automatic gate and twelve solid walls togeth
   assert.equal(committed.length,1);
   const binding=committed[0].nativeBarrierAdditionBinding,{nativeIds}=binding;
   assert.equal(nativeIds.length,15);
-  const wrongDirection=structuredClone(binding);delete wrongDirection.reference.gates[0].openingDirection;
-  assert.throws(()=>copyNativeBarrierAdditionAttestation(wrongDirection),/differs from its preparation/);
+  const wrongTravel=structuredClone(binding);delete wrongTravel.reference.gates[0].openingDegrees;
+  assert.throws(()=>copyNativeBarrierAdditionAttestation(wrongTravel),/differs from its preparation/);
   const wrongIds=structuredClone(binding);[wrongIds.nativeIds[0],wrongIds.nativeIds[3]]=[wrongIds.nativeIds[3],wrongIds.nativeIds[0]];
   assert.throws(()=>copyNativeBarrierAdditionAttestation(wrongIds),/differs from its preparation/);
   const checkpoint=f.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
   const owners=new Map(wallOwners(checkpoint).map(({entityId,ids})=>[entityId,ids]));
-  assert.deepEqual(owners.get('structure-19'),nativeIds.slice(0,3));
+  assert.deepEqual(owners.get('structure-7'),nativeIds.slice(0,3));
   assert.deepEqual(additions.map(({entityId})=>owners.get(entityId)),nativeIds.slice(3).map(id=>[id]));
   const saved=prepareWorkerCheckpoint(checkpoint,{slotId:before.slotId,policy:{nativeAuthority:true},savedAt:0});
   assert(saved.saved);assert.deepEqual(saved.state.ledger.entries[enclosureCommand.id],rational(-130));
@@ -103,7 +103,7 @@ test('one native Build installs the automatic gate and twelve solid walls togeth
   // stored as zero. Every barrier ID, coordinate and counter must survive.
   assert.deepEqual(restored.nativeAuthorityCheckpoint.spatialState,JSON.parse(JSON.stringify(checkpoint.nativeAuthorityCheckpoint.spatialState)));
   assert.deepEqual(reloaded.snapshot().structures,saved.state.structures);
-  assert.equal(reloaded.snapshot().structures.find(piece=>piece.id==='structure-19').gateOpenDirection,-1);
+  assert.equal(reloaded.snapshot().structures.find(piece=>piece.id==='structure-7').gateOpenDegrees,89);
   assert.equal(reloaded.command(enclosureCommand).value,false);
   const nextCommand={kind:'buildWallChain',id:'next-wall-after-enclosure',material:'zarzas',points:[[89,5],[92,5]],options:{smooth:false,snap:false}};
   await pump(reloaded,reloaded.authority.prepareNativeStructureCommand(nextCommand));
@@ -111,6 +111,25 @@ test('one native Build installs the automatic gate and twelve solid walls togeth
   const [nextId]=next.nativeWorldResources.find(resource=>resource.kind===2).nativeBarrierAdditionBinding.nativeIds;
   assert.equal(nextId,nativeIds.at(-1)+1);
   await pump(reloaded,reloaded.authority.finishNativeStructureCommand(nextCommand));
+  reloaded.command({kind:'openInitialHiring'});
+  reloaded.command({kind:'hire',id:'enclosed-first-worker',selection:{youngMale:1}});
+  assert.equal(reloaded.snapshot().workers.length,1);
+  let entered=false;
+  for(let i=0;i<350&&!entered;i++){
+   const packet=await reloaded.command({kind:'advance',seconds:.05,steps:4,nightFastForward:false});
+   const state=JSON.parse(packet.snapshot),[worker]=state.workers;
+   await reloaded.present();
+   if(worker.x>97&&worker.z>-13&&worker.z<-5){
+    const gate=state.structures.find(piece=>piece.id==='structure-7');
+    assert.equal(gate.gateOpen,1);assert.equal(gate.gateOpenDegrees,89);
+    assert.equal(worker.nativeRouteAdmission,'native-task');
+    entered=true;
+   }
+   assert.deepEqual(reloaded.faults,[]);
+  }
+  assert(entered,'paid worker must physically cross the recertified gate');
+  const passage=reloaded.records.find(record=>record.committed&&record.resources.gates?.some(gate=>gate.entityId==='structure-7'&&gate.openingDegrees===89));
+  assert(passage,'the worker packet must own the motor and its exact angle');
   assert.deepEqual([...f.faults,...reloaded.faults],[]);
  }finally{await f.close();await reloaded?.close();}
 });

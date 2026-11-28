@@ -5,7 +5,7 @@ import {copyNativeWorldBoundary,sameNativeWorldBoundary} from './native-world-bo
 const dimensions=['x','z','halfX','halfZ','yaw'];
 const geometryKeys=[...dimensions,'passMask'];
 const shapeKeys=['entityId',...geometryKeys];
-const gateKeys=['entityId','modelId','x','z','yaw','sx','sz','mechanismId','opening','openingDirection','rootMatrix','leafMatrix','proxies'];
+const gateKeys=['entityId','modelId','x','z','yaw','sx','sz','mechanismId','opening','openingDirection','openingDegrees','rootMatrix','leafMatrix','proxies'];
 const only=(value,keys)=>value&&Object.keys(value).every(key=>keys.includes(key));
 const validGeometry=shape=>dimensions.every(key=>Number.isFinite(shape[key])&&Math.fround(shape[key])===shape[key])&&
  shape.halfX>0&&shape.halfZ>0&&shape.halfX<=100&&shape.halfZ<=100;
@@ -22,7 +22,7 @@ function copyPreparedGate(value){
  if(!only(value,gateKeys)||!id||!Number.isSafeInteger(Number(id[1]))||![1,2,3].includes(value.modelId)||
     ![value.x,value.z,value.yaw,value.sx,value.sz].every(Number.isFinite)||value.sx<=0||value.sz<=0||
     !Number.isSafeInteger(value.mechanismId)||value.mechanismId<1||!Number.isFinite(value.opening)||value.opening<0||value.opening>1||
-    value.openingDirection!==undefined&&value.openingDirection!==-1||
+    value.openingDirection!==undefined&&value.openingDirection!==-1||value.openingDegrees!==undefined&&(!Number.isInteger(value.openingDegrees)||value.openingDegrees<1||value.openingDegrees>=90)||
     !matrix(value.rootMatrix)||!matrix(value.leafMatrix)||value.rootMatrix[12]!==value.x||value.rootMatrix[14]!==value.z||
     !Array.isArray(value.proxies)||value.proxies.length!==3)
   throw TypeError('Invalid prepared native gate');
@@ -32,7 +32,7 @@ function copyPreparedGate(value){
  });
  return Object.freeze({
   entityId:value.entityId,modelId:value.modelId,x:value.x,z:value.z,yaw:value.yaw,sx:value.sx,sz:value.sz,
-  mechanismId:value.mechanismId,opening:value.opening,...(value.openingDirection===-1?{openingDirection:-1}:{}),
+  mechanismId:value.mechanismId,opening:value.opening,...(value.openingDirection===-1?{openingDirection:-1}:{}),...(value.openingDegrees!==undefined?{openingDegrees:value.openingDegrees}:{}),
   rootMatrix:Object.freeze([...value.rootMatrix]),leafMatrix:Object.freeze([...value.leafMatrix]),proxies:Object.freeze(proxies)
  });
 }
@@ -52,7 +52,7 @@ export function copyNativeBarrierAdditionReference(value){
  const worldBoundary=copyNativeWorldBoundary(value.worldBoundary);if(!worldBoundary)throw TypeError('Missing native solid addition boundary');
  const identity={kind:value.kind,version:value.version,worldBoundary,sourceControlSequence:value.sourceControlSequence};
  if(!batch)return Object.freeze({...identity,[variant]:variant==='removal'?copyPreparedRemoval(value.removal):variant==='gate'?copyPreparedGate(value.gate):copyNativeBarrierAdditions(value.additions)});
- if(!Array.isArray(value.gates)||!value.gates.length||!Array.isArray(value.additions)||value.gates.length+value.additions.length>256||value.gates.length+value.additions.length<2)throw TypeError('Invalid native gate addition batch');
+ if(!Array.isArray(value.gates)||!value.gates.length||!Array.isArray(value.additions)||value.gates.length+value.additions.length>256)throw TypeError('Invalid native gate addition batch');
  const gates=value.gates.map(copyPreparedGate),additions=value.additions.length?copyNativeBarrierAdditions(value.additions):Object.freeze([]);
  if(new Set([...gates,...additions].map(placement=>placement.entityId)).size!==gates.length+additions.length||
     gates.some((gate,index)=>gate.mechanismId!==gates[0].mechanismId+index))throw TypeError('Repeated or unordered native gate addition owner');

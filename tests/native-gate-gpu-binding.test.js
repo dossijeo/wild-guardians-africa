@@ -68,24 +68,25 @@ for(const material of ['zarzas','empalizada','reforzado'])test(`${material}: the
  }finally{f.close();}
 });
 
-test('the reverse swing material and pick surface use the native saved orientation',()=>{
+for(const {openingDirection,openingDegrees} of [{openingDirection:-1},{openingDegrees:89}])test(`gate travel ${openingDegrees??-90} renders and picks the native saved pose`,()=>{
  const f=nativeGateCrossingFixture({opening:1,yaw:.37,install:false}),gate=f.gates[0],prototype=gateMeshPrototype('zarzas');
  let wall,binding;
  try{
-  gate.gateOpenDirection=-1;
+  if(openingDirection!==undefined)gate.gateOpenDirection=openingDirection;
+  if(openingDegrees!==undefined)gate.gateOpenDegrees=openingDegrees;
   const navigationBarriers=f.session.core.addBarriersBatch(nativeGateCollisionProxies(f.session.core,gate));
-  assert.equal(f.service.installMechanism(gate.id,gate.material,{navigationBarriers,openingDirection:-1}).status,'installed');
+  assert.equal(f.service.installMechanism(gate.id,gate.material,{navigationBarriers,openingDirection,openingDegrees}).status,'installed');
   const pose=f.bridge.nativeGateMechanism(gate.id),at=pose.sampledAt;
-  assert.equal(pose.openingDirection,-1);assert.equal(pose.opening,1);
+  assert.equal(pose.openingDirection,openingDirection);assert.equal(pose.openingDegrees,openingDegrees);assert.equal(pose.opening,1);
   const worldBoundary={version:1,authorityEpoch:pose.authorityEpoch,nativeSession:pose.nativeSession,ticket:42,effectiveTime:at};
   const packet={kind:'native-gate-presentation',version:1,worldBoundary,gateId:pose.gateId,entityId:gate.id,mechanism:pose.mechanism,modelId:pose.modelId,
-   openingDirection:pose.openingDirection,rootMatrix:pose.rootMatrix,hinge:[-.62,0,0],startTime:at,endTime:at,rows:Float64Array.of(at,pose.opening),
+   openingDirection:pose.openingDirection,openingDegrees:pose.openingDegrees,rootMatrix:pose.rootMatrix,hinge:[-.62,0,0],startTime:at,endTime:at,rows:Float64Array.of(at,pose.opening),
    positions:pose.positions,leafFlags:pose.leafFlags,authorizedAutonomy:false};
   prototype.material.dispose();prototype.material=new MeshStandardNodeMaterial({side:DoubleSide});
   wall=new NativeWall({zarzas_puerta:prototype},{...gate,hp:1,maxHp:1},at);
   const parent=new Group();new Matrix4().fromArray(packet.rootMatrix).decompose(parent.position,parent.quaternion,parent.scale);parent.scale.divide(wall.scale);parent.add(wall);
   const motion=createNativeGateGpuClock(packet);
-  assert.throws(()=>createNativeGateGpuBinding({wall,presentation:{...packet,openingDirection:undefined},motion,getPickTime:()=>at}),/direction/);
+  assert.throws(()=>createNativeGateGpuBinding({wall,presentation:{...packet,openingDirection:undefined,openingDegrees:undefined},motion,getPickTime:()=>at}),/direction or angle/);
   binding=createNativeGateGpuBinding({wall,presentation:packet,motion,getPickTime:()=>at});binding.activate();
   const vertices=f.bridge.nativeGateMechanismWorldVertices(gate.id),index=packet.leafFlags.findIndex((value,i)=>i%3===0&&value&&
    new Vector3().fromArray(vertices,(i+1)*3).sub(new Vector3().fromArray(vertices,i*3))

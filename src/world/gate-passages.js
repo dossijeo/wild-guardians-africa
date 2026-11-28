@@ -6,13 +6,14 @@ const nativeModelIds=new Map([['zarzas',1],['empalizada',2],['reforzado',3]]);
 export const nativeGateModelId=material=>nativeModelIds.get(material);
 export const validGateOpening=opening=>Number.isFinite(opening)&&opening>=0&&opening<=1;
 export const gateScale=entity=>({adobe:1.4,piedra:1.4,reforzado:1.6}[entity.material]??1);
+export const gateTravelRadians=(direction=1,degrees=90)=>direction*(degrees===90?Math.PI/2:degrees*Math.PI/180);
 export function gateFrameFootprints(entity,opening=1){
   const source=entity.gate&&nativeGateFrames[entity.material];if(!source)return null;
-  const direction=entity.gateOpenDirection??1,key=[entity.x,entity.z,entity.yaw??0,entity.baseScaleX??1,entity.material,opening,direction].join(':');
+  const travel=gateTravelRadians(entity.gateOpenDirection,entity.gateOpenDegrees),key=[entity.x,entity.z,entity.yaw??0,entity.baseScaleX??1,entity.material,opening,travel].join(':');
   if(cache.get(entity)?.key===key)return cache.get(entity).frames;
   const c=Math.cos(entity.yaw??0),s=Math.sin(entity.yaw??0),scale=gateScale(entity),sx=scale*(entity.baseScaleX??1),leaf=nativeGateLeaves[entity.material];
   const polygons=[...source];
-  if(leaf){const angle=direction*Math.max(0,Math.min(1,opening))*Math.PI/2,co=Math.cos(angle),si=Math.sin(angle),[hx,hz]=leaf.hinge;polygons.push(nativeGateLeafFootprints[entity.material].map(([x,z])=>[hx+(x-hx)*co-(z-hz)*si,hz+(x-hx)*si+(z-hz)*co]));}
+  if(leaf){const angle=travel*Math.max(0,Math.min(1,opening)),co=Math.cos(angle),si=Math.sin(angle),[hx,hz]=leaf.hinge;polygons.push(nativeGateLeafFootprints[entity.material].map(([x,z])=>[hx+(x-hx)*co-(z-hz)*si,hz+(x-hx)*si+(z-hz)*co]));}
   const frames=polygons.map(side=>side.map(([x,z])=>({x:entity.x+x*sx*c+z*scale*s,z:entity.z-x*sx*s+z*scale*c})));
   cache.set(entity,{key,frames});return frames;
 }

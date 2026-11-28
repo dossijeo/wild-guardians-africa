@@ -735,7 +735,7 @@ struct IntentState {
   uint64_t gateStaticPairs=0,gateStaticEvaluations=0,gateStaticRejected=0;
   std::array<double,8> gateStaticResult{};
   uint64_t nextGateMechanism=0;
-  std::array<double,41> gateMechanismPose{};
+  std::array<double,42> gateMechanismPose{};
   std::array<double,8> gateMechanismCollision{};
   std::vector<double> gateMechanismWorld;
   int gateStaticProofs=0;
@@ -1872,7 +1872,52 @@ extern "C" EMSCRIPTEN_KEEPALIVE const double* nav_gate_addition_proxy_geometry(i
  auto& rows=state().gateResult;rows.assign(proxies.begin(),proxies.end());return rows.data();
 }
 
-int spatialIntentStageGateAdditions(const std::vector<std::array<double,7>>& values,int firstBarrier,const std::vector<float>& solids,std::vector<float>& proxies){
+// A completely opened gate also needs a resident worker connection. The
+// mechanism can clear its neighbours and still leave too little room to cross.
+static bool gateEnclosureConnection(const NativeGate& gate,const std::vector<SpatialStaticMutation>& solids){
+ if(gate.workerParts[0].empty()||gate.workerParts[1].empty())return false;
+ const double c=std::cos(gate.yaw),s=std::sin(gate.yaw),radius=.28;
+ double left=-std::numeric_limits<double>::infinity(),right=-left,low=right,high=left;
+ std::array<std::vector<double>,4> parts;
+ for(int i=0;i<4;i++){
+  parts[i]=gatePartWorld(gate,i==3?gate.physicalLeaf:gate.workerParts[i],i==3,gate.at,1);
+  for(size_t k=0;k<parts[i].size();k+=2){
+   const double x=parts[i][k]-gate.x,z=parts[i][k+1]-gate.z,lateral=x*c-z*s,spread=x*s+z*c;
+   if(i==0||i==3)left=std::max(left,lateral);else if(i==1)right=std::min(right,lateral);
+   low=std::min(low,spread);high=std::max(high,spread);
+  }
+ }
+ if(right-left<=2*radius+1e-4)return false;
+ const double middle=(left+right)/2,u=low-radius-.1,v=high+radius+.1;
+ const float x=float(gate.x+middle*c+u*s),z=float(gate.z-middle*s+u*c),nx=float(gate.x+middle*c+v*s),nz=float(gate.z-middle*s+v*c);
+ for(const auto& polygon:parts)if(polygon.size()>=6&&spatialNativePolygonDistance(polygon.data(),int(polygon.size()/2),x,z,nx,nz)<=radius+1e-4)return false;
+ const auto clear=[&](const SpatialStaticMutation& shape){return !spatialStaticMutationBlocks(shape,x,z,nx,nz,radius+1e-4,0,true);};
+ const auto proxies=gateAdditionShapes(gateAdditionProxies(gate));
+ return proxies.size()==3&&clear(proxies[0])&&clear(proxies[1])&&std::all_of(solids.begin(),solids.end(),clear)&&
+  spatialGateCandidateSegmentClear(x,z,nx,nz,radius)==1&&spatialGateCandidateSegmentClear(nx,nz,x,z,radius)==1;
+}
+static bool gateEnclosureSwing(IntentState& s,const NativeGate& gate,const std::vector<SpatialStaticMutation>& solids){
+ NativeGate opening=gate;opening.from=0;opening.target=1;
+ const auto& bounds=gate.unsupported;
+ for(const auto& shape:solids){
+  if(bounds.maxX<shape.minX||bounds.minX>shape.maxX||bounds.maxZ<shape.minZ||bounds.minZ>shape.maxZ)continue;
+  if(!gateSweepStaticPair(s,opening,shape,s.effectiveTime,gateMotionEnd(opening)).clear||
+     (!gateWallEndJoint(gate,shape)&&!gateFixedPartsClear(s,gate,shape)))return false;
+ }
+ auto proposed=s.gates;proposed.emplace(opening.id,std::move(opening));
+ return gateSweepStaticObjects(s,proposed,true)==1;
+}
+int spatialIntentGateEnclosureTravel(const std::array<double,7>& value,const std::vector<float>& values){
+ auto& s=state();NativeGate gate;std::set<uint64_t> affected;
+ if(prepareGateAdditionCandidate(s,value,gate,&affected)!=1)return 0;
+ const auto solids=gateAdditionShapes(values);
+ for(int degrees=90;degrees>=1;degrees--)for(int direction:{1,-1}){
+  gate.openingDirection=direction;gate.openingDegrees=degrees;
+  if(gateEnclosureConnection(gate,solids)&&gateEnclosureSwing(s,gate,solids))return direction*degrees;
+ }
+ return 0;
+}
+int spatialIntentStageGateAdditions(const std::vector<std::array<double,8>>& values,int firstBarrier,const std::vector<float>& solids,std::vector<float>& proxies){
  auto& s=state();if(s.barrierProposal.pending)return -4;
  if(values.empty()||solids.size()%6||values.size()+solids.size()/6>256||firstBarrier<1||
     values.size()*3+solids.size()/6>size_t(std::numeric_limits<int>::max()-firstBarrier)||values.size()>uint64_t(maxId)-s.nextGateMechanism)return -1;
@@ -1880,32 +1925,10 @@ int spatialIntentStageGateAdditions(const std::vector<std::array<double,7>>& val
  std::map<uint64_t,NativeGate> candidates;auto mechanism=s.nextGateMechanism;
  for(const auto& value:values){
   NativeGate gate;
-  const auto fits=[&](const NativeGate& candidate){
-   const auto& bounds=candidate.unsupported;
-   NativeGate opening=candidate;opening.from=0;opening.target=1;
-   for(size_t index=0;index<solidShapes.size();index++){
-    const auto& shape=solidShapes[index];
-    if(bounds.maxX<shape.minX||bounds.minX>shape.maxX||bounds.maxZ<shape.minZ||bounds.minZ>shape.maxZ)continue;
-    const auto answer=gateSweepStaticPair(s,opening,shape,s.effectiveTime,gateMotionEnd(opening));
-    if(!answer.clear||(!gateWallEndJoint(candidate,shape)&&!gateFixedPartsClear(s,candidate,shape))){
-     gateStaticWitness(s,candidate.id,5,firstBarrier+3*values.size()+index,0,0,
-       answer.clear?GateSweepAnswer{false,1,s.effectiveTime,s.effectiveTime}:answer);
-     return false;
-    }
-   }
-   return true;
-  };
-  const int proof=prepareGateAdditionCandidate(s,value,gate);if(proof!=1)return proof;
-  if(!fits(gate)){
-   NativeGate reverse;reverse.openingDirection=-1;
-   const int reversed=prepareGateAdditionCandidate(s,value,reverse);if(reversed!=1)return reversed;
-   if(!fits(reverse))return 0;
-   // The alternate side must also clear all existing world geometry for the
-   // complete swing. This draft never publishes a motor or resource owner.
-   auto proposed=s.gates;reverse.from=0;reverse.target=1;proposed.emplace(reverse.id,reverse);
-   if(gateSweepStaticObjects(s,proposed,true)!=1)return 0;
-   gate.openingDirection=-1;
-  }
+  if(!std::isfinite(value[7])||std::abs(value[7])>90||std::floor(value[7])!=value[7])return -1;
+  if(value[7]!=0){gate.openingDirection=value[7]<0?-1:1;gate.openingDegrees=int(std::abs(value[7]));}
+  const int proof=prepareGateAdditionCandidate(s,{value[0],value[1],value[2],value[3],value[4],value[5],value[6]},gate);if(proof!=1)return proof;
+  if(value[7]!=0&&(!gateEnclosureConnection(gate,solidShapes)||!gateEnclosureSwing(s,gate,solidShapes)))return 0;
   const int first=firstBarrier+int(proxies.size()/6);
   gate.navigationBarriers={first,first+1,first+2};gate.mechanism=++mechanism;gate.bodySweepCertified=gate.staticSweepCertified=true;
   const auto parts=gateAdditionProxies(gate);
@@ -1913,7 +1936,8 @@ int spatialIntentStageGateAdditions(const std::vector<std::array<double,7>>& val
   proxies.insert(proxies.end(),parts.begin(),parts.end());
  }
  if(candidates.size()>1){
-  auto proposed=s.gates;proposed.insert(candidates.begin(),candidates.end());
+  auto proposed=s.gates;
+  for(const auto& [id,gate]:candidates){auto opening=gate;opening.from=0;opening.target=1;proposed.emplace(id,std::move(opening));}
   if(gateSweepStaticObjects(s,proposed,true)!=1)return 0;
  }
  proxies.insert(proxies.end(),solids.begin(),solids.end());
@@ -2008,7 +2032,7 @@ static int gateAdditionProposalPose(double session,double ticket,double id){
  if(found==gates.end())return 0;
  const auto& gate=found->second;const auto root=gateRootMatrix(gate),leaf=gateLeafMatrix(gate,s.effectiveTime);auto& out=s.gateMechanismPose;
  out[0]=double(gate.id);out[1]=gate.mesh->id;out[2]=double(gate.mechanism);out[3]=gate.baseY;out[4]=gate.supportMin;out[5]=gate.supportMax;out[6]=s.effectiveTime;out[7]=gateOpening(gate,s.effectiveTime);
- std::copy(root.begin(),root.end(),out.begin()+8);std::copy(leaf.begin(),leaf.end(),out.begin()+24);out[40]=gate.openingDirection;return 1;
+ std::copy(root.begin(),root.end(),out.begin()+8);std::copy(leaf.begin(),leaf.end(),out.begin()+24);out[40]=gate.openingDirection;out[41]=gate.openingDegrees;return 1;
 }
 extern "C" EMSCRIPTEN_KEEPALIVE int nav_gate_addition_proposal_pose(double session,double ticket){return gateAdditionProposalPose(session,ticket,0);}
 extern "C" EMSCRIPTEN_KEEPALIVE int nav_gate_additions_proposal_pose(double session,double ticket,double id){return gateAdditionProposalPose(session,ticket,id);}

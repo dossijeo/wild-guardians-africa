@@ -510,7 +510,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
      if(removal)return false;
      if(gate){
       const scale=gateScale(wall);
-      return nativeGateModelId(wall.material)!==gate.modelId||wall.gateOpen!==gate.opening||wall.gateOpenDirection!==gate.openingDirection||wall.x!==gate.x||wall.z!==gate.z||
+      return nativeGateModelId(wall.material)!==gate.modelId||wall.gateOpen!==gate.opening||wall.gateOpenDirection!==gate.openingDirection||wall.gateOpenDegrees!==gate.openingDegrees||wall.x!==gate.x||wall.z!==gate.z||
        (wall.yaw??0)!==gate.yaw||scale!==gate.sz||scale*(wall.baseScaleX??1)!==gate.sx;
      }
      const parts=spatialStructureBarriers(wall);

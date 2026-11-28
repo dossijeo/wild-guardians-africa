@@ -35,11 +35,11 @@ static bool gateNavigationProxiesMatch(const IntentState& s,NativeGate& gate,con
  gate.navigationBarriers=ids;return true;
 }
 
-static int installGateMechanism(double id,int modelId,const std::array<int,3>& proxies={},int direction=1){
+static int installGateMechanism(double id,int modelId,const std::array<int,3>& proxies={},int direction=1,int degrees=90){
   auto& s=state();if(!s.session||!integer(id)||!s.gates.count(uint64_t(id))||s.nextGateMechanism>=uint64_t(maxId))return -4;
   if(!gateStaticProofCurrent(s))return -5;
   NativeGate candidate=s.gates.at(uint64_t(id));
-  candidate.openingDirection=direction;
+  candidate.openingDirection=direction;candidate.openingDegrees=degrees;
   if(!prepareGateMechanismGeometry(candidate,nativeGateMeshModel(modelId)))return -4;
   if(proxies[0]&&(!gateNavigationProxiesMatch(s,candidate,proxies)||s.causalClock||s.barrierProposal.pending||s.worldMutationPreview||s.executionEnabled))return -4;
   const int proof=proveGateMechanismCandidate(s,candidate);if(proof!=1)return proof;
@@ -57,13 +57,17 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_mechanism_install_reverse(double id,int modelI
  if(!integer(left)||!integer(right)||!integer(envelope)||left>2147483647||right>2147483647||envelope>2147483647)return -4;
  return installGateMechanism(id,modelId,{int(left),int(right),int(envelope)},-1);
 }
+EMSCRIPTEN_KEEPALIVE int nav_gate_mechanism_install_travel(double id,int modelId,double left,double right,double envelope,int travel){
+ if(!integer(left)||!integer(right)||!integer(envelope)||left>2147483647||right>2147483647||envelope>2147483647||!travel||travel< -90||travel>90)return -4;
+ return installGateMechanism(id,modelId,{int(left),int(right),int(envelope)},travel<0?-1:1,std::abs(travel));
+}
 EMSCRIPTEN_KEEPALIVE int nav_gate_mechanism_pose(double id){
   auto& s=state();s.gateMechanismPose.fill(0);
   if(!integer(id)||!s.gates.count(uint64_t(id))||!s.gates.at(uint64_t(id)).mesh||!gateStaticProofCurrent(s))return 0;
   const auto& g=s.gates.at(uint64_t(id));const auto root=gateRootMatrix(g),leaf=gateLeafMatrix(g,s.effectiveTime);
   auto& out=s.gateMechanismPose;out[0]=id;out[1]=g.mesh->id;out[2]=double(g.mechanism);out[3]=g.baseY;
   out[4]=g.supportMin;out[5]=g.supportMax;out[6]=s.effectiveTime;out[7]=gateOpening(g,s.effectiveTime);
-  std::copy(root.begin(),root.end(),out.begin()+8);std::copy(leaf.begin(),leaf.end(),out.begin()+24);out[40]=g.openingDirection;return 1;
+  std::copy(root.begin(),root.end(),out.begin()+8);std::copy(leaf.begin(),leaf.end(),out.begin()+24);out[40]=g.openingDirection;out[41]=g.openingDegrees;return 1;
 }
 EMSCRIPTEN_KEEPALIVE const double* nav_gate_mechanism_pose_ptr(){return state().gateMechanismPose.data();}
 EMSCRIPTEN_KEEPALIVE int nav_gate_mechanism_vertices(double id){

@@ -108,6 +108,8 @@ export function validateSnapshot(state,{livePhysics=false}={}) {
   for(const structure of state.structures){
    if(structure.gateOpen!==undefined&&(!structure.gate||!Number.isFinite(structure.gateOpen)||structure.gateOpen<0||structure.gateOpen>1))throw new Error('Apertura de puerta inválida');
    if(structure.gateOpenDirection!==undefined&&(!structure.gate||structure.gateOpenDirection!==-1))throw new Error('Sentido de puerta inválido');
+   const degrees=structure.gateOpenDegrees;
+   if(degrees!==undefined&&(!structure.gate||!Number.isInteger(degrees)||degrees<1||degrees>=90))throw new Error('Ángulo de puerta inválido');
   }
   for(const structure of state.structures)if(structure.wallPresentation!==undefined){
     const p=structure.wallPresentation,ratio=value=>Number.isFinite(value)&&value>=0&&value<=1;

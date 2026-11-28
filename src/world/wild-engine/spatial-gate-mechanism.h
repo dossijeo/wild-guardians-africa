@@ -5,7 +5,8 @@ GateMatrix gateRootMatrix(const NativeGate& g){
   return {g.sx*c,0,-g.sx*s,0,0,g.sz,0,0,g.sz*s,0,g.sz*c,0,g.x,g.baseY,g.z,1};
 }
 GateMatrix gateLeafMatrixAtOpening(const NativeGate& g,double opening){
-  const double angle=g.openingDirection*opening*pi/2,c=std::cos(angle),s=std::sin(angle);
+  const double travel=g.openingDirection*(g.openingDegrees==90?pi/2:g.openingDegrees*pi/180);
+  const double angle=opening*travel,c=std::cos(angle),s=std::sin(angle);
   return {c,0,s,0,0,1,0,0,-s,0,c,0,g.hx-g.hx*c+g.hz*s,0,g.hz-g.hx*s-g.hz*c,1};
 }
 GateMatrix gateLeafMatrix(const NativeGate& g,double at){return gateLeafMatrixAtOpening(g,gateOpening(g,at));}

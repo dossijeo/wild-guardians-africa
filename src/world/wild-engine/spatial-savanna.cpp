@@ -3220,7 +3220,7 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_gate_removal_revalidate(double session,do
  auto& h=worldResourcePreview->header;h[2]=identity[1];h[3]=identity[3];return 1;
 }
 EMSCRIPTEN_KEEPALIVE int spatial_world_gate_addition_version(){return 1;}
-static int stageGateAdditions(const std::vector<std::array<double,7>>& gates,const std::vector<float>& solids){
+static int stageGateAdditions(const std::vector<std::array<double,8>>& gates,const std::vector<float>& solids){
  WorldResourcePreview preview;preview.gateAddition=true;
  const int result=spatialIntentStageGateAdditions(gates,nextBarrierId,solids,preview.barrierAdditions);if(result!=1)return result;
  std::array<double,6> identity{};if(spatialIntentWorldProposalSnapshot(identity)!=1)return -2;
@@ -3228,20 +3228,28 @@ static int stageGateAdditions(const std::vector<std::array<double,7>>& gates,con
  worldResourcePreview=std::make_shared<WorldResourcePreview>(std::move(preview));return 1;
 }
 EMSCRIPTEN_KEEPALIVE int spatial_world_gate_addition_stage(double id,int model,double x,double z,double yaw,double sx,double sz){
- return stageGateAdditions({{id,double(model),x,z,yaw,sx,sz}},{});
+ return stageGateAdditions({{id,double(model),x,z,yaw,sx,sz,0}},{});
 }
-static std::vector<std::array<double,7>> worldGateAdditionInputs;
+static std::vector<std::array<double,8>> worldGateAdditionInputs;
 EMSCRIPTEN_KEEPALIVE double* spatial_world_gate_additions_input(int count){
  if(count<1||count>256)return nullptr;
  worldGateAdditionInputs.resize(count);return worldGateAdditionInputs.front().data();
 }
-EMSCRIPTEN_KEEPALIVE int spatial_world_gate_additions_stage(int count,int floatCount){
- if(count<1||size_t(count)!=worldGateAdditionInputs.size()||floatCount<0||floatCount%6||
-    size_t(floatCount)!=worldProposalFloatInput.size()||count+floatCount/6>256)return -1;
+static bool enclosedGateSolidInputValid(int floatCount){
+ if(floatCount<0||floatCount%6||size_t(floatCount)!=worldProposalFloatInput.size())return false;
  for(int i=0;i<floatCount;i+=6){
   const auto* p=worldProposalFloatInput.data()+i;
-  if(!std::all_of(p,p+5,[](float v){return std::isfinite(v);})||p[2]<=0||p[2]>100||p[3]<=0||p[3]>100||p[5]!=0)return -1;
+  if(!std::all_of(p,p+5,[](float v){return std::isfinite(v);})||p[2]<=0||p[2]>100||p[3]<=0||p[3]>100||p[5]!=0)return false;
  }
+ return true;
+}
+EMSCRIPTEN_KEEPALIVE int spatial_world_gate_enclosure_travel(double id,int model,double x,double z,double yaw,double sx,double sz,int floatCount){
+ if(floatCount>255*6||!enclosedGateSolidInputValid(floatCount))return 0;
+ return spatialIntentGateEnclosureTravel({id,double(model),x,z,yaw,sx,sz},worldProposalFloatInput);
+}
+EMSCRIPTEN_KEEPALIVE int spatial_world_gate_additions_stage(int count,int floatCount){
+ if(count<1||size_t(count)!=worldGateAdditionInputs.size()||count+floatCount/6>256||!enclosedGateSolidInputValid(floatCount)||
+    std::any_of(worldGateAdditionInputs.begin(),worldGateAdditionInputs.end(),[](const auto& gate){return gate[7]==0;}))return -1;
  return stageGateAdditions(worldGateAdditionInputs,worldProposalFloatInput);
 }
 EMSCRIPTEN_KEEPALIVE const float* spatial_world_gate_addition_proxies_ptr(double session,double ticket){

@@ -236,7 +236,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    if(active.length!==nativeGateOwners.length||active.some(gate=>!nativeGateOwners.includes(gate)))throw Error('Native gate projection has another structure owner');
    for(const gate of nativeGateOwners){
     const pose=planner.nativeGateMechanismPose(gate.id);
-    if(!pose||pose.sampledAt!==game.elapsed||pose.openingDirection!==gate.gateOpenDirection||gate.status!=='intact'||!Number.isFinite(gate.maxHp)||!(gate.hp>0&&gate.hp<=gate.maxHp))throw Error('Native gate projection lost its current mechanism');
+    if(!pose||pose.sampledAt!==game.elapsed||pose.openingDirection!==gate.gateOpenDirection||pose.openingDegrees!==gate.gateOpenDegrees||gate.status!=='intact'||!Number.isFinite(gate.maxHp)||!(gate.hp>0&&gate.hp<=gate.maxHp))throw Error('Native gate projection lost its current mechanism');
     gate.gateOpen=pose.opening;
    }
   }
@@ -253,7 +253,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     for(const gate of nativeGateOwners)if(!bindings.register(gate))throw Error('Native restored gate registration rejected');
     if(bindings.reconcile({enabled:true}).status!=='updated'||bindings.reconcile({enabled:false}).status!=='updated')throw Error('Native restored gate occupancy unavailable');
     for(const gate of nativeGateOwners){
-     const installed=bindings.installMechanism(gate.id,gate.material,{navigationBarriers:session.wallBarrierIds(gate.id),openingDirection:gate.gateOpenDirection});
+     const installed=bindings.installMechanism(gate.id,gate.material,{navigationBarriers:session.wallBarrierIds(gate.id),openingDirection:gate.gateOpenDirection,openingDegrees:gate.gateOpenDegrees});
      if(installed.status!=='installed')throw Error('Native restored gate mechanism rejected: '+installed.status);
     }
     nav.projectNativeGateLeaves=projectNativeGateLeaves;
@@ -727,7 +727,19 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   }
   const nativeGatePlacement=entity=>{
     const scale=gateScale(entity);
-    return {entityId:entity.id,modelId:nativeGateModelId(entity.material),x:entity.x,z:entity.z,yaw:entity.yaw??0,sx:scale*(entity.baseScaleX??1),sz:scale};
+    return {entityId:entity.id,modelId:nativeGateModelId(entity.material),x:entity.x,z:entity.z,yaw:entity.yaw??0,sx:scale*(entity.baseScaleX??1),sz:scale,
+      ...(entity.gateOpenDirection===-1?{openingDirection:-1}:{}),...(entity.gateOpenDegrees!==undefined?{openingDegrees:entity.gateOpenDegrees}:{})};
+  };
+  if(nativeBodies)nav.certifyWallGate=(entity,pieces)=>{
+    // The quote can select another original module while Game retains its own
+    // ranking, construction price, crop clearance and enclosure rules.
+    const gate=nativeGatePlacement(entity),wasm=session.core.wasm;
+    if(!gate.modelId||pieces.length>256)return null;
+    const rows=pieces.filter(piece=>piece.id!==entity.id).flatMap(piece=>spatialStructureBarriers(piece)).flatMap(p=>[p.x,p.z,p.halfX,p.halfZ,p.yaw,0]);
+    const ptr=wasm.spatial_world_proposal_float_ptr(rows.length);
+    if(rows.length)new Float32Array(wasm.memory.buffer,ptr,rows.length).set(rows);
+    const travel=wasm.spatial_world_gate_enclosure_travel(Number(gate.entityId.slice(10)),gate.modelId,gate.x,gate.z,gate.yaw,gate.sx,gate.sz,rows.length);
+    return travel?{...(travel<0?{gateOpenDirection:-1}:{}),...(Math.abs(travel)<90?{gateOpenDegrees:Math.abs(travel)}:{})}:null;
   };
   function nativeStructureQuote(quoted){
     const plan=quoted.plan,entity=plan?.entity;
@@ -1129,12 +1141,12 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       return true;
     };
     const additions=first.additions.length?{additions:first.additions}:{},gateCount=first.gates.length;
-    const input=gateCount===1&&!first.additions.length?{gate:first.gates[0]}:gateCount?{gates:first.gates,...additions}:additions;
+    const input=first.quoted.plan.entity?{gate:first.gates[0]}:gateCount?{gates:first.gates,...additions}:additions;
     const preparedOwners=(quote,reference)=>{
       const gates=reference.gates??(reference.gate?[reference.gate]:[]);
       if(gates.length!==gateCount||gates.some((gate,index)=>Object.entries(first.gates[index]).some(([key,value])=>gate[key]!==value)))throw Error('Native gate preparation changed the placement quote');
       const pieces=quote.quoted.plan.pieces??[quote.quoted.plan.entity];
-      return [...gates.map(gate=>({...pieces.find(piece=>piece.id===gate.entityId),gateOpen:gate.opening,...(gate.openingDirection===-1?{gateOpenDirection:-1}:{})})),...quote.solids];
+      return [...gates.map(gate=>({...pieces.find(piece=>piece.id===gate.entityId),gateOpen:gate.opening,...(gate.openingDirection===-1?{gateOpenDirection:-1}:{}),...(gate.openingDegrees!==undefined?{gateOpenDegrees:gate.openingDegrees}:{})})),...quote.solids];
     };
     return prepareNativeCommandCommit(owner,({retain,atCommitBoundary})=>
       planner.addNativeBarriersAfterGpuQuiescence({...input,getPublication:()=>nativeIntentControl,signal:owner.controller.signal,validate,
@@ -1157,6 +1169,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
               if(!gate?.gate)throw Error('Native gate projection lost its Game wall');
               gate.gateOpen=prepared.gateOpen;
               if(prepared.gateOpenDirection===-1)gate.gateOpenDirection=-1;
+              if(prepared.gateOpenDegrees!==undefined)gate.gateOpenDegrees=prepared.gateOpenDegrees;
               nativeGateOwners.push(gate);
             }
             adopt();

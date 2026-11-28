@@ -23,7 +23,8 @@ double gateOpening(const NativeGate& gate,double now){
     gateMotorOpening(gate.from,gate.target,gate.at,now);
 }
 std::vector<double> gateLeaf(const NativeGate& gate,double opening){
-  const double angle=gate.openingDirection*std::clamp(opening,0.0,1.0)*pi/2,co=std::cos(angle),si=std::sin(angle),c=std::cos(gate.yaw),s=std::sin(gate.yaw);
+  const double travel=gate.openingDirection*(gate.openingDegrees==90?pi/2:gate.openingDegrees*pi/180);
+  const double angle=std::clamp(opening,0.0,1.0)*travel,co=std::cos(angle),si=std::sin(angle),c=std::cos(gate.yaw),s=std::sin(gate.yaw);
   std::vector<double> out;out.reserve(gate.local.size());
   for(size_t i=0;i<gate.local.size();i+=2){
     const double x=gate.hx+(gate.local[i]-gate.hx)*co-(gate.local[i+1]-gate.hz)*si,

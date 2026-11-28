@@ -122,8 +122,8 @@ export function createSpatialWallMirror(core){
       const gate=gates[i],wall=structures[i],scale=gateScale(wall),numeric=Number(gate.entityId.slice('structure-'.length));
       if(wall.status!=='intact'||wall.hp!==wall.maxHp||nativeGateModelId(wall.material)!==gate.modelId||wall.x!==gate.x||wall.z!==gate.z||(wall.yaw??0)!==gate.yaw||scale*(wall.baseScaleX??1)!==gate.sx||scale!==gate.sz)throw Error('Native gate adoption differs from its quoted placement');
       if(wasm.nav_gate_mechanism_pose(numeric)!==1)throw Error('Native gate adoption lost its acquired mechanism');
-      const pose=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_mechanism_pose_ptr(),typeof wasm.nav_gate_mechanism_install_reverse==='function'?41:40));
-      if(pose[0]!==numeric||pose[1]!==gate.modelId||pose[2]!==gate.mechanismId||pose[6]!==worldBoundary.effectiveTime||pose[7]!==gate.opening||(pose[40]===-1?-1:undefined)!==gate.openingDirection||!pose.slice(8,24).every((value,index)=>value===gate.rootMatrix[index])||!pose.slice(24,40).every((value,index)=>value===gate.leafMatrix[index]))throw Error('Native gate adoption pose differs from its prepared mechanism');
+      const pose=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_mechanism_pose_ptr(),typeof wasm.nav_gate_mechanism_install_travel==='function'?42:typeof wasm.nav_gate_mechanism_install_reverse==='function'?41:40));
+      if(pose[0]!==numeric||pose[1]!==gate.modelId||pose[2]!==gate.mechanismId||pose[6]!==worldBoundary.effectiveTime||pose[7]!==gate.opening||(pose[40]===-1?-1:undefined)!==gate.openingDirection||(pose[41]<90?pose[41]:undefined)!==gate.openingDegrees||!pose.slice(8,24).every((value,index)=>value===gate.rootMatrix[index])||!pose.slice(24,40).every((value,index)=>value===gate.leafMatrix[index]))throw Error('Native gate adoption pose differs from its prepared mechanism');
     }
     const records=[];let offset=0;
     for(let i=0;i<structures.length;i++){

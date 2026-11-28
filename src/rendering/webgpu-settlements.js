@@ -149,7 +149,7 @@ export function createWebGpuSettlements({scene,state,residency,renderer=null,pip
  }
  function bank(kind,key){const id=kind+':'+key;let result=banks.get(id);if(!result){result={value:null,promise:null};banks.set(id,result);result.promise=(kind==='village'?villageBank(key):kind==='center'?centerBank(key):wallsBank(key)).then(value=>{if(closed)return;result.value=value;sync();if(kind==='village')villagePreview?.assetsReady(key);}).catch(error=>{if(closed||abort.signal.aborted)return;result.preparationError=error;banks.delete(id);failure=String(error?.message??error);onSelectableChange?.();onError(error);});}return result.value;}
  function remove(id,entry){entry.centerAdmission?.abort();scene.remove(entry.group);entry.damage?.dispose();entry.village?.dispose();if(entry.kind==='wall'){if(entry.wall)entry.wall.dispose();else entry.group.dispose();}entries.delete(id);}
- const intactWallPlacement=entity=>JSON.stringify([entity.id,entity.material,entity.x,entity.z,entity.yaw??0,entity.baseScaleX??1,entity.gate===true,entity.gateOpenDirection??1,entity.status,entity.hp,entity.maxHp,entity.wallPresentation??null]);
+ const intactWallPlacement=entity=>JSON.stringify([entity.id,entity.material,entity.x,entity.z,entity.yaw??0,entity.baseScaleX??1,entity.gate===true,entity.gateOpenDirection??1,entity.gateOpenDegrees??90,entity.status,entity.hp,entity.maxHp,entity.wallPresentation??null]);
  function prepareCenterRuin(source,{signal}){
   const key='s:'+source.center,entry=entries.get(key),entity=state.structures.find(item=>item.id===source.center);
   const points=entity?.kind==='center'?centerFootprint(entity,state).footprint.flatMap(p=>[Math.fround(p.x),Math.fround(p.z)]):[];
@@ -250,7 +250,7 @@ export function createWebGpuSettlements({scene,state,residency,renderer=null,pip
    const id='s:'+entity.id,key=entity.material,height=surface(entity.x,entity.z);
    if(ids.has(id)||owned(id,entity))throw Error('Native wall placement already owned');
    if(height===null)throw Error('Native wall placement requires resident terrain');
-   if(gate&&(entity.gateOpen!==gate.opening||entity.gateOpenDirection!==gate.openingDirection||Math.abs(height+.025-gate.rootMatrix[13])>1e-5))throw Error('Native gate placement differs from its initial pose');
+   if(gate&&(entity.gateOpen!==gate.opening||entity.gateOpenDirection!==gate.openingDirection||entity.gateOpenDegrees!==gate.openingDegrees||Math.abs(height+.025-gate.rootMatrix[13])>1e-5))throw Error('Native gate placement differs from its initial pose');
    ids.add(id);
    return {id,key,height,entity,gate,stamp:intactWallPlacement(entity)};
   });

@@ -7,6 +7,7 @@ import {floorFloat32,ceilFloat32} from './float32-time.js';
 import {cloneWebGpuNodeMaterial} from './webgpu-clone-node-material.js';
 import {structureMaterialReplica} from './structure-material-replica.js';
 import {wallStages,morphedWallPositions} from './walls-native.js';
+import {gateTravelRadians} from '../world/gate-passages.js';
 
 // One rigid leaf on the existing wall mesh. The existing actor clock is shared
 // as data; neither this owner nor its input proxy advances an authoritative motor.
@@ -26,8 +27,8 @@ export function createNativeGateGpuBinding({wall,presentation,motion,getPickTime
  if(rest.length!==geometry.attributes.wgGatePosition.array.length||rest.some((v,i)=>v!==geometry.attributes.wgGatePosition.array[i]))throw Error('Native gate damage rest geometry mismatch');
  const root=new Matrix4().fromArray(packet.rootMatrix),hinge=new Vector3().fromArray(packet.hinge);let duration=floorFloat32(packet.endTime-packet.startTime);const rows=Array.from({length:6},(_,i)=>{const at=Math.min(i,packet.rows.length/2-1)*2;return new Vector2(at===packet.rows.length-2?duration:ceilFloat32(packet.rows[at]-packet.startTime),Math.fround(packet.rows[at+1]));}),knots=uniformArray(rows,'vec2').setName('nativeGateKnots'),count=uniform(packet.rows.length/2,'int'),pivot=uniform(hinge);
  const opening=motion.openingNode??Fn(()=>{const value=knots.element(int(0)).y.toVar();Loop({start:1,end:6},({i})=>{If(i.lessThan(count),()=>{const a=knots.element(i.sub(1)),b=knots.element(i),t=clamp(timeNode.sub(a.x).div(b.x.sub(a.x).max(1e-30)),0,1);value.assign(mix(value,b.y,t));});});return value;})();
- const direction=packet.openingDirection??1,angle=opening.mul(direction*Math.PI/2).mul(attribute('wgGateLeaf','float'));
- if(wall.gateOpenDirection!==undefined&&wall.gateOpenDirection!==direction)throw Error('Native gate opening direction differs from its wall');
+ const travel=gateTravelRadians(packet.openingDirection,packet.openingDegrees),angle=opening.mul(travel).mul(attribute('wgGateLeaf','float'));
+ if(wall.gateTravel!==undefined&&wall.gateTravel!==travel)throw Error('Native gate opening direction or angle differs from its wall');
  const material=cloneWebGpuNodeMaterial(original);material.userData=original.userData;
  material.positionNode=Fn(()=>{normalLocal.assign(rotate(attribute('wgGateNormal','vec3'),vec3(0,angle,0)));return rotate(attribute('wgGatePosition','vec3').sub(pivot),vec3(0,angle,0)).add(pivot);})();
  let unregister;try{unregister=part.sourceMaterial?.[structureMaterialReplica]?.(material);}catch(error){material.dispose();throw error;}
@@ -35,7 +36,7 @@ export function createNativeGateGpuBinding({wall,presentation,motion,getPickTime
  let radius=0;for(let i=0;i<packet.leafFlags.length;i++)if(packet.leafFlags[i])radius=Math.max(radius,Math.hypot(rest[i*3]-hinge.x,rest[i*3+2]-hinge.z));
  bounds.expandByPoint(new Vector3(hinge.x-radius,bounds.min.y,hinge.z-radius));bounds.expandByPoint(new Vector3(hinge.x+radius,bounds.max.y,hinge.z+radius));const sphere=bounds.getBoundingSphere(new Sphere());
  let repairLayer=null;
- try{if(visual<1&&presentationClock)repairLayer=createWallRepairLayer({parts,material,opening,pivot,presentationClock,getPresentationTime,visual,previous,direction});}catch(error){unregister?.();material.dispose();throw error;}
+ try{if(visual<1&&presentationClock)repairLayer=createWallRepairLayer({parts,material,opening,pivot,presentationClock,getPresentationTime,visual,previous,travel});}catch(error){unregister?.();material.dispose();throw error;}
  if(repairLayer){bounds.union(repairLayer.records[0].bounds);bounds.getBoundingSphere(sphere);}
  const proxy=new Mesh(geometry,original),rotation=new Matrix4();let disposed=false,activated=false,committed=false;
  proxy.getVertexPosition=(index,target)=>{if(repairLayer)repairLayer.position(0,index,target);else target.fromBufferAttribute(geometry.attributes.wgGatePosition,index);if(packet.leafFlags[index])target.sub(hinge).applyMatrix4(rotation).add(hinge);return target;};
@@ -45,12 +46,12 @@ export function createNativeGateGpuBinding({wall,presentation,motion,getPickTime
   const raw=floorFloat32(at-packet.startTime),time=Math.max(0,Math.min(Math.fround(raw-Math.fround(Math.max(Math.abs(raw),1)*.000000476837158203125)),duration));
   let value=rows[0].y;for(let i=1;i<packet.rows.length/2;i++){const a=rows[i-1],b=rows[i],t=Math.max(0,Math.min(1,(time-a.x)/Math.max(1e-30,b.x-a.x)));value=value+(b.y-value)*t;}return value;
  }
- function raycast(raycaster,hits){rotation.makeRotationY(-direction*sample(getPickTime())*Math.PI/2);proxy.matrixWorld.copy(mesh.matrixWorld);const found=[];Mesh.prototype.raycast.call(proxy,raycaster,found);for(const hit of found){hit.object=mesh;hits.push(hit);}}
+ function raycast(raycaster,hits){rotation.makeRotationY(-travel*sample(getPickTime()));proxy.matrixWorld.copy(mesh.matrixWorld);const found=[];Mesh.prototype.raycast.call(proxy,raycaster,found);for(const hit of found){hit.object=mesh;hits.push(hit);}}
  function rootCurrent(){wall.updateWorldMatrix(true,true);return mesh.matrixWorld.elements.every((value,i)=>Math.abs(value-root.elements[i])<=1e-5);}
  const binding={material,mesh,repairLayer,materialAlternatives:[{mesh,material},...(repairLayer?.records.slice(1).map(r=>({mesh:r.mesh,material:r.material}))??[])],originalMaterial:original,originalRaycast,originalBounds,originalSphere,lease:Object.freeze({start:packet.startTime,end:packet.worldBoundary?Number.MAX_SAFE_INTEGER:packet.endTime}),nativeRoute:packet.nativeRoute,nativeGate:installed.nativeGate??null,
   canActivate:()=>!disposed&&!activated&&shapeCurrent()&&wall.parts[0]===part&&(wall.nativeGpuGate??wall.nativeGpuRepair??null)===previous&&mesh.material===(previous?.material??original)&&siblings.every(({part,material})=>part.mesh.material===material)&&rootCurrent(),
   current:()=>!disposed&&activated&&shapeCurrent()&&wall.nativeGpuGate===binding&&wall.parts[0]===part&&mesh.material===material&&(repairLayer?repairLayer.current():siblings.every(({part,material})=>part.mesh.material===material))&&rootCurrent(),
-  checkEntity(entity,elapsed){if(entity.gate!==true||entity.status!=='intact'||!Number.isFinite(entity.hp)||!Number.isFinite(entity.maxHp)||entity.maxHp<=0||entity.material!==wall.nativeGateMaterial||(entity.gateOpenDirection??1)!==direction||!binding.current()||!(repairLayer?repairLayer.accept(entity,elapsed):entity.hp/entity.maxHp===visual))throw Error('Native gate requires a prepared geometry or lifecycle transition');},
+  checkEntity(entity,elapsed){if(entity.gate!==true||entity.status!=='intact'||!Number.isFinite(entity.hp)||!Number.isFinite(entity.maxHp)||entity.maxHp<=0||entity.material!==wall.nativeGateMaterial||gateTravelRadians(entity.gateOpenDirection,entity.gateOpenDegrees)!==travel||!binding.current()||!(repairLayer?repairLayer.accept(entity,elapsed):entity.hp/entity.maxHp===visual))throw Error('Native gate requires a prepared geometry or lifecycle transition');},
   sampleOpening:sample,
   // A stopped actor can leave a historical crossing without changing its motor.
   // Retain only the independent, committed world clock on this exact owner.
@@ -81,7 +82,7 @@ export function createNativeGateGpuBinding({wall,presentation,motion,getPickTime
   retarget(value,{retagClock}={}){
    if(disposed||committed||activated||!binding.canActivate()||typeof motion.retarget!=='function')throw Error('Native gate resource cannot be retargeted');
    const next=copyNativeGatePresentation(value,value);
-   if(!packet.worldBoundary||!next.worldBoundary||['gateId','entityId','mechanism','modelId','openingDirection'].some(key=>packet[key]!==next[key])||['rootMatrix','hinge','positions','leafFlags'].some(key=>packet[key].length!==next[key].length||packet[key].some((v,i)=>!Object.is(v,next[key][i]))))return false;
+   if(!packet.worldBoundary||!next.worldBoundary||['gateId','entityId','mechanism','modelId','openingDirection','openingDegrees'].some(key=>packet[key]!==next[key])||['rootMatrix','hinge','positions','leafFlags'].some(key=>packet[key].length!==next[key].length||packet[key].some((v,i)=>!Object.is(v,next[key][i]))))return false;
    if(motion.retarget(next,{retagClock})!==true)return false;
    for(let i=0;i<6;i++){const at=Math.min(i,next.rows.length/2-1)*2;rows[i].set(at===next.rows.length-2?floorFloat32(next.endTime-next.startTime):ceilFloat32(next.rows[at]-next.startTime),Math.fround(next.rows[at+1]));}count.value=next.rows.length/2;duration=floorFloat32(next.endTime-next.startTime);packet=next;binding.nativeGate=motion.status().installed.nativeGate;binding.lease=Object.freeze({start:next.startTime,end:Number.MAX_SAFE_INTEGER});return true;
   },
@@ -107,22 +108,22 @@ export function bindRestoredGateRepair({wall,entity,elapsed,presentationClock,ge
  const p=entity?.wallPresentation,parts=wall?.parts;
  if(!wall?.isObject3D||wall.nativeGpuGate||wall.nativeGpuRepair||wall.nativeGateBinding||entity.id!==wall.entityId||entity.material!==wall.nativeGateMaterial||entity.gate!==true||entity.status!=='intact'||entity.hp!==entity.maxHp||!Number.isFinite(entity.maxHp)||entity.maxHp<=0||!p||!Number.isFinite(p.from)||p.from<=0||p.from>=1||p.to!==1||!Number.isFinite(p.at)||p.at<0||!Number.isFinite(elapsed)||elapsed<p.at||elapsed>=p.at+WALL_REPAIR_DURATION||wall.visual!==p.from||wall.target!==p.from||parts?.length!==2||!parts[0].bridge.leaf||!Number.isFinite(entity.gateOpen)||entity.gateOpen<0||entity.gateOpen>1)
   throw Error('Restored gate Repair source unavailable');
- const opening=entity.gateOpen,direction=entity.gateOpenDirection??1,visual=wall.visual,[x,z]=parts[0].bridge.leaf.hinge,pivot=uniform(new Vector3(x,0,z));
+ const opening=entity.gateOpen,travel=gateTravelRadians(entity.gateOpenDirection,entity.gateOpenDegrees),visual=wall.visual,[x,z]=parts[0].bridge.leaf.hinge,pivot=uniform(new Vector3(x,0,z));
  const mesh=parts[0].mesh,geometry=mesh.geometry,originalMaterial=mesh.material,originalRaycast=mesh.raycast,originalBounds=geometry.boundingBox,originalSphere=geometry.boundingSphere;
  const material=cloneWebGpuNodeMaterial(originalMaterial);material.userData=originalMaterial.userData;
  let layer,unregister;
  try{
   unregister=parts[0].sourceMaterial?.[structureMaterialReplica]?.(material);
-  layer=createWallRepairLayer({parts,material,opening:float(opening),pivot,presentationClock,getPresentationTime,visual,previous:null,direction});
+  layer=createWallRepairLayer({parts,material,opening:float(opening),pivot,presentationClock,getPresentationTime,visual,previous:null,travel});
   if(!layer.accept(entity,elapsed))throw Error('Restored gate Repair curve unavailable');
  }catch(error){layer?.dispose();unregister?.();material.dispose();throw error;}
- const proxy=new Mesh(geometry,originalMaterial),rotation=new Matrix4().makeRotationY(-direction*opening*Math.PI/2),hinge=pivot.value;
+ const proxy=new Mesh(geometry,originalMaterial),rotation=new Matrix4().makeRotationY(-travel*opening),hinge=pivot.value;
  proxy.getVertexPosition=(index,out)=>{layer.position(0,index,out);if(parts[0].bridge.leafFlags[index])out.sub(hinge).applyMatrix4(rotation).add(hinge);return out;};
  const raycast=(raycaster,hits)=>{proxy.matrixWorld.copy(mesh.matrixWorld);const found=[];Mesh.prototype.raycast.call(proxy,raycaster,found);for(const hit of found){hit.object=mesh;hits.push(hit);}};
  let closed=false;
  const binding={material,originalMaterial,originalRaycast,originalBounds,originalSphere,raycast,bounds:layer.records[0].bounds,sphere:layer.records[0].sphere,repairLayer:layer,
   current:()=>!closed&&wall.nativeGpuRepair===binding&&!wall.nativeGpuGate&&wall.visual===visual&&wall.parts===parts&&parts.length===2&&layer.records.every((r,i)=>parts[i].mesh===r.mesh&&r.mesh.parent===wall)&&mesh.geometry===geometry&&mesh.material===material&&layer.current(),
-  checkEntity(value,at){if(!binding.current()||value.id!==entity.id||value.material!==entity.material||value.gate!==true||value.status!=='intact'||!Number.isFinite(value.hp)||value.maxHp!==entity.maxHp||value.gateOpen!==opening||(value.gateOpenDirection??1)!==direction||!layer.accept(value,at))throw Error('Restored gate Repair requires a prepared geometry or motor transition');},
+  checkEntity(value,at){if(!binding.current()||value.id!==entity.id||value.material!==entity.material||value.gate!==true||value.status!=='intact'||!Number.isFinite(value.hp)||value.maxHp!==entity.maxHp||value.gateOpen!==opening||gateTravelRadians(value.gateOpenDirection,value.gateOpenDegrees)!==travel||!layer.accept(value,at))throw Error('Restored gate Repair requires a prepared geometry or motor transition');},
   dispose(){if(closed)return;closed=true;if(wall.nativeGpuRepair===binding)wall.nativeGpuRepair=null;if(mesh.material===material){mesh.material=originalMaterial;mesh.raycast=originalRaycast;geometry.boundingBox=originalBounds;geometry.boundingSphere=originalSphere;}layer.dispose();unregister?.();material.dispose();}
  };
  wall.nativeGpuRepair=binding;mesh.material=material;mesh.raycast=raycast;geometry.boundingBox=binding.bounds;geometry.boundingSphere=binding.sphere;layer.activate();return binding;
@@ -131,7 +132,7 @@ export function bindRestoredGateRepair({wall,entity,elapsed,presentationClock,ge
 
 // The confirmed visual clock drives the 480 ms Repair.
 // Successive bindings on the same wall retain this policy and the motor clock.
-export function createWallRepairLayer({parts,material,opening,pivot,presentationClock,getPresentationTime,visual,previous,gate=true,repairAge=null,getRepairAge=null,repairFrom=0,direction=1}){
+export function createWallRepairLayer({parts,material,opening,pivot,presentationClock,getPresentationTime,visual,previous,gate=true,repairAge=null,getRepairAge=null,repairFrom=0,travel=gateTravelRadians()}){
  if(!presentationClock?.isNode||typeof getPresentationTime!=='function'||repairAge&&typeof getRepairAge!=='function')
   throw Error('Native gate Repair requires a submitted presentation clock');
  const policy=previous?.repairLayer?.policy??{node:uniform(new Vector3(visual,visual,0)),event:null};
@@ -176,7 +177,7 @@ export function createWallRepairLayer({parts,material,opening,pivot,presentation
     const normal=mix(baseNormal,attribute('wgMorphTargetNormal','vec3'),t).toVar();
     If(normal.dot(normal).lessThan(.0001),()=>{normal.assign(baseNormal);});
     if(isLeaf){
-     const angle=opening.mul(direction*Math.PI/2).mul(attribute('wgGateLeaf','float'));
+     const angle=opening.mul(travel).mul(attribute('wgGateLeaf','float'));
      normalLocal.assign(rotate(normal,vec3(0,angle,0)));
      return rotate(position.sub(pivot),vec3(0,angle,0)).add(pivot);
     }
