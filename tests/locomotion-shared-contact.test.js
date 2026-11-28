@@ -7,3 +7,34 @@ test('preview preserves the live tracker and requires exact observations and a k
  const clip=FOOTSTEPS.sources.youngMale.clips.Walk_Skip,phase=clip.duration+clip.contacts[0].time-.02,actor={id:'w',profile:'youngMale',status:'walking',x:0,z:0,heading:.7,walkPhase:phase},state={elapsed:10,workers:[actor],tasks:[],raid:null},tracker=createLocomotionStepTracker();tracker.observe(state,()=>.7);const first=actorTickState(actor,10),end={...actor,x:.2,z:.1,walkPhase:phase+.04},last=actorTickState(end,10.1),preview={start:10,end:10.1,trace:{actorTickStates:{complete:true,actors:[{actorId:'w',samples:[first,last]}]}}};
  assert.equal(tracker.preview(state,preview,{headingAtEnd:()=>null}),null);const forecast=tracker.preview(state,preview,{headingAtEnd:()=>.7});assert.equal(forecast.length,1);assert.deepEqual(tracker.preview(state,preview,{headingAtEnd:()=>.7}),forecast);const bad=structuredClone(preview);bad.trace.actorTickStates.actors[0].samples[0].x=1;assert.equal(tracker.preview(state,bad,{headingAtEnd:()=>.7}),null);Object.assign(actor,end);state.elapsed=10.1;assert.deepEqual(tracker.observe(state,()=>.7),forecast);assert.equal(tracker.preview(state,preview,{headingAtEnd:()=>.7}),null);
 });
+
+test('the first night continuation at the contact horizon survives clock rounding',()=>{
+ const start=299.99999999996135,end=300.2499999999614;
+ const tracker=createLocomotionStepTracker();
+ const resting={id:'worker-6',profile:'youngMale',status:'home',x:60,z:0,heading:0};
+ const home={elapsed:start,workers:[resting],tasks:[],raid:null};
+ const preview={start,end,trace:{actorTickStates:{complete:true,actors:[{
+  actorId:resting.id,samples:[actorTickState(resting,start),actorTickState(resting,end)],
+ }]}}};
+ const headingAtEnd=()=>{throw Error('A stationary interval has no contact heading');};
+ assert.ok(end-start>.25);
+ tracker.observe(home);
+ assert.deepEqual(tracker.preview(home,preview,{headingAtEnd}),[]);
+ assert.equal(tracker.preview(home,{...preview,end:end+1e-6},{headingAtEnd}),null);
+
+ const clip=FOOTSTEPS.sources.youngMale.clips.Walk_Skip;
+ const phase=clip.duration+clip.contacts[0].time;
+ const worker={...resting,status:'walking',x:0,heading:.7,walkPhase:phase-.02};
+ const walking={elapsed:start,workers:[worker],tasks:[],raid:null};
+ const next={...worker,x:.2,walkPhase:phase+.02};
+ const first=actorTickState(worker,start),last=actorTickState(next,end);
+ const movement={...preview,trace:{actorTickStates:{complete:true,actors:[{actorId:worker.id,samples:[first,last]}]}}};
+ tracker.observe(walking);
+ const forecast=tracker.preview(walking,movement,{headingAtEnd:()=>.7});
+ assert.equal(forecast.length,1);
+ assert.ok(Math.abs(forecast[0].birth-(start+(end-start)/2))<1e-10);
+ assert.deepEqual(locomotionStepsBetween(next,{x:worker.x,z:worker.z,pose:movingPose(worker)},start,end+1e-6,.7),[]);
+ Object.assign(worker,next);
+ walking.elapsed=end;
+ assert.deepEqual(tracker.observe(walking),forecast);
+});

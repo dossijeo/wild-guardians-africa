@@ -20,11 +20,18 @@ export function crossedFootsteps(clip,start,end){
  return contacts.sort((a,b)=>a.phase-b.phase);
 }
 
+function withinContactHorizon(start,end){
+ const duration=end-start;
+ // Tick clocks accumulate absolute times before the contact interval is measured.
+ const rounding=Math.max(Math.abs(start),Math.abs(end))*Number.EPSILON;
+ return Number.isFinite(duration)&&duration>0&&duration<=.25+rounding;
+}
+
 // Reuse the exact presentation rule for confirmed samples and future
 // interval planning. The caller supplies the already selected visual heading.
 export function locomotionStepsBetween(actor,previous,start,end,yaw,result=[]){
  const pose=movingPose(actor),clip=pose&&FOOTSTEPS.sources[actor.profile??actor.species]?.clips[pose.name],dt=end-start;
- if(clip&&previous?.pose?.name===pose.name&&dt>0&&dt<=.25&&Math.hypot(actor.x-previous.x,actor.z-previous.z)>1e-8)for(const step of crossedFootsteps(clip,previous.pose.phase,pose.phase)){
+ if(clip&&previous?.pose?.name===pose.name&&withinContactHorizon(start,end)&&Math.hypot(actor.x-previous.x,actor.z-previous.z)>1e-8)for(const step of crossedFootsteps(clip,previous.pose.phase,pose.phase)){
   const u=(step.phase-previous.pose.phase)/(pose.phase-previous.pose.phase),c=Math.cos(yaw),s=Math.sin(yaw),[px,pz]=step.point;
   result.push({key:`${actor.id}/${pose.name}/${step.cycle}/${step.index}`,x:previous.x+(actor.x-previous.x)*u+c*px+s*pz,z:previous.z+(actor.z-previous.z)*u-s*px+c*pz,yaw,birth:end-dt*(1-u)});
  }
@@ -47,7 +54,7 @@ export function createLocomotionStepTracker(){
   for(const id of observations.keys())if(!observed.has(id))observations.delete(id);elapsed=state.elapsed;stateRef=state;return result;
  },preview(state,preview,{headingAtEnd}={}){
   const ticks=preview?.trace?.actorTickStates,actors=[...(state?.workers??[]),...(state?.raid?.animals??[])];
-  if(stateRef!==state||elapsed!==preview?.start||state.elapsed!==preview.start||!Number.isFinite(preview.end)||preview.end<=preview.start||preview.end-preview.start>.25||ticks?.complete!==true||!Array.isArray(ticks.actors)||ticks.actors.length!==actors.length||typeof headingAtEnd!=='function')return null;
+  if(stateRef!==state||elapsed!==preview?.start||state.elapsed!==preview.start||!withinContactHorizon(preview.start,preview.end)||ticks?.complete!==true||!Array.isArray(ticks.actors)||ticks.actors.length!==actors.length||typeof headingAtEnd!=='function')return null;
   const records=new Map();for(const record of ticks.actors){if(typeof record?.actorId!=='string'||records.has(record.actorId)||!Array.isArray(record.samples))return null;records.set(record.actorId,record.samples);}
   const result=[],seen=new Set();for(const actor of actors){
    if(typeof actor?.id!=='string'||!actor.id||seen.has(actor.id))return null;seen.add(actor.id);
