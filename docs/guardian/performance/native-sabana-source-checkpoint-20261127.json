@@ -34,6 +34,23 @@
     "candidateAppliedThrough": 7178,
     "candidateCheckpointAcknowledgements": 1
   },
+  "originalDawnTraceAudit": {
+    "input": "native-savanna-lion-dawn-native-source-turns.json",
+    "inputSha256": "5798f8cd977166be767299be5863163bc7045968417a4f6b9aa5ee48dbdf171e",
+    "checkpointEntryThreshold": 64,
+    "phaseAlignedTurnEnds": [6241, 6306, 6371, 6436, 6501, 6566, 6631, 6696, 6761, 6826, 6891, 6956, 7021, 7086, 7151, 7216, 7281],
+    "partialSlices": [
+      {"sequence": 7151, "applied": 1, "limit": 8},
+      {"sequence": 7281, "applied": 1, "limit": 8}
+    ],
+    "sourceBacklog": 84,
+    "publicationBudget": {"intermediate": 24, "terminal": 32},
+    "minimumFrameAcknowledgementsIncludingInFlight": 4,
+    "acknowledgementsObservedInIsolatedNvidiaCandidate": 4,
+    "scope": "The original trace has no direct checkpoint marker. The 17 phase-aligned turn ends and the two partial slices corroborate the checkpoint explanation. Under the existing publication budgets, three acknowledgements can cover at most 80 of the 84 publications, so the isolated NVIDIA candidate reaches the lower bound for this backlog.",
+    "auditScriptSha256": "bfaff1915b568dddad4a100088bd52bdaa28c615bf6744435f4bdfd2a905a10e",
+    "auditResultSha256": "2e0541e60e49464aeaa6ae5da58a8f9116000f1ba5329bead1a2874ede7669a4"
+  },
   "nvidia": {
     "scope": "Minimal draw using the production receiver, client and Host on NVIDIA Turing. Stable Game state, replayed sequence and timing, controlled clock anchor.",
     "missing": "Full Sabana Game run and Strike27 qualification.",
