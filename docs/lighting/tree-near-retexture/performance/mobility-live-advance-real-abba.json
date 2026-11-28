@@ -1,0 +1,290 @@
+{
+  "runs": [
+    {
+      "mode": "main",
+      "chunks": [
+        "0,-1",
+        "0,-2",
+        "0,0",
+        "0,1",
+        "0,2",
+        "1,-1",
+        "1,-2",
+        "1,0",
+        "1,1",
+        "1,2",
+        "2,-1",
+        "2,-2",
+        "2,0",
+        "2,1",
+        "2,2",
+        "3,-1",
+        "3,-2",
+        "3,0",
+        "3,1",
+        "3,2",
+        "4,-1",
+        "4,-2",
+        "4,0",
+        "4,1",
+        "4,2"
+      ],
+      "elapsed": 0.05,
+      "workMs": 924.5500000119209,
+      "responseMs": 925.4450000077486,
+      "initMs": 828.9450000077486,
+      "frames": {
+        "count": 149,
+        "p95": 33.38999999999942,
+        "p99": 33.404999999998836,
+        "max": 933.3000000000029
+      },
+      "overlap": {
+        "count": 1,
+        "p95": 933.3000000000029,
+        "p99": 933.3000000000029,
+        "max": 933.3000000000029
+      },
+      "renderMs": {
+        "count": 150,
+        "p95": 26.805000007152557,
+        "p99": 30.67000000178814,
+        "max": 37.935000002384186
+      },
+      "gpu": {
+        "samples": 150,
+        "disjoint": 0,
+        "discarded": 0,
+        "elapsed": {
+          "count": 150,
+          "p95": 15.876128,
+          "p99": 24.496128,
+          "max": 26.362656
+        }
+      },
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "sceneErrors": [],
+      "identity": {
+        "source": "53caefeaf1accec44f8718924623a93820e2a8fa4415217b2c3d1cf1e4d1cca6",
+        "chunks": "4f2d501510695806c3a971f8c69016a1090545e5461f793386b9feadd1a129dd",
+        "snapshot": "187fa582a7234fe0d1b0430bc1827b9fdbf70d504b47f2b08667291af24714d2"
+      },
+      "equal": true
+    },
+    {
+      "mode": "worker",
+      "chunks": [
+        "0,-1",
+        "0,-2",
+        "0,0",
+        "0,1",
+        "0,2",
+        "1,-1",
+        "1,-2",
+        "1,0",
+        "1,1",
+        "1,2",
+        "2,-1",
+        "2,-2",
+        "2,0",
+        "2,1",
+        "2,2",
+        "3,-1",
+        "3,-2",
+        "3,0",
+        "3,1",
+        "3,2",
+        "4,-1",
+        "4,-2",
+        "4,0",
+        "4,1",
+        "4,2"
+      ],
+      "elapsed": 0.05,
+      "workMs": 1034.565000012517,
+      "responseMs": 1059.9150000065565,
+      "initMs": 846.7199999988079,
+      "frames": {
+        "count": 149,
+        "p95": 33.400000000001455,
+        "p99": 33.44000000000233,
+        "max": 33.48500000000058
+      },
+      "overlap": {
+        "count": 32,
+        "p95": 33.37000000000262,
+        "p99": 33.375,
+        "max": 33.42000000000553
+      },
+      "renderMs": {
+        "count": 150,
+        "p95": 29.325000002980232,
+        "p99": 31.569999992847443,
+        "max": 33.33500000834465
+      },
+      "gpu": {
+        "samples": 150,
+        "disjoint": 0,
+        "discarded": 0,
+        "elapsed": {
+          "count": 150,
+          "p95": 15.454656,
+          "p99": 24.527168,
+          "max": 27.078496
+        }
+      },
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "sceneErrors": [],
+      "identity": {
+        "source": "53caefeaf1accec44f8718924623a93820e2a8fa4415217b2c3d1cf1e4d1cca6",
+        "chunks": "4f2d501510695806c3a971f8c69016a1090545e5461f793386b9feadd1a129dd",
+        "snapshot": "187fa582a7234fe0d1b0430bc1827b9fdbf70d504b47f2b08667291af24714d2"
+      },
+      "equal": true
+    },
+    {
+      "mode": "worker",
+      "chunks": [
+        "0,-1",
+        "0,-2",
+        "0,0",
+        "0,1",
+        "0,2",
+        "1,-1",
+        "1,-2",
+        "1,0",
+        "1,1",
+        "1,2",
+        "2,-1",
+        "2,-2",
+        "2,0",
+        "2,1",
+        "2,2",
+        "3,-1",
+        "3,-2",
+        "3,0",
+        "3,1",
+        "3,2",
+        "4,-1",
+        "4,-2",
+        "4,0",
+        "4,1",
+        "4,2"
+      ],
+      "elapsed": 0.05,
+      "workMs": 1045.030000001192,
+      "responseMs": 1059.9149999916553,
+      "initMs": 844.7750000059605,
+      "frames": {
+        "count": 149,
+        "p95": 33.38500000000204,
+        "p99": 33.41500000000087,
+        "max": 33.43000000000029
+      },
+      "overlap": {
+        "count": 32,
+        "p95": 33.3550000000032,
+        "p99": 33.36000000000058,
+        "max": 33.36499999999796
+      },
+      "renderMs": {
+        "count": 150,
+        "p95": 28.515000000596046,
+        "p99": 33.20499999821186,
+        "max": 34.50499999523163
+      },
+      "gpu": {
+        "samples": 150,
+        "disjoint": 0,
+        "discarded": 0,
+        "elapsed": {
+          "count": 150,
+          "p95": 15.259648,
+          "p99": 24.675232,
+          "max": 25.524224
+        }
+      },
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "sceneErrors": [],
+      "identity": {
+        "source": "53caefeaf1accec44f8718924623a93820e2a8fa4415217b2c3d1cf1e4d1cca6",
+        "chunks": "4f2d501510695806c3a971f8c69016a1090545e5461f793386b9feadd1a129dd",
+        "snapshot": "187fa582a7234fe0d1b0430bc1827b9fdbf70d504b47f2b08667291af24714d2"
+      },
+      "equal": true
+    },
+    {
+      "mode": "main",
+      "chunks": [
+        "0,-1",
+        "0,-2",
+        "0,0",
+        "0,1",
+        "0,2",
+        "1,-1",
+        "1,-2",
+        "1,0",
+        "1,1",
+        "1,2",
+        "2,-1",
+        "2,-2",
+        "2,0",
+        "2,1",
+        "2,2",
+        "3,-1",
+        "3,-2",
+        "3,0",
+        "3,1",
+        "3,2",
+        "4,-1",
+        "4,-2",
+        "4,0",
+        "4,1",
+        "4,2"
+      ],
+      "elapsed": 0.05,
+      "workMs": 1048.484999999404,
+      "responseMs": 1049.405000001192,
+      "initMs": 836.3049999922514,
+      "frames": {
+        "count": 149,
+        "p95": 33.400000000001455,
+        "p99": 33.474999999998545,
+        "max": 1066.6649999999972
+      },
+      "overlap": {
+        "count": 1,
+        "p95": 1066.6649999999972,
+        "p99": 1066.6649999999972,
+        "max": 1066.6649999999972
+      },
+      "renderMs": {
+        "count": 150,
+        "p95": 31.95999999344349,
+        "p99": 46.53000000119209,
+        "max": 48.20000000298023
+      },
+      "gpu": {
+        "samples": 150,
+        "disjoint": 0,
+        "discarded": 0,
+        "elapsed": {
+          "count": 150,
+          "p95": 15.269728,
+          "p99": 23.290784,
+          "max": 24.528256
+        }
+      },
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "sceneErrors": [],
+      "identity": {
+        "source": "53caefeaf1accec44f8718924623a93820e2a8fa4415217b2c3d1cf1e4d1cca6",
+        "chunks": "4f2d501510695806c3a971f8c69016a1090545e5461f793386b9feadd1a129dd",
+        "snapshot": "187fa582a7234fe0d1b0430bc1827b9fdbf70d504b47f2b08667291af24714d2"
+      },
+      "equal": true
+    }
+  ],
+  "allEqual": true,
+  "scope": "Four independent Edge headless QA mangrove-islands scenes with 20 synthetic animals and a cloned simulation, using advanceReal(.05) and native navigation in main thread versus Worker while frozen WorldScene renders. Input state uses fixed slot and time, actor ID zero remapped, resident chunk keys captured per run; one cold request per session. Clone owns separate world, not production authority or real input; no physics, visual projection, horizon, gameplay integration or integrated GPU. GPU queries perturb timing."
+}

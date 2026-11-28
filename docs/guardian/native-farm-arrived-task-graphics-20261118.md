@@ -1,0 +1,25 @@
+# Actor original de Farm23 terminada a Task14
+
+Continúa el [control directo](native-farm-arrived-task-control-20261118.md) del [plan integrado](integrated-gpu-migration-plan-20261104.md). El roster acepta la última fila de una Farm23 instalada como procedencia corporal de Task14. Conserva raíz, mallas, geometrías, índices y bancos del actor. Este incremento es parcial: el reloj de Idle tras el final físico y la aceptación completa en Surface/Host/GPU siguen pendientes. A6/A/B/C permanecen abiertos; D no iniciado.
+
+## Código de referencia y decisión
+
+Se consultan las implementaciones reales de [`Mesh.copy` de Three r180](https://github.com/mrdoob/three.js/blob/r180/src/objects/Mesh.js#L110) y [`SkeletonUtils.clone`](https://github.com/mrdoob/three.js/blob/r180/examples/jsm/utils/SkeletonUtils.js#L388), desde la dependencia instalada. La primera conserva referencias a geometría/material; la segunda remapea los huesos al clonar inicialmente un actor. El relevo reutiliza el actor ya residente y el mecanismo de variantes/reemplazo/retirada existente. No clona de nuevo el modelo ni introduce dependencia, registro corporal, parada24 o historia Idle ficticia.
+
+La comprobación nueva exige asociación23 instalada, mismo cuerpo/actor/perfil/radio/época/sesión, secuencia posterior y solicitud no anterior al final real. Lee la última fila nativa inmutable: tiempo final exacto, llegada efectiva, velocidad y running cero, posición/rumbo/fases/presupuesto coincidentes tanto con Game como con la propuesta14. No calcula una trayectoria en JavaScript.
+
+La política del actor se guarda al preparar23. Sólo los campos de ejecución y la cancelación semántica propia de Task pueden cambiar; el estado pendiente debe tener pose final exacta, destino/Idle/path nulos y tarea genuina asignada al trabajador. Contrato, centro, perfil y demás política quedan fijados. La validación se repite durante preparación, activación, rollback, revalidación y adquisición. El reemplazo usa una tabla Task nueva y retira el propietario Farm con el mecanismo diferido existente.
+
+## Evidencia y límites
+
+La prueba anterior reproduce `Native motion has no matching source worker`. El control negativo que elimina únicamente la igualdad corporal permite indebidamente la propuesta de otro cuerpo y falla por ausencia de rechazo. Ambos cargan código de sólo lectura, sin modificar los archivos de producto.
+
+Los36 casos nuevos incluyen cuatro perfiles, caminar/correr, viaje/llegada ya dentro del radio, espera1.8s, rollback, revalidación y adquisición tardías, retarget sin nuevos propietarios, asociación final alterada, color/sombra con NodeBuilder real, picking ordinario y pthread. También rechazan cambios de pose, rumbo, fases, centro, contrato, perfil, tarea y cuerpo. Las variantes conservan las texturas/datos/versiones de los bancos y sólo queda un propietario de movimiento al completar la retirada. El fixture de picking traduce la época preparada a la adquisición real; no usa el tiempo de adquisición directamente como edad del recurso preparado.
+
+Pasan2.617/2.618 pruebas de246 archivos, con una comparación opcional omitida y cero fallos/cancelaciones. La misma ejecución incluye los36 casos nuevos completos. Build pasa en1m46s. Se congelan402 entradas y64 fuentes/artefactos nativos idénticos al incremento anterior, sin recompilar WASM.
+
+Los fixtures usan C++/WASM, GLB, bakes, terreno y compilación TSL reales; renderer, admisión y testigo de frame son dobles. El commit nativo confiado de prueba no acredita un recibo gráfico, drain físico, cero pipelines nuevos en hardware ni ausencia de tirones. No se atribuye aquí evidencia GPU de incrementos anteriores.
+
+Un diagnóstico adicional reproduce un problema previo que este incremento no cierra: después del final19.715618539806457, el muestreador23 da la misma fase Idle9.715618133544922 en19.815618539806458 y20.815618539806458, conservando posición y rumbo. La edad de Idle sigue limitada por la duración de la trayectoria. Se consultan también [`AnimationMixer.update`](https://github.com/mrdoob/three.js/blob/r180/src/animation/AnimationMixer.js#L670) y [`AnimationAction._updateTime`](https://github.com/mrdoob/three.js/blob/r180/src/animation/AnimationAction.js#L711): reloj global separado del tiempo y repetición del clip. Esa separación es la referencia para el siguiente mecanismo, conservando las cotas físicas y los relojes/picking efectivamente enviados. No basta con relajar el límite de ejecución de23.
+
+La [evidencia estructurada](performance/native-farm-arrived-task-graphics-validation-20261118.json) identifica entradas, resultados y límites. Se conservan los16 archivos locales ajenos, el worker pthread sin seguimiento y los bytes anteriores de los cuatro documentos principales. Permanecen pendientes el reloj/Surface/hardware del relevo terminal, finales Home/Idle, productor/cohort y recuperación incremental integral de3.123 recursos. Los siete fallos históricos fuera de la selección y el seguimiento causal de cadencia/plataforma conservan su alcance previo.

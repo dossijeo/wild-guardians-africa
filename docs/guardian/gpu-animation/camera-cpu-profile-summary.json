@@ -1,0 +1,1722 @@
+{
+  "scope": "One instrumented paused-camera run. V8 statistical self samples, weighted by sampling deltas. Native waits and GPU work may be hidden or attributed to callers. Sampling and browser tracing add overhead; times are not exact function durations.",
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "selected": {
+    "id": "spatial:0:-1:21",
+    "slot": 3,
+    "x": -2.6859482881760885,
+    "z": 185.09613374722403,
+    "ready": 0
+  },
+  "profileSamples": 5845,
+  "movementSamples": 2919,
+  "top": [
+    {
+      "name": "(program)",
+      "url": "",
+      "line": -1,
+      "samples": 796,
+      "estimatedMs": 517.7339999999999
+    },
+    {
+      "name": "updateMatrixWorld",
+      "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+      "line": 8324,
+      "samples": 90,
+      "estimatedMs": 160.67700000000005
+    },
+    {
+      "name": "getParameters",
+      "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+      "line": 35491,
+      "samples": 79,
+      "estimatedMs": 143.422
+    },
+    {
+      "name": "updateAssetLods",
+      "url": "http://127.0.0.1:5175/src/rendering/asset-lod.js",
+      "line": 36,
+      "samples": 89,
+      "estimatedMs": 136.24300000000005
+    },
+    {
+      "name": "(idle)",
+      "url": "",
+      "line": -1,
+      "samples": 72,
+      "estimatedMs": 118.234
+    },
+    {
+      "name": "setCoverage",
+      "url": "http://127.0.0.1:5175/tools/experiments/far-tree-transitions.js",
+      "line": 9,
+      "samples": 57,
+      "estimatedMs": 105.15700000000005
+    },
+    {
+      "name": "standbyTreeKey",
+      "url": "http://127.0.0.1:5175/tools/experiments/native-tree-standby.js",
+      "line": 14,
+      "samples": 49,
+      "estimatedMs": 87.909
+    },
+    {
+      "name": "prepare",
+      "url": "http://127.0.0.1:5175/src/rendering/smooth-far-transitions.js",
+      "line": 46,
+      "samples": 62,
+      "estimatedMs": 73.38199999999999
+    },
+    {
+      "name": "upload",
+      "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+      "line": 34742,
+      "samples": 37,
+      "estimatedMs": 71.578
+    },
+    {
+      "name": "nativeFarRenderSignature",
+      "url": "http://127.0.0.1:5175/tools/experiments/native-far-render-signature.js",
+      "line": 2,
+      "samples": 46,
+      "estimatedMs": 70.58400000000003
+    },
+    {
+      "name": "(garbage collector)",
+      "url": "",
+      "line": -1,
+      "samples": 35,
+      "estimatedMs": 67.774
+    },
+    {
+      "name": "prepare",
+      "url": "http://127.0.0.1:5175/src/rendering/asset-groups.js",
+      "line": 88,
+      "samples": 34,
+      "estimatedMs": 67.351
+    },
+    {
+      "name": "getProgram",
+      "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+      "line": 40765,
+      "samples": 33,
+      "estimatedMs": 64.56
+    },
+    {
+      "name": "select",
+      "url": "http://127.0.0.1:5175/src/rendering/continuous-grass.js",
+      "line": 134,
+      "samples": 35,
+      "estimatedMs": 63.71200000000001
+    },
+    {
+      "name": "multiplyMatrices",
+      "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+      "line": 6651,
+      "samples": 36,
+      "estimatedMs": 62.82400000000001
+    },
+    {
+      "name": "projectObject",
+      "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+      "line": 40592,
+      "samples": 33,
+      "estimatedMs": 61.565999999999995
+    },
+    {
+      "name": "attribute",
+      "url": "http://127.0.0.1:5175/src/rendering/shadow-cache.js",
+      "line": 23,
+      "samples": 33,
+      "estimatedMs": 58.94500000000001
+    },
+    {
+      "name": "toArray",
+      "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+      "line": 7290,
+      "samples": 33,
+      "estimatedMs": 58.35800000000001
+    },
+    {
+      "name": "witness",
+      "url": "http://127.0.0.1:5175/tools/experiments/attach-native-far-world.js",
+      "line": 54,
+      "samples": 38,
+      "estimatedMs": 57.300000000000004
+    },
+    {
+      "name": "request",
+      "url": "http://127.0.0.1:5175/tools/experiments/native-tree-standby.js",
+      "line": 41,
+      "samples": 28,
+      "estimatedMs": 51.54400000000001
+    },
+    {
+      "name": "setValueM4Array",
+      "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+      "line": 34503,
+      "samples": 25,
+      "estimatedMs": 50.473000000000006
+    },
+    {
+      "name": "WebGLRenderer.renderBufferDirect",
+      "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+      "line": 40313,
+      "samples": 26,
+      "estimatedMs": 50.07800000000002
+    },
+    {
+      "name": "",
+      "url": "http://127.0.0.1:5175/src/rendering/shadow-cache.js",
+      "line": 54,
+      "samples": 21,
+      "estimatedMs": 46.443
+    },
+    {
+      "name": "traverseVisible",
+      "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+      "line": 8283,
+      "samples": 28,
+      "estimatedMs": 45.18699999999999
+    },
+    {
+      "name": "update",
+      "url": "http://127.0.0.1:5175/tools/experiments/native-far-layer.js",
+      "line": 37,
+      "samples": 25,
+      "estimatedMs": 44.062
+    },
+    {
+      "name": "setProgram",
+      "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+      "line": 40854,
+      "samples": 23,
+      "estimatedMs": 41.646
+    },
+    {
+      "name": "run",
+      "url": "http://127.0.0.1:5175/tools/experiments/native-tree-standby.js",
+      "line": 50,
+      "samples": 36,
+      "estimatedMs": 37.026
+    },
+    {
+      "name": "getProgramCacheKey",
+      "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+      "line": 35706,
+      "samples": 19,
+      "estimatedMs": 36.484
+    },
+    {
+      "name": "bindVertexArray",
+      "url": "",
+      "line": -1,
+      "samples": 20,
+      "estimatedMs": 35.939
+    },
+    {
+      "name": "nativeLodBins",
+      "url": "http://127.0.0.1:5175/src/rendering/lod-source.js",
+      "line": 2,
+      "samples": 22,
+      "estimatedMs": 34.061
+    },
+    {
+      "name": "",
+      "url": "http://127.0.0.1:5175/tools/experiments/native-tree-standby.js",
+      "line": 78,
+      "samples": 27,
+      "estimatedMs": 32.415
+    },
+    {
+      "name": "traverse",
+      "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+      "line": 8268,
+      "samples": 22,
+      "estimatedMs": 30.958
+    },
+    {
+      "name": "update",
+      "url": "http://127.0.0.1:5175/tools/experiments/native-tree-standby.js",
+      "line": 99,
+      "samples": 17,
+      "estimatedMs": 30.003
+    },
+    {
+      "name": "",
+      "url": "http://127.0.0.1:5175/tools/experiments/native-far-render-signature.js",
+      "line": 3,
+      "samples": 22,
+      "estimatedMs": 29.894999999999992
+    },
+    {
+      "name": "nearWaterChunk",
+      "url": "http://127.0.0.1:5175/src/rendering/continuous-grass.js",
+      "line": 106,
+      "samples": 16,
+      "estimatedMs": 29.497000000000003
+    }
+  ],
+  "topPaths": [
+    {
+      "stack": [
+        {
+          "name": "updateAssetLods",
+          "url": "http://127.0.0.1:5175/src/rendering/asset-lod.js",
+          "line": 36
+        },
+        {
+          "name": "renderFrameUpdates",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 907
+        },
+        {
+          "name": "render",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 923
+        },
+        {
+          "name": "",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 628
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/loading-gameplay-gpu-qa.js",
+          "line": 8
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 610
+        },
+        {
+          "name": "(root)",
+          "url": "",
+          "line": -1
+        }
+      ],
+      "samples": 89
+    },
+    {
+      "stack": [
+        {
+          "name": "getParameters",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 35491
+        },
+        {
+          "name": "getProgram",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40765
+        },
+        {
+          "name": "prepareMaterial",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40402
+        },
+        {
+          "name": "",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40440
+        },
+        {
+          "name": "traverse",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8268
+        },
+        {
+          "name": "traverse",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8268
+        },
+        {
+          "name": "WebGLRenderer.compile",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40415
+        },
+        {
+          "name": "compileGpuPreparation",
+          "url": "http://127.0.0.1:5175/tools/experiments/compile-gpu-preparation.js",
+          "line": 5
+        },
+        {
+          "name": "compileDrawAndFence",
+          "url": "http://127.0.0.1:5175/tools/experiments/prepare-native-far-gpu.js",
+          "line": 68
+        },
+        {
+          "name": "prepareNativeFarGpu",
+          "url": "http://127.0.0.1:5175/tools/experiments/prepare-native-far-gpu.js",
+          "line": 39
+        },
+        {
+          "name": "",
+          "url": "http://127.0.0.1:5175/tools/experiments/attach-native-far-world.js",
+          "line": 90
+        },
+        {
+          "name": "(root)",
+          "url": "",
+          "line": -1
+        }
+      ],
+      "samples": 73
+    },
+    {
+      "stack": [
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "WebGLRenderer.render",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40505
+        },
+        {
+          "name": "uploadDraw",
+          "url": "http://127.0.0.1:5175/tools/experiments/prepare-native-far-gpu.js",
+          "line": 83
+        },
+        {
+          "name": "submit",
+          "url": "http://127.0.0.1:5175/tools/experiments/prepare-native-far-gpu.js",
+          "line": 83
+        },
+        {
+          "name": "draw",
+          "url": "http://127.0.0.1:5175/tools/experiments/prepare-native-far-gpu.js",
+          "line": 83
+        },
+        {
+          "name": "withGpuRootIsolation",
+          "url": "http://127.0.0.1:5175/tools/experiments/isolated-gpu-root.js",
+          "line": 2
+        },
+        {
+          "name": "compileDrawAndFence",
+          "url": "http://127.0.0.1:5175/tools/experiments/prepare-native-far-gpu.js",
+          "line": 68
+        },
+        {
+          "name": "(root)",
+          "url": "",
+          "line": -1
+        }
+      ],
+      "samples": 19
+    },
+    {
+      "stack": [
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "WebGLRenderer.render",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40505
+        },
+        {
+          "name": "uploadDraw",
+          "url": "http://127.0.0.1:5175/tools/experiments/prepare-native-far-gpu.js",
+          "line": 83
+        },
+        {
+          "name": "submit",
+          "url": "http://127.0.0.1:5175/tools/experiments/prepare-native-far-gpu.js",
+          "line": 83
+        },
+        {
+          "name": "draw",
+          "url": "http://127.0.0.1:5175/tools/experiments/prepare-native-far-gpu.js",
+          "line": 83
+        },
+        {
+          "name": "withGpuRootIsolation",
+          "url": "http://127.0.0.1:5175/tools/experiments/isolated-gpu-root.js",
+          "line": 2
+        },
+        {
+          "name": "compileDrawAndFence",
+          "url": "http://127.0.0.1:5175/tools/experiments/prepare-native-far-gpu.js",
+          "line": 68
+        },
+        {
+          "name": "(root)",
+          "url": "",
+          "line": -1
+        }
+      ],
+      "samples": 19
+    },
+    {
+      "stack": [
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "frozenEntries",
+          "url": "http://127.0.0.1:5175/tools/experiments/attach-native-far-world.js",
+          "line": 78
+        },
+        {
+          "name": "",
+          "url": "http://127.0.0.1:5175/tools/experiments/attach-native-far-world.js",
+          "line": 90
+        },
+        {
+          "name": "(root)",
+          "url": "",
+          "line": -1
+        }
+      ],
+      "samples": 12
+    },
+    {
+      "stack": [
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "WebGLRenderer.render",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40505
+        },
+        {
+          "name": "",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 926
+        },
+        {
+          "name": "withRenderOrigin",
+          "url": "http://127.0.0.1:5175/src/rendering/render-origin.js",
+          "line": 18
+        },
+        {
+          "name": "drawWorldFrame",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 926
+        },
+        {
+          "name": "draw",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 925
+        },
+        {
+          "name": "draw",
+          "url": "http://127.0.0.1:5175/src/ui/game-juice.js",
+          "line": 61
+        },
+        {
+          "name": "GameJuice.world.presentationDraw",
+          "url": "http://127.0.0.1:5175/src/ui/game-juice.js",
+          "line": 13
+        },
+        {
+          "name": "drawRenderFrame",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 925
+        },
+        {
+          "name": "render",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 923
+        },
+        {
+          "name": "",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 628
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/loading-gameplay-gpu-qa.js",
+          "line": 8
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 610
+        },
+        {
+          "name": "(root)",
+          "url": "",
+          "line": -1
+        }
+      ],
+      "samples": 10
+    },
+    {
+      "stack": [
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "update",
+          "url": "http://127.0.0.1:5175/src/rendering/asset-groups.js",
+          "line": 172
+        },
+        {
+          "name": "renderFrameUpdates",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 907
+        },
+        {
+          "name": "render",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 923
+        },
+        {
+          "name": "",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 628
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/loading-gameplay-gpu-qa.js",
+          "line": 8
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 610
+        },
+        {
+          "name": "(root)",
+          "url": "",
+          "line": -1
+        }
+      ],
+      "samples": 6
+    },
+    {
+      "stack": [
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "WebGLRenderer.render",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40505
+        },
+        {
+          "name": "uploadDraw",
+          "url": "http://127.0.0.1:5175/tools/experiments/prepare-native-far-gpu.js",
+          "line": 83
+        },
+        {
+          "name": "submit",
+          "url": "http://127.0.0.1:5175/tools/experiments/prepare-native-far-gpu.js",
+          "line": 83
+        },
+        {
+          "name": "draw",
+          "url": "http://127.0.0.1:5175/tools/experiments/prepare-native-far-gpu.js",
+          "line": 83
+        },
+        {
+          "name": "withGpuRootIsolation",
+          "url": "http://127.0.0.1:5175/tools/experiments/isolated-gpu-root.js",
+          "line": 2
+        },
+        {
+          "name": "compileDrawAndFence",
+          "url": "http://127.0.0.1:5175/tools/experiments/prepare-native-far-gpu.js",
+          "line": 68
+        },
+        {
+          "name": "(root)",
+          "url": "",
+          "line": -1
+        }
+      ],
+      "samples": 6
+    },
+    {
+      "stack": [
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "frozenEntries",
+          "url": "http://127.0.0.1:5175/tools/experiments/attach-native-far-world.js",
+          "line": 78
+        },
+        {
+          "name": "",
+          "url": "http://127.0.0.1:5175/tools/experiments/attach-native-far-world.js",
+          "line": 90
+        },
+        {
+          "name": "(root)",
+          "url": "",
+          "line": -1
+        }
+      ],
+      "samples": 6
+    },
+    {
+      "stack": [
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "WebGLRenderer.render",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40505
+        },
+        {
+          "name": "",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 926
+        },
+        {
+          "name": "withRenderOrigin",
+          "url": "http://127.0.0.1:5175/src/rendering/render-origin.js",
+          "line": 18
+        },
+        {
+          "name": "drawWorldFrame",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 926
+        },
+        {
+          "name": "draw",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 925
+        },
+        {
+          "name": "draw",
+          "url": "http://127.0.0.1:5175/src/ui/game-juice.js",
+          "line": 61
+        },
+        {
+          "name": "GameJuice.world.presentationDraw",
+          "url": "http://127.0.0.1:5175/src/ui/game-juice.js",
+          "line": 13
+        },
+        {
+          "name": "drawRenderFrame",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 925
+        },
+        {
+          "name": "render",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 923
+        },
+        {
+          "name": "",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 628
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/loading-gameplay-gpu-qa.js",
+          "line": 8
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 610
+        },
+        {
+          "name": "(root)",
+          "url": "",
+          "line": -1
+        }
+      ],
+      "samples": 3
+    },
+    {
+      "stack": [
+        {
+          "name": "getParameters",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 35491
+        },
+        {
+          "name": "getProgram",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40765
+        },
+        {
+          "name": "prepareMaterial",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40402
+        },
+        {
+          "name": "",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40440
+        },
+        {
+          "name": "traverse",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8268
+        },
+        {
+          "name": "traverse",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8268
+        },
+        {
+          "name": "WebGLRenderer.compile",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40415
+        },
+        {
+          "name": "compileGpuPreparation",
+          "url": "http://127.0.0.1:5175/tools/experiments/compile-gpu-preparation.js",
+          "line": 5
+        },
+        {
+          "name": "compileDrawAndFence",
+          "url": "http://127.0.0.1:5175/tools/experiments/prepare-native-far-gpu.js",
+          "line": 68
+        },
+        {
+          "name": "prepareNativeFarGpu",
+          "url": "http://127.0.0.1:5175/tools/experiments/prepare-native-far-gpu.js",
+          "line": 39
+        },
+        {
+          "name": "prepare",
+          "url": "http://127.0.0.1:5175/tools/experiments/attach-native-far-world.js",
+          "line": 63
+        },
+        {
+          "name": "run",
+          "url": "http://127.0.0.1:5175/tools/experiments/native-tree-standby.js",
+          "line": 50
+        },
+        {
+          "name": "request",
+          "url": "http://127.0.0.1:5175/tools/experiments/native-tree-standby.js",
+          "line": 41
+        },
+        {
+          "name": "",
+          "url": "http://127.0.0.1:5175/tools/experiments/attach-native-far-world.js",
+          "line": 90
+        },
+        {
+          "name": "(root)",
+          "url": "",
+          "line": -1
+        }
+      ],
+      "samples": 2
+    },
+    {
+      "stack": [
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "WebGLRenderer.render",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40505
+        },
+        {
+          "name": "",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 926
+        },
+        {
+          "name": "withRenderOrigin",
+          "url": "http://127.0.0.1:5175/src/rendering/render-origin.js",
+          "line": 18
+        },
+        {
+          "name": "drawWorldFrame",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 926
+        },
+        {
+          "name": "draw",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 925
+        },
+        {
+          "name": "draw",
+          "url": "http://127.0.0.1:5175/src/ui/game-juice.js",
+          "line": 61
+        },
+        {
+          "name": "GameJuice.world.presentationDraw",
+          "url": "http://127.0.0.1:5175/src/ui/game-juice.js",
+          "line": 13
+        },
+        {
+          "name": "drawRenderFrame",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 925
+        },
+        {
+          "name": "render",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 923
+        },
+        {
+          "name": "",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 628
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/loading-gameplay-gpu-qa.js",
+          "line": 8
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 610
+        },
+        {
+          "name": "(root)",
+          "url": "",
+          "line": -1
+        }
+      ],
+      "samples": 2
+    },
+    {
+      "stack": [
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "withRenderOrigin",
+          "url": "http://127.0.0.1:5175/src/rendering/render-origin.js",
+          "line": 18
+        },
+        {
+          "name": "drawWorldFrame",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 926
+        },
+        {
+          "name": "draw",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 925
+        },
+        {
+          "name": "draw",
+          "url": "http://127.0.0.1:5175/src/ui/game-juice.js",
+          "line": 61
+        },
+        {
+          "name": "GameJuice.world.presentationDraw",
+          "url": "http://127.0.0.1:5175/src/ui/game-juice.js",
+          "line": 13
+        },
+        {
+          "name": "drawRenderFrame",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 925
+        },
+        {
+          "name": "render",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 923
+        },
+        {
+          "name": "",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 628
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/loading-gameplay-gpu-qa.js",
+          "line": 8
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 610
+        },
+        {
+          "name": "(root)",
+          "url": "",
+          "line": -1
+        }
+      ],
+      "samples": 2
+    },
+    {
+      "stack": [
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "draw",
+          "url": "http://127.0.0.1:5175/src/ui/guardian-3d.js",
+          "line": 28
+        },
+        {
+          "name": "draw",
+          "url": "http://127.0.0.1:5175/src/ui/guardian.js",
+          "line": 109
+        },
+        {
+          "name": "update",
+          "url": "http://127.0.0.1:5175/src/ui/guardian.js",
+          "line": 98
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 610
+        },
+        {
+          "name": "(root)",
+          "url": "",
+          "line": -1
+        }
+      ],
+      "samples": 1
+    },
+    {
+      "stack": [
+        {
+          "name": "getParameters",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 35491
+        },
+        {
+          "name": "getProgram",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40765
+        },
+        {
+          "name": "setProgram",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40854
+        },
+        {
+          "name": "WebGLRenderer.renderBufferDirect",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40313
+        },
+        {
+          "name": "draw",
+          "url": "http://127.0.0.1:5175/src/rendering/native-shadow.js",
+          "line": 56
+        },
+        {
+          "name": "renderObject",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 36699
+        },
+        {
+          "name": "renderObject",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 36699
+        },
+        {
+          "name": "renderObject",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 36699
+        },
+        {
+          "name": "WebGLShadowMap.render",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 36552
+        },
+        {
+          "name": "render",
+          "url": "http://127.0.0.1:5175/src/rendering/native-shadow.js",
+          "line": 38
+        },
+        {
+          "name": "render",
+          "url": "http://127.0.0.1:5175/src/rendering/asset-shadows.js",
+          "line": 40
+        },
+        {
+          "name": "WebGLRenderer.render",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40505
+        },
+        {
+          "name": "",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 926
+        },
+        {
+          "name": "withRenderOrigin",
+          "url": "http://127.0.0.1:5175/src/rendering/render-origin.js",
+          "line": 18
+        },
+        {
+          "name": "drawWorldFrame",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 926
+        },
+        {
+          "name": "draw",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 925
+        },
+        {
+          "name": "draw",
+          "url": "http://127.0.0.1:5175/src/ui/game-juice.js",
+          "line": 61
+        },
+        {
+          "name": "GameJuice.world.presentationDraw",
+          "url": "http://127.0.0.1:5175/src/ui/game-juice.js",
+          "line": 13
+        },
+        {
+          "name": "drawRenderFrame",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 925
+        },
+        {
+          "name": "render",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 923
+        },
+        {
+          "name": "",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 628
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/loading-gameplay-gpu-qa.js",
+          "line": 8
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 610
+        },
+        {
+          "name": "(root)",
+          "url": "",
+          "line": -1
+        }
+      ],
+      "samples": 1
+    },
+    {
+      "stack": [
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "update",
+          "url": "http://127.0.0.1:5175/src/rendering/asset-groups.js",
+          "line": 172
+        },
+        {
+          "name": "renderFrameUpdates",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 907
+        },
+        {
+          "name": "render",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 923
+        },
+        {
+          "name": "",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 628
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/loading-gameplay-gpu-qa.js",
+          "line": 8
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 610
+        },
+        {
+          "name": "(root)",
+          "url": "",
+          "line": -1
+        }
+      ],
+      "samples": 1
+    },
+    {
+      "stack": [
+        {
+          "name": "getParameters",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 35491
+        },
+        {
+          "name": "getProgram",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40765
+        },
+        {
+          "name": "prepareMaterial",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40402
+        },
+        {
+          "name": "",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40440
+        },
+        {
+          "name": "traverse",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8268
+        },
+        {
+          "name": "traverse",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8268
+        },
+        {
+          "name": "WebGLRenderer.compile",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40415
+        },
+        {
+          "name": "compileGpuPreparation",
+          "url": "http://127.0.0.1:5175/tools/experiments/compile-gpu-preparation.js",
+          "line": 5
+        },
+        {
+          "name": "compileDrawAndFence",
+          "url": "http://127.0.0.1:5175/tools/experiments/prepare-native-far-gpu.js",
+          "line": 68
+        },
+        {
+          "name": "prepareNativeFarGpu",
+          "url": "http://127.0.0.1:5175/tools/experiments/prepare-native-far-gpu.js",
+          "line": 39
+        },
+        {
+          "name": "prepare",
+          "url": "http://127.0.0.1:5175/tools/experiments/attach-native-far-world.js",
+          "line": 63
+        },
+        {
+          "name": "run",
+          "url": "http://127.0.0.1:5175/tools/experiments/native-tree-standby.js",
+          "line": 50
+        },
+        {
+          "name": "(root)",
+          "url": "",
+          "line": -1
+        }
+      ],
+      "samples": 1
+    },
+    {
+      "stack": [
+        {
+          "name": "getParameters",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 35491
+        },
+        {
+          "name": "getProgram",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40765
+        },
+        {
+          "name": "setProgram",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40854
+        },
+        {
+          "name": "WebGLRenderer.renderBufferDirect",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40313
+        },
+        {
+          "name": "renderObject",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40747
+        },
+        {
+          "name": "renderObjects",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40731
+        },
+        {
+          "name": "renderScene",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40650
+        },
+        {
+          "name": "WebGLRenderer.render",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40505
+        },
+        {
+          "name": "uploadDraw",
+          "url": "http://127.0.0.1:5175/tools/experiments/prepare-native-far-gpu.js",
+          "line": 83
+        },
+        {
+          "name": "submit",
+          "url": "http://127.0.0.1:5175/tools/experiments/prepare-native-far-gpu.js",
+          "line": 83
+        },
+        {
+          "name": "draw",
+          "url": "http://127.0.0.1:5175/tools/experiments/prepare-native-far-gpu.js",
+          "line": 83
+        },
+        {
+          "name": "withGpuRootIsolation",
+          "url": "http://127.0.0.1:5175/tools/experiments/isolated-gpu-root.js",
+          "line": 2
+        },
+        {
+          "name": "compileDrawAndFence",
+          "url": "http://127.0.0.1:5175/tools/experiments/prepare-native-far-gpu.js",
+          "line": 68
+        },
+        {
+          "name": "(root)",
+          "url": "",
+          "line": -1
+        }
+      ],
+      "samples": 1
+    },
+    {
+      "stack": [
+        {
+          "name": "getParameters",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 35491
+        },
+        {
+          "name": "getProgram",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40765
+        },
+        {
+          "name": "setProgram",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40854
+        },
+        {
+          "name": "WebGLRenderer.renderBufferDirect",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40313
+        },
+        {
+          "name": "renderObject",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40747
+        },
+        {
+          "name": "renderObjects",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40731
+        },
+        {
+          "name": "renderScene",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40650
+        },
+        {
+          "name": "WebGLRenderer.render",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 40505
+        },
+        {
+          "name": "",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 926
+        },
+        {
+          "name": "withRenderOrigin",
+          "url": "http://127.0.0.1:5175/src/rendering/render-origin.js",
+          "line": 18
+        },
+        {
+          "name": "drawWorldFrame",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 926
+        },
+        {
+          "name": "draw",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 925
+        },
+        {
+          "name": "draw",
+          "url": "http://127.0.0.1:5175/src/ui/game-juice.js",
+          "line": 61
+        },
+        {
+          "name": "GameJuice.world.presentationDraw",
+          "url": "http://127.0.0.1:5175/src/ui/game-juice.js",
+          "line": 13
+        },
+        {
+          "name": "drawRenderFrame",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 925
+        },
+        {
+          "name": "render",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 923
+        },
+        {
+          "name": "",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 628
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/loading-gameplay-gpu-qa.js",
+          "line": 8
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 610
+        },
+        {
+          "name": "(root)",
+          "url": "",
+          "line": -1
+        }
+      ],
+      "samples": 1
+    },
+    {
+      "stack": [
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 12238
+        },
+        {
+          "name": "update",
+          "url": "http://127.0.0.1:5175/tools/experiments/attach-native-far-world.js",
+          "line": 100
+        },
+        {
+          "name": "update",
+          "url": "http://127.0.0.1:5175/src/rendering/far-vegetation.js",
+          "line": 78
+        },
+        {
+          "name": "renderFrameUpdates",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 907
+        },
+        {
+          "name": "render",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 923
+        },
+        {
+          "name": "",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 628
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/loading-gameplay-gpu-qa.js",
+          "line": 8
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 610
+        },
+        {
+          "name": "(root)",
+          "url": "",
+          "line": -1
+        }
+      ],
+      "samples": 1
+    },
+    {
+      "stack": [
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "withRenderOrigin",
+          "url": "http://127.0.0.1:5175/src/rendering/render-origin.js",
+          "line": 18
+        },
+        {
+          "name": "drawWorldFrame",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 926
+        },
+        {
+          "name": "draw",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 925
+        },
+        {
+          "name": "draw",
+          "url": "http://127.0.0.1:5175/src/ui/game-juice.js",
+          "line": 61
+        },
+        {
+          "name": "GameJuice.world.presentationDraw",
+          "url": "http://127.0.0.1:5175/src/ui/game-juice.js",
+          "line": 13
+        },
+        {
+          "name": "drawRenderFrame",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 925
+        },
+        {
+          "name": "render",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 923
+        },
+        {
+          "name": "",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 628
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/loading-gameplay-gpu-qa.js",
+          "line": 8
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 610
+        },
+        {
+          "name": "(root)",
+          "url": "",
+          "line": -1
+        }
+      ],
+      "samples": 1
+    },
+    {
+      "stack": [
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 12238
+        },
+        {
+          "name": "update",
+          "url": "http://127.0.0.1:5175/tools/experiments/attach-native-far-world.js",
+          "line": 100
+        },
+        {
+          "name": "update",
+          "url": "http://127.0.0.1:5175/src/rendering/far-vegetation.js",
+          "line": 78
+        },
+        {
+          "name": "renderFrameUpdates",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 907
+        },
+        {
+          "name": "render",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 923
+        },
+        {
+          "name": "",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 628
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/loading-gameplay-gpu-qa.js",
+          "line": 8
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 610
+        },
+        {
+          "name": "(root)",
+          "url": "",
+          "line": -1
+        }
+      ],
+      "samples": 1
+    },
+    {
+      "stack": [
+        {
+          "name": "updateMatrixWorld",
+          "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=26412576",
+          "line": 8324
+        },
+        {
+          "name": "withRenderOrigin",
+          "url": "http://127.0.0.1:5175/src/rendering/render-origin.js",
+          "line": 18
+        },
+        {
+          "name": "drawWorldFrame",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 926
+        },
+        {
+          "name": "draw",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 925
+        },
+        {
+          "name": "draw",
+          "url": "http://127.0.0.1:5175/src/ui/game-juice.js",
+          "line": 61
+        },
+        {
+          "name": "GameJuice.world.presentationDraw",
+          "url": "http://127.0.0.1:5175/src/ui/game-juice.js",
+          "line": 13
+        },
+        {
+          "name": "drawRenderFrame",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 925
+        },
+        {
+          "name": "render",
+          "url": "http://127.0.0.1:5175/src/rendering/scene.js",
+          "line": 923
+        },
+        {
+          "name": "",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 628
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/loading-gameplay-gpu-qa.js",
+          "line": 8
+        },
+        {
+          "name": "frame",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 610
+        },
+        {
+          "name": "(root)",
+          "url": "",
+          "line": -1
+        }
+      ],
+      "samples": 1
+    }
+  ]
+}

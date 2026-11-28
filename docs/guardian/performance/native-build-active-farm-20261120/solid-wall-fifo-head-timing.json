@@ -1,0 +1,692 @@
+{
+  "baselineCommit": "53ca24120d8c158be0d4ddae053c6141ba15fbd5",
+  "measuredChangeBase": "92d4bd01100ab690fd1544adf5d61c962fc0ff43",
+  "environment": {
+    "browser": "Edge Chromium",
+    "adapter": "NVIDIA Turing",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja",
+    "desktopRefreshHz": 30
+  },
+  "ordinaryCrossingTiming": {
+    "reference": {
+      "holdMs": 45.5,
+      "preparedTicket": 6,
+      "effectiveTicket": 7,
+      "windowMs": 1799.9,
+      "submissions": 54,
+      "replays": 45,
+      "medianSubmissionIntervalMs": 33.3,
+      "maxSubmissionIntervalMs": 47.7,
+      "drawMsAtMaxInterval": 4.1,
+      "skippedOpportunities": [
+        {
+          "atMs": 31.1,
+          "outcome": "mutation-hold",
+          "holdId": 3,
+          "sequence": 47
+        }
+      ],
+      "milestones": [
+        {
+          "step": "authority-wall-requote-start",
+          "atMs": -30.5
+        },
+        {
+          "step": "authority-wall-requote-ready",
+          "atMs": -21.5
+        },
+        {
+          "step": "authority-quiesce-sent",
+          "atMs": 0,
+          "ticket": 6
+        },
+        {
+          "step": "draw-quiesce-received",
+          "atMs": 0.4,
+          "ticket": 6
+        },
+        {
+          "step": "draw-fence-start",
+          "atMs": 0.6
+        },
+        {
+          "step": "draw-fence-ack",
+          "atMs": 7.4
+        },
+        {
+          "step": "authority-fence-received",
+          "atMs": 7.6
+        },
+        {
+          "step": "authority-wall-ready",
+          "atMs": 8
+        },
+        {
+          "step": "runtime-wall-ready",
+          "atMs": 8.2
+        },
+        {
+          "step": "runtime-build-dispatch",
+          "atMs": 8.3
+        },
+        {
+          "step": "runtime-build-sent",
+          "atMs": 21,
+          "sequence": 27
+        },
+        {
+          "step": "authority-build-consume",
+          "atMs": 21.2,
+          "ticket": 6
+        },
+        {
+          "step": "authority-wall-requote-start",
+          "atMs": 21.7
+        },
+        {
+          "step": "authority-wall-requote-ready",
+          "atMs": 31.1
+        },
+        {
+          "step": "native-revalidation-start",
+          "atMs": 31.2,
+          "ticket": 6
+        },
+        {
+          "step": "native-revalidation-end",
+          "atMs": 31.5,
+          "ticket": 6
+        },
+        {
+          "step": "native-physical-commit-start",
+          "atMs": 32,
+          "ticket": 7
+        },
+        {
+          "step": "native-physical-commit-end",
+          "atMs": 36.8,
+          "ticket": 7
+        },
+        {
+          "step": "game-wall-projection-start",
+          "atMs": 37.3,
+          "ticket": 7
+        },
+        {
+          "step": "game-wall-projection-end",
+          "atMs": 39.8,
+          "ticket": 7
+        },
+        {
+          "step": "authority-build-committed",
+          "atMs": 40.4,
+          "ticket": 7
+        },
+        {
+          "step": "authority-release-sent",
+          "atMs": 42.4,
+          "ticket": 7
+        },
+        {
+          "step": "draw-release-received",
+          "atMs": 42.6,
+          "ticket": 7
+        },
+        {
+          "step": "draw-release-installed",
+          "atMs": 45.5,
+          "ticket": 7
+        }
+      ]
+    },
+    "fifoHead1": {
+      "holdMs": 23.1,
+      "preparedTicket": 6,
+      "effectiveTicket": 7,
+      "windowMs": 1833.3,
+      "submissions": 55,
+      "replays": 46,
+      "medianSubmissionIntervalMs": 33.3,
+      "maxSubmissionIntervalMs": 36.7,
+      "drawMsAtMaxInterval": 2.6,
+      "skippedOpportunities": [],
+      "milestones": [
+        {
+          "step": "authority-wall-ready",
+          "atMs": -60.2
+        },
+        {
+          "step": "runtime-wall-ready",
+          "atMs": -55.8
+        },
+        {
+          "step": "runtime-build-dispatch",
+          "atMs": -55.7
+        },
+        {
+          "step": "runtime-build-sent",
+          "atMs": -43.4,
+          "sequence": 27
+        },
+        {
+          "step": "authority-wall-requote-start",
+          "atMs": -43
+        },
+        {
+          "step": "authority-wall-requote-ready",
+          "atMs": -32.7
+        },
+        {
+          "step": "authority-quiesce-sent",
+          "atMs": 0,
+          "ticket": 6
+        },
+        {
+          "step": "draw-quiesce-received",
+          "atMs": 0.2,
+          "ticket": 6
+        },
+        {
+          "step": "draw-fence-start",
+          "atMs": 0.4
+        },
+        {
+          "step": "draw-fence-ack",
+          "atMs": 7.7
+        },
+        {
+          "step": "authority-fence-received",
+          "atMs": 8
+        },
+        {
+          "step": "authority-build-consume",
+          "atMs": 8.6,
+          "ticket": 6
+        },
+        {
+          "step": "native-revalidation-start",
+          "atMs": 8.9,
+          "ticket": 6
+        },
+        {
+          "step": "native-revalidation-end",
+          "atMs": 9.1,
+          "ticket": 6
+        },
+        {
+          "step": "native-physical-commit-start",
+          "atMs": 9.5,
+          "ticket": 7
+        },
+        {
+          "step": "native-physical-commit-end",
+          "atMs": 14.2,
+          "ticket": 7
+        },
+        {
+          "step": "game-wall-projection-start",
+          "atMs": 14.7,
+          "ticket": 7
+        },
+        {
+          "step": "game-wall-projection-end",
+          "atMs": 17.6,
+          "ticket": 7
+        },
+        {
+          "step": "authority-build-committed",
+          "atMs": 18.2,
+          "ticket": 7
+        },
+        {
+          "step": "authority-release-sent",
+          "atMs": 20.2,
+          "ticket": 7
+        },
+        {
+          "step": "draw-release-received",
+          "atMs": 20.4,
+          "ticket": 7
+        },
+        {
+          "step": "draw-release-installed",
+          "atMs": 23.1,
+          "ticket": 7
+        }
+      ]
+    },
+    "fifoHead2": {
+      "holdMs": 23.1,
+      "preparedTicket": 6,
+      "effectiveTicket": 7,
+      "windowMs": 1832.5,
+      "submissions": 55,
+      "replays": 45,
+      "medianSubmissionIntervalMs": 33.3,
+      "maxSubmissionIntervalMs": 36.8,
+      "drawMsAtMaxInterval": 4,
+      "skippedOpportunities": [],
+      "milestones": [
+        {
+          "step": "authority-wall-ready",
+          "atMs": -26
+        },
+        {
+          "step": "runtime-wall-ready",
+          "atMs": -24.3
+        },
+        {
+          "step": "runtime-build-dispatch",
+          "atMs": -24.2
+        },
+        {
+          "step": "runtime-build-sent",
+          "atMs": -24.1,
+          "sequence": 27
+        },
+        {
+          "step": "authority-wall-fifo-head",
+          "atMs": -23.8,
+          "sequence": 27
+        },
+        {
+          "step": "authority-wall-requote-start",
+          "atMs": -23.4
+        },
+        {
+          "step": "authority-wall-requote-ready",
+          "atMs": -13.2
+        },
+        {
+          "step": "authority-quiesce-sent",
+          "atMs": 0,
+          "ticket": 6
+        },
+        {
+          "step": "draw-quiesce-received",
+          "atMs": 0.2,
+          "ticket": 6
+        },
+        {
+          "step": "draw-fence-start",
+          "atMs": 0.5
+        },
+        {
+          "step": "draw-fence-ack",
+          "atMs": 7.9
+        },
+        {
+          "step": "authority-fence-received",
+          "atMs": 8.1
+        },
+        {
+          "step": "authority-build-consume",
+          "atMs": 8.7,
+          "ticket": 6
+        },
+        {
+          "step": "native-revalidation-start",
+          "atMs": 9,
+          "ticket": 6
+        },
+        {
+          "step": "native-revalidation-end",
+          "atMs": 9.2,
+          "ticket": 6
+        },
+        {
+          "step": "native-physical-commit-start",
+          "atMs": 9.6,
+          "ticket": 7
+        },
+        {
+          "step": "native-physical-commit-end",
+          "atMs": 14.2,
+          "ticket": 7
+        },
+        {
+          "step": "game-wall-projection-start",
+          "atMs": 14.7,
+          "ticket": 7
+        },
+        {
+          "step": "game-wall-projection-end",
+          "atMs": 17.3,
+          "ticket": 7
+        },
+        {
+          "step": "authority-build-committed",
+          "atMs": 17.9,
+          "ticket": 7
+        },
+        {
+          "step": "authority-release-sent",
+          "atMs": 19.9,
+          "ticket": 7
+        },
+        {
+          "step": "draw-release-received",
+          "atMs": 20.2,
+          "ticket": 7
+        },
+        {
+          "step": "draw-release-installed",
+          "atMs": 23.1,
+          "ticket": 7
+        }
+      ]
+    }
+  },
+  "functionalValidation": {
+    "crossing1": {
+      "walls": [
+        115,
+        117
+      ],
+      "drawTickets": [
+        2,
+        5,
+        7,
+        9
+      ],
+      "bodyId": 1,
+      "replacementBody": 1,
+      "sameMeshOwners": 32,
+      "checkpoint": {
+        "sequence": 29,
+        "ticket": 7,
+        "regions": 12
+      },
+      "gpuErrors": 0
+    },
+    "crossing2": {
+      "walls": [
+        115,
+        117
+      ],
+      "drawTickets": [
+        2,
+        5,
+        7,
+        9
+      ],
+      "bodyId": 1,
+      "replacementBody": 1,
+      "sameMeshOwners": 32,
+      "checkpoint": {
+        "sequence": 30,
+        "ticket": 7,
+        "regions": 12
+      },
+      "gpuErrors": 0
+    },
+    "away": {
+      "walls": [
+        115,
+        118
+      ],
+      "drawTickets": [
+        2,
+        5
+      ],
+      "bodyId": 1,
+      "sameMeshOwners": 32,
+      "checkpoint": {
+        "sequence": 16,
+        "ticket": 5,
+        "regions": 12
+      },
+      "gpuErrors": 0
+    },
+    "cold": {
+      "walls": [
+        115,
+        115
+      ],
+      "drawTickets": [
+        2
+      ],
+      "bodyId": 1,
+      "sameMeshOwners": 32,
+      "rejection": "Native structure requires prepared regions: 2,-1;2,0;2,1",
+      "gpuErrors": 0
+    },
+    "held": {
+      "walls": [
+        115,
+        117
+      ],
+      "drawTickets": [
+        2,
+        5,
+        7,
+        9
+      ],
+      "bodyId": 1,
+      "replacementBody": 1,
+      "sameMeshOwners": 32,
+      "checkpoint": {
+        "sequence": 120,
+        "ticket": 7,
+        "regions": 12
+      },
+      "gpuErrors": 0,
+      "farmElapsedWhileReady": [
+        10.749999999999984,
+        10.94999999999998
+      ],
+      "wallElapsedWhileReady": [
+        11.249999999999973,
+        11.39999999999997
+      ],
+      "farRegionsAtStart": 30,
+      "farOwnersRetained": 34,
+      "farPairsRetained": 58,
+      "additionalFarRegions": 2,
+      "terrainChangedAtStopAndWall": [
+        false,
+        false
+      ]
+    }
+  },
+  "physicalSixtyHz": {
+    "commit": "deb328ed12a14cb86c0053546aa7d44328781d08",
+    "adapter": "NVIDIA Turing",
+    "quality": "muy_baja",
+    "trials": [
+      {
+        "phaseTrace": true,
+        "desktop": {
+          "width": 3840,
+          "height": 2160,
+          "refreshChanged": [
+            30,
+            60,
+            30
+          ],
+          "registryPersisted": false
+        },
+        "viewport": [
+          640,
+          480
+        ],
+        "windowMs": 2097.9,
+        "submissions": 126,
+        "replays": 115,
+        "medianSubmissionIntervalMs": 16.7,
+        "maxSubmissionIntervalMs": 32.1,
+        "drawMsAtMaxInterval": 6.3,
+        "maxDrawTrigger": "mutation-release",
+        "maxDrawTicket": 7,
+        "skippedOpportunities": [
+          {
+            "atMs": 1197.9,
+            "intervalMs": 16.7,
+            "outcome": "mutation-hold",
+            "holdId": 3,
+            "sequence": 93,
+            "nextSubmissionIntervalMs": 32.1,
+            "nextTicket": 7
+          }
+        ],
+        "holdMs": 28,
+        "holdTimeline": [
+          {
+            "step": "authority-wall-fifo-head",
+            "atMs": -19.6
+          },
+          {
+            "step": "authority-wall-requote-start",
+            "atMs": -19.3
+          },
+          {
+            "step": "authority-wall-requote-ready",
+            "atMs": -9.1
+          },
+          {
+            "step": "authority-quiesce-sent",
+            "atMs": 0,
+            "ticket": 6
+          },
+          {
+            "step": "draw-quiesce-received",
+            "atMs": 1.1,
+            "ticket": 6
+          },
+          {
+            "step": "draw-fence-start",
+            "atMs": 1.4
+          },
+          {
+            "step": "draw-fence-ack",
+            "atMs": 8.3
+          },
+          {
+            "step": "authority-fence-received",
+            "atMs": 8.7
+          },
+          {
+            "step": "authority-build-consume",
+            "atMs": 9.4,
+            "ticket": 6
+          },
+          {
+            "step": "native-revalidation-start",
+            "atMs": 9.7,
+            "ticket": 6
+          },
+          {
+            "step": "native-revalidation-end",
+            "atMs": 10.1,
+            "ticket": 6
+          },
+          {
+            "step": "native-physical-commit-start",
+            "atMs": 10.5,
+            "ticket": 7
+          },
+          {
+            "step": "native-physical-commit-end",
+            "atMs": 16.5,
+            "ticket": 7
+          },
+          {
+            "step": "game-wall-projection-start",
+            "atMs": 16.9,
+            "ticket": 7
+          },
+          {
+            "step": "game-wall-projection-end",
+            "atMs": 19.8,
+            "ticket": 7
+          },
+          {
+            "step": "authority-build-committed",
+            "atMs": 20.7,
+            "ticket": 7
+          },
+          {
+            "step": "authority-release-sent",
+            "atMs": 23.5,
+            "ticket": 7
+          },
+          {
+            "step": "draw-release-received",
+            "atMs": 23.8,
+            "ticket": 7
+          },
+          {
+            "step": "draw-release-installed",
+            "atMs": 28,
+            "ticket": 7
+          }
+        ],
+        "drawTickets": [
+          2,
+          5,
+          7,
+          9
+        ],
+        "gpuErrors": 0,
+        "consumerDrained": true
+      },
+      {
+        "phaseTrace": false,
+        "desktop": {
+          "width": 3840,
+          "height": 2160,
+          "refreshChanged": [
+            30,
+            60,
+            30
+          ],
+          "registryPersisted": false
+        },
+        "viewport": [
+          640,
+          480
+        ],
+        "windowMs": 2296.8,
+        "submissions": 138,
+        "replays": 129,
+        "medianSubmissionIntervalMs": 16.7,
+        "maxSubmissionIntervalMs": 23.6,
+        "drawMsAtMaxInterval": 2.5,
+        "maxDrawTrigger": "mutation-release",
+        "maxDrawTicket": 9,
+        "skippedOpportunities": [
+          {
+            "atMs": 1446.7,
+            "intervalMs": 16.6,
+            "outcome": "mutation-hold",
+            "holdId": 3,
+            "sequence": 89,
+            "nextSubmissionIntervalMs": 21.7,
+            "nextTicket": 7
+          },
+          {
+            "atMs": 2246.8,
+            "intervalMs": 16.7,
+            "outcome": "mutation-hold",
+            "holdId": 4,
+            "sequence": 90,
+            "nextSubmissionIntervalMs": 23.6,
+            "nextTicket": 9
+          }
+        ],
+        "drawTickets": [
+          2,
+          5,
+          7,
+          9
+        ],
+        "gpuErrors": 0,
+        "consumerDrained": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,713 @@
+{
+  "date": "2026-11-23",
+  "renderer": "NVIDIA GTX 1660 (Turing) with Edge 158 and remote WebGPU Draw Worker",
+  "canvas": [
+    640,
+    480
+  ],
+  "quality": "muy_baja",
+  "displayHz": 30,
+  "receipt": {
+    "file": "native-moving-farm-checkpoint-idle-cycle-physical-20261123.json",
+    "sha256": "43cefa866c4f7c475952a667211964ca68e504717216b41960e0418afb51cb7d"
+  },
+  "trace": {
+    "file": "native-moving-farm-checkpoint-idle-cycle-physical-20261123.trace.json.gz",
+    "sha256": "61669e8bf7d57536fe08c673b8cded8ca2a52656a0e613f690574f490a3ba292",
+    "dataLossOccurred": false
+  },
+  "checkpoint": {
+    "saved": true,
+    "sequence": 16,
+    "elapsed": 10.49999999999999,
+    "version": 2,
+    "chunkKeys": [
+      "1,0",
+      "-1,-1",
+      "0,-1",
+      "1,-1",
+      "-1,0",
+      "0,0",
+      "-1,1",
+      "0,1",
+      "1,1",
+      "2,-1",
+      "2,0",
+      "2,1"
+    ],
+    "bodyId": 1,
+    "authorityEpoch": "49095ee2-b922-4cc1-8870-b873690ff2da/1",
+    "firstDrawTicket": 2,
+    "paused": {
+      "elapsed": 10.49999999999999,
+      "pose": {
+        "x": -13.989817815680736,
+        "z": 11.399983810442837,
+        "heading": 3.1161437184417013,
+        "runPhase": 23.25,
+        "walkPhase": 7.680757999200579,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      },
+      "state": "native-farm-arrival",
+      "gate": {
+        "open": 0.21582444533267225,
+        "hp": 60,
+        "material": "zarzas"
+      },
+      "renderedOpening": 0.21582359211351107,
+      "drawSequence": 19,
+      "drawTicket": 2,
+      "root": 618,
+      "gateRoot": 397
+    }
+  },
+  "restoration": {
+    "cold": {
+      "elapsed": 10.49999999999999,
+      "pose": {
+        "x": -13.989817815680736,
+        "z": 11.399983810442837,
+        "heading": 3.1161437184417013,
+        "runPhase": 23.25,
+        "walkPhase": 7.680757999200579,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      },
+      "state": "pending-farm-arrival-resources",
+      "gate": {
+        "open": 0.21582444533267225,
+        "hp": 60,
+        "material": "zarzas"
+      },
+      "renderedOpening": null,
+      "drawSequence": 14,
+      "drawTicket": null,
+      "root": 618,
+      "gateRoot": 475
+    },
+    "paused": {
+      "elapsed": 10.49999999999999,
+      "pose": {
+        "x": -13.989817815680736,
+        "z": 11.399983810442837,
+        "heading": 3.1161437184417013,
+        "runPhase": 23.25,
+        "walkPhase": 7.680757999200579,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      },
+      "state": "pending-farm-arrival-resources",
+      "gate": {
+        "open": 0.21582444533267225,
+        "hp": 60,
+        "material": "zarzas"
+      },
+      "renderedOpening": null,
+      "drawSequence": 14,
+      "drawTicket": null,
+      "root": 618,
+      "gateRoot": 475
+    },
+    "ready": {
+      "at": 1795432233786,
+      "preparedTicket": 1
+    },
+    "held": {
+      "elapsed": 14.299999999999908,
+      "pose": {
+        "x": -13.989817815680736,
+        "z": 11.399983810442837,
+        "heading": 3.1161437184417013,
+        "runPhase": 23.25,
+        "walkPhase": 7.680757999200579,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      },
+      "state": "pending-farm-arrival-resources",
+      "gate": {
+        "open": 0.21582444533267225,
+        "hp": 60,
+        "material": "zarzas"
+      },
+      "renderedOpening": null,
+      "drawSequence": 14,
+      "drawTicket": null,
+      "root": 618,
+      "gateRoot": 475
+    },
+    "firstFarm": {
+      "elapsed": 14.299999999999908,
+      "pose": {
+        "x": -13.989817815680736,
+        "z": 11.399983810442837,
+        "heading": 3.1161437184417013,
+        "runPhase": 23.25,
+        "walkPhase": 7.680757999200579,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      },
+      "state": "pending-farm-arrival-resources",
+      "gate": {
+        "open": 0.21582444533267225,
+        "hp": 60,
+        "material": "zarzas"
+      },
+      "renderedOpening": 0.2158244401216507,
+      "drawSequence": 15,
+      "drawTicket": 2,
+      "root": 618,
+      "gateRoot": 475
+    },
+    "idle": {
+      "elapsed": 21.799999999999955,
+      "pose": {
+        "x": -13.97523021697998,
+        "z": 5.199846267700195,
+        "heading": -3.1292060741233034,
+        "runPhase": 23.25,
+        "walkPhase": 16.292991407378103,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      },
+      "state": "native-idle",
+      "gate": {
+        "open": 1,
+        "hp": 60,
+        "material": "zarzas"
+      },
+      "renderedOpening": 1,
+      "drawSequence": 68,
+      "drawTicket": 4,
+      "root": 618,
+      "gateRoot": 475
+    },
+    "bodyIds": [
+      1,
+      1
+    ],
+    "origin": {
+      "x": -13.989817815680736,
+      "z": 11.399983810442837,
+      "yaw": 3.1161437184417013,
+      "radius": 0.28,
+      "runPhase": 23.25,
+      "walkPhase": 7.680757999200579,
+      "carryPhase": 9.5,
+      "runRemaining": 40
+    },
+    "authorityEpoch": "6d3f85b0-c322-404b-8da6-c0f127c8e35c/1",
+    "idleSource": "native-farm-arrival-idle-source",
+    "graphics": {
+      "compared": 831,
+      "changed": [],
+      "actorGeometryIds": [
+        205,
+        206,
+        207,
+        208,
+        209,
+        210,
+        211,
+        212,
+        213,
+        214,
+        215,
+        216,
+        217,
+        218,
+        219,
+        220,
+        221,
+        222,
+        223,
+        224,
+        225,
+        226,
+        227,
+        228,
+        229,
+        230,
+        231,
+        230,
+        231,
+        232,
+        229,
+        232
+      ]
+    },
+    "observedGateOpenings": [
+      [
+        14.299999999999908,
+        0.21582444533267225,
+        11.399983810442837
+      ],
+      [
+        14.349999999999907,
+        0.2991577786660038,
+        11.399983810442837
+      ],
+      [
+        14.399999999999906,
+        0.3824911119993354,
+        11.399983810442837
+      ],
+      [
+        14.449999999999905,
+        0.4658244453326669,
+        11.399983810442837
+      ],
+      [
+        14.499999999999904,
+        0.5491577786659985,
+        11.399983810442837
+      ],
+      [
+        14.549999999999903,
+        0.6324911119993301,
+        11.399983810442837
+      ],
+      [
+        14.599999999999902,
+        0.7158244453326617,
+        11.399983810442837
+      ],
+      [
+        14.6499999999999,
+        0.7991577786659931,
+        11.399983810442837
+      ],
+      [
+        14.6999999999999,
+        0.8824911119993248,
+        11.399983810442837
+      ],
+      [
+        14.749999999999899,
+        0.9658244453326563,
+        11.399983810442837
+      ],
+      [
+        14.799999999999898,
+        1,
+        11.368139884482952
+      ]
+    ]
+  },
+  "drains": {
+    "original": {
+      "disposed": true
+    },
+    "restored": {
+      "disposed": true
+    }
+  },
+  "cadence": {
+    "original": {
+      "samples": 258,
+      "intervals": 257,
+      "aboveTarget": 257,
+      "targetFrameMs": 16.666666666666668,
+      "completeHistory": true,
+      "peaks": [
+        {
+          "at": 1795432220367.8,
+          "sequence": 13,
+          "ticket": null,
+          "intervalMs": 36.199951171875,
+          "drawMs": 0.699951171875,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795432221000,
+          "sequence": 19,
+          "ticket": 2,
+          "intervalMs": 35,
+          "drawMs": 2.300048828125,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795432214566.4001,
+          "sequence": 5,
+          "ticket": null,
+          "intervalMs": 34.900146484375,
+          "drawMs": 0.300048828125,
+          "trigger": "raf",
+          "replay": false
+        },
+        {
+          "at": 1795432220899.3,
+          "sequence": 18,
+          "ticket": 2,
+          "intervalMs": 34.39990234375,
+          "drawMs": 1.699951171875,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795432214899.1,
+          "sequence": 7,
+          "ticket": null,
+          "intervalMs": 34.199951171875,
+          "drawMs": 0.199951171875,
+          "trigger": "raf",
+          "replay": true
+        }
+      ],
+      "slowestImageRegion": {
+        "at": 1795432214181.6,
+        "end": 1795432214185.4001,
+        "durationMs": 3.800048828125,
+        "reference": "Texture:202",
+        "label": "",
+        "format": "rgba8unorm-srgb",
+        "layer": 0,
+        "sourceOrigin": {
+          "x": 1024,
+          "y": 512
+        },
+        "destinationOrigin": {
+          "x": 1024,
+          "y": 512,
+          "z": 0
+        },
+        "sourceDimensions": [
+          2048,
+          2048
+        ],
+        "extent": {
+          "width": 512,
+          "height": 512,
+          "depthOrArrayLayers": 1
+        },
+        "activeSequence": 1
+      },
+      "imageRegionsInsideWorstFrameInterval": []
+    },
+    "restored": {
+      "samples": 472,
+      "intervals": 471,
+      "aboveTarget": 471,
+      "targetFrameMs": 16.666666666666668,
+      "completeHistory": true,
+      "peaks": [
+        {
+          "at": 1795432231078.3,
+          "sequence": 14,
+          "ticket": null,
+          "intervalMs": 46.39990234375,
+          "drawMs": 1.900146484375,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795432235469.7002,
+          "sequence": 20,
+          "ticket": 2,
+          "intervalMs": 37.800048828125,
+          "drawMs": 1.5,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795432227502.3,
+          "sequence": 1,
+          "ticket": null,
+          "intervalMs": 37,
+          "drawMs": 0.300048828125,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795432233768.3,
+          "sequence": 14,
+          "ticket": null,
+          "intervalMs": 36.5,
+          "drawMs": 1.199951171875,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795432227400.9001,
+          "sequence": 1,
+          "ticket": null,
+          "intervalMs": 36,
+          "drawMs": 0.300048828125,
+          "trigger": "raf",
+          "replay": true
+        }
+      ],
+      "slowestImageRegion": {
+        "at": 1795432235464.9001,
+        "end": 1795432235469.3,
+        "durationMs": 4.39990234375,
+        "reference": "Texture:2870",
+        "label": "",
+        "format": "rgba8unorm",
+        "layer": 0,
+        "sourceOrigin": {
+          "x": 2560,
+          "y": 1536
+        },
+        "destinationOrigin": {
+          "x": 2560,
+          "y": 0,
+          "z": 0
+        },
+        "sourceDimensions": [
+          4096,
+          2048
+        ],
+        "extent": {
+          "width": 512,
+          "height": 512,
+          "depthOrArrayLayers": 1
+        },
+        "activeSequence": 20
+      },
+      "imageRegionsInsideWorstFrameInterval": []
+    }
+  },
+  "cadenceCorrelation": {
+    "file": "native-moving-farm-checkpoint-idle-cycle-physical-20261123.astra-analysis.json",
+    "sha256": "a3265bee6de75eba1b02d26f2484946f00696056acac8a04d6448fee93e51a9d",
+    "restoredWorstInterval": {
+      "sequence": 14,
+      "intervalMs": 46.39990234375,
+      "batches": [
+        {
+          "thread": "CrGpuMain",
+          "at": 1795432231047.2407,
+          "durationMs": 27.124,
+          "threadCpuMs": 26.769,
+          "overlapMs": 27.1240234375,
+          "bytes": 59144,
+          "shaderModules": [
+            {
+              "name": "DeviceBase::APICreateShaderModule",
+              "thread": "CrGpuMain",
+              "at": 1795432231047.2788,
+              "durationMs": 17.242,
+              "threadCpuMs": 17.113
+            },
+            {
+              "name": "DeviceBase::APICreateShaderModule",
+              "thread": "CrGpuMain",
+              "at": 1795432231064.5608,
+              "durationMs": 9.674,
+              "threadCpuMs": 9.458
+            }
+          ]
+        },
+        {
+          "thread": "CrGpuMain",
+          "at": 1795432231023.8267,
+          "durationMs": 22.235,
+          "threadCpuMs": 22.154,
+          "overlapMs": 14.16162109375,
+          "bytes": 59408,
+          "shaderModules": [
+            {
+              "name": "DeviceBase::APICreateShaderModule",
+              "thread": "CrGpuMain",
+              "at": 1795432231023.8486,
+              "durationMs": 12.319,
+              "threadCpuMs": 12.312
+            },
+            {
+              "name": "DeviceBase::APICreateShaderModule",
+              "thread": "CrGpuMain",
+              "at": 1795432231036.2117,
+              "durationMs": 9.675,
+              "threadCpuMs": 9.61
+            }
+          ]
+        }
+      ]
+    },
+    "presentationDelivery": {
+      "extraction": {
+        "file": "farm-begin-frame-flow.json",
+        "sha256": "5641b083a1083256e9dfb8bf6e69fa85b4a13d8d45fe90f4f17918571db0a517"
+      },
+      "displayTraceId": "-1945226264772534766",
+      "steps": [
+        {
+          "step": "STEP_DRAW_AND_SWAP",
+          "relativeMs": -31.236328125,
+          "thread": "VizCompositorThread"
+        },
+        {
+          "step": "STEP_SURFACE_AGGREGATION",
+          "relativeMs": -31.232421875,
+          "thread": "VizCompositorThread"
+        },
+        {
+          "step": "STEP_SEND_BUFFER_SWAP",
+          "relativeMs": -30.768310546875,
+          "thread": "VizCompositorThread"
+        },
+        {
+          "step": "STEP_BUFFER_SWAP_POST_SUBMIT",
+          "relativeMs": 46.048583984375,
+          "thread": "CrGpuMain"
+        },
+        {
+          "step": "STEP_FINISH_BUFFER_SWAP",
+          "relativeMs": 46.191650390625,
+          "thread": "CrGpuMain"
+        },
+        {
+          "step": "STEP_SWAP_BUFFERS_ACK",
+          "relativeMs": 46.2216796875,
+          "thread": "VizCompositorThread"
+        }
+      ],
+      "queues": [
+        {
+          "name": "Scheduler::ScheduleTask",
+          "relativeMs": -31.58349609375,
+          "flow": 46430,
+          "phase": "s",
+          "thread": "Chrome_ChildIOThread"
+        },
+        {
+          "name": "Scheduler::ScheduleTask",
+          "relativeMs": -30.74951171875,
+          "flow": 46433,
+          "phase": "s",
+          "thread": "VizCompositorThread"
+        },
+        {
+          "name": "Scheduler::ScheduleTask",
+          "relativeMs": 45.358642578125,
+          "flow": 46430,
+          "phase": "f",
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Scheduler::ScheduleTask",
+          "relativeMs": 45.403564453125,
+          "flow": 46433,
+          "phase": "f",
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Scheduler::SequenceUnblocked",
+          "relativeMs": 45.403564453125,
+          "flow": 46436,
+          "phase": "s",
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Scheduler::SequenceUnblocked",
+          "relativeMs": 45.439697265625,
+          "flow": 46436,
+          "phase": "f",
+          "thread": "CrGpuMain"
+        }
+      ],
+      "syncTokenReleasedAtMs": 45.399658203125,
+      "externalBeginFrames": [
+        {
+          "relativeMs": -0.243408203125,
+          "frameTimeUs": 11684363546,
+          "intervalUs": 33333
+        },
+        {
+          "relativeMs": 46.23046875,
+          "frameTimeUs": 11684396745,
+          "intervalUs": 33333
+        }
+      ],
+      "drawWorkerDeliveryAtMs": 46.379638671875
+    },
+    "releaseQueueWork": {
+      "extraction": {
+        "file": "farm-begin-frame-critical-work.json",
+        "sha256": "431210f68b0514db3c45dddc6835f102d7c7b41e220e6c7140dfc8891af7bc8a"
+      },
+      "thread": "CrGpuMain",
+      "intervalMs": 76.942138671875,
+      "levels": {
+        "Scheduler::RunTask": {
+          "spans": 25,
+          "overlapMs": 76.65771484375
+        },
+        "WebGPUDecoderImpl::HandleDawnCommands": {
+          "spans": 26,
+          "overlapMs": 75.921142578125
+        },
+        "DeviceBase::APICreateShaderModule": {
+          "spans": 7,
+          "overlapMs": 70.377197265625
+        }
+      },
+      "shaderModules": [
+        {
+          "label": "fragment_BakedMaterial.001",
+          "overlapMs": 4.901123046875,
+          "cpuMs": 7.668,
+          "durationMs": 7.675
+        },
+        {
+          "label": "vertex_Kofi head continuous skin shading",
+          "overlapMs": 10.741943359375,
+          "cpuMs": 10.736,
+          "durationMs": 10.742
+        },
+        {
+          "label": "fragment_Kofi head continuous skin shading",
+          "overlapMs": 5.823974609375,
+          "cpuMs": 5.514,
+          "durationMs": 5.824
+        },
+        {
+          "label": "vertex_Actor eyelid original fur",
+          "overlapMs": 12.319091796875,
+          "cpuMs": 12.312,
+          "durationMs": 12.319
+        },
+        {
+          "label": "fragment_Actor eyelid original fur",
+          "overlapMs": 9.675048828125,
+          "cpuMs": 9.61,
+          "durationMs": 9.675
+        },
+        {
+          "label": "vertex_Worker oral tissue",
+          "overlapMs": 17.241943359375,
+          "cpuMs": 17.113,
+          "durationMs": 17.242
+        },
+        {
+          "label": "fragment_Worker oral tissue",
+          "overlapMs": 9.674072265625,
+          "cpuMs": 9.458,
+          "durationMs": 9.674
+        }
+      ],
+      "actorProfile": "youngMale"
+    },
+    "scope": "Swap and SyncToken scheduler flow along with measured occupancy on the same CPU thread. Work levels are nested. Labels identify material stages; shader equivalence and reuse remain open."
+  },
+  "firstAttempt": {
+    "file": "native-moving-farm-checkpoint-physical-20261123.failure.json",
+    "sha256": "1c032a4e76b39f8ecc13b8232db60e0ba2aa96ced5df5e4c6169cd5bc436da03",
+    "traceSha256": "83debb2e7a9a792852fe77316b6551a6cf3e9d053ca22b903b88a10656cf434b",
+    "saved": {
+      "saved": true,
+      "sequence": 17,
+      "elapsed": 10.549999999999988
+    },
+    "gate": 0.2991577786660038,
+    "reached": "native-idle",
+    "harnessError": "The observer waited for Initial Idle20 instead of the Farm Idle cycle."
+  },
+  "scope": {
+    "c4Closed": false,
+    "expiredHeldFarmHomeVerifiedWithGpuDouble": true
+  }
+}

@@ -1,0 +1,527 @@
+{
+  "base": "edb439a50a3e8f56c52dfb73d8ba934feefc80e8",
+  "input": {
+    "path": ".cache/native-flee-sabana-physical-input.json",
+    "sha256": "a899869e9b7f759874d3f23b95bd5d6fe8f2c42aab38b78fcb3cf17d350c0aa2"
+  },
+  "sources": {
+    "pair": {
+      "path": ".cache/flee-mixed/manifest-two-body.json",
+      "sha256": "1b6602565145bc76a93cf27207e23dfb479223167061a34292c80ddc84ce33d2"
+    },
+    "stopProjection": {
+      "path": ".cache/flee-stop-clock-proof/manifest.json",
+      "sha256": "83a100b6a2cf2f8b10f291e79d4a9f88b4b68b3b2cfedaeac786b3648258f7dc"
+    },
+    "nativeInputs": {
+      "path": ".cache/flee-mixed/two-body-native-freeze.json",
+      "sha256": "692c2553787c266e6fe92e3eebe2c03db4e78c944a153f881f17d7e8fc3ee5ae"
+    },
+    "standalone": {
+      "path": "src/world/wild-engine/spatial-savanna.wasm",
+      "sha256": "2f74c9f8811539e304f786dccd4136351cfc6926b5a000809fe13c2a5da02ce7"
+    },
+    "pthread": {
+      "path": "public/wild-engine/spatial-threaded.wasm",
+      "sha256": "86991adb59f3b02f9269f1ecb1e310bbdd40617db3f898b3af7f3f6940c54f41"
+    },
+    "pthreadGlue": {
+      "path": "public/wild-engine/spatial-threaded.mjs",
+      "sha256": "73d18b3a73e85729bd1e604cbc33e12a3d5bf36d41e37b9362e44b0759f8f542"
+    },
+    "pthreadGlueCommittedLF": "14d676c95928acd84d2d8bc940781d9a437bb905efc9b2d3d0ebf29ead0d58f0",
+    "pthreadAbi": {
+      "path": ".cache/flee-mixed/pthread-abi.json",
+      "sha256": "eacf5a6dac23b89adf0320cfec4d99fb7dcf50ac123a5f3dc1e4866713ec3323"
+    },
+    "pthreadSmoke": {
+      "path": ".cache/flee-mixed/pthread-smoke.json",
+      "sha256": "1fad1a6cd5f9650af34b12cc40fc0d21370f91448529ebe9e2612d0e9bfb3e11"
+    }
+  },
+  "rejectedCaptures": [
+    {
+      "receipt": {
+        "path": ".cache/native-flee-sabana-two-body-nvidia-20261125.failure.json",
+        "sha256": "4978f53c84b671bdd6681c586e48793a6746705eaa572916856f4315e4bf2de8"
+      },
+      "trace": {
+        "path": ".cache/native-flee-sabana-two-body-nvidia-20261125.trace.json.gz",
+        "sha256": "af798fd6fa784633af752cd1a7abe61a37d86543f31fb1adbc76cf1736335731"
+      },
+      "timerCut": {
+        "path": ".cache/flee-mixed/farm-startup-timers.json",
+        "sha256": "b932f07b6cdb471049b2f35d672c92dd71dba2bd8624245d8386f8014256b6eb"
+      },
+      "outcome": "startup-resource-timeout"
+    },
+    {
+      "receipt": {
+        "path": ".cache/native-flee-sabana-current-frame-nvidia-20261125.failure.json",
+        "sha256": "7f92b40572db2a6fd250a69b5e3f66f7dddd1cba10a025412090af1e2bc86657"
+      },
+      "trace": {
+        "path": ".cache/native-flee-sabana-current-frame-nvidia-20261125.trace.json.gz",
+        "sha256": "8c6acd9c3e3f06d54d8d806cdec4835ceab3e855c1e358e7a3d92960ef1a1f4a"
+      },
+      "timings": {
+        "path": ".cache/native-flee-sabana-current-frame-nvidia-20261125.preparation-marks.json",
+        "sha256": "eb8cb2cf45909de48ecf8587b2d82766d8c33ae1503ad915cd33f8d9f3359e16"
+      },
+      "outcome": "moving-farm-stop-publication-rejected"
+    }
+  ],
+  "hardware": {
+    "receipt": {
+      "path": ".cache/native-flee-sabana-stop-proof-nvidia-20261125.json",
+      "sha256": "bcbe043ad7952441beff93d3093bd21759ab17008958a05d2404bf7792a77662"
+    },
+    "trace": {
+      "path": ".cache/native-flee-sabana-stop-proof-nvidia-20261125.trace.json.gz",
+      "sha256": "5d9ab5a6dfd200f5e3b03b63aa3ae91e26c82ec3d2d66c57ec82555a7641db43"
+    },
+    "timings": {
+      "path": ".cache/native-flee-sabana-stop-proof-nvidia-20261125.preparation-marks.json",
+      "sha256": "3a882d73ca8bb14012ed268d0dd930a4369454dc456e4676c43eac41a1407a59"
+    },
+    "cuts": {
+      "path": ".cache/native-flee-sabana-stop-proof-nvidia-20261125.cuts.json",
+      "sha256": "69a86586d94e7c316016ae503f6a3d35a9b3d14edd750b1d3e85c2225f5e797d"
+    },
+    "detailedCuts": {
+      "path": ".cache/native-flee-sabana-stop-proof-nvidia-20261125.astra-cuts.json",
+      "sha256": "357cec077f59cc72c642675ac6c9f2768df5f64b6ce7a8120e21e6a9300c5a6e"
+    },
+    "boundaryCuts": {
+      "path": ".cache/native-flee-sabana-stop-proof-nvidia-20261125.astra-boundaries.json",
+      "sha256": "b6e209c315231a16592b788afa4d2aa60439fe650314514be52e501843100ff0"
+    },
+    "traceLoss": false,
+    "scenario": {
+      "pendingFarm": false,
+      "expectAnimal": true,
+      "currentFrameBeforeAttach": true,
+      "qualification": {
+        "qualifyFarmFlee": true,
+        "qualifyAnimalCrop": true
+      },
+      "handoffOnly": false
+    },
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 132.90000000223517
+      }
+    },
+    "initialFrame": {
+      "sequence": 3,
+      "terrainGeneration": 25,
+      "selectableGeneration": 184,
+      "cameraVersion": 0
+    },
+    "raid": {
+      "id": "raid-2-day",
+      "day": 2,
+      "daytime": true,
+      "elapsed": 603.9999999999864,
+      "waveIndex": 0,
+      "pressureFacts": null,
+      "exposedLiving": 2,
+      "exposedWounded": 0,
+      "actors": [
+        {
+          "id": "animal-22",
+          "species": "warthog",
+          "hitsRemaining": 2,
+          "spawn": {
+            "x": 83,
+            "z": 27.1
+          },
+          "exit": {
+            "x": 83,
+            "z": 30.1
+          }
+        }
+      ]
+    },
+    "acquired": [
+      {
+        "binding": "nativeFarmArrivalBinding",
+        "version": 1,
+        "authorityEpoch": "2be5be64-1e41-4699-94d8-b8db77754d3e/1",
+        "nativeSession": 1,
+        "ticket": 2,
+        "effectiveTime": 599.99999999999,
+        "bodies": [
+          1
+        ]
+      },
+      {
+        "binding": "nativeFarmArrivalStopBinding",
+        "version": 1,
+        "authorityEpoch": "2be5be64-1e41-4699-94d8-b8db77754d3e/1",
+        "nativeSession": 1,
+        "ticket": 5,
+        "effectiveTime": 606.7499999999839,
+        "bodies": [
+          1
+        ]
+      },
+      {
+        "binding": "nativeAnimalCropRouteBinding",
+        "version": 1,
+        "authorityEpoch": "2be5be64-1e41-4699-94d8-b8db77754d3e/1",
+        "nativeSession": 1,
+        "ticket": 7,
+        "effectiveTime": 609.0499999999818,
+        "bodies": [
+          2
+        ]
+      },
+      {
+        "binding": "nativeHomeRouteBinding",
+        "version": 1,
+        "authorityEpoch": "2be5be64-1e41-4699-94d8-b8db77754d3e/1",
+        "nativeSession": 1,
+        "ticket": 9,
+        "effectiveTime": 611.5499999999795,
+        "bodies": [
+          1
+        ]
+      },
+      {
+        "binding": "nativeHomeArrivalBinding",
+        "version": 1,
+        "authorityEpoch": "2be5be64-1e41-4699-94d8-b8db77754d3e/1",
+        "nativeSession": 1,
+        "ticket": 11,
+        "effectiveTime": 615.0499999999763,
+        "bodies": [
+          1
+        ]
+      }
+    ],
+    "simultaneousSamples": [
+      {
+        "sequence": 91,
+        "ticket": 9,
+        "at": 1795611319351.5999,
+        "homeAge": 0,
+        "cropAge": 2.499999761581421
+      },
+      {
+        "sequence": 91,
+        "ticket": 9,
+        "at": 1795611319418.2,
+        "homeAge": 0.09999999403953552,
+        "cropAge": 2.5999999046325684
+      },
+      {
+        "sequence": 91,
+        "ticket": 9,
+        "at": 1795611319623.0999,
+        "homeAge": 0.29999998211860657,
+        "cropAge": 2.799999952316284
+      },
+      {
+        "sequence": 93,
+        "ticket": 9,
+        "at": 1795611319884.9,
+        "homeAge": 0.5499999523162842,
+        "cropAge": 3.049999952316284
+      },
+      {
+        "sequence": 94,
+        "ticket": 9,
+        "at": 1795611320118.2998,
+        "homeAge": 0.7999999523162842,
+        "cropAge": 3.299999952316284
+      },
+      {
+        "sequence": 96,
+        "ticket": 9,
+        "at": 1795611320384.9,
+        "homeAge": 1.0499999523162842,
+        "cropAge": 3.549999952316284
+      },
+      {
+        "sequence": 97,
+        "ticket": 9,
+        "at": 1795611320618.2998,
+        "homeAge": 1.2999999523162842,
+        "cropAge": 3.799999952316284
+      },
+      {
+        "sequence": 99,
+        "ticket": 9,
+        "at": 1795611320884.9,
+        "homeAge": 1.5499999523162842,
+        "cropAge": 4.049999713897705
+      },
+      {
+        "sequence": 101,
+        "ticket": 9,
+        "at": 1795611321151.7,
+        "homeAge": 1.7999999523162842,
+        "cropAge": 4.299999713897705
+      },
+      {
+        "sequence": 102,
+        "ticket": 9,
+        "at": 1795611321384.9,
+        "homeAge": 2.049999952316284,
+        "cropAge": 4.549999713897705
+      },
+      {
+        "sequence": 103,
+        "ticket": 9,
+        "at": 1795611321620.2,
+        "homeAge": 2.299999952316284,
+        "cropAge": 4.799999713897705
+      },
+      {
+        "sequence": 104,
+        "ticket": 9,
+        "at": 1795611321885.2,
+        "homeAge": 2.549999952316284,
+        "cropAge": 5.049999713897705
+      },
+      {
+        "sequence": 105,
+        "ticket": 9,
+        "at": 1795611322119.0999,
+        "homeAge": 2.799999952316284,
+        "cropAge": 5.299999713897705
+      },
+      {
+        "sequence": 107,
+        "ticket": 9,
+        "at": 1795611322384.9,
+        "homeAge": 3.037505626678467,
+        "cropAge": 5.549999713897705
+      },
+      {
+        "sequence": 108,
+        "ticket": 9,
+        "at": 1795611322620.4,
+        "homeAge": 3.037505626678467,
+        "cropAge": 5.799999713897705
+      }
+    ],
+    "refuge": {
+      "x": 60,
+      "z": 0,
+      "hits": 0
+    },
+    "stoppedPose": {
+      "x": 66,
+      "z": 1.2899999999933707,
+      "yaw": 0,
+      "radius": 0.28,
+      "runPhase": 0,
+      "walkPhase": 10.124999999990793,
+      "carryPhase": 0,
+      "runRemaining": 105.80409353316266
+    },
+    "reused": {
+      "compared": 2974,
+      "sameReference": 2974,
+      "sameVersion": 2973,
+      "updated": [
+        {
+          "before": {
+            "reference": "Buffer:7236",
+            "mesh": 803,
+            "name": "",
+            "geometry": 622,
+            "attribute": "iGrowth",
+            "bytes": 128,
+            "version": 1,
+            "hash": 2020326510
+          },
+          "after": {
+            "reference": "Buffer:7236",
+            "mesh": 803,
+            "name": "",
+            "geometry": 622,
+            "attribute": "iGrowth",
+            "bytes": 128,
+            "version": 235,
+            "hash": 1582661007
+          }
+        }
+      ]
+    },
+    "drained": {
+      "disposed": true
+    },
+    "cadence": {
+      "refreshHz": 30,
+      "targetMs": 16.666666666666668,
+      "intervals": 739,
+      "overTarget": 739,
+      "slowest": [
+        {
+          "at": 1795611317430.2998,
+          "sequence": 88,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "2be5be64-1e41-4699-94d8-b8db77754d3e/1",
+            "nativeSession": 1,
+            "ticket": 7,
+            "effectiveTime": 609.0499999999818
+          },
+          "intervalMs": 45.39990234375,
+          "drawMs": 9,
+          "replay": true,
+          "clockElapsed": 609.5999999999813,
+          "safeUntil": 609.5999999999813,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795611312729.4,
+          "sequence": 78,
+          "trigger": "mutation-release",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "2be5be64-1e41-4699-94d8-b8db77754d3e/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 599.99999999999
+          },
+          "intervalMs": 44.10009765625,
+          "drawMs": 10.300048828125,
+          "replay": true,
+          "clockElapsed": 604.9499999999855,
+          "safeUntil": 604.9499999999855,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795611314560.0999,
+          "sequence": 84,
+          "trigger": "mutation-release",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "2be5be64-1e41-4699-94d8-b8db77754d3e/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 606.7499999999839
+          },
+          "intervalMs": 41.800048828125,
+          "drawMs": 13.699951171875,
+          "replay": false,
+          "clockElapsed": 606.7499999999839,
+          "safeUntil": 606.7499999999839,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795611313259.2,
+          "sequence": 81,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "2be5be64-1e41-4699-94d8-b8db77754d3e/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 599.99999999999
+          },
+          "intervalMs": 40.900146484375,
+          "drawMs": 9.199951171875,
+          "replay": true,
+          "clockElapsed": 605.449999999985,
+          "safeUntil": 605.449999999985,
+          "cameraVersion": null
+        }
+      ]
+    }
+  },
+  "validation": {
+    "finalSuite": {
+      "passed": 111,
+      "failed": 0,
+      "skipped": 0,
+      "log": {
+        "path": ".cache/flee-mixed/root-final.tap",
+        "sha256": "227bd0a20943a947e3c8c895e9ab3343f76dbd28105fde3230512aa7cdeeb3e2"
+      }
+    },
+    "build": {
+      "path": ".cache/flee-mixed/root-final-build.log",
+      "sha256": "3ccae0a4e32866f5ea6977f0b756bdf9ec8d9f0f5c8fd3c8a502bf8e20b379d8"
+    }
+  },
+  "initialPublicationBeforeResources": {
+    "source": "35ef1335fece9233698fe4a7734027b6e9310230",
+    "app": {
+      "rawReceiptSha256": "930ba8d2e375cf64b809711e3e75c94483aea4c03d2a79d20b64dc83f43898e6",
+      "scene": "fresh Sabana 712 from product menu",
+      "startupSequence": 1,
+      "preparedRegions": 25,
+      "drawnSinceNavigationMs": 12112.854999996722,
+      "attachedSinceNavigationMs": 12113.954999998212,
+      "backend": "WebGPU",
+      "errors": []
+    },
+    "paidFarm": {
+      "rawReceiptSha256": "eaac7bba5121acd60172f2c0075f92a687b0417b7d2c40d811991c059b72cdf6",
+      "snapshotSha256": "00bfc00f1c75014eefa64f3a03946411d8e572e1fc294180ed2d3d39c35ce906",
+      "actorId": 21,
+      "bodyId": 1,
+      "preparedTicket": 1,
+      "acquiredTicket": 2,
+      "sequence": 1,
+      "initialFrame": {
+        "sequence": 1,
+        "terrainGeneration": 25,
+        "selectableGeneration": 182,
+        "cameraVersion": 0
+      },
+      "requestFloor": 1,
+      "sourceHeldElapsed": 599.99999999999,
+      "initialPublicationWaitMs": 6043.5,
+      "requestAfterInitialDrawMs": 15.300048828125,
+      "readyAfterRequestMs": 3326.7998046875,
+      "firstDrawAfterRequestMs": 3383,
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 105.40000000596046
+        }
+      },
+      "drained": true,
+      "errors": []
+    },
+    "cadence": {
+      "displayHz": 30,
+      "targetMs": 16.666666666666668,
+      "samples": 284,
+      "maximum": {
+        "ms": 60.199951171875,
+        "previousDrawWallMs": 59.900146484375,
+        "at": 1795622501169.5999,
+        "sequence": 51,
+        "worldTicket": null
+      },
+      "c4": false
+    }
+  }
+}

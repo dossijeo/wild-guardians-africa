@@ -1,3 +1,4 @@
+import {publishAnimalGone} from './presentation-lifecycle.js';
 import {canyonRaidFormation} from './canyon-raid-formation.js';
 import {agriculturalRayClear,resolveAgriculturalImpact,validDamageProfile} from './raid-agricultural-impact.js';
 import {liveWaitQueue,occupiedEligibleGroup,enqueueWait,leaveWait,observeWaitProgress,waitEpoch,RAID_WAIT_SECONDS} from './raid-contention.js';
@@ -9,9 +10,10 @@ import {activeCrops} from './active-crops.js';
 import {retireFarmHistory} from './retire-farm-history.js';
 import {RAID_NOTICE_TEXT} from './raid-notice.js';
 import {warmRaidNavigation} from '../world/raid-navigation-warmth.js';
-import {centerBoundaryPoint,centerCulture,centerDeliveryPoint} from '../world/centers.js';
+import {centerBoundaryPoint,centerCulture,centerDeliveryPoint,centerFootprint} from '../world/centers.js';
+import {footprintDistance,footprintsOverlap} from '../world/footprints.js';
 import {BALANCE as B} from './balance.js';
-import {nextRandom,randomInt,attraction,threatTier,animalSpec,operational,hitStructure,collapseThreshold} from './rules.js';
+import {nextRandom,randomInt,attraction,threatTier,animalSpec,operational,hitStructure,collapseThreshold,CENTER_COLLAPSE_SECONDS} from './rules.js';
 import {createRaidCompositionIndex} from './raid-composition-index.js';
 import {preparePressureNight,nextPressureWave} from './raid-pressure-plan.js';
 import {eligiblePendingRaidWavePlan} from '../world/raid-entry-data.js';
@@ -27,9 +29,12 @@ import {actorBlockers,actorSegmentClear} from './actor-motion.js';
 import {activeChunkRegion,validActiveBounds} from '../world/active-region.js';
 import {defensiveGroups} from './defensive-groups.js';
 import {wallCollisionFrame} from '../world/wall-collision-frame.js';
+import {nativeGateModelId} from '../world/gate-passages.js';
 import {targetReservationKey,targetReserved,reservedApproachClear,reconcileTargetReservations} from './raid-target-reservations.js';
 import {applyCropImpact,cropImpactDamage,CROP_HIT_POINTS} from './crop-impact-health.js';
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z),entrySelections=new WeakMap();
+const RETREAT_SPEED=3.8;
+const APPROACH_SPEED=1.5;
 const cropTargetIndexes=new WeakMap();
 const raidRegionDecisions=new WeakMap();
 const reservationReconciliation=new WeakMap();
@@ -389,10 +394,13 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   emit(s,wave?'RaidWaveSpawned':'RaidSpawned',{raidFacts:{id:s.raid.id,day:s.day,daytime,elapsed:s.elapsed,waveIndex:s.raid.waveIndex??0,pressureFacts:s.raid.pressureFacts??null,exposedLiving:exposed.length,exposedWounded:exposed.filter(p=>(p.attackHits??0)>0).length,actors:animals.map(a=>({id:a.id,species:a.species,hitsRemaining:a.hitsRemaining,...(a.damageProfile?{damageProfile:structuredClone(a.damageProfile)}:{}),spawn:{...a.spawn},exit:{...a.exit}}))}});return true;
 }
 function release(s,a,nav) {nav?.intentTaskPlanner?.cancelAttackIntent(a.id);if(a.reservation&&s.raid.reservations[a.reservation]===a.id){delete s.raid.reservations[a.reservation];s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;}a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
-function beginRetreat(s,a,nav,reason){
+function publishRetreat(s,a,reason){
   leaveWait(s.raid,a);a.status='retreating';delete a.retreatRouteUnknown;
   emit(s,'AnimalRetreating',{targetId:a.id,species:a.species,
     hitsRemaining:a.hitsRemaining,reason});
+}
+function beginRetreat(s,a,nav,reason){
+  publishRetreat(s,a,reason);
   const route=nav.intentTaskPlanner?.planRetreatRoute?.(s,a);
   if(route?.status==='found'){
     a.path=route.path;a.destinationId=`exit-${a.id}`;a.pathVersion=nav.version;
@@ -407,7 +415,7 @@ function finishUnknownRetreat(s,a,nav,reason){
   emit(s,'AnimalRetreatExitAbandoned',{actorId:a.id,x:a.x,z:a.z,
     elapsed:s.elapsed,reason,hitsRemaining:a.hitsRemaining??0,
     seconds:s.elapsed-(a.retreatRouteUnknown?.since??s.elapsed)});
-  a.status='gone';a.path=null;
+  a.status='gone';publishAnimalGone(s,a.id);a.path=null;
   delete a.retreatRouteUnknown;delete a.exitConnectorSearch;
   nav.intentTaskPlanner?.finishRetreatIntent?.(a.id);
 }
@@ -467,7 +475,7 @@ export function reachableApproach(a,target,nav,shield=null,onUnknown=null,region
   }
   return null;
 }
-function canAttackCrop(s,p){
+export function canAttackCrop(s,p){
   return p.alive&&(cropImpactDamage(p)<CROP_HIT_POINTS-1||s.raid.introCropLimit===undefined||(s.raid.introCropsDestroyed??0)<s.raid.introCropLimit);
 }
 export function raidTarget(s,id){
@@ -476,13 +484,14 @@ export function raidTarget(s,id){
   // the complete farm history for every animal and simulation step.
   return activeCrops(s.plants).find(eligible)??s.structures.find(eligible);
 }
-export function targetFor(s,a,nav) {
+export function targetFor(s,a,nav,nativeCropOnly=false) {
   nav.planningObserver?.({kind:'attackSelection',actorId:a.id,elapsed:s.elapsed});
   const stats=nav.raidSelectionStats;
   const started=stats?performance.now():0;
   if(stats)stats.selections=(stats.selections??0)+1;
   try{
-    const native=nav.intentTaskPlanner?.planAttackCrop?.(s,a);
+    const protectedDesertFarm=nativeDesertIntroductoryRaid(s,a)&&nativeCenterAttackCohort(s);
+    const native=protectedDesertFarm?null:nav.intentTaskPlanner?.planAttackCrop?.(s,a);
     if(native&&stats){
       stats.nativeCropPlans=(stats.nativeCropPlans??0)+1;
       stats.nativeCropRegionQueries=(stats.nativeCropRegionQueries??0)+
@@ -536,6 +545,7 @@ export function targetFor(s,a,nav) {
         if(queued)stats.nativeFrontierQueued=(stats.nativeFrontierQueued??0)+1;
       }
     }
+    if(nativeCropOnly)return null;
     let nativeWallStatus='not-requested';
     if(nav.intentTaskPlanner?.nativeWallSelectionEnabled&&
       (native?.status==='blocked'||native?.status==='unknown')){
@@ -758,6 +768,297 @@ export function warmRaidApproaches(state,specs,entry,nav){
     }
   }finally{nav.state=originalState;}
 }
+// Interrupt both authoritative intent ownership and the JS approach reservation.
+// Recovery must select a fresh route from the displaced physical position.
+export function interruptAnimalAttack(s,a,nav) {
+ // Native cancellation deliberately refuses a committed strike. Finish its
+ // ownership first; damage is emitted by updateRaid, not by this operation.
+ if(a.status==='attacking')nav?.intentTaskPlanner?.finishAttackIntent(a.id);
+ release(s,a,nav);a.destinationId=null;a.hitApplied=true;a.attackRemaining=0;
+ if(a.status==='attacking')a.status='walking';
+}
+export function retreatAnimal(s,a,reason='magic',nav={}) {
+ release(s,a,nav);a.hitApplied=true;a.attackRemaining=0;beginRetreat(s,a,nav,reason);
+}
+function nativeDesertIntroductoryCohort(state,animal){
+ const raid=state.raid;
+ return state.biome==='desierto'&&raid?.daytime===false&&raid.pressureFacts?.introductory===true&&
+   Number.isSafeInteger(raid.introCropLimit)&&raid.animals.length===1&&raid.animals[0]===animal&&
+   state.structures[0]?.kind==='center'&&state.structures.slice(1).every(wall=>wall.kind==='wall'&&wall.status==='intact'&&
+     (!wall.gate||wall.gateOpen===0&&nativeGateModelId(wall.material)))&&
+   state.workers.every(worker=>worker.status==='home'&&!worker.raidReturn&&!worker.nativeRouteAdmission);
+}
+export function nativeDesertIntroductoryRaid(state,animal){
+ return animal?.species==='warthog'&&nativeDesertIntroductoryCohort(state,animal);
+}
+export function nativeDesertShelteredCenterRaid(state,animal){
+ return ['warthog','hyena','buffalo','lion','rhino'].includes(animal?.species)&&nativeDesertIntroductoryCohort(state,animal);
+}
+// The first native crop cohort has one mobile body and only inactive workers.
+// A different encounter, protection or reservation requires a new admission.
+export function nativeCenterAttackCohort(state,flightWorker=null){
+ if(state.biome==='sabana')return state.structures.length===1&&state.structures[0].kind==='center'&&
+   (state.raid?.daytime===true?state.workers.length===1:
+     !flightWorker&&state.raid?.daytime===false&&Number.isSafeInteger(state.raid.introCropLimit))&&
+   state.workers.every(worker=>worker===flightWorker||worker.status==='home'&&!worker.raidReturn&&!worker.nativeRouteAdmission);
+ if(state.biome!=='desierto')return false;
+ const introductory=!flightWorker&&nativeDesertIntroductoryRaid(state,state.raid?.animals[0]);
+ if((state.workers.length>1&&!introductory)||!state.workers.every(worker=>
+   worker===flightWorker||worker.status==='home'&&!worker.raidReturn&&!worker.nativeRouteAdmission)||
+   state.structures[0]?.kind!=='center'||(!introductory&&!state.workers.length&&state.structures.some(structure=>structure.kind!=='center')))return false;
+ const crops=activeCrops(state.plants);
+ return !crops.length||introductory&&crops.every(crop=>!canAttackCrop(state,crop));
+}
+export function nativeCenterAttackSite(state,target){
+ return !!target&&operational(target)&&(target===state.structures[0]||
+   state.biome==='desierto'&&state.structures.includes(target));
+}
+function animalStructureDamage(animal){
+ return validDamageProfile(animal.damageProfile)?animal.damageProfile.structureDamage:animalSpec(animal.species).structure_hit_damage;
+}
+export function centerSurvivesStrikes(target,animal,hits){
+ return target.hp-animalStructureDamage(animal)*hits>collapseThreshold(target)+1e-9;
+}
+function centerFootprintGap(a,b){
+ if(footprintsOverlap(a,b))return 0;
+ return Math.min(...a.map(point=>footprintDistance(b,point.x,point.z)),
+   ...b.map(point=>footprintDistance(a,point.x,point.z)));
+}
+function centerCollapseWalkDistance(animal){
+ const clips=ANIMAL_ACTIONS.animals[animal.species].clips;
+ // A successor moves at approach speed, then the native strike must reach
+ // the end of its clip before Game can apply the hit.
+ const shortest=Math.min(...raidStrikeClips.map(name=>clips[name].duration));
+ return Math.max(0,CENTER_COLLAPSE_SECONDS+.02-shortest)*APPROACH_SPEED;
+}
+function nativeCenterCollapseSuccessors(state,animal,target){
+ if(state.biome!=='desierto'||state.spells.length||state.structures.some(structure=>
+   structure.kind==='center'&&structure.status==='collapsing'))return null;
+ const centers=state.structures.filter(center=>center!==target&&operational(center));
+ const damage=animalStructureDamage(animal);
+ const untilCollapse=Math.max(1,Math.ceil((target.hp-collapseThreshold(target)-1e-9)/damage));
+ return centers.length&&centers.every(next=>centerSurvivesStrikes(next,animal,animal.hitsRemaining-untilCollapse))?
+   centers:null;
+}
+export function nativeLiveCenterRaidCanArm(state,plan){
+ const centers=state.structures.filter(operational);
+ if(!centers.length)return false;
+ if(state.structures.length===1)return true;
+ // Arming the empty clock commits Game to native execution at birth.
+ // Cover every possible target until the ordinary selector chooses one.
+ const species=plan.group[0],actor=plan.actors?.[0],spec=animalSpec(species);
+ const animal={species,damageProfile:actor?.damageProfile,hitsRemaining:actor?.hits??spec.hit_budget_max,
+   radius:ANIMAL_ACTIONS.animals[species].presentation.footprint.radius};
+ return state.structures.every(center=>center.status==='ruined'||operational(center))&&centers.every(center=>{
+  if(centerSurvivesStrikes(center,animal,animal.hitsRemaining))return true;
+  // Before spawn no exit has been selected. Every possible route to a
+  // successor must leave either its approach or its strike live at the cut.
+  if(centerSurvivesStrikes(center,animal,(actor?.hits??spec.hit_budget_min)-1))return false;
+  const successors=nativeCenterCollapseSuccessors(state,animal,center);
+  if(!successors)return false;
+  const hull=centerFootprint(center,state).footprint;
+  const clearance=animal.radius+.5,minimum=centerCollapseWalkDistance(animal);
+  return successors.every(next=>centerFootprintGap(hull,centerFootprint(next,state).footprint)-2*clearance>minimum);
+ });
+}
+export function nativeLiveCenterAttackSite(state,animal,target,approach=null,nav=null){
+ if(!nativeCenterAttackSite(state,target))return false;
+ if(!state.structures.some(center=>center!==target&&center.kind==='center')||
+    centerSurvivesStrikes(target,animal,animal.hitsRemaining))return true;
+ // The collapse needs an approach, strike or retreat that lasts through its substep.
+ const exit=animal.exit??animal.spawn;
+ if(!approach||!exit)return false;
+ if(centerSurvivesStrikes(target,animal,animal.hitsRemaining-1))
+  return Math.hypot(Math.fround(approach.x)-Math.fround(exit.x),Math.fround(approach.z)-Math.fround(exit.z))>
+    (CENTER_COLLAPSE_SECONDS+.02)*RETREAT_SPEED;
+ const centers=nav&&nativeCenterCollapseSuccessors(state,animal,target);
+ if(!centers)return false;
+ const from={...animal,x:Math.fround(approach.x),z:Math.fround(approach.z)};
+ const minimum=centerCollapseWalkDistance(animal),clearance=animal.radius+.5;
+ // Game may choose any of these centers when the strike finishes.
+ return centers.every(next=>footprintDistance(centerFootprint(next,state).footprint,from.x,from.z)-clearance>minimum)&&
+   centers.some(next=>!!reachableApproach(from,next,nav)?.path?.length);
+}
+export function nativeCenterCollapseSite(state,animal){
+ if(!animal?.hitApplied||!animal.attackId)return null;
+ const hit=state.events.findLast(event=>event.type==='AnimalLogicalHit'&&event.attackId===animal.attackId&&
+   event.presentation?.target?.kind==='center'&&event.presentation.shield===null);
+ const center=hit&&state.structures.find(item=>item.id===hit.targetId&&item.kind==='center');
+ return hit&&nativeCenterCollapseImpact(state,animal,center)===hit?center:null;
+}
+// The collapsing center retains the impact that started its countdown even
+// after the animal acquires a different target and attack id.
+export function nativeCenterCollapseImpact(state,animal,center){
+ if(!animal||center?.kind!=='center'||center.status!=='collapsing'||!(center.collapseRemaining>0)||
+    !state.structures.includes(center))return null;
+ const threshold=collapseThreshold(center)+1e-9;
+ const index=state.events.findLastIndex(event=>event.type==='StructureHit'&&event.animalId===animal.id&&
+   event.targetId===center.id&&event.structureHit?.kind==='center'&&event.structureHit.previousHp>threshold&&
+   event.structureHit.hp===center.hp&&event.structureHit.hp<=threshold&&event.structureHit.maxHp===center.maxHp&&
+   event.structureHit.x===center.x&&event.structureHit.z===center.z);
+ if(index<0)return null;
+ const damage=state.events[index],hit=state.events[index+1],pose=hit?.presentation?.animal;
+ if(hit?.type!=='AnimalLogicalHit'||hit.targetId!==center.id||hit.species!==animal.species||
+    !/^attack-[1-9]\d*$/.test(hit.attackId)||hit.presentation?.target?.kind!=='center'||hit.presentation.shield!==null||
+    hit.simulationTime!==damage.simulationTime||hit.presentation.elapsed!==damage.simulationTime||
+    !Number.isFinite(pose?.x)||!Number.isFinite(pose?.z)||pose.x!==damage.presentation?.x||pose.z!==damage.presentation?.z||
+    !(damage.simulationTime<=state.elapsed)||
+    Math.abs(damage.simulationTime+CENTER_COLLAPSE_SECONDS-state.elapsed-center.collapseRemaining)>1e-7)return null;
+ return hit;
+}
+export function nativeShelteredCenterActor(state,animal){
+ const raid=state.raid;
+ if(raid?.animals.length!==1||raid.animals[0]!==animal)return false;
+ if(state.biome==='desierto'){
+  const center=state.structures[0];
+  return nativeDesertShelteredCenterRaid(state,animal)&&(animal.targetId===center.id||
+   !animal.targetId&&state.events.some(event=>event.type==='AnimalLogicalHit'&&event.attackId===animal.attackId&&
+    event.targetId===center.id&&event.presentation?.target?.kind==='center'));
+ }
+ if(!nativeCenterAttackCohort(state))return false;
+ if(!raid.daytime)return ['warthog','hyena','buffalo','lion','rhino'].includes(animal?.species);
+ const center=state.structures[0].id;
+ return animal?.species==='warthog'&&(animal.targetId===center||state.events?.some(event=>
+   event.type==='StructureHit'&&event.animalId===animal.id&&event.targetId===center));
+}
+export function nativeRetreatBudgetAllowed(state,animal){
+ if(animal.hitsRemaining===0)return true;
+ if(!nativeShelteredCenterActor(state,animal)||!animal.hitApplied||!animal.attackId||
+    animal.targetId||animal.reservation||animal.hitsRemaining<=0)return false;
+ const center=state.structures[0],retreating=animal.status==='retreating';
+ if(!retreating&&(animal.status!=='walking'||center.status!=='collapsing'||
+   state.biome!=='desierto'&&activeCrops(state.plants).length))return false;
+ const hit=state.events.findLast(event=>event.type==='AnimalLogicalHit'&&event.attackId===animal.attackId&&
+   event.targetId===center.id&&event.presentation?.target?.kind==='center'&&event.presentation.shield===null);
+ if(!hit||!state.events.some(event=>event.type==='StructureHit'&&event.simulationTime===hit.simulationTime&&
+   event.animalId===animal.id&&event.targetId===center.id&&event.structureHit?.kind==='center'&&
+   event.structureHit.previousHp>collapseThreshold(center)&&event.structureHit.hp<=collapseThreshold(center)))return false;
+ // Once the raid has decided to leave, later crop or center changes cannot give it a new target.
+ return !retreating||state.events.some(event=>event.type==='AnimalRetreating'&&event.targetId===animal.id&&
+   event.reason==='no-reachable-unleased-target'&&event.hitsRemaining===animal.hitsRemaining&&event.simulationTime>=hit.simulationTime);
+}
+export function nativeAnimalCropPublicationMatches(state,{reference,attackId}){
+ const animal=state.raid?.animals.find(candidate=>candidate.id==='animal-'+reference.actorId);
+ const shelteredPurpose=reference.purpose==='center'||reference.purpose==='retreat';
+ if(!animal||(animal.species!=='warthog'&&(!shelteredPurpose||!nativeShelteredCenterActor(state,animal))))return false;
+ if(reference.purpose==='retreat')return animal.status==='retreating'&&!animal.targetId&&nativeRetreatBudgetAllowed(state,animal)&&
+  (animal.exit??animal.spawn)?.x===reference.targetX&&(animal.exit??animal.spawn)?.z===reference.targetZ;
+ const targetId=(reference.purpose==='center'?'structure-':'plant-')+reference.targetId;
+ return animal.targetId===targetId&&(reference.kind===26?['entering','walking'].includes(animal.status):
+  animal.status==='attacking'&&animal.attackId==='attack-'+attackId);
+}
+export function nativeCropRouteSubject(state,animal,flightWorker=null,native=null){
+ const raid=state.raid;
+ if(raid?.animals.length!==1||raid.animals[0]!==animal||!animal?.targetId)return null;
+ const target=raidTarget(state,animal.targetId);
+ const centerAttack=target?.kind==='center'&&(nativeCenterAttackCohort(state,flightWorker)||
+  !flightWorker&&nativeShelteredCenterActor(state,animal));
+ const desertCrop=!centerAttack&&nativeDesertIntroductoryRaid(state,animal)&&operational(state.structures[0]);
+ if((state.biome!=='sabana'&&!centerAttack&&!desertCrop)||
+    (animal?.species!=='warthog'&&!(centerAttack&&nativeShelteredCenterActor(state,animal)))||
+    !state.workers.every(w=>w===flightWorker||w.status==='home'&&!w.raidReturn&&!w.nativeRouteAdmission)||
+    !animal.approach||animal.magicDown||(animal.magicStunUntil??0)>state.elapsed||
+    animal.hitsRemaining<=0)return null;
+ if((centerAttack?!nativeCenterAttackSite(state,target):!target?.alive)||animal.reservation!==targetReservationKey(target,animal)||
+    raid.reservations[animal.reservation]!==animal.id)return null;
+ const shield=spellAt(state,'shield',target),contact=native?.shieldContact;
+ const pendingRemoval=!shield&&contact&&state.spells.some(spell=>spell.kind==='shield'&&spell.id===contact.id&&spell.remaining<=1e-9&&
+   spell.x===contact.x&&spell.z===contact.z&&spell.radius===contact.radius&&Math.hypot(spell.x-target.x,spell.z-target.z)<=spell.radius);
+ const expiredStrike=!shield&&!centerAttack&&!flightWorker&&native?.mode===3&&native.shieldPolygon>0&&contact&&animal.approachShieldId===contact.id&&
+   animal.status==='attacking'&&animal.attackId==='attack-'+native.strike.attackId&&(pendingRemoval||native.shieldExpired&&!state.spells.some(s=>s.id===contact.id));
+ const expiringApproach=pendingRemoval&&!centerAttack&&!flightWorker&&[1,2].includes(native?.mode)&&
+   native.shieldPolygon>0&&animal.approachShieldId===contact.id;
+ if((shield||animal.approachShieldId)&&!expiredStrike&&!expiringApproach){
+   if(centerAttack||flightWorker||!contact||shield?.id!==contact.id||shield.x!==contact.x||shield.z!==contact.z||
+      shield.radius!==contact.radius||native.mode!==4&&(!native.shieldPolygon||animal.approachShieldId!==shield.id))return null;
+ }
+ return centerAttack?{target,center:target,purpose:'center'}:{target,center:state.structures.find(operational)??target};
+}
+export function nativeRetreatSubject(state,animal){
+ if(!animal||(state.biome!=='sabana'&&!nativeCenterAttackCohort(state)&&!nativeDesertIntroductoryRaid(state,animal)&&!nativeShelteredCenterActor(state,animal))||state.raid?.animals.length!==1||
+    state.raid.animals[0]!==animal||(animal.species!=='warthog'&&!nativeShelteredCenterActor(state,animal))||animal.status!=='retreating'||
+    !nativeRetreatBudgetAllowed(state,animal)||!animal.hitApplied||animal.targetId||animal.reservation||animal.magicDown||
+    (animal.magicStunUntil??0)>state.elapsed||
+    !state.workers.every(w=>w.status==='home'&&!w.raidReturn&&!w.nativeRouteAdmission))return null;
+ const exit=animal.exit??animal.spawn;
+ return Number.isFinite(exit?.x)&&Number.isFinite(exit?.z)?exit:null;
+}
+
+function nativeRetreatOwnersMatch(state,animal,native,planner){
+ const exit=nativeRetreatSubject(state,animal)??planner?.encounterRetreatOwner?.(state,animal,native)?.exit;
+ return native.retreat&&!!exit&&animal.id==='animal-'+native.actor&&
+   (!native.previousStrike||animal.attackId==='attack-'+native.previousStrike.attackId)&&
+   animal.radius===native.radius&&exit.x===native.targetX&&exit.z===native.targetZ;
+}
+export function nativeCropCohortCurrent(state,planner){
+ const animal=state.raid?.animals[0],native=animal&&planner?.nativeAnimalCropState?.(animal.id);
+ const subject=animal&&nativeCropRouteSubject(state,animal,planner?.nativeRaidFlightMember?.(state,animal),native);
+ if((!subject||subject.purpose==='center')&&animal?.hitApplied&&(nativeRetreatBudgetAllowed(state,animal)?
+    planner?.nativeFinishedAnimalRetreat?.(state,animal):planner?.nativeFinishedAnimalCrop?.(state,animal)))return true;
+
+ if(!native&&planner?.encounterRetreatOwner?.(state,animal,null))return true;
+ if(!subject&&animal?.status!=='retreating')return false;
+ if(native?.retreat)return native.executedThrough===state.elapsed&&nativeRetreatOwnersMatch(state,animal,native,planner)&&
+   animal.x===native.x&&animal.z===native.z&&animal.motionPhase===native.phase;
+ return !!subject&&!!native&&native.executedThrough===state.elapsed&&nativeCropOwnersMatch(subject,animal,native)&&
+   animal.x===native.x&&animal.z===native.z&&(animal.motionPhase??0)===native.phase;
+}
+function nativeCropOwnersMatch({target,center,purpose},animal,native){
+ return purpose===native.purpose&&animal.id==='animal-'+native.actor&&target.id===(purpose==='center'?'structure-':'plant-')+native.target&&
+   target.x===native.targetX&&target.z===native.targetZ&&center.id===(center===target&&purpose!=='center'?'plant-':'structure-')+native.center&&
+   center.x===native.centerX&&center.z===native.centerZ&&animal.radius===native.radius;
+}
+export const raidStrikeClips=Object.freeze(['Right_Hand_Sword_Slash','Charged_Upward_Slash','Weapon_Combo','Weapon_Combo_2']);
+export function savedRaidStrike(animal){
+ const match=/^attack-([1-9]\d*)$/.exec(animal.attackId??''),attackId=match?Number(match[1]):0;
+ const clip=raidStrikeClips.indexOf(animal.animation),duration=animal.attackDuration,remaining=animal.attackRemaining;
+ if(animal.status!=='attacking'||animal.hitApplied!==false||!Number.isSafeInteger(attackId)||attackId<=0||
+    clip<0||duration!==ANIMAL_ACTIONS.animals[animal.species]?.clips[animal.animation]?.duration||
+    !Number.isFinite(remaining)||!(remaining>0&&remaining<=duration))return null;
+ return {attackId,clip,duration,remaining};
+}
+function raidStrikeClip(roll){return roll<.45?0:roll<.75?1:roll<.9?2:3;}
+
+// Resource selection can read the persisted RNG, but only acquisition consumes
+// a draw, allocates the attack id, and starts the ordinary gameplay action.
+export function previewRaidStrike(state,animal){
+ const index=raidStrikeClip(nextRandom({rng:state.rng})),animation=raidStrikeClips[index];
+ return {index,animation,duration:ANIMAL_ACTIONS.animals[animal.species].clips[animation].duration};
+}
+function startRaidStrike(state,animal,markActive){
+ animal.status='attacking';animal.hitApplied=false;animal.attackId=`attack-${state.sequence++}`;
+ markActive?.();animal.animation=raidStrikeClips[raidStrikeClip(nextRandom(state))];
+ animal.attackDuration=ANIMAL_ACTIONS.animals[animal.species].clips[animal.animation].duration;
+ animal.attackRemaining=animal.attackDuration;
+}
+export function projectAcquiredRaidStrike(state,animal,proof){
+ const target=raidTarget(state,animal.targetId);
+ const center=proof?.purpose==='center';
+ if(!target||!proof||(center?target.kind!=='center'||target.status!=='intact'||
+    Math.fround(animal.approach?.x)!==proof.x||Math.fround(animal.approach?.z)!==proof.z:!target.alive)||
+    animal.targetId!==(center?'structure-':'plant-')+proof.target||animal.id!=='animal-'+proof.actor||
+    state.raid?.reservations[animal.reservation]!==animal.id||animal.hitsRemaining<=0||
+    animal.x!==proof.x||animal.z!==proof.z||target.x!==proof.targetX||target.z!==proof.targetZ)
+  throw Error('Native crop strike has another actor, crop or terminal pose');
+ if(animal.status==='attacking'){
+  if(animal.attackId!==`attack-${proof.attackId}`||animal.animation!==raidStrikeClips[proof.clip]||animal.attackDuration!==proof.duration)
+   throw Error('Native crop strike cannot replace an active game strike');
+  return;
+ }
+ const clip=previewRaidStrike(state,animal);
+ if(!['walking','entering'].includes(animal.status)||state.pauses.length||state.sequence!==proof.attackId||state.elapsed!==proof.at||
+    clip.index!==proof.clip||clip.duration!==proof.duration)throw Error('Stale native crop strike acquisition');
+ animal.heading=proof.yaw;startRaidStrike(state,animal);
+}
+
+export function assignRaidTarget(s,a,selected,nav){
+  const target=selected.target;
+  a.targetId=target.id;a.reservation=selected.reservation;s.raid.reservations[a.reservation]=a.id;
+  s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;
+  a.approach=selected.approach.point;a.approachShieldId=selected.shieldId;
+  a.path=selected.approach.path;a.destinationId=a.approach.id;a.pathVersion=nav.version;
+  return target;
+}
 export function updateRaid(s,dt,nav) {
   if(!s.raid)return;
   // Resolve confirmed crop and barrier changes before the next attack
@@ -770,13 +1071,121 @@ export function updateRaid(s,dt,nav) {
       release(s,animal,nav);
   reconcileRaidReservationsOnChange(s,nav);
   updateWorkerEncounters(s,nav);
+  nav.dynamicBodies?.sync(s);
   observeWaitProgress(s);liveWaitQueue(s.raid);
   for(const a of s.raid.animals) {
+    try {
     if(a.status==='gone')continue;
+    if(a.magicDown){if(s.elapsed<a.magicDown.until)continue;delete a.magicDown;}
+    if((a.magicStunUntil??0)>s.elapsed)continue;
+    if(nav.intentTaskPlanner?.hasRetreatEncounter?.(s,a)){
+      if(a.targetId||a.reservation)release(s,a);
+      publishRetreat(s,a,'budget-exhausted');
+      nav.intentTaskPlanner.applyRetreatEncounter(s,a);
+    }
+    const crop=nav.intentTaskPlanner?.nativeAnimalCropState?.(a.id);
+    const successor=!crop&&a.hitApplied&&a.hitsRemaining>0?nav.intentTaskPlanner?.nativeFinishedAnimalCrop?.(s,a):null;
+    if(successor?.shieldPolygon){
+      if(!nav.intentTaskPlanner.requestNativeProtectedSuccessor(s,a,successor,nav))throw Error('Native protected strike lost its finished source');
+      continue;
+    }
+    if(successor?.purpose==='center'){
+      const selected=successor.collapsed?targetFor(s,a,nav):null;
+      if(!nav.intentTaskPlanner.requestNativeCenterSuccessor(s,a,successor,selected))throw Error('Native center strike lost its successor');
+      if(selected)assignRaidTarget(s,a,{...selected,approach:{point:selected.approach.point,path:null}},nav);
+      continue;
+    }
+    if(successor&&nativeDesertIntroductoryRaid(s,a)&&nativeCenterAttackCohort(s)){
+      const epoch=waitEpoch(s,nav,a);
+      if(a.raidWait?.epoch===epoch&&s.elapsed<a.raidWait.retryAt)continue;
+      const selected=targetFor(s,a,nav);
+      if(!selected||selected.unknown){
+        a.raidWait={since:a.raidWait?.since??s.elapsed,epoch,retryAt:s.elapsed+8};
+        continue;
+      }
+      if(!nav.intentTaskPlanner.requestNativeCenterAfterCrop(s,a,successor,selected))
+        throw Error('Native crop strike lost its center successor');
+      leaveWait(s.raid,a);
+      assignRaidTarget(s,a,{...selected,approach:{point:selected.approach.point,path:null}},nav);
+      continue;
+    }
+    if(!crop&&a.hitApplied&&nav.intentTaskPlanner?.nativeFinishedAnimalRetreat?.(s,a)){
+      const exit=a.exit??a.spawn,prior=a.retreatRouteUnknown;
+      const sectors=nav.spatialSectorRevision?.(a.radius,false)??0;
+      if(prior&&prior.sectors===sectors&&prior.topology===nav.version&&prior.exitX===exit?.x&&prior.exitZ===exit?.z)continue;
+      const result=nav.intentTaskPlanner.requestNativeRetreat(s,a);
+      if(result==='unknown'||result==='blocked'){
+        a.retreatRouteUnknown={sectors,topology:nav.version,exitX:exit.x,exitZ:exit.z};
+        if(result==='unknown')nav.requestRaidConnectivity?.(a,exit,a.radius);
+        continue;
+      }
+      if(result!=='pending')throw Error('Native retreat has no terminal source');
+      if(a.hitsRemaining>0)emit(s,'AnimalTargetUnavailable',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining});
+      publishRetreat(s,a,a.hitsRemaining>0?'no-reachable-unleased-target':'budget-exhausted');
+      continue;
+    }
+
+    if(!crop&&nav.intentTaskPlanner?.encounterRetreatOwner?.(s,a,null)){
+      if(a.targetId||a.reservation)release(s,a);
+      const exit=a.exit??a.spawn,prior=a.retreatRouteUnknown,sectors=nav.spatialSectorRevision?.(a.radius,false)??0;
+      if(prior&&prior.sectors===sectors&&prior.topology===nav.version&&prior.exitX===exit.x&&prior.exitZ===exit.z)continue;
+      const result=nav.intentTaskPlanner.requestEncounterRetreat(s,a);
+      if(result==='blocked'||result==='unknown'){
+        a.retreatRouteUnknown={sectors,topology:nav.version,exitX:exit.x,exitZ:exit.z};
+        if(result==='unknown')nav.requestRaidConnectivity?.(a,exit,a.radius);
+        continue;
+      }
+      if(result!=='pending')throw Error('Encounter retreat lost its current body');
+      continue;
+    }
+    if(crop?.retreat){
+      if(!nativeRetreatOwnersMatch(s,a,crop,nav.intentTaskPlanner)||crop.executedThrough!==s.elapsed)throw Error('Native retreat changed its exit or actor');
+      if(crop.mode===1){
+        if(a.x!==crop.x||a.z!==crop.z||a.motionPhase!==crop.phase)throw Error('Pending retreat moved before acquisition');
+      }else{
+        a.x=crop.x;a.z=crop.z;a.heading=crop.yaw;a.motionPhase=crop.phase;
+        if(crop.arrived){
+          if(!nav.intentTaskPlanner.finishNativeRetreat(a,crop))throw Error('Native retreat lacks its arrived body');
+          a.status='gone';publishAnimalGone(s,a.id);
+        }
+      }
+      continue;
+    }
+    if(crop){
+      const source=nativeCropRouteSubject(s,a,nav.intentTaskPlanner?.nativeRaidFlightMember?.(s,a),crop);
+      if(!source||!nativeCropOwnersMatch(source,a,crop)||crop.executedThrough!==s.elapsed)
+        throw Error('Native crop action lost the current game source');
+      if(crop.mode===4){
+        if(a.x!==crop.x||a.z!==crop.z||a.heading!==crop.yaw||a.motionPhase!==crop.phase)
+          throw Error('Shield crop moved while stopped');
+        nav.intentTaskPlanner.replanNativeShieldCrop(a.id,nav);
+        continue;
+      }
+      if(crop.mode===5){
+        const saved=savedRaidStrike(a),restore=crop.restore;
+        if(!saved||!Object.keys(saved).every(key=>saved[key]===restore[key])||
+           a.x!==crop.x||a.z!==crop.z||a.heading!==crop.yaw||a.motionPhase!==crop.phase)
+          throw Error('Pending restored strike lost its saved action');
+        continue;
+      }
+      if(crop.mode!==3){
+        if(!['entering','walking'].includes(a.status))throw Error('Native crop route has another semantic action');
+        if(crop.mode===1){
+          if(a.x!==crop.x||a.z!==crop.z||(a.motionPhase??0)!==crop.phase)throw Error('Pending crop route moved before acquisition');
+        }else{
+          a.x=crop.x;a.z=crop.z;a.heading=crop.yaw;a.motionPhase=crop.phase;
+          if(!crop.running)a.status='walking';
+        }
+        continue;
+      }
+      if(a.status!=='attacking'||a.attackId!=='attack-'+crop.strike.attackId||
+         a.animation!==raidStrikeClips[crop.strike.clip]||a.attackDuration!==crop.strike.duration)
+        throw Error('Native crop strike lacks its acquired game action');
+    }
     if(a.status==='attacking'){
       a.attackDuration??=ANIMAL_ACTIONS.animals[a.species].clips[a.animation].duration;
-      a.attackRemaining=Math.max(0,a.attackRemaining-dt);
-      if(a.attackRemaining>1e-9)continue;
+      a.attackRemaining=crop?Math.max(0,crop.strike.endTime-s.elapsed):Math.max(0,a.attackRemaining-dt);
+      if(crop?s.elapsed<crop.strike.endTime:a.attackRemaining>1e-9)continue;
       const target=raidTarget(s,a.targetId);
       if(!a.hitApplied&&a.hitsRemaining>0){
         a.hitApplied=true;a.hitsRemaining--;observeWaitProgress(s);
@@ -792,30 +1201,30 @@ export function updateRaid(s,dt,nav) {
           if(!shield){
             if('alive' in target){
               if(agriculturalImpact){
-                for(const hit of agriculturalImpact.hits){emit(s,'CropHit',{...hit,hits:hit.after});if(hit.destroyed){emit(s,'CropDestroyed',{targetId:hit.targetId,attackId:a.attackId,animalId:a.id});}}
+                for(const hit of agriculturalImpact.hits){emit(s,'CropHit',{...hit,hits:hit.after,presentation:{elapsed:s.elapsed}});if(hit.destroyed){emit(s,'CropDestroyed',{targetId:hit.targetId,attackId:a.attackId,animalId:a.id});}}
               }else if(!legacyCropOccluded){
                 const hit=applyCropImpact(s,target,1);
-                if(hit){emit(s,'CropHit',{targetId:target.id,...hit,hits:hit.after});if(hit.destroyed)emit(s,'CropDestroyed',{targetId:target.id});}
+                if(hit){emit(s,'CropHit',{targetId:target.id,...hit,hits:hit.after,presentation:{elapsed:s.elapsed}});if(hit.destroyed)emit(s,'CropDestroyed',{targetId:target.id});}
               }
             }
             else {
-              const previousHp=target.hp;hitStructure(target,validDamageProfile(a.damageProfile)?a.damageProfile.structureDamage:animalSpec(a.species).structure_hit_damage,s.elapsed,s);
+              const previousHp=target.hp;hitStructure(target,animalStructureDamage(a),s.elapsed,s);
               const hitIds=s.raid.attackedStructureIds??=[],firstHitThisRaid=target.hp<previousHp&&!hitIds.includes(target.id);
               if(firstHitThisRaid){hitIds.push(target.id);s.raid.attackedStructureIds=hitIds;}
-              emit(s,'StructureHit',{animalId:a.id,targetId:target.id,structureHit:{kind:target.kind,x:target.x,z:target.z,previousHp,hp:target.hp,maxHp:target.maxHp,
+              emit(s,'StructureHit',{animalId:a.id,targetId:target.id,presentation:{elapsed:s.elapsed,x:a.x,z:a.z},structureHit:{kind:target.kind,...(target.kind==='wall'?{material:target.material}:{}),x:target.x,z:target.z,previousHp,hp:target.hp,maxHp:target.maxHp,
                 criticalThreshold:collapseThreshold(target)*2,firstHitThisRaid}});
             }
           }
           // A presentation snapshot is a fact about this completed hit, never
           // another damage command. It survives target movement, raid end/save.
-          emit(s,(agriculturalImpact?.blocked||legacyCropOccluded)&&!shield?'AnimalLogicalMiss':'AnimalLogicalHit',{attackId:a.attackId,targetId:target.id,species:a.species,...(legacyCropOccluded?{reason:'occluded'}:{}),...(agriculturalImpact?{agriculturalImpact}:{}),presentation:{elapsed:s.elapsed,...(agriculturalImpact?{agriculturalImpact}:{}),
-            animal:{x:a.x,z:a.z,heading:a.heading},target:{x:target.x,z:target.z,kind:target.kind,...(target.kind==='center'?{culture:centerCulture(target,s),yaw:target.yaw}:{}),...(target.kind==='wall'?{material:target.material,gate:target.gate,yaw:target.yaw,baseScaleX:target.baseScaleX}:{})},
+          emit(s,(agriculturalImpact?.blocked||legacyCropOccluded)&&!shield?'AnimalLogicalMiss':'AnimalLogicalHit',{attackId:a.attackId,targetId:target.id,species:a.species,...(legacyCropOccluded?{reason:'occluded'}:{}),...(agriculturalImpact?{agriculturalImpact}:{}),presentation:{version:1,elapsed:s.elapsed,...(agriculturalImpact?{agriculturalImpact}:{}),
+            animal:{x:a.x,z:a.z,heading:a.heading},target:{x:target.x,z:target.z,kind:target.kind,...(target.kind==='center'?{culture:centerCulture(target,s),yaw:target.yaw??0}:{}),...(target.kind==='wall'?{material:target.material,gate:target.gate,yaw:target.yaw,baseScaleX:target.baseScaleX}:{})},
             shield:shield?{id:shield.id,x:shield.x,z:shield.z,radius:shield.radius}:null}});
         }else emit(s,'AnimalLogicalMiss',{attackId:a.attackId,targetId:a.targetId,species:a.species,...(expiredBorder?{reason:'shield-expired'}:{})});
       }
       const reconsider=nav.intentTaskPlanner?.finishAttackIntent(a.id);
       a.status='walking';a.path=null;
-      if(reconsider>0||!target||target.alive===false||
+      if(reconsider>0||!target||target.alive===false||(crop?.purpose==='center'||crop?.shieldPolygon>0)&&a.hitsRemaining===0||
         target.status&&target.status!=='intact')release(s,a,nav);
       else if(nav.intentTaskPlanner&&a.approach){
         if(dist(a,a.approach)>.1)release(s,a,nav);
@@ -856,9 +1265,9 @@ export function updateRaid(s,dt,nav) {
       }
       try{
         if(walkTo(s,a,exit,dt,nav,
-          {speed:3.8,worker:false,expandRoute:true,routeVia:a.spawn,
+          {speed:RETREAT_SPEED,worker:false,expandRoute:true,routeVia:a.spawn,
             externallyPlanned:native})){
-          a.status='gone';nav.intentTaskPlanner?.finishRetreatIntent?.(a.id);
+          a.status='gone';publishAnimalGone(s,a.id);nav.intentTaskPlanner?.finishRetreatIntent?.(a.id);
         }else if(native&&!a.path)nav.intentTaskPlanner?.finishRetreatIntent?.(a.id);
         delete a.retreatRouteUnknown;
       }catch(error){
@@ -881,7 +1290,7 @@ export function updateRaid(s,dt,nav) {
     if(a.hitsRemaining<=0)continue;
     let target=raidTarget(s,a.targetId);
     if(!target) {
-      if(a.status!=='waiting')release(s,a,nav);
+      if(!successor&&a.status!=='waiting')release(s,a,nav);
       // Search independent targets before staging. Each waiting actor retries
       // its own bounded search; an unreachable queue head cannot block peers.
       if(a.status==='waiting'){
@@ -906,7 +1315,14 @@ export function updateRaid(s,dt,nav) {
         if(wait.epoch===epoch&&s.elapsed<wait.retryAt)continue;
         wait.epoch=epoch;wait.retryAt=s.elapsed+8;
       }
-      const selected=targetFor(s,a,nav);
+      if(successor&&a.raidWait?.epoch===waitEpoch(s,nav,a)&&s.elapsed<a.raidWait.retryAt)continue;
+      const selected=targetFor(s,a,nav,!!successor);
+      if(successor&&!selected){
+        // The retained native body stays at the strike endpoint while an
+        // unsupported shield or unavailable crop prevents another admission.
+        a.raidWait={since:a.raidWait?.since??s.elapsed,epoch:waitEpoch(s,nav,a),retryAt:s.elapsed+8};
+        continue;
+      }
       if(!selected||selected.unknown){
         emit(s,'AnimalTargetUnavailable',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining});
         if(selected?.unknown){
@@ -920,9 +1336,13 @@ export function updateRaid(s,dt,nav) {
         continue;
       }
       if(a.status==='waiting')a.status='entering';leaveWait(s.raid,a);
-      target=selected.target;a.targetId=target.id;a.reservation=selected.reservation;s.raid.reservations[a.reservation]=a.id;s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;
-      a.approach=selected.approach.point;a.approachShieldId=selected.shieldId;
-      a.path=selected.approach.path;a.destinationId=a.approach.id;a.pathVersion=nav.version;
+      target=assignRaidTarget(s,a,selected,nav);
+      if(successor){
+        const request=nav.intentTaskPlanner.nativeAnimalCropState(a.id);
+        const subject=nativeCropRouteSubject(s,a,nav.intentTaskPlanner?.nativeRaidFlightMember?.(s,a));
+        if(!request||request.mode!==1||request.body!==successor.body||!subject||!nativeCropOwnersMatch(subject,a,request))release(s,a,nav);
+        continue;
+      }
       if(!selected.native)nav.intentTaskPlanner?.registerAttackIntent(s,a,target,a.path??[]);
     }
     // A confirmed topological event may leave the same native attack target
@@ -960,7 +1380,7 @@ export function updateRaid(s,dt,nav) {
       nav.intentTaskPlanner?.registerAttackIntent(s,a,target,a.path??[]);
     }
     if(a.status!=='attacking') {
-      if(walkTo(s,a,a.approach,dt,nav,{speed:a.status==='entering'?3.8:1.5,
+      if(walkTo(s,a,a.approach,dt,nav,{speed:a.status==='entering'?3.8:APPROACH_SPEED,
         worker:false,externallyPlanned:!!nav.intentTaskPlanner})) {
         if(nav.intentTaskPlanner&&(!reservedApproachClear(s,a,a.approach)||
           !actorSegmentClear(a.approach,a.approach,a,actorBlockers(s,a,false))))
@@ -969,10 +1389,7 @@ export function updateRaid(s,dt,nav) {
         // A previous committed strike releases its native lease at the damage
         // frame. Renew it only when this next strike actually begins.
         nav.intentTaskPlanner?.registerAttackIntent(s,a,target,[]);
-        a.status='attacking';a.hitApplied=false;a.attackId=`attack-${s.sequence++}`;
-        nav.intentTaskPlanner?.markAttackActive(a.id);
-        const roll=nextRandom(s);a.animation=roll<.45?'Right_Hand_Sword_Slash':roll<.75?'Charged_Upward_Slash':roll<.9?'Weapon_Combo':'Weapon_Combo_2';
-        a.attackDuration=ANIMAL_ACTIONS.animals[a.species].clips[a.animation].duration;a.attackRemaining=a.attackDuration;
+        startRaidStrike(s,a,()=>nav.intentTaskPlanner?.markAttackActive(a.id));
       } else if(!a.path){
         emit(s,'AnimalRouteUnavailable',{targetId:a.id,species:a.species,phase:'travel'});
         release(s,a,nav);
@@ -985,12 +1402,15 @@ export function updateRaid(s,dt,nav) {
       }
       else if(dist(a,s.structures.find(operational)??target)<25)a.status='walking';
     }
+    } finally {nav.dynamicBodies?.update(a,1);}
   }
   if(s.raid.animals.every(a=>a.status==='gone')) {
     const pending=s.raid.pendingWavePlan??nextPressureWave(s.raid,s.time);
     if(pending){s.raid.pendingWavePlan=pending;return;}
     nav.intentTaskPlanner?.retireRaidActors?.(s.raid.animals);
+    const endedRaid=s.raid;
     s.raid=null;nav.setState(s);emit(s,'RaidEnded');
+    const endEvent=s.events.at(-1);
     if(!s.structures.some(operational)&&compare(s.ledger.balance,rational(B.work_center.cost))<0){s.result='defeat';notice(s,'Cayó el último centro; faltan monedas para que otro nazca.');emit(s,'GameOver');retireFarmHistory(s);return;}
     for(const w of s.workers) {
       if(w.incapacitated||contractExpired(w,s)||s.time>=PROFILES_END(w.profile))continue;
@@ -999,6 +1419,7 @@ export function updateRaid(s,dt,nav) {
       else {w.displacedDay=s.day;w.status='returning';w.path=null;}
       notifyWorkerPlanningChange(s,w);
     }
+    nav.intentTaskPlanner?.returnFromRaidRefuge?.(s,endedRaid,endEvent);
     recoverDisplacedWorkers(s);
     rebuildTasks(s);
   }

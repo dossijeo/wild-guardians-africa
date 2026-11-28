@@ -1,0 +1,181 @@
+{
+  "date": "2026-11-16",
+  "branch": "codex/guardian-3d-animation",
+  "sourceBaseCommit": "900b67def",
+  "scope": "Pending initial Idle on the existing native Game clock: held body and private state, advancing admitted peer, actual initial source to Home before READY/first body, and pending-resource task preemption. No initial graphical admission, Idle/Alert policy execution, ordinary producer or A6/A/B/C closure.",
+  "research": [
+    {
+      "source": "https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp#L482-L625",
+      "readBeforeDesign": "addAgent active record with target NONE; separate requestMoveTarget/resetMoveTarget",
+      "decision": "Retain physical presence and pending goals separately on existing ActiveIntent/body/clock owners. No synthetic Carry/settlement/route, NavMesh snapping, local corridor import, new controller or dependency."
+    }
+  ],
+  "nativeBuild": {
+    "standalone": "passed",
+    "pthread": "passed",
+    "log": ".cache/native-initial-idle-clock-final-build.log",
+    "sourceAndBinaryHashes": {
+      "src/world/wild-engine/spatial-intent-state.cpp": "f97cd29a98dba7bac111ccb495f902e387b8694c7ac6d430feb7f183e19d9eb4",
+      "src/world/wild-engine/spatial-initial-idle-resource-request.inc": "26a79b1351e8b10fe2549adc825a5b125066ab103b6eeb486b336becb75f23d0",
+      "src/world/wild-engine/spatial-home-resource-request.inc": "c97ffb2b7157c3b047993a4172bbaf4e0be96ab5a7e66972ed18f04202844ade",
+      "src/world/wild-engine/spatial-task-execution.inc": "a770e50ad4eb660d762101f06e5bf62f18f1767a63c643af2a5c7e0bd0bd1baf",
+      "tools/build-spatial-savanna-wasm.sh": "764ed4bdeae941fb70d4f3ecab3c744586315e4ac4c1d1a74be50dea9c883e6a",
+      "src/world/wild-engine/spatial-savanna.wasm": "e6d26aee2445ae3b992830e84635693588a1f0896d51bd27b634b73ecb7228a1",
+      "public/wild-engine/spatial-threaded.wasm": "5e5f082f5aa62f0e0ba7dbeb294defa56f3fd05427a43b18f103dc6bec20550e",
+      "public/wild-engine/spatial-threaded.mjs": "89aea9ba97e5f8c3b6de75ee65d5a510625f394f663491d0977329a063d05f5a",
+      "src/world/wild-engine/spatial-gate-api.inc": "59c12369f3a8d9b328ae2eb53c02a9d3c3dfcb76664287bbb5d0ccec4095244c"
+    },
+    "newExports": [
+      "nav_initial_idle_declaration_snapshot",
+      "nav_intent_initial_idle_home_request"
+    ]
+  },
+  "directed": {
+    "tests": 49,
+    "pass": 49,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "durationMs": 22986.7618,
+    "log": ".cache/native-initial-idle-clock-directed-final.log"
+  },
+  "regression": {
+    "tests": 766,
+    "pass": 766,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "durationMs": 419813.9306,
+    "log": ".cache/native-initial-idle-clock-regression-final.log",
+    "files": [
+      "tests/native-task-settlement-proposal.test.js",
+      "tests/native-task-settlement-game.test.js",
+      "tests/settlement-notification.test.js",
+      "tests/native-task-consequence-proposal.test.js",
+      "tests/native-task-consequence-game.test.js",
+      "tests/native-task-consequence-admission.test.js",
+      "tests/native-task-consequence-control.test.js",
+      "tests/native-task-consequence-graphics.test.js",
+      "tests/native-task-consequence-crops.test.js",
+      "tests/delivery-consequence-data.test.js",
+      "tests/harvest-consequence.test.js",
+      "tests/agricultural-power.test.js",
+      "tests/closest-center-delivery.test.js",
+      "tests/native-task-action-binding.test.js",
+      "tests/native-task-action-game-execution.test.js",
+      "tests/native-task-action-restoration.test.js",
+      "tests/native-task-action-proposal.test.js",
+      "tests/native-task-action-clock.test.js",
+      "tests/native-task-start-proposal.test.js",
+      "tests/native-task-start-binding.test.js",
+      "tests/native-task-start-graphics.test.js",
+      "tests/native-resource-preparation-channel.test.js",
+      "tests/native-admission-vertical.test.js",
+      "tests/spatial-native-causal-clock.test.js",
+      "tests/spatial-native-route-execution.test.js",
+      "tests/spatial-native-route-reservations.test.js",
+      "tests/spatial-native-gate-transactions.test.js",
+      "tests/spatial-native-gate-resume.test.js",
+      "tests/spatial-native-gate-crossings.test.js",
+      "tests/spatial-native-gate-waits.test.js",
+      "tests/native-gate-causal-transaction.test.js",
+      "tests/native-gate-gpu-binding.test.js",
+      "tests/remote-webgpu.test.js",
+      "tests/native-route-pick-frame.test.js",
+      "tests/native-resume-control.test.js",
+      "tests/native-resume-graphics.test.js",
+      "tests/native-resume-time-translation.test.js",
+      "tests/money-rational-add.test.js",
+      "tests/money-decimal.test.js",
+      "tests/acceptance-economic-boundaries.test.js",
+      "tests/repair-settlement-evidence.test.js",
+      "tests/native-task-settlement-clock.test.js",
+      "tests/native-task-settlement-control.test.js",
+      "tests/native-task-settlement-gpu-motion.test.js",
+      "tests/native-task-settlement-graphics.test.js",
+      "tests/native-task-settlement-remote.test.js",
+      "tests/native-task-settlement-publication.test.js",
+      "tests/spatial-native-worker-home.test.js",
+      "tests/native-home-route-proposal.test.js",
+      "tests/native-home-route-game.test.js",
+      "tests/acceptance-workforce.test.js",
+      "tests/prepared-save-load.test.js",
+      "tests/save-game.test.js",
+      "tests/crop-task-queue.test.js",
+      "tests/native-home-route-graphics.test.js",
+      "tests/native-home-route-control.test.js",
+      "tests/native-home-route-remote.test.js",
+      "tests/native-home-route-clock.test.js",
+      "tests/native-home-arrival-proposal.test.js",
+      "tests/native-home-arrival-game.test.js",
+      "tests/native-home-arrival-graphics.test.js",
+      "tests/native-home-arrival-control.test.js",
+      "tests/native-home-arrival-remote.test.js",
+      "tests/native-home-inactive-restoration.test.js",
+      "tests/native-home-restoration.test.js",
+      "tests/native-idle-home.test.js",
+      "tests/native-initial-idle-request.test.js",
+      "tests/idle.test.js",
+      "tests/native-initial-idle-game.test.js",
+      "tests/native-initial-idle-clock.test.js"
+    ],
+    "command": "node20 --test --test-concurrency=1 <selected 70 files>"
+  },
+  "developmentFailures": {
+    "firstDirected": {
+      "tests": 48,
+      "passed": 43,
+      "failed": 5,
+      "log": ".cache/native-initial-idle-clock-directed-first.log",
+      "reason": "Four newly enabled Game steps correctly rejected unmigrated gates imported by old source-only fixtures; one new shared-port Home test had no certified route to the imported village in its reduced world. Fixed fixture setup before creating the tested intent session; no gate/path guard was removed."
+    },
+    "secondDirected": {
+      "tests": 48,
+      "passed": 48,
+      "log": ".cache/native-initial-idle-clock-directed-second.log"
+    },
+    "subsequentReview": "Added the fail-closed unbound-birth guard for live causal cohorts, rebuilt both modules, then passed final49 and the full selected regression."
+  },
+  "ports": {
+    "realControlAndResourcePorts": true,
+    "gpu": "simulated queue",
+    "sameBodyHeldDuringPrepareAndDrain": true,
+    "preparedHomeRouteIssuedOnActualInitialRequest": true,
+    "fabricatedCarryOrSettlement": false
+  },
+  "productBuild": {
+    "passed": true,
+    "seconds": 43.91,
+    "log": ".cache/native-initial-idle-clock-product-build.log"
+  },
+  "preservation": {
+    "priorUnrelatedFiles": 16,
+    "byteHashesUnchanged": true
+  },
+  "gpu": {
+    "run": false,
+    "reason": "No initial graphical admission or renderer change in this increment; existing Home admission was exercised on real ports with a simulated GPU."
+  },
+  "finalSourceHashes": {
+    "src/world/native-initial-idle-request-reference.js": "dbdbd43212a544828ec87058e0429ae92406896cbc062962e7acfebcdfc8eb99",
+    "src/world/native-initial-idle-state.js": "3c36f0fd9e32724c89184949f0556ad6b89f4f87ac8d418c7c38849419ca3300",
+    "src/world/wild-engine/spatial-intent-bridge.js": "4f514a2f5da23183aff2f141984baee9b2550ca8a30496e28ee54bf2d07d10cb",
+    "src/world/wild-engine/spatial-intent-state.cpp": "f97cd29a98dba7bac111ccb495f902e387b8694c7ac6d430feb7f183e19d9eb4",
+    "src/world/wild-engine/spatial-initial-idle-resource-request.inc": "26a79b1351e8b10fe2549adc825a5b125066ab103b6eeb486b336becb75f23d0",
+    "src/world/wild-engine/spatial-home-resource-request.inc": "c97ffb2b7157c3b047993a4172bbaf4e0be96ab5a7e66972ed18f04202844ade",
+    "src/world/wild-engine/spatial-task-execution.inc": "a770e50ad4eb660d762101f06e5bf62f18f1767a63c643af2a5c7e0bd0bd1baf",
+    "tools/build-spatial-savanna-wasm.sh": "764ed4bdeae941fb70d4f3ecab3c744586315e4ac4c1d1a74be50dea9c883e6a",
+    "src/simulation/game.js": "b621d20cc963dc9d2b62e61d8ae2aaa2ba1fc9263f333e7644e53de2db7f0853",
+    "tests/helpers/native-initial-idle-request.js": "09f39287cc711c8dd6febfd3c570b7d97101bbd4e8d3cb0b9a591c1ec5b3d0e5",
+    "tests/helpers/native-initial-idle-game.js": "8ddecbbb598edb036b2b8ea5e3873e2aa361f0ac102bfd3924724ccc0babdee7",
+    "tests/native-initial-idle-game.test.js": "f12ad2c4f002400ef126b0bc94b7c011bd9f92691d605fed071e882006a23c7c",
+    "tests/native-initial-idle-request.test.js": "5bb9089c27778704af22d93bb7c5bbba53dd070691336b6bbf18eb38bd5a5642",
+    "tests/native-initial-idle-clock.test.js": "0e33d06af8197813108c84ea3d6f726cc2ce9eb68bcaf7d5378a13d182c90a99"
+  },
+  "pending": [
+    "Initial stationary resource admission and source control metadata through existing transactor/cache/consumer",
+    "Original Idle/Alert finite policy, RNG, anchors and ambient walk",
+    "Prepared physical birth in a live world and ordinary producer",
+    "Other task finals/classes/gates, live-world replacement, healthy incremental3123 recovery and A/B/C acceptance before D"
+  ]
+}

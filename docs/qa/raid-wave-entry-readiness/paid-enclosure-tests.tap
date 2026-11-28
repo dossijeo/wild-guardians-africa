@@ -1,0 +1,110 @@
+TAP version 13
+# Subtest: only all-gone previous actors permit valid1..16 next-wave preparation
+ok 1 - only all-gone previous actors permit valid1..16 next-wave preparation # SKIP test name does not match pattern
+  ---
+  duration_ms: 1.963
+  ...
+# Subtest: malformed/finished waves do not escape active raid veto
+ok 2 - malformed/finished waves do not escape active raid veto # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1314
+  ...
+# Subtest: request copies current workers/incapacitation and wave owner without former raid actors
+ok 3 - request copies current workers/incapacitation and wave owner without former raid actors # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1106
+  ...
+# Subtest: native complete16-actor prepared entry remains exterior/legal and keeps exact state/RNG through reload
+ok 4 - native complete16-actor prepared entry remains exterior/legal and keeps exact state/RNG through reload # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1619
+  ...
+# Subtest: retained paid closed enclosure prepares an exterior mixed next wave from its inside camera
+not ok 5 - retained paid closed enclosure prepares an exterior mixed next wave from its inside camera
+  ---
+  duration_ms: 1594.0647
+  location: 'file:///C:/Users/PC/.codex/worktrees/raid-wave-entry-readiness/wild-guardians-africa/tests/raid-wave-entry-readiness.test.js:50:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(exteriorRaidWitness(a,r,box,nav))
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/raid-wave-entry-readiness/wild-guardians-africa/tests/raid-wave-entry-readiness.test.js:58:163)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: wave-index: stale wave reply cannot install or be taken
+ok 6 - wave-index: stale wave reply cannot install or be taken # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1542
+  ...
+# Subtest: raid-id: stale wave reply cannot install or be taken
+ok 7 - raid-id: stale wave reply cannot install or be taken # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0749
+  ...
+# Subtest: camera: stale wave reply cannot install or be taken
+ok 8 - camera: stale wave reply cannot install or be taken # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1335
+  ...
+# Subtest: topology: stale wave reply cannot install or be taken
+ok 9 - topology: stale wave reply cannot install or be taken # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0746
+  ...
+# Subtest: bounds: stale wave reply cannot install or be taken
+ok 10 - bounds: stale wave reply cannot install or be taken # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1476
+  ...
+# Subtest: rng: stale wave reply cannot install or be taken
+ok 11 - rng: stale wave reply cannot install or be taken # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0901
+  ...
+# Subtest: worker: stale wave reply cannot install or be taken
+ok 12 - worker: stale wave reply cannot install or be taken # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0602
+  ...
+# Subtest: finished: stale wave reply cannot install or be taken
+ok 13 - finished: stale wave reply cannot install or be taken # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0563
+  ...
+# Subtest: active-actor: stale wave reply cannot install or be taken
+ok 14 - active-actor: stale wave reply cannot install or be taken # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1124
+  ...
+# Subtest: accepted wave cannot leak through changed identity and disposal rejects delayed reply
+ok 15 - accepted wave cannot leak through changed identity and disposal rejects delayed reply # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0573
+  ...
+# Subtest: result/postgame remove readiness; ordinary no-raid key stays byte-identical
+ok 16 - result/postgame remove readiness; ordinary no-raid key stays byte-identical # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.08
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 15
+# todo 0
+# duration_ms 1887.279

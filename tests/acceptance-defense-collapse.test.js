@@ -36,7 +36,7 @@ function completeCollapse(s,nav,target,seconds){
  const before=serialize(s);Game.pause(s,'qa');Game.tick(s,100,nav);Game.resume(s,'qa');assert.equal(serialize(s),before);
  s=deserialize(before);nav.setState(s);target=s.structures.find(e=>e.id===target.id);
  Game.tick(s,seconds-.01,nav);assert.equal(target.status,'collapsing');assert.ok(target.collapseRemaining>0);
- Game.tick(s,.01,nav);assert.equal(target.status,'ruined');assert.equal(target.hp,0);assert.equal(s.events.filter(e=>e.type==='StructureRuined'&&e.targetId===target.id).length,1);
+ Game.tick(s,.01,nav);assert.equal(target.status,'ruined');assert.equal(target.hp,0);const ruined=s.events.filter(e=>e.type==='StructureRuined'&&e.targetId===target.id);assert.equal(ruined.length,1);assert.equal(ruined[0].structureKind,target.kind);assert.equal(ruined[0].simulationTime,s.elapsed);
  Game.tick(s,.1,nav);assert.equal(s.events.filter(e=>e.type==='StructureRuined'&&e.targetId===target.id).length,1);
  const loaded=deserialize(serialize(s));assert.equal(loaded.structures.find(e=>e.id===target.id).status,'ruined');return loaded;
 }

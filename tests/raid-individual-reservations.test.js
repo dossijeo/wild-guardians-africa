@@ -9,7 +9,14 @@ import {reconcileTargetReservations,reservedApproachClear,targetReservationKey} 
 import {activeCrops} from '../src/simulation/active-crops.js';
 import {RAID_WAIT_SECONDS} from '../src/simulation/raid-contention.js';
 function tick(s,nav,dt=.1){s.elapsed+=dt;updateRaid(s,dt,nav);}
-function start(layout='mono',count=12){const {s,nav}=fixture(layout);assert(spawnRaid(s,{group:Array(count).fill('warthog')},nav));updateRaid(s,0,nav);return {s,nav,raid:s.raid};}
+function start(layout='mono',count=12){
+ const {s,nav}=fixture(layout);
+ const plan=s.nightPlan={at:s.time,group:Array(count).fill('warthog'),done:false};
+ assert(spawnRaid(s,plan,nav));
+ plan.done=true;
+ updateRaid(s,0,nav);
+ return {s,nav,raid:s.raid};
+}
 function finish(s,nav){for(let i=0;i<4000&&s.raid;i++)tick(s,nav);assert.equal(s.raid,null);}
 function independent(s){
  for(const a of s.raid.animals.filter(a=>a.targetId)){

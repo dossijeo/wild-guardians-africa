@@ -1,0 +1,7 @@
+# Material candidato de impostores WebGPU
+
+`createWebGpuFarImpostor` construye un lote instanciado desde metadatos y atlas 8×8 día/noche de autoría. El grafo calcula orientación a cámara, escala horizontal no uniforme, vistas y giros interpolados, mezcla los colores preiluminados en espacio lineal y aplica el patrón ordenado de cobertura. Las texturas siguen siendo propiedad del llamador. La malla comienza oculta y no crea sombras.
+
+`configureWebGpuFarModelCoverage` aplica el patrón complementario a un **material 3D candidato**, conservando su nodo de opacidad anterior. Ambos lotes necesitan los mismos atributos por instancia, cámara, intervalos y revisión de mundo. El propietario debe admitir los dos materiales y publicar la sustitución conjuntamente; esta función nunca debe modificar el material actualmente visible. El lote de impostores todavía no tiene selección por instancia ni conexión regional, y la composición de sombras tampoco está cerrada. Por ello no se conecta al juego ni se retiran los árboles 3D existentes.
+
+Las pruebas utilizan los metadatos de producción de los seis biomas y generan WGSL para ambos materiales sin dispositivo. No verifican píxeles, orientación con transformaciones arbitrarias de padres, imágenes decodificadas, cobertura complementaria en GPU, atlas admitidos, recuperación ni rendimiento. Falta conectar transporte regional y revisión, asignar atributos alineados por identidad entre los lotes, coordinar picking/supresiones y validar publicación atómica, calidad y consumo en una partida WebGPU real.

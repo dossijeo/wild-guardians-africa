@@ -1,0 +1,395 @@
+{
+  "baseline": "9ff67f699be3da5499d2eab891a63f0c5b2186e6",
+  "scenarioInput": {
+    "path": ".cache/native-flee-physical-input.json",
+    "sha256": "1687e15b4ae7b23a5eb711dbb5a97c3751a98b0ce6eb6f6f3eb59753b86edeb3"
+  },
+  "source": {
+    "path": ".cache/flee-js/manifest.json",
+    "sha256": "df0a2cef8f23d689d51fc3999aaf3ca75b5f76dfeb16246e8fa1f82dc0dbe827"
+  },
+  "graphics": {
+    "path": ".cache/flee-graphics/manifest.json",
+    "sha256": "124e83c7e7ce2f127d9c83af7afe4d57b1ee7b07ff2354b2d2953697c34e02aa"
+  },
+  "clock": {
+    "path": ".cache/flee-stop-clock/manifest.json",
+    "sha256": "e02245b1a11e0acfb5888cc9fe03bf5aa2bea2ca88604cc8dd34219c605f16a6"
+  },
+  "standalone": {
+    "path": "src/world/wild-engine/spatial-savanna.wasm",
+    "sha256": "85c5ebd89b5529d7ec181b6efba56654bf3960765471c7395b8c82b6cf42dc0c"
+  },
+  "pthread": {
+    "path": "public/wild-engine/spatial-threaded.wasm",
+    "sha256": "d900d3f40f1c6f69ed0bae35ba9156596cd5eaea771036fbdc030443aef995d0"
+  },
+  "pthreadGlue": {
+    "path": "public/wild-engine/spatial-threaded.mjs",
+    "sha256": "30b0d5814f47feab9facce475d10893533ebf50f5eddbf43b1a4682293e2c550"
+  },
+  "pthreadGlueCommittedLF": "b2594f4d36a7efa23b3c36880d9f2079672caee3cb2906eb596dae498a51e475",
+  "standaloneABI": {
+    "path": ".cache/flee-owner-pthread-root/standalone-abi.json",
+    "sha256": "7e49365208f8b15471b8b45f524bcbdfdbbc5a0c2dcc275bea509eb1268fbe0e"
+  },
+  "pthreadABI": {
+    "path": ".cache/flee-owner-pthread-root/pthread-abi.json",
+    "sha256": "51aa19ff7f8cd29a4e7ccbd03737e735f92925d63d797e5e860eb16e896ed441"
+  },
+  "rejectedAttempts": [
+    {
+      "receipt": {
+        "path": ".cache/native-farm-flee-acquired-handoff-nvidia-20261125.failure.json",
+        "sha256": "71531bf1ba94855802dc2d0cb77ec11265908534366cbf82fbf8452b3befe73b"
+      },
+      "trace": {
+        "path": ".cache/native-farm-flee-acquired-handoff-nvidia-20261125.trace.json.gz",
+        "sha256": "ce09bfce2f6a0061619f70f50478cd9522e00a87b02e01955eac66789ca95487"
+      }
+    },
+    {
+      "receipt": {
+        "path": ".cache/native-farm-flee-acquired-roster-nvidia-20261125.failure.json",
+        "sha256": "1cb289e98634196efcef448f0d9b549df14aab630371fa02b8ac8e473a176e06"
+      },
+      "trace": {
+        "path": ".cache/native-farm-flee-acquired-roster-nvidia-20261125.trace.json.gz",
+        "sha256": "549d1e6a451467865f345fef6ad9540017bd3c72b2080f91aa15023428e05f98"
+      },
+      "offlineDrawCoverage": {
+        "path": ".cache/native-farm-flee-acquired-roster-nvidia-20261125.offline-draw-coverage.json",
+        "sha256": "070875611d27bda54f5522b9aeee088d47b169f3dc3012cfaa4cc52e5f601b61"
+      }
+    }
+  ],
+  "pending": {
+    "receipt": {
+      "path": ".cache/native-farm-flee-pending-handoff-nvidia-20261125.json",
+      "sha256": "05d9b1ea42676d1811bb13157e32ecb79a6474b5b6be4f05c3fa2a137b146218"
+    },
+    "trace": {
+      "path": ".cache/native-farm-flee-pending-handoff-nvidia-20261125.trace.json.gz",
+      "sha256": "5a1bbdb58404ffe5646735f5168621ebadb2820bb26854735f12720e6094bfb6"
+    },
+    "traceLoss": false,
+    "target": "stationary-refuge-request",
+    "snapshotSHA256": "de54f80484beaa6d625a654db3329cc726ac7e0602dd357081707a593d5e88c8",
+    "scenario": {
+      "pendingFarm": true,
+      "expectAnimal": false,
+      "qualification": {
+        "qualifyFarmFlee": true
+      },
+      "handoffOnly": true
+    },
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 102.80000000074506
+      }
+    },
+    "request": {
+      "kind": "native-home-request-reference",
+      "version": 2,
+      "raidSpawnSequence": 29208,
+      "authorityEpoch": "db9b3ede-1e1d-4705-94bf-b7357c67ef3c/1",
+      "nativeSession": 1,
+      "actorId": 900011,
+      "bodyId": 1,
+      "bodyFlags": 1,
+      "requestSequence": 3,
+      "requestedAt": 10.799999999999983,
+      "profile": 1,
+      "home": {
+        "villageId": 1,
+        "x": -5.800000000000001,
+        "z": 0.2
+      },
+      "pose": {
+        "x": -17.8,
+        "z": 0.2,
+        "yaw": 0.37,
+        "radius": 0.28,
+        "runPhase": 23.25,
+        "walkPhase": 7.125,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      }
+    },
+    "farmPhase": 1,
+    "stop24": null,
+    "visibleWorker": {
+      "root": 743,
+      "originalMeshes": 32
+    },
+    "resources": {
+      "comparable": 1408,
+      "retained": 1408,
+      "stableVersions": 1408
+    },
+    "cadence": {
+      "window": "controlled RaidSpawned cut",
+      "displayHz": 30,
+      "intervals": 265,
+      "maximum": {
+        "at": 1795606280629.4,
+        "sequence": 6,
+        "trigger": "raf",
+        "nativeWorldBoundary": null,
+        "intervalMs": 35.5,
+        "drawMs": 0.10009765625,
+        "replay": true,
+        "clockElapsed": 10,
+        "safeUntil": 10,
+        "cameraVersion": null
+      },
+      "targetPassed": false
+    },
+    "drained": true
+  },
+  "acquired": {
+    "receipt": {
+      "path": ".cache/native-farm-flee-acquired-clock-nvidia-20261125.json",
+      "sha256": "f3ffc82afa633140eebd41a65c77100bf4d38afedc1c60d6ced2150c0febf9c4"
+    },
+    "trace": {
+      "path": ".cache/native-farm-flee-acquired-clock-nvidia-20261125.trace.json.gz",
+      "sha256": "e60dec31a4d34b2144d0aef3d207bf61ea98e1f7c4ae237b954b501d04c4c8db"
+    },
+    "traceLoss": false,
+    "target": "stationary-refuge-request",
+    "snapshotSHA256": "de54f80484beaa6d625a654db3329cc726ac7e0602dd357081707a593d5e88c8",
+    "scenario": {
+      "pendingFarm": false,
+      "expectAnimal": false,
+      "qualification": {
+        "qualifyFarmFlee": true
+      },
+      "handoffOnly": true
+    },
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 123.39999999850988
+      }
+    },
+    "request": {
+      "kind": "native-home-request-reference",
+      "version": 2,
+      "raidSpawnSequence": 29208,
+      "authorityEpoch": "30563d5f-0b1b-45cb-95ed-4714ad49a8d3/1",
+      "nativeSession": 1,
+      "actorId": 900011,
+      "bodyId": 1,
+      "bodyFlags": 1,
+      "requestSequence": 5,
+      "requestedAt": 10.799999999999983,
+      "profile": 1,
+      "home": {
+        "villageId": 1,
+        "x": -5.800000000000001,
+        "z": 0.2
+      },
+      "pose": {
+        "x": -17.418842712474635,
+        "z": 0,
+        "yaw": 1.5707963267948966,
+        "radius": 0.28,
+        "runPhase": 23.25,
+        "walkPhase": 8.324999999999974,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      }
+    },
+    "farmPhase": 2,
+    "stop24": {
+      "prepared": 3,
+      "acquired": 4,
+      "firstDraw": {
+        "at": 1795607113631.3,
+        "sequence": 32,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "30563d5f-0b1b-45cb-95ed-4714ad49a8d3/1",
+          "nativeSession": 1,
+          "ticket": 4,
+          "effectiveTime": 10.799999999999983
+        },
+        "intervalMs": 33.300048828125,
+        "drawMs": 4.900146484375,
+        "replay": false,
+        "clockElapsed": 10.799999999999983,
+        "safeUntil": 10.799999999999983,
+        "cameraVersion": null
+      }
+    },
+    "visibleWorker": {
+      "root": 743,
+      "originalMeshes": 32
+    },
+    "resources": {
+      "comparable": 1408,
+      "retained": 1408,
+      "stableVersions": 1408
+    },
+    "cadence": {
+      "window": "controlled RaidSpawned cut",
+      "displayHz": 30,
+      "intervals": 274,
+      "maximum": {
+        "at": 1795607113001.3,
+        "sequence": 29,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "30563d5f-0b1b-45cb-95ed-4714ad49a8d3/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 10
+        },
+        "intervalMs": 36.699951171875,
+        "drawMs": 1.60009765625,
+        "replay": true,
+        "clockElapsed": 10.799999999999983,
+        "safeUntil": 10.799999999999983,
+        "cameraVersion": null
+      },
+      "targetPassed": false
+    },
+    "drained": true
+  },
+  "hardwareSources": [
+    {
+      "pending": {
+        "path": ".cache/flee-js/hardware-pending-harness/native-flee-hosted-physical.mjs",
+        "sha256": "5b5fcc8d2bd9eeed1d911d55b832da12401e8b687b4d3fbc85813526acc8930f"
+      },
+      "acquired": {
+        "path": ".cache/native-flee-hosted-physical.mjs",
+        "sha256": "e4ce451f5ad2d28cf2c11aeab7f5bea7d4264eaf1a89be83302ae6697eec4894"
+      }
+    },
+    {
+      "pending": {
+        "path": ".cache/flee-js/hardware-pending-harness/native-flee-hosted-browser.js",
+        "sha256": "75bdc80d83f426474cd8d252ae4a3e5218187c6931689b7c9b4acc1271c69fa0"
+      },
+      "acquired": {
+        "path": ".cache/native-flee-hosted-browser.js",
+        "sha256": "14e72b0458be930a585c37a550bb5c97080ddef1aa6c4587bf5fbd01d761e3d8"
+      }
+    },
+    {
+      "pending": {
+        "path": ".cache/flee-js/hardware-pending-harness/native-flee-hosted-worker.js",
+        "sha256": "2f53e3ef963c3da22e2f5a385ce6a1aa391e4b0b1c95a94aa9425c14494f6869"
+      },
+      "acquired": {
+        "path": ".cache/native-flee-hosted-worker.js",
+        "sha256": "2f53e3ef963c3da22e2f5a385ce6a1aa391e4b0b1c95a94aa9425c14494f6869"
+      }
+    }
+  ],
+  "cadenceAttribution": {
+    "refreshHz": 30,
+    "extractor": {
+      "path": ".cache/cut-flee-trace.py",
+      "sha256": "c683a87ec102517ee26a5636993f59b90e3a1f908502df72d1588fa8e839d435"
+    },
+    "active": {
+      "cut": {
+        "path": ".cache/native-farm-flee-acquired-clock-nvidia-20261125.cuts.json",
+        "sha256": "4e8bf1b4f30fa71d12a9280c9e6f393a5d5aa26bc2bdce7d169f710cab8b7303"
+      },
+      "sequence": 29,
+      "intervalMs": 36.699951171875,
+      "replay": true,
+      "opportunities": 1,
+      "vizBeginFrameMsFromPreviousDraw": 33.144,
+      "drawBeginFrameMsFromPreviousDraw": 36.608,
+      "drawPresentMsFromPreviousDraw": 36.649,
+      "drawWorkerMicrotask": {
+        "startMsFromPreviousDraw": 33.14,
+        "wallMs": 3.439,
+        "cpuMs": 3.43
+      }
+    },
+    "pending": {
+      "cut": {
+        "path": ".cache/native-farm-flee-pending-handoff-nvidia-20261125.cuts.json",
+        "sha256": "5cd707c84cadd71f784526f9baa679d3bdd97df13b2614a5cb397f5c8b2283c3"
+      },
+      "sequence": 6,
+      "intervalMs": 35.5,
+      "replay": true,
+      "opportunities": 1,
+      "vizBeginFrameMsFromPreviousDraw": 33.19,
+      "drawBeginFrameMsFromPreviousDraw": 35.544,
+      "drawPresentMsFromPreviousDraw": 35.626,
+      "drawWorkerMicrotask": {
+        "startMsFromPreviousDraw": 32.46,
+        "wallMs": 3.054,
+        "cpuMs": 2.901,
+        "writePixels": {
+          "startMsFromPreviousDraw": 33.011,
+          "wallMs": 2.362,
+          "cpuMs": 2.288
+        }
+      }
+    }
+  },
+  "nativeRegression": {
+    "passed": 364,
+    "failed": 0,
+    "skipped": 0,
+    "log": {
+      "path": ".cache/flee-js/root-native-regression.tap",
+      "sha256": "641e2119c1bf2549a1f97998cb66e141cadacdeee4bb37be344b4ed6ea33a3c3"
+    }
+  },
+  "graphicsRegression": {
+    "passed": 24,
+    "failed": 0,
+    "skipped": 0,
+    "log": {
+      "path": ".cache/flee-graphics/root-integrated-graphics.tap",
+      "sha256": "f9684cd5aed1e32b0a320c139c4b3053322909a5d5360b99b1175be2715e1f04"
+    }
+  },
+  "clockRegression": {
+    "passed": 109,
+    "failed": 0,
+    "skipped": 0,
+    "log": {
+      "path": ".cache/flee-js/root-clock-regression.tap",
+      "sha256": "14085abe386081a663a41646c54a67ea7e45ed3b96b0a01ab2fa1a1034baf14d"
+    }
+  },
+  "build": {
+    "seconds": 52.04,
+    "log": {
+      "path": ".cache/flee-js/root-build.log",
+      "sha256": "84032080a24973db8e58fc2822eb7928105c4438967274c18cacb624a2dd5793"
+    }
+  }
+}

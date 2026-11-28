@@ -1,0 +1,11 @@
+# Subida de texturas privadas de efectos agrícolas
+
+El atlas y las paletas nuevas de pisadas y combate esperan un recibo de su propia textura antes de publicarla. El Host comprueba que no la usan los paquetes activos, pendientes o retenidos. Si hay escrituras ajenas esperando el próximo fotograma, envía solo los píxeles independientes y conserva las demás operaciones en orden. La confirmación global y el fence mantienen sus comprobaciones.
+
+El cambio usa el orden de la cola que ya aplica Three al actualizar una textura y su generación. Dawn valida el destino y encola la escritura de cada textura. Wild Guardians conserva su cola y sus comprobaciones de generación al trasladar ese orden a través del puerto. [Three r180, actualización y versión](https://github.com/mrdoob/three.js/blob/r180/src/renderers/common/Textures.js#L281-L293) · [Dawn, QueueBase::APIWriteTexture](https://github.com/google/dawn/blob/main/src/dawn/native/Queue.cpp#L318-L344).
+
+El control reproduce el rechazo anterior. Con el recibo privado llegan los píxeles y el storage publicado conserva su valor hasta el siguiente fotograma. Ambos comprobantes globales siguen rechazando ese estado. También se prueban una textura sin escribir, el uso compartido, un frame abierto, un proxy ajeno y una operación GPU que impide la reordenación. La regresión integrada pasa 367 pruebas y Vite compila en 57,95 s.
+
+En NVIDIA Turing, el recorrido de Sabana registra 154 confirmaciones privadas. En el primer golpe, la textura de combate `Texture:10574` (`rgba32float`, 1.024 × 62) pasa de 60 a 59 operaciones pendientes al enviar sus píxeles, con el paquete 411 activo. El aviso agrícola anterior está ausente hasta el corte. La preparación del segundo cultivo se aborta por un fence de retirada que rechaza escrituras pendientes. La captura queda rechazada para el recorrido completo. [Recibo del retorno civil](native-sabana-civil-return-20261125.md) · [Evidencia y hashes](performance/native-agriculture-vfx-private-upload-20261125.json).
+
+El Preparer dedica 263,20 ms a `renderer.render` en la primera transición de golpe, dentro de una captura de 264,80 ms. La repetición tras corregir el fence completa ambos golpes y el regreso civil sin avisos. C4 conserva el objetivo de 16,667 ms. [Repetición estricta y medición por etapa](native-retirement-presentation-fence-20261125.md).

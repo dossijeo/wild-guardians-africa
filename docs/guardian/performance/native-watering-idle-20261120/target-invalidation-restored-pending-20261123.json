@@ -1,0 +1,290 @@
+{
+  "parent": "a8afeb71e0907f463a8696de9b34a58e3a173e1e",
+  "environment": {
+    "authority": "createSimulationAuthority",
+    "wasm": "spatial-savanna.wasm",
+    "drawHost": "deterministic",
+    "transport": "production resource and control ports"
+  },
+  "captureSha256": "14c1a5abdec383107808f745223d3fe9fe7f1a6ae3f4efea86c600438550ae6c",
+  "cases": [
+    {
+      "kind": "initial",
+      "preview": true,
+      "before": {
+        "elapsed": 19.449479101957092,
+        "admission": "pending-action-resources",
+        "taskId": "task-920001",
+        "action": {
+          "version": 1,
+          "kind": "initial",
+          "duration": 4.8,
+          "elapsed": 0.6000000000000085
+        },
+        "awakenings": {
+          "version": 1,
+          "progress": 100,
+          "lastEvaluatedDay": 14,
+          "total": 0,
+          "destroyed": 0,
+          "streak": 0,
+          "history": [],
+          "current": {
+            "day": 15,
+            "opportunity": 0,
+            "productive": 0,
+            "delivered": 0,
+            "seedBasis": 0,
+            "wages": 0,
+            "seeds": 0,
+            "repairs": 0,
+            "losses": 0,
+            "cropValueLost": 0,
+            "exposed": 0,
+            "threat": 0,
+            "eventsCompleted": 0,
+            "deliveryIds": [],
+            "opportunityIds": [],
+            "lossIds": [],
+            "eventIds": [],
+            "raidIds": []
+          },
+          "enabled": true
+        },
+        "blessing": null,
+        "waterEvents": 0
+      },
+      "whileHeld": {
+        "value": false,
+        "rejection": "El Despertar necesita preparar el relevo del trabajador asignado.",
+        "after": {
+          "elapsed": 19.449479101957092,
+          "admission": "pending-action-resources",
+          "taskId": "task-920001",
+          "action": {
+            "version": 1,
+            "kind": "initial",
+            "duration": 4.8,
+            "elapsed": 0.6000000000000085
+          },
+          "awakenings": {
+            "version": 1,
+            "progress": 100,
+            "lastEvaluatedDay": 14,
+            "total": 0,
+            "destroyed": 0,
+            "streak": 0,
+            "history": [],
+            "current": {
+              "day": 15,
+              "opportunity": 0,
+              "productive": 0,
+              "delivered": 0,
+              "seedBasis": 0,
+              "wages": 0,
+              "seeds": 0,
+              "repairs": 0,
+              "losses": 0,
+              "cropValueLost": 0,
+              "exposed": 0,
+              "threat": 0,
+              "eventsCompleted": 0,
+              "deliveryIds": [],
+              "opportunityIds": [],
+              "lossIds": [],
+              "eventIds": [],
+              "raidIds": []
+            },
+            "enabled": true
+          },
+          "blessing": null,
+          "waterEvents": 0
+        }
+      },
+      "afterReady": {
+        "elapsed": 19.450479101957093,
+        "admission": "native-action",
+        "taskId": "task-920001",
+        "action": {
+          "version": 1,
+          "kind": "initial",
+          "duration": 4.8,
+          "elapsed": 0.6010000000000097
+        },
+        "awakenings": {
+          "version": 1,
+          "progress": 100,
+          "lastEvaluatedDay": 14,
+          "total": 0,
+          "destroyed": 0,
+          "streak": 0,
+          "history": [],
+          "current": {
+            "day": 15,
+            "opportunity": 0.000007142857142857143,
+            "productive": 0,
+            "delivered": 0,
+            "seedBasis": 0,
+            "wages": 0,
+            "seeds": 0,
+            "repairs": 0,
+            "losses": 0,
+            "cropValueLost": 0,
+            "exposed": 0,
+            "threat": 0,
+            "eventsCompleted": 0,
+            "deliveryIds": [],
+            "opportunityIds": [],
+            "lossIds": [],
+            "eventIds": [],
+            "raidIds": []
+          },
+          "enabled": true
+        },
+        "blessing": null,
+        "waterEvents": 0
+      },
+      "body": 1,
+      "authorityFaults": []
+    },
+    {
+      "kind": "water",
+      "preview": true,
+      "before": {
+        "elapsed": 19.449479101957092,
+        "admission": "pending-action-resources",
+        "taskId": "task-920001",
+        "action": {
+          "version": 1,
+          "kind": "water",
+          "duration": 2.2666666666666666,
+          "elapsed": 0.6000000000000085
+        },
+        "awakenings": {
+          "version": 1,
+          "progress": 100,
+          "lastEvaluatedDay": 14,
+          "total": 0,
+          "destroyed": 0,
+          "streak": 0,
+          "history": [],
+          "current": {
+            "day": 15,
+            "opportunity": 0,
+            "productive": 0,
+            "delivered": 0,
+            "seedBasis": 0,
+            "wages": 0,
+            "seeds": 0,
+            "repairs": 0,
+            "losses": 0,
+            "cropValueLost": 0,
+            "exposed": 0,
+            "threat": 0,
+            "eventsCompleted": 0,
+            "deliveryIds": [],
+            "opportunityIds": [],
+            "lossIds": [],
+            "eventIds": [],
+            "raidIds": []
+          },
+          "enabled": true
+        },
+        "blessing": null,
+        "waterEvents": 0
+      },
+      "whileHeld": {
+        "value": false,
+        "rejection": "El Despertar necesita preparar el relevo del trabajador asignado.",
+        "after": {
+          "elapsed": 19.449479101957092,
+          "admission": "pending-action-resources",
+          "taskId": "task-920001",
+          "action": {
+            "version": 1,
+            "kind": "water",
+            "duration": 2.2666666666666666,
+            "elapsed": 0.6000000000000085
+          },
+          "awakenings": {
+            "version": 1,
+            "progress": 100,
+            "lastEvaluatedDay": 14,
+            "total": 0,
+            "destroyed": 0,
+            "streak": 0,
+            "history": [],
+            "current": {
+              "day": 15,
+              "opportunity": 0,
+              "productive": 0,
+              "delivered": 0,
+              "seedBasis": 0,
+              "wages": 0,
+              "seeds": 0,
+              "repairs": 0,
+              "losses": 0,
+              "cropValueLost": 0,
+              "exposed": 0,
+              "threat": 0,
+              "eventsCompleted": 0,
+              "deliveryIds": [],
+              "opportunityIds": [],
+              "lossIds": [],
+              "eventIds": [],
+              "raidIds": []
+            },
+            "enabled": true
+          },
+          "blessing": null,
+          "waterEvents": 0
+        }
+      },
+      "afterReady": {
+        "elapsed": 19.450479101957093,
+        "admission": "native-action",
+        "taskId": "task-920001",
+        "action": {
+          "version": 1,
+          "kind": "water",
+          "duration": 2.2666666666666666,
+          "elapsed": 0.6010000000000097
+        },
+        "awakenings": {
+          "version": 1,
+          "progress": 100,
+          "lastEvaluatedDay": 14,
+          "total": 0,
+          "destroyed": 0,
+          "streak": 0,
+          "history": [],
+          "current": {
+            "day": 15,
+            "opportunity": 0.000007142857142857143,
+            "productive": 0.000007142857142857143,
+            "delivered": 0,
+            "seedBasis": 0,
+            "wages": 0,
+            "seeds": 0,
+            "repairs": 0,
+            "losses": 0,
+            "cropValueLost": 0,
+            "exposed": 0,
+            "threat": 0,
+            "eventsCompleted": 0,
+            "deliveryIds": [],
+            "opportunityIds": [],
+            "lossIds": [],
+            "eventIds": [],
+            "raidIds": []
+          },
+          "enabled": true
+        },
+        "blessing": null,
+        "waterEvents": 0
+      },
+      "body": 1,
+      "authorityFaults": []
+    }
+  ]
+}

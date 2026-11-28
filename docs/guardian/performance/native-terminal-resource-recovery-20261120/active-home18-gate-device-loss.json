@@ -1,0 +1,656 @@
+{
+  "base": "be86d334dc08af4fc90295e58ca542a466974015",
+  "scope": "Continue, un Home18 civil y un portón de zarzas original. Pérdida real provocada en un submit con ambos relojes.",
+  "recipe": ".cache/native-active-home-gate-device-loss.mjs",
+  "receiptSHA256": "f37a073a203b44c7f08ac983c6daa65d1de7a1ce0f10f5c39b72c0bec3f06980",
+  "drawAdapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 83.05499999970198
+    }
+  },
+  "displayHz": 30,
+  "seed": {
+    "slotId": "qa-active-lease-device-loss",
+    "actor": "worker-900011",
+    "elapsed": 10,
+    "quality": "muy_baja"
+  },
+  "hold": {
+    "first": {
+      "holdId": 34,
+      "fenceId": 1,
+      "effectiveTime": 11.749999999999963,
+      "draw": {
+        "holdId": 34,
+        "consumerToken": "dac69240-51fa-4edf-819a-c579f5e18eeb",
+        "frameSequence": 1,
+        "assignmentSequence": 3,
+        "kind": 18,
+        "nativeHome": {
+          "kind": "native-home-route-reference",
+          "version": 1,
+          "actorId": 900011,
+          "bodyId": 1,
+          "sourceRequest": {
+            "kind": "native-home-request-reference",
+            "version": 1,
+            "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+            "nativeSession": 1,
+            "actorId": 900011,
+            "bodyId": 1,
+            "bodyFlags": 1,
+            "requestSequence": 2,
+            "requestedAt": 10,
+            "profile": 1,
+            "home": {
+              "villageId": 1,
+              "x": -14,
+              "z": 11.8
+            },
+            "pose": {
+              "x": -14,
+              "z": 3.2,
+              "yaw": 0.37,
+              "radius": 0.28,
+              "runPhase": 23.25,
+              "walkPhase": 7.125,
+              "carryPhase": 9.5,
+              "runRemaining": 40
+            }
+          },
+          "expectedRouteHandle": {
+            "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+            "session": 1,
+            "slot": 0,
+            "generation": 2
+          },
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10
+          },
+          "sourceControlSequence": 2,
+          "endTime": 18.56384598438025
+        },
+        "elapsed": 11.749999999999963,
+        "relativeTime": 1.7499998807907104,
+        "nativeGate": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10
+          }
+        },
+        "gateElapsed": 11.74999988079071
+      },
+      "clock": {
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+        "nativeSession": 1,
+        "clockSequence": 107,
+        "intentSequence": 3,
+        "committedThrough": 11.749999999999963,
+        "rate": 1,
+        "paused": false,
+        "reanchor": false
+      }
+    },
+    "last": {
+      "holdId": 34,
+      "fenceId": 2,
+      "effectiveTime": 11.749999999999963,
+      "draw": {
+        "holdId": 34,
+        "consumerToken": "dac69240-51fa-4edf-819a-c579f5e18eeb",
+        "frameSequence": 1,
+        "assignmentSequence": 3,
+        "kind": 18,
+        "nativeHome": {
+          "kind": "native-home-route-reference",
+          "version": 1,
+          "actorId": 900011,
+          "bodyId": 1,
+          "sourceRequest": {
+            "kind": "native-home-request-reference",
+            "version": 1,
+            "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+            "nativeSession": 1,
+            "actorId": 900011,
+            "bodyId": 1,
+            "bodyFlags": 1,
+            "requestSequence": 2,
+            "requestedAt": 10,
+            "profile": 1,
+            "home": {
+              "villageId": 1,
+              "x": -14,
+              "z": 11.8
+            },
+            "pose": {
+              "x": -14,
+              "z": 3.2,
+              "yaw": 0.37,
+              "radius": 0.28,
+              "runPhase": 23.25,
+              "walkPhase": 7.125,
+              "carryPhase": 9.5,
+              "runRemaining": 40
+            }
+          },
+          "expectedRouteHandle": {
+            "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+            "session": 1,
+            "slot": 0,
+            "generation": 2
+          },
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10
+          },
+          "sourceControlSequence": 2,
+          "endTime": 18.56384598438025
+        },
+        "elapsed": 11.749999999999963,
+        "relativeTime": 1.7499998807907104,
+        "nativeGate": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10
+          }
+        },
+        "gateElapsed": 11.74999988079071
+      },
+      "clock": {
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+        "nativeSession": 1,
+        "clockSequence": 107,
+        "intentSequence": 3,
+        "committedThrough": 11.749999999999963,
+        "rate": 1,
+        "paused": false,
+        "reanchor": false
+      }
+    },
+    "between": {
+      "sequence": 2,
+      "clockElapsed": 11.749999999999963,
+      "presentationElapsed": 11.749999046325684,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+        "nativeSession": 1,
+        "ticket": 2,
+        "effectiveTime": 10
+      },
+      "bindings": [
+        {
+          "nativeHome": {
+            "kind": "native-home-route-reference",
+            "version": 1,
+            "actorId": 900011,
+            "bodyId": 1,
+            "sourceRequest": {
+              "kind": "native-home-request-reference",
+              "version": 1,
+              "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+              "nativeSession": 1,
+              "actorId": 900011,
+              "bodyId": 1,
+              "bodyFlags": 1,
+              "requestSequence": 2,
+              "requestedAt": 10,
+              "profile": 1,
+              "home": {
+                "villageId": 1,
+                "x": -14,
+                "z": 11.8
+              },
+              "pose": {
+                "x": -14,
+                "z": 3.2,
+                "yaw": 0.37,
+                "radius": 0.28,
+                "runPhase": 23.25,
+                "walkPhase": 7.125,
+                "carryPhase": 9.5,
+                "runRemaining": 40
+              }
+            },
+            "expectedRouteHandle": {
+              "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 2
+            },
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+              "nativeSession": 1,
+              "ticket": 2,
+              "effectiveTime": 10
+            },
+            "sourceControlSequence": 2,
+            "endTime": 18.56384598438025
+          },
+          "relativeTime": 1.7499998807907104,
+          "semantic": "relative",
+          "epoch": 10,
+          "executionEpoch": 10,
+          "elapsed": 11.74999988079071
+        },
+        {
+          "nativeGate": {
+            "gateId": 1000000,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+              "nativeSession": 1,
+              "ticket": 2,
+              "effectiveTime": 10
+            }
+          },
+          "semantic": "relative",
+          "epoch": 10,
+          "elapsed": 11.74999988079071
+        }
+      ]
+    },
+    "gate": {
+      "cut": {
+        "stage": "physical gate device cut",
+        "draw": 39,
+        "gate": {
+          "nativeGate": {
+            "gateId": 1000000,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+              "nativeSession": 1,
+              "ticket": 1,
+              "effectiveTime": 10
+            }
+          },
+          "semantic": "relative",
+          "epoch": 10,
+          "elapsed": 11.74999988079071
+        },
+        "actor": {
+          "nativeHome": {
+            "kind": "native-home-route-reference",
+            "version": 1,
+            "actorId": 900011,
+            "bodyId": 1,
+            "sourceRequest": {
+              "kind": "native-home-request-reference",
+              "version": 1,
+              "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+              "nativeSession": 1,
+              "actorId": 900011,
+              "bodyId": 1,
+              "bodyFlags": 1,
+              "requestSequence": 2,
+              "requestedAt": 10,
+              "profile": 1,
+              "home": {
+                "villageId": 1,
+                "x": -14,
+                "z": 11.8
+              },
+              "pose": {
+                "x": -14,
+                "z": 3.2,
+                "yaw": 0.37,
+                "radius": 0.28,
+                "runPhase": 23.25,
+                "walkPhase": 7.125,
+                "carryPhase": 9.5,
+                "runRemaining": 40
+              }
+            },
+            "expectedRouteHandle": {
+              "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 2
+            },
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+              "nativeSession": 1,
+              "ticket": 1,
+              "effectiveTime": 10
+            },
+            "sourceControlSequence": 2,
+            "endTime": 18.56384598438025
+          },
+          "relativeTime": 1.7499998807907104,
+          "semantic": "relative",
+          "epoch": 10,
+          "executionEpoch": 10,
+          "elapsed": 11.74999988079071
+        }
+      },
+      "laterGate": {
+        "nativeGate": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10
+          }
+        },
+        "semantic": "relative",
+        "epoch": 10,
+        "elapsed": 11.74999988079071
+      },
+      "opening": 0.13855593496242177
+    },
+    "pick": {
+      "stage": "replacement held pick",
+      "actorId": "worker-900011",
+      "pose": {
+        "kind": "native-home-route-execution",
+        "version": 1,
+        "actorId": 900011,
+        "bodyId": 1,
+        "villageId": 1,
+        "nativeRoute": {
+          "actorId": 900011,
+          "routeHandle": {
+            "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+            "session": 1,
+            "slot": 0,
+            "generation": 2
+          },
+          "assignmentSequence": 3
+        },
+        "executedThrough": 11.749999999999963,
+        "destination": {
+          "x": -14,
+          "z": 11.8
+        },
+        "binding": {
+          "kind": "native-home-route-attestation",
+          "version": 1,
+          "projectionVersion": 1,
+          "reference": {
+            "kind": "native-home-route-reference",
+            "version": 1,
+            "actorId": 900011,
+            "bodyId": 1,
+            "sourceRequest": {
+              "kind": "native-home-request-reference",
+              "version": 1,
+              "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+              "nativeSession": 1,
+              "actorId": 900011,
+              "bodyId": 1,
+              "bodyFlags": 1,
+              "requestSequence": 2,
+              "requestedAt": 10,
+              "profile": 1,
+              "home": {
+                "villageId": 1,
+                "x": -14,
+                "z": 11.8
+              },
+              "pose": {
+                "x": -14,
+                "z": 3.2,
+                "yaw": 0.37,
+                "radius": 0.28,
+                "runPhase": 23.25,
+                "walkPhase": 7.125,
+                "carryPhase": 9.5,
+                "runRemaining": 40
+              }
+            },
+            "expectedRouteHandle": {
+              "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 2
+            },
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+              "nativeSession": 1,
+              "ticket": 2,
+              "effectiveTime": 10
+            },
+            "sourceControlSequence": 2,
+            "endTime": 18.56384598438025
+          },
+          "preparedReference": {
+            "kind": "native-home-route-reference",
+            "version": 1,
+            "actorId": 900011,
+            "bodyId": 1,
+            "sourceRequest": {
+              "kind": "native-home-request-reference",
+              "version": 1,
+              "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+              "nativeSession": 1,
+              "actorId": 900011,
+              "bodyId": 1,
+              "bodyFlags": 1,
+              "requestSequence": 2,
+              "requestedAt": 10,
+              "profile": 1,
+              "home": {
+                "villageId": 1,
+                "x": -14,
+                "z": 11.8
+              },
+              "pose": {
+                "x": -14,
+                "z": 3.2,
+                "yaw": 0.37,
+                "radius": 0.28,
+                "runPhase": 23.25,
+                "walkPhase": 7.125,
+                "carryPhase": 9.5,
+                "runRemaining": 40
+              }
+            },
+            "expectedRouteHandle": {
+              "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 2
+            },
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+              "nativeSession": 1,
+              "ticket": 1,
+              "effectiveTime": 10
+            },
+            "sourceControlSequence": 2,
+            "endTime": 18.56384598438025
+          },
+          "assignmentSequence": 3,
+          "gateIds": [
+            1000000
+          ]
+        },
+        "x": -13.977703266080153,
+        "z": 5.000077669748135,
+        "distance": 1.8002157541443107,
+        "phase": 1.6668664390225099,
+        "yaw": 0.012385906506801088,
+        "firstRemainingPoint": 0,
+        "arrived": false,
+        "at": 11.749999999999963,
+        "duration": 8.56384598438025,
+        "runPhase": 23.25,
+        "walkPhase": 9.625299658533764,
+        "carryPhase": 9.5,
+        "runDistance": 0,
+        "walkDistance": 1.8002157541443107,
+        "runRemaining": 40,
+        "running": false,
+        "currentSpeed": 0
+      },
+      "ground": 17.507015228271484,
+      "publication": 127,
+      "frameSequence": 2,
+      "attempts": [
+        {
+          "height": 1,
+          "coordinate": {
+            "x": 0,
+            "y": -6.050271383847595e-16
+          },
+          "entityId": "worker-900011",
+          "hitPoint": {
+            "x": -13.920915676172317,
+            "y": 18.571915331023412,
+            "z": 5.0893153110318705
+          }
+        }
+      ]
+    }
+  },
+  "resumed": {
+    "elapsed": 12.399999999999949,
+    "publication": 143
+  },
+  "arrival": {
+    "requests": [
+      {
+        "stage": "resource requested",
+        "id": 1,
+        "kind": "prepareNativeHomeArrivalResources",
+        "minSequence": 298,
+        "ticket": 3,
+        "at": 1795649059531.3052,
+        "timeoutMs": 10000
+      },
+      {
+        "stage": "resource received",
+        "id": 1,
+        "kind": "prepareNativeHomeArrivalResources",
+        "ticket": 3,
+        "at": 1795649059532.61
+      }
+    ],
+    "retirement": {
+      "at": 1795649059874.71,
+      "sequence": 68,
+      "trigger": "raf",
+      "nativeWorldBoundary": {
+        "version": 1,
+        "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+        "nativeSession": 1,
+        "ticket": 4,
+        "effectiveTime": 18.899999999999913
+      },
+      "intervalMs": 33.41015625,
+      "drawMs": 2.454833984375,
+      "replay": false,
+      "clockElapsed": 18.899999999999913,
+      "safeUntil": 18.899999999999913,
+      "cameraVersion": null
+    },
+    "finalFrame": {
+      "sequence": 68,
+      "clockElapsed": 19.049999999999915,
+      "presentationElapsed": 19.049999237060547,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+        "nativeSession": 1,
+        "ticket": 4,
+        "effectiveTime": 18.899999999999913
+      },
+      "bindings": [
+        {
+          "nativeGate": {
+            "gateId": 1000000,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "8436e1cd-d64e-4370-bb0a-717faf6909c6/1",
+              "nativeSession": 1,
+              "ticket": 2,
+              "effectiveTime": 10
+            }
+          },
+          "semantic": "relative",
+          "epoch": 10,
+          "elapsed": 18.563861846923828
+        }
+      ]
+    },
+    "publication": 308,
+    "elapsed": 19.049999999999915
+  },
+  "drains": [
+    {
+      "drain": null,
+      "error": "Error: WebGPU device lost: destroyed: Device was destroyed.\n    at port.onmessage (http://127.0.0.1:5218/src/rendering/remote-webgpu-client.js?t=1795648867066:455:20)"
+    },
+    {
+      "drain": {
+        "disposed": true
+      },
+      "error": null
+    }
+  ],
+  "image": {
+    "width": 640,
+    "height": 480,
+    "region": {
+      "minX": 160,
+      "maxX": 448,
+      "minY": 120,
+      "maxY": 326
+    },
+    "differingPixels": 59257,
+    "minimum": 500,
+    "ok": true,
+    "blankControlRejected": true,
+    "sha256": "24f972d9565ee82906cd1917e2bceee3bef8b1ef44774917af5f7e78fc25879d",
+    "path": ".cache/home-route-recovery/nvidia-home-gate-after-loss.png"
+  },
+  "cadence": {
+    "samples": 232,
+    "maximumIntervalMs": 46.625
+  },
+  "limits": "Un Home18 civil y un único portón certificado. Captura funcional a 30 Hz, sin traza CDP. C4 abierto.",
+  "validation": {
+    "tests": {
+      "passed": 86,
+      "failed": 0,
+      "skipped": 0
+    },
+    "buildSeconds": 46.89
+  }
+}

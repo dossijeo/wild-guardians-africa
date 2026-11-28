@@ -1,0 +1,438 @@
+{
+  "environment": {
+    "date": "2026-11-21",
+    "browser": "Edge Chromium",
+    "webgpu": "NVIDIA Turing hardware",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja",
+    "startup": "Paused until the first native Farm packet is acquired; enable Game clock before performing the gesture",
+    "transport": "WorkerHostedRuntime, production authority WASM, resource preparation and separate draw Worker"
+  },
+  "binaries": {
+    "standalone": "4e4a0d58c4abc143e66db32beb592192a9c489a88ecb4a71f1429ea259bdb4a7",
+    "factory": "fa604ddda0ea6361528ce69ad3629044bcd57f0f05d2520809fb44b5e2ee7975",
+    "wasm": "9f3dd31b730f9e0d28c59512c122cddd2bb2c2cd48a7fb4ab29a8daca92c1dd0"
+  },
+  "scenarios": {
+    "crossing": {
+      "original": {
+        "sequence": 8,
+        "elapsed": 10.15,
+        "position": [
+          -17.914551,
+          0.085449
+        ],
+        "admission": "native-farm-arrival"
+      },
+      "final": {
+        "sequence": 68,
+        "elapsed": 13,
+        "position": [
+          -17.148843,
+          0
+        ],
+        "admission": "native-farm-arrival"
+      },
+      "wallCountBefore": 115,
+      "wallCountAfter": 117,
+      "actor": {
+        "id": 900011,
+        "bodyId": 1,
+        "rootPreserved": true,
+        "bonesPreserved": true,
+        "meshGeometryOwnersPreserved": 32
+      },
+      "drawnTickets": [
+        2,
+        5,
+        7,
+        9
+      ],
+      "drained": true,
+      "errors": [],
+      "purchase": {
+        "id": "build-active-crossing",
+        "event": "WallChainBuilt",
+        "count": 2,
+        "pieces": [
+          "structure-1000000",
+          "structure-1000001"
+        ],
+        "terrainChanged": false,
+        "duplicateCharged": false
+      },
+      "heldStop": {
+        "atReady": {
+          "sequence": 19,
+          "elapsed": 10.7,
+          "position": [
+            -17.526843,
+            0
+          ],
+          "admission": "native-farm-arrival"
+        },
+        "beforeRelease": {
+          "sequence": 23,
+          "elapsed": 10.9,
+          "position": [
+            -17.310843,
+            0
+          ],
+          "admission": "native-farm-arrival"
+        }
+      },
+      "heldWall": {
+        "atReady": {
+          "sequence": 28,
+          "elapsed": 11.15,
+          "position": [
+            -17.310843,
+            0
+          ],
+          "admission": "native-farm-arrival-held"
+        },
+        "beforeRelease": {
+          "sequence": 31,
+          "elapsed": 11.3,
+          "position": [
+            -17.310843,
+            0
+          ],
+          "admission": "native-farm-arrival-held"
+        }
+      },
+      "receipt": {
+        "prepared": {
+          "ticket": 6,
+          "effectiveTime": 10.9,
+          "nativeSession": 1
+        },
+        "effective": {
+          "ticket": 7,
+          "effectiveTime": 11.4,
+          "nativeSession": 1
+        },
+        "ids": [
+          116,
+          117
+        ],
+        "footprints": [
+          {
+            "entityId": "structure-1000000",
+            "x": -11.800000190734863,
+            "z": -1.7999999523162842,
+            "halfX": 1,
+            "halfZ": 0.2199999988079071,
+            "yaw": -1.5707963705062866,
+            "passMask": 0
+          },
+          {
+            "entityId": "structure-1000001",
+            "x": -11.800000190734863,
+            "z": 2.200000047683716,
+            "halfX": 1,
+            "halfZ": 0.2199999988079071,
+            "yaw": -1.5707963705062866,
+            "passMask": 0
+          }
+        ]
+      },
+      "checkpoint": {
+        "sequence": 36,
+        "regions": [
+          [
+            -1,
+            -1
+          ],
+          [
+            0,
+            -1
+          ],
+          [
+            1,
+            -1
+          ],
+          [
+            -1,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            -1,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            -1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "boundary": {
+          "ticket": 7,
+          "effectiveTime": 11.4,
+          "nativeSession": 1
+        }
+      },
+      "stop": {
+        "prepared": {
+          "ticket": 4,
+          "effectiveTime": 10.15,
+          "nativeSession": 1
+        },
+        "effective": {
+          "ticket": 5,
+          "effectiveTime": 10.9,
+          "nativeSession": 1
+        }
+      },
+      "continuation": {
+        "bodyId": 1,
+        "actorId": 900011,
+        "boundary": {
+          "ticket": 9,
+          "effectiveTime": 12.85,
+          "nativeSession": 1
+        }
+      },
+      "packetTiming": {
+        "comparison": "First draw per packet. This does not measure time between replayed draws or display refresh.",
+        "fromSequence": 46,
+        "toSequence": 47,
+        "firstDrawIntervalMs": 1497.9,
+        "endFrameIntervalMs": 1610.4
+      }
+    },
+    "away": {
+      "original": {
+        "sequence": 8,
+        "elapsed": 10.15,
+        "position": [
+          -17.914551,
+          0.085449
+        ],
+        "admission": "native-farm-arrival"
+      },
+      "final": {
+        "sequence": 26,
+        "elapsed": 10.9,
+        "position": [
+          -17.310843,
+          0
+        ],
+        "admission": "native-farm-arrival"
+      },
+      "wallCountBefore": 115,
+      "wallCountAfter": 118,
+      "actor": {
+        "id": 900011,
+        "bodyId": 1,
+        "rootPreserved": true,
+        "bonesPreserved": true,
+        "meshGeometryOwnersPreserved": 32
+      },
+      "drawnTickets": [
+        2,
+        5
+      ],
+      "drained": true,
+      "errors": [],
+      "purchase": {
+        "id": "build-active-away",
+        "event": "WallChainBuilt",
+        "count": 3,
+        "pieces": [
+          "structure-1000000",
+          "structure-1000001",
+          "structure-1000002"
+        ],
+        "terrainChanged": false,
+        "duplicateCharged": false
+      },
+      "heldStop": null,
+      "heldWall": {
+        "atReady": {
+          "sequence": 12,
+          "elapsed": 10.35,
+          "position": [
+            -17.904843,
+            0
+          ],
+          "admission": "native-farm-arrival"
+        },
+        "beforeRelease": {
+          "sequence": 15,
+          "elapsed": 10.5,
+          "position": [
+            -17.742843,
+            0
+          ],
+          "admission": "native-farm-arrival"
+        }
+      },
+      "receipt": {
+        "prepared": {
+          "ticket": 4,
+          "effectiveTime": 10.15,
+          "nativeSession": 1
+        },
+        "effective": {
+          "ticket": 5,
+          "effectiveTime": 10.55,
+          "nativeSession": 1
+        },
+        "ids": [
+          116,
+          117,
+          118
+        ],
+        "footprints": [
+          {
+            "entityId": "structure-1000000",
+            "x": -11.800000190734863,
+            "z": 9.199999809265137,
+            "halfX": 1,
+            "halfZ": 0.2199999988079071,
+            "yaw": -1.5707963705062866,
+            "passMask": 0
+          },
+          {
+            "entityId": "structure-1000001",
+            "x": -11.800000190734863,
+            "z": 11.199999809265137,
+            "halfX": 1,
+            "halfZ": 0.2199999988079071,
+            "yaw": -1.5707963705062866,
+            "passMask": 0
+          },
+          {
+            "entityId": "structure-1000002",
+            "x": -11.800000190734863,
+            "z": 13.199999809265137,
+            "halfX": 1,
+            "halfZ": 0.2199999988079071,
+            "yaw": -1.5707963705062866,
+            "passMask": 0
+          }
+        ]
+      },
+      "checkpoint": {
+        "sequence": 19,
+        "regions": [
+          [
+            -1,
+            -1
+          ],
+          [
+            0,
+            -1
+          ],
+          [
+            1,
+            -1
+          ],
+          [
+            -1,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            -1,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            -1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "boundary": {
+          "ticket": 5,
+          "effectiveTime": 10.55,
+          "nativeSession": 1
+        }
+      }
+    },
+    "cold": {
+      "original": {
+        "sequence": 8,
+        "elapsed": 10.15,
+        "position": [
+          -17.914551,
+          0.085449
+        ],
+        "admission": "native-farm-arrival"
+      },
+      "final": {
+        "sequence": 11,
+        "elapsed": 10.3,
+        "position": [
+          -17.958843,
+          0
+        ],
+        "admission": "native-farm-arrival"
+      },
+      "wallCountBefore": 115,
+      "wallCountAfter": 115,
+      "actor": {
+        "id": 900011,
+        "bodyId": 1,
+        "rootPreserved": true,
+        "bonesPreserved": true,
+        "meshGeometryOwnersPreserved": 32
+      },
+      "drawnTickets": [
+        2
+      ],
+      "drained": true,
+      "errors": [],
+      "coldRejection": "Native structure requires prepared regions: 2,-1;2,0;2,1"
+    }
+  }
+}

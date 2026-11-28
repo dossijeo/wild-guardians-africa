@@ -1,0 +1,27 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {loadWorkerPhysicsRig} from '../../src/simulation/worker-physics-rig.js';
+import {loadWorkerPhysicsClips} from '../../src/simulation/worker-physics-clips.js';
+import {prepareAnimalModel,animalGroundSamples,applyAnimalPose} from '../../src/rendering/animal-actions.js';
+import {AnimationMixer,Group} from 'three';
+window.audit=async(species='hyena')=>{
+ const results=[];
+ for(let i=0;i<3;i++){
+  const start=performance.now();let rigEnd,clipsEnd;
+  const [model,clips]=await Promise.all([loadWorkerPhysicsRig(species).then(v=>(rigEnd=performance.now(),v)),loadWorkerPhysicsClips(species).then(v=>(clipsEnd=performance.now(),v))]);
+  const loaded=performance.now();prepareAnimalModel(model,species);const prepared=performance.now(),samples=animalGroundSamples(model),sampled=performance.now();
+  results.push({rigMs:rigEnd-start,clipsMs:clipsEnd-start,parallelLoadMs:loaded-start,prepareMs:prepared-loaded,samplesMs:sampled-prepared,totalMs:sampled-start,clips:clips.length,samples:samples?.length??null});
+  model.traverse(o=>{if(o.isSkinnedMesh){o.geometry.dispose();o.material.dispose();o.skeleton.dispose();}});
+ }
+ return {species,results,scope:'Isolated repeated rig and clip fetch/decode and CPU preparation on the browser main thread, without simulation, rendering or physical admission. Network/cache state and overlap affect timings; this is not a gameplay or Worker latency measurement.'};
+};window.ready=true;
+window.compareSharing=async(species='hyena')=>{
+ const shared=await loadWorkerPhysicsClips(species),runs=[];
+ for(const reuse of [false,true,false,true]){
+  const start=performance.now(),[model,clips]=await Promise.all([loadWorkerPhysicsRig(species),reuse?Promise.resolve(shared):loadWorkerPhysicsClips(species)]);prepareAnimalModel(model,species);const root=new Group();root.add(model);const rig={model,clips,mixer:new AnimationMixer(model),groundSamples:animalGroundSamples(model)};
+  const elapsed=performance.now()-start,poses=[];for(const t of [0,.2,.6]){applyAnimalPose(rig,{species,status:'walking',motionPhase:t},t);const bones=[];model.traverse(o=>{if(o.isBone)bones.push([...o.position.toArray(),...o.quaternion.toArray()]);});poses.push(bones);}
+  runs.push({reuse,elapsed,poses});model.traverse(o=>{if(o.isSkinnedMesh){o.geometry.dispose();o.material.dispose();o.skeleton.dispose();}});
+ }
+ const baseline=JSON.stringify(runs[0].poses);if(runs.some(r=>JSON.stringify(r.poses)!==baseline))throw Error('Shared clips changed sampled poses');
+ return {species,runs:runs.map(({reuse,elapsed})=>({reuse,elapsed})),scope:'Alternating isolated admissions on browser main thread with and without already prepared species clips; three walking poses compared exactly. No Worker, attack, memory or whole-game benchmark.'};
+};
+</script>

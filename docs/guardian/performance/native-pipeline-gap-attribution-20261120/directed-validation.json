@@ -1,0 +1,36 @@
+{
+  "command": [
+    ".cache/tooling/node20.exe",
+    "--test",
+    "tests/remote-webgpu-resource-timing.test.js",
+    "tests/webgpu-pipeline-admission.test.js",
+    "tests/remote-webgpu.test.js"
+  ],
+  "log": ".cache/native-pipeline-gap-directed.log",
+  "sha256": "069efab8d4448666f592ce4a5f61c5e3a95fbca0dffa98cbd06c3d12a8b6ec44",
+  "startedAt": "2026-11-20T05:16:41.356Z",
+  "finishedAt": "2026-11-20T05:17:16.984Z",
+  "seconds": 35.628,
+  "exitCode": 0,
+  "tests": 247,
+  "pass": 247,
+  "fail": 0,
+  "cancelled": 0,
+  "skipped": 0,
+  "syntax": [
+    "tools/guardian/audit_native_farm_birth_world_owner.mjs",
+    "tools/guardian/native-audit-pipeline-timings.mjs",
+    "tools/guardian/analyze_native_farm_birth_trace.mjs"
+  ],
+  "annotatedSyntax": [
+    {
+      "path": ".cache/native-pipeline-gap-annotated-0.mjs",
+      "sha256": "3c9b5989cab2ac0fa1badf5b4f1afd82dbe833f368fb4ae3018dfd971659b91d"
+    },
+    {
+      "path": ".cache/native-pipeline-gap-annotated-1.mjs",
+      "sha256": "80121dced3cdc5f13c99a387566a89e739e7adb25d4057f114cd4ddb517b3ebf"
+    }
+  ],
+  "scope": "Fresh existing remote-resource timing/admission/protocol contracts after both GPU runs terminated. GPU validates served observations; CPU uses unchanged product sources. Full suites/build inherited."
+}

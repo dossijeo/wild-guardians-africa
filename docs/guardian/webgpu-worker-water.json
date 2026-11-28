@@ -1,0 +1,51 @@
+{
+  "backend": "WebGPU",
+  "keys": [
+    "1,0",
+    "2,0"
+  ],
+  "status": {
+    "kind": "status",
+    "id": 1,
+    "resident": 8,
+    "waterResident": 8,
+    "receiver": {
+      "closed": false,
+      "confirmedSequence": 8,
+      "pending": false,
+      "lastId": 8
+    },
+    "stateStream": {
+      "closed": false,
+      "sequence": 8,
+      "lastElapsed": 6069.0000000038335,
+      "fault": false
+    },
+    "eventIds": [],
+    "keys": [
+      {
+        "key": "1,0",
+        "present": true,
+        "water": true,
+        "revision": 1
+      },
+      {
+        "key": "2,0",
+        "present": true,
+        "water": true,
+        "revision": 1
+      }
+    ]
+  },
+  "capture": {
+    "kind": "capture",
+    "id": 2,
+    "draws": 4,
+    "nonBackground": 112689
+  },
+  "simulationSequence": 8,
+  "simulationElapsed": 6069.0000000038335,
+  "simulationFault": null,
+  "mangroveNetwork": true,
+  "scope": "Real hosted simulation transfers confirmed state and Wild Engine terrain and water directly to a WebGPU Worker, without main-thread sequence forwarding. Mangrove island network enabled. Two requested chunks, provisional ground and water materials; no full scene, terrain edits/eviction, gameplay or performance comparison."
+}

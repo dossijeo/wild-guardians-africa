@@ -1,0 +1,354 @@
+import test from 'node:test';
+import {readFileSync} from 'node:fs';
+import assert from 'node:assert/strict';
+import {createConfirmedTimelinePump} from '../src/rendering/confirmed-timeline-pump.js';
+import {createConfirmedHistoricalClock} from '../src/rendering/confirmed-historical-clock.js';
+import {confirmedEventsAtEndpoint} from '../src/rendering/confirmed-endpoint-events.js';
+
+function fixture(items){let sequence=0,lastElapsed=0,ready=true,lastClock=null;const seen=[];return {seen,setReady(value){ready=value;},stream:{status:()=>({closed:false,sequence,lastElapsed}),timelineStatus:()=>({receivedElapsed:items.at(-1)?.elapsed??lastElapsed}),lastConfirmedClockSegments:()=>lastClock,nextTimelineBoundary:()=>items[0]??null,advanceNextTimelineBoundary(){if(!ready)return false;const item=items.shift();sequence=item.sequence;lastElapsed=item.elapsed;lastClock=item.clock??null;seen.push(item);return true;}}};}
+
+test('native resource preparation applies ordered slices up to its exact publication',async()=>{
+ const f=fixture(Array.from({length:8},(_,i)=>({sequence:i+1,elapsed:i+1})));
+ const pump=createConfirmedTimelinePump({stream:f.stream,maxBoundaries:2}),yields=[];
+ const prepare=pump.withOrdinaryPublications(async()=>{await new Promise(resolve=>yields.push(resolve));},{minSequence:5});
+ try{
+  assert.equal(pump.hasNativePreparationBacklog(),true);
+  const boundariesAtYield=[];
+  const count=await pump.advanceNativePreparationSource({
+   yieldBetween:async()=>{boundariesAtYield.push(f.stream.status().sequence);},
+   isCurrent:()=>true,
+  });
+  assert.equal(count,5);
+  assert.deepEqual(boundariesAtYield,[2,4]);
+  assert.deepEqual(f.seen.map(item=>item.sequence),[1,2,3,4,5]);
+  assert.equal(pump.hasNativePreparationBacklog(),false);
+  assert.equal(pump.advance(),2);
+  assert.equal(f.seen.at(-1).sequence,7);
+ }finally{yields[0]();await prepare;pump.dispose();}
+});
+
+test('a final available slice reaches the exact source in the same draw',async()=>{
+ const f=fixture(Array.from({length:10},(_,i)=>({sequence:i+1,elapsed:i+1})));
+ const pump=createConfirmedTimelinePump({stream:f.stream,maxBoundaries:2}),turns=[];
+ let release;
+ const preparing=pump.withOrdinaryPublications(()=>new Promise(resolve=>{release=resolve;}),{minSequence:7});
+ try{
+  const count=await pump.advanceNativePreparationSource({isCurrent:()=>true,yieldBetween:async()=>{turns.push(f.stream.status().sequence);}});
+  assert.equal(count,7);
+  assert.deepEqual(turns,[2,4,6]);
+  assert.equal(f.stream.status().sequence,7);
+ }finally{release();await preparing;pump.dispose();}
+});
+
+test('a native source initially inside the ordinary draw window retains the ordinary path',async()=>{
+ const f=fixture([{sequence:1,elapsed:1},{sequence:2,elapsed:2}]);
+ const pump=createConfirmedTimelinePump({stream:f.stream,maxBoundaries:2});
+ await pump.withOrdinaryPublications(async()=>{
+  assert.equal(pump.hasNativePreparationBacklog(),false);
+  assert.equal(pump.advance(),2);
+ },{minSequence:1});
+ pump.dispose();
+});
+
+for(const stop of ['retired preparation','replaced surface','terrain pending'])test('native preparation catch-up stops for '+stop,async()=>{
+ const f=fixture(Array.from({length:16},(_,i)=>({sequence:i+1,elapsed:i+1})));
+ const pump=createConfirmedTimelinePump({stream:f.stream,maxBoundaries:2});
+ let release,current=true,nYields=0;
+ const prepare=pump.withOrdinaryPublications(()=>new Promise(resolve=>{release=resolve;}),{minSequence:12});
+ try{
+  const count=await pump.advanceNativePreparationSource({
+   yieldBetween:async()=>{
+    nYields++;
+    if(stop==='retired preparation'){release();await prepare;}
+    if(stop==='replaced surface')current=false;
+    if(stop==='terrain pending')f.setReady(false);
+   },
+   isCurrent:()=>current,
+  });
+  assert.equal(count,stop==='replaced surface'?null:2);
+  assert.equal(nYields,1);
+  assert.deepEqual(f.seen.map(item=>item.sequence),[1,2]);
+  assert.equal(f.stream.nextTimelineBoundary().sequence,3);
+ }finally{release();await prepare;pump.dispose();}
+});
+
+function preparedFixture({allow=true,onPreview=null,certify=value=>value,lastRejection=()=>null,cancel}={}){
+ let now=0;const items=[1,2].map(sequence=>{const start=(sequence-1)/10,end=sequence/10;return {sequence,elapsed:end,clock:{version:1,start,end,startPauses:[],endPauses:[],complete:true,segments:[{start,end,realDuration:.1,rate:1}]}};}),f=fixture(items),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now,timeOrigin:0});
+ f.stream.previewNextMotionBoundary=()=>{const item=items[0];return item?{sequence:item.sequence,start:item.clock.start,end:item.elapsed,reasons:[],safeForAutonomousPlayback:true,clockSegments:item.clock}:null;};
+ const pump=createConfirmedTimelinePump({stream:f.stream,onPreview,preparedIntervals:true,historicalPlayback:{clock,now:()=>now,certify,lastRejection,start(){now+=250;return true;},isCurrent:()=>true,canPrepareInterval:()=>allow,finish(){},abort(){},cancel}});
+ return {...f,clock,pump,setNow(value){now=value;}};
+}
+
+test('prepared intervals survive expensive preparation and require retained packet before advancing cursor',()=>{
+ const f=preparedFixture();assert.equal(f.pump.advance(),0);const first=f.pump.preparedInterval();assert.equal(first.start,0);assert.equal(first.end,.1);assert.equal(f.clock.elapsed,0);
+ assert.equal(f.clock.remoteLease({allowAdvance:true}).consumerAnchored,true);f.setNow(10000);assert.equal(f.pump.advance(),0);assert.equal(f.clock.elapsed,0);assert.equal(f.seen.length,0);
+ assert.throws(()=>f.pump.sealPreparedInterval(first.token+1),/token/);f.pump.sealPreparedInterval(first.token);assert.equal(f.clock.elapsed,0);assert.throws(()=>f.pump.sealPreparedInterval(first.token),/token/);
+ assert.equal(f.pump.advance(),1);assert.deepEqual(f.seen.map(item=>item.sequence),[1]);const second=f.pump.preparedInterval();assert.equal(second.start,.1);assert.equal(second.end,.2);assert.notEqual(first.token,second.token);assert.equal(f.clock.elapsed,.1);
+ f.pump.sealPreparedInterval(second.token);assert.equal(f.pump.advance(),1);assert.deepEqual(f.seen.map(item=>item.sequence),[1,2]);assert.equal(f.pump.status().historicalDiagnostics.finishedSameTurn,0);
+ f.pump.dispose();f.clock.dispose();
+});
+
+for(const family of ['TaskStart','FarmArrival'])test('Surface reaches the first '+family+' source without opening more empty historical intervals',async()=>{
+ const f=preparedFixture(),state={workers:[],raid:null},controller=new AbortController();
+ const source=readFileSync(new URL('../src/rendering/webgpu-world-surface.js',import.meta.url),'utf8');
+ const start=source.indexOf('  function prepareNativeResumeResources'),end=source.indexOf('  function prepareNativeIdleStrollResources',start);
+ assert(start>=0&&end>start);
+ const waits=[],calls=[];
+ const waitNativePublication=(sequence,signal)=>new Promise((resolve,reject)=>{
+  if(f.stream.status().sequence>=sequence){resolve();return;}
+  const abort=()=>reject(new DOMException('Cancelled','AbortError'));
+  signal.addEventListener('abort',abort,{once:true});
+  waits.push({sequence,finish(){signal.removeEventListener('abort',abort);resolve();}});
+ });
+ const resource={family},identity=value=>value;
+ const build=new Function('state','stream','timelinePump','waitNativePublication','prepareNativeResources',
+  'copyNativeTaskStartProposal','copyNativeFarmArrivalRouteProposal',
+  `${source.slice(start,end)}\nreturn prepareNative${family}Resources;`);
+ const prepare=build(state,f.stream,f.pump,waitNativePublication,(value,options)=>{
+  calls.push(value);return waitNativePublication(options.minSequence,options.signal).then(()=>value);
+ },identity,identity);
+ try{
+  assert.equal(f.pump.advance(),0);
+  const first=f.pump.preparedInterval(),pending=prepare(resource,{minSequence:2,signal:controller.signal});
+  pending.catch(()=>{});
+  assert.deepEqual(f.pump.preparedInterval(),first);
+  assert.equal(f.pump.advance(),0,'the existing overlapping interval remains authoritative until submitted');
+  f.pump.sealPreparedInterval(first.token);
+  assert.equal(f.pump.advance(),2);
+  assert.deepEqual(f.seen.map(item=>item.sequence),[1,2]);
+  assert.equal(f.pump.preparedInterval(),null);
+  for(const wait of waits)if(wait.sequence<=2)wait.finish();
+  assert.equal(await pending,resource);
+  assert.deepEqual(calls,[resource]);
+ }finally{controller.abort();f.pump.dispose();f.clock.dispose();}
+});
+
+test('an expired unsubmitted interval relinquishes ownership and commits through the ordinary stream',()=>{
+ const cancelled=[],confirmed=[];
+ const f=preparedFixture({cancel:preview=>cancelled.push(preview.sequence)});
+ try{
+  assert.equal(f.pump.advance(),0);const first=f.pump.preparedInterval();
+  f.pump.deferUntilBoundary('first',()=>confirmed.push(f.stream.status().sequence));
+  assert.equal(f.pump.discardExpiredPreparedInterval({...first,token:first.token+1},.15),false);
+  assert.equal(f.pump.discardExpiredPreparedInterval({...first,end:.08},.15),false);
+  assert.equal(f.pump.discardExpiredPreparedInterval(first,first.end),false);
+  assert.deepEqual(f.pump.preparedInterval(),first);
+  assert.equal(f.pump.discardExpiredPreparedInterval(first,.15),true);
+  assert.deepEqual(cancelled,[1]);assert.deepEqual(confirmed,[]);assert.equal(f.clock.elapsed,0);
+  assert.equal(f.pump.discardExpiredPreparedInterval(first,.15),false);
+  f.setReady(false);assert.equal(f.pump.advance(),0);assert.deepEqual(confirmed,[]);
+  f.setReady(true);assert.equal(f.pump.advance(1),1);assert.deepEqual(confirmed,[1]);
+  assert.equal(f.pump.preparedInterval(),null);
+  f.pump.finishOrdinaryContinuation();assert.equal(f.pump.advance(),0);
+  const second=f.pump.preparedInterval();assert.equal(second.sequence,2);assert.equal(f.clock.elapsed,.1);
+  f.pump.sealPreparedInterval(second.token);
+  assert.equal(f.pump.discardExpiredPreparedInterval(second,.3),false);
+  assert.equal(f.pump.advance(),1);assert.deepEqual(f.seen.map(value=>value.sequence),[1,2]);
+ }finally{f.pump.dispose();f.clock.dispose();}
+});
+
+test('confirmed progress remains publishable when the next boundary awaits GPU preparation',()=>{
+ let ready=false,rejection=null;
+ const f=preparedFixture({certify:preview=>{
+  if(preview.sequence===1){rejection={reason:'unsupported-presentation',preparationPending:false};return null;}
+  if(!ready){rejection={reason:'vfx-gpu-resources-pending',preparationPending:true};return null;}
+  rejection=null;return preview;
+ },lastRejection:()=>rejection});
+ try{
+  const advanced=f.pump.advance();assert.equal(advanced,1);
+  assert.deepEqual(f.seen.map(item=>item.sequence),[1]);assert.equal(f.stream.status().sequence,1);assert.equal(f.clock.elapsed,.1);
+  assert.deepEqual(f.pump.status().preparationPending,{sequence:2,reason:'vfx-gpu-resources-pending'});
+  assert.equal(f.stream.nextTimelineBoundary().sequence,2);
+  // The caller must publish that confirmed progress before sleeping for the
+  // next resource. Only a subsequent attempt with no progress can sleep.
+  assert.equal(!!f.pump.status().preparationPending&&advanced===0,false);
+  const waiting=f.pump.advance();assert.equal(waiting,0);
+  assert.equal(!!f.pump.status().preparationPending&&waiting===0,true);
+  assert.equal(f.clock.elapsed,.1);assert.equal(f.seen.length,1);
+  ready=true;assert.equal(f.pump.advance(),0);assert.equal(f.pump.status().preparationPending,null);
+  const interval=f.pump.preparedInterval();assert.equal(interval.sequence,2);assert.equal(interval.start,.1);assert.equal(interval.end,.2);
+  assert.equal(f.clock.elapsed,.1);assert.equal(f.stream.status().sequence,1);
+  f.pump.sealPreparedInterval(interval.token);assert.equal(f.pump.advance(),1);
+  assert.deepEqual(f.seen.map(item=>item.sequence),[1,2]);assert.equal(f.clock.elapsed,.2);
+ }finally{f.pump.dispose();f.clock.dispose();}
+});
+
+test('first-draw receipt during visibility hold retains its token without consuming hidden time',()=>{
+ const f=preparedFixture();f.pump.advance();const first=f.pump.preparedInterval();f.pump.setHistoricalVisibility(true);assert.equal(f.pump.sealPreparedInterval(first.token),true);f.setNow(10000);assert.equal(f.pump.advance(),0);assert.equal(f.clock.elapsed,0);assert.equal(f.seen.length,0);assert.deepEqual(f.pump.status().preparedWaiting,{token:first.token,sequence:1,start:0,end:.1,sealed:true,held:true});
+ f.pump.setHistoricalVisibility(false);assert.equal(f.pump.advance(),1);assert.equal(f.clock.elapsed,.1);assert.equal(f.pump.preparedInterval().start,.1);f.pump.dispose();f.clock.dispose();
+});
+
+test('CPU-dependent historical intervals retain their conservative existing playback path',()=>{
+ const f=preparedFixture({allow:false});assert.equal(f.pump.advance(),2);assert.equal(f.pump.preparedInterval(),null);assert.equal(f.pump.status().historicalDiagnostics.preparedIntervals,0);assert.equal(f.pump.status().historicalDiagnostics.finishedSameTurn,2);f.pump.dispose();f.clock.dispose();
+});
+
+test('preparation diagnostics retain exact blockers without changing conservative fallback',()=>{
+ const f=preparedFixture({allow:{ready:false,remoteBlockers:['worker-cpu-presentation','other-effects-active'],clock:{sequence:1,elapsed:0,safeUntil:.1,paused:true}}});
+ try{assert.equal(f.pump.advance(),2);const d=f.pump.status().historicalDiagnostics;
+  assert.equal(d.preparationChecks,2);assert.equal(d.preparationRejections,2);
+  assert.deepEqual(d.preparationBlockers,{'worker-cpu-presentation':2,'other-effects-active':2});
+  assert.equal(d.lastPreparationRejection.sequence,2);assert.deepEqual(d.lastPreparationRejection.reasons,['worker-cpu-presentation','other-effects-active']);
+  d.lastPreparationRejection.reasons.push('forged');d.preparationBlockers['worker-cpu-presentation']=100;
+  assert.equal(f.pump.status().historicalDiagnostics.lastPreparationRejection.reasons.length,2);assert.equal(f.pump.status().historicalDiagnostics.preparationBlockers['worker-cpu-presentation'],2);
+ }finally{f.pump.dispose();f.clock.dispose();}
+});
+
+test('a same-time unclocked publication explains lastClock null without revoking historical evidence',()=>{
+ const segments={version:1,start:0,end:.1,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:.1,rate:1,realDuration:.1}]},f=fixture([{sequence:1,elapsed:.1,clock:segments},{sequence:2,elapsed:.1}]),pump=createConfirmedTimelinePump({stream:f.stream});
+ try{assert.equal(pump.advance(),2);const d=pump.status().historicalDiagnostics;assert.equal(pump.status().lastClock,null);assert.equal(d.clockedBoundaries,1);assert.equal(d.clocklessBoundaries,1);assert.deepEqual(d.lastClocklessBoundary,{sequence:2,start:.1,end:.1,kind:'boundary'});}finally{pump.dispose();}
+});
+
+test('event subinterval preparation uses the same blocker diagnostics as whole publications',()=>{
+ let elapsed=0,sequence=0,now=0;
+ const clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now}),samples=[0,1,2].map(at=>({at,x:at,z:0,status:'walking'})),actor={actorId:'a',start:{at:0,x:0,z:0},end:{at:2,x:2,z:0},startStatus:'walking',endStatus:'walking',radius:.2,continuous:true,timed:true,segments:[{at:1,t0:0,t1:1,x0:0,z0:0,x1:1,z1:0},{at:2,t0:1,t1:2,x0:1,z0:0,x1:2,z1:0}]};
+ const preview={sequence:1,start:0,end:2,eventBoundaries:[{at:1,eventIds:['e'],count:1}],reasons:['events','visual-time-and-support-unverified'],safeForAutonomousPlayback:false,trace:{start:0,end:2,actors:[actor],actorTickStates:{complete:true,actors:[{actorId:'a',samples}]},rosterChanged:false,topologyChanged:false,chunkChanged:false,terrainChanged:false,physicsActivity:{samplesComplete:true,observed:false},spatialEvidence:{version:1,start:0,end:2,actors:1,segments:2,revisions:{topology:0,chunks:0,terrain:0,payloads:0}},separationEvidence:{version:1,start:0,end:2,actors:1,gates:'none'}},clockSegments:{version:1,start:0,end:2,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:2,rate:1,realDuration:2}]}};
+ const stream={status:()=>({closed:false,sequence,lastElapsed:elapsed}),timelineStatus:()=>({receivedElapsed:2}),nextTimelineBoundary:()=>sequence?null:{sequence:1,elapsed:2},previewNextMotionBoundary:()=>preview,lastConfirmedClockSegments:()=>preview.clockSegments,advanceNextTimelineBoundary(){throw Error('must use historical event transaction');},beginHistoricalEvents:()=>preview.eventBoundaries,confirmHistoricalEventStart(){},advanceHistoricalEvent(){elapsed=1;},finishHistoricalEvents(){elapsed=2;sequence=1;clock.commitBoundary(1,2);return true;},cancelHistoricalEvents(){}};
+ const pump=createConfirmedTimelinePump({stream,preparedIntervals:true,historicalPlayback:{clock,certify:p=>({...p,reasons:[],safeForAutonomousPlayback:true}),start:()=>true,isCurrent:()=>true,finish(){},abort(){},canPrepareInterval:()=>({ready:false,remoteBlockers:['native-vfx-presentation']})}});
+ try{assert.equal(pump.advance(),0);now=2100;assert.equal(pump.advance(),1);const d=pump.status().historicalDiagnostics;assert.equal(d.eventPublicationsStarted,1);assert.equal(d.preparationChecks,2);assert.deepEqual(d.preparationBlockers,{'native-vfx-presentation':2});assert.equal(d.lastPreparationRejection.start,1);assert.equal(d.lastPreparationRejection.end,2);}finally{pump.dispose();clock.dispose();}
+});
+
+test('diagnostics distinguish rejected certificates from intervals consumed before any draw',()=>{
+ const segments={version:1,start:0,end:.1,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:.1,realDuration:.1,rate:1}]};
+ for(const reject of [true,false]){
+  let now=0;const f=fixture([{sequence:1,elapsed:.1,clock:segments}]),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now});
+  f.stream.previewNextMotionBoundary=()=>({sequence:1,start:0,end:.1,reasons:[],safeForAutonomousPlayback:true,clockSegments:segments});
+  const pump=createConfirmedTimelinePump({stream:f.stream,historicalPlayback:{clock,now:()=>now,certify:value=>reject?null:value,lastRejection:()=>({reason:'animal-bake-pending',actorId:'a'}),start(){now=150;return true;},finish(){},abort(){},isCurrent:()=>true}});
+  assert.equal(pump.advance(),1);const stats=pump.status().historicalDiagnostics;
+  assert.equal(stats.starts,reject?0:1);assert.equal(stats.finishedSameTurn,reject?0:1);assert.equal(stats.certifierRejections,reject?1:0);
+  if(reject){assert.equal(stats.lastRejection.reason,'animal-bake-pending');stats.lastRejection.reason='changed';assert.equal(pump.status().historicalDiagnostics.lastRejection.reason,'animal-bake-pending');}
+  assert.equal(pump.status().historicalPending,null);pump.dispose();clock.dispose();
+ }
+});
+
+test('certified endpoint events stay pending through playback and publish once at its end',()=>{
+ let now=0,effects=0;const segments={version:1,start:0,end:.1,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:.1,realDuration:.1,rate:1}]};
+ const item={sequence:1,elapsed:.1,clock:segments,events:[{id:'hit',simulationTime:.1}],presentationJournalVersion:2,presentationJournal:[{kind:'event',eventId:'hit',at:.1}]},f=fixture([item]),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now});
+ f.stream.previewNextMotionBoundary=()=>({sequence:1,start:0,end:.1,reasons:confirmedEventsAtEndpoint(item,0,.1)?['visual-time-and-support-unverified']:['events'],safeForAutonomousPlayback:false,clockSegments:segments});
+ const commit=f.stream.advanceNextTimelineBoundary;f.stream.advanceNextTimelineBoundary=()=>{const applied=commit();if(applied){assert.equal(clock.elapsed,.1);effects++;}return applied;};
+ const pump=createConfirmedTimelinePump({stream:f.stream,historicalPlayback:{clock,now:()=>now,certify:preview=>({...preview,reasons:[],safeForAutonomousPlayback:true}),start:()=>true,finish(){},abort(){},isCurrent:()=>true}});
+ try{assert.equal(pump.advance(),0);now=50;assert.equal(pump.advance(),0);assert.equal(clock.elapsed,.05);assert.equal(effects,0);assert.equal(f.stream.status().sequence,0);now=100;assert.equal(pump.advance(),1);assert.equal(effects,1);assert.equal(f.stream.status().sequence,1);assert.equal(pump.advance(),0);assert.equal(effects,1);}finally{pump.dispose();clock.dispose();}
+});
+test('invalidated interval reports once without committing or advancing to its endpoint',()=>{let now=0,current=true;const segments={version:1,start:0,end:1,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:1,realDuration:1,rate:1}]},f=fixture([{sequence:1,elapsed:1,clock:segments}]),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now}),notices=[];f.stream.previewNextMotionBoundary=()=>({sequence:1,start:0,end:1,reasons:[],safeForAutonomousPlayback:true,clockSegments:segments});const pump=createConfirmedTimelinePump({stream:f.stream,historicalPlayback:{clock,now:()=>now,certify:value=>value,start:()=>true,finish(){},abort(){},isCurrent:()=>current,onInvalidated:(preview,reason)=>notices.push([preview.sequence,reason])}});try{pump.advance();now=100;current=false;assert.equal(pump.advance(),0);assert.deepEqual(notices,[[1,'reconciliation']]);assert.equal(clock.elapsed,.1);now=200;assert.equal(pump.advance(),0);assert.deepEqual(notices,[[1,'reconciliation']]);assert.equal(f.seen.length,0);}finally{pump.dispose();clock.dispose();}});
+test('deferred presentation effects run once after the current commit and before the next boundary',()=>{
+ let now=0;const segments={version:1,start:0,end:1,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:1,realDuration:1,rate:1}]},f=fixture([{sequence:1,elapsed:1,clock:segments},{sequence:2,elapsed:1}]),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now}),seen=[];
+ f.stream.previewNextMotionBoundary=()=>f.seen.length?null:{sequence:1,start:0,end:1,reasons:[],safeForAutonomousPlayback:true,clockSegments:segments};const pump=createConfirmedTimelinePump({stream:f.stream,historicalPlayback:{clock,now:()=>now,certify:value=>value,start:()=>true,finish(){},abort(){},isCurrent:()=>true}});
+ try{pump.advance();assert.equal(pump.deferUntilBoundary('attack:a',()=>seen.push(f.seen.map(x=>x.sequence))),true);assert.throws(()=>pump.deferUntilBoundary('attack:a',()=>{}),/Duplicate/);assert.equal(pump.deferUntilBoundary('cancel',()=>{throw Error('cancelled effect ran');}),true);assert.equal(pump.cancelDeferred('cancel'),true);now=1000;assert.equal(pump.advance(),2);assert.deepEqual(seen,[[1]]);assert.equal(pump.deferUntilBoundary('immediate',()=>seen.push('immediate')),false);assert.deepEqual(seen,[[1],'immediate']);}finally{pump.dispose();clock.dispose();}
+});
+test('visibility restoration leaves invalidated history safely suspended',()=>{
+ let now=0,current=true;const segments={version:1,start:0,end:1,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:1,realDuration:1,rate:1}]},f=fixture([{sequence:1,elapsed:1,clock:segments}]),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now});f.stream.previewNextMotionBoundary=()=>({sequence:1,start:0,end:1,reasons:[],safeForAutonomousPlayback:true,clockSegments:segments});const pump=createConfirmedTimelinePump({stream:f.stream,historicalPlayback:{clock,now:()=>now,certify:value=>value,start:()=>true,finish(){},abort(){},isCurrent:()=>current}});
+ try{pump.advance();now=250;pump.setHistoricalVisibility(true);current=false;pump.setHistoricalVisibility(false);assert.equal(pump.status().historicalHold,'visibility');now=3000;assert.equal(pump.advance(),0);assert.equal(clock.elapsed,.25);assert.equal(f.seen.length,0);}finally{pump.dispose();clock.dispose();}
+});
+test('visibility restoration reports a stale interval to a fail-closed owner',()=>{let now=0,current=true;const segments={version:1,start:0,end:1,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:1,realDuration:1,rate:1}]},f=fixture([{sequence:1,elapsed:1,clock:segments}]),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now}),notices=[];f.stream.previewNextMotionBoundary=()=>({sequence:1,start:0,end:1,reasons:[],safeForAutonomousPlayback:true,clockSegments:segments});const pump=createConfirmedTimelinePump({stream:f.stream,historicalPlayback:{clock,now:()=>now,certify:value=>value,start:()=>true,finish(){},abort(){},isCurrent:()=>current,onInvalidated:(_preview,reason)=>notices.push(reason)}});try{pump.advance();now=250;pump.setHistoricalVisibility(true);current=false;now=5000;pump.setHistoricalVisibility(false);assert.equal(pump.status().historicalHold,'reconciliation');assert.deepEqual(notices,['reconciliation']);assert.equal(clock.elapsed,.25);assert.equal(pump.advance(),0);assert.deepEqual(notices,['reconciliation']);assert.equal(f.seen.length,0);}finally{pump.dispose();clock.dispose();}});
+test('pump applies ordered confirmed boundaries without inferring a clock rate',()=>{
+ const f=fixture([{sequence:1,elapsed:1,pauses:['menu']},{sequence:2,elapsed:1,pauses:[]},{sequence:3,elapsed:6,rate:5}]),pump=createConfirmedTimelinePump({stream:f.stream,maxBoundaries:2});assert.equal(pump.advance(),2);assert.deepEqual(f.seen.map(item=>item.elapsed),[1,1]);assert.equal(pump.advance(),1);assert.equal(f.seen.at(-1).elapsed,6);assert.equal(pump.advance(),0);pump.dispose();assert.throws(()=>pump.advance(),/disposed/);
+});
+test('pump waits for terrain and rejects discontinuous or future boundaries',()=>{
+ const f=fixture([{sequence:1,elapsed:2}]),pump=createConfirmedTimelinePump({stream:f.stream});f.setReady(false);assert.equal(pump.advance(),0);assert.deepEqual(f.seen,[]);f.setReady(true);assert.equal(pump.advance(),1);const bad=fixture([{sequence:2,elapsed:1}]);assert.throws(()=>createConfirmedTimelinePump({stream:bad.stream}).advance(),/Invalid confirmed/);
+});
+test('pump consumes confirmed clock metadata only after its boundary commits',()=>{
+ const clock={version:1,start:0,end:1,complete:true,segments:[{start:0,end:1,realDuration:.2,rate:5}]},f=fixture([{sequence:1,elapsed:1,clock}]),pump=createConfirmedTimelinePump({stream:f.stream});f.setReady(false);assert.equal(pump.advance(),0);assert.equal(pump.status().lastClock,null);f.setReady(true);assert.equal(pump.advance(),1);assert.deepEqual(pump.status().lastClock,{sequence:1,...clock});const result=pump.status();result.lastClock.segments[0].rate=1;assert.equal(pump.status().lastClock.segments[0].rate,5);
+});
+test('certified historical playback holds next state until its bounded clock completes',()=>{let now=0,current=true;const segments={version:1,start:0,end:1,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:1,realDuration:1,rate:1}]},f=fixture([{sequence:1,elapsed:1,clock:segments}]),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now}),calls=[];f.stream.previewNextMotionBoundary=()=>({sequence:1,start:0,end:1,reasons:[],safeForAutonomousPlayback:true,clockSegments:segments});const pump=createConfirmedTimelinePump({stream:f.stream,historicalPlayback:{clock,certify:value=>value,start:()=>{calls.push('start');return true;},finish:()=>calls.push('finish'),abort:()=>calls.push('abort'),isCurrent:()=>current,reconcile:(_p,_s,evidence)=>evidence==='confirmed'}});try{assert.equal(pump.advance(),0);assert.equal(f.seen.length,0);now=500;assert.equal(pump.advance(),0);assert.equal(clock.elapsed,.5);assert.equal(f.seen.length,0);now=1000;assert.equal(pump.advance(),1);assert.deepEqual(calls,['start','finish']);assert.equal(f.seen.length,1);assert.equal(clock.status().sequence,1);}finally{pump.dispose();clock.dispose();}});
+test('uncertified preview falls back and invalidated playback never commits',()=>{let now=0,current=true;const segments={version:1,start:0,end:1,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:1,realDuration:1,rate:1}]},f=fixture([{sequence:1,elapsed:1,clock:segments}]),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now});let certified=false,aborts=0;f.stream.previewNextMotionBoundary=()=>({sequence:1,start:0,end:1,reasons:certified?[]:['terrain'],safeForAutonomousPlayback:certified,clockSegments:segments});const pump=createConfirmedTimelinePump({stream:f.stream,historicalPlayback:{clock,certify:value=>value,start:()=>true,finish(){},abort:()=>aborts++,isCurrent:()=>current,reconcile:(_p,_s,evidence)=>evidence==='confirmed'}});try{certified=true;assert.equal(pump.advance(),0);now=300;current=false;assert.equal(pump.advance(),0);assert.equal(pump.status().historicalHold,'reconciliation');assert.equal(aborts,0);assert.equal(f.seen.length,0);assert.equal(pump.resumeHistorical({evidence:'confirmed'}),false);current=true;assert.equal(pump.resumeHistorical({reconciled:true}),false);assert.equal(pump.resumeHistorical({evidence:'confirmed'}),true);now=1000;assert.equal(pump.advance(),1);}finally{pump.dispose();clock.dispose();}const other=fixture([{sequence:1,elapsed:1}]),fallbackClock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>0});other.stream.previewNextMotionBoundary=()=>({sequence:1,start:0,end:1,reasons:['terrain'],safeForAutonomousPlayback:false});const fallback=createConfirmedTimelinePump({stream:other.stream,historicalPlayback:{clock:fallbackClock,certify:()=>null,start(){throw Error('unexpected');},finish(){},abort(){},isCurrent:()=>true,reconcile:(_p,_s,evidence)=>evidence==='confirmed'}});try{assert.equal(fallback.advance(),1);assert.equal(fallbackClock.elapsed,1);}finally{fallback.dispose();fallbackClock.dispose();}});
+test('input and tab suspension hold a partial boundary until explicit reconciliation',()=>{let now=0;const segments={version:1,start:0,end:1,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:1,realDuration:1,rate:1}]},f=fixture([{sequence:1,elapsed:1,clock:segments}]),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now}),holds=[];f.stream.previewNextMotionBoundary=()=>({sequence:1,start:0,end:1,reasons:[],safeForAutonomousPlayback:true,clockSegments:segments});const pump=createConfirmedTimelinePump({stream:f.stream,historicalPlayback:{clock,now:()=>now,certify:value=>value,start:()=>true,finish(){},abort(){},hold:(_preview,elapsed,reason)=>holds.push([elapsed,reason]),isCurrent:()=>true,reconcile:(_p,_s,evidence)=>evidence==='confirmed'}});try{pump.advance();now=250;assert.equal(pump.suspendHistorical('input'),true);assert.deepEqual(holds,[[.25,'input']]);now=5000;assert.equal(pump.advance(),0);assert.equal(clock.elapsed,.25);assert.equal(f.seen.length,0);assert.equal(pump.resumeHistorical(),false);assert.equal(pump.resumeHistorical({evidence:'confirmed'}),true);now=5750;assert.equal(pump.advance(),1);assert.equal(f.seen.length,1);}finally{pump.dispose();clock.dispose();}});
+test('watchdog commits a completed immutable interval after a long scheduling stall',()=>{let now=0;const segments={version:1,start:0,end:1,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:1,realDuration:1,rate:1}]},f=fixture([{sequence:1,elapsed:1,clock:segments}]),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now});f.stream.previewNextMotionBoundary=()=>({sequence:1,start:0,end:1,reasons:[],safeForAutonomousPlayback:true,clockSegments:segments});const pump=createConfirmedTimelinePump({stream:f.stream,historicalPlayback:{clock,now:()=>now,watchdogGraceMs:1,certify:value=>value,start:()=>true,finish(){},abort(){},isCurrent:()=>true}});try{pump.advance();now=60000;assert.equal(pump.advance(),1);assert.equal(clock.elapsed,1,'clock never extrapolates beyond the confirmed endpoint');assert.equal(pump.status().historicalHold,null);assert.equal(f.seen.length,1);}finally{pump.dispose();clock.dispose();}});
+
+test('hidden visibility blocks starting a certified historical boundary until visible',()=>{let now=0,starts=0;const segments={version:1,start:0,end:1,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:1,realDuration:1,rate:1}]},f=fixture([{sequence:1,elapsed:1,clock:segments}]),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now});f.stream.previewNextMotionBoundary=()=>({sequence:1,start:0,end:1,reasons:[],safeForAutonomousPlayback:true,clockSegments:segments});const pump=createConfirmedTimelinePump({stream:f.stream,historicalPlayback:{clock,now:()=>now,certify:value=>value,start:()=>{starts++;return true;},finish(){},abort(){},isCurrent:()=>true,reconcile:()=>true}});try{pump.setHistoricalVisibility(true);assert.equal(pump.advance(),0);assert.equal(starts,0);assert.equal(f.seen.length,0);pump.setHistoricalVisibility(false);assert.equal(pump.advance(),0);assert.equal(starts,1);now=200;pump.setHistoricalVisibility(true);assert.equal(pump.resumeHistorical({evidence:'confirmed'}),false);pump.setHistoricalVisibility(false);assert.equal(pump.status().historicalHold,null);assert.equal(pump.resumeHistorical({evidence:'confirmed'}),false);now=1000;assert.equal(pump.advance(),1);}finally{pump.dispose();clock.dispose();}});
+test('visibility signals do not delay normal confirmed boundary processing',()=>{const f=fixture([{sequence:1,elapsed:1}]),pump=createConfirmedTimelinePump({stream:f.stream});try{pump.setHistoricalVisibility(true);assert.equal(pump.advance(),1);assert.equal(f.seen.length,1);}finally{pump.dispose();}});
+
+test('input commits an already completed certified boundary before dispatch without starting the next',()=>{let now=0,starts=0;const segments={version:1,start:0,end:1,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:1,realDuration:1,rate:1}]},f=fixture([{sequence:1,elapsed:1,clock:segments},{sequence:2,elapsed:1}]),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now});f.stream.previewNextMotionBoundary=()=>({sequence:1,start:0,end:1,reasons:[],safeForAutonomousPlayback:true,clockSegments:segments});const pump=createConfirmedTimelinePump({stream:f.stream,historicalPlayback:{clock,now:()=>now,certify:value=>value,start:()=>{starts++;return true;},finish(){},abort(){},isCurrent:()=>true}});try{pump.advance();now=1000;assert.equal(pump.suspendHistorical('input'),true);assert.deepEqual(f.seen.map(item=>item.sequence),[1]);assert.equal(starts,1);assert.equal(clock.status().sequence,1);}finally{pump.dispose();clock.dispose();}});
+
+test('an input while hidden upgrades the hold and cannot use a visibility-only reconciliation',()=>{let now=0;const segments={version:1,start:0,end:1,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:1,realDuration:1,rate:1}]},f=fixture([{sequence:1,elapsed:1,clock:segments}]),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now});f.stream.previewNextMotionBoundary=()=>({sequence:1,start:0,end:1,reasons:[],safeForAutonomousPlayback:true,clockSegments:segments});const pump=createConfirmedTimelinePump({stream:f.stream,historicalPlayback:{clock,now:()=>now,certify:value=>value,start:()=>true,finish(){},abort(){},isCurrent:()=>true,reconcile:(_preview,_status,evidence,reason)=>evidence==='visibility'&&reason==='visibility'}});try{pump.advance();now=250;pump.setHistoricalVisibility(true);assert.equal(pump.status().historicalHold,'visibility');assert.equal(pump.suspendHistorical('input'),true);assert.equal(pump.status().historicalHold,'input');pump.setHistoricalVisibility(false);assert.equal(pump.resumeHistorical({evidence:'visibility'}),false);assert.equal(f.seen.length,0);}finally{pump.dispose();clock.dispose();}});
+
+test('historical playback checks actor validity after binding and rolls back a stale binding',()=>{for(const valid of [true,false]){let now=0,bound=false,aborted=0;const segments={version:1,start:0,end:1,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:1,realDuration:1,rate:1}]},f=fixture([{sequence:1,elapsed:1,clock:segments}]),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now});f.stream.previewNextMotionBoundary=()=>({sequence:1,start:0,end:1,reasons:[],safeForAutonomousPlayback:true,clockSegments:segments});const pump=createConfirmedTimelinePump({stream:f.stream,historicalPlayback:{clock,now:()=>now,certify:value=>value,start:()=>{bound=true;return true;},finish(){},abort(){aborted++;bound=false;},isCurrent:()=>bound&&valid}});try{if(valid){assert.equal(pump.advance(),0);assert.equal(bound,true);}else{assert.throws(()=>pump.advance(),/Stale historical playback after start/);assert.equal(aborted,1);assert.equal(bound,false);assert.equal(clock.status().active,null);assert.equal(f.seen.length,0);}}finally{pump.dispose();clock.dispose();}}});
+
+test('events and pause boundaries cannot be overridden by a playback certificate',()=>{for(const reason of ['events','pause']){let certified=0,started=0;const f=fixture([{sequence:1,elapsed:1}]),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>0});f.stream.previewNextMotionBoundary=()=>({sequence:1,start:0,end:1,reasons:[reason],safeForAutonomousPlayback:false});const pump=createConfirmedTimelinePump({stream:f.stream,historicalPlayback:{clock,certify:value=>{certified++;return {...value,reasons:[],safeForAutonomousPlayback:true};},start:()=>{started++;return true;},finish(){},abort(){},isCurrent:()=>true}});try{assert.equal(pump.advance(),1);assert.equal(certified,0);assert.equal(started,0);assert.equal(f.seen.length,1);assert.equal(clock.status().sequence,1);}finally{pump.dispose();clock.dispose();}}});
+
+test('a crop hit inside a stable attack commits damage and VFX at its event boundary',()=>{
+ const hit={id:'event-1',type:'CropHit',animalId:'a',targetId:'crop',presentation:{elapsed:.05}},item={sequence:1,elapsed:.05,events:[hit]},f=fixture([item]),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>0});let starts=0,certifies=0,damage=0,vfx=0;
+ f.stream.previewNextMotionBoundary=()=>({sequence:1,start:0,end:.05,reasons:['events','visual-time-and-support-unverified'],safeForAutonomousPlayback:false,trace:{actorTickStates:{complete:true,actors:[{actorId:'a',samples:[{status:'attacking',attackId:'strike'},{status:'attacking',attackId:'strike'}]}]}}});
+ const commit=f.stream.advanceNextTimelineBoundary;f.stream.advanceNextTimelineBoundary=()=>{const result=commit();if(result)for(const event of f.seen.at(-1).events)if(event.type==='CropHit'){damage++;vfx++;}return result;};const pump=createConfirmedTimelinePump({stream:f.stream,historicalPlayback:{clock,certify:()=>{certifies++;return null;},start:()=>{starts++;return true;},finish(){},abort(){},isCurrent:()=>true}});
+ try{assert.equal(damage,0);assert.equal(vfx,0);assert.equal(pump.advance(),1);assert.equal(certifies,0);assert.equal(starts,0);assert.deepEqual(f.seen[0].events,[hit]);assert.equal(damage,1);assert.equal(vfx,1);assert.equal(pump.advance(),0);assert.equal(damage,1);assert.equal(vfx,1);}finally{pump.dispose();clock.dispose();}
+});
+test('worker incapacitation inside a fall remains an authoritative event boundary',()=>{
+ const hit={id:'event-1',type:'WorkerIncapacitated',targetId:'w',presentation:{elapsed:.05}},item={sequence:1,elapsed:.05,events:[hit]},f=fixture([item]),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>0});let starts=0,handled=0;
+ f.stream.previewNextMotionBoundary=()=>({sequence:1,start:0,end:.05,reasons:['events','visual-time-and-support-unverified'],safeForAutonomousPlayback:false,trace:{actorTickStates:{complete:true,actors:[{actorId:'w',samples:[{falling:true},{falling:true}]}]}}});const commit=f.stream.advanceNextTimelineBoundary;f.stream.advanceNextTimelineBoundary=()=>{const result=commit();if(result)handled+=f.seen.at(-1).events.length;return result;};const pump=createConfirmedTimelinePump({stream:f.stream,historicalPlayback:{clock,certify:()=>{throw Error('event must block certification');},start:()=>{starts++;return true;},finish(){},abort(){},isCurrent:()=>true}});
+ try{assert.equal(pump.advance(),1);assert.equal(starts,0);assert.equal(handled,1);assert.equal(pump.advance(),0);assert.equal(handled,1);}finally{pump.dispose();clock.dispose();}
+});
+
+test('worker collision during recovery stays behind its confirmed event boundary',()=>{
+ const hit={id:'event-1',type:'ActorMobileCollisionRecovery',targetId:'w',presentation:{elapsed:.05}},item={sequence:1,elapsed:.05,events:[hit]},f=fixture([item]),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>0});let starts=0,handled=0;
+ f.stream.previewNextMotionBoundary=()=>({sequence:1,start:0,end:.05,reasons:['events','visual-time-and-support-unverified'],safeForAutonomousPlayback:false,trace:{actorTickStates:{complete:true,actors:[{actorId:'w',samples:[{recovery:true},{recovery:true}]}]}}});const commit=f.stream.advanceNextTimelineBoundary;f.stream.advanceNextTimelineBoundary=()=>{const result=commit();if(result)handled+=f.seen.at(-1).events.length;return result;};const pump=createConfirmedTimelinePump({stream:f.stream,historicalPlayback:{clock,certify:()=>{throw Error('event must block certification');},start:()=>{starts++;return true;},finish(){},abort(){},isCurrent:()=>true}});
+ try{assert.equal(pump.advance(),1);assert.equal(starts,0);assert.equal(handled,1);assert.equal(pump.advance(),0);assert.equal(handled,1);}finally{pump.dispose();clock.dispose();}
+});
+
+test('historical handoff runs after successful boundary commit and never on failed commit',()=>{
+ for(const success of [true,false]){let now=0;const segments={version:1,start:0,end:1,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:1,realDuration:1,rate:1}]},f=fixture([{sequence:1,elapsed:1,clock:segments}]),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now}),calls=[];f.stream.previewNextMotionBoundary=()=>({sequence:1,start:0,end:1,reasons:[],safeForAutonomousPlayback:true,clockSegments:segments});const apply=f.stream.advanceNextTimelineBoundary;f.stream.advanceNextTimelineBoundary=()=>{calls.push('commit');return success?apply():false;};const pump=createConfirmedTimelinePump({stream:f.stream,historicalPlayback:{clock,now:()=>now,certify:value=>value,start:()=>true,finish:()=>calls.push('finish'),afterCommit:(_preview,{continuation})=>{assert.equal(f.stream.status().sequence,1);assert.equal(clock.status().sequence,1);assert.equal(continuation,false);calls.push('handoff');},abort:()=>calls.push('abort'),isCurrent:()=>true}});try{pump.advance();now=1000;if(success){assert.equal(pump.advance(),1);assert.deepEqual(calls,['finish','commit','handoff']);}else{assert.throws(()=>pump.advance(),/boundary could not commit/);assert.deepEqual(calls,['finish','commit','abort']);}}finally{pump.dispose();clock.dispose();}}
+});
+
+test('historical certification cannot replace confirmed endpoint headings',()=>{const segments={version:1,start:0,end:1,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:1,realDuration:1,rate:1}]},f=fixture([{sequence:1,elapsed:1,clock:segments}]),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>0});f.stream.previewNextMotionBoundary=()=>({sequence:1,start:0,end:1,reasons:[],safeForAutonomousPlayback:false,clockSegments:segments,workerHeadingProof:{version:1,sequence:1,start:0,end:1,initial:[],final:[{id:'w',yaw:1}]}});const pump=createConfirmedTimelinePump({stream:f.stream,historicalPlayback:{clock,certify:value=>({...value,reasons:[],safeForAutonomousPlayback:true,workerHeadingProof:{...value.workerHeadingProof,final:[{id:'w',yaw:2}]}}),start:()=>true,finish(){},abort(){},isCurrent:()=>true}});try{assert.throws(()=>pump.advance(),/Invalid historical playback certificate/);assert.equal(f.seen.length,0);}finally{pump.dispose();clock.dispose();}});
+
+
+test('remote resource preparation retains the confirmed boundary until ready instead of consuming a CPU fallback',()=>{
+ let ready=false,failed=false;const f=preparedFixture({certify:value=>ready?value:null,lastRejection:()=>({reason:'resources-pending',preparationPending:!failed})});
+ try{assert.equal(f.pump.advance(),0);assert.deepEqual(f.pump.status().preparationPending,{sequence:1,reason:'resources-pending'});assert.equal(f.clock.elapsed,0);assert.equal(f.seen.length,0);f.setNow(5000);assert.equal(f.pump.advance(),0);ready=true;assert.equal(f.pump.advance(),0);assert.equal(f.pump.status().preparationPending,null);assert.equal(f.pump.preparedInterval().start,0);f.pump.sealPreparedInterval(f.pump.preparedInterval().token);ready=false;failed=true;assert.equal(f.pump.advance(),2);assert.equal(f.seen.length,2);assert.equal(f.pump.status().preparationPending,null,'unsupported or failed preparation follows the conservative path');}finally{f.pump.dispose();f.clock.dispose();}
+});
+
+// Exercise the actual Surface entry against the real pump. Only the
+// resource packet and the asynchronous stream/renderer endpoints are doubles.
+function cropSurface(pump,waitForPublication,prepareResources){
+ const source=readFileSync(new URL('../src/rendering/webgpu-world-surface.js',import.meta.url),'utf8');
+ const entry=source.match(/  (?:async function prepareAnimalCropResources\b|const prepareNativeAnimalCropRouteResources\b)[\s\S]*?(?=  function prepareNativeFarmArrivalResources)/)[0];
+ return Function('timelinePump','waitNativePublication','prepareNativeResources','copyNativeAnimalCropProposal',
+  entry+';return [prepareNativeAnimalCropRouteResources,prepareNativeAnimalCropStrikeResources]')(
+  pump,waitForPublication,prepareResources,(p,kind)=>{assert.equal(p.kind,kind);return p;});
+}
+test('a native crop request keeps its source and successor on the ordinary publication stream',async()=>{
+ const previews=[],f=preparedFixture({onPreview:p=>{if(p)previews.push(p.sequence);}});
+ try{
+  let receive;
+  const source=new Promise(resolve=>{receive=resolve;});
+  const [route]=cropSurface(f.pump,()=>assert.fail('unexpected open interval'),async(_,options)=>{
+   assert.equal(options.minSequence,1);await source;
+   assert.equal(f.pump.status().historicalPending,null,'historical playback has claimed the crop source');
+   assert.deepEqual(f.seen.map(item=>item.sequence),[1,2]);
+  });
+  const admission=route({kind:26},{minSequence:1});
+  f.pump.advance();receive();await admission;
+  assert.deepEqual(previews,[1,2]);assert.equal(f.pump.status().historicalDiagnostics.starts,0);
+ }finally{f.pump.dispose();f.clock.dispose();}
+});
+test('native preparation drains an already owned historical token and releases exclusion on cancellation',async()=>{
+ const f=preparedFixture(),controller=new AbortController();let observed=false;
+ try{
+  assert.equal(f.pump.advance(),0);const token=f.pump.preparedInterval();
+  const [,strike]=cropSurface(f.pump,(sequence,signal)=>{
+   assert.equal(sequence,1);observed=true;
+   return new Promise((_,reject)=>signal.addEventListener('abort',()=>reject(signal.reason),{once:true}));
+  },()=>assert.fail('the request is still waiting on its source'));
+  const admitted=strike({kind:27},{signal:controller.signal});
+  assert(observed);
+  assert.equal(f.pump.advance(),0);assert.equal(f.seen.length,0);
+  f.pump.sealPreparedInterval(token.token);assert.equal(f.pump.advance(1),1);
+  assert.equal(f.pump.preparedInterval(),null);assert.equal(f.seen[0].sequence,1);
+  controller.abort();await assert.rejects(admitted,{name:'AbortError'});
+  assert.equal(f.pump.advance(),0);assert.equal(f.pump.preparedInterval().sequence,2);
+ }finally{f.pump.dispose();f.clock.dispose();}
+});
+
+test('an open token finishes on its own clock before the crop roster is claimed',async()=>{
+ const f=preparedFixture();let committed,claims=0;
+ try{
+  f.pump.advance();const original=f.pump.preparedInterval();
+  const [prepare]=cropSurface(f.pump,sequence=>{
+   assert.equal(sequence,original.sequence);return new Promise(resolve=>{committed=resolve;});
+  },()=>{
+   assert.equal(f.pump.status().historicalPending,null);claims++;
+  });
+  const ready=prepare({kind:26});assert.equal(claims,0);
+  assert.deepEqual(f.pump.preparedInterval(),original);assert.equal(f.clock.elapsed,0);
+  f.pump.sealPreparedInterval(original.token);assert.equal(f.pump.advance(),2);
+  committed();await ready;assert.equal(claims,1);
+  assert.deepEqual(f.seen.map(item=>item.sequence),[1,2]);assert.equal(f.pump.status().historicalDiagnostics.starts,1);
+ }finally{f.pump.dispose();f.clock.dispose();}
+});

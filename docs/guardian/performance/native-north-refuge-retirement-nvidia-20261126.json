@@ -1,0 +1,202 @@
+{
+  "version": 1,
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 125.1000000089407
+    }
+  },
+  "raw": {
+    "file": "E:/wild-guardians-qa/north-refuge-retirement-20261126/nvidia.json",
+    "sha256": "e46920f22d3d032d2a169de85d7cd21e201279b89be4400c3424850819f2b50e"
+  },
+  "trace": {
+    "dataLossOccurred": false,
+    "traceFormat": "json",
+    "streamCompression": "gzip",
+    "browserVersion": "158.0.4370.33",
+    "options": {
+      "traceConfig": {
+        "recordMode": "recordUntilFull",
+        "traceBufferSizeInKb": 524288,
+        "includedCategories": [
+          "toplevel",
+          "blink",
+          "blink.user_timing",
+          "devtools.timeline",
+          "v8.execute",
+          "gpu",
+          "viz",
+          "cc"
+        ]
+      },
+      "transferMode": "ReturnAsStream",
+      "streamFormat": "json",
+      "streamCompression": "gzip",
+      "bufferUsageReportingInterval": 1000
+    },
+    "peakBufferUsage": 0.26783645153045654,
+    "usageReports": 88,
+    "collectionComplete": true,
+    "tracePath": "E:/wild-guardians-qa/north-refuge-retirement-20261126/nvidia.trace.json.gz",
+    "exportedBytes": 45732170,
+    "sha256": "5e6bf33680237b4b3ad736bf55cd98b159689748ec56e9a769c9527d3ae3defb"
+  },
+  "scope": "Desierto DEV, un trabajador y un facóquero. El refugio se coloca en la ruta norte comprobada. Reloj dirigido en la frontera y ordinario durante el resto de la incursión.",
+  "refuge": {
+    "x": -12,
+    "z": 14
+  },
+  "spawn": {
+    "event": "event-29208",
+    "elapsed": 10.799999999999983,
+    "pose": {
+      "x": -10,
+      "z": 27.1
+    }
+  },
+  "home": {
+    "bodyId": 1,
+    "assignmentSequence": 7,
+    "boundary": {
+      "version": 1,
+      "authorityEpoch": "723234ff-f03c-443a-b9d5-791b0b3ad4b6/1",
+      "nativeSession": 1,
+      "ticket": 6,
+      "effectiveTime": 10.999999999999979
+    },
+    "endTime": 19.091184463531075,
+    "retiredSequence": 8,
+    "retiredAt": {
+      "version": 1,
+      "authorityEpoch": "723234ff-f03c-443a-b9d5-791b0b3ad4b6/1",
+      "nativeSession": 1,
+      "ticket": 8,
+      "effectiveTime": 19.39999999999992
+    },
+    "firstAbsence": {
+      "sequence": 88,
+      "clockElapsed": 19.499999999999922,
+      "presentationElapsed": 19.499998092651367,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "723234ff-f03c-443a-b9d5-791b0b3ad4b6/1",
+        "nativeSession": 1,
+        "ticket": 8,
+        "effectiveTime": 19.39999999999992
+      },
+      "bindings": []
+    }
+  },
+  "attack": {
+    "bodyId": 2,
+    "boundary": {
+      "version": 1,
+      "authorityEpoch": "723234ff-f03c-443a-b9d5-791b0b3ad4b6/1",
+      "nativeSession": 1,
+      "ticket": 10,
+      "effectiveTime": 19.549999999999923
+    },
+    "request": {
+      "generation": 0,
+      "kind": "preparation-request",
+      "method": "prepareNativeAnimalCropRouteResources",
+      "id": 5,
+      "minSequence": 102,
+      "world": {
+        "version": 1,
+        "authorityEpoch": "723234ff-f03c-443a-b9d5-791b0b3ad4b6/1",
+        "nativeSession": 1,
+        "ticket": 9,
+        "effectiveTime": 19.499999999999922
+      },
+      "resourceKind": "native-animal-crop-route-proposal"
+    },
+    "firstDraw": {
+      "sequence": 89,
+      "clockElapsed": 19.599999999999923,
+      "presentationElapsed": 19.599998474121094,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "723234ff-f03c-443a-b9d5-791b0b3ad4b6/1",
+        "nativeSession": 1,
+        "ticket": 10,
+        "effectiveTime": 19.549999999999923
+      },
+      "bindings": [
+        {
+          "nativeAnimalCrop": {
+            "version": 1,
+            "kind": 26,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "723234ff-f03c-443a-b9d5-791b0b3ad4b6/1",
+              "nativeSession": 1,
+              "ticket": 9,
+              "effectiveTime": 19.499999999999922
+            },
+            "sourceControlSequence": 8,
+            "endTime": 35.56904842276974,
+            "purpose": "center",
+            "actorId": 1000000,
+            "bodyId": 2,
+            "targetId": 2,
+            "centerId": 2,
+            "requestSequence": 4,
+            "slot": 1,
+            "generation": 3,
+            "radius": 1.1,
+            "x": -10,
+            "z": 27.1,
+            "phase": 0,
+            "yaw": 0,
+            "targetX": -10.75499877929687,
+            "targetZ": 0.2,
+            "centerX": -10.75499877929687,
+            "centerZ": 0.2
+          },
+          "relativeTime": 0.04999999701976776,
+          "semantic": "relative",
+          "epoch": 19.499999999999922,
+          "executionEpoch": 19.549999999999923,
+          "elapsed": 19.54999999701969
+        }
+      ]
+    },
+    "targetId": 2,
+    "structureHp": [
+      580,
+      560,
+      540,
+      520
+    ]
+  },
+  "civil": {
+    "refugeSequence": 8,
+    "bodyId": 3,
+    "worker": "worker-900011",
+    "hits": 0,
+    "admission": "native-idle",
+    "drawDrained": true
+  },
+  "cpu": {
+    "preimage": {
+      "file": "E:/wild-guardians-qa/north-refuge-retirement-20261126/preimage.tap",
+      "sha256": "c292263c111a0b8db9fbdb3250eb521e61333be1060526b3749267dfbfc799f8"
+    },
+    "originalTestWithFix": {
+      "file": "E:/wild-guardians-qa/north-refuge-retirement-20261126/original-test-fixed.tap",
+      "sha256": "df3fca7c557df968c0bb3bd110e1599c3017aea957e414ee88e9974281e3e79a"
+    }
+  },
+  "errors": []
+}

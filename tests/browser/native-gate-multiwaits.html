@@ -1,0 +1,20 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Native multi-gate timetable audit</title>
+<h1>Native multi-gate timetable audit</h1>
+<p>Complete native hold knots replayed in WebGPU. Diagnostic triangle only; no character locomotion or crossing admission.</p>
+<pre id="result">Ready</pre>
+<script type="module">
+import {auditNativeGateMultiwaits} from './native-gate-multiwaits.js';
+window.runNativeGateMultiwaitsAudit=async()=>{
+ const results=[];
+ try{
+  for(let i=0;i<3;i++){
+   document.querySelector('#result').textContent=`Running ${i+1}/3`;
+   results.push(await auditNativeGateMultiwaits());
+  }
+  window.nativeGateMultiwaitsAudit=results;
+  document.querySelector('#result').textContent=JSON.stringify(results,null,2);return results;
+ }catch(error){document.querySelector('#result').textContent=String(error.stack??error);throw error;}
+};
+</script>

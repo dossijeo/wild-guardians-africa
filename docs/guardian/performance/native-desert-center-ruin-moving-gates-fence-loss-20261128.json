@@ -1,0 +1,73 @@
+{
+  "scope": "Desert 983, two gate motors acquired after Home19 at the start of the pending ruin substep. QA schedules the independent closing command and holds the old Draw fence. The browser destroys the original GPUDevice and exercises the normal Hosted recovery and queued substep replay.",
+  "inputSha256": "e03507bbdc17aff0bcac3cc87730f941eacd0d8236a26638b7488555343289b3",
+  "adapter": { "vendor": "nvidia", "architecture": "turing" },
+  "interruption": {
+    "ruinTicket": 23,
+    "retainedMotorTicket": 22,
+    "retainedGateIds": [1000000, 1000001],
+    "hold": 12,
+    "preparedFrame": 379,
+    "fenceAckSent": false,
+    "frozenElapsed": 58.84000000000239,
+    "plannedRuinElapsed": 58.85000000000239,
+    "lossPublication": 980,
+    "ruinEventsBeforeReplacement": 0
+  },
+  "replacement": {
+    "checkpointSequence": 976,
+    "replayedThrough": 980,
+    "activationSequence": 990,
+    "firstFrame": 1,
+    "firstClock": 58.84000000000239,
+    "firstWorldTicket": 22,
+    "firstGateClockSamples": [58.84000000000239, 58.84000000000239],
+    "firstApproachAge": 2.5399999618530273,
+    "approachTicket": 21,
+    "actorId": 1000003,
+    "bodyId": 2,
+    "slot": 0,
+    "generation": 18,
+    "ruinTicket": 24,
+    "ruinFrame": 4,
+    "ruinClock": 58.85000000000239,
+    "ruinGateClockSamples": [58.84999999977887, 58.84999999977887],
+    "centerId": "structure-1000002",
+    "removedPolygonId": 10,
+    "ruinEventCount": 1,
+    "ashVisible": true,
+    "debrisInstances": 270,
+    "smokeInstances": 80,
+    "drained": true,
+    "errors": [],
+    "resourceErrors": []
+  },
+  "regression": {
+    "passed": 88,
+    "failed": 0,
+    "skipped": 0,
+    "build": "Vite WebGPU worker with remote Draw, 755 modules",
+    "negative": "With the authority from 03bd9f663, the cancelled ruin leaves no terminal source for the approach and the motors together.",
+    "focal": "The replacement requires both motors and the exact frozen cut. The cancelled ticket is never presented. The remaining 0.01 s acquire a new ticket, remove the original polygon once and advance the same motor and approach programs."
+  },
+  "diskSaveBaseline": {
+    "activeElapsed": 49.300000000001575,
+    "activeOpenings": [0.16666666666659558, 0.16666666666659558],
+    "activeSaveAvailable": false,
+    "settledElapsed": 49.40000000000158,
+    "settledOpenings": [0, 0],
+    "settledSaveAvailable": true
+  },
+  "openCases": ["Occupied gate crossing", "Disk reload with moving gates"],
+  "evidenceSha256": {
+    "center-gates-before-go-nvidia.json": "21356261d100fb3b3747365807fb6562d78a0c79d622bd4868e2355bd7ee3f6f",
+    "center-gates-before-go-impact.tap": "77f10eec0b2ffccfd5783c2687f18f4c12d39148e3f17b8d7bb8581df2bb961f",
+    "center-gates-before-go-canonical-red.tap": "3c6fb5a3ea735b6131e27a76768334b50f3151b175edc71f1bfef167ae51c358",
+    "center-gates-before-go-final-focal.tap": "a66fc9582562dfdef1378d9f3f3f2e54f4e05d855daa6056eddbf90b761fe1a7",
+    "center-gates-before-go-build.log": "81f4735b38aa769af6090b50e9f4e48d6ad04d9c38f0e5e32bb39653fa241c01",
+    "center-gates-disk-control.tap": "5b32ca7fd98141ff795f0902016e6aa1c2329b4724592aa6287d1b0f0d9dfd57",
+    "center-gates-before-go-driver.mjs": "a615f1873842ed0de6e0ab2138dde0541f7f6748ea6ea73747d44ca662517365",
+    "center-gates-before-go-browser.mjs": "9a83035a33a14127c0a10bbefb39f14c846c2f055d8b24192b4796f0ef898691",
+    "center-gates-before-go-preparer.mjs": "3ab6a10bbfbcaff672bf28ff845f63aeafd5ec8c0b29f48eb8dcafb8be3d069e"
+  }
+}

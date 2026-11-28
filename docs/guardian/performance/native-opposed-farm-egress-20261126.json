@@ -1,0 +1,242 @@
+{
+  "baseCommit": "54077f69336e6a35883829eab4ff95c1193628e4",
+  "input": {
+    "id": "worker-900012",
+    "actorId": 900012,
+    "opposite": true,
+    "lateral": 0,
+    "firstStart": {
+      "x": -14,
+      "z": 11.799999999999999
+    },
+    "secondStart": {
+      "x": -14,
+      "z": 4.2
+    },
+    "secondGoal": {
+      "x": -14,
+      "z": 13
+    }
+  },
+  "tests": {
+    "baseline": {
+      "tests": 28,
+      "pass": 0,
+      "fail": 2,
+      "skipped": 26
+    },
+    "focal": {
+      "tests": 29,
+      "pass": 5,
+      "fail": 0,
+      "skipped": 24
+    },
+    "impact": {
+      "tests": 309,
+      "pass": 309,
+      "fail": 0,
+      "skipped": 0
+    },
+    "productionBuild": true
+  },
+  "wasm": {
+    "src/world/wild-engine/spatial-savanna.wasm": "42f92c55ec341fc9275628a501b35263a0713ea809086923c667c8e2d1220ce0",
+    "public/wild-engine/spatial-threaded.wasm": "073c52e387c41c52a68ac1ca5fc76e0b523f09314877bbaee0578eaaca878fa1",
+    "public/wild-engine/spatial-threaded.mjs": "1ce4c9da37af1cd5ced81e12cf79c18a3e8ed9870db62df7af639a328ba6c970"
+  },
+  "physical": {
+    "rawSha256": "aca807db3caa1aa7646b579fca9c7d97379fd02eaa7115990ae0274711ad4078",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 114.60000000149012
+      }
+    },
+    "first": {
+      "actorId": 900011,
+      "bodyId": 1,
+      "goal": {
+        "x": -14,
+        "z": 3.2,
+        "centerX": -18.954998779296876,
+        "centerZ": 3.2,
+        "arrivalRadius": 2
+      },
+      "from": {
+        "x": -14,
+        "z": 11.799999999999999,
+        "yaw": 0.37,
+        "radius": 0.28,
+        "runPhase": 23.25,
+        "walkPhase": 7.125,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      },
+      "parked": {
+        "x": -13.296272277832031,
+        "z": 5.061415672302246
+      },
+      "started": 10,
+      "arrived": 17.353592734687645,
+      "ticket": 2,
+      "assignmentSequence": 5,
+      "gateIds": [
+        1000000
+      ]
+    },
+    "second": {
+      "actorId": 900012,
+      "bodyId": 2,
+      "goal": {
+        "x": -14,
+        "z": 13,
+        "centerX": -18.954998779296876,
+        "centerZ": 13,
+        "arrivalRadius": 2
+      },
+      "from": {
+        "x": -14,
+        "z": 4.2,
+        "yaw": 0.37,
+        "radius": 0.28,
+        "runPhase": 23.25,
+        "walkPhase": 7.125,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      },
+      "parked": {
+        "x": -13.968306541442871,
+        "z": 11.000251770019531
+      },
+      "started": 18.59999999999991,
+      "arrived": 24.89704983754021,
+      "ticket": 4,
+      "assignmentSequence": 6,
+      "gateIds": [
+        1000000
+      ]
+    },
+    "passage": [
+      {
+        "elapsed": 13.949999999999916,
+        "opening": 1,
+        "workers": [
+          {
+            "x": -13.949600219726562,
+            "z": 8.182641344984123,
+            "status": "arriving",
+            "admission": "native-farm-arrival",
+            "profile": "youngMale"
+          },
+          {
+            "x": -14,
+            "z": 4.2,
+            "status": "arriving",
+            "admission": "pending-farm-arrival-resources",
+            "profile": "youngFemale"
+          }
+        ]
+      },
+      {
+        "elapsed": 22.29999999999996,
+        "opening": 1,
+        "workers": [
+          {
+            "x": -13.296272277832031,
+            "z": 5.061415672302246,
+            "status": "idle",
+            "admission": "native-idle",
+            "profile": "youngMale"
+          },
+          {
+            "x": -13.949600219726562,
+            "z": 8.195586178428373,
+            "status": "arriving",
+            "admission": "native-farm-arrival",
+            "profile": "youngFemale"
+          }
+        ]
+      }
+    ],
+    "drawTicketsBefore": [
+      2
+    ],
+    "drawTicketsAfter": [
+      2,
+      4,
+      6
+    ],
+    "retainedBothOwners": true,
+    "owners": [
+      {
+        "root": 691,
+        "meshCount": 32
+      },
+      {
+        "root": 760,
+        "meshCount": 32
+      }
+    ],
+    "gateRoot": 474,
+    "final": {
+      "elapsed": 25.70000000000001,
+      "workers": [
+        {
+          "id": "worker-900011",
+          "centerId": "structure-2",
+          "nativeRouteAdmission": "native-idle",
+          "x": -13.296272277832031,
+          "z": 5.061415672302246
+        },
+        {
+          "id": "worker-900012",
+          "centerId": "structure-1000002",
+          "nativeRouteAdmission": "native-idle",
+          "x": -13.968306541442871,
+          "z": 11.000251770019531
+        }
+      ]
+    },
+    "drain": {
+      "disposed": true
+    },
+    "failed": false,
+    "gpuErrors": 0,
+    "errors": [],
+    "opportunities": 240,
+    "maxRecordedDrawIntervalMs": 35.7001953125
+  },
+  "lateHire": {
+    "sha256": "47358b91d6111eb9427b8422e7da4e640c39e6933486e4ecb4112aab17a37619",
+    "hiredAfter": 17.29999999999989,
+    "through": 43.30000000000106,
+    "charge": {
+      "n": "-26",
+      "d": "1"
+    },
+    "workers": [
+      {
+        "id": "worker-900011",
+        "x": -13.97523021697998,
+        "z": 5.199846267700195,
+        "nativeRouteAdmission": "native-idle"
+      },
+      {
+        "id": "worker-1000003",
+        "x": -14,
+        "z": 4.2,
+        "nativeRouteAdmission": "pending-farm-arrival-resources"
+      }
+    ],
+    "faults": []
+  }
+}

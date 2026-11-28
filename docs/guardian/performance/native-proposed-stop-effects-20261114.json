@@ -1,0 +1,2964 @@
+[
+  {
+    "ok": true,
+    "backend": "WebGPU",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "mode": "production-prepared-terrain-cutover",
+    "before": {
+      "inspectionGeneration": "a3f299a9-e948-4824-b158-2d58289aad8a",
+      "resident": 9,
+      "nativeRig": {
+        "meshes": [
+          {
+            "mesh": 405,
+            "geometry": 122,
+            "material": 194
+          },
+          {
+            "mesh": 406,
+            "geometry": 123,
+            "material": 195
+          },
+          {
+            "mesh": 407,
+            "geometry": 124,
+            "material": 196
+          }
+        ],
+        "poseHash": 3352405388
+      },
+      "nativeRoute": {
+        "actorId": 9263,
+        "assignmentSequence": 2,
+        "routeHandle": {
+          "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+          "session": 1,
+          "slot": 0,
+          "generation": 3
+        }
+      },
+      "worker": {
+        "id": "worker-9263",
+        "personId": "person-5",
+        "profile": "olderFemale",
+        "contractDay": 14,
+        "centerId": "structure-2",
+        "villageId": "village-1",
+        "x": 20.05,
+        "z": 24,
+        "status": "returning",
+        "taskId": null,
+        "crateId": null,
+        "path": [],
+        "hits": 0,
+        "incapacitated": false,
+        "recovering": false,
+        "runRemaining": 105.80409353316266,
+        "actionRemaining": -0.09999999999999098,
+        "idleState": null,
+        "running": false,
+        "taskApproach": null,
+        "mobileRecoveryDestinationId": "home-village-1",
+        "mobileRecoveryVersion": 39,
+        "mobileRecoveryAttempts": 0,
+        "mobileProgressDistance": 19.61075574551514,
+        "mobileProgressAt": 8100.10000001091,
+        "destinationId": "home-village-1",
+        "pathVersion": 39,
+        "runPhase": 44.085038972151764,
+        "heading": 1.7354811145652242,
+        "dynamicStallSeconds": 0,
+        "gateWaiting": false,
+        "deliveryApproach": null,
+        "carryPhase": 72.64734745404371,
+        "walkPhase": 239.8931865905003,
+        "radius": 0.28
+      }
+    },
+    "after": {
+      "inspectionGeneration": "a3f299a9-e948-4824-b158-2d58289aad8a",
+      "resident": 9,
+      "workers": {
+        "closed": false,
+        "count": 1,
+        "ready": 1,
+        "pending": 0,
+        "native": 1,
+        "nativePreparing": 0,
+        "assets": {
+          "closed": false,
+          "idle": {
+            "idle": 0,
+            "estimatedBytes": 0,
+            "maxBytes": 100663296
+          },
+          "textureFailure": null,
+          "profiles": [
+            {
+              "profile": "olderFemale",
+              "ready": true,
+              "textured": true,
+              "refs": 2,
+              "pending": 0
+            }
+          ]
+        }
+      },
+      "resourcesCreated": 2861
+    },
+    "mutations": [
+      {
+        "sequence": 2,
+        "mutation": {
+          "type": "removeChunks",
+          "chunks": [
+            [
+              -1,
+              -1
+            ]
+          ],
+          "releaseOnly": true
+        },
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+          "nativeSession": 1,
+          "ticket": 1,
+          "effectiveTime": 10
+        },
+        "receipt": {
+          "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+          "session": "ground-native",
+          "holdId": 1,
+          "sequence": 2,
+          "effectiveTime": 10,
+          "clockSequence": 1,
+          "preparedWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+            "nativeSession": 1,
+            "ticket": 1,
+            "effectiveTime": 10
+          },
+          "preparedFrameSequence": 89
+        },
+        "nativeRetention": true,
+        "nativeAdvance": {
+          "x": 20.049999979400635,
+          "z": 24.323999999999995,
+          "distance": 0.323999999999995,
+          "phase": 0.2999999999999954,
+          "yaw": -6.357828781962848e-8,
+          "firstRemainingPoint": 0,
+          "arrived": false,
+          "at": 10.299999999999995,
+          "duration": 11.111111111111132,
+          "runPhase": 0,
+          "walkPhase": 0.44999999999999307,
+          "carryPhase": 0,
+          "runDistance": 0,
+          "walkDistance": 0.323999999999995,
+          "runRemaining": 0,
+          "running": false,
+          "currentSpeed": 1.08,
+          "executedThrough": 10.299999999999995
+        },
+        "placementWitness": [],
+        "cropWitness": [],
+        "readyAt": 1794677555525.8,
+        "committedAt": 1794677555540,
+        "observedAt": 1794677555767.5,
+        "block": {
+          "kind": "block-end",
+          "start": 1794677555532.5,
+          "end": 1794677557032.6
+        },
+        "newWorldFramesWhileBlocked": [
+          {
+            "at": 1794677555573.7,
+            "sequence": 89,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 1,
+              "effectiveTime": 10
+            },
+            "intervalMs": 56.800048828125,
+            "drawMs": 1.800048828125,
+            "replay": false,
+            "clockElapsed": 10.1,
+            "safeUntil": 10.1,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677555607,
+            "sequence": 89,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 1,
+              "effectiveTime": 10
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 1.699951171875,
+            "replay": true,
+            "clockElapsed": 10.139999999999999,
+            "safeUntil": 10.139999999999999,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677555640.3,
+            "sequence": 89,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 1,
+              "effectiveTime": 10
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 1.599853515625,
+            "replay": true,
+            "clockElapsed": 10.159999999999998,
+            "safeUntil": 10.159999999999998,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677555673.5999,
+            "sequence": 89,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 1,
+              "effectiveTime": 10
+            },
+            "intervalMs": 33.2998046875,
+            "drawMs": 1.5,
+            "replay": true,
+            "clockElapsed": 10.199999999999998,
+            "safeUntil": 10.199999999999998,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677555707.2,
+            "sequence": 89,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 1,
+              "effectiveTime": 10
+            },
+            "intervalMs": 33.60009765625,
+            "drawMs": 1.800048828125,
+            "replay": true,
+            "clockElapsed": 10.239999999999997,
+            "safeUntil": 10.239999999999997,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677555740.4,
+            "sequence": 89,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 1,
+              "effectiveTime": 10
+            },
+            "intervalMs": 33.199951171875,
+            "drawMs": 1.5,
+            "replay": true,
+            "clockElapsed": 10.259999999999996,
+            "safeUntil": 10.259999999999996,
+            "cameraVersion": null
+          }
+        ],
+        "resourcesReady": 2022,
+        "resourcesDuring": 2022,
+        "resourcesAfterAdoption": 2022,
+        "consumerForksAtReady": {
+          "uniformForks": 105,
+          "bufferForks": 2,
+          "textureForks": 0,
+          "bindingForks": 105
+        },
+        "consumerForksDuring": {
+          "uniformForks": 105,
+          "bufferForks": 2,
+          "textureForks": 0,
+          "bindingForks": 105
+        },
+        "gpuErrors": 0
+      },
+      {
+        "sequence": 3,
+        "mutation": {
+          "type": "addChunk",
+          "cx": -1,
+          "cz": -1
+        },
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 10.299999999999995
+        },
+        "receipt": {
+          "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+          "session": "ground-native",
+          "holdId": 2,
+          "sequence": 2,
+          "effectiveTime": 10.299999999999995,
+          "clockSequence": 13,
+          "preparedWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10.299999999999995
+          },
+          "preparedFrameSequence": 95
+        },
+        "nativeRetention": true,
+        "nativeAdvance": {
+          "x": 20.04999995880127,
+          "z": 24.64799999999999,
+          "distance": 0.64799999999999,
+          "phase": 0.5999999999999908,
+          "yaw": -6.357828781962848e-8,
+          "firstRemainingPoint": 0,
+          "arrived": false,
+          "at": 10.59999999999999,
+          "duration": 11.111111111111132,
+          "runPhase": 0,
+          "walkPhase": 0.8999999999999861,
+          "carryPhase": 0,
+          "runDistance": 0,
+          "walkDistance": 0.64799999999999,
+          "runRemaining": 0,
+          "running": false,
+          "currentSpeed": 1.08,
+          "executedThrough": 10.59999999999999
+        },
+        "placementWitness": [],
+        "cropWitness": [],
+        "readyAt": 1794677557516.5,
+        "committedAt": 1794677557530.7,
+        "observedAt": 1794677557758.5,
+        "block": {
+          "kind": "block-end",
+          "start": 1794677557523.7002,
+          "end": 1794677559023.7002
+        },
+        "newWorldFramesWhileBlocked": [
+          {
+            "at": 1794677557540.5,
+            "sequence": 95,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 2,
+              "effectiveTime": 10.299999999999995
+            },
+            "intervalMs": 33,
+            "drawMs": 1.300048828125,
+            "replay": false,
+            "clockElapsed": 10.379999999999995,
+            "safeUntil": 10.379999999999995,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677557573.7,
+            "sequence": 95,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 2,
+              "effectiveTime": 10.299999999999995
+            },
+            "intervalMs": 33.199951171875,
+            "drawMs": 1.199951171875,
+            "replay": true,
+            "clockElapsed": 10.399999999999995,
+            "safeUntil": 10.399999999999995,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677557607,
+            "sequence": 95,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 2,
+              "effectiveTime": 10.299999999999995
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 1.199951171875,
+            "replay": true,
+            "clockElapsed": 10.439999999999994,
+            "safeUntil": 10.439999999999994,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677557640.3,
+            "sequence": 95,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 2,
+              "effectiveTime": 10.299999999999995
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 1.39990234375,
+            "replay": true,
+            "clockElapsed": 10.479999999999993,
+            "safeUntil": 10.479999999999993,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677557673.7,
+            "sequence": 95,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 2,
+              "effectiveTime": 10.299999999999995
+            },
+            "intervalMs": 33.39990234375,
+            "drawMs": 1.699951171875,
+            "replay": true,
+            "clockElapsed": 10.499999999999993,
+            "safeUntil": 10.499999999999993,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677557707,
+            "sequence": 95,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 2,
+              "effectiveTime": 10.299999999999995
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 1.300048828125,
+            "replay": true,
+            "clockElapsed": 10.539999999999992,
+            "safeUntil": 10.539999999999992,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677557740.3,
+            "sequence": 95,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 2,
+              "effectiveTime": 10.299999999999995
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 1.099853515625,
+            "replay": true,
+            "clockElapsed": 10.579999999999991,
+            "safeUntil": 10.579999999999991,
+            "cameraVersion": null
+          }
+        ],
+        "resourcesReady": 2155,
+        "resourcesDuring": 2155,
+        "resourcesAfterAdoption": 2155,
+        "consumerForksAtReady": {
+          "uniformForks": 196,
+          "bufferForks": 4,
+          "textureForks": 0,
+          "bindingForks": 196
+        },
+        "consumerForksDuring": {
+          "uniformForks": 196,
+          "bufferForks": 4,
+          "textureForks": 0,
+          "bindingForks": 196
+        },
+        "gpuErrors": 0
+      },
+      {
+        "sequence": 4,
+        "mutation": {
+          "type": "removeProp",
+          "group": 0,
+          "gx": -2,
+          "gz": -3
+        },
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+          "nativeSession": 1,
+          "ticket": 3,
+          "effectiveTime": 10.59999999999999
+        },
+        "receipt": {
+          "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+          "session": "ground-native",
+          "holdId": 3,
+          "sequence": 2,
+          "effectiveTime": 10.59999999999999,
+          "clockSequence": 25,
+          "preparedWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+            "nativeSession": 1,
+            "ticket": 3,
+            "effectiveTime": 10.59999999999999
+          },
+          "preparedFrameSequence": 98
+        },
+        "nativeRetention": true,
+        "nativeAdvance": {
+          "x": 20.049999938201903,
+          "z": 24.971999999999984,
+          "distance": 0.9719999999999851,
+          "phase": 0.8999999999999861,
+          "yaw": -6.357828781962848e-8,
+          "firstRemainingPoint": 0,
+          "arrived": false,
+          "at": 10.899999999999986,
+          "duration": 11.111111111111132,
+          "runPhase": 0,
+          "walkPhase": 1.3499999999999794,
+          "carryPhase": 0,
+          "runDistance": 0,
+          "walkDistance": 0.9719999999999851,
+          "runRemaining": 0,
+          "running": false,
+          "currentSpeed": 1.08,
+          "executedThrough": 10.899999999999986
+        },
+        "placementWitness": [],
+        "cropWitness": [],
+        "readyAt": 1794677559261.3,
+        "committedAt": 1794677559275,
+        "observedAt": 1794677559503.0999,
+        "block": {
+          "kind": "block-end",
+          "start": 1794677559268.7002,
+          "end": 1794677560768.7002
+        },
+        "newWorldFramesWhileBlocked": [
+          {
+            "at": 1794677559307.0999,
+            "sequence": 98,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 3,
+              "effectiveTime": 10.59999999999999
+            },
+            "intervalMs": 65.89990234375,
+            "drawMs": 1.5,
+            "replay": false,
+            "clockElapsed": 10.69999999999999,
+            "safeUntil": 10.69999999999999,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677559340.4,
+            "sequence": 98,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 3,
+              "effectiveTime": 10.59999999999999
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 1.10009765625,
+            "replay": true,
+            "clockElapsed": 10.71999999999999,
+            "safeUntil": 10.71999999999999,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677559373.7,
+            "sequence": 98,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 3,
+              "effectiveTime": 10.59999999999999
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 1.10009765625,
+            "replay": true,
+            "clockElapsed": 10.75999999999999,
+            "safeUntil": 10.75999999999999,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677559407,
+            "sequence": 98,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 3,
+              "effectiveTime": 10.59999999999999
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 1.5,
+            "replay": true,
+            "clockElapsed": 10.799999999999988,
+            "safeUntil": 10.799999999999988,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677559440.3,
+            "sequence": 98,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 3,
+              "effectiveTime": 10.59999999999999
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 1.099853515625,
+            "replay": true,
+            "clockElapsed": 10.819999999999988,
+            "safeUntil": 10.819999999999988,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677559473.7,
+            "sequence": 98,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 3,
+              "effectiveTime": 10.59999999999999
+            },
+            "intervalMs": 33.39990234375,
+            "drawMs": 1.10009765625,
+            "replay": true,
+            "clockElapsed": 10.859999999999987,
+            "safeUntil": 10.859999999999987,
+            "cameraVersion": null
+          }
+        ],
+        "resourcesReady": 2155,
+        "resourcesDuring": 2155,
+        "resourcesAfterAdoption": 2166,
+        "consumerForksAtReady": {
+          "uniformForks": 312,
+          "bufferForks": 6,
+          "textureForks": 0,
+          "bindingForks": 312
+        },
+        "consumerForksDuring": {
+          "uniformForks": 312,
+          "bufferForks": 6,
+          "textureForks": 0,
+          "bindingForks": 312
+        },
+        "gpuErrors": 0
+      },
+      {
+        "sequence": 5,
+        "mutation": {
+          "type": "restoreRemovedProps",
+          "records": []
+        },
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+          "nativeSession": 1,
+          "ticket": 4,
+          "effectiveTime": 10.899999999999986
+        },
+        "receipt": {
+          "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+          "session": "ground-native",
+          "holdId": 4,
+          "sequence": 2,
+          "effectiveTime": 10.899999999999986,
+          "clockSequence": 37,
+          "preparedWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+            "nativeSession": 1,
+            "ticket": 4,
+            "effectiveTime": 10.899999999999986
+          },
+          "preparedFrameSequence": 102
+        },
+        "nativeRetention": true,
+        "nativeAdvance": {
+          "x": 20.04999991760254,
+          "z": 25.295999999999978,
+          "distance": 1.29599999999998,
+          "phase": 1.1999999999999815,
+          "yaw": -6.357828781962848e-8,
+          "firstRemainingPoint": 0,
+          "arrived": false,
+          "at": 11.199999999999982,
+          "duration": 11.111111111111132,
+          "runPhase": 0,
+          "walkPhase": 1.7999999999999723,
+          "carryPhase": 0,
+          "runDistance": 0,
+          "walkDistance": 1.29599999999998,
+          "runRemaining": 0,
+          "running": false,
+          "currentSpeed": 1.08,
+          "executedThrough": 11.199999999999982
+        },
+        "placementWitness": [],
+        "cropWitness": [],
+        "readyAt": 1794677561088.4,
+        "committedAt": 1794677561103.0999,
+        "observedAt": 1794677561332.4,
+        "block": {
+          "kind": "block-end",
+          "start": 1794677561097,
+          "end": 1794677562597
+        },
+        "newWorldFramesWhileBlocked": [
+          {
+            "at": 1794677561107.0999,
+            "sequence": 102,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 4,
+              "effectiveTime": 10.899999999999986
+            },
+            "intervalMs": 26.199951171875,
+            "drawMs": 2,
+            "replay": false,
+            "clockElapsed": 10.979999999999986,
+            "safeUntil": 10.979999999999986,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677561140.3,
+            "sequence": 102,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 4,
+              "effectiveTime": 10.899999999999986
+            },
+            "intervalMs": 33.2001953125,
+            "drawMs": 2.099853515625,
+            "replay": true,
+            "clockElapsed": 10.999999999999986,
+            "safeUntil": 10.999999999999986,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677561173.7,
+            "sequence": 102,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 4,
+              "effectiveTime": 10.899999999999986
+            },
+            "intervalMs": 33.39990234375,
+            "drawMs": 1.5,
+            "replay": true,
+            "clockElapsed": 11.039999999999985,
+            "safeUntil": 11.039999999999985,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677561207,
+            "sequence": 102,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 4,
+              "effectiveTime": 10.899999999999986
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 2,
+            "replay": true,
+            "clockElapsed": 11.059999999999985,
+            "safeUntil": 11.059999999999985,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677561240.4,
+            "sequence": 102,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 4,
+              "effectiveTime": 10.899999999999986
+            },
+            "intervalMs": 33.39990234375,
+            "drawMs": 2,
+            "replay": true,
+            "clockElapsed": 11.099999999999984,
+            "safeUntil": 11.099999999999984,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677561273.7,
+            "sequence": 102,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 4,
+              "effectiveTime": 10.899999999999986
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 2,
+            "replay": true,
+            "clockElapsed": 11.139999999999983,
+            "safeUntil": 11.139999999999983,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677561307,
+            "sequence": 102,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 4,
+              "effectiveTime": 10.899999999999986
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 2,
+            "replay": true,
+            "clockElapsed": 11.159999999999982,
+            "safeUntil": 11.159999999999982,
+            "cameraVersion": null
+          }
+        ],
+        "resourcesReady": 2213,
+        "resourcesDuring": 2213,
+        "resourcesAfterAdoption": 2244,
+        "consumerForksAtReady": {
+          "uniformForks": 410,
+          "bufferForks": 8,
+          "textureForks": 0,
+          "bindingForks": 410
+        },
+        "consumerForksDuring": {
+          "uniformForks": 410,
+          "bufferForks": 8,
+          "textureForks": 0,
+          "bindingForks": 410
+        },
+        "gpuErrors": 0
+      },
+      {
+        "sequence": 6,
+        "mutation": {
+          "type": "settlements",
+          "sites": [
+            {
+              "x": 60,
+              "z": -60,
+              "hx": 2,
+              "hz": 2
+            }
+          ]
+        },
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+          "nativeSession": 1,
+          "ticket": 5,
+          "effectiveTime": 11.199999999999982
+        },
+        "receipt": {
+          "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+          "session": "ground-native",
+          "holdId": 5,
+          "sequence": 2,
+          "effectiveTime": 11.199999999999982,
+          "clockSequence": 49,
+          "preparedWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 11.199999999999982
+          },
+          "preparedFrameSequence": 108
+        },
+        "nativeRetention": true,
+        "nativeAdvance": {
+          "x": 20.049999897003175,
+          "z": 25.619999999999973,
+          "distance": 1.6199999999999752,
+          "phase": 1.499999999999977,
+          "yaw": -6.357828781962848e-8,
+          "firstRemainingPoint": 0,
+          "arrived": false,
+          "at": 11.499999999999977,
+          "duration": 11.111111111111132,
+          "runPhase": 0,
+          "walkPhase": 2.249999999999966,
+          "carryPhase": 0,
+          "runDistance": 0,
+          "walkDistance": 1.6199999999999752,
+          "runRemaining": 0,
+          "running": false,
+          "currentSpeed": 1.08,
+          "executedThrough": 11.499999999999977
+        },
+        "placementWitness": [],
+        "cropWitness": [],
+        "readyAt": 1794677563123.5999,
+        "committedAt": 1794677563144.8,
+        "observedAt": 1794677563374.8,
+        "block": {
+          "kind": "block-end",
+          "start": 1794677563134.8,
+          "end": 1794677564634.8
+        },
+        "newWorldFramesWhileBlocked": [
+          {
+            "at": 1794677563173.8,
+            "sequence": 108,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 5,
+              "effectiveTime": 11.199999999999982
+            },
+            "intervalMs": 60.10009765625,
+            "drawMs": 1.7998046875,
+            "replay": false,
+            "clockElapsed": 11.299999999999981,
+            "safeUntil": 11.299999999999981,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677563207,
+            "sequence": 108,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 5,
+              "effectiveTime": 11.199999999999982
+            },
+            "intervalMs": 33.199951171875,
+            "drawMs": 1.5,
+            "replay": true,
+            "clockElapsed": 11.31999999999998,
+            "safeUntil": 11.31999999999998,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677563240.4,
+            "sequence": 108,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 5,
+              "effectiveTime": 11.199999999999982
+            },
+            "intervalMs": 33.39990234375,
+            "drawMs": 1.400146484375,
+            "replay": true,
+            "clockElapsed": 11.35999999999998,
+            "safeUntil": 11.35999999999998,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677563273.7,
+            "sequence": 108,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 5,
+              "effectiveTime": 11.199999999999982
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 1.5,
+            "replay": true,
+            "clockElapsed": 11.399999999999979,
+            "safeUntil": 11.399999999999979,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677563307.0999,
+            "sequence": 108,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 5,
+              "effectiveTime": 11.199999999999982
+            },
+            "intervalMs": 33.39990234375,
+            "drawMs": 1.300048828125,
+            "replay": true,
+            "clockElapsed": 11.419999999999979,
+            "safeUntil": 11.419999999999979,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677563340.3,
+            "sequence": 108,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 5,
+              "effectiveTime": 11.199999999999982
+            },
+            "intervalMs": 33.2001953125,
+            "drawMs": 1.2998046875,
+            "replay": true,
+            "clockElapsed": 11.459999999999978,
+            "safeUntil": 11.459999999999978,
+            "cameraVersion": null
+          }
+        ],
+        "resourcesReady": 2308,
+        "resourcesDuring": 2308,
+        "resourcesAfterAdoption": 2339,
+        "consumerForksAtReady": {
+          "uniformForks": 553,
+          "bufferForks": 10,
+          "textureForks": 0,
+          "bindingForks": 553
+        },
+        "consumerForksDuring": {
+          "uniformForks": 553,
+          "bufferForks": 10,
+          "textureForks": 0,
+          "bindingForks": 553
+        },
+        "gpuErrors": 0
+      },
+      {
+        "sequence": 7,
+        "mutation": {
+          "type": "settlements",
+          "replace": true,
+          "sites": [
+            {
+              "x": 20,
+              "z": 30,
+              "hx": 20,
+              "hz": 20
+            }
+          ]
+        },
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 11.499999999999977
+        },
+        "receipt": {
+          "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+          "session": "ground-native",
+          "holdId": 6,
+          "sequence": 2,
+          "effectiveTime": 11.499999999999977,
+          "clockSequence": 61,
+          "preparedWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+            "nativeSession": 1,
+            "ticket": 6,
+            "effectiveTime": 11.499999999999977
+          },
+          "preparedFrameSequence": 114
+        },
+        "nativeRetention": true,
+        "nativeAdvance": {
+          "x": 20.04999987640381,
+          "z": 25.943999999999967,
+          "distance": 1.9439999999999702,
+          "phase": 1.7999999999999723,
+          "yaw": -6.357828781962848e-8,
+          "firstRemainingPoint": 0,
+          "arrived": false,
+          "at": 11.799999999999972,
+          "duration": 11.111111111111132,
+          "runPhase": 0,
+          "walkPhase": 2.699999999999959,
+          "carryPhase": 0,
+          "runDistance": 0,
+          "walkDistance": 1.9439999999999702,
+          "runRemaining": 0,
+          "running": false,
+          "currentSpeed": 1.08,
+          "executedThrough": 11.799999999999972
+        },
+        "placementWitness": [],
+        "cropWitness": [],
+        "readyAt": 1794677565500.8,
+        "committedAt": 1794677565532.4,
+        "observedAt": 1794677565768.2,
+        "block": {
+          "kind": "block-end",
+          "start": 1794677565514,
+          "end": 1794677567014
+        },
+        "newWorldFramesWhileBlocked": [
+          {
+            "at": 1794677565540.4,
+            "sequence": 114,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 6,
+              "effectiveTime": 11.499999999999977
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 1.800048828125,
+            "replay": false,
+            "clockElapsed": 11.579999999999977,
+            "safeUntil": 11.579999999999977,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677565573.7,
+            "sequence": 114,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 6,
+              "effectiveTime": 11.499999999999977
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 1.300048828125,
+            "replay": true,
+            "clockElapsed": 11.599999999999977,
+            "safeUntil": 11.599999999999977,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677565607.0999,
+            "sequence": 114,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 6,
+              "effectiveTime": 11.499999999999977
+            },
+            "intervalMs": 33.39990234375,
+            "drawMs": 1.300048828125,
+            "replay": true,
+            "clockElapsed": 11.639999999999976,
+            "safeUntil": 11.639999999999976,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677565640.4,
+            "sequence": 114,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 6,
+              "effectiveTime": 11.499999999999977
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 1.60009765625,
+            "replay": true,
+            "clockElapsed": 11.659999999999975,
+            "safeUntil": 11.659999999999975,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677565673.7,
+            "sequence": 114,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 6,
+              "effectiveTime": 11.499999999999977
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 1.199951171875,
+            "replay": true,
+            "clockElapsed": 11.699999999999974,
+            "safeUntil": 11.699999999999974,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677565707,
+            "sequence": 114,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 6,
+              "effectiveTime": 11.499999999999977
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 1.199951171875,
+            "replay": true,
+            "clockElapsed": 11.739999999999974,
+            "safeUntil": 11.739999999999974,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677565740.4,
+            "sequence": 114,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 6,
+              "effectiveTime": 11.499999999999977
+            },
+            "intervalMs": 33.39990234375,
+            "drawMs": 1.800048828125,
+            "replay": true,
+            "clockElapsed": 11.759999999999973,
+            "safeUntil": 11.759999999999973,
+            "cameraVersion": null
+          }
+        ],
+        "resourcesReady": 2449,
+        "resourcesDuring": 2449,
+        "resourcesAfterAdoption": 2480,
+        "consumerForksAtReady": {
+          "uniformForks": 730,
+          "bufferForks": 12,
+          "textureForks": 0,
+          "bindingForks": 730
+        },
+        "consumerForksDuring": {
+          "uniformForks": 730,
+          "bufferForks": 12,
+          "textureForks": 0,
+          "bindingForks": 730
+        },
+        "gpuErrors": 0
+      },
+      {
+        "sequence": 8,
+        "mutation": {
+          "type": "settlements",
+          "sites": [
+            {
+              "x": 50.847511768341064,
+              "z": 1.0006317496299744,
+              "hx": 6,
+              "hz": 6
+            }
+          ]
+        },
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+          "nativeSession": 1,
+          "ticket": 7,
+          "effectiveTime": 11.799999999999972
+        },
+        "receipt": {
+          "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+          "session": "ground-native",
+          "holdId": 7,
+          "sequence": 2,
+          "effectiveTime": 11.799999999999972,
+          "clockSequence": 73,
+          "preparedWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+            "nativeSession": 1,
+            "ticket": 7,
+            "effectiveTime": 11.799999999999972
+          },
+          "preparedFrameSequence": 120
+        },
+        "nativeRetention": true,
+        "nativeAdvance": {
+          "x": 20.049999855804444,
+          "z": 26.26799999999996,
+          "distance": 2.267999999999965,
+          "phase": 2.0999999999999677,
+          "yaw": -6.357828781962848e-8,
+          "firstRemainingPoint": 0,
+          "arrived": false,
+          "at": 12.099999999999968,
+          "duration": 11.111111111111132,
+          "runPhase": 0,
+          "walkPhase": 3.1499999999999515,
+          "carryPhase": 0,
+          "runDistance": 0,
+          "walkDistance": 2.267999999999965,
+          "runRemaining": 0,
+          "running": false,
+          "currentSpeed": 1.08,
+          "executedThrough": 12.099999999999968
+        },
+        "placementWitness": [
+          {
+            "recorded": {
+              "id": "structure-749",
+              "object": 170,
+              "position": [
+                48.847511768341064,
+                14.972959899902344,
+                -0.9993682503700256
+              ],
+              "worldPosition": [
+                48.847511768341064,
+                14.972959899902344,
+                -0.9993682503700256
+              ],
+              "visible": true,
+              "geometries": [
+                51,
+                52
+              ],
+              "materials": [
+                51,
+                52
+              ]
+            },
+            "confirmed": {
+              "id": "structure-749",
+              "object": 170,
+              "position": [
+                48.847511768341064,
+                14.524411189535295,
+                -0.9993682503700256
+              ],
+              "worldPosition": [
+                48.847511768341064,
+                14.524411189535295,
+                -0.9993682503700256
+              ],
+              "visible": true,
+              "geometries": [
+                51,
+                52
+              ],
+              "materials": [
+                51,
+                52
+              ]
+            },
+            "nativeHeight": 14.972959899902344,
+            "adopted": {
+              "id": "structure-749",
+              "object": 170,
+              "position": [
+                48.847511768341064,
+                14.972959899902344,
+                -0.9993682503700256
+              ],
+              "worldPosition": [
+                48.847511768341064,
+                14.972959899902344,
+                -0.9993682503700256
+              ],
+              "visible": true,
+              "geometries": [
+                51,
+                52
+              ],
+              "materials": [
+                51,
+                52
+              ]
+            }
+          },
+          {
+            "recorded": {
+              "id": "structure-2",
+              "object": 175,
+              "position": [
+                47.847511768341064,
+                14.972959899902344,
+                -1.9993682503700256
+              ],
+              "worldPosition": [
+                47.847511768341064,
+                14.972959899902344,
+                -1.9993682503700256
+              ],
+              "visible": true,
+              "geometries": [
+                48,
+                54,
+                55,
+                56,
+                57
+              ],
+              "materials": [
+                54,
+                57,
+                56,
+                58,
+                59
+              ]
+            },
+            "confirmed": {
+              "id": "structure-2",
+              "object": 175,
+              "position": [
+                47.847511768341064,
+                14.292918902835163,
+                -1.9993682503700256
+              ],
+              "worldPosition": [
+                47.847511768341064,
+                14.292918902835163,
+                -1.9993682503700256
+              ],
+              "visible": true,
+              "geometries": [
+                48,
+                54,
+                55,
+                56,
+                57
+              ],
+              "materials": [
+                54,
+                57,
+                56,
+                58,
+                59
+              ]
+            },
+            "nativeHeight": 14.972959899902344,
+            "adopted": {
+              "id": "structure-2",
+              "object": 175,
+              "position": [
+                47.847511768341064,
+                14.972959899902344,
+                -1.9993682503700256
+              ],
+              "worldPosition": [
+                47.847511768341064,
+                14.972959899902344,
+                -1.9993682503700256
+              ],
+              "visible": true,
+              "geometries": [
+                48,
+                54,
+                55,
+                56,
+                57
+              ],
+              "materials": [
+                54,
+                57,
+                56,
+                58,
+                59
+              ]
+            }
+          },
+          {
+            "recorded": {
+              "id": "crate-186",
+              "object": 369,
+              "position": [
+                48.347511768341064,
+                14.972959899902344,
+                -1.4993682503700256
+              ],
+              "worldPosition": [
+                48.347511768341064,
+                14.972959899902344,
+                -1.4993682503700256
+              ],
+              "visible": true,
+              "geometries": [
+                98,
+                99,
+                100,
+                101,
+                102,
+                103,
+                104,
+                105,
+                106
+              ],
+              "materials": [
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120,
+                121,
+                122
+              ]
+            },
+            "confirmed": {
+              "id": "crate-186",
+              "object": 369,
+              "position": [
+                48.347511768341064,
+                14.408321216490856,
+                -1.4993682503700256
+              ],
+              "worldPosition": [
+                48.347511768341064,
+                14.408321216490856,
+                -1.4993682503700256
+              ],
+              "visible": true,
+              "geometries": [
+                98,
+                99,
+                100,
+                101,
+                102,
+                103,
+                104,
+                105,
+                106
+              ],
+              "materials": [
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120,
+                121,
+                122
+              ]
+            },
+            "nativeHeight": 14.972959899902344,
+            "adopted": {
+              "id": "crate-186",
+              "object": 369,
+              "position": [
+                48.347511768341064,
+                14.972959899902344,
+                -1.4993682503700256
+              ],
+              "worldPosition": [
+                48.347511768341064,
+                14.972959899902344,
+                -1.4993682503700256
+              ],
+              "visible": true,
+              "geometries": [
+                98,
+                99,
+                100,
+                101,
+                102,
+                103,
+                104,
+                105,
+                106
+              ],
+              "materials": [
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120,
+                121,
+                122
+              ]
+            }
+          }
+        ],
+        "cropWitness": [
+          {
+            "recorded": {
+              "object": 418,
+              "geometry": 194,
+              "material": 189,
+              "matrixAttribute": 2180,
+              "matrixResources": [
+                "Buffer:2416",
+                "Buffer:2443"
+              ],
+              "count": 1,
+              "visible": true,
+              "positions": [
+                [
+                  47.847511291503906,
+                  14.947959899902344,
+                  -1.9993681907653809
+                ]
+              ],
+              "growth": [
+                1.0533417463302612,
+                1.0020638704299927,
+                1,
+                3
+              ],
+              "blessing": [
+                0,
+                0,
+                -1000,
+                0
+              ]
+            },
+            "confirmed": {
+              "object": 418,
+              "geometry": 194,
+              "material": 189,
+              "matrixAttribute": 2180,
+              "matrixResources": [
+                "Buffer:2416",
+                "Buffer:2443"
+              ],
+              "count": 1,
+              "visible": true,
+              "positions": [
+                [
+                  47.847511291503906,
+                  14.267918586730957,
+                  -1.9993681907653809
+                ]
+              ],
+              "growth": [
+                1.0533417463302612,
+                1.0020638704299927,
+                1,
+                3
+              ],
+              "blessing": [
+                0,
+                0,
+                -1000,
+                0
+              ]
+            },
+            "gpuPosition": [
+              47.847511291503906,
+              14.947959899902344,
+              -1.9993681907653809
+            ],
+            "adopted": {
+              "object": 418,
+              "geometry": 194,
+              "material": 189,
+              "matrixAttribute": 2180,
+              "matrixResources": [
+                "Buffer:2416",
+                "Buffer:2443"
+              ],
+              "count": 1,
+              "visible": true,
+              "positions": [
+                [
+                  47.847511291503906,
+                  14.947959899902344,
+                  -1.9993681907653809
+                ]
+              ],
+              "growth": [
+                1.0533417463302612,
+                1.0020638704299927,
+                1,
+                3
+              ],
+              "blessing": [
+                0,
+                0,
+                -1000,
+                0
+              ]
+            },
+            "nativeHeights": [
+              14.947959899902344
+            ]
+          },
+          {
+            "recorded": {
+              "object": 419,
+              "geometry": 195,
+              "material": 190,
+              "matrixAttribute": 2192,
+              "matrixResources": [
+                "Buffer:2465",
+                "Buffer:2492"
+              ],
+              "count": 1,
+              "visible": true,
+              "positions": [
+                [
+                  48.14751052856445,
+                  14.947959899902344,
+                  -1.7993682622909546
+                ]
+              ],
+              "growth": [
+                0.5,
+                0.9054179787635803,
+                23,
+                0
+              ],
+              "blessing": [
+                0,
+                0,
+                -1000,
+                0
+              ]
+            },
+            "confirmed": {
+              "object": 419,
+              "geometry": 195,
+              "material": 190,
+              "matrixAttribute": 2192,
+              "matrixResources": [
+                "Buffer:2465",
+                "Buffer:2492"
+              ],
+              "count": 1,
+              "visible": true,
+              "positions": [
+                [
+                  48.14751052856445,
+                  14.35132122039795,
+                  -1.7993682622909546
+                ]
+              ],
+              "growth": [
+                0.5,
+                0.9054179787635803,
+                23,
+                0
+              ],
+              "blessing": [
+                0,
+                0,
+                -1000,
+                0
+              ]
+            },
+            "gpuPosition": [
+              48.14751052856445,
+              14.947959899902344,
+              -1.7993682622909546
+            ],
+            "adopted": {
+              "object": 419,
+              "geometry": 195,
+              "material": 190,
+              "matrixAttribute": 2192,
+              "matrixResources": [
+                "Buffer:2465",
+                "Buffer:2492"
+              ],
+              "count": 1,
+              "visible": true,
+              "positions": [
+                [
+                  48.14751052856445,
+                  14.947959899902344,
+                  -1.7993682622909546
+                ]
+              ],
+              "growth": [
+                0.5,
+                0.9054179787635803,
+                23,
+                0
+              ],
+              "blessing": [
+                0,
+                0,
+                -1000,
+                0
+              ]
+            },
+            "nativeHeights": [
+              14.947959899902344
+            ]
+          },
+          {
+            "recorded": {
+              "object": 420,
+              "geometry": 196,
+              "material": 189,
+              "matrixAttribute": 2200,
+              "matrixResources": [
+                "Buffer:2517",
+                "Buffer:2533"
+              ],
+              "count": 1,
+              "visible": true,
+              "positions": [
+                [
+                  48.447513580322266,
+                  14.947959899902344,
+                  -1.5993682146072388
+                ]
+              ],
+              "growth": [
+                1,
+                1,
+                1,
+                25
+              ],
+              "blessing": [
+                0,
+                0,
+                -1000,
+                0
+              ]
+            },
+            "confirmed": {
+              "object": 420,
+              "geometry": 196,
+              "material": 189,
+              "matrixAttribute": 2200,
+              "matrixResources": [
+                "Buffer:2517",
+                "Buffer:2533"
+              ],
+              "count": 1,
+              "visible": true,
+              "positions": [
+                [
+                  48.447513580322266,
+                  14.433333396911621,
+                  -1.5993682146072388
+                ]
+              ],
+              "growth": [
+                1,
+                1,
+                1,
+                25
+              ],
+              "blessing": [
+                0,
+                0,
+                -1000,
+                0
+              ]
+            },
+            "gpuPosition": [
+              48.447513580322266,
+              14.947959899902344,
+              -1.5993682146072388
+            ],
+            "adopted": {
+              "object": 420,
+              "geometry": 196,
+              "material": 189,
+              "matrixAttribute": 2200,
+              "matrixResources": [
+                "Buffer:2517",
+                "Buffer:2533"
+              ],
+              "count": 1,
+              "visible": true,
+              "positions": [
+                [
+                  48.447513580322266,
+                  14.947959899902344,
+                  -1.5993682146072388
+                ]
+              ],
+              "growth": [
+                1,
+                1,
+                1,
+                25
+              ],
+              "blessing": [
+                0,
+                0,
+                -1000,
+                0
+              ]
+            },
+            "nativeHeights": [
+              14.947959899902344
+            ]
+          }
+        ],
+        "readyAt": 1794677567740.5999,
+        "committedAt": 1794677567766,
+        "observedAt": 1794677567997.0999,
+        "block": {
+          "kind": "block-end",
+          "start": 1794677567754.4001,
+          "end": 1794677569254.4001
+        },
+        "newWorldFramesWhileBlocked": [
+          {
+            "at": 1794677567773.5999,
+            "sequence": 120,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 7,
+              "effectiveTime": 11.799999999999972
+            },
+            "intervalMs": 33.39990234375,
+            "drawMs": 1.5,
+            "replay": false,
+            "clockElapsed": 11.879999999999972,
+            "safeUntil": 11.879999999999972,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677567807.0999,
+            "sequence": 120,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 7,
+              "effectiveTime": 11.799999999999972
+            },
+            "intervalMs": 33.5,
+            "drawMs": 1.800048828125,
+            "replay": true,
+            "clockElapsed": 11.899999999999972,
+            "safeUntil": 11.899999999999972,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677567840.4,
+            "sequence": 120,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 7,
+              "effectiveTime": 11.799999999999972
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 1.60009765625,
+            "replay": true,
+            "clockElapsed": 11.939999999999971,
+            "safeUntil": 11.939999999999971,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677567873.7,
+            "sequence": 120,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 7,
+              "effectiveTime": 11.799999999999972
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 1.5,
+            "replay": true,
+            "clockElapsed": 11.95999999999997,
+            "safeUntil": 11.95999999999997,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677567907,
+            "sequence": 120,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 7,
+              "effectiveTime": 11.799999999999972
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 1.699951171875,
+            "replay": true,
+            "clockElapsed": 11.99999999999997,
+            "safeUntil": 11.99999999999997,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677567940.3,
+            "sequence": 120,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 7,
+              "effectiveTime": 11.799999999999972
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 1.5,
+            "replay": true,
+            "clockElapsed": 12.039999999999969,
+            "safeUntil": 12.039999999999969,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677567973.7,
+            "sequence": 120,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 7,
+              "effectiveTime": 11.799999999999972
+            },
+            "intervalMs": 33.39990234375,
+            "drawMs": 1.89990234375,
+            "replay": true,
+            "clockElapsed": 12.059999999999969,
+            "safeUntil": 12.059999999999969,
+            "cameraVersion": null
+          }
+        ],
+        "resourcesReady": 2628,
+        "resourcesDuring": 2628,
+        "resourcesAfterAdoption": 2659,
+        "consumerForksAtReady": {
+          "uniformForks": 914,
+          "bufferForks": 14,
+          "textureForks": 0,
+          "bindingForks": 914
+        },
+        "consumerForksDuring": {
+          "uniformForks": 914,
+          "bufferForks": 14,
+          "textureForks": 0,
+          "bindingForks": 914
+        },
+        "gpuErrors": 0
+      },
+      {
+        "sequence": 9,
+        "mutation": {
+          "type": "settlements",
+          "replace": true,
+          "sites": [
+            {
+              "x": 20,
+              "z": 30,
+              "hx": 20,
+              "hz": 20
+            }
+          ]
+        },
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+          "nativeSession": 1,
+          "ticket": 8,
+          "effectiveTime": 12.099999999999968
+        },
+        "receipt": {
+          "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+          "session": "ground-native",
+          "holdId": 8,
+          "sequence": 2,
+          "effectiveTime": 12.099999999999968,
+          "clockSequence": 85,
+          "preparedWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+            "nativeSession": 1,
+            "ticket": 8,
+            "effectiveTime": 12.099999999999968
+          },
+          "preparedFrameSequence": 126
+        },
+        "nativeRetention": true,
+        "nativeAdvance": {
+          "x": 20.049999835205078,
+          "z": 26.591999999999956,
+          "distance": 2.59199999999996,
+          "phase": 2.399999999999963,
+          "yaw": -6.357828781962848e-8,
+          "firstRemainingPoint": 0,
+          "arrived": false,
+          "at": 12.399999999999963,
+          "duration": 11.111111111111132,
+          "runPhase": 0,
+          "walkPhase": 3.5999999999999446,
+          "carryPhase": 0,
+          "runDistance": 0,
+          "walkDistance": 2.59199999999996,
+          "runRemaining": 0,
+          "running": false,
+          "currentSpeed": 1.08,
+          "executedThrough": 12.399999999999963
+        },
+        "placementWitness": [
+          {
+            "recorded": {
+              "id": "structure-749",
+              "object": 170,
+              "position": [
+                48.847511768341064,
+                14.524411189535295,
+                -0.9993682503700256
+              ],
+              "worldPosition": [
+                48.847511768341064,
+                14.524411189535295,
+                -0.9993682503700256
+              ],
+              "visible": true,
+              "geometries": [
+                51,
+                52
+              ],
+              "materials": [
+                51,
+                52
+              ]
+            },
+            "confirmed": {
+              "id": "structure-749",
+              "object": 170,
+              "position": [
+                48.847511768341064,
+                14.972959899902344,
+                -0.9993682503700256
+              ],
+              "worldPosition": [
+                48.847511768341064,
+                14.972959899902344,
+                -0.9993682503700256
+              ],
+              "visible": true,
+              "geometries": [
+                51,
+                52
+              ],
+              "materials": [
+                51,
+                52
+              ]
+            },
+            "nativeHeight": 14.524410629272461,
+            "adopted": {
+              "id": "structure-749",
+              "object": 170,
+              "position": [
+                48.847511768341064,
+                14.524411189535295,
+                -0.9993682503700256
+              ],
+              "worldPosition": [
+                48.847511768341064,
+                14.524411189535295,
+                -0.9993682503700256
+              ],
+              "visible": true,
+              "geometries": [
+                51,
+                52
+              ],
+              "materials": [
+                51,
+                52
+              ]
+            }
+          },
+          {
+            "recorded": {
+              "id": "structure-2",
+              "object": 175,
+              "position": [
+                47.847511768341064,
+                14.292918902835163,
+                -1.9993682503700256
+              ],
+              "worldPosition": [
+                47.847511768341064,
+                14.292918902835163,
+                -1.9993682503700256
+              ],
+              "visible": true,
+              "geometries": [
+                48,
+                54,
+                55,
+                56,
+                57
+              ],
+              "materials": [
+                54,
+                57,
+                56,
+                58,
+                59
+              ]
+            },
+            "confirmed": {
+              "id": "structure-2",
+              "object": 175,
+              "position": [
+                47.847511768341064,
+                14.972959899902344,
+                -1.9993682503700256
+              ],
+              "worldPosition": [
+                47.847511768341064,
+                14.972959899902344,
+                -1.9993682503700256
+              ],
+              "visible": true,
+              "geometries": [
+                48,
+                54,
+                55,
+                56,
+                57
+              ],
+              "materials": [
+                54,
+                57,
+                56,
+                58,
+                59
+              ]
+            },
+            "nativeHeight": 14.292918586730957,
+            "adopted": {
+              "id": "structure-2",
+              "object": 175,
+              "position": [
+                47.847511768341064,
+                14.292918902835163,
+                -1.9993682503700256
+              ],
+              "worldPosition": [
+                47.847511768341064,
+                14.292918902835163,
+                -1.9993682503700256
+              ],
+              "visible": true,
+              "geometries": [
+                48,
+                54,
+                55,
+                56,
+                57
+              ],
+              "materials": [
+                54,
+                57,
+                56,
+                58,
+                59
+              ]
+            }
+          },
+          {
+            "recorded": {
+              "id": "crate-186",
+              "object": 369,
+              "position": [
+                48.347511768341064,
+                14.408321216490913,
+                -1.4993682503700256
+              ],
+              "worldPosition": [
+                48.347511768341064,
+                14.408321216490913,
+                -1.4993682503700256
+              ],
+              "visible": true,
+              "geometries": [
+                98,
+                99,
+                100,
+                101,
+                102,
+                103,
+                104,
+                105,
+                106
+              ],
+              "materials": [
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120,
+                121,
+                122
+              ]
+            },
+            "confirmed": {
+              "id": "crate-186",
+              "object": 369,
+              "position": [
+                48.347511768341064,
+                14.972959899902344,
+                -1.4993682503700256
+              ],
+              "worldPosition": [
+                48.347511768341064,
+                14.972959899902344,
+                -1.4993682503700256
+              ],
+              "visible": true,
+              "geometries": [
+                98,
+                99,
+                100,
+                101,
+                102,
+                103,
+                104,
+                105,
+                106
+              ],
+              "materials": [
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120,
+                121,
+                122
+              ]
+            },
+            "nativeHeight": 14.408321762084961,
+            "adopted": {
+              "id": "crate-186",
+              "object": 369,
+              "position": [
+                48.347511768341064,
+                14.408321216490856,
+                -1.4993682503700256
+              ],
+              "worldPosition": [
+                48.347511768341064,
+                14.408321216490856,
+                -1.4993682503700256
+              ],
+              "visible": true,
+              "geometries": [
+                98,
+                99,
+                100,
+                101,
+                102,
+                103,
+                104,
+                105,
+                106
+              ],
+              "materials": [
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120,
+                121,
+                122
+              ]
+            }
+          }
+        ],
+        "cropWitness": [
+          {
+            "recorded": {
+              "object": 418,
+              "geometry": 194,
+              "material": 189,
+              "matrixAttribute": 2180,
+              "matrixResources": [
+                "Buffer:2416",
+                "Buffer:2443"
+              ],
+              "count": 1,
+              "visible": true,
+              "positions": [
+                [
+                  47.847511291503906,
+                  14.267918586730957,
+                  -1.9993681907653809
+                ]
+              ],
+              "growth": [
+                1.0533417463302612,
+                1.0020638704299927,
+                1,
+                3
+              ],
+              "blessing": [
+                0,
+                0,
+                -1000,
+                0
+              ]
+            },
+            "confirmed": {
+              "object": 418,
+              "geometry": 194,
+              "material": 189,
+              "matrixAttribute": 2180,
+              "matrixResources": [
+                "Buffer:2416",
+                "Buffer:2443"
+              ],
+              "count": 1,
+              "visible": true,
+              "positions": [
+                [
+                  47.847511291503906,
+                  14.947959899902344,
+                  -1.9993681907653809
+                ]
+              ],
+              "growth": [
+                1.0533417463302612,
+                1.0020638704299927,
+                1,
+                3
+              ],
+              "blessing": [
+                0,
+                0,
+                -1000,
+                0
+              ]
+            },
+            "gpuPosition": [
+              47.847511291503906,
+              14.267918586730957,
+              -1.9993681907653809
+            ],
+            "adopted": {
+              "object": 418,
+              "geometry": 194,
+              "material": 189,
+              "matrixAttribute": 2180,
+              "matrixResources": [
+                "Buffer:2416",
+                "Buffer:2443"
+              ],
+              "count": 1,
+              "visible": true,
+              "positions": [
+                [
+                  47.847511291503906,
+                  14.267918586730957,
+                  -1.9993681907653809
+                ]
+              ],
+              "growth": [
+                1.0533417463302612,
+                1.0020638704299927,
+                1,
+                3
+              ],
+              "blessing": [
+                0,
+                0,
+                -1000,
+                0
+              ]
+            },
+            "nativeHeights": [
+              14.267918586730957
+            ]
+          },
+          {
+            "recorded": {
+              "object": 419,
+              "geometry": 195,
+              "material": 190,
+              "matrixAttribute": 2192,
+              "matrixResources": [
+                "Buffer:2465",
+                "Buffer:2492"
+              ],
+              "count": 1,
+              "visible": true,
+              "positions": [
+                [
+                  48.14751052856445,
+                  14.35132122039795,
+                  -1.7993682622909546
+                ]
+              ],
+              "growth": [
+                0.5,
+                0.9054179787635803,
+                23,
+                0
+              ],
+              "blessing": [
+                0,
+                0,
+                -1000,
+                0
+              ]
+            },
+            "confirmed": {
+              "object": 419,
+              "geometry": 195,
+              "material": 190,
+              "matrixAttribute": 2192,
+              "matrixResources": [
+                "Buffer:2465",
+                "Buffer:2492"
+              ],
+              "count": 1,
+              "visible": true,
+              "positions": [
+                [
+                  48.14751052856445,
+                  14.947959899902344,
+                  -1.7993682622909546
+                ]
+              ],
+              "growth": [
+                0.5,
+                0.9054179787635803,
+                23,
+                0
+              ],
+              "blessing": [
+                0,
+                0,
+                -1000,
+                0
+              ]
+            },
+            "gpuPosition": [
+              48.14751052856445,
+              14.35132122039795,
+              -1.7993682622909546
+            ],
+            "adopted": {
+              "object": 419,
+              "geometry": 195,
+              "material": 190,
+              "matrixAttribute": 2192,
+              "matrixResources": [
+                "Buffer:2465",
+                "Buffer:2492"
+              ],
+              "count": 1,
+              "visible": true,
+              "positions": [
+                [
+                  48.14751052856445,
+                  14.35132122039795,
+                  -1.7993682622909546
+                ]
+              ],
+              "growth": [
+                0.5,
+                0.9054179787635803,
+                23,
+                0
+              ],
+              "blessing": [
+                0,
+                0,
+                -1000,
+                0
+              ]
+            },
+            "nativeHeights": [
+              14.351320266723633
+            ]
+          },
+          {
+            "recorded": {
+              "object": 420,
+              "geometry": 196,
+              "material": 189,
+              "matrixAttribute": 2200,
+              "matrixResources": [
+                "Buffer:2517",
+                "Buffer:2533"
+              ],
+              "count": 1,
+              "visible": true,
+              "positions": [
+                [
+                  48.447513580322266,
+                  14.433333396911621,
+                  -1.5993682146072388
+                ]
+              ],
+              "growth": [
+                1,
+                1,
+                1,
+                25
+              ],
+              "blessing": [
+                0,
+                0,
+                -1000,
+                0
+              ]
+            },
+            "confirmed": {
+              "object": 420,
+              "geometry": 196,
+              "material": 189,
+              "matrixAttribute": 2200,
+              "matrixResources": [
+                "Buffer:2517",
+                "Buffer:2533"
+              ],
+              "count": 1,
+              "visible": true,
+              "positions": [
+                [
+                  48.447513580322266,
+                  14.947959899902344,
+                  -1.5993682146072388
+                ]
+              ],
+              "growth": [
+                1,
+                1,
+                1,
+                25
+              ],
+              "blessing": [
+                0,
+                0,
+                -1000,
+                0
+              ]
+            },
+            "gpuPosition": [
+              48.447513580322266,
+              14.433333396911621,
+              -1.5993682146072388
+            ],
+            "adopted": {
+              "object": 420,
+              "geometry": 196,
+              "material": 189,
+              "matrixAttribute": 2200,
+              "matrixResources": [
+                "Buffer:2517",
+                "Buffer:2533"
+              ],
+              "count": 1,
+              "visible": true,
+              "positions": [
+                [
+                  48.447513580322266,
+                  14.433333396911621,
+                  -1.5993682146072388
+                ]
+              ],
+              "growth": [
+                1,
+                1,
+                1,
+                25
+              ],
+              "blessing": [
+                0,
+                0,
+                -1000,
+                0
+              ]
+            },
+            "nativeHeights": [
+              14.433334350585938
+            ]
+          }
+        ],
+        "readyAt": 1794677570219.3,
+        "committedAt": 1794677570247.5,
+        "observedAt": 1794677570480.9,
+        "block": {
+          "kind": "block-end",
+          "start": 1794677570231.4001,
+          "end": 1794677571731.4001
+        },
+        "newWorldFramesWhileBlocked": [
+          {
+            "at": 1794677570273.8,
+            "sequence": 126,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 8,
+              "effectiveTime": 12.099999999999968
+            },
+            "intervalMs": 66.7001953125,
+            "drawMs": 2.099853515625,
+            "replay": false,
+            "clockElapsed": 12.179999999999968,
+            "safeUntil": 12.179999999999968,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677570307.0999,
+            "sequence": 126,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 8,
+              "effectiveTime": 12.099999999999968
+            },
+            "intervalMs": 33.2998046875,
+            "drawMs": 1.60009765625,
+            "replay": true,
+            "clockElapsed": 12.219999999999967,
+            "safeUntil": 12.219999999999967,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677570340.4,
+            "sequence": 126,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 8,
+              "effectiveTime": 12.099999999999968
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 1.900146484375,
+            "replay": true,
+            "clockElapsed": 12.259999999999966,
+            "safeUntil": 12.259999999999966,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677570373.7,
+            "sequence": 126,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 8,
+              "effectiveTime": 12.099999999999968
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 2,
+            "replay": true,
+            "clockElapsed": 12.279999999999966,
+            "safeUntil": 12.279999999999966,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677570407,
+            "sequence": 126,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 8,
+              "effectiveTime": 12.099999999999968
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 1.800048828125,
+            "replay": true,
+            "clockElapsed": 12.319999999999965,
+            "safeUntil": 12.319999999999965,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677570440.3,
+            "sequence": 126,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 8,
+              "effectiveTime": 12.099999999999968
+            },
+            "intervalMs": 33.300048828125,
+            "drawMs": 1.39990234375,
+            "replay": true,
+            "clockElapsed": 12.359999999999964,
+            "safeUntil": 12.359999999999964,
+            "cameraVersion": null
+          },
+          {
+            "at": 1794677570473.7,
+            "sequence": 126,
+            "nativeWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+              "nativeSession": 1,
+              "ticket": 8,
+              "effectiveTime": 12.099999999999968
+            },
+            "intervalMs": 33.39990234375,
+            "drawMs": 1.39990234375,
+            "replay": true,
+            "clockElapsed": 12.379999999999963,
+            "safeUntil": 12.379999999999963,
+            "cameraVersion": null
+          }
+        ],
+        "resourcesReady": 2830,
+        "resourcesDuring": 2830,
+        "resourcesAfterAdoption": 2861,
+        "consumerForksAtReady": {
+          "uniformForks": 1128,
+          "bufferForks": 16,
+          "textureForks": 0,
+          "bindingForks": 1128
+        },
+        "consumerForksDuring": {
+          "uniformForks": 1128,
+          "bufferForks": 16,
+          "textureForks": 0,
+          "bindingForks": 1128
+        },
+        "gpuErrors": 0
+      }
+    ],
+    "diagnosticGpuReadbacks": {
+      "buffersReservedBeforeSupportMutations": 2,
+      "bytesPerBuffer": 384,
+      "sourceMatrices": [
+        {
+          "object": 418,
+          "matrixResource": "Buffer:2416"
+        },
+        {
+          "object": 418,
+          "matrixResource": "Buffer:2443"
+        },
+        {
+          "object": 419,
+          "matrixResource": "Buffer:2465"
+        },
+        {
+          "object": 419,
+          "matrixResource": "Buffer:2492"
+        },
+        {
+          "object": 420,
+          "matrixResource": "Buffer:2517"
+        },
+        {
+          "object": 420,
+          "matrixResource": "Buffer:2533"
+        }
+      ],
+      "copiesExecuteInPreparedPacket": true
+    },
+    "placementSupport": {
+      "plants": [
+        {
+          "id": "plant-3",
+          "species": "mijo",
+          "growth": 14
+        },
+        {
+          "id": "plant-23",
+          "species": "mijo",
+          "growth": 67.284
+        },
+        {
+          "id": "plant-25",
+          "species": "mijo",
+          "growth": 140
+        }
+      ],
+      "structures": [
+        {
+          "id": "structure-2",
+          "kind": "center",
+          "hp": 360,
+          "maxHp": 600,
+          "gate": false
+        },
+        {
+          "id": "structure-749",
+          "kind": "wall",
+          "hp": 60,
+          "maxHp": 100,
+          "gate": false
+        }
+      ],
+      "crates": [
+        {
+          "id": "crate-186",
+          "profile": "olderFemale"
+        }
+      ]
+    },
+    "guardedMutation": {
+      "occupiedChunk": [
+        0,
+        1
+      ],
+      "error": null,
+      "refusedStatus": "blocked",
+      "preparationAttempted": false,
+      "nativeBeforeGuard": {
+        "version": 1,
+        "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+        "nativeSession": 1,
+        "ticket": 8,
+        "effectiveTime": 12.099999999999968
+      },
+      "nativeAfterGuard": {
+        "version": 1,
+        "authorityEpoch": "6130770e-0bdb-45b9-8c0d-8f9aab391240/1",
+        "nativeSession": 1,
+        "ticket": 8,
+        "effectiveTime": 12.099999999999968
+      },
+      "resident": 9
+    },
+    "gpuErrors": 0,
+    "errors": [],
+    "scope": "An admitted original worker retains its route, rig and materials while the direct C++ clock advances during each prepared terrain cutover; no periodic JS worker poses. Native C++ authority fixture, actual product preparation/draw Workers, delta mutations, optional original structures/crates and original stationary worker. Consumer submits the prepared new-world image while the preparation Worker remains blocked, before processing confirmed publications. Occupied support retirement is rejected before physical effect; receipt distinguishes a native preflight rejection from the graphical support guard. No ordinary native intent feed or complete f-R4 acceptance.",
+    "daylight": true,
+    "disposalAndGpuDrainVerified": true
+  }
+]

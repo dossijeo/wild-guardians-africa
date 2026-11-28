@@ -1,0 +1,7 @@
+# Salida AfricanToon del desierto en WebGPU
+
+El proveedor del desierto aplica ahora la rama predeterminada de `africanToon4` del renderizador anterior después del material de arena: bandas de luz, reflejo ambiental, pigmento procedural y tinta de contorno. La rama original recibe `groundLit`, pero no lo utiliza para este bioma cuando `uKind` y `wet` son cero; tampoco incorpora entonces el AO de contacto. Se conserva ese comportamiento en lugar de aplicar la iluminación PBR que usaba anteriormente el proveedor WebGPU.
+
+La prueba de contrato genera WGSL con las dos texturas reales, bandas e instrucciones derivadas para el contorno; también cubre los bindings del cielo y la cancelación de cargas. La prueba no ejecuta la GPU ni demuestra paridad visual. Quedan pendientes la comparación de día y noche, la verificación de origen flotante y la medición de coste en partida.
+
+La traducción corresponde a la configuración predeterminada de producto: `globalNightLight` devuelve 1,12 para desierto, la exposición toon original es 1 y `uFineNoise` está activado. El material original desactiva el tone mapping de Three después de su curva y convierte el color de salida de lineal a sRGB; el Worker WebGPU utiliza salida lineal y aplica esa conversión explícitamente. Las variantes optativas de `visualLab=global-lighting`, como el suavizado experimental de bandas, no están implementadas en esta ruta.

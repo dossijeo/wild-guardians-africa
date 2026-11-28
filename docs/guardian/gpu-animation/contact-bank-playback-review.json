@@ -1,0 +1,123 @@
+{
+  "scope": "Browser playback observation; requestVideoFrameCallback counts callbacks delivered during playback, not an authoritative count of encoded frames. Screenshots sampled at callbacks 1, 30, 60 and 85 when available. Playback timing and dropped callbacks depend on host and browser load; not a performance benchmark.",
+  "rows": [
+    {
+      "species": "buffalo",
+      "width": 1600,
+      "height": 600,
+      "callbacks": 62,
+      "lastMediaTime": 2.907,
+      "nonmonotonic": 0,
+      "frames": [
+        {
+          "frame": 1,
+          "time": 0.008
+        },
+        {
+          "frame": 30,
+          "time": 1.842
+        },
+        {
+          "frame": 60,
+          "time": 2.84
+        }
+      ]
+    },
+    {
+      "species": "hyena",
+      "width": 1600,
+      "height": 600,
+      "callbacks": 87,
+      "lastMediaTime": 2.887,
+      "nonmonotonic": 0,
+      "frames": [
+        {
+          "frame": 1,
+          "time": 0
+        },
+        {
+          "frame": 30,
+          "time": 0.987
+        },
+        {
+          "frame": 60,
+          "time": 1.987
+        },
+        {
+          "frame": 85,
+          "time": 2.82
+        }
+      ]
+    },
+    {
+      "species": "lion",
+      "width": 1600,
+      "height": 600,
+      "callbacks": 87,
+      "lastMediaTime": 2.883,
+      "nonmonotonic": 0,
+      "frames": [
+        {
+          "frame": 1,
+          "time": 0
+        },
+        {
+          "frame": 30,
+          "time": 0.983
+        },
+        {
+          "frame": 60,
+          "time": 1.983
+        },
+        {
+          "frame": 85,
+          "time": 2.817
+        }
+      ]
+    },
+    {
+      "species": "rhino",
+      "width": 1600,
+      "height": 600,
+      "callbacks": 76,
+      "lastMediaTime": 2.884,
+      "nonmonotonic": 0,
+      "frames": [
+        {
+          "frame": 1,
+          "time": 0.017
+        },
+        {
+          "frame": 30,
+          "time": 1.351
+        },
+        {
+          "frame": 60,
+          "time": 2.351
+        }
+      ]
+    },
+    {
+      "species": "warthog",
+      "width": 1600,
+      "height": 600,
+      "callbacks": 83,
+      "lastMediaTime": 2.907,
+      "nonmonotonic": 0,
+      "frames": [
+        {
+          "frame": 1,
+          "time": 0.006
+        },
+        {
+          "frame": 30,
+          "time": 1.14
+        },
+        {
+          "frame": 60,
+          "time": 2.14
+        }
+      ]
+    }
+  ]
+}

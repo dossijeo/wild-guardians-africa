@@ -2,6 +2,7 @@ import {globalFrameScheduler,globalFrameSchedulerEnabled} from './global-frame-s
 import {streamingOptions} from '../rendering/streaming-options.js';
 import {prepareTerrainChunk,discardPreparedTerrain} from '../rendering/prepare-terrain-chunk.js';
 import {findSpatialStart} from '../world/wild-engine/spatial-initial-site.js';
+import {findSpatialStartInWorker} from '../world/wild-engine/spatial-initial-site-client.js';
 import {createSpatialGameSession} from '../world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../world/wild-engine/spatial-navigation-movement.js';
 import {WILD_ENGINE_WORLD_VERSION} from '../world/wild-engine/world-version.js';
@@ -27,7 +28,7 @@ export async function prepareWildEngineWorld(world,state,payload,{signal,loaded=
       // margin. Loaded worlds retain the recipe stored in their snapshot.
       state.mangroveSettlementVersion=2;
     }
-    const start=await findSpatialStart(module,state,payload,{signal});
+    const start=await (world.metadataOnlySpatial===true?findSpatialStartInWorker(module,state,payload,{signal}):findSpatialStart(module,state,payload,{signal}));
     Object.assign(state.villages[0],start.site);
     state.suppressed.push(...start.site.suppress);
     state.wildEngineWorldVersion=WILD_ENGINE_WORLD_VERSION;
@@ -52,7 +53,7 @@ export async function prepareWildEngineWorld(world,state,payload,{signal,loaded=
     }
     session=createSpatialGameSession(module,state,{
     ...(threaded?{core:threaded.core}:{}),
-    ...(globalFrameSchedulerEnabled()||new URLSearchParams(location.search).get('chunkInstall')==='staged'?{
+    ...(!world.metadataOnlySpatial&&(globalFrameSchedulerEnabled()||new URLSearchParams(location.search).get('chunkInstall')==='staged')?{
       pipeline:globalFrameSchedulerEnabled(),
       prepareData:(data,current)=>prepareTerrainChunk(world,data,current,{scheduler:globalFrameSchedulerEnabled()?globalFrameScheduler:null,signal}),
       discardData:data=>discardPreparedTerrain(world,data)

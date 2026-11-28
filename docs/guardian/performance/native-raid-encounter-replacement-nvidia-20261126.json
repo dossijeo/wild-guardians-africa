@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "parentRevision": "54f29de34",
+  "sourceSha256": "26ea0242a8d6a107866724e68fda520ed2ae8113c7aabf3b7764b8749db55cb1",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 80.5
+    }
+  },
+  "harness": {
+    "profile": "DEV qualifyRaidEncounter",
+    "world": "Desert",
+    "clockPulseMs": [
+      20,
+      40
+    ],
+    "lossRequest": "after lost callback",
+    "oldDevice": "destroyed before first Retreat submit"
+  },
+  "wire": [
+    {
+      "kind": "encounter-ready",
+      "id": 6,
+      "sequence": 75
+    },
+    {
+      "kind": "hidden-retreat",
+      "confirmedBefore": 12.599999999999945,
+      "pendingSequence": 75,
+      "activeSequence": 74,
+      "clock": 12.619999999999944
+    },
+    {
+      "kind": "lost-cut",
+      "sequence": 139,
+      "elapsed": 12.619999999999944,
+      "pending": 1,
+      "oldErrors": [
+        "Error: Error: WebGPU device lost: Device was destroyed.\n    at http://127.0.0.1:5286/src/rendering/webgpu-world-surface.js:176:833\n    at worker.onmessage (http://127.0.0.1:5286/src/rendering/webgpu-world-client.js:31:760)"
+      ]
+    },
+    {
+      "kind": "replacement-activated",
+      "elapsed": 12.639999999999944
+    },
+    {
+      "kind": "drained",
+      "replacement": true
+    }
+  ],
+  "replacement": {
+    "at": 12.619999999999944,
+    "base": 131,
+    "publication": 139,
+    "draw": 1,
+    "worker": {
+      "version": 1,
+      "workerId": 900011,
+      "workerBody": 1,
+      "hit": 29210,
+      "x": -14.520928903743672,
+      "z": 2.5523155738541687,
+      "heading": 0,
+      "remaining": 3.081666507720947
+    },
+    "relativeTime": 0,
+    "worldBoundary": {
+      "version": 1,
+      "authorityEpoch": "8b589b33-9a43-451f-b78a-50bcff9afac7/1",
+      "nativeSession": 1,
+      "ticket": 11,
+      "effectiveTime": 12.619999999999944
+    }
+  },
+  "terminalElapsed": 18.91999999999981,
+  "events": [
+    {
+      "id": "event-29209",
+      "type": "WorkerHit",
+      "simulationTime": 12.179999999999954
+    },
+    {
+      "id": "event-29210",
+      "type": "WorkerIncapacitated",
+      "simulationTime": 12.619999999999944
+    },
+    {
+      "id": "event-29211",
+      "type": "AnimalRetreating",
+      "simulationTime": 12.619999999999944
+    },
+    {
+      "id": "event-29212",
+      "type": "RaidEnded",
+      "simulationTime": 14.339999999999907
+    }
+  ],
+  "browserErrors": [
+    "THREE.WebGPURenderer: WebGPU Device Lost:\n\nMessage: Device was destroyed.\nReason: destroyed"
+  ]
+}

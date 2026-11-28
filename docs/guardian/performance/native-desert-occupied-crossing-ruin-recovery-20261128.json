@@ -1,0 +1,822 @@
+{
+  "schema": 1,
+  "fixture": "Desert 983 daytime raid with a single gate and two centers",
+  "qualification": "The audit enables the existing Strike27 producer for this fixture slot and holds selected READY replies to set the logical cut.",
+  "product": {
+    "base": "91c1b7062",
+    "hostSourceSha256": "0b16b2155c2525ac7df878a9745780ed1c72e20c98073dc3c718f64a370704a8",
+    "latestHarnessSha256": "4ddd6e2f58ef82c667b0701da28bf2d0bb897db87cefd05be7b35f80615153c2"
+  },
+  "rejectionBeforeFix": {
+    "stage": "first physical ruin submit before device loss",
+    "time": 16.739999999999856,
+    "operand": "The valid Home18 origin-modulo uniform was rejected as a non-relative clock."
+  },
+  "after": {
+    "source": {
+      "input": ".cache/occupied-ruin-nvidia-input.json",
+      "rawReceipt": "occupied-ruin-nvidia-after-phase.json",
+      "sha256": "78d8c5d86c365f3c40fe50eeeab4d05260e0c14797cfd02e766612e7e3d22116",
+      "snapshotSha256": "3d5f06f0f8ca7c873bdd22b4c787e5a6b735073774a64bef4613fc14964405cd"
+    },
+    "adapters": {
+      "original": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 110.2999999821186
+        }
+      },
+      "replacement": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 79.40000000596046
+        }
+      }
+    },
+    "before": {
+      "at": 16.739999999999856,
+      "worker": {
+        "id": "worker-900011",
+        "x": -13.949600219726562,
+        "z": 7.815896481184101,
+        "heading": 0,
+        "admission": "native-home"
+      },
+      "animal": {
+        "id": "animal-1000003",
+        "x": -21.74907623291007,
+        "z": -16,
+        "heading": -1.5707963267948966,
+        "phase": 3.5139491780598378,
+        "target": "structure-2"
+      },
+      "gate": {
+        "id": "structure-1000000",
+        "z": 8.2,
+        "opening": 1
+      },
+      "center": {
+        "id": "structure-1000002",
+        "status": "collapsing",
+        "hp": 120,
+        "remaining": 0.009999999999999627
+      }
+    },
+    "frozen": {
+      "at": 16.759999999999856,
+      "worker": {
+        "id": "worker-900011",
+        "x": -13.949600219726562,
+        "z": 7.863896481184099,
+        "heading": 0,
+        "admission": "native-home"
+      },
+      "animal": {
+        "id": "animal-1000003",
+        "x": -21.779076232910068,
+        "z": -16,
+        "heading": -1.5707963267948966,
+        "phase": 3.5339491780598373,
+        "target": "structure-2"
+      },
+      "gate": {
+        "id": "structure-1000000",
+        "z": 8.2,
+        "opening": 1
+      },
+      "center": {
+        "id": "structure-1000002",
+        "status": "ruined",
+        "hp": 0,
+        "remaining": -0.010000000000000373
+      }
+    },
+    "tickets": {
+      "home": 5,
+      "animal": 11,
+      "abandoned": null,
+      "acquired": 12,
+      "homeArrival": 14
+    },
+    "firstReplacement": {
+      "frame": {
+        "sequence": 1,
+        "clock": 16.759999999999856,
+        "world": {
+          "version": 1,
+          "authorityEpoch": "117a16fd-ae85-435a-b360-e0b533df63cb/1",
+          "nativeSession": 1,
+          "ticket": 12,
+          "effectiveTime": 16.759999999999856
+        },
+        "home": [
+          {
+            "actor": 900011,
+            "body": 1,
+            "handle": {
+              "authorityEpoch": "117a16fd-ae85-435a-b360-e0b533df63cb/1",
+              "session": 1,
+              "slot": 1,
+              "generation": 2
+            },
+            "drawTicket": 5,
+            "executionEpoch": 10.799999999999983,
+            "relativeTime": 5.9599995613098145,
+            "elapsed": 16.759999561309797
+          }
+        ],
+        "motor": [
+          {
+            "nativeGate": {
+              "gateId": 1000000,
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "117a16fd-ae85-435a-b360-e0b533df63cb/1",
+                "nativeSession": 1,
+                "ticket": 5,
+                "effectiveTime": 10.799999999999983
+              }
+            },
+            "semantic": "relative",
+            "epoch": 10.799999999999983,
+            "elapsed": 16.759999561309797
+          }
+        ],
+        "animal": [
+          {
+            "actor": 1000003,
+            "body": 2,
+            "target": 2,
+            "slot": 0,
+            "generation": 10,
+            "drawTicket": 11,
+            "executionEpoch": 13.999999999999915,
+            "relativeTime": 2.759999990463257,
+            "elapsed": 16.75999999046317
+          }
+        ]
+      },
+      "particles": {
+        "body": false,
+        "ash": true,
+        "smoke": {
+          "count": 82,
+          "hash": 3070389020
+        },
+        "debris": {
+          "count": 270,
+          "hash": 2724456631
+        },
+        "emitted": 95
+      },
+      "pick": {
+        "entityId": "animal-1000003",
+        "hitPoint": {
+          "x": -21.44309983989792,
+          "y": 19.35940459166721,
+          "z": -16.622330592488115
+        },
+        "point": {
+          "x": -21.94974869652361,
+          "z": -15.683862623650967
+        },
+        "sequence": 219
+      },
+      "witness": [
+        {
+          "age": 2.759999990463257,
+          "actorId": 1000003,
+          "bodyId": 2,
+          "at": 16.759999999999856
+        },
+        {
+          "age": 2.759999990463257,
+          "actorId": 1000003,
+          "bodyId": 2,
+          "at": 16.759999999999856
+        },
+        {
+          "age": 2.759999990463257,
+          "actorId": 1000003,
+          "bodyId": 2,
+          "at": 16.759999999999856
+        },
+        {
+          "age": 2.759999990463257,
+          "actorId": 1000003,
+          "bodyId": 2,
+          "at": 16.759999999999856
+        },
+        {
+          "age": 2.759999990463257,
+          "actorId": 1000003,
+          "bodyId": 2,
+          "at": 16.759999999999856
+        },
+        {
+          "age": 2.759999990463257,
+          "actorId": 1000003,
+          "bodyId": 2,
+          "at": 16.759999999999856
+        }
+      ]
+    },
+    "ruin": {
+      "id": "structure-1000002",
+      "polygon": 10,
+      "preparedAt": 16.739999999999856,
+      "event": {
+        "id": "event-29212",
+        "type": "StructureRuined",
+        "targetId": "structure-1000002",
+        "structureKind": "center",
+        "presentation": {
+          "x": -18,
+          "z": -12
+        },
+        "simulationTime": 16.759999999999856
+      },
+      "frame": {
+        "sequence": 67,
+        "clock": 16.759999999999856,
+        "world": {
+          "version": 1,
+          "authorityEpoch": "117a16fd-ae85-435a-b360-e0b533df63cb/1",
+          "nativeSession": 1,
+          "ticket": 12,
+          "effectiveTime": 16.759999999999856
+        },
+        "home": [
+          {
+            "actor": 900011,
+            "body": 1,
+            "handle": {
+              "authorityEpoch": "117a16fd-ae85-435a-b360-e0b533df63cb/1",
+              "session": 1,
+              "slot": 1,
+              "generation": 2
+            },
+            "drawTicket": 4,
+            "executionEpoch": 10.799999999999983,
+            "relativeTime": 5.9599995613098145,
+            "elapsed": 16.759999561309797
+          }
+        ],
+        "motor": [
+          {
+            "nativeGate": {
+              "gateId": 1000000,
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "117a16fd-ae85-435a-b360-e0b533df63cb/1",
+                "nativeSession": 1,
+                "ticket": 4,
+                "effectiveTime": 10.799999999999983
+              }
+            },
+            "semantic": "relative",
+            "epoch": 10.799999999999983,
+            "elapsed": 16.759999561309797
+          }
+        ],
+        "animal": [
+          {
+            "actor": 1000003,
+            "body": 2,
+            "target": 2,
+            "slot": 0,
+            "generation": 10,
+            "drawTicket": 10,
+            "executionEpoch": 13.999999999999915,
+            "relativeTime": 2.759999990463257,
+            "elapsed": 16.35999999046318
+          }
+        ]
+      },
+      "capture": {
+        "id": "structure-1000002",
+        "p": 16.739999999999856,
+        "end": 16.759999999999856,
+        "meshes": [
+          {
+            "mesh": 51,
+            "geometry": 20,
+            "material": 31,
+            "visible": false,
+            "instances": null
+          },
+          {
+            "mesh": 52,
+            "geometry": 21,
+            "material": 30,
+            "visible": true,
+            "instances": null
+          },
+          {
+            "mesh": 54,
+            "geometry": 22,
+            "material": 32,
+            "visible": true,
+            "instances": 270
+          },
+          {
+            "mesh": 55,
+            "geometry": 23,
+            "material": 33,
+            "visible": true,
+            "instances": 82
+          }
+        ],
+        "effects": {
+          "smoke": 82,
+          "debris": 270,
+          "emitted": 95
+        }
+      }
+    },
+    "homeArrival": {
+      "frame": {
+        "sequence": 18,
+        "clock": 18.95999999999981,
+        "world": {
+          "version": 1,
+          "authorityEpoch": "117a16fd-ae85-435a-b360-e0b533df63cb/1",
+          "nativeSession": 1,
+          "ticket": 14,
+          "effectiveTime": 18.93999999999981
+        },
+        "home": [],
+        "motor": [
+          {
+            "nativeGate": {
+              "gateId": 1000000,
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "117a16fd-ae85-435a-b360-e0b533df63cb/1",
+                "nativeSession": 1,
+                "ticket": 5,
+                "effectiveTime": 10.799999999999983
+              }
+            },
+            "semantic": "relative",
+            "epoch": 10.799999999999983,
+            "elapsed": 18.400324630737288
+          }
+        ],
+        "animal": [
+          {
+            "actor": 1000003,
+            "body": 2,
+            "target": 2,
+            "slot": 0,
+            "generation": 10,
+            "drawTicket": 11,
+            "executionEpoch": 13.999999999999915,
+            "relativeTime": 4.9599995613098145,
+            "elapsed": 18.95999956130973
+          }
+        ]
+      },
+      "retiredSequence": 12
+    },
+    "drainage": {
+      "disposed": true
+    },
+    "errors": [],
+    "expectedDeviceLoss": 1,
+    "shaderWarnings": [
+      "warning AttributeNode: Vertex attribute \"position\" not found on geometry.",
+      "warning AttributeNode: Vertex attribute \"vfxKind\" not found on geometry.",
+      "warning AttributeNode: Vertex attribute \"color\" not found on geometry.",
+      "warning AttributeNode: Vertex attribute \"normal\" not found on geometry."
+    ]
+  },
+  "before": {
+    "source": {
+      "input": ".cache/occupied-ruin-nvidia-input.json",
+      "rawReceipt": "occupied-ruin-nvidia-before-phase-r2.json",
+      "sha256": "763dbb20138e64f69e93ec4968843fa14a8ac882c3b47464b7d8b6b16b43f8a6",
+      "snapshotSha256": "3d5f06f0f8ca7c873bdd22b4c787e5a6b735073774a64bef4613fc14964405cd"
+    },
+    "adapters": {
+      "original": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 129.09999999403954
+        }
+      },
+      "replacement": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 80.80000001192093
+        }
+      }
+    },
+    "before": {
+      "at": 16.739999999999856,
+      "worker": {
+        "id": "worker-900011",
+        "x": -13.949600219726562,
+        "z": 7.815896481184101,
+        "heading": 0,
+        "admission": "native-home"
+      },
+      "animal": {
+        "id": "animal-1000003",
+        "x": -21.74907623291007,
+        "z": -16,
+        "heading": -1.5707963267948966,
+        "phase": 3.5139491780598378,
+        "target": "structure-2"
+      },
+      "gate": {
+        "id": "structure-1000000",
+        "z": 8.2,
+        "opening": 1
+      },
+      "center": {
+        "id": "structure-1000002",
+        "status": "collapsing",
+        "hp": 120,
+        "remaining": 0.009999999999999627
+      }
+    },
+    "frozen": {
+      "at": 16.739999999999856,
+      "worker": {
+        "id": "worker-900011",
+        "x": -13.949600219726562,
+        "z": 7.815896481184101,
+        "heading": 0,
+        "admission": "native-home"
+      },
+      "animal": {
+        "id": "animal-1000003",
+        "x": -21.74907623291007,
+        "z": -16,
+        "heading": -1.5707963267948966,
+        "phase": 3.5139491780598378,
+        "target": "structure-2"
+      },
+      "gate": {
+        "id": "structure-1000000",
+        "z": 8.2,
+        "opening": 1
+      },
+      "center": {
+        "id": "structure-1000002",
+        "status": "collapsing",
+        "hp": 120,
+        "remaining": 0.009999999999999627
+      }
+    },
+    "tickets": {
+      "home": 5,
+      "animal": 11,
+      "abandoned": 12,
+      "acquired": 13,
+      "homeArrival": 15
+    },
+    "firstReplacement": {
+      "frame": {
+        "sequence": 1,
+        "clock": 16.739999999999856,
+        "world": {
+          "version": 1,
+          "authorityEpoch": "950b046e-928c-4f49-b267-f9bab1666f6e/1",
+          "nativeSession": 1,
+          "ticket": 11,
+          "effectiveTime": 13.999999999999915
+        },
+        "home": [
+          {
+            "actor": 900011,
+            "body": 1,
+            "handle": {
+              "authorityEpoch": "950b046e-928c-4f49-b267-f9bab1666f6e/1",
+              "session": 1,
+              "slot": 1,
+              "generation": 2
+            },
+            "drawTicket": 5,
+            "executionEpoch": 10.799999999999983,
+            "relativeTime": 5.939999580383301,
+            "elapsed": 16.739999580383284
+          }
+        ],
+        "motor": [
+          {
+            "nativeGate": {
+              "gateId": 1000000,
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "950b046e-928c-4f49-b267-f9bab1666f6e/1",
+                "nativeSession": 1,
+                "ticket": 5,
+                "effectiveTime": 10.799999999999983
+              }
+            },
+            "semantic": "relative",
+            "epoch": 10.799999999999983,
+            "elapsed": 16.739999580383284
+          }
+        ],
+        "animal": [
+          {
+            "actor": 1000003,
+            "body": 2,
+            "target": 2,
+            "slot": 0,
+            "generation": 10,
+            "drawTicket": 11,
+            "executionEpoch": 13.999999999999915,
+            "relativeTime": 2.739999771118164,
+            "elapsed": 16.73999977111808
+          }
+        ]
+      },
+      "particles": {
+        "body": true,
+        "ash": true,
+        "smoke": {
+          "count": 83,
+          "hash": 721334071
+        },
+        "debris": {
+          "count": 270,
+          "hash": 1078423587
+        },
+        "emitted": 95
+      },
+      "originalParticles": {
+        "body": true,
+        "ash": true,
+        "smoke": {
+          "count": 83,
+          "hash": 721334071
+        },
+        "debris": {
+          "count": 270,
+          "hash": 1078423587
+        },
+        "emitted": 95
+      },
+      "pick": {
+        "entityId": "animal-1000003",
+        "hitPoint": {
+          "x": -21.417574316661614,
+          "y": 19.3527401600561,
+          "z": -16.61895604932503
+        },
+        "point": {
+          "x": -21.918393822053744,
+          "z": -15.68386262365105
+        },
+        "sequence": 219
+      },
+      "witness": [
+        {
+          "age": 2.739999771118164,
+          "actorId": 1000003,
+          "bodyId": 2,
+          "at": 16.739999999999856
+        },
+        {
+          "age": 2.739999771118164,
+          "actorId": 1000003,
+          "bodyId": 2,
+          "at": 16.739999999999856
+        },
+        {
+          "age": 2.739999771118164,
+          "actorId": 1000003,
+          "bodyId": 2,
+          "at": 16.739999999999856
+        },
+        {
+          "age": 2.739999771118164,
+          "actorId": 1000003,
+          "bodyId": 2,
+          "at": 16.739999999999856
+        },
+        {
+          "age": 2.739999771118164,
+          "actorId": 1000003,
+          "bodyId": 2,
+          "at": 16.739999999999856
+        },
+        {
+          "age": 2.739999771118164,
+          "actorId": 1000003,
+          "bodyId": 2,
+          "at": 16.739999999999856
+        }
+      ]
+    },
+    "ruin": {
+      "id": "structure-1000002",
+      "polygon": 10,
+      "preparedAt": 16.739999999999856,
+      "event": {
+        "id": "event-29212",
+        "type": "StructureRuined",
+        "targetId": "structure-1000002",
+        "structureKind": "center",
+        "presentation": {
+          "x": -18,
+          "z": -12
+        },
+        "simulationTime": 16.759999999999856
+      },
+      "frame": {
+        "sequence": 4,
+        "clock": 16.759999999999856,
+        "world": {
+          "version": 1,
+          "authorityEpoch": "950b046e-928c-4f49-b267-f9bab1666f6e/1",
+          "nativeSession": 1,
+          "ticket": 13,
+          "effectiveTime": 16.759999999999856
+        },
+        "home": [
+          {
+            "actor": 900011,
+            "body": 1,
+            "handle": {
+              "authorityEpoch": "950b046e-928c-4f49-b267-f9bab1666f6e/1",
+              "session": 1,
+              "slot": 1,
+              "generation": 2
+            },
+            "drawTicket": 5,
+            "executionEpoch": 10.799999999999983,
+            "relativeTime": 5.9599995613098145,
+            "elapsed": 16.759999561309797
+          }
+        ],
+        "motor": [
+          {
+            "nativeGate": {
+              "gateId": 1000000,
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "950b046e-928c-4f49-b267-f9bab1666f6e/1",
+                "nativeSession": 1,
+                "ticket": 5,
+                "effectiveTime": 10.799999999999983
+              }
+            },
+            "semantic": "relative",
+            "epoch": 10.799999999999983,
+            "elapsed": 16.759999561309797
+          }
+        ],
+        "animal": [
+          {
+            "actor": 1000003,
+            "body": 2,
+            "target": 2,
+            "slot": 0,
+            "generation": 10,
+            "drawTicket": 11,
+            "executionEpoch": 13.999999999999915,
+            "relativeTime": 2.759999990463257,
+            "elapsed": 16.75999999046317
+          }
+        ]
+      },
+      "capture": {
+        "id": "structure-1000002",
+        "p": 16.739999999999856,
+        "end": 16.759999999999856,
+        "meshes": [
+          {
+            "mesh": 379,
+            "geometry": 210,
+            "material": 134,
+            "visible": false,
+            "instances": null
+          },
+          {
+            "mesh": 380,
+            "geometry": 211,
+            "material": 133,
+            "visible": true,
+            "instances": null
+          },
+          {
+            "mesh": 382,
+            "geometry": 212,
+            "material": 135,
+            "visible": true,
+            "instances": 270
+          },
+          {
+            "mesh": 383,
+            "geometry": 213,
+            "material": 136,
+            "visible": true,
+            "instances": 82
+          }
+        ],
+        "effects": {
+          "smoke": 82,
+          "debris": 270,
+          "emitted": 95
+        }
+      }
+    },
+    "homeArrival": {
+      "frame": {
+        "sequence": 19,
+        "clock": 18.719999999999814,
+        "world": {
+          "version": 1,
+          "authorityEpoch": "950b046e-928c-4f49-b267-f9bab1666f6e/1",
+          "nativeSession": 1,
+          "ticket": 15,
+          "effectiveTime": 18.699999999999815
+        },
+        "home": [],
+        "motor": [
+          {
+            "nativeGate": {
+              "gateId": 1000000,
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "950b046e-928c-4f49-b267-f9bab1666f6e/1",
+                "nativeSession": 1,
+                "ticket": 5,
+                "effectiveTime": 10.799999999999983
+              }
+            },
+            "semantic": "relative",
+            "epoch": 10.799999999999983,
+            "elapsed": 18.400324630737288
+          }
+        ],
+        "animal": [
+          {
+            "actor": 1000003,
+            "body": 2,
+            "target": 2,
+            "slot": 0,
+            "generation": 10,
+            "drawTicket": 11,
+            "executionEpoch": 13.999999999999915,
+            "relativeTime": 4.71999979019165,
+            "elapsed": 18.719999790191565
+          }
+        ]
+      },
+      "retiredSequence": 12
+    },
+    "drainage": {
+      "disposed": true
+    },
+    "errors": [],
+    "expectedDeviceLoss": 1,
+    "shaderWarnings": [
+      "warning AttributeNode: Vertex attribute \"position\" not found on geometry.",
+      "warning AttributeNode: Vertex attribute \"vfxKind\" not found on geometry.",
+      "warning AttributeNode: Vertex attribute \"color\" not found on geometry.",
+      "warning AttributeNode: Vertex attribute \"normal\" not found on geometry."
+    ]
+  }
+}

@@ -14,7 +14,7 @@ function withJunkChunk(source){
 }
 function stableMetadata(source){
  const j=structuredClone(source),images=new Set(j.images.map(image=>image.bufferView));delete j.buffers[0].byteLength;
- for(const [i,v] of j.bufferViews.entries())if(images.has(i)){delete v.byteOffset;delete v.byteLength;}else delete v.extensions.EXT_meshopt_compression.byteOffset;
+ for(const [i,v] of j.bufferViews.entries())if(images.has(i)){delete v.byteOffset;delete v.byteLength;}else if(v.extensions?.EXT_meshopt_compression)delete v.extensions.EXT_meshopt_compression.byteOffset;else delete v.byteOffset;
  return j;
 }
 function assertPreserved(before,after,changed){
@@ -22,6 +22,8 @@ function assertPreserved(before,after,changed){
  for(const [index,view] of before.json.bufferViews.entries())if(view.extensions?.EXT_meshopt_compression){
   assert.deepEqual(physical(after.bin,after.json.bufferViews[index].extensions.EXT_meshopt_compression),physical(before.bin,view.extensions.EXT_meshopt_compression),'compressed view '+index);
  }
+ const imageViews=new Set(before.json.images.map(image=>image.bufferView));
+ for(const [index,view] of before.json.bufferViews.entries())if(!imageViews.has(index)&&!view.extensions?.EXT_meshopt_compression)assert.deepEqual(physical(after.bin,after.json.bufferViews[index]),physical(before.bin,view),'uncompressed view '+index);
  for(const [index,image] of before.json.images.entries())if(!changed.has(index))assert.deepEqual(physical(after.bin,after.json.bufferViews[after.json.images[index].bufferView]),physical(before.bin,before.json.bufferViews[image.bufferView]),'untouched image '+index);
 }
 async function fixture(){
@@ -43,7 +45,7 @@ test('all textured runtime GLBs retain exact compressed geometry, animation and 
   assertPreserved(before,after,new Set([index]));assert.equal(hash(bytes),originalHash);
   assert.ok(Buffer.from(physical(after.bin,after.json.bufferViews[after.json.images[index].bufferView])).equals(replacement));
   const compressedIndex=before.json.bufferViews.findIndex(view=>view.extensions?.EXT_meshopt_compression);
-  assert.notEqual(after.json.bufferViews[compressedIndex].extensions.EXT_meshopt_compression.byteOffset,before.json.bufferViews[compressedIndex].extensions.EXT_meshopt_compression.byteOffset);
+  if(compressedIndex>=0)assert.notEqual(after.json.bufferViews[compressedIndex].extensions.EXT_meshopt_compression.byteOffset,before.json.bufferViews[compressedIndex].extensions.EXT_meshopt_compression.byteOffset);
   t.diagnostic(record.runtime+' compressed views and metadata unchanged');
  }
 });
@@ -77,4 +79,21 @@ test('unsupported storage and extensions fail before changing the source contain
   const {json,bin}=readGlb(bytes);mutate(json);const bad=writeGlb(json,bin),original=hash(bad);await assert.rejects(replaceWebGlbColorImages(bad,new Map([[0,color]])),/Web GLB image replacement/);assert.equal(hash(bad),original);
  }
  for(const replacements of [new Map([[9,color]]),new Map([[.5,color]]),new Map([[0,new Uint8Array()]]),new Map([[0,'bytes']])])await assert.rejects(replaceWebGlbColorImages(bytes,replacements),/invalid replacement/);
+});
+
+
+test('byte sparse morph indices survive image relocation and reject invalid ranges',async()=>{
+ const {bytes,color}=await fixture(),{json,bin}=readGlb(bytes);
+ const raw=Buffer.from([0,2,3,0]),index=json.bufferViews.length;
+ json.bufferViews.push({buffer:0,byteOffset:bin.length,byteLength:3});
+ json.buffers[0].byteLength=bin.length+raw.length;
+ json.accessors=[{componentType:5126,count:4,type:'VEC3',sparse:{count:3,indices:{bufferView:index,componentType:5121},values:{bufferView:2}}}];
+ const input=writeGlb(json,Buffer.concat([bin,raw]));
+ const after=readGlb(await replaceWebGlbColorImages(input,new Map([[0,withJunkChunk(color)]])));
+ assert.deepEqual(after.json.accessors,json.accessors);
+ assert.deepEqual(physical(after.bin,after.json.bufferViews[index]),Uint8Array.from(raw.subarray(0,3)));
+ assert.notEqual(after.json.bufferViews[index].byteOffset,json.bufferViews[index].byteOffset);
+ assert.deepEqual(physical(after.bin,after.json.bufferViews[2].extensions.EXT_meshopt_compression),physical(bin,json.bufferViews[2].extensions.EXT_meshopt_compression));
+ json.accessors[0].sparse.count=4;
+ await assert.rejects(replaceWebGlbColorImages(writeGlb(json,Buffer.concat([bin,raw])),new Map()),/invalid raw sparse/);
 });

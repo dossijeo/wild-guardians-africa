@@ -1,0 +1,50 @@
+{
+  "sourceBranch": "codex/global-visual-lab",
+  "sourceCommit": "6ee7ec158ffa7483b0e6145cb067e56d605aca08",
+  "status": "migration-in-progress",
+  "animals": {
+    "warthog": {
+      "url": "/assets/6d41a31b6bc7ac4163f8e484f001c7a4b7debac0fc6c93fefd3ff4a9a9fec275.glb",
+      "sha256": "6d41a31b6bc7ac4163f8e484f001c7a4b7debac0fc6c93fefd3ff4a9a9fec275"
+    },
+    "hyena": {
+      "url": "/assets/e45d7ac086ba07a8c3948fa0695fc41267914a95e1ab243cee608aa7ca4ec472.glb",
+      "sha256": "e45d7ac086ba07a8c3948fa0695fc41267914a95e1ab243cee608aa7ca4ec472"
+    },
+    "buffalo": {
+      "url": "/assets/0c77a268cc0a7d22c66dedb7a471a66a414437f39e6bdfbc60c75dc36acf7920.glb",
+      "sha256": "0c77a268cc0a7d22c66dedb7a471a66a414437f39e6bdfbc60c75dc36acf7920"
+    },
+    "lion": {
+      "url": "/assets/539e240badbd4705dd44b299b6c163c050c6dca388d9d25dc10688c88e0b4968.glb",
+      "sha256": "539e240badbd4705dd44b299b6c163c050c6dca388d9d25dc10688c88e0b4968"
+    },
+    "rhino": {
+      "url": "/assets/e77e4a48a6d072d58420575e0e58b3545e8f4eb5d8ea54f4a7f38819e93f1cff.glb",
+      "sha256": "e77e4a48a6d072d58420575e0e58b3545e8f4eb5d8ea54f4a7f38819e93f1cff"
+    }
+  },
+  "facialInspection": {
+    "animalRigs": "No jaw/eye/lid bones or morph targets in imported five assets",
+    "farmerRigs": "Four existing farmer models have no jaw/eye/lid bones",
+    "implemented": false
+  },
+  "validation": {
+    "rigTests": "7/7 pass with all five replacement models: fitted collision shapes, bounded launch, settling, wall, pose/bone lengths and get-up continuity",
+    "remaining": [
+      "Graphical validation with replacement models",
+      "Facial geometry authoring and state integration",
+      "Performance comparison after new skeletons and solver settings"
+    ],
+    "suite": "46/46: ragdoll, production bridge, animal clips/grounding, singleton and retained effects",
+    "graphical": "New hyena falls and recovers in WorldScene with production Game.tick; no runtime errors, one Guardian maximum. Other species and facial changes not yet visually validated."
+  },
+  "rigAdaptation": {
+    "hierarchy": "Constraint parents derived from actual bones; replacement thighs attach to Spine",
+    "markers": "Head_top alias; virtual toe endpoints follow model forward axis",
+    "contactSkin": 0.05,
+    "solverIterations": 12,
+    "angularDamping": 2.5,
+    "recoveryGroundClearance": 0.01
+  }
+}

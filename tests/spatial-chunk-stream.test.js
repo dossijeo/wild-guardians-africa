@@ -9,6 +9,8 @@ import * as THREE from 'three';
 import {WorldScene} from '../src/rendering/scene.js';
 import {refreshResidentProps} from '../src/rendering/resident-props.js';
 import {BIOME_IDS} from '../src/world/biome-ids.js';
+import {captureWorldMotion} from '../src/simulation/worker-world-motion.js';
+import {movePath,pathMotionClock} from '../src/simulation/locomotion.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL('../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 
@@ -59,6 +61,8 @@ test('a Sabana game state renders and routes from one spatial authority through 
   assert(passage,'workers and animals should share a physically open chunk seam');
   assert.equal(session.actorCanStand(passage.start),true);
   assert.equal(session.actorStepClear(passage.start,passage.end),true);
+  const spatialTrace=()=>{const worker={id:'historic-worker',...passage.start,radius:.28,status:'walking',path:[{...passage.end}]},game={elapsed:0,workers:[worker],raid:{animals:[]}},capture=captureWorldMotion(game,()=>({topology:session.topologySource.revision(),chunks:core.chunkRevision(),terrain:session.horizonSource.revision(),payloads:0}),null,{spatialNavigation:{segmentClear:(a,b)=>session.actorStepClear(a,b,{worker:true})}});game.elapsed=1;movePath(worker,1,null,pathMotionClock(worker,0,1,1));return capture.finish();};
+  assert.ok(spatialTrace().spatialEvidence,'native spatial authority certifies the open segment');
   assert.equal(session.actorStepClear(passage.start,passage.end,{worker:false,species:'warthog'}),true);
   assert.equal(session.actorConnectivity(passage.start,passage.end),'possible');
   state.structures.push({id:'wall-1',kind:'wall',material:'adobe',status:'intact',
@@ -76,6 +80,7 @@ test('a Sabana game state renders and routes from one spatial authority through 
   assert.equal(core.snapshot().polygons.length,2+state.villages[0].buildings.filter(b=>b.kind!=='Zona común').length);
   assert.equal(core.localClear(passage.start,passage.end),false);
   assert.equal(session.actorStepClear(passage.start,passage.end),false);
+  assert.equal(spatialTrace().spatialEvidence,undefined,'native barrier rejects the historical segment');
   assert.equal(session.actorStepClear(passage.start,passage.end,{worker:false,species:'warthog'}),false);
   assert.notEqual(session.actorConnectivity(passage.start,passage.end),'possible');
   assert.notEqual(session.routeActor(passage.start,passage.end).status,'found');

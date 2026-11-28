@@ -40,7 +40,13 @@ export class NativeTreeStandby {
  sourceKey(level){return this.resourceRevision()+':'+sourceKey(this.sources[level]);}
  has(id,tree,suppressed){const d=this.active?.entries.get(id);return !!d&&!!tree&&!suppressed?.has(id)&&d.key===standbyTreeKey(tree)&&d.resource===this.sourceKey(d.level);}
  request(entries,camera){
-  if(this.closed)return;this.stats.requests++;if(this.pending)this.stats.queuedReplacements++;this.pending={entries:entries.map(d=>({...d,matrix:new Float64Array(d.matrix)})),camera:{x:camera.x,z:camera.z}};if(!this.busy)void this.run();
+  if(this.closed)return;this.stats.requests++;if(this.pending)this.stats.queuedReplacements++;
+  // Physical coverage and logical preloads can queue during the same fence.
+  // Keep both demands, just as run() retains already adopted nearby entries.
+  // Latest identity/LOD wins; run() still enforces distance and population limits.
+  const queued=new Map((this.pending?.entries??[]).map(d=>[d.id,d]));
+  for(const d of entries)queued.set(d.id,{...d,matrix:new Float64Array(d.matrix)});
+  this.pending={entries:[...queued.values()],camera:{x:camera.x,z:camera.z}};if(!this.busy)void this.run();
  }
  async run(){
   this.busy=true;

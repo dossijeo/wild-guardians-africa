@@ -1,0 +1,29 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {Scene,MeshBasicMaterial,DoubleSide,BoxGeometry,Mesh,PerspectiveCamera} from 'three';
+import {MeshBasicNodeMaterial,WebGPURenderer} from 'three/webgpu';
+import {nativeIdleStrollFixture} from './helpers/native-idle-stroll.js';
+import {createWebGpuTerrainResidency} from '../src/rendering/webgpu-terrain-residency.js';
+import {createConfirmedTerrainSupport} from '../src/rendering/confirmed-terrain-support.js';
+import {createNativeIdleStrollGpuMotion} from '../src/rendering/native-gpu-motion.js';
+import {NATIVE_STOP_POSE_FIELDS} from '../src/world/native-idle-stroll-stop.js';
+import {floorFloat32} from '../src/float32-time.js';
+
+// Source and actual TSL/terrain kernels. Projection reads stand in for the last
+// submitted frame here; real Host transport is exercised by the remote tests.
+for(const delayed of [false,true])for(const knot of [1,4])test(`stopped kernel retains native turn, phase and route texture at knot ${knot} (${delayed?'retimed source':'direct source'})`,()=>{
+ const f=nativeIdleStrollFixture(),scene=new Scene(),material=new MeshBasicMaterial({side:DoubleSide}),residency=createWebGpuTerrainResidency({scene,material}),chunks=[],geometry=new BoxGeometry(),materials=[];let terrain,moving,held;
+ try{
+  for(let z=-1;z<=1;z++)for(let x=-1;x<=1;x++){f.session.core.selectChunk(x,z);residency.replace(f.session.core.chunkPayload(),1,'stop-kernel');chunks.push({cx:x,cz:z,revision:1});}
+  terrain=createConfirmedTerrainSupport({residency});const p=f.prepare().proposal,support=terrain.prepareNativeIdleStrollProposal(p,{terrainManifest:{epoch:'stop-kernel',chunks}});moving=createNativeIdleStrollGpuMotion({actorId:f.worker.id,support});let actual=p;
+  if(delayed){f.advance(.2);actual=f.planner.revalidateNativeIdleStrollProposal(p.ticket).proposal;}
+  assert.equal(f.w.nav_idle_stroll_proposal_commit_bound(...f.tuple().slice(0,5),p.ticket.ticket),1);assert.equal(f.planner.beginNativeRouteExecution().status,'started');assert.equal(f.planner.commitNativeCausalClock().status,'committed');const binding=f.planner.nativeIdleStrollBinding(f.actor);moving.setExecutionEpoch(binding.reference.worldBoundary.effectiveTime);moving.seal();f.advance(.05);
+  const stop=f.planner.prepareNativeIdleStrollStopProposal(f.actor);assert.equal(stop.status,'proposed');const owner=stop.proposal.nativeStop.routes[0],reference={kind:'native-suspended-body',version:1,nativeRoute:owner.nativeRoute,worldBoundary:stop.proposal.worldBoundary,bodyId:owner.bodyId,resumeGeneration:owner.resumeGeneration,suspendedAt:stop.proposal.worldBoundary.effectiveTime},selector={kind:'native-idle-stroll-stopped-body',version:1,stop:stop.proposal.nativeStop,actorId:f.actor};let submitted;
+  held=moving.prepareStopped({reference:selector,nativePose:stop.proposal.routeEffects.rows.slice(8,26),height:residency.surface(stop.proposal.routeEffects.rows[8],stop.proposal.routeEffects.rows[9]),isCurrent:()=>true,getProjection:()=>submitted});assert.equal(held.texture,moving.texture);assert.deepEqual(held.clockNode[Symbol.for('wild-guardians.remote-clock')].nativeStopped,selector);
+  const renderer=new WebGPURenderer({canvas:{width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}}});renderer.hasFeature=()=>true;const camera=new PerspectiveCamera();
+  const shader=motion=>{const m=new MeshBasicNodeMaterial();materials.push(m);motion.bind(m);const mesh=new Mesh(geometry,m),builder=renderer.backend.createNodeBuilder(mesh,renderer);builder.scene=scene;builder.camera=camera;builder.build();return builder.vertexShader;};assert.equal(shader(held),shader(moving));
+  const at=actual.rows[knot*16];f.advance(at-f.state.elapsed);const fresh=f.planner.revalidateNativeIdleStrollStopProposal(stop.ticket);assert.equal(fresh.status,'revalidated');assert.equal(f.w.spatial_world_proposal_stop_commit_bound(...f.tuple().slice(0,5),stop.ticket.ticket),1);assert.equal(f.planner.commitNativeCausalClock().status,'committed');const proof=f.planner.nativeIdleStrollStopBinding(fresh.proposal.nativeStop,stop.proposal.nativeStop,{projection:{version:1,routeEffects:fresh.proposal.routeEffects,gateEffects:fresh.proposal.gateEffects}});assert(proof);const row=proof.projection.routeEffects.rows.slice(8,26),age=floorFloat32(at-binding.reference.worldBoundary.effectiveTime);
+  submitted={age,relativeTime:floorFloat32(at-moving.clockEpoch),at,...Object.fromEntries(Object.entries(NATIVE_STOP_POSE_FIELDS).map(([field,index])=>[field,Math.fround(row[index])]))};const pose=held.sample(at),old=moving.sample(p.startTime+age);assert.notEqual(old.yaw,pose.yaw);assert.equal(pose.yaw,Math.fround(row[4]));assert.equal(pose.x,Math.fround(row[0]));assert.equal(pose.z,Math.fround(row[1]));assert.equal(pose.walkPhase,Math.fround(row[10]));assert(Math.abs(pose.y-residency.surface(pose.x,pose.z))<4e-6);assert.equal(pose.running,0);assert.equal(pose.currentSpeed,0);assert.equal(held.clockEpoch,p.startTime);assert(reference.suspendedAt<proof.reference.worldBoundary.effectiveTime);
+  const bytes=held.texture.image.data.byteLength,idleBefore=held.sampleForClip(at,'Idle',2);moving.dispose();assert(held.valid());assert.equal(held.texture.image.data.byteLength,bytes);const frozen=held.sample(at);assert.throws(()=>held.sample(at+1),/submitted frame time/);f.advance(.2);submitted={...submitted,at:f.state.elapsed,relativeTime:floorFloat32(f.state.elapsed-held.clockEpoch)};assert.equal(held.sample(f.state.elapsed).yaw,frozen.yaw);assert.equal(held.sample(f.state.elapsed).walkPhase,frozen.walkPhase);assert.notEqual(held.sampleForClip(f.state.elapsed,'Idle',2),idleBefore);
+ }finally{held?.dispose();moving?.dispose();materials.forEach(m=>m.dispose());geometry.dispose();terrain?.dispose();residency.dispose();material.dispose();f.close();}
+});

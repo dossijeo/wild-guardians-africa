@@ -1,0 +1,27 @@
+{
+  "base": "https://chromium.googlesource.com/chromium/src",
+  "revision": "671d6af90da4ab79e89cabbd7220cae70025cc11",
+  "log": {
+    "log": [
+      {
+        "commit": "671d6af90da4ab79e89cabbd7220cae70025cc11",
+        "tree": "06b78985839603d25a886ab0bd0012f838e7f407",
+        "parents": [
+          "2be41fa36e613d3670494b01636d51ef73a9efaf"
+        ],
+        "author": {
+          "name": "Mike Wasserman",
+          "email": "msw@chromium.org",
+          "time": "Fri Nov 20 18:40:12 2026"
+        },
+        "committer": {
+          "name": "Chromium LUCI CQ",
+          "email": "chromium-scoped@luci-project-accounts.iam.gserviceaccount.com",
+          "time": "Fri Nov 20 18:40:12 2026"
+        },
+        "message": "On-Device AI: Gate updated page action UX on obsolete uninstalls\n\nAdd ModelInstallState::kUninstalledObsolete for manifest retirements.\nRecord it when an installed model uninstalls with kObsolete.\nReserve the updated page action UX for installed or obsolete Nano V3.\n\nBug: 581470910\nChange-Id: I1f3fd76ee802af90efde6773db8d9565afa458a6\nReviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/8830968\nCommit-Queue: Jingyun Liu <jingyun@google.com>\nReviewed-by: Steven Holte <holte@chromium.org>\nCr-Commit-Position: refs/heads/main@{#1750669}\n"
+      }
+    ],
+    "next": "2be41fa36e613d3670494b01636d51ef73a9efaf"
+  }
+}

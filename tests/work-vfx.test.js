@@ -31,6 +31,13 @@ test('missing tasks skip target history; active plans see same-length target rep
 });
 function graphics(){const renderer={shadowMap:{enabled:false},getDrawingBufferSize:v=>v.set(800,600)},pipeline=new BuildingDestructionPass(renderer),texture=new THREE.Texture({width:4096,height:2048}),library=new VfxLibrary(catalog,texture),scene=new THREE.Scene();return {library,pipeline,scene,manager:new WorkVfx(library,pipeline,scene,()=>0)};}
 
+test('resuming a skipped watering effect cannot reconstruct a moving emitter history',()=>{
+ const a=graphics(),b=graphics(),worker={id:'w',profile:'olderMale',status:'acting',taskId:'t',actionRemaining:3.4,x:0},state={time:0,elapsed:0,workers:[worker],tasks:[{id:'t',kind:'water',targetId:'p'}],plants:[{id:'p',x:0,z:0}],structures:[]};
+ for(const manager of [a.manager,b.manager])manager.waterSource=()=>({position:[worker.x,2,0],direction:[0,0,1]});a.manager.update(state);b.manager.update(state);
+ const speed=PROFILES.find(p=>p.id==='olderMale').speed;for(let i=1;i<=20;i++){worker.x=i/10;worker.actionRemaining=(3.4-i/10)/speed;state.elapsed=i/10;a.manager.update(state);}b.manager.update(state);
+ const left=[...a.manager.effects.values()][0].native.rigids,right=[...b.manager.effects.values()][0].native.rigids;assert.ok(left.length&&right.length);assert.notDeepEqual(left.map(r=>r.p),right.map(r=>r.p));for(const g of [a,b]){g.manager.dispose();g.library.dispose();g.pipeline.dispose();}
+});
+
 test('Initial planting and first water track the four original profile speeds in separate phases',()=>{
   for(const profile of PROFILES){
     const worker={id:'worker',profile:profile.id,status:'acting',taskId:'initial',actionRemaining:5.3/profile.speed},state={tasks:[{id:'initial',kind:'initial',targetId:'plant'}],workers:[worker],plants:[{id:'plant',x:8,z:4}],structures:[]};
@@ -76,7 +83,7 @@ test('Committed arrival repair emits one native dust burst at its service point,
   if(!s.events.some(e=>e.type==='RepairApplied'))assert.ok(![...g.manager.effects.keys()].some(key=>key.startsWith('repair/')));
  }
  const event=s.events.find(e=>e.type==='RepairApplied'),worker=s.workers[0];assert.ok(event);assert.equal(numberOf(s.ledger.balance),611);
- assert.deepEqual(event.presentation,{elapsed:s.elapsed,x:worker.x,z:worker.z,yaw:worker.heading??0});
+ assert.deepEqual(event.presentation,{elapsed:s.elapsed,x:worker.x,z:worker.z,yaw:worker.heading??0,structure:{x:center.x,z:center.z}});
  const key=`repair/${event.id}`,effect=g.manager.effects.get(key);assert.ok(effect);assert.equal(effect.native.definition.id,'dust');assert.equal(effect.native.rigids.length,4);assert.ok(effect.native.parts.length>0);assert.equal(effect.position.x,worker.x);assert.equal(effect.position.z,worker.z);
  assert.equal(workVfxPlans({...s,events:[event,event]}).filter(p=>p.key===key).length,1);
  Game.tick(s,.12,nav);g.manager.update(s);Game.pause(s,'qa');

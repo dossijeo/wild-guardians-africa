@@ -1,0 +1,850 @@
+[
+  {
+    "ok": true,
+    "backend": "WebGPU",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "mode": "prepared-native-delta",
+    "before": {
+      "resourcesCreated": 2158,
+      "resourceTypes": {
+        "createBindGroup": 460,
+        "createBindGroupLayout": 272,
+        "createBuffer": 960,
+        "createPipelineLayout": 126,
+        "createRenderPipeline": 8,
+        "createRenderPipelineAsync": 120,
+        "createSampler": 36,
+        "createShaderModule": 139,
+        "createTexture": 37
+      },
+      "unchangedGpuBuffers": {
+        "position": "Buffer:2124",
+        "color": "Buffer:2122",
+        "normal": "Buffer:2123",
+        "index": "Buffer:2125"
+      },
+      "frames": 176,
+      "biomeChunks": 9
+    },
+    "after": {
+      "resourcesCreated": 2720,
+      "resourceTypes": {
+        "createBindGroup": 612,
+        "createBindGroupLayout": 314,
+        "createBuffer": 1278,
+        "createPipelineLayout": 142,
+        "createRenderPipeline": 8,
+        "createRenderPipelineAsync": 136,
+        "createSampler": 37,
+        "createShaderModule": 155,
+        "createTexture": 38
+      },
+      "unchangedGpuBuffers": {
+        "position": "Buffer:2124",
+        "color": "Buffer:2122",
+        "normal": "Buffer:2123",
+        "index": "Buffer:2125"
+      },
+      "bufferForks": 0,
+      "bindingForks": 0,
+      "frames": 224,
+      "resident": 9
+    },
+    "mutations": [
+      {
+        "sequence": 2,
+        "mutation": {
+          "type": "removeChunks",
+          "chunks": [
+            [
+              -1,
+              -1
+            ]
+          ],
+          "releaseOnly": true
+        },
+        "proposed": {
+          "version": 1,
+          "authorityEpoch": "82932c96-ea05-4817-85ba-d0b2196e6265/1",
+          "nativeSession": 1,
+          "ticket": 1,
+          "effectiveTime": 10
+        },
+        "world": {
+          "version": 1,
+          "authorityEpoch": "82932c96-ea05-4817-85ba-d0b2196e6265/1",
+          "nativeSession": 1,
+          "ticket": 1,
+          "effectiveTime": 10
+        },
+        "preparationMs": 1.699951171875,
+        "readyBeforePhysicalCommitMs": 3.7001953125,
+        "drainMs": 1.199951171875,
+        "physicalCommitAndProjectionMs": 1.900146484375,
+        "resident": 8,
+        "resourcesCreated": 2247,
+        "resourceTypesReady": {
+          "createBindGroup": 460,
+          "createBindGroupLayout": 272,
+          "createBuffer": 960,
+          "createPipelineLayout": 126,
+          "createRenderPipeline": 8,
+          "createRenderPipelineAsync": 120,
+          "createSampler": 36,
+          "createShaderModule": 139,
+          "createTexture": 37
+        },
+        "resourceTypesAfter": {
+          "createBindGroup": 489,
+          "createBindGroupLayout": 274,
+          "createBuffer": 1018,
+          "createPipelineLayout": 126,
+          "createRenderPipeline": 8,
+          "createRenderPipelineAsync": 120,
+          "createSampler": 36,
+          "createShaderModule": 139,
+          "createTexture": 37
+        }
+      },
+      {
+        "sequence": 3,
+        "mutation": {
+          "type": "addChunk",
+          "cx": -1,
+          "cz": -1
+        },
+        "proposed": {
+          "version": 1,
+          "authorityEpoch": "82932c96-ea05-4817-85ba-d0b2196e6265/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 10
+        },
+        "world": {
+          "version": 1,
+          "authorityEpoch": "82932c96-ea05-4817-85ba-d0b2196e6265/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 10
+        },
+        "preparationMs": 389.39990234375,
+        "readyBeforePhysicalCommitMs": 505.10009765625,
+        "drainMs": 0.400146484375,
+        "physicalCommitAndProjectionMs": 2.5,
+        "blockedPreparation": {
+          "durationMs": 500.80000000074506,
+          "nativeFrames": 15,
+          "worldBefore": {
+            "version": 1,
+            "authorityEpoch": "82932c96-ea05-4817-85ba-d0b2196e6265/1",
+            "nativeSession": 1,
+            "ticket": 1,
+            "effectiveTime": 10
+          },
+          "worldAfter": {
+            "version": 1,
+            "authorityEpoch": "82932c96-ea05-4817-85ba-d0b2196e6265/1",
+            "nativeSession": 1,
+            "ticket": 1,
+            "effectiveTime": 10
+          },
+          "holdBefore": null,
+          "holdAfter": null
+        },
+        "resident": 9,
+        "resourcesCreated": 2519,
+        "resourceTypesReady": {
+          "createBindGroup": 519,
+          "createBindGroupLayout": 304,
+          "createBuffer": 1089,
+          "createPipelineLayout": 140,
+          "createRenderPipeline": 8,
+          "createRenderPipelineAsync": 134,
+          "createSampler": 37,
+          "createShaderModule": 153,
+          "createTexture": 38
+        },
+        "resourceTypesAfter": {
+          "createBindGroup": 550,
+          "createBindGroupLayout": 306,
+          "createBuffer": 1153,
+          "createPipelineLayout": 140,
+          "createRenderPipeline": 8,
+          "createRenderPipelineAsync": 134,
+          "createSampler": 37,
+          "createShaderModule": 153,
+          "createTexture": 38
+        }
+      },
+      {
+        "sequence": 4,
+        "mutation": {
+          "type": "removeProp",
+          "group": 0,
+          "gx": -2,
+          "gz": -3
+        },
+        "proposed": {
+          "version": 1,
+          "authorityEpoch": "82932c96-ea05-4817-85ba-d0b2196e6265/1",
+          "nativeSession": 1,
+          "ticket": 3,
+          "effectiveTime": 10
+        },
+        "world": {
+          "version": 1,
+          "authorityEpoch": "82932c96-ea05-4817-85ba-d0b2196e6265/1",
+          "nativeSession": 1,
+          "ticket": 3,
+          "effectiveTime": 10
+        },
+        "preparationMs": 11.300048828125,
+        "readyBeforePhysicalCommitMs": 2.099853515625,
+        "drainMs": 0.7998046875,
+        "physicalCommitAndProjectionMs": 0.800048828125,
+        "retainedTerrain": [
+          {
+            "key": "-1,-1",
+            "buffersBefore": {
+              "position": "Buffer:2742",
+              "color": "Buffer:2740",
+              "normal": "Buffer:2741",
+              "index": "Buffer:2743"
+            },
+            "buffersAfter": {
+              "position": "Buffer:2742",
+              "color": "Buffer:2740",
+              "normal": "Buffer:2741",
+              "index": "Buffer:2743"
+            },
+            "maskTextureBefore": "Texture:2749",
+            "maskTextureAfter": "Texture:2749",
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true,
+            "sameMask": true
+          }
+        ],
+        "retainedProps": [
+          {
+            "chunk": "-1,-1",
+            "slot": 4,
+            "buffersBefore": {
+              "position": "Buffer:513",
+              "normal": "Buffer:514",
+              "uv": "Buffer:515",
+              "index": "Buffer:516",
+              "instanceMatrix": null
+            },
+            "buffersAfter": {
+              "position": "Buffer:513",
+              "normal": "Buffer:514",
+              "uv": "Buffer:515",
+              "index": "Buffer:516",
+              "instanceMatrix": null
+            },
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true
+          },
+          {
+            "chunk": "-1,-1",
+            "slot": 5,
+            "buffersBefore": {
+              "position": "Buffer:644",
+              "normal": "Buffer:645",
+              "uv": "Buffer:646",
+              "index": "Buffer:647",
+              "instanceMatrix": null
+            },
+            "buffersAfter": {
+              "position": "Buffer:644",
+              "normal": "Buffer:645",
+              "uv": "Buffer:646",
+              "index": "Buffer:647",
+              "instanceMatrix": null
+            },
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true
+          },
+          {
+            "chunk": "-1,-1",
+            "slot": 8,
+            "buffersBefore": {
+              "position": "Buffer:661",
+              "normal": "Buffer:662",
+              "uv": "Buffer:663",
+              "index": "Buffer:664",
+              "instanceMatrix": null
+            },
+            "buffersAfter": {
+              "position": "Buffer:661",
+              "normal": "Buffer:662",
+              "uv": "Buffer:663",
+              "index": "Buffer:664",
+              "instanceMatrix": null
+            },
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true
+          },
+          {
+            "chunk": "-1,-1",
+            "slot": 9,
+            "buffersBefore": {
+              "position": "Buffer:678",
+              "normal": "Buffer:679",
+              "uv": "Buffer:680",
+              "index": "Buffer:681",
+              "instanceMatrix": null
+            },
+            "buffersAfter": {
+              "position": "Buffer:678",
+              "normal": "Buffer:679",
+              "uv": "Buffer:680",
+              "index": "Buffer:681",
+              "instanceMatrix": null
+            },
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true
+          },
+          {
+            "chunk": "-1,-1",
+            "slot": 10,
+            "buffersBefore": {
+              "position": "Buffer:695",
+              "normal": "Buffer:696",
+              "uv": "Buffer:697",
+              "index": "Buffer:698",
+              "instanceMatrix": null
+            },
+            "buffersAfter": {
+              "position": "Buffer:695",
+              "normal": "Buffer:696",
+              "uv": "Buffer:697",
+              "index": "Buffer:698",
+              "instanceMatrix": null
+            },
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true
+          },
+          {
+            "chunk": "-1,-1",
+            "slot": 13,
+            "buffersBefore": {
+              "position": "Buffer:712",
+              "normal": "Buffer:713",
+              "uv": "Buffer:714",
+              "index": "Buffer:715",
+              "instanceMatrix": null
+            },
+            "buffersAfter": {
+              "position": "Buffer:712",
+              "normal": "Buffer:713",
+              "uv": "Buffer:714",
+              "index": "Buffer:715",
+              "instanceMatrix": null
+            },
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true
+          }
+        ],
+        "nativePreparedPayload": true,
+        "recipeChunksAtReady": 0,
+        "recipeChunksAfterCommit": 0,
+        "resident": 9,
+        "resourcesCreated": 2608,
+        "resourceTypesReady": {
+          "createBindGroup": 550,
+          "createBindGroupLayout": 306,
+          "createBuffer": 1153,
+          "createPipelineLayout": 140,
+          "createRenderPipeline": 8,
+          "createRenderPipelineAsync": 134,
+          "createSampler": 37,
+          "createShaderModule": 153,
+          "createTexture": 38
+        },
+        "resourceTypesAfter": {
+          "createBindGroup": 579,
+          "createBindGroupLayout": 308,
+          "createBuffer": 1211,
+          "createPipelineLayout": 140,
+          "createRenderPipeline": 8,
+          "createRenderPipelineAsync": 134,
+          "createSampler": 37,
+          "createShaderModule": 153,
+          "createTexture": 38
+        }
+      },
+      {
+        "sequence": 5,
+        "mutation": {
+          "type": "restoreRemovedProps",
+          "records": []
+        },
+        "proposed": {
+          "version": 1,
+          "authorityEpoch": "82932c96-ea05-4817-85ba-d0b2196e6265/1",
+          "nativeSession": 1,
+          "ticket": 4,
+          "effectiveTime": 10
+        },
+        "world": {
+          "version": 1,
+          "authorityEpoch": "82932c96-ea05-4817-85ba-d0b2196e6265/1",
+          "nativeSession": 1,
+          "ticket": 4,
+          "effectiveTime": 10
+        },
+        "preparationMs": 170.199951171875,
+        "readyBeforePhysicalCommitMs": 3.300048828125,
+        "drainMs": 1.39990234375,
+        "physicalCommitAndProjectionMs": 1.300048828125,
+        "retainedTerrain": [
+          {
+            "key": "-1,-1",
+            "buffersBefore": {
+              "position": "Buffer:2742",
+              "color": "Buffer:2740",
+              "normal": "Buffer:2741",
+              "index": "Buffer:2743"
+            },
+            "buffersAfter": {
+              "position": "Buffer:2742",
+              "color": "Buffer:2740",
+              "normal": "Buffer:2741",
+              "index": "Buffer:2743"
+            },
+            "maskTextureBefore": "Texture:2749",
+            "maskTextureAfter": "Texture:2749",
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true,
+            "sameMask": true
+          },
+          {
+            "key": "0,-1",
+            "buffersBefore": {
+              "position": "Buffer:829",
+              "color": "Buffer:827",
+              "normal": "Buffer:828",
+              "index": "Buffer:830"
+            },
+            "buffersAfter": {
+              "position": "Buffer:829",
+              "color": "Buffer:827",
+              "normal": "Buffer:828",
+              "index": "Buffer:830"
+            },
+            "maskTextureBefore": "Texture:836",
+            "maskTextureAfter": "Texture:836",
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true,
+            "sameMask": true
+          }
+        ],
+        "retainedProps": [
+          {
+            "chunk": "-1,-1",
+            "slot": 4,
+            "buffersBefore": {
+              "position": "Buffer:513",
+              "normal": "Buffer:514",
+              "uv": "Buffer:515",
+              "index": "Buffer:516",
+              "instanceMatrix": null
+            },
+            "buffersAfter": {
+              "position": "Buffer:513",
+              "normal": "Buffer:514",
+              "uv": "Buffer:515",
+              "index": "Buffer:516",
+              "instanceMatrix": null
+            },
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true
+          },
+          {
+            "chunk": "-1,-1",
+            "slot": 5,
+            "buffersBefore": {
+              "position": "Buffer:644",
+              "normal": "Buffer:645",
+              "uv": "Buffer:646",
+              "index": "Buffer:647",
+              "instanceMatrix": null
+            },
+            "buffersAfter": {
+              "position": "Buffer:644",
+              "normal": "Buffer:645",
+              "uv": "Buffer:646",
+              "index": "Buffer:647",
+              "instanceMatrix": null
+            },
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true
+          },
+          {
+            "chunk": "-1,-1",
+            "slot": 8,
+            "buffersBefore": {
+              "position": "Buffer:661",
+              "normal": "Buffer:662",
+              "uv": "Buffer:663",
+              "index": "Buffer:664",
+              "instanceMatrix": null
+            },
+            "buffersAfter": {
+              "position": "Buffer:661",
+              "normal": "Buffer:662",
+              "uv": "Buffer:663",
+              "index": "Buffer:664",
+              "instanceMatrix": null
+            },
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true
+          },
+          {
+            "chunk": "-1,-1",
+            "slot": 9,
+            "buffersBefore": {
+              "position": "Buffer:678",
+              "normal": "Buffer:679",
+              "uv": "Buffer:680",
+              "index": "Buffer:681",
+              "instanceMatrix": null
+            },
+            "buffersAfter": {
+              "position": "Buffer:678",
+              "normal": "Buffer:679",
+              "uv": "Buffer:680",
+              "index": "Buffer:681",
+              "instanceMatrix": null
+            },
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true
+          },
+          {
+            "chunk": "-1,-1",
+            "slot": 10,
+            "buffersBefore": {
+              "position": "Buffer:695",
+              "normal": "Buffer:696",
+              "uv": "Buffer:697",
+              "index": "Buffer:698",
+              "instanceMatrix": null
+            },
+            "buffersAfter": {
+              "position": "Buffer:695",
+              "normal": "Buffer:696",
+              "uv": "Buffer:697",
+              "index": "Buffer:698",
+              "instanceMatrix": null
+            },
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true
+          },
+          {
+            "chunk": "-1,-1",
+            "slot": 13,
+            "buffersBefore": {
+              "position": "Buffer:712",
+              "normal": "Buffer:713",
+              "uv": "Buffer:714",
+              "index": "Buffer:715",
+              "instanceMatrix": null
+            },
+            "buffersAfter": {
+              "position": "Buffer:712",
+              "normal": "Buffer:713",
+              "uv": "Buffer:714",
+              "index": "Buffer:715",
+              "instanceMatrix": null
+            },
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true
+          },
+          {
+            "chunk": "0,-1",
+            "slot": 0,
+            "buffersBefore": {
+              "position": "Buffer:842",
+              "normal": "Buffer:843",
+              "uv": "Buffer:844",
+              "index": "Buffer:845",
+              "instanceMatrix": null
+            },
+            "buffersAfter": {
+              "position": "Buffer:842",
+              "normal": "Buffer:843",
+              "uv": "Buffer:844",
+              "index": "Buffer:845",
+              "instanceMatrix": null
+            },
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true
+          },
+          {
+            "chunk": "0,-1",
+            "slot": 1,
+            "buffersBefore": {
+              "position": "Buffer:859",
+              "normal": "Buffer:860",
+              "uv": "Buffer:861",
+              "index": "Buffer:862",
+              "instanceMatrix": null
+            },
+            "buffersAfter": {
+              "position": "Buffer:859",
+              "normal": "Buffer:860",
+              "uv": "Buffer:861",
+              "index": "Buffer:862",
+              "instanceMatrix": null
+            },
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true
+          },
+          {
+            "chunk": "0,-1",
+            "slot": 3,
+            "buffersBefore": {
+              "position": "Buffer:876",
+              "normal": "Buffer:877",
+              "uv": "Buffer:878",
+              "index": "Buffer:879",
+              "instanceMatrix": null
+            },
+            "buffersAfter": {
+              "position": "Buffer:876",
+              "normal": "Buffer:877",
+              "uv": "Buffer:878",
+              "index": "Buffer:879",
+              "instanceMatrix": null
+            },
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true
+          },
+          {
+            "chunk": "0,-1",
+            "slot": 5,
+            "buffersBefore": {
+              "position": "Buffer:644",
+              "normal": "Buffer:645",
+              "uv": "Buffer:646",
+              "index": "Buffer:647",
+              "instanceMatrix": null
+            },
+            "buffersAfter": {
+              "position": "Buffer:644",
+              "normal": "Buffer:645",
+              "uv": "Buffer:646",
+              "index": "Buffer:647",
+              "instanceMatrix": null
+            },
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true
+          },
+          {
+            "chunk": "0,-1",
+            "slot": 6,
+            "buffersBefore": {
+              "position": "Buffer:906",
+              "normal": "Buffer:907",
+              "uv": "Buffer:908",
+              "index": "Buffer:909",
+              "instanceMatrix": null
+            },
+            "buffersAfter": {
+              "position": "Buffer:906",
+              "normal": "Buffer:907",
+              "uv": "Buffer:908",
+              "index": "Buffer:909",
+              "instanceMatrix": null
+            },
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true
+          },
+          {
+            "chunk": "0,-1",
+            "slot": 8,
+            "buffersBefore": {
+              "position": "Buffer:661",
+              "normal": "Buffer:662",
+              "uv": "Buffer:663",
+              "index": "Buffer:664",
+              "instanceMatrix": null
+            },
+            "buffersAfter": {
+              "position": "Buffer:661",
+              "normal": "Buffer:662",
+              "uv": "Buffer:663",
+              "index": "Buffer:664",
+              "instanceMatrix": null
+            },
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true
+          },
+          {
+            "chunk": "0,-1",
+            "slot": 10,
+            "buffersBefore": {
+              "position": "Buffer:695",
+              "normal": "Buffer:696",
+              "uv": "Buffer:697",
+              "index": "Buffer:698",
+              "instanceMatrix": null
+            },
+            "buffersAfter": {
+              "position": "Buffer:695",
+              "normal": "Buffer:696",
+              "uv": "Buffer:697",
+              "index": "Buffer:698",
+              "instanceMatrix": null
+            },
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true
+          },
+          {
+            "chunk": "0,-1",
+            "slot": 12,
+            "buffersBefore": {
+              "position": "Buffer:949",
+              "normal": "Buffer:950",
+              "uv": "Buffer:951",
+              "index": "Buffer:952",
+              "instanceMatrix": null
+            },
+            "buffersAfter": {
+              "position": "Buffer:949",
+              "normal": "Buffer:950",
+              "uv": "Buffer:951",
+              "index": "Buffer:952",
+              "instanceMatrix": null
+            },
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true
+          },
+          {
+            "chunk": "0,-1",
+            "slot": 14,
+            "buffersBefore": {
+              "position": "Buffer:966",
+              "normal": "Buffer:967",
+              "uv": "Buffer:968",
+              "index": "Buffer:969",
+              "instanceMatrix": null
+            },
+            "buffersAfter": {
+              "position": "Buffer:966",
+              "normal": "Buffer:967",
+              "uv": "Buffer:968",
+              "index": "Buffer:969",
+              "instanceMatrix": null
+            },
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true
+          },
+          {
+            "chunk": "0,-1",
+            "slot": 16,
+            "buffersBefore": {
+              "position": "Buffer:983",
+              "normal": "Buffer:984",
+              "uv": "Buffer:985",
+              "index": "Buffer:986",
+              "instanceMatrix": null
+            },
+            "buffersAfter": {
+              "position": "Buffer:983",
+              "normal": "Buffer:984",
+              "uv": "Buffer:985",
+              "index": "Buffer:986",
+              "instanceMatrix": null
+            },
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true
+          }
+        ],
+        "nativePreparedPayload": true,
+        "recipeChunksAtReady": 2,
+        "recipeChunksAfterCommit": 2,
+        "resident": 9,
+        "resourcesCreated": 2720,
+        "resourceTypesReady": {
+          "createBindGroup": 583,
+          "createBindGroupLayout": 312,
+          "createBuffer": 1220,
+          "createPipelineLayout": 142,
+          "createRenderPipeline": 8,
+          "createRenderPipelineAsync": 136,
+          "createSampler": 37,
+          "createShaderModule": 155,
+          "createTexture": 38
+        },
+        "resourceTypesAfter": {
+          "createBindGroup": 612,
+          "createBindGroupLayout": 314,
+          "createBuffer": 1278,
+          "createPipelineLayout": 142,
+          "createRenderPipeline": 8,
+          "createRenderPipelineAsync": 136,
+          "createSampler": 37,
+          "createShaderModule": 155,
+          "createTexture": 38
+        }
+      }
+    ],
+    "sameRenderer": true,
+    "sameDevice": true,
+    "sameScene": true,
+    "sameWorkerRoot": true,
+    "unchangedTerrainMesh": true,
+    "unchangedTerrainGeometry": true,
+    "preparedWorld": {
+      "version": 1,
+      "authorityEpoch": "82932c96-ea05-4817-85ba-d0b2196e6265/1",
+      "nativeSession": 1,
+      "ticket": 4,
+      "effectiveTime": 10
+    },
+    "requiredWorld": {
+      "version": 1,
+      "authorityEpoch": "82932c96-ea05-4817-85ba-d0b2196e6265/1",
+      "nativeSession": 1,
+      "ticket": 4,
+      "effectiveTime": 10
+    },
+    "gpuErrors": 0,
+    "errors": [],
+    "scope": "Real native precommit resource proposal through the existing terrain channel and real product surface owners, one GPU device/draw Worker. Chunk removal/readmission and canonical prop removal/restoration, retaining terrain GPU resources in changed chunks; one stationary worker. No ordinary gameplay activation, blocked-preparer locomotion or no-stutter acceptance.",
+    "daylight": true,
+    "disposalAndGpuDrainVerified": true
+  }
+]

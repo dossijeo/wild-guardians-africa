@@ -1,0 +1,100 @@
+{
+  "baseCommit": "bac8fe87605d013cbf3bff9b74e613d38bb8b3ec",
+  "scope": "After the broad frozen run, add one terminal-state guard after awaiting a captured image and three dispose/lost/error regressions. Repeat affected transport, Host and native-contract tests plus build; do not relabel the earlier broad run as the final snapshot.",
+  "files": {
+    "src/rendering/remote-webgpu-client.js": "1737ab4bd3a495a95778402f2502501a67835cc813e78b97819d5bd48ff69ce8",
+    "src/rendering/remote-webgpu-host.js": "c082eed1d6882de9a8f0e82878cd3f445f76a18e1e7955db2e96f498b5d9ee6b",
+    "src/rendering/webgpu-draw-worker.js": "2ea36be5e9d82c179e3ab6fe7f792a5d9337cfeddc5dbe6fa784f5592a3577b5",
+    "src/rendering/remote-resource-uploads.js": "f69a832b7806bde7742f4fcb0ae29560a30a9e45c041fc7c2f200bfa047593b5",
+    "src/rendering/remote-image-copy-preparation.js": "a288d2cf34cf946359713e46d5cdc8ab423c25f64fe12eb96a003b80f64063e2",
+    "src/world/native-task-action-presentation.js": "6a14f15be9a48b80378b6f053ddf2cf7e50b78a9803907c1c0b322442c58eca8",
+    "src/world/native-task-consequence.js": "74db176abc4a14f48210a225bb2cfee4a9513d11a07df55a51e4ba048d084cfd",
+    "src/world/native-task-settlement.js": "cc13857033238682aa08bb4c111315a32becaae1f0a8eeaaecf1e577079428df",
+    "tests/remote-resource-transport.test.js": "b7cae7a092e404dcf3aa826ef333e67097d46a2b3cec8837fe7c711ed213638b",
+    "tests/remote-resource-uploads.test.js": "78e077c9c3b7e869289e0dd50950c4df83f4e3d5dd3847ae1735e2f58faf33f8",
+    "tests/remote-image-copy-preparation.test.js": "0f7e59b6a5850ba39c940188a4305cbb2ac1bcf0bfede8d6b50ab0dca4e353cf",
+    "tests/native-task-reference-canonical-reuse.test.js": "c80111a144e001238aa881515b95d26b84e989342da2327c1eadeea3094d01ba",
+    "tests/remote-preparation-slices.test.js": "463e9037fc2ee41b6d5eeca3f45fc7e89a774b194ee46d2b020e8b3d47a809e7",
+    "tests/native-audit-preparation-costs.test.js": "89cef342d61b6b7d126d77d83be26d532e97389c15f279187cc431a1047b3b7b",
+    "tests/browser/remote-image-regions.html": "035cfa567688786be7679b34a79743318a628924a5f73b428a4b9e9a952840ad",
+    "tests/browser/remote-image-regions.js": "ebe008d58503a25bada28937ecd045c4fc77e327c9808f8828d4aedfe64e9966",
+    "tools/guardian/native-audit-preparation-costs.mjs": "0236fed2cb1fcbdec0e7ccf491acdd83cd052230c829e218578ce2d5364b94be",
+    "tools/guardian/audit_remote_image_regions.mjs": "4b99fcfb0725658426b38131ba780289437d2e811fdf2852f72bbbbd9fad4e41"
+  },
+  "changedSinceBroad": [
+    "src/rendering/remote-webgpu-client.js",
+    "tests/remote-resource-transport.test.js"
+  ],
+  "selectedFiles": 37,
+  "build": {
+    "command": [
+      ".cache/tooling/node20.exe",
+      "node_modules/vite/bin/vite.js",
+      "build"
+    ],
+    "environment": {
+      "WILD_ENGINE_NATIVE_ROUTE_WASM": "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\src\\world\\wild-engine\\spatial-savanna.wasm",
+      "WILD_ENGINE_SPATIAL_SERVICES_WASM": "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\src\\world\\wild-engine\\spatial-savanna.wasm",
+      "VITE_PRESENTATION_BACKEND": "webgpu-worker",
+      "VITE_WEBGPU_REMOTE_DRAW": "true"
+    },
+    "log": ".cache/native-resource-correction-final-build.log",
+    "sha256": "5361676188c14d6fc558c02bc3b24513ecbf8334fd2db1c61d2b623f87e22a96",
+    "startedAt": "2026-11-20T14:01:57.598Z",
+    "finishedAt": "2026-11-20T14:03:27.661Z",
+    "exitCode": 0
+  },
+  "tests": {
+    "command": [
+      ".cache/tooling/node20.exe",
+      "--test",
+      "tests/native-idle-reference-canonical-reuse.test.js",
+      "tests/native-task-action-binding.test.js",
+      "tests/native-task-action-clock.test.js",
+      "tests/native-task-action-game-execution.test.js",
+      "tests/native-task-action-graphics.test.js",
+      "tests/native-task-action-proposal.test.js",
+      "tests/native-task-action-restoration.test.js",
+      "tests/native-task-consequence-admission.test.js",
+      "tests/native-task-consequence-control.test.js",
+      "tests/native-task-consequence-crops.test.js",
+      "tests/native-task-consequence-game.test.js",
+      "tests/native-task-consequence-graphics.test.js",
+      "tests/native-task-consequence-proposal.test.js",
+      "tests/native-task-game-execution.test.js",
+      "tests/native-task-resource-requests.test.js",
+      "tests/native-task-settlement-clock.test.js",
+      "tests/native-task-settlement-control.test.js",
+      "tests/native-task-settlement-game.test.js",
+      "tests/native-task-settlement-gpu-motion.test.js",
+      "tests/native-task-settlement-graphics.test.js",
+      "tests/native-task-settlement-proposal.test.js",
+      "tests/native-task-settlement-publication.test.js",
+      "tests/native-task-settlement-remote.test.js",
+      "tests/native-task-start-binding.test.js",
+      "tests/native-task-start-graphics.test.js",
+      "tests/native-task-start-proposal.test.js",
+      "tests/remote-uniform-retention.test.js",
+      "tests/remote-webgpu-resource-timing.test.js",
+      "tests/remote-webgpu.test.js",
+      "tests/remote-prepared-first-use.test.js",
+      "tests/native-task-pending-source-pick.test.js",
+      "tests/native-audit-preparation-costs.test.js",
+      "tests/remote-preparation-slices.test.js",
+      "tests/remote-resource-transport.test.js",
+      "tests/remote-resource-uploads.test.js",
+      "tests/remote-image-copy-preparation.test.js",
+      "tests/native-task-reference-canonical-reuse.test.js"
+    ],
+    "environment": {
+      "WILD_ENGINE_NATIVE_ROUTE_WASM": "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\src\\world\\wild-engine\\spatial-savanna.wasm",
+      "WILD_ENGINE_SPATIAL_SERVICES_WASM": "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\src\\world\\wild-engine\\spatial-savanna.wasm"
+    },
+    "log": ".cache/native-resource-correction-final-tests.log",
+    "sha256": "6ff02730b411a1d28482fc87758709142284b3aa2152d3fb34499a800a5239d3",
+    "startedAt": "2026-11-20T14:01:57.587Z",
+    "finishedAt": "2026-11-20T14:03:36.487Z",
+    "exitCode": 0
+  },
+  "inputsUnchanged": true
+}

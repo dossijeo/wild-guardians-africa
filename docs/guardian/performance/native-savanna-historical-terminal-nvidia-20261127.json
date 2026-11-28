@@ -1,0 +1,62 @@
+{
+  "baseRevision": "4b840439f4305baef46678fa5363ff234ce9a2c0",
+  "artifact": "native-savanna-home-historical-terminal-injection-extended.json",
+  "sha256": "57a80e86d166bda21458bc610fe33ee9524e8ce3a1d3fcb7e3738b43362480c1",
+  "input": {
+    "artifact": "native-ordinary-home-source-714.json",
+    "sha256": "872a767c1f52b230fa6965c62e105d42f463779bc70810ac9ae78931dbc5379e"
+  },
+  "sources": {
+    "src/app/main.js": "719324d2cb8371c4e09aa6792e575fd8c1ced554299cc57de7190a67704c8842",
+    "src/app/webgpu-auto-recovery.js": "1f28be1ec76c6cb7f650875ef57c9e3457981512d92668b54f6e681fea33f34f",
+    "src/rendering/confirmed-historical-event-playback.js": "a83baaedf33d72d66bcab98f5a74369bc8ceefb3715520c984f68f3d47a5bd71",
+    "src/rendering/webgpu-frame-recovery.js": "5d83f07b9ff70deb347383fee01cc6742105c691a29a860f76b1361b666d221c",
+    "tests/historical-event-auto-recovery-integration.test.js": "640ba58865931d5b0d226ba9bd52421dcd5f238b61d237c39ee5169ffaac4825"
+  },
+  "scenario": {
+    "biome": "sabana",
+    "seed": 714,
+    "adapter": "NVIDIA Turing",
+    "profile": "nativeWorkerLifecycle",
+    "faultInjection": "typed historical continuation loss at the World Worker; no GPUDevice destruction command"
+  },
+  "trigger": {
+    "code": "historical-event-continuation-lost",
+    "elapsed": 304.49999999996237,
+    "homeTicket": 4
+  },
+  "hold": {
+    "id": 521,
+    "publicationFloor": 1233,
+    "lastConfirmedCheckpoint": 1106
+  },
+  "retirement": {
+    "callbacksSettled": true,
+    "drawDrained": true,
+    "afterMs": 789.374755859375
+  },
+  "replacement": {
+    "firstFrame": 1,
+    "ticket": 4,
+    "elapsed": 304.49999999996237,
+    "bindings": 0,
+    "afterMs": 6633.334716796875
+  },
+  "activation": {
+    "candidateDrainAfterMs": 6863.544677734375,
+    "sequence": 1245,
+    "checkpointBase": 1234
+  },
+  "nextRaid": {
+    "firstFrame": 111,
+    "ticket": 6,
+    "elapsed": 379.27814648073223,
+    "body": 2,
+    "balance": 510
+  },
+  "finalDrain": {
+    "firstAcknowledgementAfterMs": 26528.71484375
+  },
+  "pageErrors": [],
+  "httpErrors": []
+}

@@ -1,0 +1,197 @@
+{
+  "version": 1,
+  "date": "2026-11-15",
+  "baseCommit": "b7c3da0ed",
+  "scope": "Existing native admission transaction extracted and connected, shared motion/resource profiles, reusable deterministic integration contract and route-to-action sequence. Consequence semantics and full product activation remain outside this increment.",
+  "sourceHashes": {
+    "src/world/native-resource-admission.js": "a28f73422d8252341c605bd6b805bad9711e2345c08333b2243c2df986b4f508",
+    "src/world/native-resource-admission-profiles.js": "c1d558c464f594adc818ff431a666e65b534a0f43c00fa2d5a4e36c3f4208f28",
+    "src/simulation/native-resource-preparation-client.js": "58daabfb45ad81c44dc622965ad61967415b9fb5854aa19b4302dc6e5bb2e6af",
+    "src/world/wild-engine/spatial-intent-bridge.js": "b2da741809e2a6597e48fad528eb6020eda281c7691fab7a5d8ed3f3ad65047e",
+    "tests/helpers/remote-webgpu-fixture.js": "c5986d84f9f102b30f27960f4bd602713f2b2ef7d0a18d8e2dc24b42a87f7726",
+    "tests/helpers/native-admission-vertical.js": "661297c2fee190ef137e4c65e5d18e7f7908691c334993feae5fea5076aba561",
+    "tests/helpers/native-admission-contract.js": "ad0ebd88dd52b688e7b4be8207657430e0f8dee99d29ac3d97d09947bb23816b",
+    "tests/native-admission-vertical.test.js": "5ba4e928802240665be9c0a5426217deaf3173c00072b9fcd933372698320816",
+    "tests/remote-webgpu.test.js": "6f20406f009537cd24d265deb49cd554cd9345a4db4f932bac4763e360d7b994"
+  },
+  "finalDirected": {
+    "command": ".cache/tooling/node20.exe --test tests/native-admission-vertical.test.js",
+    "tests": 11,
+    "pass": 11,
+    "fail": 0,
+    "skipped": 0,
+    "durationMs": 4599.0014,
+    "artifact": "native-admission-vertical-final-20261115.tap",
+    "artifactSha256": "5d2e967ba7f4090872d3b49979f01004e2f5627ff652741bdeb28cb4353fe738"
+  },
+  "earlierDirected": [
+    {
+      "files": [
+        "tests/native-task-start-binding.test.js",
+        "tests/native-resource-preparation-channel.test.js",
+        "tests/native-task-action-binding.test.js"
+      ],
+      "tests": 38,
+      "pass": 38,
+      "fail": 0,
+      "skipped": 0
+    },
+    {
+      "files": [
+        "tests/native-admission-vertical.test.js",
+        "tests/remote-webgpu.test.js",
+        "tests/native-barrier-quiescence.test.js",
+        "tests/native-gate-causal-transaction.test.js"
+      ],
+      "tests": 173,
+      "pass": 173,
+      "fail": 0,
+      "skipped": 0,
+      "note": "Before the additional chained test and final harness extensions; final affected suite rerun separately."
+    }
+  ],
+  "coordinatedEvidence": {
+    "originThread": "01a1d588-5060-7f50-9872-1623ecffdd8b",
+    "testedHashes": {
+      "public/wild-engine/spatial-threaded.mjs": "5b7f1c54eac355a09503f4d9861c0adceaa02f6546511511306d742dabe748d9",
+      "src/world/wild-engine/spatial-intent-state.cpp": "3c8a586c25fde28115517461dbfb03f5ba4a22317f39a95e6d7028a1ff3fcf94",
+      "src/world/wild-engine/spatial-task-action-proposal.inc": "073cf218482ddd17e159c9a843090be694885d2569a570193dc3c94c19d5ecb7",
+      "src/world/wild-engine/spatial-route-execution.h": "c6ac3fa1f78ce7699ba03d73112cec4702ce1964a7af6ded3315c542039bd4a2",
+      "src/rendering/remote-webgpu-host.js": "3a7417df5d02c67719a3df2acfcd957fb8d0fb5d3bcf50af8272553c61d804b3",
+      "src/rendering/webgpu-world-surface.js": "f59e1169b1c7efa63260602a1612ac4cbc91e8a95ba152c0c67b673803964611",
+      "src/rendering/webgpu-worker-roster.js": "ab8372078b51f85943f9a0b95cd5fac9c4c71b553b8eb29c81bb22d3dd0588a5",
+      "src/rendering/native-task-action-gpu-motion.js": "3e4b2884f6016fe8047739a94e04046ab6bbdbf190b0a3751bc15f8d8ae4b166",
+      "tests/browser/native-first-task-world-owner.js": "4b0ebe666eefe52e97348f3d8ae8760efaa45531172b29dad533ba23439327c1",
+      "src/world/native-resource-admission.js": "a28f73422d8252341c605bd6b805bad9711e2345c08333b2243c2df986b4f508",
+      "src/world/native-resource-admission-profiles.js": "c1d558c464f594adc818ff431a666e65b534a0f43c00fa2d5a4e36c3f4208f28",
+      "src/simulation/native-resource-preparation-client.js": "58daabfb45ad81c44dc622965ad61967415b9fb5854aa19b4302dc6e5bb2e6af",
+      "tests/helpers/native-admission-contract.js": "cac3f24c0cadd8d82bdd88588d0b835376a1644f50965808717535c06b7d036d",
+      "tests/helpers/native-admission-vertical.js": "661297c2fee190ef137e4c65e5d18e7f7908691c334993feae5fea5076aba561",
+      "tests/native-admission-vertical.test.js": "dd00ac3f71515a7e3aaa23d458b487d283484eca719fe76b3e9a9a7b9ef1693c",
+      "src/world/wild-engine/spatial-task-execution.inc": "1cea8fbe0fffb6e41057f34ed6d3556ef9c46fd9b46de934bf947e500eba171d",
+      "src/world/wild-engine/spatial-intent-bridge.js": "b2da741809e2a6597e48fad528eb6020eda281c7691fab7a5d8ed3f3ad65047e",
+      "src/simulation/game.js": "5705853b7df2bbd2e4fa66901b583e2c58e13782a891719eb4d967ee863cdc49",
+      "src/simulation/tasks.js": "fe76a4e59a2678eaa40fcd5c3a9f01d342e82b0d3f38e47ae78712cf1ddda414",
+      "src/persistence/snapshots.js": "ccac88ba00949d60640375e37893b9e7ca7134b1c019d37e0ec9e7223008f8a4",
+      "src/world/wild-engine/spatial-savanna.wasm": "171904aaa2b6874e559072b0e64a5f42ddb092aea0474025bb254afeb7fec03d",
+      "public/wild-engine/spatial-threaded.wasm": "b0d27d9a33a8fbc68e3fa741c16f54a97871171842ea305ada4def79e50740be",
+      "tests/native-task-action-binding.test.js": "7b6b578b758bd992bb09e815ce15dc029c20dc0ff63320532a76e5dbe0470f9b",
+      "tests/remote-webgpu.test.js": "6f20406f009537cd24d265deb49cd554cd9345a4db4f932bac4763e360d7b994",
+      "tests/native-task-action-game-execution.test.js": "a7a783dbbd29e71dcc9421d36dde7e45f44499786d5c14953151e549b4250f6e"
+    },
+    "changedSinceValidation": {
+      "tests/helpers/native-admission-contract.js": {
+        "tested": "cac3f24c0cadd8d82bdd88588d0b835376a1644f50965808717535c06b7d036d",
+        "current": "ad0ebd88dd52b688e7b4be8207657430e0f8dee99d29ac3d97d09947bb23816b"
+      },
+      "tests/native-admission-vertical.test.js": {
+        "tested": "dd00ac3f71515a7e3aaa23d458b487d283484eca719fe76b3e9a9a7b9ef1693c",
+        "current": "5ba4e928802240665be9c0a5426217deaf3173c00072b9fcd933372698320816"
+      }
+    },
+    "directed": {
+      "tests": 249,
+      "pass": 249,
+      "fail": 0
+    },
+    "wide": {
+      "tests": 2006,
+      "pass": 2001,
+      "fail": 5,
+      "note": "Five pre-existing failures, not a green migration acceptance."
+    },
+    "build": {
+      "passed": true,
+      "seconds": 43.0,
+      "log": ".cache/native-action-game-product-build.log",
+      "sha256": "4dee1e66e3faa5624f5f90b8a5cd77456f02a59233983f1ede2fcc272c928d6a"
+    },
+    "hardware": [
+      {
+        "path": ".cache/native-action-game-gpu-regression.json",
+        "sha256": "054dab0e7744c9cd5eae513e17c59cc8d7f5b0ffff279fb214175c7944b28680",
+        "adapter": {
+          "vendor": "nvidia",
+          "architecture": "turing",
+          "device": "",
+          "description": ""
+        },
+        "block": {
+          "start": 1794732880680.88,
+          "end": 1794732882480.95,
+          "committedAt": 1794732880687.79,
+          "drawFrames": 53,
+          "minClock": 13.379999999999928,
+          "maxClock": 14.959999999999894,
+          "resourcesAfterReady": 0
+        },
+        "drained": true,
+        "errors": {
+          "errors": [],
+          "consoleErrors": [],
+          "httpFailures": [],
+          "requestFailures": []
+        }
+      },
+      {
+        "path": ".cache/native-action-game-action-gpu-regression.json",
+        "sha256": "73ff67f68c86e499b43249e99297f9443186224a66694b966cab272f2007c375",
+        "adapter": {
+          "vendor": "nvidia",
+          "architecture": "turing",
+          "device": "",
+          "description": ""
+        },
+        "block": {
+          "start": 1794732898172.755,
+          "end": 1794732899972.8298,
+          "committedAt": 1794732898177.68,
+          "drawFrames": 54,
+          "minClock": 13.139999999999933,
+          "maxClock": 14.779999999999898,
+          "resourcesAfterReady": 0
+        },
+        "drained": true,
+        "errors": {
+          "errors": [],
+          "consoleErrors": [],
+          "httpFailures": [],
+          "requestFailures": []
+        }
+      },
+      {
+        "path": ".cache/native-action-game-resume-gpu.json",
+        "sha256": "cf4a7042898dd2ae37ff5a264c5250e32441a5c0350bc70116f718b5eaad083c",
+        "adapter": {
+          "vendor": "nvidia",
+          "architecture": "turing",
+          "device": "",
+          "description": ""
+        },
+        "block": {
+          "start": 1794732924495.065,
+          "end": 1794732926295.125,
+          "committedAt": 1794732924504.935,
+          "drawFrames": 54,
+          "minClock": 60.77629700272216,
+          "maxClock": 62.35629700272241,
+          "resourcesAfterReady": 0
+        },
+        "drained": true,
+        "errors": {
+          "errors": [],
+          "consoleErrors": [],
+          "httpFailures": [],
+          "requestFailures": null
+        }
+      }
+    ],
+    "note": "Reviewed evidence produced by the other task. Not rerun here. Its hash verifier detected the listed concurrent edits; evidence retains its original hashes rather than being relabeled as a new run."
+  },
+  "limits": [
+    "Deterministic integration harness uses a fake GPU queue, not visual/hardware acceptance.",
+    "Chained test declares the action through the native API; it does not enable the complete ordinary Game producer.",
+    "Native completion still retains its guard until consequence resources/commit exist.",
+    "Full persistence, ordinary publication independence, all intentions/biomes and A6 remain open."
+  ]
+}

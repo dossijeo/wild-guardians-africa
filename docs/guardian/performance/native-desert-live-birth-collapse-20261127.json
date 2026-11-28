@@ -1,0 +1,236 @@
+{
+  "base": "c1511d9ea0e18b713332edc2ef915314cceaeaae",
+  "scope": "Isolated native development qualification, Desert, two centers and a single warthog with four planned hits. The normal Hosted clock starts before the raid. This case does not qualify a successor already close enough to strike at collapse.",
+  "rawCapture": {
+    "file": "live-birth-two-centers-collapse-ordered-nvidia-20261127.json",
+    "sha256": "4e95bedfb67b504a1d517289aa945658716fcac866c4146320954bb4138eae70"
+  },
+  "inputs": [
+    {
+      "path": ".cache/flee-return/live-collapse-case.json",
+      "sha256": "edbef01b987ae8bb0120bdd4ff7261da39a8483133f822e5b3f73d27308a8d2f"
+    },
+    {
+      "path": ".cache/flee-return/live-collapse-physical.mjs",
+      "sha256": "2f9f615e5568921972a35dff26bd43814623a36a9fc0d96ca5acaf9f09e8bb9d"
+    },
+    {
+      "path": ".cache/flee-return/live-collapse-browser.js",
+      "sha256": "b513367f53f2b0017f7a31dbc5fc34909d9af11013410cf049a82fa81bc6ee19"
+    },
+    {
+      "path": "src/world/wild-engine/spatial-savanna.wasm",
+      "sha256": "208bab53630ce4d3d50516a248149b5e69bd2fb3741f34d8750926d1c9c1b848"
+    },
+    {
+      "path": "public/wild-engine/spatial-threaded.wasm",
+      "sha256": "a5b89605a25ec16b2f5a1c4e7e240190ca471759a26243b898711706ce28e63a"
+    },
+    {
+      "path": "public/wild-engine/spatial-threaded.mjs",
+      "sha256": "71b4a1931384d4d498b1054201c9f8295915d34424ae9311795583d2e646391c"
+    }
+  ],
+  "snapshotSHA256": "361118c96b849226cfd890cc7f806e6b9499905a7a4cec25627b81eef19ecd05",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing"
+  },
+  "firstRouteHeld": {
+    "spawnAt": 0.05,
+    "actor": {
+      "id": "animal-4",
+      "species": "warthog",
+      "hitsRemaining": 4,
+      "spawn": {
+        "x": 113.18869448991569,
+        "z": 33.294181937769594
+      },
+      "exit": {
+        "x": 114.6269711057283,
+        "z": 35.926929623440714
+      }
+    },
+    "target": "structure-3",
+    "readyTicket": 1,
+    "releasedAt": 3.3999999999999964,
+    "heldSource": [
+      113.18869448991569,
+      33.294181937769594,
+      null,
+      180,
+      4
+    ]
+  },
+  "presented": [
+    {
+      "kind": 26,
+      "purpose": "center",
+      "targetId": 3,
+      "bodyId": 1,
+      "ticket": 2,
+      "preparedTicket": 1,
+      "effectiveTime": 3.3999999999999964,
+      "firstFrame": 18,
+      "firstAge": 0
+    },
+    {
+      "kind": 27,
+      "purpose": "center",
+      "targetId": 3,
+      "bodyId": 1,
+      "ticket": 4,
+      "preparedTicket": 3,
+      "effectiveTime": 14.699999999999767,
+      "firstFrame": 111,
+      "firstAge": 0
+    },
+    {
+      "kind": 26,
+      "purpose": "center",
+      "targetId": 3,
+      "bodyId": 1,
+      "ticket": 6,
+      "preparedTicket": 5,
+      "effectiveTime": 16.949999999999754,
+      "firstFrame": 129,
+      "firstAge": 0
+    },
+    {
+      "kind": 27,
+      "purpose": "center",
+      "targetId": 3,
+      "bodyId": 1,
+      "ticket": 8,
+      "preparedTicket": 7,
+      "effectiveTime": 17.34999999999976,
+      "firstFrame": 131,
+      "firstAge": 0
+    },
+    {
+      "kind": 26,
+      "purpose": "center",
+      "targetId": 3,
+      "bodyId": 1,
+      "ticket": 10,
+      "preparedTicket": 9,
+      "effectiveTime": 19.49999999999979,
+      "firstFrame": 149,
+      "firstAge": 0
+    },
+    {
+      "kind": 27,
+      "purpose": "center",
+      "targetId": 3,
+      "bodyId": 1,
+      "ticket": 12,
+      "preparedTicket": 11,
+      "effectiveTime": 20.0999999999998,
+      "firstFrame": 152,
+      "firstAge": 0
+    },
+    {
+      "kind": 26,
+      "purpose": "center",
+      "targetId": 2,
+      "bodyId": 1,
+      "ticket": 14,
+      "preparedTicket": 13,
+      "effectiveTime": 22.19999999999983,
+      "firstFrame": 170,
+      "firstAge": 0
+    },
+    {
+      "kind": 27,
+      "purpose": "center",
+      "targetId": 2,
+      "bodyId": 1,
+      "ticket": 17,
+      "preparedTicket": 16,
+      "effectiveTime": 46.5000000000012,
+      "firstFrame": 408,
+      "firstAge": 0
+    },
+    {
+      "kind": 26,
+      "purpose": "retreat",
+      "targetId": null,
+      "bodyId": 1,
+      "ticket": 19,
+      "preparedTicket": 18,
+      "effectiveTime": 52.3500000000017,
+      "firstFrame": 461,
+      "firstAge": 0
+    }
+  ],
+  "attacks": [
+    {
+      "attackId": "attack-5",
+      "center": "structure-3",
+      "elapsed": 16.249999999999744,
+      "before": 180,
+      "after": 160
+    },
+    {
+      "attackId": "attack-8",
+      "center": "structure-3",
+      "elapsed": 18.899999999999782,
+      "before": 160,
+      "after": 140
+    },
+    {
+      "attackId": "attack-11",
+      "center": "structure-3",
+      "elapsed": 21.64999999999982,
+      "before": 140,
+      "after": 120
+    },
+    {
+      "attackId": "attack-15",
+      "center": "structure-2",
+      "elapsed": 51.05000000000159,
+      "before": 600,
+      "after": 580
+    }
+  ],
+  "ruin": {
+    "center": "structure-3",
+    "polygon": 10,
+    "kind": 4,
+    "preparedTicket": 15,
+    "ticket": 15,
+    "elapsed": 24.849999999999866,
+    "frame": 198,
+    "successor": "structure-2",
+    "retainedApproachTicket": 14,
+    "bodyId": 1,
+    "age": 2.6499998569488525
+  },
+  "rig": {
+    "root": 488,
+    "geometries": [
+      308,
+      309,
+      310,
+      311
+    ],
+    "attributes": 26
+  },
+  "absence": {
+    "frame": 559,
+    "elapsed": 62.10000000000253,
+    "bodyId": 1
+  },
+  "centers": [
+    {
+      "id": "structure-2",
+      "hp": 580
+    },
+    {
+      "id": "structure-3",
+      "hp": 0
+    }
+  ],
+  "drained": true,
+  "errors": []
+}

@@ -57,4 +57,10 @@ test('all ten acts include five narrated, layered, local scenes',async()=>{
     assert.match(path,/^(layers|audio)\/[a-z0-9-]+\.(webp|opus)$/);
     assert.ok((await stat(resolve(root,'public/cinematics',path))).size>0,path);
   }
+  for(const scene of manifest.acts.flatMap(act=>act.scenes)){
+    assert.match(scene.id,/^\d{2}$/);
+    const guide=await readFile(resolve(root,`public/cinematics/pencil-guides/scene-${scene.id}.webp`));
+    assert.equal(guide.toString('ascii',0,4),'RIFF',scene.id);
+    assert.equal(guide.toString('ascii',8,12),'WEBP',scene.id);
+  }
 });

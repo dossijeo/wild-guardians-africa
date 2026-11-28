@@ -1,0 +1,9 @@
+# Pausa quiescente en el runtime autoritativo
+
+Se evaluaron tres alternativas: inferir la quietud solo por una pausa (rechazada, pues podría quedar trabajo de navegación, física o mantenimiento); compactar las publicaciones (reduce transporte pero conserva las consultas y ticks); y un certificado conservador de la autoridad, que evita capturar nuevos ticks mientras no haya trabajo útil. Se implementó la tercera.
+
+La autoridad certifica únicamente tras una publicación previa, con al menos una pausa, sin actores en el registro físico, sin servicio de navegación pendiente conocido, sin reparación de día de microeventos, sin chunks demandados ni revisión de terreno pendiente. La existencia de un servicio de navegación no certificable o de cualquier actor en el registro físico impide el certificado, incluso si parece inactivo. El campo es interno al transporte de autoridad y el runtime lo retira antes de entregar la publicación a los receptores y la presentación.
+
+El runtime deja de capturar tiempo real mientras la pausa certificada sigue vigente y no hay órdenes pendientes, pero procesa todos los steps y comandos ya aceptados; conserva la fracción previa. Al admitir cualquier comando vuelve a anclar el reloj inmediatamente, sin esperar su respuesta. Si la orden se rechaza o sigue otra pausa, la autoridad puede volver a certificarla. Un comando encolado desde una notificación de estado impide suspender con un certificado que ya no basta.
+
+Las pruebas cubren pausas y reanudaciones demoradas, rechazo, pausas múltiples, callback reentrante, órdenes y pasos intercalados, wire incremental, reloj de recuperación y comparación de snapshots con Wild Engine real. No todas las pausas cumplen los requisitos: por ejemplo, después de admitir física, el runtime conserva la ruta anterior. Falta validación funcional integrada en GPU; el objetivo es evitar trabajo innecesario, no alterar el tiempo ni la física autoritativos.

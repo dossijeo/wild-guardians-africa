@@ -1,0 +1,271 @@
+{
+  "scope": "Isolated Node/WASM microbenchmark, fixed synthetic root and one savanna terrain location with nominal slope 0.246, five real models. Four blocks original/baked/baked/original per species, 30 warm and 120 measured batches, 20 lift computations per batch. Each block prepares the same poses outside timing. Original includes model.updateWorldMatrix and deformed contact sampling; candidate interpolates baked local points. Both issue identical numbers of native terrain height queries. No timing of animation, baking, applying lift, GPU, simulation, rendering, resource load or gameplay; not a frame-time benchmark. Small timings and serial execution may be affected by JIT, GC and host load.",
+  "node": "v20.19.0",
+  "results": [
+    {
+      "species": "buffalo",
+      "contactCount": 18,
+      "bankFloatBytes": 7128,
+      "maxLiftError": 0.005537545540515776,
+      "checksum": 501.51858335231117,
+      "runs": [
+        {
+          "mode": "original",
+          "msPerLift": {
+            "count": 120,
+            "mean": 0.010374833333333177,
+            "p95": 0.01171000000000504,
+            "p99": 0.012340000000000373,
+            "max": 0.01301499999999578
+          },
+          "terrainQueriesPerLift": 18
+        },
+        {
+          "mode": "baked",
+          "msPerLift": {
+            "count": 120,
+            "mean": 0.002379874999999932,
+            "p95": 0.002555000000000973,
+            "p99": 0.0028050000000007457,
+            "max": 0.002849999999995134
+          },
+          "terrainQueriesPerLift": 18
+        },
+        {
+          "mode": "baked",
+          "msPerLift": {
+            "count": 120,
+            "mean": 0.0024135000000000194,
+            "p95": 0.0029100000000028105,
+            "p99": 0.003964999999999464,
+            "max": 0.0044699999999977535
+          },
+          "terrainQueriesPerLift": 18
+        },
+        {
+          "mode": "original",
+          "msPerLift": {
+            "count": 120,
+            "mean": 0.010285458333333726,
+            "p95": 0.011880000000002156,
+            "p99": 0.012854999999996152,
+            "max": 0.015214999999994917
+          },
+          "terrainQueriesPerLift": 18
+        }
+      ]
+    },
+    {
+      "species": "hyena",
+      "contactCount": 16,
+      "bankFloatBytes": 6336,
+      "maxLiftError": 0.0019473198586550389,
+      "checksum": 586.0171588221235,
+      "runs": [
+        {
+          "mode": "original",
+          "msPerLift": {
+            "count": 120,
+            "mean": 0.006657708333332885,
+            "p95": 0.0074450000000013,
+            "p99": 0.008605000000000019,
+            "max": 0.009800000000001318
+          },
+          "terrainQueriesPerLift": 16
+        },
+        {
+          "mode": "baked",
+          "msPerLift": {
+            "count": 120,
+            "mean": 0.0023078750000006688,
+            "p95": 0.0031300000000101134,
+            "p99": 0.0033250000000066395,
+            "max": 0.004415000000005875
+          },
+          "terrainQueriesPerLift": 16
+        },
+        {
+          "mode": "baked",
+          "msPerLift": {
+            "count": 120,
+            "mean": 0.0022809166666669972,
+            "p95": 0.002809999999999491,
+            "p99": 0.003520000000003165,
+            "max": 0.00828999999999951
+          },
+          "terrainQueriesPerLift": 16
+        },
+        {
+          "mode": "original",
+          "msPerLift": {
+            "count": 120,
+            "mean": 0.006800666666666664,
+            "p95": 0.008109999999999219,
+            "p99": 0.010265000000003965,
+            "max": 0.010379999999997835
+          },
+          "terrainQueriesPerLift": 16
+        }
+      ]
+    },
+    {
+      "species": "lion",
+      "contactCount": 16,
+      "bankFloatBytes": 6336,
+      "maxLiftError": 0.004504525139148008,
+      "checksum": 541.4325514201169,
+      "runs": [
+        {
+          "mode": "original",
+          "msPerLift": {
+            "count": 120,
+            "mean": 0.012245208333333247,
+            "p95": 0.014209999999991396,
+            "p99": 0.016590000000007876,
+            "max": 0.018640000000004875
+          },
+          "terrainQueriesPerLift": 16
+        },
+        {
+          "mode": "baked",
+          "msPerLift": {
+            "count": 120,
+            "mean": 0.002224583333333309,
+            "p95": 0.0023099999999999453,
+            "p99": 0.002874999999994543,
+            "max": 0.0035600000000044927
+          },
+          "terrainQueriesPerLift": 16
+        },
+        {
+          "mode": "baked",
+          "msPerLift": {
+            "count": 120,
+            "mean": 0.0022217499999999278,
+            "p95": 0.0026250000000004547,
+            "p99": 0.0031449999999949795,
+            "max": 0.004685000000006312
+          },
+          "terrainQueriesPerLift": 16
+        },
+        {
+          "mode": "original",
+          "msPerLift": {
+            "count": 120,
+            "mean": 0.012386583333333001,
+            "p95": 0.01400500000000875,
+            "p99": 0.01539500000000089,
+            "max": 0.01710000000000491
+          },
+          "terrainQueriesPerLift": 16
+        }
+      ]
+    },
+    {
+      "species": "rhino",
+      "contactCount": 16,
+      "bankFloatBytes": 6336,
+      "maxLiftError": 0.007999645017087609,
+      "checksum": 798.840392360423,
+      "runs": [
+        {
+          "mode": "original",
+          "msPerLift": {
+            "count": 120,
+            "mean": 0.01048391666666627,
+            "p95": 0.011435000000005857,
+            "p99": 0.01229000000000724,
+            "max": 0.01483499999999367
+          },
+          "terrainQueriesPerLift": 16
+        },
+        {
+          "mode": "baked",
+          "msPerLift": {
+            "count": 120,
+            "mean": 0.002383541666666721,
+            "p95": 0.0033950000000004367,
+            "p99": 0.00341000000000804,
+            "max": 0.003644999999994525
+          },
+          "terrainQueriesPerLift": 16
+        },
+        {
+          "mode": "baked",
+          "msPerLift": {
+            "count": 120,
+            "mean": 0.0022398333333337457,
+            "p95": 0.0025599999999940336,
+            "p99": 0.0035100000000056752,
+            "max": 0.0049350000000004
+          },
+          "terrainQueriesPerLift": 16
+        },
+        {
+          "mode": "original",
+          "msPerLift": {
+            "count": 120,
+            "mean": 0.010601833333332136,
+            "p95": 0.012079999999991741,
+            "p99": 0.014035000000012588,
+            "max": 0.01550999999999476
+          },
+          "terrainQueriesPerLift": 16
+        }
+      ]
+    },
+    {
+      "species": "warthog",
+      "contactCount": 17,
+      "bankFloatBytes": 6732,
+      "maxLiftError": 0.005508872922938224,
+      "checksum": 347.96215865736497,
+      "runs": [
+        {
+          "mode": "original",
+          "msPerLift": {
+            "count": 120,
+            "mean": 0.007040083333333012,
+            "p95": 0.008105000000000473,
+            "p99": 0.00924999999999727,
+            "max": 0.016509999999993853
+          },
+          "terrainQueriesPerLift": 17
+        },
+        {
+          "mode": "baked",
+          "msPerLift": {
+            "count": 120,
+            "mean": 0.0026284999999993883,
+            "p95": 0.003960000000006403,
+            "p99": 0.004785000000015316,
+            "max": 0.005364999999983411
+          },
+          "terrainQueriesPerLift": 17
+        },
+        {
+          "mode": "baked",
+          "msPerLift": {
+            "count": 120,
+            "mean": 0.0023627916666670956,
+            "p95": 0.002715000000011969,
+            "p99": 0.00362999999999829,
+            "max": 0.006079999999997199
+          },
+          "terrainQueriesPerLift": 17
+        },
+        {
+          "mode": "original",
+          "msPerLift": {
+            "count": 120,
+            "mean": 0.007212500000000734,
+            "p95": 0.008150000000000546,
+            "p99": 0.009030000000007022,
+            "max": 0.011124999999992724
+          },
+          "terrainQueriesPerLift": 17
+        }
+      ]
+    }
+  ]
+}

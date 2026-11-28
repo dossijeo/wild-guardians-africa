@@ -1,10 +1,37 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {BufferGeometry,InterleavedBuffer,InterleavedBufferAttribute} from 'three';
 import {createNativeDestruction} from '../src/rendering/destruction-native.js';
 import {prepareBuildingDataAsync} from '../src/rendering/prepare-building-data.js';
 const building={seed:712};
 const input=()=>({positions:new Float32Array([-1,0,-1,1,0,-1,0,0,1,0,3,0]),normals:new Float32Array(12).fill(.5),uv:new Float32Array(8),indices:new Uint16Array([0,2,1,0,1,3,1,2,3,2,0,3]),bounds:{min:[-1,0,-1],max:[1,3,1]}});
 const data=kernel=>Object.fromEntries(['positions','normals','uv','indices','bounds','triangles','vertices','repairNormals','ash','hull','noiseBytes','holes','hitSites'].map(key=>[key,kernel[key]]));
+
+test('actual worker handler includes transferable face policy alongside unchanged geometry',async()=>{
+ const previous=globalThis.self;let message,transfers;
+ try{
+  globalThis.self={postMessage(value,buffers){message=value;transfers=buffers;}};
+  await import('../src/rendering/building-data-worker.js');
+  globalThis.self.onmessage({data:{building,input:input()}});
+  assert.equal(message.error,undefined);
+  assert.equal(message.facePolicy.length,message.vertices.length/12);
+  assert.ok(transfers.includes(message.facePolicy.buffer));
+  assert.deepEqual(message.vertices,createNativeDestruction(building,input()).vertices);
+  assert.equal(message.centerBounds,undefined);
+  const original=message;
+  globalThis.self.onmessage({data:{building,input:input(),centerBounds:true}});
+  assert.equal(message.error,undefined);
+  for(const [name,vertices] of [['body','vertices'],['ash','ash']]){
+   assert.deepEqual(message[vertices],original[vertices]);
+   const geometry=new BufferGeometry(),buffer=new InterleavedBuffer(message[vertices],12);
+   geometry.setAttribute('position',new InterleavedBufferAttribute(buffer,3,0));
+   geometry.computeBoundingSphere();
+   const {center,radius}=geometry.boundingSphere;
+   assert.deepEqual(message.centerBounds?.[name],[...center.toArray(),radius]);
+   geometry.dispose();
+  }
+ }finally{if(previous===undefined)delete globalThis.self;else globalThis.self=previous;}
+});
 test('transferred building data retains byte-identical geometry, seeded groups and native damage/picking closures',()=>{
  const native=createNativeDestruction(building,input()),prepared=structuredClone(data(native)),restored=createNativeDestruction(building,{},prepared);
  for(const key of Object.keys(prepared))assert.deepEqual(restored[key],native[key],key);

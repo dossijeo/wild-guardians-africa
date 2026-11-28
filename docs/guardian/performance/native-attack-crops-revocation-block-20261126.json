@@ -1,0 +1,101 @@
+{
+  "baseline": "7a32089f99d4e14a034527245bc2d614ebba99ee",
+  "scope": "DEV, AttackCrops interrupted by an intersecting Shield kind3 on the direct authority channel while the Preparer is synchronously blocked",
+  "fixture": "tests/fixtures/sabana712-d1-native-active-raid.json.gz",
+  "fixtureSha256": "8520884802b64d0bd89644ddcb4252dad60a0ba1b81b77ffc722a53fe95e5c81",
+  "browser": "Edge 158.0.4370.33",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing"
+  },
+  "actor": "animal-396",
+  "pauseReason": "tutorial-action",
+  "initial": {
+    "ticket": 2,
+    "slot": 0,
+    "generation": 3,
+    "bodyId": 1,
+    "targetId": 373,
+    "phase": 4.497729763870326,
+    "x": 84,
+    "z": 30.51480569445,
+    "time": 375.0000000000071
+  },
+  "readyToBlockMs": 374.900146484375,
+  "synchronousBlockMs": 2500.2998046875,
+  "traceBlockMs": 2500.152,
+  "lastOld": {
+    "offsetMs": 29.199951171875,
+    "sequence": 55,
+    "elapsed": 375.50000000000665
+  },
+  "direct": {
+    "sequence": 12,
+    "slot": 0,
+    "generation": 3,
+    "effectiveTime": 375.50000000000665,
+    "appliedOffsetMs": 58.099853515625,
+    "releaseOffsetMs": 58.599853515625,
+    "preparerObservedCommitOffsetMs": 2500.5,
+    "invalidations": 1,
+    "retiredDraws": 0
+  },
+  "shield": {
+    "spellId": "spell-397",
+    "polygonId": 10,
+    "x": 84,
+    "z": 21,
+    "readyAndGo": 3,
+    "firstSubmitOffsetMs": 62.5,
+    "drawSequence": 56,
+    "submitsDuringBlock": 74,
+    "replaysDuringBlock": 73,
+    "oldSubmitsBeforeRevocationDuringBlock": 1,
+    "lastSubmitOffsetMs": 2495.89990234375,
+    "rafAfterRevocation": 74,
+    "maxDrawIntervalMs": 33.5
+  },
+  "replacement": {
+    "ticket": 5,
+    "slot": 0,
+    "generation": 8,
+    "bodyId": 1,
+    "targetId": 373,
+    "phase": 4.997729763869871,
+    "x": 84,
+    "z": 28.61480569445173,
+    "time": 376.7500000000055,
+    "end": 388.788310812816,
+    "firstObservedDraw": 65,
+    "firstObservedAge": 0.2499999850988388
+  },
+  "checkpoint": {
+    "sequence": 195,
+    "elapsed": 379.55000000000297
+  },
+  "retainedPose": {
+    "x": 84,
+    "z": 28.61480569445173,
+    "phase": 4.997729763869871
+  },
+  "drained": true,
+  "gameChecks": {
+    "matchingSpellActivations": 1,
+    "damageBudgetUnchanged": true,
+    "ledgerUnchanged": true,
+    "retainedActorPoseAndPhase": true,
+    "shieldCheckpointOwnerMatchesNativePolygon": true
+  },
+  "localEvidence": {
+    "rawReceipt": ".cache/attack-crop-revocation/paused-moving.json",
+    "trace": ".cache/attack-crop-revocation/paused-moving.trace.json.gz",
+    "traceClock": "The Chromium trace includes both stall markers. Direct acceptance and release times come from the Draw Worker hooks in the receipt.",
+    "ordinaryPauseControl": "A preliminary run under the shield-audit pause never reached a Shield READY. Game only permits this action under a tutorial-action pause. The measured run uses that explicit pause after the route advances."
+  },
+  "receiptSha256": "f82997e82ef2075657ef61aaaf5d38987c3b36c0239dba491fdbb192161fc88e",
+  "trace": {
+    "sha256": "c445defe5d70adbda6adcf9ae175fc2ddc0ee4d8a3d037260fa4706e3dfbcc25",
+    "bytes": 21605775,
+    "dataLossOccurred": false
+  }
+}

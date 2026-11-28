@@ -1,0 +1,49 @@
+diff --git a/src/simulation/confirmed-hud-delta.js b/src/simulation/confirmed-hud-delta.js
+index 70c8675f3..c4f744b5e 100644
+--- a/src/simulation/confirmed-hud-delta.js
++++ b/src/simulation/confirmed-hud-delta.js
+@@ -25,0 +26,12 @@ export function createConfirmedHudDeltaEncoder({validate=null}={}){
++// Construct an isolated candidate once. It is never exposed directly: the
++// receiver can validate a detached view before atomically publishing it.
++function decodeCandidate(packet,current,validate){
++ if(!plain(packet)||!Number.isSafeInteger(packet.sequence)||packet.sequence<0)throw TypeError('Invalid HUD packet');
++ if(packet.kind==='baseline'){checkView(packet.view,packet.sequence,validate);if(current&&(packet.sequence<current.sequence||packet.sequence===current.sequence&&!equal(packet.view,current)))throw Error('Stale HUD baseline');return copy(packet.view);}
++ if(packet.kind!=='delta'||!current||packet.base!==current.sequence||packet.sequence<=packet.base)throw Error('HUD delta base mismatch');
++ const next=copy(current);applyFields(next,packet.root);if(Object.hasOwn(packet.root.set,'sequence')||packet.root.remove.includes('sequence')||Object.hasOwn(packet.root.set,'audio')||packet.root.remove.includes('audio'))throw TypeError('Invalid HUD root delta');applyFields(next.audio,packet.audio);for(const key of [...collectionNames,'raid'])if(Object.hasOwn(packet.audio.set,key)||packet.audio.remove.includes(key))throw TypeError('Invalid HUD audio delta');
++ if(Object.hasOwn(packet,'raid')){if(packet.raid!==null&&!plain(packet.raid))throw TypeError('Invalid HUD raid');next.audio.raid=packet.raid===null?null:{...copy(packet.raid),animals:[]};}
++ if(!plain(packet.collections)||Object.keys(packet.collections).some(name=>![...collectionNames,'raidAnimals'].includes(name)))throw TypeError('Invalid HUD collections');for(const name of collectionNames)if(Object.hasOwn(packet.collections,name))next.audio[name]=applyCollection(next.audio[name],packet.collections[name]);if(Object.hasOwn(packet.collections,'raidAnimals')){if(!next.audio.raid)throw TypeError('HUD raid missing');next.audio.raid.animals=applyCollection(next.audio.raid.animals,packet.collections.raidAnimals);}
++ next.sequence=packet.sequence;checkView(next,packet.sequence,validate);return next;
++}
++
+@@ -28,6 +40,2 @@ export function createConfirmedHudDeltaDecoder({validate=null}={}){
+- return {decode(packet){if(!plain(packet)||!Number.isSafeInteger(packet.sequence)||packet.sequence<0)throw TypeError('Invalid HUD packet');if(packet.kind==='baseline'){checkView(packet.view,packet.sequence,validate);if(current&&(packet.sequence<current.sequence||packet.sequence===current.sequence&&!equal(packet.view,current)))throw Error('Stale HUD baseline');current=copy(packet.view);generation++;return copy(current);}if(packet.kind!=='delta'||!current||packet.base!==current.sequence||packet.sequence<=packet.base)throw Error('HUD delta base mismatch');
+-  const next=copy(current);applyFields(next,packet.root);if(Object.hasOwn(packet.root.set,'sequence')||packet.root.remove.includes('sequence')||Object.hasOwn(packet.root.set,'audio')||packet.root.remove.includes('audio'))throw TypeError('Invalid HUD root delta');applyFields(next.audio,packet.audio);for(const key of [...collectionNames,'raid'])if(Object.hasOwn(packet.audio.set,key)||packet.audio.remove.includes(key))throw TypeError('Invalid HUD audio delta');
+-  if(Object.hasOwn(packet,'raid')){if(packet.raid!==null&&!plain(packet.raid))throw TypeError('Invalid HUD raid');next.audio.raid=packet.raid===null?null:{...copy(packet.raid),animals:[]};}
+-  if(!plain(packet.collections)||Object.keys(packet.collections).some(name=>![...collectionNames,'raidAnimals'].includes(name)))throw TypeError('Invalid HUD collections');for(const name of collectionNames)if(Object.hasOwn(packet.collections,name))next.audio[name]=applyCollection(next.audio[name],packet.collections[name]);if(Object.hasOwn(packet.collections,'raidAnimals')){if(!next.audio.raid)throw TypeError('HUD raid missing');next.audio.raid.animals=applyCollection(next.audio.raid.animals,packet.collections.raidAnimals);}
+-  next.sequence=packet.sequence;checkView(next,packet.sequence,validate);current=next;generation++;return copy(current);
+- },prepare(packet){const expected=generation,shadow=createConfirmedHudDeltaDecoder({validate});if(current)shadow.decode({kind:'baseline',sequence:current.sequence,view:current});const candidate=shadow.decode(packet);let used=false;return {view:copy(candidate),commit(){if(used||generation!==expected)throw Error('Stale HUD preparation');used=true;current=copy(candidate);generation++;return copy(current);}};
++ return {decode(packet){const candidate=decodeCandidate(packet,current,validate);current=candidate;generation++;return copy(current);},
++  prepare(packet){const expected=generation;if(current)checkView(current,current.sequence,validate);const candidate=copy(decodeCandidate(packet,current,validate));let used=false;return {view:copy(candidate),commit(){if(used||generation!==expected)throw Error('Stale HUD preparation');used=true;current=candidate;generation++;return copy(current);}};
+diff --git a/tests/confirmed-hud-delta.test.js b/tests/confirmed-hud-delta.test.js
+index b6d0eb4bc..bfe8adaee 100644
+--- a/tests/confirmed-hud-delta.test.js
++++ b/tests/confirmed-hud-delta.test.js
+@@ -32,0 +33,18 @@ test('prepared HUD remains isolated from packet, returned view and committed res
++test('rejected prepared HUD leaves the accepted state isolated and retryable',()=>{
++ const state=newGame({seed:719}),encoder=createConfirmedHudDeltaEncoder(),decoder=createConfirmedHudDeltaDecoder({validate:(view,sequence)=>{if(sequence===2&&view.audio.workers[0].x===99)throw Error('rejected');}});
++ state.workers=[{id:'w',profile:'farmer',status:'idle',x:1,z:2}];decoder.prepare(encoder.encode(projectConfirmedHud(state,1))).commit();
++ state.workers[0].x=7;const packet=encoder.encode(projectConfirmedHud(state,2)),bad=structuredClone(packet);bad.collections.workers.upsert[0].x=99;
++ assert.throws(()=>decoder.prepare(bad),/rejected/);assert.equal(decoder.status().sequence,1);
++ const prepared=decoder.prepare(packet);packet.collections.workers.upsert[0].x=50;prepared.view.audio.workers[0].x=60;const committed=prepared.commit();assert.equal(committed.audio.workers[0].x,7);committed.audio.workers[0].x=80;
++ state.workers[0].x=8;assert.equal(decoder.prepare(encoder.encode(projectConfirmedHud(state,3))).commit().audio.workers[0].x,8);
++});
++
++test('a validator cannot mutate a prepared delta through a retained candidate reference',()=>{
++ const state=newGame({seed:720}),encoder=createConfirmedHudDeltaEncoder();let retained=null;
++ const decoder=createConfirmedHudDeltaDecoder({validate:(view,sequence)=>{if(sequence===2)retained=view;}});
++ state.workers=[{id:'w',profile:'farmer',status:'idle',x:1,z:2}];decoder.prepare(encoder.encode(projectConfirmedHud(state,1))).commit();
++ state.workers[0].x=7;const prepared=decoder.prepare(encoder.encode(projectConfirmedHud(state,2)));assert.ok(retained);retained.audio.workers[0].x=99;
++ assert.equal(prepared.view.audio.workers[0].x,7);assert.equal(prepared.commit().audio.workers[0].x,7);
++ state.time=4;assert.equal(decoder.decode(encoder.encode(projectConfirmedHud(state,3))).audio.workers[0].x,7);
++});
++

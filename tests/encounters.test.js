@@ -1,8 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {updateWorkerEncounters,pushWorker,sweptDistance} from '../src/simulation/encounters.js';
+import {classifyWorkerEncounter,prepareWorkerEncounter,updateWorkerEncounters,pushWorker,sweptDistance} from '../src/simulation/encounters.js';
 import * as Game from '../src/simulation/game.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
+import {observeTaskChanges} from '../src/simulation/tasks.js';
 import {LOCOMOTION as L} from '../src/simulation/locomotion-calibration.js';
 import {updateRaid} from '../src/simulation/raids.js';
 const nav={walkable:()=>true};
@@ -14,6 +15,42 @@ function fixture(){
   s.workers=[worker];s.raid={id:'raid',animals:[animal],encounters:[],reservations:{}};
   return {s,worker,animal};
 }
+test('An encounter preview preserves the source and predicts the next RNG, pose and effect',()=>{
+  for(const scenario of [
+    {rng:1,z:1,hits:0,fall:0,accepted:true},
+    {rng:123456789,z:1,hits:0,fall:0,accepted:false},
+    {rng:1,z:.3,hits:0,fall:0,accepted:true},
+    {rng:1,z:.3,hits:1,fall:.5,accepted:true},
+  ]){
+    const {s,worker,animal}=fixture();
+    s.rng=scenario.rng;
+    Object.assign(worker,{z:scenario.z,hits:scenario.hits,fallRemaining:scenario.fall});
+    const before=structuredClone(s);
+    const contact=classifyWorkerEncounter(animal,worker,{},false,false);
+    assert(contact.eligible);
+    const prepared=prepareWorkerEncounter(s,nav,animal,worker,contact.collision);
+    assert.deepEqual(s,before);
+    assert.equal(!!prepared.hit,scenario.accepted);
+    updateWorkerEncounters(s,nav);
+    assert.equal(s.rng,prepared.rng);
+    assert.equal(animal.hitsRemaining,4-Number(scenario.accepted));
+    assert.equal(worker.hits,scenario.hits+Number(scenario.accepted));
+    if(!prepared.hit){assert.equal(s.events.length,0);continue;}
+    const {hit}=prepared,expected=hit.push??before.workers[0],event=s.events.at(-1);
+    assert.deepEqual([worker.x,worker.z],[expected.x,expected.z]);
+    assert.equal(worker.fallRemaining,hit.fall??scenario.fall);
+    assert.equal(event.type,hit.incapacitated?'WorkerIncapacitated':'WorkerHit');
+    assert.deepEqual(event.presentation,hit.presentation);
+    assert.equal(event.pushed,hit.push?.distance??0);
+  }
+});
+test('A failed collision sweep leaves the encounter consequence untouched',()=>{
+  const {s,worker}=fixture();
+  worker.z=.3;
+  const before=structuredClone(s);
+  assert.throws(()=>updateWorkerEncounters(s,{walkable(){throw Error('Terrain unavailable');}}),/Terrain unavailable/);
+  assert.deepEqual(s,before);
+});
 test('A rejected frontal encounter rolls once, but later physical overlap makes the hit mandatory',()=>{
   const {s,worker,animal}=fixture();s.rng=123456789;
   updateWorkerEncounters(s,nav);assert.equal(worker.hits,0);const rng=s.rng;
@@ -101,4 +138,24 @@ test('Raid survivors return walking even with urgent tasks, and resume ordinary 
   while(worker.status==='arriving')Game.tick(s,.1,world);
   assert.equal(worker.raidReturn,false);assert.equal(worker.runRemaining,50);
   Game.tick(s,.2,world);assert.equal(worker.status,'walking');assert.ok(worker.runRemaining<50);assert.equal(worker.running,true);
+});
+
+test('first impact fixes fall heading and publishes worker position to planning',()=>{
+ const {s,worker}=fixture();worker.z=.1;worker.heading=.7;
+ const events=[];const stop=observeTaskChanges(s,e=>events.push(e));
+ updateWorkerEncounters(s,nav);stop();
+ assert.equal(worker.downHeading,.7);
+ assert.ok(events.some(e=>e.type==='worker'&&e.worker.x===worker.x&&e.worker.z===worker.z));
+});
+test('Game.tick freezes a downed worker and publishes its reconciled recovery position',()=>{
+ const {s,worker}=fixture();s.raid=null;s.initialPreparation=false;s.time=100;
+ s.dayPlan={done:true};s.nightPlan={done:true};
+ Object.assign(worker,{villageId:s.villages[0].id,fallRemaining:.2,heading:.7});
+ const world={...nav,path:(_a,b)=>[b],setState:()=>{}};
+ const events=[];const stop=observeTaskChanges(s,e=>events.push(e));
+ Game.tick(s,.3,world);assert.ok(worker.recovery);assert.equal(worker.x,0);assert.equal(worker.z,1);
+ const {dx,dz}=worker.recovery;
+ while(worker.recovery)Game.tick(s,.01,world);
+ stop();assert.ok(Math.abs(worker.x-dx)<1e-9);assert.ok(Math.abs(worker.z-1-dz)<1e-9);
+ assert.ok(events.some(e=>e.type==='worker'&&e.worker.x===worker.x&&e.worker.z===worker.z));
 });

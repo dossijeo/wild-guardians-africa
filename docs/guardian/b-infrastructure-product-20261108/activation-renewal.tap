@@ -1,0 +1,55 @@
+TAP version 13
+# (node:8668) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:8668) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: real authority accepts a command while the graphical checkpoint acknowledgement is pending
+ok 1 - real authority accepts a command while the graphical checkpoint acknowledgement is pending
+  ---
+  duration_ms: 2282.7129
+  ...
+# Subtest: host keeps historical recovery unavailable in a production build
+ok 2 - host keeps historical recovery unavailable in a production build
+  ---
+  duration_ms: 131.1535
+  ...
+# Subtest: real host direct rejects a stale historical handoff and propagates replay failure
+ok 3 - real host direct rejects a stale historical handoff and propagates replay failure
+  ---
+  duration_ms: 132.6698
+  ...
+# Subtest: real host prepared early rejects a stale historical handoff and propagates replay failure
+ok 4 - real host prepared early rejects a stale historical handoff and propagates replay failure
+  ---
+  duration_ms: 253.0061
+  ...
+# (node:8668) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# Subtest: prepared host replays checkpoints and publications produced by real Wild Engine
+ok 5 - prepared host replays checkpoints and publications produced by real Wild Engine
+  ---
+  duration_ms: 1917.4401
+  ...
+# Subtest: a timed-out graphical attachment cannot reconnect after a newer retry
+ok 6 - a timed-out graphical attachment cannot reconnect after a newer retry
+  ---
+  duration_ms: 257.9041
+  ...
+# Subtest: host rejects partial history configuration and waits for visual negotiation before executing
+ok 7 - host rejects partial history configuration and waits for visual negotiation before executing
+  ---
+  duration_ms: 315.9643
+  ...
+# Subtest: prepared authority bootstraps its retained terrain before negotiating presentation and starting
+ok 8 - prepared authority bootstraps its retained terrain before negotiating presentation and starting
+  ---
+  duration_ms: 163.7746
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5460.3563

@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "productCommit": "670953ae7",
+  "baseCommit": "f088a31cc",
+  "fixture": {
+    "path": "tests/fixtures/desierto712-d5-enclosed-rhino-live-crops-before-raid.json.gz",
+    "sha256": "5f54e3c598ffc5595dd28c49561e58d5e1f66ec405c8ae92f57f7681b9ae869c",
+    "center": [83, 0],
+    "liveCrops": ["plant-3", "plant-5"],
+    "residentRegions": 25
+  },
+  "authorityBaseline": {
+    "trace": ".cache/desert-menu-712/enclosure-fresh-authority-cpu-ruin-trace.log",
+    "sha256": "32f8e7d243283e667bf180467f70c6a9b5b5120941848c3e91c3559839d0f0c5",
+    "elapsed": 2782.6357055869903,
+    "substepSeconds": 0.02,
+    "centerCohort": false,
+    "shelteredActor": true,
+    "currentCropCohort": true,
+    "verifiedImpact": true,
+    "workerHomeInactive": true,
+    "retreatBody": 10,
+    "sameOriginalRigWithoutAuthorityFix": {
+      "path": ".cache/desert-menu-712/live-crops-center-authority-red.tap",
+      "sha256": "28fa4b453bbfaa6f496cf28028e3ed2d5b532d07690710ea1bb0ad570f2c242b"
+    }
+  },
+  "gpuTableBaseline": {
+    "path": ".cache/desert-menu-712/live-crops-center-ruin-interval.tap",
+    "sha256": "94deb1cec86bf06b4d7cbb2f073a7dd512f037704e3554fadbfb966cb6442b8e",
+    "purpose": "center",
+    "exactInteriorTimes": [2739.804160365251, 2739.8041605028866],
+    "gpuAgeBoth": 3.8184549808502197,
+    "packedPositionBoth": [83, 11.421807289123535, 25],
+    "error": "Native route intervals cannot be represented on GPU"
+  },
+  "withOriginalRig": {
+    "path": ".cache/desert-menu-712/live-crops-center-ruin-green.tap",
+    "sha256": "904a92385ec447c8c5d6e7809a0f23f5a7be7d132f77d878d0e0f7c4ca8cf84d",
+    "passed": 1,
+    "failed": 0,
+    "skippedByFilter": 31,
+    "scope": "Real rig, WASM, resource ports and Draw. Deterministic queue, pipeline admission double."
+  },
+  "regression": {
+    "path": ".cache/desert-menu-712/live-crops-center-ruin-regression.tap",
+    "sha256": "67de1b7b5ca7f086ca3a341a3379aa135835d85e6a5aff88880aec5e753348da",
+    "passed": 130,
+    "failed": 0,
+    "skipped": 0
+  },
+  "freshCpuThroughDefeat": {
+    "path": ".cache/desert-menu-712/enclosure-fresh-authority-cpu.json",
+    "sha256": "b6eb36baaaa0b1976372c5947e1a673b55433c49c6e331a9c0b42c59afbc6400",
+    "centerPurchaseElapsed": 1.3,
+    "enclosurePurchaseElapsed": 4.799999999999978,
+    "centerRuinElapsed": 2782.65570558699,
+    "defeatElapsed": 2796.2557055870398,
+    "confirmedAbsences": 5,
+    "result": "defeat",
+    "faults": []
+  },
+  "coldPhysicalAttempt": {
+    "path": ".cache/desert-menu-712/fresh-enclosure-rhino-live-crops-nvidia-boundary.failure.json",
+    "sha256": "0ace2f09fe94727654a208d16cdfbf208621350f5a939fafec677e1aa85d10fa",
+    "preparedKind": 26,
+    "readiness": "READY recorded and held by the test. Authority timed out before acquisition.",
+    "error": "Native resource preparation timed out"
+  },
+  "coldPhysicalImmediateReadyAttempt": {
+    "path": ".cache/desert-menu-712/fresh-enclosure-rhino-live-crops-nvidia-fast-ready.failure.json",
+    "sha256": "cffb0f4a3441348c9362d4e4bb7c15a8b82a80a1f7c2a0ca3919badb3a3f383d",
+    "requestId": 1,
+    "reachedReady": false,
+    "error": "Native gate resource surface unavailable"
+  }
+}

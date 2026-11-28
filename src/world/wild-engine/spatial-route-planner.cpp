@@ -5,6 +5,7 @@
 #include <limits>
 #include <cstring>
 #include <vector>
+#include "spatial-gate-intents.h"
 
 // Experimental whole-world route entry point. The existing sector graph and
 // physical predicates remain authoritative; no JavaScript geometry callback is
@@ -13,9 +14,12 @@ extern "C" {
 int spatial_walkable(int x,int z);
 int spatial_local_clear(float x,float z,float nx,float nz);
 int lazy_route(int fromX,int fromZ,int toX,int toZ);
+int lazy_route_filtered(int fromX,int fromZ,int toX,int toZ,bool (*clear)(double,double,double,double));
 int32_t* lazy_route_ptr();
 int lazy_connected_reason();
 int lazy_portal_world_points(int encoded,float* out);
+int lazy_portal_count();
+uint64_t spatial_execution_revision(int);
 int lazy_add_portal_world(int fromX,int fromZ,int toX,int toZ,
   float fromWorldX,float fromWorldZ,float toWorldX,float toWorldZ);
 int lazy_selected_context();
@@ -32,7 +36,7 @@ struct WorldRoute {
   const float* view=nullptr;
   int reason=0,graphReason=0;
 };
-struct RouteKey {uint32_t x,z,tx,tz,revision;int profile;};
+struct RouteKey {uint32_t x,z,tx,tz,revision;int profile;uint64_t world;};
 struct CacheEntry {
   RouteKey key{};
   std::vector<float> points;
@@ -60,11 +64,13 @@ size_t slotFor(const RouteKey& key){
   uint64_t h=mix((uint64_t(key.x)<<32)|key.z);
   h^=mix((uint64_t(key.tx)<<32)|key.tz);
   h^=mix((uint64_t(key.revision)<<32)|uint32_t(key.profile));
+  h^=mix(key.world);
   return size_t(h)&(cacheCapacity-1);
 }
 bool equal(const RouteKey& a,const RouteKey& b){return a.x==b.x&&a.z==b.z&&
-  a.tx==b.tx&&a.tz==b.tz&&a.revision==b.revision&&a.profile==b.profile;}
+  a.tx==b.tx&&a.tz==b.tz&&a.revision==b.revision&&a.profile==b.profile&&a.world==b.world;}
 bool clearWorld(Point a,Point b){
+  if(!spatialGatePlanningClear(a.x,a.z,b.x,b.z))return false;
   const float length=distance(a,b);
   const int steps=std::max(1,int(std::ceil(length/1.25f)));
   for(int i=0;i<steps;i++){
@@ -106,7 +112,8 @@ std::array<Anchor,9> anchors(Point point,int& count){
   }
   bool hasConnector=false;
   for(int i=0;i<count;i++)if(spatial_walkable(rows[i].x,rows[i].z)&&
-    spatial_local_clear(point.x,point.z,float(rows[i].x),float(rows[i].z))){
+    spatial_local_clear(point.x,point.z,float(rows[i].x),float(rows[i].z))&&
+    spatialGatePlanningClear(point.x,point.z,rows[i].x,rows[i].z)){
     hasConnector=true;break;
   }
   // A continuous position can be legal while its four floor/ceil cells are
@@ -132,6 +139,17 @@ void append(Point p){result().points.push_back(p.x);result().points.push_back(p.
 Point last(Point fallback){
   const auto& points=result().points;
   return points.empty()?fallback:Point{points[points.size()-2],points.back()};
+}
+bool appendSectorRoute(int count){
+  const int32_t* route=lazy_route_ptr();
+  for(int k=0;k<count;k++){
+    if(route[k*2]==std::numeric_limits<int32_t>::min()){
+      float crossing[4];
+      if(!lazy_portal_world_points(route[k*2+1],crossing))return false;
+      append({crossing[0],crossing[1]});append({crossing[2],crossing[3]});
+    }else append({float(route[k*2]),float(route[k*2+1])});
+  }
+  return true;
 }
 // A sector path can wrap a building through many grid cells even when one
 // validated corner joins the continuous endpoints. Test only the points on
@@ -200,8 +218,22 @@ int spatial_world_route(float fromX,float fromZ,float toX,float toZ){
   WorldRoute& out=result();out.points.clear();out.view=nullptr;out.reason=0;out.graphReason=0;
   const Point start{fromX,fromZ},end{toX,toZ};
   if(!finite(start)||!finite(end)){out.reason=4;return -1;}
-  if(spatial_local_clear(fromX,fromZ,toX,toZ)){
+  if(spatialGatePlanningClear(fromX,fromZ,toX,toZ)&&spatial_local_clear(fromX,fromZ,toX,toZ)){
     append(end);out.view=out.points.data();return 1;
+  }
+  // A coarse grid edge can cut the opened leaf even though its frame proxies
+  // are passable. Reuse registered sub-grid connectors before accepting that
+  // shortcut. Their original endpoints remain in the returned native route.
+  if(!spatialGatePlanningClear(fromX,fromZ,toX,toZ)){
+    std::vector<float> connector;float best=std::numeric_limits<float>::infinity();
+    for(int id=0;id<lazy_portal_count();id++)for(int reverse=0;reverse<2;reverse++){
+      float p[4];if(!lazy_portal_world_points(id*2+reverse,p))continue;
+      const Point a{p[0],p[1]},b{p[2],p[3]};
+      const float length=distance(start,a)+distance(a,b)+distance(b,end);
+      if(length>=best||!clearWorld(start,a)||!clearWorld(a,b)||!clearWorld(b,end))continue;
+      connector={a.x,a.z,b.x,b.z,end.x,end.z};best=length;
+    }
+    if(!connector.empty()){out.points=std::move(connector);out.view=out.points.data();return int(out.points.size()/2);}
   }
   int startCount=0,endCount=0;
   const auto starts=anchors(start,startCount),ends=anchors(end,endCount);
@@ -212,43 +244,63 @@ int spatial_world_route(float fromX,float fromZ,float toX,float toZ){
   for(int i=0;i<startCount;i++){
     const Anchor& from=starts[i];
     if(!spatial_walkable(from.x,from.z)||
-       !spatial_local_clear(fromX,fromZ,float(from.x),float(from.z)))continue;
+       !spatial_local_clear(fromX,fromZ,float(from.x),float(from.z))||
+       !spatialGatePlanningClear(fromX,fromZ,from.x,from.z))continue;
     startReachable=true;
     for(int j=0;j<endCount;j++){
       const Anchor& to=ends[j];
       if(!spatial_walkable(to.x,to.z)||
-         !spatial_local_clear(toX,toZ,float(to.x),float(to.z)))continue;
+         !spatial_local_clear(toX,toZ,float(to.x),float(to.z))||
+         !spatialGatePlanningClear(to.x,to.z,toX,toZ))continue;
       endReachable=true;
-      const int count=lazy_route(from.x,from.z,to.x,to.z);
-      if(count<0){unknown=true;out.graphReason=lazy_connected_reason();continue;}
-      if(!count)continue;
-      if(from.distance>1e-6f)append({float(from.x),float(from.z)});
-      const int32_t* route=lazy_route_ptr();
-      bool valid=true;
-      for(int k=0;k<count;k++){
-        if(route[k*2]==std::numeric_limits<int32_t>::min()){
-          float crossing[4];
-          if(!lazy_portal_world_points(route[k*2+1],crossing)){
-            valid=false;break;
+      int count=lazy_route(from.x,from.z,to.x,to.z);
+      for(int attempt=0;attempt<2;attempt++){
+        if(count<0){unknown=true;out.graphReason=lazy_connected_reason();break;}
+        if(!count)break;
+        if(from.distance>1e-6f)append({float(from.x),float(from.z)});
+        if(!appendSectorRoute(count)){out.points.clear();unknown=true;out.graphReason=11;break;}
+        if(distance(last({float(from.x),float(from.z)}),end)>1e-6f)append(end);
+        shortenOneCorner(start,end);
+        float length=0;Point previous=start;
+        bool valid=true;
+        for(size_t at=0;at<out.points.size();at+=2){
+          const Point next{out.points[at],out.points[at+1]};
+          if(!spatialGatePlanningClear(previous.x,previous.z,next.x,next.z)){valid=false;break;}
+          length+=distance(previous,next);previous=next;
+        }
+        if(valid){
+          if(length<bestLength){bestLength=length;bestRoute=out.points;}
+          if(bestLength<=acceptable){
+            out.points=std::move(bestRoute);out.view=out.points.data();
+            return int(out.points.size()/2);
           }
-          append({crossing[0],crossing[1]});append({crossing[2],crossing[3]});
-        }else append({float(route[k*2]),float(route[k*2+1])});
+        }
+        out.points.clear();
+        if(valid||attempt)break;
+        // The coarse raster deliberately leaves gate proxies open to workers.
+        // Find another graph path when its first choice intersects the actual
+        // leaf, keeping the clearance filter local to this query.
+        count=lazy_route_filtered(from.x,from.z,to.x,to.z,spatialGatePlanningClear);
       }
-      if(!valid){out.points.clear();unknown=true;out.graphReason=11;continue;}
-      if(distance(last({float(from.x),float(from.z)}),end)>1e-6f)append(end);
-      shortenOneCorner(start,end);
-      float length=0;Point previous=start;
-      for(size_t at=0;at<out.points.size();at+=2){
-        const Point next{out.points[at],out.points[at+1]};
-        length+=distance(previous,next);previous=next;
-      }
-      if(length<bestLength){bestLength=length;bestRoute=out.points;}
-      if(bestLength<=acceptable){
-        out.points=std::move(bestRoute);out.view=out.points.data();
-        return int(out.points.size()/2);
-      }
-      out.points.clear();
     }
+  }
+  if(!bestRoute.empty()){
+    out.points=std::move(bestRoute);out.view=out.points.data();
+    return int(out.points.size()/2);
+  }
+  // A saved body can resume from between a portal's original waypoints.
+  // If the grid has no clear connector, certify the remaining sub-grid leg
+  // directly, without forcing the body to go back through the entrance.
+  for(int id=0;id<lazy_portal_count();id++)for(int reverse=0;reverse<2;reverse++){
+    float p[4];if(!lazy_portal_world_points(id*2+reverse,p))continue;
+    const Point a{p[0],p[1]},b{p[2],p[3]};
+    const double dx=double(b.x)-a.x,dz=double(b.z)-a.z;
+    const double along=(double(start.x)-a.x)*dx+(double(start.z)-a.z)*dz;
+    const float full=distance(a,b),remaining=distance(start,b);
+    if(along<=0||along>=dx*dx+dz*dz||remaining>=full)continue;
+    const float length=remaining+distance(b,end);
+    if(length>=bestLength||!clearWorld(start,b)||!clearWorld(b,end))continue;
+    bestLength=length;bestRoute={b.x,b.z,end.x,end.z};
   }
   if(!bestRoute.empty()){
     out.points=std::move(bestRoute);out.view=out.points.data();
@@ -267,7 +319,7 @@ int spatial_world_route_reason(){return result().reason;}
 int spatial_world_route_graph_reason(){return result().graphReason;}
 int spatial_world_route_cached(float fromX,float fromZ,float toX,float toZ){
   const RouteKey key{bits(fromX),bits(fromZ),bits(toX),bits(toZ),
-    lazy_route_revision(),lazy_selected_context()};
+    lazy_route_revision(),lazy_selected_context(),spatial_execution_revision(2)};
   CacheEntry& entry=cache().entries[slotFor(key)];
   if(entry.valid&&equal(entry.key,key)){
     cache().hits++;

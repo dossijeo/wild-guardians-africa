@@ -1,0 +1,23 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {nativeTaskSettlementGraphicsFixture} from './helpers/native-task-settlement-graphics.js';
+import {createNativeAdmissionVertical} from './helpers/native-admission-vertical.js';
+import {captureNativeRoutePickFrame} from '../src/rendering/native-route-pick-frame.js';
+import {flush} from './helpers/remote-webgpu-fixture.js';
+import {PROFILES} from '../src/simulation/workforce.js';
+import {createPlant} from '../src/simulation/crops.js';
+import {centerDeliveryPoint} from '../src/world/centers.js';
+
+const phaseError=(a,b,period)=>Math.abs(((a-b+period*1.5)%period)-period*.5);
+// Actual WASM, original GLB, control/resource MessageChannels and original Host.
+// GPU queue/renderer doubles do not prove hardware or Surface acceptance.
+for(const profile of PROFILES)test(`${profile.id} source17 submitted native phase survives deferred21 then resets at WATCH`,async()=>{
+ const f=await nativeTaskSettlementGraphicsFixture({alert:true,configureSave(saved){const worker=saved.workers[0];worker.profile=profile.id;const center=saved.structures.find(c=>c.id===worker.centerId),task=saved.tasks.find(t=>t.id===worker.taskId),target=saved.plants.find(p=>p.id===task.targetId),p=centerDeliveryPoint(center,target,saved),plant=createPlant('plant-900097','mijo',p.x+1.5,p.z+.5,center.id);for(const water of plant.water)water.status='manual';saved.plants.push(plant);}});let v,part,frame,proof;try{
+  assert(f.planner.cancelNativeTaskSettlementProposal(f.proposal.ticket));const actor=f.roster.get(f.actor),period=f.bakes.get('Idle').meta.duration,alertPeriod=f.bakes.get('Alert').meta.duration,phases=[],original=actor.prepareNativeMotionVariant,body=f.body(1),root=actor.root;actor.prepareNativeMotionVariant=(phase,settings)=>{phases.push(phase);return original(phase,settings);};
+  v=await createNativeAdmissionVertical({planner:f.planner,elapsed:f.nativeState.elapsed,kind:'task-settlement',retainStaticBuffer:true,idleCycleIdlePhase:true,idleCyclePhasePeriods:[...new Set([period,alertPeriod])],
+   async onPrepare(e){if(e.method==='prepareNativeTaskSettlementResources'){const r=e.resources.nativeSettlement;e.client.registerClockBinding(e.buffer,{byteOffset:4,semantic:'origin-modulo',epoch:r.worldBoundary.effectiveTime,period,nativeSettlement:r});part=await f.roster.prepareNativeTaskSettlementProposal(f.terrain.prepareNativeTaskSettlement(r),{getPickAge:r=>{assert(frame);return frame.getSettlementElapsed(r);}});}else{f.advance(.2);part=await f.roster.prepareNativeIdleCycleProposal(f.terrain.prepareNativeIdleCycle(e.resources.nativeIdleCycle),{getPickAge:r=>{assert(frame);return frame.getIdleCycleElapsed(r);},getPickPhaseOffset:(r,d)=>{assert(frame);return frame.getIdleCyclePhaseOffset(r,d);}});}},onReady(){part.activate();},onDrain(){if(f.planner.nativeTaskSettlementBinding(f.actor))f.advance(.3);},onCommit({data}){part.finalize(data);if(data.nativeIdleCycleBinding)proof=data.nativeIdleCycleBinding;}});
+  async function draw(){await flush();await v.host.idle();v.host.present();const inspect=await v.host.inspect();assert.equal(inspect.failed,false);frame=captureNativeRoutePickFrame(inspect);return inspect;}
+  const settled=await v.run(options=>f.planner.startNativeTaskSettlementAfterGpuQuiescence({actorId:f.actor,...options}));assert.equal(settled.status,'committed',JSON.stringify(settled));await v.present();f.sync();f.flush();f.planner.flushTaskEvents();f.planner.flushNativeIntentControl();await draw();const sourcePhase=phases.at(-1),oldPhase=sourcePhase.sampleForClip('Idle',period);
+  const result=await v.run(options=>f.planner.startNativeIdleCycleAfterGpuQuiescence({actorId:f.actor,...options}),{kind:'idle-cycle'});assert.equal(result.status,'committed',JSON.stringify(result));await v.present();f.sync();f.flush();await draw();assert(proof.reference.worldBoundary.effectiveTime>proof.preparedReference.worldBoundary.effectiveTime);const phase=phases.at(-1).sampleForClip('Idle',period);assert(phaseError(phase,oldPhase+.5,period)<2e-5,`phase jumped ${oldPhase} -> ${phase}`);assert.equal(frame.getIdleCycleElapsed(proof.preparedReference),0);assert.deepEqual(f.body(1),body);assert.equal(f.roster.get(f.actor),actor);assert.equal(actor.root,root);assert.equal(f.acquires,1);
+  f.advance(proof.reference.watchStartOffset);assert(f.planner.projectNativeIdleCycle(f.nativeState,f.worker));await draw();assert.equal(f.worker.idleState.mode,'watch');assert.equal(frame.getIdleCyclePhaseOffset(proof.preparedReference,alertPeriod),0);assert(phaseError(phases.at(-1).sampleForClip('Alert',alertPeriod),0,alertPeriod)<2e-5);assert.deepEqual(f.errors,[]);assert.deepEqual(v.errors,[]);
+ }finally{part?.cancel();await v?.close();f.close();}
+});

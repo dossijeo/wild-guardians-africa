@@ -1,0 +1,64 @@
+{
+  "animals": 20,
+  "moved": 5,
+  "initializationMs": 854.0949999988079,
+  "workerTickMs": 989.2400000095367,
+  "responseMs": 994.0550000071526,
+  "applyDelayMs": 6.295000001788139,
+  "frames": {
+    "count": 119,
+    "p95": 33.41500000000087,
+    "p99": 33.455000000001746,
+    "max": 33.775000000001455
+  },
+  "overlapFrames": {
+    "count": 30,
+    "p95": 33.3550000000032,
+    "p99": 33.37000000000262,
+    "max": 33.41000000000349
+  },
+  "renderMs": {
+    "count": 120,
+    "p95": 27.410000011324883,
+    "p99": 29.080000013113022,
+    "max": 33.29499998688698
+  },
+  "maxPositionError": 0,
+  "baselineCount": 20,
+  "segments": [
+    {
+      "id": "qa-beast-1000000",
+      "distance": 0.0750000000000038,
+      "terrainClear": true,
+      "staticBodiesClear": true
+    },
+    {
+      "id": "qa-beast-1",
+      "distance": 0.0749999999999999,
+      "terrainClear": true,
+      "staticBodiesClear": true
+    },
+    {
+      "id": "qa-beast-3",
+      "distance": 0.07500000000000018,
+      "terrainClear": true,
+      "staticBodiesClear": true
+    },
+    {
+      "id": "qa-beast-4",
+      "distance": 0.07500000000000423,
+      "terrainClear": true,
+      "staticBodiesClear": true
+    },
+    {
+      "id": "qa-beast-5",
+      "distance": 0.055757937001910916,
+      "terrainClear": true,
+      "staticBodiesClear": true
+    }
+  ],
+  "overlappingPairs": 21,
+  "newSweptConflicts": 0,
+  "sceneErrors": [],
+  "scope": "Single frozen mangrove QA scene with 20 animals; Worker restores adapted copy and executes one tick; after response the test copies only x/z back for rendering. After measurement, straight segments are checked against the original scene navigation and initial body positions, plus a simultaneous linear disc approximation between animals. This is not an authoritative gameplay bridge, trajectory, collision, pose, input or visual-equivalence proof. Initialization and segment audits outside measurement; no GPU timer."
+}

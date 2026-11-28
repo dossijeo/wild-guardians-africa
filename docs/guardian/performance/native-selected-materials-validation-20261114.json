@@ -1,0 +1,395 @@
+{
+  "date": "2026-11-14",
+  "baseRevision": "cbb06155f",
+  "scope": "Explicit selected mesh binding/admission and fenced detach in existing native worker owner. No ordinary native producer/execution or A/B/C acceptance.",
+  "tests": {
+    "directed": {
+      "log": ".cache/native-scoped-final-directed.tap",
+      "tests": 40,
+      "pass": 40,
+      "fail": 0,
+      "skipped": 0,
+      "failures": []
+    },
+    "regression": {
+      "log": ".cache/native-scoped-regression.tap",
+      "tests": 518,
+      "pass": 516,
+      "fail": 2,
+      "skipped": 0,
+      "failures": [
+        "late crate admission is rejected after drop and retries a later pickup",
+        "confirmed harvest installs its sampled GPU horizon and cancels on changed target"
+      ]
+    },
+    "baselineEvidence": "native-carry-validation-20261114.json documents identical legacy carry/harvest failures on the prior base; the same two failures remain."
+  },
+  "expandedTestFiles": [
+    "tests/baked-walk-catalog.test.js",
+    "tests/baked-worker-walk-catalog.test.js",
+    "tests/native-frame-continuation.test.js",
+    "tests/native-gpu-motion.test.js",
+    "tests/native-route-terrain-support.test.js",
+    "tests/native-worker-roster.test.js",
+    "tests/remote-webgpu.test.js",
+    "tests/webgpu-actor-motion-binding.test.js",
+    "tests/webgpu-baked-walk.test.js",
+    "tests/webgpu-confirmed-worker-clock.test.js",
+    "tests/webgpu-hidden-actor-motion.test.js",
+    "tests/webgpu-pipeline-admission.test.js",
+    "tests/webgpu-resource-registry.test.js",
+    "tests/webgpu-shared-shadow.test.js",
+    "tests/webgpu-worker-action-retry.test.js",
+    "tests/webgpu-worker-baked-alert.test.js",
+    "tests/webgpu-worker-baked-carry.test.js",
+    "tests/webgpu-worker-baked-fall.test.js",
+    "tests/webgpu-worker-baked-getup.test.js",
+    "tests/webgpu-worker-baked-harvest.test.js",
+    "tests/webgpu-worker-baked-idle.test.js",
+    "tests/webgpu-worker-baked-plant.test.js",
+    "tests/webgpu-worker-baked-run.test.js",
+    "tests/webgpu-worker-baked-walk.test.js",
+    "tests/webgpu-worker-baked-water.test.js",
+    "tests/webgpu-worker-carry-roster.test.js",
+    "tests/webgpu-worker-carry-tool.test.js",
+    "tests/webgpu-worker-fall-roster.test.js",
+    "tests/webgpu-worker-getup-roster.test.js",
+    "tests/webgpu-worker-harvest-roster.test.js",
+    "tests/webgpu-worker-recovery-exit-motion.test.js",
+    "tests/webgpu-worker-roster.test.js",
+    "tests/webgpu-worker-run-roster.test.js",
+    "tests/webgpu-worker-water-tools.test.js",
+    "tests/webgpu-world-client-temporal-profile.test.js",
+    "tests/webgpu-world-client.test.js"
+  ],
+  "hardware": {
+    "carry": {
+      "receipt": "native-worker-world-owner-carry-scoped-20261114.json",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": ""
+      },
+      "block": {
+        "start": 1794643038648.83,
+        "end": 1794643039148.905,
+        "blockedMs": 500.074951171875,
+        "drawFrames": 15,
+        "minClock": 10.0845400390625,
+        "maxClock": 11.924740234375003
+      },
+      "resourcesBeforeReuse": 2139,
+      "resourcesAfterReuse": 2139,
+      "initialRenderFactories": {
+        "createBuffer": 0,
+        "createTexture": 0,
+        "createSampler": 0,
+        "createBindGroup": 0,
+        "createBindGroupLayout": 0,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "replacementRenderFactories": {
+        "createBuffer": 0,
+        "createTexture": 0,
+        "createSampler": 0,
+        "createBindGroup": 0,
+        "createBindGroupLayout": 0,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "preparationDelta": {
+        "createBuffer": 90,
+        "createTexture": 1,
+        "createSampler": 1,
+        "createBindGroup": 48,
+        "createBindGroupLayout": 48,
+        "createPipelineLayout": 3,
+        "createShaderModule": 3,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 3,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "rig": {
+        "before": {
+          "attachments": [
+            {
+              "id": 572,
+              "geometry": 151,
+              "index": 0
+            },
+            {
+              "id": 573,
+              "geometry": 152,
+              "index": 1
+            },
+            {
+              "id": 574,
+              "geometry": 153,
+              "index": 2
+            },
+            {
+              "id": 575,
+              "geometry": 154,
+              "index": 3
+            },
+            {
+              "id": 576,
+              "geometry": 155,
+              "index": 4
+            },
+            {
+              "id": 577,
+              "geometry": 156,
+              "index": 5
+            },
+            {
+              "id": 578,
+              "geometry": 157,
+              "index": 6
+            },
+            {
+              "id": 579,
+              "geometry": 158,
+              "index": 7
+            },
+            {
+              "id": 580,
+              "geometry": 159,
+              "index": 8
+            }
+          ],
+          "poseHash": 3531015238
+        },
+        "after": {
+          "attachments": [
+            {
+              "id": 572,
+              "geometry": 151,
+              "index": 0
+            },
+            {
+              "id": 573,
+              "geometry": 152,
+              "index": 1
+            },
+            {
+              "id": 574,
+              "geometry": 153,
+              "index": 2
+            },
+            {
+              "id": 575,
+              "geometry": 154,
+              "index": 3
+            },
+            {
+              "id": 576,
+              "geometry": 155,
+              "index": 4
+            },
+            {
+              "id": 577,
+              "geometry": 156,
+              "index": 5
+            },
+            {
+              "id": 578,
+              "geometry": 157,
+              "index": 6
+            },
+            {
+              "id": 579,
+              "geometry": 158,
+              "index": 7
+            },
+            {
+              "id": 580,
+              "geometry": 159,
+              "index": 8
+            }
+          ],
+          "poseHash": 3531015238
+        },
+        "replaced": {
+          "attachments": [
+            {
+              "id": 572,
+              "geometry": 151,
+              "index": 0
+            },
+            {
+              "id": 573,
+              "geometry": 152,
+              "index": 1
+            },
+            {
+              "id": 574,
+              "geometry": 153,
+              "index": 2
+            },
+            {
+              "id": 575,
+              "geometry": 154,
+              "index": 3
+            },
+            {
+              "id": 576,
+              "geometry": 155,
+              "index": 4
+            },
+            {
+              "id": 577,
+              "geometry": 156,
+              "index": 5
+            },
+            {
+              "id": 578,
+              "geometry": 157,
+              "index": 6
+            },
+            {
+              "id": 579,
+              "geometry": 158,
+              "index": 7
+            },
+            {
+              "id": 580,
+              "geometry": 159,
+              "index": 8
+            }
+          ],
+          "poseHash": 3531015238
+        }
+      },
+      "transition": null,
+      "drained": true,
+      "errors": [],
+      "gpuErrors": 0
+    },
+    "runWalk": {
+      "receipt": "native-worker-world-owner-run-walk-scoped-20261114.json",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": ""
+      },
+      "block": {
+        "start": 1794643313548.905,
+        "end": 1794643314049.005,
+        "blockedMs": 500.099853515625,
+        "drawFrames": 15,
+        "minClock": 10.084900390625,
+        "maxClock": 11.923879882812502
+      },
+      "resourcesBeforeReuse": 1750,
+      "resourcesAfterReuse": 1750,
+      "initialRenderFactories": {
+        "createBuffer": 0,
+        "createTexture": 0,
+        "createSampler": 0,
+        "createBindGroup": 0,
+        "createBindGroupLayout": 0,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "replacementRenderFactories": {
+        "createBuffer": 0,
+        "createTexture": 0,
+        "createSampler": 0,
+        "createBindGroup": 0,
+        "createBindGroupLayout": 0,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "preparationDelta": {
+        "createBuffer": 27,
+        "createTexture": 1,
+        "createSampler": 1,
+        "createBindGroup": 12,
+        "createBindGroupLayout": 12,
+        "createPipelineLayout": 6,
+        "createShaderModule": 10,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 6,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "rig": null,
+      "transition": {
+        "at": 10.416666666666666,
+        "before": {
+          "x": 7.175999999999999,
+          "z": -11.800000015513103,
+          "distance": 0.9759999999999992,
+          "phase": 0.4066666666666663,
+          "yaw": 1.5707963426894676,
+          "firstRemainingPoint": 0,
+          "arrived": false,
+          "at": 10.406666666666666,
+          "duration": 10.601852558277272,
+          "runPhase": 0.4066666666666663,
+          "walkPhase": 0,
+          "carryPhase": 0,
+          "runDistance": 0.9759999999999992,
+          "walkDistance": 0,
+          "runRemaining": 0.0240000000000008,
+          "running": true,
+          "currentSpeed": 2.4000000000000004
+        },
+        "after": {
+          "x": 7.210799999999999,
+          "z": -11.800000016066233,
+          "distance": 1.0107999999999993,
+          "phase": 0.4266666666666659,
+          "yaw": 1.5707963426894676,
+          "firstRemainingPoint": 0,
+          "arrived": false,
+          "at": 10.426666666666666,
+          "duration": 10.601852558277272,
+          "runPhase": 0.41666666666666663,
+          "walkPhase": 0.014999999999998966,
+          "carryPhase": 0,
+          "runDistance": 1,
+          "walkDistance": 0.010799999999999255,
+          "runRemaining": 0,
+          "running": false,
+          "currentSpeed": 1.08
+        },
+        "drawsBefore": 3,
+        "drawsAfter": 12
+      },
+      "drained": true,
+      "errors": [],
+      "gpuErrors": 0
+    }
+  },
+  "build": {
+    "status": "passed",
+    "seconds": 43.55,
+    "log": ".cache/native-scoped-build.log",
+    "command": "VITE_WEBGPU_REMOTE_DRAW=true .cache/tooling/node20.exe node_modules/vite/bin/vite.js build"
+  },
+  "remainingCost": "Three identical shadow vertex shaders/pipelines still recreated on Carry replacement, plus 90 buffers, one texture/sampler and 48 bind groups/layouts. Full resource reuse is not accepted.",
+  "completeMigration": false,
+  "ordinaryNativeAutonomyEnabled": false
+}

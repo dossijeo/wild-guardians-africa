@@ -1,0 +1,25 @@
+{
+  "baselineRevision": "168fb9d4f",
+  "fixture": "sabana712-d6-native-multi-reservation",
+  "packets": 41,
+  "passes": 4,
+  "clones": {
+    "baseline": 90148,
+    "current": 90027
+  },
+  "baseline": {
+    "count": 160,
+    "mean": 78.11734625000022,
+    "p95": 81.29290000000037,
+    "p99": 86.98979999999938,
+    "max": 102.49990000000253
+  },
+  "current": {
+    "count": 160,
+    "mean": 56.23176750000012,
+    "p95": 58.3666000000012,
+    "p99": 59.185899999996764,
+    "max": 62.88750000000073
+  },
+  "scope": "Current worktree; Node prepare+commit of identical recorded real WASM HUD packets, schema validation included; no browser, render, GPU or end-to-end frametime"
+}

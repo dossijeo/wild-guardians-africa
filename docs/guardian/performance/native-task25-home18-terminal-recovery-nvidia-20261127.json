@@ -1,0 +1,120 @@
+{
+  "scenario": "Civil del perfil olderMale con una cosecha en marcha al cierre del turno",
+  "qualification": "Hosted, Worker de autoridad y WebGPU remoto con el arnés de fin de turno; destrucción real del dispositivo",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 96.5
+    }
+  },
+  "actor": "worker-900011",
+  "bodyId": 1,
+  "ledgerUnchanged": true,
+  "rejectedBeforeActivation": [
+    "missing stop uniforms",
+    "foreign actor",
+    "foreign prepared task table",
+    "changed Home pose",
+    "GPU fence before submit"
+  ],
+  "original": {
+    "frame": 50,
+    "taskTicket": 5,
+    "stopTicket": 7,
+    "clock": 14.449999999999214
+  },
+  "recovered": {
+    "frame": 1,
+    "worldTicket": 7,
+    "heldAt": 14.499999999999213,
+    "holdId": 9,
+    "checkpointSequence": 279,
+    "attached": 295,
+    "activated": 296,
+    "projection": {
+      "age": 2.1999998092651367,
+      "x": -20.093156814575195,
+      "z": 0,
+      "yaw": -1.5707963705062866,
+      "phase": 2.200000047683716,
+      "runPhase": 23.25,
+      "walkPhase": 10.425000190734863,
+      "carryPhase": 9.5,
+      "arrived": 0
+    },
+    "trials": [
+      {
+        "h": 0.7,
+        "id": "worker-900011"
+      }
+    ]
+  },
+  "pendingHome": {
+    "ticket": 8,
+    "id": 5,
+    "committedOnRetiredEndpoint": false,
+    "cancelNoticeObserved": false
+  },
+  "home": {
+    "ticket": 10,
+    "start": 14.899999999999205,
+    "firstDraw": 10
+  },
+  "arrival": {
+    "ticket": 12,
+    "at": 28.39999999999936,
+    "firstDraw": 141,
+    "inspectedDraw": 142,
+    "bodyAbsent": true
+  },
+  "drawing": {
+    "replacementDrained": true,
+    "oldDrainObserved": false,
+    "pageErrors": []
+  },
+  "rig": {
+    "actor": "worker-900011",
+    "color": 4,
+    "shadows": 4,
+    "pickSamples": 12,
+    "slots": [
+      "age",
+      "arrived",
+      "carryPhase",
+      "phase",
+      "relative",
+      "runPhase",
+      "walkPhase",
+      "x",
+      "yaw",
+      "z"
+    ],
+    "tableKnots": 11,
+    "tableBytes": 880,
+    "height": 15.379250615033422
+  },
+  "controls": {
+    "selectedPassed": 84,
+    "directedFinalPassed": 2
+  },
+  "evidenceFiles": {
+    "terminal-task25-cpu-impact-20261127.tap": "3f3681de94df8d93ab7070848471f94444d65d5214a1e369feb85e2a78f20910",
+    "terminal-task25-installed-cpu-focal-20261127.tap": "545232497f22749a3102393f3e203d253e16d19113dc3c1dd4e43078c76833be",
+    "terminal-task25-rig-20261127.tap": "c41a76a70472605a61fb31f249b7b306034eb7fac8ea036f2cb476d38610ebbf",
+    "terminal-task25-product-build-20261127.log": "41f2539b5beb7def6b1d60ad6a8004200ed26ae79a03897d113a73c4e5b5aea1",
+    "terminal-task25-vite-reload-20261127.failure.json": "06c91efbb5a5a29ffdd4c1239561f87c3951d52dd94f6445486f6d7b6dff82b7",
+    "terminal-task25-physical-pick-harness-20261127.failure.json": "ae92cda369168f8a389b2c5597892fc37d6a52a9d03d44ad7bd06532c0bace75",
+    "terminal-task25-visibility-harness-20261127.failure.json": "4022263e141118804fa0b99e187915ab9309c3509b2dbad56a840ffb6f321f6f",
+    "terminal-task25-hosted-nvidia-20261127.json": "56cff62b47f0238c8198f4b52db0744f29892e42501ad30202c8253b6abf5f52",
+    "terminal-task25-hosted-nvidia-20261127.log": "d08e9c3ceaae7828770f099723a9368fb079d27d621a49a3179eb08066bd4097"
+  }
+}

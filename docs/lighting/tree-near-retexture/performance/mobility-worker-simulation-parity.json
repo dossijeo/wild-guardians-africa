@@ -1,0 +1,129 @@
+{
+  "equal": true,
+  "steps": 80,
+  "mainTickMs": {
+    "p95": 1.0450000017881393,
+    "p99": 14.040000006556511,
+    "max": 14.040000006556511
+  },
+  "workerTickMs": {
+    "p95": 1.3999999985098839,
+    "p99": 13.990000002086163,
+    "max": 13.990000002086163
+  },
+  "batches": [
+    {
+      "batch": 0,
+      "elapsed": 3430.9999999975794,
+      "animals": 8,
+      "restored": 8,
+      "centerStatus": "intact",
+      "ruinedEvents": 0,
+      "snapshotBytes": 548458,
+      "mainRunAndSerializeMs": 22.490000002086163,
+      "mainSerializationMs": 6.380000002682209,
+      "workerTotalMs": 21.850000001490116,
+      "workerSerializationMs": 5.25,
+      "requestToReceiptMs": 22.80000000447035
+    },
+    {
+      "batch": 1,
+      "elapsed": 3431.9999999975785,
+      "animals": 8,
+      "restored": 8,
+      "centerStatus": "intact",
+      "ruinedEvents": 0,
+      "snapshotBytes": 548095,
+      "mainRunAndSerializeMs": 10.759999997913837,
+      "mainSerializationMs": 5.274999998509884,
+      "workerTotalMs": 11.469999998807907,
+      "workerSerializationMs": 4.700000002980232,
+      "requestToReceiptMs": 11.939999997615814
+    },
+    {
+      "batch": 2,
+      "elapsed": 3432.9999999975776,
+      "animals": 8,
+      "restored": 8,
+      "centerStatus": "intact",
+      "ruinedEvents": 0,
+      "snapshotBytes": 547713,
+      "mainRunAndSerializeMs": 10.41499999910593,
+      "mainSerializationMs": 5.5150000005960464,
+      "workerTotalMs": 9.905000001192093,
+      "workerSerializationMs": 4.740000002086163,
+      "requestToReceiptMs": 10.700000002980232
+    },
+    {
+      "batch": 3,
+      "elapsed": 3433.9999999975767,
+      "animals": 8,
+      "restored": 8,
+      "centerStatus": "collapsing",
+      "ruinedEvents": 0,
+      "snapshotBytes": 547509,
+      "mainRunAndSerializeMs": 8.600000001490116,
+      "mainSerializationMs": 4.829999998211861,
+      "workerTotalMs": 9.150000005960464,
+      "workerSerializationMs": 5.719999998807907,
+      "requestToReceiptMs": 9.605000004172325
+    },
+    {
+      "batch": 4,
+      "elapsed": 3434.9999999975757,
+      "animals": 8,
+      "restored": 8,
+      "centerStatus": "collapsing",
+      "ruinedEvents": 0,
+      "snapshotBytes": 547325,
+      "mainRunAndSerializeMs": 8.78999999910593,
+      "mainSerializationMs": 5.394999995827675,
+      "workerTotalMs": 7.91499999910593,
+      "workerSerializationMs": 4.840000003576279,
+      "requestToReceiptMs": 8.924999997019768
+    },
+    {
+      "batch": 5,
+      "elapsed": 3435.999999997575,
+      "animals": 8,
+      "restored": 8,
+      "centerStatus": "collapsing",
+      "ruinedEvents": 0,
+      "snapshotBytes": 547309,
+      "mainRunAndSerializeMs": 9.755000002682209,
+      "mainSerializationMs": 4.705000005662441,
+      "workerTotalMs": 9.570000000298023,
+      "workerSerializationMs": 5.6049999967217445,
+      "requestToReceiptMs": 9.890000000596046
+    },
+    {
+      "batch": 6,
+      "elapsed": 3436.999999997574,
+      "animals": 8,
+      "restored": 8,
+      "centerStatus": "ruined",
+      "ruinedEvents": 1,
+      "snapshotBytes": 547089,
+      "mainRunAndSerializeMs": 20.910000003874302,
+      "mainSerializationMs": 4.174999997019768,
+      "workerTotalMs": 21.024999998509884,
+      "workerSerializationMs": 4.409999996423721,
+      "requestToReceiptMs": 21.509999997913837
+    },
+    {
+      "batch": 7,
+      "elapsed": 3437.999999997573,
+      "animals": 8,
+      "restored": 8,
+      "centerStatus": "ruined",
+      "ruinedEvents": 1,
+      "snapshotBytes": 546982,
+      "mainRunAndSerializeMs": 7.3900000005960464,
+      "mainSerializationMs": 4.864999994635582,
+      "workerTotalMs": 6.950000002980232,
+      "workerSerializationMs": 4.5150000005960464,
+      "requestToReceiptMs": 7.66499999910593
+    }
+  ],
+  "scope": "Two separate sessions restored from one saved raid; full serialized snapshots compared every ten 0.1s ticks, including a scripted center collapse. Main and worker run concurrently. Rendering, physics manager, input handling and production publication are not exercised."
+}

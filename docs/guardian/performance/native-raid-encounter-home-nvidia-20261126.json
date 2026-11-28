@@ -1,0 +1,188 @@
+{
+  "version": 1,
+  "scope": "Desierto, un trabajador y un facóquero, sin portón, con las calificaciones de desarrollo del encuentro.",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 91.80000000447035
+    }
+  },
+  "restored": {
+    "elapsed": 12.639999999999944,
+    "worker": "worker-900011",
+    "workerFallRemaining": 3.061666507720947,
+    "animal": "animal-1000000",
+    "animalPhase": 1.6799999999999642,
+    "marker": {
+      "version": 1,
+      "workerId": 900011,
+      "animalId": 1000000,
+      "hit": 29210
+    },
+    "worldBoundary": {
+      "version": 1,
+      "authorityEpoch": "5d59cd0f-d8ff-46b7-b977-d1d745f4f009/1",
+      "nativeSession": 1,
+      "ticket": 2,
+      "effectiveTime": 12.639999999999944
+    },
+    "sequence": 18,
+    "relativeTime": 0
+  },
+  "events": [
+    {
+      "id": "event-29209",
+      "type": "WorkerHit",
+      "simulationTime": 12.179999999999954,
+      "targetId": "worker-900011"
+    },
+    {
+      "id": "event-29210",
+      "type": "WorkerIncapacitated",
+      "simulationTime": 12.619999999999944,
+      "targetId": "worker-900011"
+    },
+    {
+      "id": "event-29211",
+      "type": "AnimalRetreating",
+      "simulationTime": 12.619999999999944,
+      "targetId": "animal-1000000"
+    },
+    {
+      "id": "event-29212",
+      "type": "RaidEnded",
+      "simulationTime": 14.339999999999907
+    }
+  ],
+  "commands": [
+    {
+      "id": 1,
+      "method": "prepareNativeAnimalCropRouteResources",
+      "at": 12.639999999999944,
+      "minSequence": 2
+    },
+    {
+      "id": 2,
+      "method": "prepareNativeHomeRouteResources",
+      "at": 18.91999999999981,
+      "minSequence": 316
+    },
+    {
+      "id": 3,
+      "method": "prepareNativeHomeArrivalResources",
+      "at": 34.53999999999993,
+      "minSequence": 708
+    }
+  ],
+  "home": {
+    "recoveredAt": 18.91999999999981,
+    "bodyId": 1,
+    "hit": 29210,
+    "prepared": {
+      "version": 1,
+      "authorityEpoch": "5d59cd0f-d8ff-46b7-b977-d1d745f4f009/1",
+      "nativeSession": 1,
+      "ticket": 3,
+      "effectiveTime": 18.91999999999981
+    },
+    "acquired": {
+      "version": 1,
+      "authorityEpoch": "5d59cd0f-d8ff-46b7-b977-d1d745f4f009/1",
+      "nativeSession": 1,
+      "ticket": 4,
+      "effectiveTime": 18.91999999999981
+    },
+    "first": {
+      "sequence": 224,
+      "clockElapsed": 18.91999999999981,
+      "relativeTime": 0
+    },
+    "moving": {
+      "sequence": 225,
+      "relativeTime": 0.019999999552965164,
+      "firstStepDistance": 0.016799999999999607
+    },
+    "origin": {
+      "id": "worker-900011",
+      "status": "incapacitated",
+      "x": -14.791069342739112,
+      "z": 2.2152638339379633,
+      "heading": -0.260206984596688,
+      "runPhase": 24.509999999999973,
+      "walkPhase": 8.414999999999973,
+      "carryPhase": 9.5,
+      "runRemaining": 40,
+      "recoveryExitRemaining": 0.24,
+      "incapacitated": true,
+      "hits": 2,
+      "nativeRouteAdmission": "native-home"
+    },
+    "firstStep": {
+      "id": "worker-900011",
+      "status": "incapacitated",
+      "x": -14.795391656386068,
+      "z": 2.2314982912660457,
+      "heading": -0.260206984596688,
+      "runPhase": 24.516999999999975,
+      "walkPhase": 8.414999999999973,
+      "carryPhase": 9.5,
+      "runRemaining": 40,
+      "recoveryExitRemaining": 0.22000000000000042,
+      "incapacitated": true,
+      "hits": 2,
+      "nativeRouteAdmission": "native-home"
+    },
+    "arrival": {
+      "version": 1,
+      "authorityEpoch": "5d59cd0f-d8ff-46b7-b977-d1d745f4f009/1",
+      "nativeSession": 1,
+      "ticket": 6,
+      "effectiveTime": 34.779999999999966
+    },
+    "retiredSequence": 7,
+    "absence": {
+      "sequence": 333,
+      "boundary": {
+        "version": 1,
+        "authorityEpoch": "5d59cd0f-d8ff-46b7-b977-d1d745f4f009/1",
+        "nativeSession": 1,
+        "ticket": 6,
+        "effectiveTime": 34.779999999999966
+      }
+    },
+    "worker": {
+      "id": "worker-900011",
+      "status": "home",
+      "x": -5.800000000000001,
+      "z": 0.2,
+      "heading": 0.7853976791094822,
+      "runPhase": 29.96621490506065,
+      "walkPhase": 8.414999999999973,
+      "carryPhase": 9.5,
+      "runRemaining": 40,
+      "recoveryExitRemaining": 0,
+      "incapacitated": true,
+      "hits": 2
+    }
+  },
+  "final": {
+    "elapsed": 34.85999999999998,
+    "drained": 2,
+    "errors": []
+  },
+  "sha256": {
+    "raw": "dbd4c95e9b43b4324b4897284228e516399635a9865a792a42d16bf2abf900ac",
+    "standalone": "8f60a17f04ccb2dd5252e62b0e5933ae4ddaea802d59a388e0cf36508561cb59",
+    "pthread": "02ad927eba4be86419ac6c2791db6245373376cb0a82071a9b26535fd440dac9",
+    "pthreadLoader": "d494415ea3d4f0a1653336662cf0cd2cbcda3da603f5e4782e3371fadaf7298b"
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "runs": [
+    {
+      "mode": "main",
+      "chunks": 25,
+      "verified": 25,
+      "capture": {
+        "count": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0
+      },
+      "compute": {
+        "count": 25,
+        "p95": 5.28999999165535,
+        "p99": 5.760000005364418,
+        "max": 6.7249999940395355
+      },
+      "frameCpu": {
+        "count": 26,
+        "p95": 38.64000000059605,
+        "p99": 40.29500000178814,
+        "max": 81.2800000011921
+      },
+      "interval": {
+        "count": 25,
+        "p95": 38.92499999701977,
+        "p99": 40.570000007748604,
+        "max": 81.55500000715256
+      },
+      "gpu": {
+        "samples": 26,
+        "disjoint": 0,
+        "elapsed": {
+          "count": 26,
+          "p95": 30.823648,
+          "p99": 31.102144,
+          "max": 90.45328
+        }
+      },
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "mode": "worker",
+      "chunks": 25,
+      "verified": 25,
+      "capture": {
+        "count": 25,
+        "p95": 0.4300000071525574,
+        "p99": 0.48000000417232513,
+        "max": 0.7550000101327896
+      },
+      "compute": {
+        "count": 25,
+        "p95": 6.530000001192093,
+        "p99": 10.739999994635582,
+        "max": 13.519999995827675
+      },
+      "frameCpu": {
+        "count": 30,
+        "p95": 38.25,
+        "p99": 40.99499998986721,
+        "max": 79.35500000417233
+      },
+      "interval": {
+        "count": 29,
+        "p95": 38.8500000089407,
+        "p99": 41.66499999165535,
+        "max": 79.64499999582767
+      },
+      "gpu": {
+        "samples": 30,
+        "disjoint": 0,
+        "elapsed": {
+          "count": 30,
+          "p95": 24.942432,
+          "p99": 26.034176,
+          "max": 28.064096
+        }
+      },
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "mode": "worker",
+      "chunks": 25,
+      "verified": 25,
+      "capture": {
+        "count": 25,
+        "p95": 0.5999999940395355,
+        "p99": 0.6550000011920929,
+        "max": 0.6800000071525574
+      },
+      "compute": {
+        "count": 25,
+        "p95": 9.010000005364418,
+        "p99": 9.359999999403954,
+        "max": 12.020000010728836
+      },
+      "frameCpu": {
+        "count": 30,
+        "p95": 33.73999999463558,
+        "p99": 39.53499999642372,
+        "max": 79.375
+      },
+      "interval": {
+        "count": 29,
+        "p95": 37.30500000715256,
+        "p99": 40.04999999701977,
+        "max": 79.70499999821186
+      },
+      "gpu": {
+        "samples": 30,
+        "disjoint": 0,
+        "elapsed": {
+          "count": 30,
+          "p95": 16.683008,
+          "p99": 16.771456,
+          "max": 16.856608
+        }
+      },
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "mode": "main",
+      "chunks": 25,
+      "verified": 25,
+      "capture": {
+        "count": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0
+      },
+      "compute": {
+        "count": 25,
+        "p95": 4.189999997615814,
+        "p99": 6.055000007152557,
+        "max": 7.704999998211861
+      },
+      "frameCpu": {
+        "count": 26,
+        "p95": 35.439999997615814,
+        "p99": 38.45999999344349,
+        "max": 68.50499999523163
+      },
+      "interval": {
+        "count": 25,
+        "p95": 35.79999999701977,
+        "p99": 38.70999999344349,
+        "max": 68.82999999821186
+      },
+      "gpu": {
+        "samples": 26,
+        "disjoint": 0,
+        "elapsed": {
+          "count": 26,
+          "p95": 13.425952,
+          "p99": 14.802496,
+          "max": 15.017984
+        }
+      },
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    }
+  ],
+  "scope": "Prototype immutable native terrain snapshot with sampled gameplay queries, synthetic mangrove QA with 20 animals, no simulation ticks or Rapier. Idle before measurement uses no drawing. Rendering and preparation share same window; validation is performed after measurement. No production integration."
+}

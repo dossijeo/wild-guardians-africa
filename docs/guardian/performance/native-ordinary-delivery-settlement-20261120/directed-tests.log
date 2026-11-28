@@ -1,0 +1,573 @@
+TAP version 13
+# (node:13612) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:13612) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: olderMale ordinary authority binds a restored22 once and admits it automatically through both existing ports
+ok 1 - olderMale ordinary authority binds a restored22 once and admits it automatically through both existing ports
+  ---
+  duration_ms: 2493.826
+  ...
+# Subtest: olderFemale ordinary authority binds a restored22 once and admits it automatically through both existing ports
+ok 2 - olderFemale ordinary authority binds a restored22 once and admits it automatically through both existing ports
+  ---
+  duration_ms: 1708.1964
+  ...
+# Subtest: youngMale ordinary authority binds a restored22 once and admits it automatically through both existing ports
+ok 3 - youngMale ordinary authority binds a restored22 once and admits it automatically through both existing ports
+  ---
+  duration_ms: 1538.7888
+  ...
+# Subtest: youngFemale ordinary authority binds a restored22 once and admits it automatically through both existing ports
+ok 4 - youngFemale ordinary authority binds a restored22 once and admits it automatically through both existing ports
+  ---
+  duration_ms: 1513.9443
+  ...
+# Subtest: authority produces restored20, watch21, WALK22 and arrival REST21 without direct commits
+ok 5 - authority produces restored20, watch21, WALK22 and arrival REST21 without direct commits
+  ---
+  duration_ms: 3541.8249
+  ...
+# Subtest: a genuine harvest command replaces a pending restored WALK and production uses the new Task request
+ok 6 - a genuine harvest command replaces a pending restored WALK and production uses the new Task request
+  ---
+  duration_ms: 1371.8799
+  ...
+# Subtest: authority automatically acquires fresh Home and its prepared absence at the real endpoint
+ok 7 - authority automatically acquires fresh Home and its prepared absence at the real endpoint
+  ---
+  duration_ms: 2876.8868
+  ...
+# Subtest: restored harvest action produces Carry and genuine settlement through ordinary authority boundaries
+ok 8 - restored harvest action produces Carry and genuine settlement through ordinary authority boundaries
+  ---
+  duration_ms: 3073.2507
+  ...
+# Subtest: closing the authority aborts its one pending preparation without publishing a late WALK
+ok 9 - closing the authority aborts its one pending preparation without publishing a late WALK
+  ---
+  duration_ms: 1033.9399
+  ...
+# Subtest: a preparation failure is observable and cannot turn into a repeated failed production loop
+ok 10 - a preparation failure is observable and cannot turn into a repeated failed production loop
+  ---
+  duration_ms: 869.1629
+  ...
+# Subtest: a mixed legacy roster keeps native activation closed until every mover has a source projection
+ok 11 - a mixed legacy roster keeps native activation closed until every mover has a source projection
+  ---
+  duration_ms: 776.2905
+  ...
+# Subtest: real authority Home peer advances while restored WALK waits for resource preparation
+ok 12 - real authority Home peer advances while restored WALK waits for resource preparation
+  ---
+  duration_ms: 825.7894
+  ...
+# Subtest: a Home missing resident data does not starve the next ready restored stroll
+ok 13 - a Home missing resident data does not starve the next ready restored stroll
+  ---
+  duration_ms: 754.2454
+  ...
+# Subtest: changed ordinary run urgency cancels a pending Task14 even when its request handle is unchanged
+ok 14 - changed ordinary run urgency cancels a pending Task14 even when its request handle is unchanged
+  ---
+  duration_ms: 712.1206
+  ...
+# Subtest: ordinary native production waits for the terrain publisher and forwards its exact current manifest
+ok 15 - ordinary native production waits for the terrain publisher and forwards its exact current manifest
+  ---
+  duration_ms: 768.7607
+  ...
+# (node:23412) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:23412) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: a genuine first-task declaration crosses the retained endpoint while independent native execution advances
+ok 16 - a genuine first-task declaration crosses the retained endpoint while independent native execution advances
+  ---
+  duration_ms: 1274.5164
+  ...
+# Subtest: an actual arrived action declaration retains its own resource class through the existing port and refresh
+ok 17 - an actual arrived action declaration retains its own resource class through the existing port and refresh
+  ---
+  duration_ms: 846.7193
+  ...
+# Subtest: the action resource port rejects a template from another declaration
+ok 18 - the action resource port rejects a template from another declaration
+  ---
+  duration_ms: 710.82
+  ...
+# Subtest: the same retained port carries stationary preparation, invalidation, refresh and its exact issued association
+ok 19 - the same retained port carries stationary preparation, invalidation, refresh and its exact issued association
+  ---
+  duration_ms: 1726.7312
+  ...
+# Subtest: a stationary port receipt cannot name another prepared body pose or opt out of deferred admission
+ok 20 - a stationary port receipt cannot name another prepared body pose or opt out of deferred admission
+  ---
+  duration_ms: 1471.2576
+  ...
+# Subtest: abort during preparation disposes a handle that arrives late and permits a later request
+ok 21 - abort during preparation disposes a handle that arrives late and permits a later request
+  ---
+  duration_ms: 43.7544
+  ...
+# Subtest: abort after ready retires its proxy and releases capacity for the next request
+ok 22 - abort after ready retires its proxy and releases capacity for the next request
+  ---
+  duration_ms: 16.1825
+  ...
+# Subtest: the retained endpoint supports invalidate and refresh without a new preparation
+ok 23 - the retained endpoint supports invalidate and refresh without a new preparation
+  ---
+  duration_ms: 3.8851
+  ...
+# Subtest: incompatible refresh and failed refresh both release the retained proxy
+ok 24 - incompatible refresh and failed refresh both release the retained proxy
+  ---
+  duration_ms: 5.9319
+  ...
+# Subtest: a duplicate refresh cannot release the first refresh or its retained reservation
+ok 25 - a duplicate refresh cannot release the first refresh or its retained reservation
+  ---
+  duration_ms: 13.512
+  ...
+# Subtest: connection disposal invalidates ready proxies and rejects a pending preparation
+ok 26 - connection disposal invalidates ready proxies and rejects a pending preparation
+  ---
+  duration_ms: 25.6793
+  ...
+# Subtest: preparation timeout cancels the existing retained handle without closing the healthy endpoint
+ok 27 - preparation timeout cancels the existing retained handle without closing the healthy endpoint
+  ---
+  duration_ms: 103.8446
+  ...
+# Subtest: wrong-session and unsolicited responses close the connection and invalidate retained handles
+ok 28 - wrong-session and unsolicited responses close the connection and invalidate retained handles
+  ---
+  duration_ms: 61.3662
+  ...
+# Subtest: aborting before the handshake does not dispatch a resource request
+ok 29 - aborting before the handshake does not dispatch a resource request
+  ---
+  duration_ms: 1.7375
+  ...
+# Subtest: genuine Home preparation, invalidation and refresh retain their typed template on the existing direct endpoint
+ok 30 - genuine Home preparation, invalidation and refresh retain their typed template on the existing direct endpoint
+  ---
+  duration_ms: 1701.7062
+  ...
+# Subtest: Home absence preparation and refresh use the same retained direct resource endpoint
+ok 31 - Home absence preparation and refresh use the same retained direct resource endpoint
+  ---
+  duration_ms: 1912.3021
+  ...
+# (node:16220) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:16220) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: stationary metadata retags the existing compiled uniform without another upload, node or cache key
+ok 32 - stationary metadata retags the existing compiled uniform without another upload, node or cache key
+  ---
+  duration_ms: 2239.342
+  ...
+# Subtest: logical Idle phase origins retain their typed period and retag the same physical scalar without another upload
+ok 33 - logical Idle phase origins retain their typed period and retag the same physical scalar without another upload
+  ---
+  duration_ms: 1666.6375
+  ...
+# Subtest: stationary clocks cannot borrow a route, a finite action, a resource extension or an absolute timer
+ok 34 - stationary clocks cannot borrow a route, a finite action, a resource extension or an absolute timer
+  ---
+  duration_ms: 1515.7879
+  ...
+# Subtest: stationary references require their own newer native ticket and retagging cannot reuse a ticket at another time
+ok 35 - stationary references require their own newer native ticket and retagging cannot reuse a ticket at another time
+  ---
+  duration_ms: 1511.8393
+  ...
+# Subtest: stationary picks retain exact submitted float ages, actual issued origins and native world coverage
+ok 36 - stationary picks retain exact submitted float ages, actual issued origins and native world coverage
+  ---
+  duration_ms: 1507.2046
+  ...
+# (node:9412) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:9412) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: a stationary template is preparation only until its exact direct transition and native settlement proof arrive
+ok 37 - a stationary template is preparation only until its exact direct transition and native settlement proof arrive
+  ---
+  duration_ms: 2295.8723
+  ...
+# Subtest: a rejected settlement batch installs nothing and a foreign Carry provenance cannot replace the actual one
+ok 38 - a rejected settlement batch installs nothing and a foreign Carry provenance cannot replace the actual one
+  ---
+  duration_ms: 1570.4613
+  ...
+# Subtest: stationary ownership survives a real pending task even when its request precedes installation of the graphical settlement proof
+ok 39 - stationary ownership survives a real pending task even when its request precedes installation of the graphical settlement proof
+  ---
+  duration_ms: 1658.4283
+  ...
+# Subtest: source baselines reconstruct current Idle and pending-task stationary associations from actual native facts
+ok 40 - source baselines reconstruct current Idle and pending-task stationary associations from actual native facts
+  ---
+  duration_ms: 1493.786
+  ...
+# Subtest: the same direct consumer holds a returning disposition without interpreting it as permission for a task
+ok 41 - the same direct consumer holds a returning disposition without interpreting it as permission for a task
+  ---
+  duration_ms: 1475.7024
+  ...
+# (node:19572) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:19572) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: native delivery commits coherent income, power, crate, worker and tutorial before every observer
+ok 42 - native delivery commits coherent income, power, crate, worker and tutorial before every observer
+  ---
+  duration_ms: 2372.8901
+  ...
+# Subtest: resource preparation and drain can advance B without consuming delivery or moving the arrived body
+ok 43 - resource preparation and drain can advance B without consuming delivery or moving the arrived body
+  ---
+  duration_ms: 1753.8694
+  ...
+# Subtest: a consumer lacking the exact settlement version cannot authorize income or retire Carry
+ok 44 - a consumer lacking the exact settlement version cannot authorize income or retire Carry
+  ---
+  duration_ms: 1552.1696
+  ...
+# Subtest: a consumer lacking the exact settlement template cannot authorize income or retire Carry
+ok 45 - a consumer lacking the exact settlement template cannot authorize income or retire Carry
+  ---
+  duration_ms: 1461.8631
+  ...
+# Subtest: changed settlement data or an expired contract cannot use an earlier prepared Idle result
+ok 46 - changed settlement data or an expired contract cannot use an earlier prepared Idle result
+  ---
+  duration_ms: 3124.4078
+  ...
+# Subtest: delivery data alone cannot credit a crate without the current native stationary fact
+ok 47 - delivery data alone cannot credit a crate without the current native stationary fact
+  ---
+  duration_ms: 1453.815
+  ...
+# Subtest: a subsequent genuine task inherits stationary ownership until its prepared native route commits
+ok 48 - a subsequent genuine task inherits stationary ownership until its prepared native route commits
+  ---
+  duration_ms: 1351.2382
+  ...
+# Subtest: a newly attached source observer gets the exact current stationary association
+ok 49 - a newly attached source observer gets the exact current stationary association
+  ---
+  duration_ms: 1237.7917
+  ...
+# Subtest: discarding an unpublished task batch does not reset the live native cohort when its commit is rejected
+ok 50 - discarding an unpublished task batch does not reset the live native cohort when its commit is rejected
+  ---
+  duration_ms: 1106.0234
+  ...
+# Subtest: pthread uses the same conditioned settlement, coherent Game projection and stationary execution
+ok 51 - pthread uses the same conditioned settlement, coherent Game projection and stationary execution
+  ---
+  duration_ms: 1365.9187
+  ...
+# Subtest: expired-contract delivery stays returning under native stationary ownership (standalone)
+ok 52 - expired-contract delivery stays returning under native stationary ownership (standalone)
+  ---
+  duration_ms: 1185.8484
+  ...
+# Subtest: expired-contract delivery stays returning under native stationary ownership (pthread)
+ok 53 - expired-contract delivery stays returning under native stationary ownership (pthread)
+  ---
+  duration_ms: 1201.2206
+  ...
+# Subtest: a changed village entry invalidates prepared returning delivery before any credit or native transfer
+ok 54 - a changed village entry invalidates prepared returning delivery before any credit or native transfer
+  ---
+  duration_ms: 957.8724
+  ...
+# (node:12552) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:12552) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: settlement uses one stationary transform, original Idle phases and submitted float ages without an action duration
+ok 55 - settlement uses one stationary transform, original Idle phases and submitted float ages without an action duration
+  ---
+  duration_ms: 2315.8663
+  ...
+# Subtest: stationary support reuses the confirmed terrain kernel and invalidates changed foot triangles
+ok 56 - stationary support reuses the confirmed terrain kernel and invalidates changed foot triangles
+  ---
+  duration_ms: 1705.0575
+  ...
+# Subtest: revalidating settlement retags the same graph and material and fails closed for a changed physical pose
+ok 57 - revalidating settlement retags the same graph and material and fails closed for a changed physical pose
+  ---
+  duration_ms: 1653.2793
+  ...
+# Subtest: the real Three shader builder retains the typed Idle clock and material transform with no trajectory texture
+ok 58 - the real Three shader builder retains the typed Idle clock and material transform with no trajectory texture
+  ---
+  duration_ms: 1705.5752
+  ...
+# (node:24248) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:24248) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: Carry prepares reversible Idle on its original resident actor (exact boundary)
+ok 59 - Carry prepares reversible Idle on its original resident actor (exact boundary)
+  ---
+  duration_ms: 2711.4258
+  ...
+# Subtest: Carry prepares reversible Idle on its original resident actor (late commit)
+ok 60 - Carry prepares reversible Idle on its original resident actor (late commit)
+  ---
+  duration_ms: 2061.9361
+  ...
+# Subtest: a foreign settlement proof is rejected and cancellation restores Carry materials, nine crate pieces and source resources
+ok 61 - a foreign settlement proof is rejected and cancellation restores Carry materials, nine crate pieces and source resources
+  ---
+  duration_ms: 1891.8199
+  ...
+# Subtest: removing the Carry actor invalidates and retires its activated unpublished stationary candidate
+ok 62 - removing the Carry actor invalidates and retires its activated unpublished stationary candidate
+  ---
+  duration_ms: 1861.8694
+  ...
+# Subtest: a changed Carry publication cannot keep or publish its stationary candidate
+ok 63 - a changed Carry publication cannot keep or publish its stationary candidate
+  ---
+  duration_ms: 1830.6483
+  ...
+# Subtest: a genuine next task prepares from the settled body and preserves it through cancellation until actual route issue
+ok 64 - a genuine next task prepares from the settled body and preserves it through cancellation until actual route issue
+  ---
+  duration_ms: 1535.5579
+  ...
+# Subtest: an unbound resident actor can roll back and cancel its activated first-task materials
+ok 65 - an unbound resident actor can roll back and cancel its activated first-task materials
+  ---
+  duration_ms: 1495.1162
+  ...
+# Subtest: removing an actor with an activated next-task candidate retires both it and its previous Idle owner
+ok 66 - removing an actor with an activated next-task candidate retires both it and its previous Idle owner
+  ---
+  duration_ms: 1360.7692
+  ...
+# Subtest: original Idle skinning retains stationary clock bindings in color and shadow programs on the resident rig
+ok 67 - original Idle skinning retains stationary clock bindings in color and shadow programs on the resident rig
+  ---
+  duration_ms: 1659.5171
+  ...
+# Subtest: ordinary on-demand picking follows the original animated Idle body at submitted ages without the carried crate
+ok 68 - ordinary on-demand picking follows the original animated Idle body at submitted ages without the carried crate
+  ---
+  duration_ms: 1557.2059
+  ...
+# (node:6864) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:6864) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: stationary committed resources require the exact issued association, world and prepared source
+ok 69 - stationary committed resources require the exact issued association, world and prepared source
+  ---
+  duration_ms: 1867.0891
+  ...
+# Subtest: settlement requires a real completed Carry and keeps its resources, body and semantic state during preparation
+ok 70 - settlement requires a real completed Carry and keeps its resources, body and semantic state during preparation
+  ---
+  duration_ms: 2836.0921
+  ...
+# Subtest: the conditioned source commit keeps a native stationary body after retiring the arrived Carry
+ok 71 - the conditioned source commit keeps a native stationary body after retiring the arrived Carry
+  ---
+  duration_ms: 1174.2943
+  ...
+# Subtest: settlement revalidation binds the exact prepared body to its later actual native origin
+ok 72 - settlement revalidation binds the exact prepared body to its later actual native origin
+  ---
+  duration_ms: 1181.8787
+  ...
+# Subtest: a retained settlement ticket is busy to other mutations and a changed body binding cannot commit it
+ok 73 - a retained settlement ticket is busy to other mutations and a changed body binding cannot commit it
+  ---
+  duration_ms: 1119.9979
+  ...
+# Subtest: both canonical native artifacts expose the same complete settlement ABI
+ok 74 - both canonical native artifacts expose the same complete settlement ABI
+  ---
+  duration_ms: 114.516
+  ...
+# Subtest: the graphical consumer rejects a stationary source baseline until its own prepared successor is implemented
+ok 75 - the graphical consumer rejects a stationary source baseline until its own prepared successor is implemented
+  ---
+  duration_ms: 1157.7069
+  ...
+# Subtest: a settled worker cannot be rebound to another otherwise unowned native body
+ok 76 - a settled worker cannot be rebound to another otherwise unowned native body
+  ---
+  duration_ms: 1050.3078
+  ...
+# Subtest: Home disposition retains the arrived native body, excludes task eligibility and rejects legacy replacement or cancellation
+ok 77 - Home disposition retains the arrived native body, excludes task eligibility and rejects legacy replacement or cancellation
+  ---
+  duration_ms: 993.8157
+  ...
+# Subtest: Home revalidation preserves its exact destination and cancellation leaves the actual Carry current
+ok 78 - Home revalidation preserves its exact destination and cancellation leaves the actual Carry current
+  ---
+  duration_ms: 1533.5963
+  ...
+# (node:14300) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:14300) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: only the exact stationary consumer ACK can yield a receipt and release the actual native association
+ok 79 - only the exact stationary consumer ACK can yield a receipt and release the actual native association
+  ---
+  duration_ms: 1973.1749
+  ...
+# Subtest: a consumer ACK with an incorrect stationary version cannot mint source admission
+ok 80 - a consumer ACK with an incorrect stationary version cannot mint source admission
+  ---
+  duration_ms: 1453.28
+  ...
+# Subtest: a consumer ACK with an incorrect stationary template cannot mint source admission
+ok 81 - a consumer ACK with an incorrect stationary template cannot mint source admission
+  ---
+  duration_ms: 1358.7887
+  ...
+# Subtest: a consumer ACK with an incorrect stationary frame cannot mint source admission
+ok 82 - a consumer ACK with an incorrect stationary frame cannot mint source admission
+  ---
+  duration_ms: 1044.7436
+  ...
+# (node:23660) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:23660) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: the native settlement consumer requires its retained clock, actual association and submitted drain (exact)
+ok 83 - the native settlement consumer requires its retained clock, actual association and submitted drain (exact)
+  ---
+  duration_ms: 2105.3722
+  ...
+# Subtest: the native settlement consumer requires its retained clock, actual association and submitted drain (late)
+ok 84 - the native settlement consumer requires its retained clock, actual association and submitted drain (late)
+  ---
+  duration_ms: 1427.5278
+  ...
+# Subtest: the native settlement consumer requires its retained clock, actual association and submitted drain (missing-template)
+ok 85 - the native settlement consumer requires its retained clock, actual association and submitted drain (missing-template)
+  ---
+  duration_ms: 1212.045
+  ...
+# Subtest: the native settlement consumer requires its retained clock, actual association and submitted drain (missing-clock)
+ok 86 - the native settlement consumer requires its retained clock, actual association and submitted drain (missing-clock)
+  ---
+  duration_ms: 1204.2815
+  ...
+# Subtest: the native settlement consumer requires its retained clock, actual association and submitted drain (missing-attestation)
+ok 87 - the native settlement consumer requires its retained clock, actual association and submitted drain (missing-attestation)
+  ---
+  duration_ms: 1016.774
+  ...
+# Subtest: Idle remains drawable through a genuine pending task and stops when its actual next route is issued
+ok 88 - Idle remains drawable through a genuine pending task and stops when its actual next route is issued
+  ---
+  duration_ms: 1139.644
+  ...
+# Subtest: stationary admission cannot consume resources or credit the crate before the actual queue drain
+ok 89 - stationary admission cannot consume resources or credit the crate before the actual queue drain
+  ---
+  duration_ms: 1108.6265
+  ...
+# Subtest: an older draw consumer cannot register or prepare the new stationary authority
+ok 90 - an older draw consumer cannot register or prepare the new stationary authority
+  ---
+  duration_ms: 988.5983
+  ...
+# Subtest: ordinary settlement observers still run once after the rounded ledger entry is committed
+ok 91 - ordinary settlement observers still run once after the rounded ledger entry is committed
+  ---
+  duration_ms: 5.8182
+  ...
+# Subtest: an owner can capture the one rounded notification and dispatch it after its related source state is coherent
+ok 92 - an owner can capture the one rounded notification and dispatch it after its related source state is coherent
+  ---
+  duration_ms: 0.7317
+  ...
+# Subtest: invalid notification configuration and insufficient funds cannot partially settle a transaction
+ok 93 - invalid notification configuration and insufficient funds cannot partially settle a transaction
+  ---
+  duration_ms: 1.2573
+  ...
+# (node:23472) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:23472) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: actor picking excludes retired invisible variants and their old clock callbacks before raycasting
+ok 94 - actor picking excludes retired invisible variants and their old clock callbacks before raycasting
+  ---
+  duration_ms: 20.2871
+  ...
+# Subtest: grouped terrain remains selectable and occludes entities behind it
+ok 95 - grouped terrain remains selectable and occludes entities behind it
+  ---
+  duration_ms: 4.7111
+  ...
+# Subtest: empty-ground spell selection carries the visible terrain height without changing placement coordinates
+ok 96 - empty-ground spell selection carries the visible terrain height without changing placement coordinates
+  ---
+  duration_ms: 29.2086
+  ...
+# Subtest: grouped biome props still occlude selectable objects
+ok 97 - grouped biome props still occlude selectable objects
+  ---
+  duration_ms: 2.3455
+  ...
+# Subtest: prepares a confirmed animal pose only for the pick and restores it even on raycast failure
+ok 98 - prepares a confirmed animal pose only for the pick and restores it even on raycast failure
+  ---
+  duration_ms: 2.2984
+  ...
+# Subtest: picks confirmed animal, nearest crop, and terrain without the old scene
+ok 99 - picks confirmed animal, nearest crop, and terrain without the old scene
+  ---
+  duration_ms: 3.2795
+  ...
+# Subtest: terrain and confirmed world geometry occlude candidates
+ok 100 - terrain and confirmed world geometry occlude candidates
+  ---
+  duration_ms: 5.1824
+  ...
+# Subtest: ignores transparent foliage texels and retains opaque or unavailable data
+ok 101 - ignores transparent foliage texels and retains opaque or unavailable data
+  ---
+  duration_ms: 2.2991
+  ...
+# Subtest: selects the nearest visible worker or structure while respecting terrain and props
+ok 102 - selects the nearest visible worker or structure while respecting terrain and props
+  ---
+  duration_ms: 4.4757
+  ...
+# Subtest: transparent cutout does not occlude a selectable structure
+ok 103 - transparent cutout does not occlude a selectable structure
+  ---
+  duration_ms: 2.1944
+  ...
+# Subtest: reports an incomplete visual scene until all confirmed selectable objects are resident
+ok 104 - reports an incomplete visual scene until all confirmed selectable objects are resident
+  ---
+  duration_ms: 1.7582
+  ...
+# Subtest: geometry outside the chunk clip cannot hide a selectable target
+ok 105 - geometry outside the chunk clip cannot hide a selectable target
+  ---
+  duration_ms: 2.0594
+  ...
+# Subtest: crop volumes preserve legacy overlap priority until removal and retain nearer opaque occlusion
+ok 106 - crop volumes preserve legacy overlap priority until removal and retain nearer opaque occlusion
+  ---
+  duration_ms: 1.9081
+  ...
+1..106
+# tests 106
+# suites 0
+# pass 106
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 25039.6568

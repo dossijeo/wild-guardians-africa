@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "product": "3a48ff26c5048303bb4e4857a9874888cb45f692",
+  "fixture": "Desierto 983",
+  "snapshotSHA256": "3d5f06f0f8ca7c873bdd22b4c787e5a6b735073774a64bef4613fc14964405cd",
+  "receiptSHA256": "0e2a237647e12a5d494f3ce3b5da1e1314a4475fdb20a1aea169230c975a85d5",
+  "qualification": "Real NVIDIA devices in Edge. The development cohort is explicit. The harness drives the steps, retains selected preparation messages and destroys the original device; authority, recovery and Draw use their production paths.",
+  "baseline": {
+    "result": "Recovery activation idle timeout",
+    "evidence": "native-desert-first-strike-under-home-20261128.json"
+  },
+  "recovered": {
+    "adapter": {"vendor": "nvidia", "architecture": "turing"},
+    "firstStrikeDraw": 33,
+    "strikeAcquiredAt": 11.999999999999957,
+    "lossAt": 12.019999999999957,
+    "holdId": 44,
+    "publication": 42,
+    "replacementDraw": 1,
+    "members": [
+      {
+        "kind": 18,
+        "actorId": 900011,
+        "bodyId": 1,
+        "preparedTicket": 4,
+        "acquiredTicket": 5,
+        "relativeTime": 1.21999990940094,
+        "gateId": 1000000,
+        "gateElapsed": 12.019999909400923
+      },
+      {
+        "kind": 27,
+        "actorId": 1000003,
+        "bodyId": 2,
+        "preparedTicket": 8,
+        "acquiredTicket": 9,
+        "attackId": "attack-29209",
+        "relativeTime": 0.019999999552965164,
+        "remaining": 1.5216667051613335
+      }
+    ],
+    "pick": {"entityId": "animal-1000003", "matchingClockSamples": 5},
+    "activatedPublication": 42,
+    "impact": {
+      "at": 13.559999999999924,
+      "target": "structure-1000002",
+      "attackId": "attack-29209",
+      "count": 1,
+      "beforeHp": 140,
+      "afterHp": 120
+    },
+    "ruin": {"ticket": 12, "at": 16.759999999999938, "count": 1},
+    "homeArrival": {"ticket": 14, "at": 19.37999999999988},
+    "drainedAt": 19.739999999999874,
+    "applicationErrors": [],
+    "rendererWarnings": ["Missing position, vfxKind, color and normal attributes during replacement startup"]
+  }
+}

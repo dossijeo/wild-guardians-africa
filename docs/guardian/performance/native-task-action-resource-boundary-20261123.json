@@ -1,0 +1,184 @@
+{
+  "date": "2026-11-23",
+  "revision": "951bdb5f1473691127e7e3e71b3b81da763251d3",
+  "nativePatchSha256": "15130e4c3b65f98f80aa794863fc8128f76d89a62cb8f7f92a9f311a9ef48005",
+  "profile": {
+    "browser": "Edge headless",
+    "adapter": "NVIDIA Turing",
+    "backend": "webgpu-worker",
+    "remoteDraw": true,
+    "displayHz": 30,
+    "viewport": [
+      640,
+      480
+    ]
+  },
+  "sources": {
+    "saveSha256": "099a5167ec0d79c710830cd18f5edd362d51d82f0df20739cfec7fad96eda63a",
+    "physicalSha256": "d794598ff317f45cff7cff624149387bf4a39cd23e5ea2d5f7b74bb5c78d742f",
+    "traceSha256": "aaa33aaf371bfa943806e0abedee08bc37b43705bf828bd44ef042b6ac550c1f",
+    "traceDataLoss": false
+  },
+  "abi": {
+    "standaloneExports": 788,
+    "pthreadExports": 809,
+    "pthreadPublicFunctions": 794,
+    "versions": {
+      "stops": 1,
+      "retirement": 1,
+      "settlement": 2,
+      "home": 2,
+      "idle": 1
+    },
+    "importsAndExportsUnchanged": true,
+    "artifactHashes": {
+      "standalone/spatial-savanna.wasm": "5971fdb319d25569e73c618856887af7feb9b9237bb83daf6c406dc86b9bd4ac",
+      "pthread/spatial-threaded.mjs": "5123b32f8b74cb77d2dc5e3933615ee91e2b11df8dccc8f6d97a673816f0d2f5",
+      "pthread/spatial-threaded.wasm": "4cdb00bc6d2441b2cb7bc8b556fdefb21530fcd5cf80fa47f0b27a62f25edd86"
+    }
+  },
+  "restored": {
+    "savedAt": 30.850000000000083,
+    "timeline": {
+      "from": 0,
+      "to": 1,
+      "at": 30.75000000000008
+    },
+    "initialMeshes": 2,
+    "retainedAttributeChanges": 4,
+    "repairEvents": 1,
+    "actionBody": 1,
+    "idleBody": 1
+  },
+  "presentation": {
+    "first": {
+      "elapsed": 30.850000000000083,
+      "presented": 30.849998474121094,
+      "root": 120,
+      "geometry": [
+        90,
+        91
+      ]
+    },
+    "last": {
+      "elapsed": 33.000000000000185,
+      "presented": 30.849998474121094,
+      "root": 120,
+      "geometry": [
+        353
+      ]
+    },
+    "observedTimes": [
+      30.849998474121094
+    ],
+    "residentAttributeWrites": [
+      {
+        "key": "90:position",
+        "elapsed": 32.50000000000014,
+        "before": 1,
+        "after": 2
+      },
+      {
+        "key": "90:normal",
+        "elapsed": 32.50000000000014,
+        "before": 1,
+        "after": 2
+      },
+      {
+        "key": "91:position",
+        "elapsed": 32.50000000000014,
+        "before": 1,
+        "after": 2
+      },
+      {
+        "key": "91:normal",
+        "elapsed": 32.50000000000014,
+        "before": 1,
+        "after": 2
+      }
+    ]
+  },
+  "graphics": {
+    "comparedOwners": 734,
+    "retainedBuffers": 734,
+    "replaced": []
+  },
+  "drained": true,
+  "cadence": {
+    "draws": 347,
+    "peaks": [
+      {
+        "at": 1795429571058.6,
+        "sequence": 2,
+        "ticket": null,
+        "intervalMs": 37.60009765625,
+        "drawMs": 0.2998046875,
+        "trigger": "raf",
+        "replay": false
+      },
+      {
+        "at": 1795429571124.4,
+        "sequence": 2,
+        "ticket": null,
+        "intervalMs": 37.099853515625,
+        "drawMs": 0.300048828125,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795429573589.2,
+        "sequence": 16,
+        "ticket": null,
+        "intervalMs": 35.099853515625,
+        "drawMs": 0.300048828125,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795429571455.5,
+        "sequence": 5,
+        "ticket": null,
+        "intervalMs": 34.800048828125,
+        "drawMs": 0.10009765625,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795429579388.8,
+        "sequence": 18,
+        "ticket": 2,
+        "intervalMs": 34.800048828125,
+        "drawMs": 3.800048828125,
+        "trigger": "raf",
+        "replay": true
+      }
+    ],
+    "lastPackets": [
+      {
+        "sequence": 17,
+        "ticket": null,
+        "draws": 126,
+        "firstClock": 30.850000000000083,
+        "lastClock": 30.850000000000083,
+        "safeUntil": 30.850000000000083
+      },
+      {
+        "sequence": 18,
+        "ticket": 2,
+        "draws": 64,
+        "firstClock": 32.300000000000125,
+        "lastClock": 32.300000000000125,
+        "safeUntil": 32.300000000000125
+      },
+      {
+        "sequence": 19,
+        "ticket": 4,
+        "draws": 6,
+        "firstClock": 36.85000000000051,
+        "lastClock": 36.90000000000052,
+        "safeUntil": 36.90000000000052
+      }
+    ],
+    "possibleCpuTestOverlapAtStartup": true
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "input": "C:\\tmp\\guardian-faces\\hyena-hollow-mouth-v17.blend",
+  "dentalIslands": [
+    {
+      "island": 3,
+      "vertices": 90,
+      "maxFullOpenRigidErrorMeters": 0.0,
+      "maxRelativeEdgeLengthChange": {
+        "0": 0,
+        "0.5": 0.012773654380847876,
+        "1": 1.2707333161166012e-05
+      }
+    },
+    {
+      "island": 2,
+      "vertices": 91,
+      "maxFullOpenRigidErrorMeters": 0.0,
+      "maxRelativeEdgeLengthChange": {
+        "0": 0,
+        "0.5": 0.01277317497525099,
+        "1": 2.3993508529995822e-05
+      }
+    },
+    {
+      "island": 1,
+      "vertices": 57,
+      "maxFullOpenRigidErrorMeters": 0.0,
+      "maxRelativeEdgeLengthChange": {
+        "0": 0,
+        "0.5": 0.012776720564962152,
+        "1": 1.957246115602551e-05
+      }
+    }
+  ],
+  "scope": "Dental geometry only; not a complete visual or clip playback validation",
+  "note": "Linear morph interpolation contracts rotating dental edges slightly at partial values; measured explicitly rather than claimed fully rigid at every intermediate value."
+}

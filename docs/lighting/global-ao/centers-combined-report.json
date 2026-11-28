@@ -1,0 +1,84 @@
+{
+  "scope": "Native WorldScene fixed per-culture camera. Only building AO toggled; globalAO, cinematic lighting and ground contacts remain on. Static savanna evidence, not all-biome/motion/performance acceptance.",
+  "biome": "sabana",
+  "seed": 712,
+  "quality": "media",
+  "camera": {
+    "fixtureDistance": 22,
+    "angle": 0.7
+  },
+  "times": {
+    "day": 150,
+    "night": 400
+  },
+  "cultures": [
+    {
+      "culture": "mapungubwe",
+      "worldAuthority": "spatial-wasm",
+      "paused": true,
+      "errors": [],
+      "renderSize": [
+        1600,
+        900
+      ],
+      "pixelRatio": 1,
+      "captures": [
+        "mapungubwe-day-combined-on.png",
+        "mapungubwe-day-building-off.png",
+        "mapungubwe-night-combined-on.png",
+        "mapungubwe-night-building-off.png"
+      ]
+    },
+    {
+      "culture": "musgum",
+      "worldAuthority": "spatial-wasm",
+      "paused": true,
+      "errors": [],
+      "renderSize": [
+        1600,
+        900
+      ],
+      "pixelRatio": 1,
+      "captures": [
+        "musgum-day-combined-on.png",
+        "musgum-day-building-off.png",
+        "musgum-night-combined-on.png",
+        "musgum-night-building-off.png"
+      ]
+    },
+    {
+      "culture": "etiope",
+      "worldAuthority": "spatial-wasm",
+      "paused": true,
+      "errors": [],
+      "renderSize": [
+        1600,
+        900
+      ],
+      "pixelRatio": 1,
+      "captures": [
+        "etiope-day-combined-on.png",
+        "etiope-day-building-off.png",
+        "etiope-night-combined-on.png",
+        "etiope-night-building-off.png"
+      ]
+    },
+    {
+      "culture": "suajili",
+      "worldAuthority": "spatial-wasm",
+      "paused": true,
+      "errors": [],
+      "renderSize": [
+        1600,
+        900
+      ],
+      "pixelRatio": 1,
+      "captures": [
+        "suajili-day-combined-on.png",
+        "suajili-day-building-off.png",
+        "suajili-night-combined-on.png",
+        "suajili-night-building-off.png"
+      ]
+    }
+  ]
+}

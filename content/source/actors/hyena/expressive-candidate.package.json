@@ -1,0 +1,134 @@
+{
+  "geometryChanged": true,
+  "textures": [
+    {
+      "name": "hyena-lids-v11.atlas.png",
+      "before": [
+        2048,
+        2048
+      ],
+      "after": [
+        2048,
+        2048
+      ]
+    },
+    {
+      "name": "Image_0",
+      "before": [
+        8192,
+        8192
+      ],
+      "after": [
+        2048,
+        2048
+      ]
+    },
+    {
+      "name": "Image_2",
+      "before": [
+        4096,
+        4096
+      ],
+      "after": [
+        2048,
+        2048
+      ]
+    },
+    {
+      "name": "Material_0 muzzle repair authoring baked base color",
+      "before": [
+        8192,
+        8192
+      ],
+      "after": [
+        2048,
+        2048
+      ]
+    },
+    {
+      "name": "muzzle-fur-repair.png",
+      "before": [
+        1254,
+        1254
+      ],
+      "after": [
+        1254,
+        1254
+      ]
+    }
+  ],
+  "bytes": 23350084,
+  "packagingHistory": {
+    "source": "C:\\tmp\\guardian-faces\\hyena-face-v12.blend",
+    "bytes": 23398567,
+    "textures": [
+      {
+        "name": "hyena-lids-v11.atlas.png",
+        "before": [
+          2048,
+          2048
+        ],
+        "after": [
+          2048,
+          2048
+        ]
+      },
+      {
+        "name": "Image_0",
+        "before": [
+          8192,
+          8192
+        ],
+        "after": [
+          2048,
+          2048
+        ]
+      },
+      {
+        "name": "Image_2",
+        "before": [
+          4096,
+          4096
+        ],
+        "after": [
+          2048,
+          2048
+        ]
+      },
+      {
+        "name": "Material_0 muzzle repair authoring baked base color",
+        "before": [
+          8192,
+          8192
+        ],
+        "after": [
+          2048,
+          2048
+        ]
+      },
+      {
+        "name": "muzzle-fur-repair.png",
+        "before": [
+          1254,
+          1254
+        ],
+        "after": [
+          1254,
+          1254
+        ]
+      }
+    ]
+  },
+  "source": "expressive-candidate.blend from commit 09a9a83d6, repaired by tools/guardian/remove_hyena_floating_debris.py",
+  "repair": {
+    "removedVertices": 173,
+    "before": 8638,
+    "after": 8465,
+    "shapeKeys": [
+      "Basis",
+      "mouthOpen"
+    ],
+    "selection": "two fully disconnected, reviewed source debris islands; no face crosses selection"
+  },
+  "sha256": "b4077ad74c87424e4776f8982099622f3b6646ed48f8e5ce3e715183ea36df42"
+}

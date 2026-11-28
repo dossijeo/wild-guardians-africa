@@ -1,0 +1,182 @@
+{
+  "base": "27a0bb0d06394e700e85ed61855dffe8a0af85a8",
+  "seed": 712,
+  "biome": "sabana",
+  "day": 2,
+  "topology": "25 regiones",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 88.5
+    }
+  },
+  "authorityOptions": {
+    "nativeWorkerLifecycle": true,
+    "qualifyAnimalCrop": false,
+    "qualifyFarmFlee": false
+  },
+  "evidenceDirectory": "E:/wild-guardians-qa/native-menu-20261126",
+  "evidence": {
+    "native-savanna-lifecycle-flight-nvidia.json": "09208918151723216577ce8ae1a6167cefcb7d01d854ddfaeea0cefc4378bd91",
+    "native-savanna-lifecycle-flight-before.tap": "dc0c38efdccdd7b3e33a8f17b429db8fa75d3807a8989962e349f50bc4dcce92",
+    "native-savanna-lifecycle-flight-final.tap": "023571172ae29eb04bca0c046bade29242ca727a6bc67807e4421105a4f81208",
+    "native-savanna-lifecycle-flight-build.log": "85a736adb0a064da201da991335c087d4cb5fc2e60b921a0552a39d47e9c9cc5"
+  },
+  "inputs": {
+    ".cache/native-flee-sabana-civil-physical-input.json": "2146d51f5421648489b403e4e52823a091abb77fdbbb4e67c6eb79dc62e6648d",
+    ".cache/flee-lifecycle-physical.mjs": "d7d34d6b908a35e88c696989588c5f06dbe767e06c3534b502284791047ef33e",
+    ".cache/flee-lifecycle-browser.mjs": "65621ac7351f5c540e77844603974dd76cd743814d9a23c29abac3c5cd7a5938",
+    ".cache/flee-startup-publication-worker.js": "8677145e702a4758f7db98fced6666573865114f368a58f71d4ad354d42f7acf",
+    "src/simulation/simulation-authority.js": "bc10d0755899e6ad7d34767dbd94e7358eeee22c1a8ab28ffe4618882c233034",
+    "src/world/wild-engine/spatial-savanna.wasm": "6b073c9a4f614d594128a981b5d177e871d91281c95ab3f1a2c997549f0fe775",
+    "src/rendering/character-preload.js": "b1637fb2ed5d0cf0aa12a1ab5eac5923319a0096413071d28376992314be2835",
+    "src/rendering/destruction-native.js": "363ffd6447b051739da75d65a6a2be1431094f0df588361158de83023ceab7b4",
+    "src/rendering/scene.js": "1cfefd4f86dee90af82300fe6762a29408d798dbb852605f5b30a45493c198da"
+  },
+  "snapshotSHA256": "00bfc00f1c75014eefa64f3a03946411d8e572e1fc294180ed2d3d39c35ce906",
+  "initialFrame": {
+    "sequence": 1,
+    "terrainGeneration": 25,
+    "selectableGeneration": 187,
+    "cameraVersion": 0
+  },
+  "spawn": {
+    "id": "event-45",
+    "simulationTime": 603.9999999999864
+  },
+  "farm": {
+    "body": 1,
+    "ticket": 2
+  },
+  "stop": {
+    "ticket": 5,
+    "body": 1,
+    "at": 606.3999999999842
+  },
+  "home": {
+    "body": 1,
+    "ticket": 9
+  },
+  "animal": {
+    "ticket": 7,
+    "body": 2,
+    "age": 0
+  },
+  "drawPairs": {
+    "count": 25,
+    "first": {
+      "sequence": 101,
+      "workerAge": 0,
+      "animalAge": 2.4499998092651367
+    },
+    "last": {
+      "sequence": 119,
+      "workerAge": 2.953338861465454,
+      "animalAge": 5.799999713897705
+    }
+  },
+  "bufferReuse": {
+    "compared": 2974,
+    "sameReference": 2974,
+    "sameVersion": 2973
+  },
+  "refuge": {
+    "ticket": 11,
+    "retiredSequence": 9,
+    "position": [
+      60,
+      0
+    ],
+    "hits": 0,
+    "sampleAt": 614.6499999999767
+  },
+  "strikes": [
+    {
+      "id": "event-51",
+      "attackId": "attack-48",
+      "targetId": "plant-5",
+      "simulationTime": 658.0999999999372
+    },
+    {
+      "id": "event-55",
+      "attackId": "attack-52",
+      "targetId": "plant-7",
+      "simulationTime": 662.1499999999335
+    }
+  ],
+  "retreatAbsence": {
+    "sequence": 525,
+    "at": 1795756640049.8,
+    "worldBoundary": {
+      "version": 1,
+      "authorityEpoch": "1221f1f0-bfbc-4a2e-8e48-d8e3f17a7dfc/1",
+      "nativeSession": 1,
+      "ticket": 19,
+      "effectiveTime": 663.1499999999326
+    },
+    "clockElapsed": 672.9499999999236,
+    "previous": {
+      "actorId": 22,
+      "bodyId": 2,
+      "executionEpoch": 663.1499999999326,
+      "sequence": 524,
+      "at": 1795756639916.6
+    }
+  },
+  "civilReturn": {
+    "raidEnded": {
+      "id": "event-57",
+      "simulationTime": 672.9399999999237
+    },
+    "ticket": 21,
+    "body": 3,
+    "refugeSequence": 9,
+    "flags": 0,
+    "firstSubmittedFrame": 526,
+    "firstSubmittedClock": 675.5499999999213,
+    "atIdle": 708.2999999998915,
+    "worker": {
+      "id": "worker-21",
+      "personId": "person-9",
+      "contractDay": 2,
+      "status": "idle",
+      "nativeRouteAdmission": "native-idle",
+      "x": 88,
+      "z": 1.9994935989379883,
+      "hits": 0
+    },
+    "balance": {
+      "n": "190",
+      "d": "1"
+    }
+  },
+  "drain": {
+    "disposed": true
+  },
+  "validations": {
+    "final": {
+      "passed": 119,
+      "skipped": 0,
+      "failed": 0
+    },
+    "before": {
+      "passed": 0,
+      "failed": 3
+    },
+    "build": {
+      "tool": "Vite 6.4.3",
+      "profile": "webgpu-worker / remote Draw",
+      "passed": true,
+      "seconds": 46.48
+    }
+  }
+}

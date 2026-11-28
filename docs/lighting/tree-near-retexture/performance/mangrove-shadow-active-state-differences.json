@@ -1,0 +1,186 @@
+{
+  "initial": {
+    "equal": false,
+    "total": 2,
+    "groups": {
+      "slotId": 1,
+      "elapsed": 1
+    },
+    "examples": [
+      {
+        "path": "/slotId",
+        "left": "d5169953-df9b-4e0b-8e2e-4ae8760fc491",
+        "right": "d17e1bf7-4e97-4dd7-a34b-2605fad12b55"
+      },
+      {
+        "path": "/elapsed",
+        "left": 3000.3500750000007,
+        "right": 3000.383295000001
+      }
+    ]
+  },
+  "final": {
+    "equal": false,
+    "total": 41,
+    "groups": {
+      "slotId": 1,
+      "elapsed": 1,
+      "workers": 1,
+      "raid": 35,
+      "events": 3
+    },
+    "examples": [
+      {
+        "path": "/slotId",
+        "left": "d5169953-df9b-4e0b-8e2e-4ae8760fc491",
+        "right": "d17e1bf7-4e97-4dd7-a34b-2605fad12b55"
+      },
+      {
+        "path": "/elapsed",
+        "left": 3006.3500750000226,
+        "right": 3006.383295000023
+      },
+      {
+        "path": "/workers/0/mobileProgressAt",
+        "left": 3000.450075000001,
+        "right": 3000.4832950000014
+      },
+      {
+        "path": "/raid/animals/0/mobileProgressAt",
+        "left": 3005.4500750000193,
+        "right": 3005.4832950000196
+      },
+      {
+        "path": "/raid/animals/1/mobileProgressAt",
+        "left": 3006.250075000022,
+        "right": 3006.2832950000225
+      },
+      {
+        "path": "/raid/animals/2/mobileProgressAt",
+        "left": 3006.150075000022,
+        "right": 3006.183295000022
+      },
+      {
+        "path": "/raid/animals/3/mobileProgressAt",
+        "left": 3005.8000750000206,
+        "right": 3005.833295000021
+      },
+      {
+        "path": "/raid/animals/4/mobileProgressAt",
+        "left": 3003.450075000012,
+        "right": 3003.4832950000123
+      },
+      {
+        "path": "/raid/animals/4/raidWait/since",
+        "left": 3000.700075000002,
+        "right": 3000.7332950000023
+      },
+      {
+        "path": "/raid/animals/4/raidWait/retryAt",
+        "left": 3013.400075000019,
+        "right": 3013.4332950000194
+      },
+      {
+        "path": "/raid/animals/4/raidWait/moveRetryAt",
+        "left": 3000.700075000002,
+        "right": 3000.7332950000023
+      },
+      {
+        "path": "/raid/animals/4/raidWait/epoch",
+        "left": "2,560,36,3004.9500750000175",
+        "right": "2,560,36,3004.9832950000177"
+      },
+      {
+        "path": "/raid/animals/5/mobileProgressAt",
+        "left": 3004.500075000016,
+        "right": 3004.533295000016
+      },
+      {
+        "path": "/raid/animals/6/mobileProgressAt",
+        "left": 3006.0500750000215,
+        "right": 3006.0832950000217
+      },
+      {
+        "path": "/raid/animals/7/mobileProgressAt",
+        "left": 3005.150075000018,
+        "right": 3005.1832950000185
+      },
+      {
+        "path": "/raid/animals/8/mobileProgressAt",
+        "left": 3005.100075000018,
+        "right": 3005.1332950000183
+      },
+      {
+        "path": "/raid/animals/9/mobileProgressAt",
+        "left": 3004.500075000016,
+        "right": 3004.533295000016
+      },
+      {
+        "path": "/raid/animals/9/raidWait/since",
+        "left": 3002.85007500001,
+        "right": 3002.88329500001
+      },
+      {
+        "path": "/raid/animals/9/raidWait/retryAt",
+        "left": 3013.400075000019,
+        "right": 3013.4332950000194
+      },
+      {
+        "path": "/raid/animals/9/raidWait/moveRetryAt",
+        "left": 3002.85007500001,
+        "right": 3002.88329500001
+      },
+      {
+        "path": "/raid/animals/9/raidWait/epoch",
+        "left": "2,560,36,3004.9500750000175",
+        "right": "2,560,36,3004.9832950000177"
+      },
+      {
+        "path": "/raid/animals/10/mobileProgressAt",
+        "left": 3001.4500750000047,
+        "right": 3001.483295000005
+      },
+      {
+        "path": "/raid/animals/11/mobileProgressAt",
+        "left": 3006.1000750000217,
+        "right": 3006.133295000022
+      },
+      {
+        "path": "/raid/animals/12/mobileProgressAt",
+        "left": 3006.0000750000213,
+        "right": 3006.0332950000216
+      },
+      {
+        "path": "/raid/animals/13/mobileProgressAt",
+        "left": 3000.400075000001,
+        "right": 3000.433295000001
+      },
+      {
+        "path": "/raid/animals/14/mobileProgressAt",
+        "left": 3006.3000750000224,
+        "right": 3006.3332950000226
+      },
+      {
+        "path": "/raid/animals/15/mobileProgressAt",
+        "left": 3004.6500750000164,
+        "right": 3004.6832950000166
+      },
+      {
+        "path": "/raid/animals/16/mobileProgressAt",
+        "left": 3005.350075000019,
+        "right": 3005.383295000019
+      },
+      {
+        "path": "/raid/animals/17/mobileProgressAt",
+        "left": 3006.1000750000217,
+        "right": 3006.133295000022
+      },
+      {
+        "path": "/raid/animals/18/raidWait/since",
+        "left": 3000.400075000001,
+        "right": 3000.433295000001
+      }
+    ]
+  },
+  "scope": "Two independent Edge headless control sessions with QA mangrove-islands scene and 20 synthetic animals, same seed and 120 Game.tick/render calls. JSON structural differences, no native-state or pixel comparison; fields may include nondeterministic fixture identities. Not a performance comparison."
+}

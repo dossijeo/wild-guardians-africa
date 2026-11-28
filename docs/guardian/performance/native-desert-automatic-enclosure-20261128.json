@@ -1,0 +1,39 @@
+{
+  "scenario": "Desierto 712, before the first hiring, with two paid crops and 400 coins",
+  "fixture": "tests/fixtures/desierto712-two-crops-prehire.json.gz",
+  "command": {
+    "kind": "buildWallChain",
+    "id": "paid-sheltered-crops-enclosure",
+    "material": "zarzas",
+    "points": [[96, -5], [102, -5], [102, -13], [96, -13], [96, -5]],
+    "options": {"smooth": false, "snap": false, "requireComplete": true}
+  },
+  "native": {
+    "worldKind": 2,
+    "referenceVersion": 4,
+    "gate": {"id": "structure-19", "opening": 0, "openingDirection": -1, "proxyIds": [1, 2, 3]},
+    "solidWallCount": 12,
+    "solidIds": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+    "currencyDebit": 130,
+    "eventCount": 1,
+    "gateLeafGeometry": "Original closed geometry and pivot. The native continuous proof rejects the original swing against structure-18 and certifies the opposite full swing. Authored triangle comparison also found contact in the original direction.",
+    "cancellation": "With READY retained, neither wall ownership, collision IDs nor ledger change. Cancelling releases the prepared frame without a purchase."
+  },
+  "nvidia": {
+    "architecture": "turing",
+    "inputSha256": "77a001ef7b9ace5e20659749abc58c5795b9f21537a834f9fbb15e7e9b408c48",
+    "purchase": {"preparedTicket": 2, "acquiredTicket": 3, "confirmedSequence": 4, "draw": 21, "visiblePieces": 13, "drained": true},
+    "reload": {"confirmedSequence": 3, "draw": 16, "visiblePieces": 13, "identicalWallOwners": true, "drained": true},
+    "saveSha256": "77e187482af6be8d5dbd9af14561357e6bf487b06b8337529bf4be21b523b727",
+    "receiptSha256": "fb4e662bfc28948170defdff8f9137d1b4f12a5556ced5c9899fe1e67e651ed9",
+    "errors": []
+  },
+  "validation": {
+    "focused": {"passed": 30, "failed": 0, "skipped": 0},
+    "broader": {"passed": 328, "failed": 2, "skipped": 0, "preexisting": ["Gate asset hash reads Windows CRLF checkout bytes while the registered blobs match the manifest.", "The pending stop test expects a different diagnostic from the one emitted by the authority. The preimage emits the same diagnostic."]},
+    "nativeBuilds": ["standalone", "pthread"],
+    "productionBuild": true,
+    "remaining": "Physical moving leaf and worker crossing through this exact enclosure. The CPU selector matches the native opened leaf on the original gate mesh."
+  },
+  "baselineReceiptSha256": "98d1f1823fe54edec4ce65332e9af317a246ac5486a613d4cd2bf6331107bc3b"
+}

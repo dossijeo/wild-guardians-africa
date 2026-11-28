@@ -1,0 +1,192 @@
+{
+  "parent": "234f17161d04c38ed369257537508e9072c07a73",
+  "gateId": "structure-1000000",
+  "command": "removeWall",
+  "initial": {
+    "gate": true,
+    "balance": {
+      "n": "163",
+      "d": "1"
+    },
+    "entry": null
+  },
+  "prior": {
+    "error": "Error: Invalid spatial topology transaction; no barrier was changed",
+    "afterFailedCommand": {
+      "gate": false,
+      "balance": {
+        "n": "163",
+        "d": "1"
+      },
+      "entry": null
+    },
+    "nextStepError": "Error: Native gate projection has another structure owner",
+    "diagnosticSha256": "cc103c1f4cb735fe2e4258cf3fbdfb639349578b46dc18d03cb32dbf25f96c3b"
+  },
+  "current": {
+    "command": {
+      "value": false,
+      "rejection": "La retirada de la puerta necesita preparación nativa",
+      "events": []
+    },
+    "afterRejectedCommand": {
+      "gate": true,
+      "balance": {
+        "n": "163",
+        "d": "1"
+      },
+      "entry": null
+    },
+    "nextStep": "advanced",
+    "nativeFarmReceiptRetained": true,
+    "diagnosticSha256": "2fd50851d1155ef2b98975759f02f8a802d4ea8c757f33d487cd001c5e9eef3b"
+  },
+  "testsPassed": 33,
+  "whileOpeningHardware": {
+    "source": "2471d60f66974d1076c0fb39a0a94905a01a7321",
+    "receiptSha256": "5e1a2bfdc485638a441c95a0236a115ac150e334ac176fa71c9545e2cfd873fe",
+    "scenario": {
+      "command": {
+        "kind": "removeWall",
+        "id": "remove-native-gate-in-motion",
+        "targetId": "structure-1000000"
+      },
+      "before": {
+        "elapsed": 10.44999999999999,
+        "position": [
+          -13.989817815680736,
+          11.399983810442837
+        ],
+        "worker": {
+          "status": "arriving",
+          "admission": "native-farm-arrival"
+        },
+        "sequence": 14
+      },
+      "opening": 0.1324911119993407,
+      "ledger": {
+        "n": "100000",
+        "d": "1"
+      },
+      "rejection": "La retirada de la puerta necesita preparación nativa",
+      "atReply": {
+        "elapsed": 10.44999999999999,
+        "position": [
+          -13.989817815680736,
+          11.399983810442837
+        ],
+        "worker": {
+          "status": "arriving",
+          "admission": "native-farm-arrival"
+        },
+        "sequence": 15
+      }
+    },
+    "body": 1,
+    "ticket": 2,
+    "final": {
+      "elapsed": 14.399999999999906,
+      "position": [
+        -13.949600219726562,
+        7.696641344984133
+      ],
+      "worker": {
+        "status": "arriving",
+        "admission": "native-farm-arrival"
+      },
+      "sequence": 94
+    },
+    "gate": [
+      {
+        "entityId": "structure-1000000",
+        "mesh": 476,
+        "geometry": 202,
+        "positionVersion": 1,
+        "normalVersion": 1,
+        "positionHash": 603722329,
+        "opening": 1,
+        "nativeGate": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "1709a092-3035-4676-a43c-eaadad3958f0/1",
+            "nativeSession": 1,
+            "ticket": 1,
+            "effectiveTime": 10
+          }
+        }
+      }
+    ],
+    "root": 474,
+    "sampledPassage": [
+      {
+        "opening": 1,
+        "elapsed": 13.649999999999922,
+        "position": [
+          -13.949600219726562,
+          8.506641344984116
+        ],
+        "localPosition": [
+          0.0503997802734375,
+          0.30664134498411677
+        ]
+      },
+      {
+        "opening": 1,
+        "elapsed": 14.19999999999991,
+        "position": [
+          -13.949600219726562,
+          7.912641344984129
+        ],
+        "localPosition": [
+          0.0503997802734375,
+          -0.2873586550158702
+        ]
+      }
+    ],
+    "uniqueRetained": 767,
+    "commonOwners": 831,
+    "replacedOwners": 0,
+    "maxDrawInterval": {
+      "at": 1795272114723,
+      "sequence": 35,
+      "trigger": "raf",
+      "nativeWorldBoundary": {
+        "version": 1,
+        "authorityEpoch": "1709a092-3035-4676-a43c-eaadad3958f0/1",
+        "nativeSession": 1,
+        "ticket": 2,
+        "effectiveTime": 10
+      },
+      "intervalMs": 36.5,
+      "drawMs": 1.099853515625,
+      "replay": true,
+      "clockElapsed": 11.699999999999964,
+      "safeUntil": 11.699999999999964,
+      "cameraVersion": null
+    },
+    "missedOpportunities": [],
+    "drained": true,
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 123.70000004768372
+      }
+    },
+    "displayHz": 30,
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja"
+  }
+}

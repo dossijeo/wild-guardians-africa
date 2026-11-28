@@ -1,0 +1,57 @@
+QA stage: boot
+QA navigation: http://127.0.0.1:5175/?qa-worker-game&qa-worker-raid&qa-webgpu-actor=buffalo&qa-webgpu-world&qa-webgpu-picking&qa-seed=712&wildEngineThreads=0
+QA console: debug [vite] connecting...
+QA console: debug [vite] connected.
+QA worker created: http://127.0.0.1:5175/src/rendering/sky-pixels-worker.js?worker_file&type=module
+QA worker created: http://127.0.0.1:5175/src/rendering/sky-pixels-worker.js?worker_file&type=module
+QA worker closed: http://127.0.0.1:5175/src/rendering/sky-pixels-worker.js?worker_file&type=module
+QA worker closed: http://127.0.0.1:5175/src/rendering/sky-pixels-worker.js?worker_file&type=module
+QA worker created: http://127.0.0.1:5175/src/rendering/loading-image-worker.js?worker_file&type=module
+QA worker created: http://127.0.0.1:5175/src/rendering/biome-tangents-worker.js?worker_file&type=module
+QA worker closed: http://127.0.0.1:5175/src/rendering/biome-tangents-worker.js?worker_file&type=module
+QA worker created: http://127.0.0.1:5175/src/rendering/building-data-worker.js?worker_file&type=module
+QA worker closed: http://127.0.0.1:5175/src/rendering/building-data-worker.js?worker_file&type=module
+QA worker created: http://127.0.0.1:5175/tools/experiments/far-scene-worker.js?worker_file&type=module
+QA worker closed: http://127.0.0.1:5175/tools/experiments/far-scene-worker.js?worker_file&type=module
+QA worker created: http://127.0.0.1:5175/tools/experiments/far-scene-worker.js?worker_file&type=module
+QA worker closed: http://127.0.0.1:5175/tools/experiments/far-scene-worker.js?worker_file&type=module
+QA worker created: http://127.0.0.1:5175/tools/experiments/far-ground-seam-worker.js?worker_file&type=module
+QA worker closed: http://127.0.0.1:5175/tools/experiments/far-ground-seam-worker.js?worker_file&type=module
+QA worker created: http://127.0.0.1:5175/tools/experiments/far-scene-worker.js?worker_file&type=module
+QA worker closed: http://127.0.0.1:5175/tools/experiments/far-scene-worker.js?worker_file&type=module
+QA worker created: http://127.0.0.1:5175/tools/experiments/far-scene-worker.js?worker_file&type=module
+QA worker closed: http://127.0.0.1:5175/tools/experiments/far-scene-worker.js?worker_file&type=module
+QA worker created: http://127.0.0.1:5175/tools/experiments/far-scene-worker.js?worker_file&type=module
+QA worker closed: http://127.0.0.1:5175/tools/experiments/far-scene-worker.js?worker_file&type=module
+QA worker closed: http://127.0.0.1:5175/src/rendering/loading-image-worker.js?worker_file&type=module
+QA worker created: http://127.0.0.1:5175/src/rendering/webgpu-world-worker.js?worker_file&type=module
+QA worker created: http://127.0.0.1:5175/src/simulation/worker-runtime-host.js?worker_file&type=module
+QA worker created: http://127.0.0.1:5175/src/simulation/simulation-authority-worker.js?worker_file&type=module
+QA worker created: http://127.0.0.1:5175/src/rendering/sky-pixels-worker.js?worker_file&type=module
+QA worker created: http://127.0.0.1:5175/src/rendering/sky-pixels-worker.js?worker_file&type=module
+QA worker closed: http://127.0.0.1:5175/src/rendering/sky-pixels-worker.js?worker_file&type=module
+QA worker closed: http://127.0.0.1:5175/src/rendering/sky-pixels-worker.js?worker_file&type=module
+QA worker created: http://127.0.0.1:5175/src/ui/guardian-3d-worker.js?worker_file&type=module
+QA stage: worker running; waiting for WebGPU world and props
+QA stage: pausing and settling camera
+QA worker created: http://127.0.0.1:5175/tools/experiments/far-ground-seam-worker.js?worker_file&type=module
+QA worker closed: http://127.0.0.1:5175/tools/experiments/far-ground-seam-worker.js?worker_file&type=module
+QA worker created: http://127.0.0.1:5175/tools/experiments/far-ground-seam-worker.js?worker_file&type=module
+QA worker created: http://127.0.0.1:5175/tools/experiments/far-scene-worker.js?worker_file&type=module
+QA worker created: http://127.0.0.1:5175/tools/experiments/far-scene-worker.js?worker_file&type=module
+QA worker created: http://127.0.0.1:5175/tools/experiments/far-scene-worker.js?worker_file&type=module
+QA worker created: http://127.0.0.1:5175/tools/experiments/far-scene-worker.js?worker_file&type=module
+QA worker closed: http://127.0.0.1:5175/tools/experiments/far-ground-seam-worker.js?worker_file&type=module
+QA worker closed: http://127.0.0.1:5175/tools/experiments/far-scene-worker.js?worker_file&type=module
+QA worker closed: http://127.0.0.1:5175/tools/experiments/far-scene-worker.js?worker_file&type=module
+QA worker closed: http://127.0.0.1:5175/tools/experiments/far-scene-worker.js?worker_file&type=module
+QA worker closed: http://127.0.0.1:5175/tools/experiments/far-scene-worker.js?worker_file&type=module
+QA worker created: http://127.0.0.1:5175/tools/experiments/far-ground-seam-worker.js?worker_file&type=module
+QA worker closed: http://127.0.0.1:5175/tools/experiments/far-ground-seam-worker.js?worker_file&type=module
+QA stage: world ready; picking and capture
+QA stage: checking pause
+{"picks":[{"x":320,"y":240,"result":{"entityId":null,"hitPoint":null,"point":{"x":140.81171249258364,"z":11.352372932197376},"sequence":305}},{"x":480,"y":240,"result":{"entityId":null,"hitPoint":null,"point":{"x":151.5507594907881,"z":5.485604818529204},"sequence":307}},{"x":640,"y":240,"result":{"entityId":null,"hitPoint":null,"point":{"x":162.28980648899255,"z":-0.3811632951389399},"sequence":311}},{"x":800,"y":240,"result":{"entityId":null,"hitPoint":null,"point":{"x":173.02885348718678,"z":-6.247931408807112},"sequence":313}},{"x":960,"y":240,"result":{"entityId":null,"hitPoint":null,"point":{"x":183.76790048539124,"z":-12.114699522475256},"sequence":317}},{"x":320,"y":360,"result":{"entityId":null,"hitPoint":null,"point":{"x":158.2809301969027,"z":28.197333342304674},"sequence":318}},{"x":480,"y":360,"result":{"entityId":null,"hitPoint":null,"point":{"x":165.83664447351657,"z":24.069627820438612},"sequence":320}},{"x":640,"y":360,"result":{"entityId":null,"hitPoint":null,"point":{"x":173.39235875013762,"z":19.941922298572543},"sequence":323}},{"x":800,"y":360,"result":{"entityId":null,"hitPoint":null,"point":{"x":180.94807302675866,"z":15.814216776706488},"sequence":324}},{"x":960,"y":360,"result":{"entityId":null,"hitPoint":null,"point":{"x":188.5037873033797,"z":11.686511254840426},"sequence":326}},{"x":320,"y":480,"result":{"entityId":null,"hitPoint":null,"point":{"x":167.7615233330206,"z":37.33914030500856},"sequence":329}},{"x":480,"y":480,"result":{"entityId":null,"hitPoint":null,"point":{"x":173.58963406945682,"z":34.15522889860834},"sequence":330}},{"x":640,"y":480,"result":{"entityId":null,"hitPoint":null,"point":{"x":179.41774480589305,"z":30.971317492208115},"sequence":331}},{"x":800,"y":480,"result":{"entityId":null,"hitPoint":null,"point":{"x":185.24585554232928,"z":27.787406085807895},"sequence":332}},{"x":960,"y":480,"result":{"entityId":null,"hitPoint":null,"point":{"x":191.07396627876554,"z":24.603494679407675},"sequence":334}}]}
+{"backend":"WebGPU","confirmed":2,"resident":3,"actor":true,"actors":{"closed":false,"count":16,"ready":16,"pending":0,"physical":0,"physicalApplied":0,"bakedWalking":0,"provisionalFalling":0,"fallsReady":false,"fallLoadError":null,"provisionalImpacts":0},"workers":{"closed":false,"count":23,"ready":23,"pending":0,"assets":{"closed":false,"textureFailure":null,"profiles":[{"profile":"olderFemale","ready":true,"textured":false,"refs":23,"pending":0}]}},"settlements":{"closed":false,"villages":1,"units":10,"centers":1,"walls":90,"damagedCenters":0,"destruction":[],"banks":3,"failure":null,"textureFailure":null,"villagePreviews":1,"villageTextured":1,"centerPreviews":1,"centerTextured":1,"wallPreviews":1,"wallTextured":1},"crops":{"closed":false,"ready":true,"bridgeReady":true,"plants":143,"batches":7,"activeStages":[25,26,27,28,29],"activeBridges":[21,22],"failure":null},"agricultureVfx":{"closed":false,"ready":false,"effects":0,"aura":null,"active":[],"failure":null},"sky":{"closed":false,"ready":true,"night":1,"failure":null},"lighting":{"night":1,"sun":0.3999999999999999,"ambient":1.1},"props":{"ready":true,"chunks":3,"meshes":32,"materials":19,"sharedMaterials":false,"instanceContract":"native","failure":null},"motion":null,"actorTextured":false,"deviceLossFallback":false,"paused":true,"scope":"Opt-in incomplete WebGPU canvas attached to a real game; legacy scene still runs. Not production parity or a performance benchmark."}
+QA worker closed: http://127.0.0.1:5175/src/simulation/worker-runtime-host.js?worker_file&type=module
+QA worker closed: http://127.0.0.1:5175/src/ui/guardian-3d-worker.js?worker_file&type=module
+QA worker closed: http://127.0.0.1:5175/src/rendering/webgpu-world-worker.js?worker_file&type=module

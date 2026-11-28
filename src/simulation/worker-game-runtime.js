@@ -1,0 +1,117 @@
+import {copyPublication} from './confirmed-snapshot-handoff.js';
+import {validateTutorialUpdateStatus} from '../tutorial/update-status.js';
+import {copyNativeWorldBoundary} from '../world/native-world-boundary.js';
+// Coordinates one authoritative Worker with a presentation-only WorldScene.
+// Its timer is independent of rendering; it never advances the game locally.
+export function createWorkerGameRuntime({client,world,session,stepSeconds=.05,nightFastForward=true,captureClockSegments=false,maxCommands=128,controlReserve=8,maxBatchSteps=1,batchWindowSteps=1,diagnostics=false,startupCommand=null,startupSuspended=false,now=()=>performance.now(),schedule=(fn,ms)=>setTimeout(fn,ms),cancel=id=>clearTimeout(id),onError=()=>{},onConfirmedEvents=null,onConfirmedState=null,onPresentationError=onError,canDispatch=()=>true,canDispatchChunks=()=>true,acceptNativeRecoveryCut=null}){
+ if(!client?.ready||typeof client.submit!=='function'||typeof world?.createConfirmedReceiver!=='function'||typeof canDispatch!=='function'||typeof canDispatchChunks!=='function'||typeof session!=='string'||!session||!Number.isFinite(stepSeconds)||stepSeconds<=0||stepSeconds>1||typeof nightFastForward!=='boolean'||typeof captureClockSegments!=='boolean'||!Number.isSafeInteger(maxCommands)||maxCommands<1||!Number.isSafeInteger(controlReserve)||controlReserve<1||!Number.isSafeInteger(maxBatchSteps)||maxBatchSteps<1||maxBatchSteps>256||!Number.isSafeInteger(batchWindowSteps)||batchWindowSteps<1||batchWindowSteps>maxBatchSteps||batchWindowSteps>1&&batchWindowSteps*stepSeconds>.25)throw TypeError('Invalid worker game runtime');
+ if(typeof startupSuspended!=='boolean')throw TypeError('Invalid startup clock policy');
+ if(startupCommand!==null&&(!['pause','resume'].includes(startupCommand?.kind)||startupCommand.reason!=='hidden'||Object.keys(startupCommand).length!==2))throw TypeError('Invalid startup visibility command');
+ if(onConfirmedEvents!==null&&typeof onConfirmedEvents!=='function'||onConfirmedState!==null&&typeof onConfirmedState!=='function'||typeof onPresentationError!=='function')throw TypeError('Invalid confirmed event handler');
+ const receiver=world.createConfirmedReceiver(session),queue=[],pendingChunks=new Set(),completedKinds=diagnostics?Object.create(null):null;let starting=false,running=false,closed=false,clockArmed=!startupSuspended,clockCaptureSuspended=false,pausedQuiescent=false,fault=null,busy=false,activeItem=null,activeSteps=0,timer=null,last=null,fraction=0,fast=nightFastForward,confirmed=null,lastAttackDiagnostic=null;
+ function fail(error){if(fault||closed)return;fault=error instanceof Error?error:Error(String(error));running=false;if(timer!==null)cancel(timer);timer=null;if(activeItem?.kind==='command')activeItem.reject(fault);for(const item of queue)if(item.kind==='command'||item.kind==='barrier')item.reject(fault);queue.length=0;try{onError(fault);}catch{}client.dispose();}
+ function enqueueElapsed(at){
+  if(!Number.isFinite(at)||last!==null&&at<last)throw RangeError('Runtime clock must be monotonic');
+  if(last!==null){const total=fraction+(at-last)/1000,steps=Math.floor((total+1e-10)/stepSeconds);if(!Number.isSafeInteger(steps))throw RangeError('Runtime clock overflow');fraction=Math.max(0,total-steps*stepSeconds);if(steps){const previous=queue.at(-1);if(previous?.kind==='steps'&&previous.seconds===undefined&&previous.fast===fast){previous.count+=steps;if(!Number.isSafeInteger(previous.count))throw RangeError('Runtime backlog overflow');}else queue.push({kind:'steps',count:steps,fast});}}
+  last=at;
+ }
+ function addDemands(result){
+  const missing=result.residency?.missing;if(!Array.isArray(missing))throw TypeError('Missing authority residency');
+  const add=[];for(const key of missing){if(typeof key!=='string'||!/^(-?\d+),(-?\d+)$/.test(key))throw TypeError('Invalid authority residency');if(!pendingChunks.has(key)){pendingChunks.add(key);add.push({kind:'chunk',key});}}
+  queue.unshift(...add);
+ }
+ function pump(){
+  if(!running||busy||closed||fault||!queue.length)return;
+  // An earlier residency request also holds clock steps that depend on it.
+  // Foreground commands can finish the proposal that is delaying the request.
+  const index=queue[0].kind==='chunk'&&!canDispatchChunks()?queue.findIndex(item=>item.kind==='command'||item.kind==='barrier'):0;
+  if(index<0)return;
+  const item=queue[index];if(item.kind==='barrier'){queue.splice(index,1);item.resolve();return;}const planned=item.kind==='steps'?Math.min(item.count,maxBatchSteps):0,command=item.kind==='steps'?{kind:'advance',seconds:item.seconds??stepSeconds,nightFastForward:item.fast,...(captureClockSegments?{captureClockSegments:true}:{}),...(planned>1?{steps:planned}:{})}:item.kind==='chunk'?{kind:'addChunk',key:item.key}:item.command;
+  if(!canDispatch(command))return;
+  if(item.kind==='steps'){item.count-=planned;if(!item.count)queue.splice(index,1);}else queue.splice(index,1);
+  let request;try{request=client.submit(command);if(!request.accepted)throw Error('Worker command not admitted: '+request.reason);busy=true;activeItem=item;activeSteps=planned;}
+  catch(error){if(item.kind==='command')item.reject(error);fail(error);return;}
+  request.result.then(result=>{
+   if(closed||fault)return;
+   if(result.tutorialUpdate!==undefined)validateTutorialUpdateStatus(result.tutorialUpdate);
+   const deferredChunk=result.deferredTerrainChunk;
+   if(deferredChunk!==undefined){
+    if(item.kind!=='chunk'||deferredChunk!==item.key||result.value!==false||result.unchanged===true)
+     throw Error('Invalid deferred terrain demand');
+    delete result.deferredTerrainChunk;
+   }
+   const pendingRuin=result.pendingRuinRecoveryCut!==undefined;
+   const cut=pendingRuin?result.pendingRuinRecoveryCut:result.encounterRecoveryCut,motion=result.centerMotionPublication;
+   if(pendingRuin&&result.encounterRecoveryCut!==undefined)throw Error('Conflicting native advance recovery cuts');
+   if(motion!==undefined){
+    const boundary=copyNativeWorldBoundary(motion?.worldBoundary),remaining=motion?.remainingSeconds,done=result.stepsExecuted;
+    const attack=motion?.kind===27?Number.isSafeInteger(motion.attackId)&&motion.attackId>0:motion?.attackId===undefined;
+    if(item.kind!=='steps'||motion?.version!==1||![26,27].includes(motion.kind)||!attack||
+       !Number.isSafeInteger(motion.actorId)||motion.actorId<1||!boundary||!Number.isFinite(result.elapsed)||boundary.effectiveTime>result.elapsed||
+       !Number.isSafeInteger(done)||done<0||done>=planned||
+       !Number.isFinite(remaining)||remaining<=0||remaining>command.seconds||result.unchanged||cut!==undefined)
+     throw Error('Invalid center motion publication boundary');
+    if(remaining===command.seconds)queue.unshift({kind:'steps',count:planned-done,seconds:item.seconds,fast:item.fast});
+    else{
+     const full=planned-done-1;
+     if(full)queue.unshift({kind:'steps',count:full,fast:item.fast});
+     queue.unshift({kind:'steps',count:1,seconds:remaining,fast:item.fast});
+    }
+    delete result.centerMotionPublication;
+   }else if(cut!==undefined){
+    const boundary=copyNativeWorldBoundary(cut?.worldBoundary),remaining=cut?.remainingSeconds,done=result.stepsExecuted;
+    if(item.kind!=='steps'||cut?.version!==1||!Number.isSafeInteger(cut.holdId)||cut.holdId<1||
+       !boundary||!Number.isFinite(result.elapsed)||!Number.isFinite(remaining)||
+       (pendingRuin?boundary.effectiveTime>result.elapsed||remaining<=0||remaining>command.seconds:
+        boundary.effectiveTime!==result.elapsed||remaining<0||remaining>=command.seconds)||
+       !Number.isSafeInteger(done)||done<(remaining?0:1)||done>planned-(remaining?1:0)||result.unchanged||
+       acceptNativeRecoveryCut?.(cut,result.sequence)!==true)
+      throw Error('Invalid native advance recovery cut');
+    if(remaining===command.seconds)queue.unshift({kind:'steps',count:planned-done,seconds:item.seconds,fast:item.fast});
+    else{
+     const full=planned-done-(remaining?1:0);
+     if(full)queue.unshift({kind:'steps',count:full,seconds:item.seconds,fast:item.fast});
+     if(remaining)queue.unshift({kind:'steps',count:1,seconds:remaining,fast:item.fast});
+    }
+    delete result[pendingRuin?'pendingRuinRecoveryCut':'encounterRecoveryCut'];
+   }else if(planned>1&&(!Number.isSafeInteger(result.stepsExecuted)||result.stepsExecuted<1||result.stepsExecuted>planned||result.stepsExecuted<planned&&!result.residency?.missing?.length)){
+    throw Error('Invalid worker batch result');
+   }
+   const quiet=result.pausedQuiescent===true;if(result.pausedQuiescent!==undefined&&(result.pausedQuiescent!==true||!Array.isArray(result.pauses)||!result.pauses.length))throw TypeError('Invalid paused quiescence certificate');delete result.pausedQuiescent;if(result.unchanged===true&&command.kind!=='setNavigationView'&&!(command.kind==='advance'&&result.pausedAdvance===true))throw Error('Unexpected unchanged publication');const meta={kind:command.kind,backgroundView:item.backgroundView===true,...(item.presentationInput===undefined?{}:{presentationInput:item.presentationInput})};let publication=result;
+   if(result.liveSnapshot!==undefined){
+    if(command.kind!=='snapshot'||command.nativeAuthorityCheckpoint!==true||typeof result.liveSnapshot!=='string'||result.unchanged===true)
+     throw Error('Unexpected live snapshot for native checkpoint');
+    publication=copyPublication(result,{omit:['snapshot','liveSnapshot'],add:{snapshot:result.liveSnapshot}});
+   }
+   const accepted=publication.unchanged===true?receiver.acceptUnchanged(publication,meta):receiver.accept(publication,meta);if(!accepted.accepted)throw Error('Confirmed scene publication rejected: '+accepted.reason);
+   if(motion===undefined&&cut===undefined&&planned>1&&result.stepsExecuted<planned)queue.unshift({kind:'steps',count:planned-result.stepsExecuted,fast:item.fast});
+   if(diagnostics){const label=command.kind==='tutorialCommand'?`${command.kind}:${command.action}`:command.kind;completedKinds[label]=(completedKinds[label]??0)+1;if(result.diagnostics?.kind==='castAttack')lastAttackDiagnostic=result.diagnostics;}
+   confirmed=publication;if(onConfirmedState)try{onConfirmedState(result.sequence);}catch(error){try{onPresentationError(error instanceof Error?error:Error(String(error)));}catch{}}if(onConfirmedEvents&&result.events?.length)try{onConfirmedEvents(result.events);}catch(error){try{onPresentationError(error instanceof Error?error:Error(String(error)));}catch{}}
+   if(item.kind==='chunk'&&deferredChunk===undefined)pendingChunks.delete(item.key);
+   addDemands(result);
+   if(deferredChunk!==undefined)queue.unshift(item);
+   if(item.kind==='command')item.resolve(result);busy=false;activeItem=null;activeSteps=0;if(quiet&&!queue.some(queued=>queued.kind==='command')&&!pendingChunks.size)pausedQuiescent=true;pump();
+  }).catch(error=>{busy=false;if(item.kind==='command')item.reject(error);activeItem=null;fail(error);});
+ }
+ function wake(){timer=null;if(!running||closed||fault)return;try{if(!clockCaptureSuspended&&!pausedQuiescent)enqueueElapsed(now());pump();if(running&&!closed&&!fault)timer=schedule(wake,stepSeconds*batchWindowSteps*1000);}catch(error){fail(error);}}
+ async function start(){
+  if(closed||fault||running||starting)throw Error('Worker runtime cannot start');starting=true;try{await client.ready;if(closed||fault)throw Error('Worker runtime closed before start');running=true;last=now();
+   // The first publication supplies residency demand before the first tick.
+   const initial=await submit(startupCommand??{kind:'snapshot'});if(closed||fault)throw fault??Error('Worker runtime closed');last=now();fraction=0;if(clockArmed)timer=schedule(wake,stepSeconds*batchWindowSteps*1000);return initial;
+  }catch(error){fail(error);throw error;}finally{starting=false;}
+ }
+ function submit(command,{backgroundView=false,presentationInput=undefined}={}){
+  if(!running||closed||fault)return Promise.reject(fault??Error('Worker runtime is not running'));
+  if(!command||typeof command!=='object'||Array.isArray(command)||['advance','addChunk'].includes(command.kind))return Promise.reject(TypeError('Invalid external worker runtime command'));
+  if(backgroundView&&command.kind!=='setNavigationView')return Promise.reject(TypeError('Invalid background view'));
+  if(presentationInput!==undefined&&(!Number.isSafeInteger(presentationInput)||presentationInput<1||backgroundView))return Promise.reject(TypeError('Invalid presentation input'));
+  try{if(pausedQuiescent){pausedQuiescent=false;if(clockArmed&&!clockCaptureSuspended){const at=now();if(!Number.isFinite(at)||last!==null&&at<last)throw RangeError('Runtime clock must be monotonic');last=at;}}if(clockArmed&&!clockCaptureSuspended)enqueueElapsed(now());const captured=structuredClone(command),previous=queue.at(-1);
+   // Only views with no intervening tick or command are observationally
+   // equivalent to their last value. Never cross a simulation boundary.
+   if(backgroundView&&previous?.kind==='command'&&previous.backgroundView){previous.command=captured;return previous.promise;}
+   const count=queue.filter(item=>item.kind==='command').length,control=['pause','resume','snapshot'].includes(command.kind);if(count>=maxCommands+(control?controlReserve:0))return Promise.reject(Error('Worker runtime command queue is full'));let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});queue.push({kind:'command',command:captured,resolve,reject,backgroundView,presentationInput,promise});pump();return promise;
+  }catch(error){fail(error);return Promise.reject(error);}
+ }
+ function queueBarrier({signal}={}){if(!running||closed||fault)return Promise.reject(fault??Error('Worker runtime is not running'));if(signal!==undefined&&typeof signal?.addEventListener!=='function')return Promise.reject(TypeError('Invalid barrier signal'));if(signal?.aborted)return Promise.reject(new DOMException('Queue barrier cancelled','AbortError'));return new Promise((resolve,reject)=>{let item;const cleanup=()=>signal?.removeEventListener('abort',abort),abort=()=>{const index=queue.indexOf(item);if(index>=0){queue.splice(index,1);cleanup();reject(new DOMException('Queue barrier cancelled','AbortError'));}};item={kind:'barrier',resolve(){cleanup();resolve();},reject(error){cleanup();reject(error);}};queue.push(item);signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted)abort();else pump();});}
+ return {confirmedEventDelivery:onConfirmedEvents!==null,start,submit,queueBarrier,hasPauseReason(reason){return !!confirmed?.pauses?.includes(reason);},canDispatchFarQuery(){return !queue.some(item=>item.kind!=='steps');},farQueryBlockers(){const counts={};for(const item of queue){if(item.kind==='steps')continue;const key=item.kind==='command'?(item.backgroundView?'background-view':item.command.kind):item.kind;counts[key]=(counts[key]??0)+1;}return counts;},activateClock(){if(!startupSuspended||clockArmed||!running||closed||fault)throw Error('Worker clock cannot activate');clockArmed=true;last=now();fraction=0;timer=schedule(wake,stepSeconds*batchWindowSteps*1000);},rejectQueuedCommands(error){if(!(error instanceof Error))throw TypeError('Expected command rejection error');for(let i=queue.length-1;i>=0;i--)if(queue[i].kind==='command'||queue[i].kind==='barrier'){const [item]=queue.splice(i,1);item.reject(error);}},resumeDispatch(){if(!closed&&!fault)pump();},suspendClockCapture(){if(!running||closed||fault)throw Error('Runtime clock unavailable');if(clockCaptureSuspended)return false;if(clockArmed&&!pausedQuiescent)enqueueElapsed(now());clockCaptureSuspended=true;return true;},resumeClockCapture(){if(!running||closed||fault)throw Error('Runtime clock unavailable');if(!clockCaptureSuspended)return false;const at=now();if(!Number.isFinite(at)||last!==null&&at<last)throw RangeError('Runtime clock must be monotonic');last=at;clockCaptureSuspended=false;return true;},setNightFastForward(value){if(typeof value!=='boolean'||!running||closed||fault)throw TypeError('Invalid runtime speed policy');if(clockArmed&&!clockCaptureSuspended&&!pausedQuiescent)enqueueElapsed(now());fast=value;pump();},status(){return {running,closed,fault:fault?.message??null,busy,...(clockCaptureSuspended?{clockCaptureSuspended:true}:{}),...(pausedQuiescent?{pausedQuiescent:true}:{}),queued:queue.length,pendingSteps:queue.reduce((sum,item)=>sum+(item.kind==='steps'?item.count:0),activeSteps),pendingChunks:pendingChunks.size,confirmedSequence:receiver.status().sequence,confirmedElapsed:receiver.status().lastElapsed,tutorialUpdate:confirmed?.tutorialUpdate??null,saveAvailable:confirmed?.saveAvailable??false,...(diagnostics?{lastAttackDiagnostic,completedKinds:{...completedKinds},queuedKinds:queue.reduce((counts,item)=>{const kind=item.kind==='command'?item.command.kind:item.kind;counts[kind]=(counts[kind]??0)+1;return counts;},{})}:{})};},dispose(){if(closed)return;closed=true;running=false;if(timer!==null)cancel(timer);timer=null;const error=Error('Worker runtime disposed');if(activeItem?.kind==='command')activeItem.reject(error);for(const item of queue)if(item.kind==='command'||item.kind==='barrier')item.reject(error);queue.length=0;client.dispose();}};
+}

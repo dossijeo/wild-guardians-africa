@@ -1,0 +1,246 @@
+{
+  "scenario": "RaidSpawned cancels a provisional Task14 for Repair and transfers its stationary Idle20 or terminal Idle21 body to Home18 in gated Desert.",
+  "qualification": {
+    "qualifyAnimalCrop": true,
+    "qualifyFarmFlee": true,
+    "ordinary": false,
+    "workers": 1,
+    "animals": 1,
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja"
+  },
+  "baseline": {
+    "commit": "94ba8a67b887e13e3b93119315a9a7a8ec9669e1",
+    "failures": 5,
+    "failure": "Native initial Idle Home request rejected",
+    "tapSha256": "815683f65082f432f132e41b0fd7a0ac24f2402fe30dab2f4e8f8fd443cf7454"
+  },
+  "firstIdle21Attempt": {
+    "lastConfirmed": 16.199999999999875,
+    "readyWithheld": true,
+    "timeoutMs": 10000,
+    "timerFiredAfterMs": 10015.706,
+    "stepBatchBefore": 1,
+    "stepBatchAfter": 2,
+    "failureReceiptSha256": "030e88c5f76a2db2d10b7da52dfe3af4233776652eb8afeebbf26a38eb63537e",
+    "traceSha256": "6f9d17f348714b7658c4414bbd36a519ff8b79b487fe9daa6f68e8435eb58a2c"
+  },
+  "artifacts": {
+    "src/world/wild-engine/spatial-savanna.wasm": "885fd36896a1e42d2b1641646f213a14f60097f7726ae975e0a24000d9d2d0ab",
+    "public/wild-engine/spatial-threaded.wasm": "986d7a3eec1b466f57264505b049acf5672c445da560c2ae4f3fd7138fd00ece",
+    "public/wild-engine/spatial-threaded.mjs": "255cb72526f3a0e452e80918aa1bdbf10b4d728251d77df4a32e686ecda434df"
+  },
+  "cases": [
+    {
+      "owner": {
+        "kind": 20,
+        "sequence": 3,
+        "ticket": 2,
+        "bodyId": 1,
+        "endTime": 0
+      },
+      "hardware": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "edge": "158.0.4370.33"
+      },
+      "task": {
+        "actor": 900011,
+        "body": 1,
+        "taskId": 1000002,
+        "targetId": 1000001,
+        "requestSequence": 4,
+        "requestHandle": {
+          "kind": "native-task-route-request-handle",
+          "authorityEpoch": "89f0b594-0022-41d3-8586-bcb8772e9fe8/1",
+          "session": 1,
+          "slot": 0,
+          "generation": 1
+        },
+        "preparedAt": 10.049999999999999,
+        "ticket": 4,
+        "wireOrder": {
+          "held": 6,
+          "aborted": 8,
+          "sent": 10,
+          "home": 12
+        }
+      },
+      "spawn": {
+        "id": "event-29210",
+        "at": 11.349999999999971
+      },
+      "home": {
+        "at": 14.549999999999903,
+        "draw": 24,
+        "ticket": 6,
+        "preparedTicket": 5,
+        "origin": {
+          "x": -14,
+          "z": 5,
+          "yaw": 0.37,
+          "radius": 0.28,
+          "runPhase": 23.25,
+          "walkPhase": 7.125,
+          "carryPhase": 9.5,
+          "runRemaining": 40
+        },
+        "gateIds": [
+          1000000
+        ]
+      },
+      "refuge": {
+        "body": 1,
+        "ticket": 10,
+        "retiredSequence": 10
+      },
+      "centerDamage": [
+        {
+          "at": 43.60000000000109,
+          "hp": 580
+        },
+        {
+          "at": 46.600000000001344,
+          "hp": 560
+        },
+        {
+          "at": 52.50000000000185,
+          "hp": 540
+        },
+        {
+          "at": 57.92000000000231,
+          "hp": 520
+        }
+      ],
+      "raidEndedAt": 66.34000000000269,
+      "civil": {
+        "worker": "worker-900011",
+        "ticket": 28,
+        "body": 3,
+        "admission": "native-idle"
+      },
+      "outcome": {
+        "taskGo": false,
+        "stopGo": false,
+        "repairApplied": false,
+        "ledgerPreserved": true,
+        "drawDrained": true,
+        "webGpuMessages": 0
+      },
+      "evidence": {
+        "receiptSha256": "66a1d6be9d33f6303135944496bc28a13b09e9a8467ee2431d4c04438d88b033",
+        "traceSha256": "3fa50a29eb42e447c8f940610c22b4d0ce19d2bef32450a7a711b96675dfe230",
+        "traceBytes": 44764238,
+        "collectionComplete": true,
+        "dataLossOccurred": false
+      }
+    },
+    {
+      "owner": {
+        "kind": 21,
+        "sequence": 4,
+        "ticket": 4,
+        "bodyId": 1,
+        "endTime": 16.391666984558103
+      },
+      "hardware": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "edge": "158.0.4370.33"
+      },
+      "task": {
+        "actor": 900011,
+        "body": 1,
+        "taskId": 1000002,
+        "targetId": 1000001,
+        "requestSequence": 5,
+        "requestHandle": {
+          "kind": "native-task-route-request-handle",
+          "authorityEpoch": "d84a7288-fa23-4525-a4b7-34f264718aa1/1",
+          "session": 1,
+          "slot": 0,
+          "generation": 1
+        },
+        "preparedAt": 10.149999999999997,
+        "ticket": 5,
+        "wireOrder": {
+          "held": 7,
+          "aborted": 9,
+          "sent": 11,
+          "home": 13
+        }
+      },
+      "spawn": {
+        "id": "event-29210",
+        "at": 17.049999999999887
+      },
+      "home": {
+        "at": 20.949999999999942,
+        "draw": 32,
+        "ticket": 7,
+        "preparedTicket": 6,
+        "origin": {
+          "x": -14,
+          "z": 5,
+          "yaw": 0.37,
+          "radius": 0.28,
+          "runPhase": 23.25,
+          "walkPhase": 7.125,
+          "carryPhase": 9.5,
+          "runRemaining": 40
+        },
+        "gateIds": [
+          1000000
+        ]
+      },
+      "refuge": {
+        "body": 1,
+        "ticket": 11,
+        "retiredSequence": 11
+      },
+      "centerDamage": [
+        {
+          "at": 49.650000000001604,
+          "hp": 580
+        },
+        {
+          "at": 52.65000000000186,
+          "hp": 560
+        },
+        {
+          "at": 58.65000000000237,
+          "hp": 540
+        },
+        {
+          "at": 64.17000000000282,
+          "hp": 520
+        }
+      ],
+      "raidEndedAt": 72.64000000000233,
+      "civil": {
+        "worker": "worker-900011",
+        "ticket": 29,
+        "body": 3,
+        "admission": "native-idle"
+      },
+      "outcome": {
+        "taskGo": false,
+        "stopGo": false,
+        "repairApplied": false,
+        "ledgerPreserved": true,
+        "drawDrained": true,
+        "webGpuMessages": 0
+      },
+      "evidence": {
+        "receiptSha256": "96a819c56027b1c8fca7e569409f20d90389682902101b402a1997ebd19b3652",
+        "traceSha256": "554ed099b557c3472b87a8627c085cdd64da4db07fdec8bf55f81b39183bc054",
+        "traceBytes": 44624511,
+        "collectionComplete": true,
+        "dataLossOccurred": false
+      }
+    }
+  ]
+}

@@ -61,6 +61,10 @@ test('compatibility fallback is explicitly reported and preserves full validatio
  assert.deepEqual(await decodeSnapshotAsync(text,{workerAvailable:true,createWorker:()=>{throw Error('not supported');},onDiagnostic:d=>construction.push(d)}),state);
  assert.equal(construction[0].reason,'worker-construction-failed');
 });
+test('a Worker-required path never falls back to synchronous decoding',async()=>{
+ const diagnostics=[];await assert.rejects(decodeSnapshotAsync('invalid',{workerAvailable:false,requireWorker:true,onDiagnostic:value=>diagnostics.push(value)}),{name:'SnapshotWorkerError',message:'Snapshot Worker required: worker-unavailable'});
+ await assert.rejects(decodeSnapshotAsync('invalid',{workerAvailable:true,requireWorker:true,createWorker(){throw Error('unsupported');},onDiagnostic:value=>diagnostics.push(value)}),{name:'SnapshotWorkerError',message:'Snapshot Worker required: worker-construction-failed'});assert.deepEqual(diagnostics,[]);await assert.rejects(decodeSnapshotAsync('{}',{requireWorker:'yes'}),/worker requirement/);
+});
 test('actual worker module preserves the complete native snapshot and validator failures',async()=>{
  const workerUrl=new URL('../src/persistence/snapshot-decode-worker.js',import.meta.url).href,terminations=[];
  const createWorker=()=>{

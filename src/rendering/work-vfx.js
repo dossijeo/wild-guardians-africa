@@ -54,5 +54,14 @@ export class WorkVfx {
     for(const [key,effect] of this.effects)if(!desired.has(key)){effect.dispose();this.effects.delete(key);}
   }
   prepare(camera){let depth=false;for(const effect of this.effects.values())depth=effect.prepare(camera,this.scene)||depth;return depth;}
+  // QA recovery candidate. Stage every effect before replacing the live set;
+  // caller must independently verify the confirmed publication sequence.
+  importWorkCheckpoint(checkpoint,state){
+    if(!checkpoint||checkpoint.version!==1||checkpoint.elapsed!==state.elapsed||!Array.isArray(checkpoint.effects))throw TypeError('Invalid work VFX manager checkpoint');
+    const plans=workVfxPlans(state,this.targetIndex),byKey=new Map();for(const item of checkpoint.effects){if(!item||typeof item.key!=='string'||byKey.has(item.key))throw TypeError('Invalid work VFX checkpoint effects');byKey.set(item.key,item);}if(byKey.size!==plans.length)throw Error('Work VFX checkpoint plans mismatch');
+    const staged=new Map();try{for(const plan of plans){const saved=byKey.get(plan.key),y=this.surface(plan.x,plan.z);if(!saved||saved.id!==plan.id||!Number.isFinite(saved.native?.clock)||Math.abs(saved.native.clock-plan.time)>1e-8||!Number.isFinite(y)||saved.x!==plan.x||saved.y!==y||saved.z!==plan.z||saved.yaw!==plan.yaw)throw Error('Work VFX checkpoint plan mismatch');let effect;effect=this.library.create(plan.id,this.pipeline,{worldSurface:this.surface,...(plan.id==='water'?{softParticleDepth:false}:{}),...(plan.id==='water'&&this.waterSource?{waterSource:time=>this.waterSource(plan.workerId,time,effect)}:{}),...(plan.stepMode?{stepMode:true}:{})});staged.set(plan.key,effect);effect.position.set(plan.x,y,plan.z);effect.rotation.y=plan.yaw;effect.native.importWorkCheckpoint(saved.native);effect.environment=vfxEnvironment(state.time>=300?1:0);}}
+    catch(error){for(const effect of staged.values())effect.dispose();throw error;}
+    for(const effect of this.effects.values())effect.dispose();this.effects=staged;for(const effect of staged.values())this.scene.add(effect);
+  }
   dispose(){for(const effect of this.effects.values())effect.dispose();this.effects.clear();this.targetIndex.reset();}
 }

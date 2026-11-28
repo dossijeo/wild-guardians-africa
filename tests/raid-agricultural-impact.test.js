@@ -153,8 +153,26 @@ test('a native wall strike uses structural profile damage but never applies agri
  for(let i=0;i<1500&&!s.events.some(e=>e.type==='StructureHit');i++){s.elapsed+=.1;updateRaid(s,.1,nav);}const event=s.events.find(e=>e.type==='StructureHit');assert(event);assert.equal(event.structureHit.previousHp-event.structureHit.hp,90);assert.equal(s.events.filter(e=>e.type==='CropHit').length,0);assert.equal(s.plants.filter(p=>p.alive).length,1);
 });
 test('native saved attack resumes once and does not duplicate event facts',()=>{
- let {s,nav}=fixture('mono');assert(spawnRaid(s,{group:['warthog']},nav));s.raid.animals[0].damageProfile={...profile};
- for(let i=0;i<1500&&s.raid.animals[0].status!=='attacking';i++){s.elapsed+=.1;updateRaid(s,.1,nav);}const attack=s.raid.animals[0].attackId;assert(attack);s=deserialize(serialize(s));nav.setState(s);for(let i=0;i<4000&&s.raid;i++){s.elapsed+=.1;updateRaid(s,.1,nav);}assert.equal(s.raid,null);assert.equal(s.events.filter(e=>e.type==='AnimalLogicalHit'&&e.attackId===attack).length,1);assert(s.events.some(e=>e.type==='CropHit'&&e.central&&e.damage===1));
+ let {s,nav}=fixture('mono');
+ s.nightPlan={at:s.time,group:['warthog'],done:false};
+ s.nightPlan.done=spawnRaid(s,s.nightPlan,nav)!==false;
+ assert(s.raid);
+ s.raid.animals[0].damageProfile={...profile};
+ for(let i=0;i<1500&&s.raid.animals[0].status!=='attacking';i++){
+  s.elapsed+=.1;
+  updateRaid(s,.1,nav);
+ }
+ const attack=s.raid.animals[0].attackId;
+ assert(attack);
+ s=deserialize(serialize(s));
+ nav.setState(s);
+ for(let i=0;i<4000&&s.raid;i++){
+  s.elapsed+=.1;
+  updateRaid(s,.1,nav);
+ }
+ assert.equal(s.raid,null);
+ assert.equal(s.events.filter(event=>event.type==='AnimalLogicalHit'&&event.attackId===attack).length,1);
+ assert(s.events.some(event=>event.type==='CropHit'&&event.central&&event.damage===1));
 });
 
 test('native committed contact writes half-point HP, reload preserves it and applied attacks cannot hit twice',()=>{

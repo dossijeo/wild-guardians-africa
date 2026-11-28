@@ -1,0 +1,510 @@
+import {copyStop12Source,copyStop12Resources,sameStop12Source,sameStop12Clock,stop12ProjectionMatches,
+ copyStop24Source,copyStop24Resources,sameStop24Source,sameStop24Clock,stop24ProjectionMatches} from './native-stop24-task-recovery.js';
+import {copyTask25HomeSource,copyTask25HomeResources,sameTask25HomeSource,sameTask25HomeClock,task25ProjectionMatches} from './native-task25-home-recovery.js';
+import {copyNativeFarmArrivalRouteAttestation,copyNativeFarmArrivalRouteResources,sameNativeFarmArrivalRouteAttestation,sameNativeFarmArrivalRouteReference} from './native-farm-arrival-route.js';
+import {copyNativeIdleStrollAttestation,copyNativeIdleStrollResources,sameNativeIdleStrollAttestation,sameNativeIdleStrollReference} from './native-idle-stroll.js';
+import {copyNativeIdleCycleAttestation,copyNativeIdleCycleResources,sameNativeIdleCycleAttestation,sameNativeIdleCycleReference} from './native-idle-cycle.js';
+import {copyNativeHomeRouteAttestation,copyNativeHomeRouteResources,sameNativeHomeRouteAttestation,sameNativeHomeRouteReference} from './native-home-route.js';
+import {copyNativeHomeArrivalAttestation} from './native-home-arrival.js';
+import {copyNativeAnimalCropAttestation,copyPendingAnimalCrop,sameNativeAnimalCropReference} from './native-animal-crop-resource.js';
+import {copyNativeRoutePresentation,NATIVE_ROUTE_PRESENTATION_FIELDS,NATIVE_ROUTE_PRESENTATION_WIDTH} from './native-route-presentation.js';
+import {copyNativeWorldBoundary,sameNativeWorldBoundary} from './native-world-boundary.js';
+import {centerSource,verifiesCenter} from './native-center-ruin-source.js';
+import {copyNativeGateMotionResources} from './native-gate-motion-resources.js';
+import {nativeClockResourceEnd} from '../rendering/native-clock-resource-end.js';
+import {floorFloat32} from '../rendering/float32-time.js';
+import {LOCOMOTION} from '../simulation/locomotion-calibration.js';
+import {RECOVERY_EXIT_SECONDS,WORKER_RECOVERY,woundedHomeSourceCurrent} from '../simulation/worker-recovery.js';
+import {copyNativeHomeRequestReference,sameNativeHomeRequestReference} from './native-home-request-reference.js';
+import {copyNativeTaskStartAttestation} from './native-task-start-attestation.js';
+import {copyNativeTaskActionAttestation,copyNativeTaskActionResources,sameNativeTaskActionAttestation} from './native-task-action-attestation.js';
+import {sameNativeTaskActionReference} from './native-task-action-presentation.js';
+import {copyNativeTaskConsequenceAttestation,sameNativeTaskConsequenceReference} from './native-task-consequence.js';
+import {copyNativeTaskSettlementAttestation,copyNativeTaskSettlementResources,sameNativeTaskSettlementAttestation,sameNativeTaskSettlementReference} from './native-task-settlement.js';
+import {sameNativeTaskStartReference} from './native-task-start-reference.js';
+import {copyNativeRouteReference,sameNativeRouteReference} from './native-route-reference.js';
+
+export function woundedHomeEndpoint(binding,at){
+ const {reference,gateIds}=binding??{},request=reference?.sourceRequest;
+ return !!request?.recoveryHit&&!request.raidSpawnSequence&&gateIds?.length===0&&at>=reference.endTime;
+}
+
+export function centerRuinApproachEndpoint(ruin,world,binding,at,pendingRuin=null){
+ const source=ruin?.prepared??pendingRuin,approach=source?.approach,ref=binding?.reference;
+ return !!approach&&ref?.kind===26&&Number.isFinite(at)&&at>=ref.endTime&&
+   at>=world?.effectiveTime&&(ruin?verifiesCenter(source,world,ruin):
+     !!(source.retainedGateIds||source.home)&&sameNativeWorldBoundary(world,source.previous)&&at===source.boundary.effectiveTime)&&
+   approach.assignmentSequence===binding.assignmentSequence&&
+   sameNativeAnimalCropReference(approach.reference,ref)&&
+   sameNativeAnimalCropReference(approach.preparedReference,binding.preparedReference);
+}
+
+export function nativeCenterApproachEndpoint(world,binding,at){
+ const ref=binding?.reference;
+ return ref?.kind===26&&ref.purpose==='center'&&Number.isFinite(at)&&at>=ref.endTime&&
+   sameNativeWorldBoundary(world,ref.worldBoundary);
+}
+
+export function nativeRaidFlightApproachEndpoint(world,binding,at,home){
+ const peer=home?.reference,ref=binding?.reference;
+ return nativeCenterApproachEndpoint(world,binding,at)&&!!peer?.sourceRequest?.raidSpawnSequence&&
+   peer.actorId!==ref.actorId&&peer.bodyId!==ref.bodyId&&at<peer.endTime&&
+   nativeRecoveryCovers(world,peer.worldBoundary)&&!sameNativeWorldBoundary(world,peer.worldBoundary);
+}
+
+const centerEndpointPose=['x','z','phase','yaw'].map(field=>[field,NATIVE_ROUTE_PRESENTATION_FIELDS.indexOf(field)-NATIVE_ROUTE_PRESENTATION_WIDTH]);
+export function matchesNativeCenterEndpointPose(execution,presentation){
+ return centerEndpointPose.every(([field,offset])=>execution[field]===presentation.rows.at(offset));
+}
+
+export function matchesNativeWoundedRefuge(world,refuge){
+ const arrival=refuge?.reference;
+ return !!world&&!!arrival&&sameNativeWorldBoundary(world,arrival.worldBoundary)&&
+   woundedHomeEndpoint(arrival.sourceHome,world.effectiveTime);
+}
+
+export function matchesNativeOrdinaryRefuge(world,refuge){
+ const arrival=refuge?.reference,home=arrival?.sourceHome;
+ return sameNativeWorldBoundary(world,arrival?.worldBoundary)&&!!home&&home.gateIds.length===0&&
+   !home.reference.sourceRequest?.raidSpawnSequence&&!home.reference.sourceRequest?.recoveryHit;
+}
+
+export function matchesNativeStationaryRefuge(world,refuge){
+ return matchesNativeWoundedRefuge(world,refuge)||matchesNativeOrdinaryRefuge(world,refuge);
+}
+
+export function woundedHomeExecutionAtEndpoint(state,worker,execution){
+ if(execution?.arrived!==true||execution.executedThrough!==state.elapsed||
+    !woundedHomeEndpoint(execution.binding,state.elapsed))return false;
+ const {reference}=execution.binding;
+ return worker?.id==='worker-'+reference.actorId&&worker.nativeRouteAdmission==='native-home'&&
+   execution.actorId===reference.actorId&&execution.bodyId===reference.bodyId&&
+   woundedHomeSourceCurrent(state,worker,reference.sourceRequest,state.elapsed-reference.worldBoundary.effectiveTime)&&
+   !worker.taskId&&!worker.crateId&&!worker.raidReturn&&worker.path===null&&
+   worker.running===false&&worker.gateWaiting===false&&worker.heading===execution.yaw&&
+   ['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(key=>worker[key]===execution[key]);
+}
+
+// Recovery carries the acquired program independently of the original Draw.
+// The terminal sample is also needed for the next strike's source validation.
+function copyCropAttestation(value){
+ const binding=copyNativeAnimalCropAttestation(value,26);
+ if(value?.gateIds?.length!==0||!Array.isArray(value.gateIds)||
+    !['x','z','phase'].every(key=>Number.isFinite(value.terminal?.[key]))||
+    value.terminal.phase<binding.reference.phase)throw TypeError('Invalid recovered crop source');
+ const {x,z,phase}=value.terminal;
+ const r=binding.reference;
+ if(r.purpose==='retreat'&&(x!==Math.fround(r.targetX)||z!==Math.fround(r.targetZ)))
+   throw TypeError('Recovered Retreat has another exit');
+ return Object.freeze({...binding,gateIds:Object.freeze([]),terminal:Object.freeze({x,z,phase})});
+}
+function sameCropAttestation(a,b){
+ return !!a&&!!b&&a.assignmentSequence===b.assignmentSequence&&a.gateIds?.length===0&&b.gateIds?.length===0&&
+   !!a.terminal&&!!b.terminal&&['x','z','phase'].every(key=>a.terminal[key]===b.terminal[key])&&
+   sameNativeAnimalCropReference(a.reference,b.reference)&&sameNativeAnimalCropReference(a.preparedReference,b.preparedReference);
+}
+function copyCropResources(value,cut=null){
+ const worldBoundary=copyNativeWorldBoundary(value?.worldBoundary);
+ const binding=copyCropAttestation(value?.nativeAnimalCropRouteBinding),r=binding.reference;
+ const presentation=copyNativeRoutePresentation(value.presentation),nativeRoute=presentation.nativeRoute;
+ const h=nativeRoute.routeHandle,p=value.nativeRoute,k=p?.routeHandle;
+ if(value.version!==1||value.kind!==26||value.phase!=='committed'||!sameNativeWorldBoundary(worldBoundary,r.worldBoundary)||
+    !sameNativeWorldBoundary(presentation.worldBoundary,cut??worldBoundary)||
+    nativeRoute.assignmentSequence!==binding.assignmentSequence||nativeRoute.actorId!==r.actorId||
+    h.session!==worldBoundary.nativeSession||h.authorityEpoch!==worldBoundary.authorityEpoch||h.slot!==r.slot||h.generation!==r.generation||
+    p?.actorId!==nativeRoute.actorId||p.assignmentSequence!==nativeRoute.assignmentSequence||
+    !['session','authorityEpoch','slot','generation'].every(name=>k?.[name]===h[name])||
+    presentation.motionMode!=='animal'||presentation.gates.length||presentation.radius!==r.radius||
+    presentation.startTime!==worldBoundary.effectiveTime||presentation.endTime!==r.endTime||
+    presentation.rows[1]!==r.x||presentation.rows[2]!==r.z||presentation.rows[4]!==r.phase||
+    presentation.rows.at(-15)!==binding.terminal.x||presentation.rows.at(-14)!==binding.terminal.z||
+    presentation.rows.at(-12)!==binding.terminal.phase||presentation.rows.at(-9)!==1)
+   throw TypeError('Recovered crop program differs from the acquired route');
+ return Object.freeze({version:1,kind:26,phase:'committed',worldBoundary,nativeRoute,presentation,nativeAnimalCropRouteBinding:binding});
+}
+function copyStrikeAttestation(value){
+ const binding=copyNativeAnimalCropAttestation(value,27);
+ if(binding.assignmentSequence!==binding.reference.sourceControlSequence+1||
+    !Array.isArray(value.gateIds)||value.gateIds.length)throw TypeError('Invalid recovered crop strike');
+ return Object.freeze({...binding,gateIds:Object.freeze([])});
+}
+function sameStrikeAttestation(a,b){
+ return !!a&&!!b&&a.attackId===b.attackId&&a.assignmentSequence===b.assignmentSequence&&
+   a.gateIds?.length===0&&b.gateIds?.length===0&&sameNativeAnimalCropReference(a.reference,b.reference)&&
+   sameNativeAnimalCropReference(a.preparedReference,b.preparedReference);
+}
+function copyStrikeResources(value){
+ const binding=copyStrikeAttestation(value?.nativeAnimalCropStrikeBinding);
+ const worldBoundary=copyNativeWorldBoundary(value.worldBoundary);
+ if(value.version!==1||value.kind!==27||value.phase!=='committed'||value.nativeRoute!==undefined||
+    value.presentation!==undefined||!sameNativeWorldBoundary(worldBoundary,binding.reference.worldBoundary))
+   throw TypeError('Recovered strike is not the acquired stationary action');
+ return Object.freeze({version:1,kind:27,phase:'committed',worldBoundary,nativeAnimalCropStrikeBinding:binding});
+}
+
+function sameTaskRouteAttestation(a,b,sameReference){
+ return !!a&&!!b&&a.assignmentSequence===b.assignmentSequence&&a.projectionVersion===b.projectionVersion&&
+   sameReference(a.reference,b.reference)&&sameReference(a.preparedReference,b.preparedReference)&&
+   Array.isArray(a.gateIds)&&a.gateIds.length===b.gateIds?.length&&a.gateIds.every((id,i)=>id===b.gateIds[i]);
+}
+
+function copyTaskRouteResources(value,cut,kind,bindingField,copyAttestation){
+ const b=copyAttestation(value?.[bindingField]),r=b.reference;
+ const worldBoundary=copyNativeWorldBoundary(value.worldBoundary),presentation=copyNativeRoutePresentation(value.presentation);
+ const nativeRoute=copyNativeRouteReference(value.nativeRoute);
+ if(value.version!==1||value.kind!==kind||value.phase!=='committed'||!sameNativeWorldBoundary(worldBoundary,r.worldBoundary)||
+    !sameNativeWorldBoundary(presentation.worldBoundary,cut??worldBoundary)||presentation.motionMode!=='worker'||
+    kind===16&&presentation.motionFlags!==8||
+    presentation.startTime!==worldBoundary.effectiveTime||presentation.endTime!==r.endTime||
+    !sameNativeRouteReference(nativeRoute,presentation.nativeRoute)||!sameNativeRouteReference(nativeRoute,{actorId:r.actorId,assignmentSequence:b.assignmentSequence,routeHandle:r.expectedRouteHandle})||
+    presentation.gates.length!==b.gateIds.length||b.gateIds.some(id=>!presentation.gates.some(gate=>gate.gateId===id)))
+   throw TypeError(`Recovered ${kind===14?'Task14':'Carry16'} program differs from the acquired route`);
+ return Object.freeze({version:1,kind,phase:'committed',worldBoundary,nativeRoute,presentation,[bindingField]:b});
+}
+
+const profiles=new Map([
+ [12,Object.freeze({
+  kind:12,admission:'pending-resources',executionKind:'native-stopped-task-execution',maxGates:0,
+  bindingField:'stoppedTaskBinding',clockField:'nativeStopped',obsoleteCode:'native-stroll-stop-admission-obsolete',
+  stopProjectionMatches:stop12ProjectionMatches,
+  copyResources:copyStop12Resources,copyAttestation:copyStop12Source,sameAttestation:sameStop12Source,sameReference:sameStop12Clock
+ })],
+ [14,Object.freeze({
+  kind:14,admission:'native-task',executionKind:'native-task-execution',maxGates:1024,
+  bindingField:'nativeTaskStartBinding',clockField:'nativeStart',proofField:'startProof',issuedField:'issuedStart',
+  obsoleteCode:'native-start-admission-obsolete',
+  copyResources:(value,cut)=>copyTaskRouteResources(value,cut,14,'nativeTaskStartBinding',copyNativeTaskStartAttestation),
+  copyAttestation:copyNativeTaskStartAttestation,
+  sameAttestation:(a,b)=>sameTaskRouteAttestation(a,b,sameNativeTaskStartReference),sameReference:sameNativeTaskStartReference
+ })],
+ [15,Object.freeze({
+  kind:15,admission:'native-action',executionKind:'native-task-action-execution',maxGates:0,
+  bindingField:'nativeTaskActionBinding',clockField:'nativeAction',
+  obsoleteCode:'native-action-admission-obsolete',copyResources:copyNativeTaskActionResources,copyAttestation:copyNativeTaskActionAttestation,
+  sameAttestation:sameNativeTaskActionAttestation,sameReference:sameNativeTaskActionReference
+ })],
+ [16,Object.freeze({
+  kind:16,admission:'native-delivery',executionKind:'native-delivery-execution',maxGates:1024,
+  bindingField:'nativeTaskConsequenceBinding',clockField:'nativeConsequence',proofField:'consequenceProof',
+  obsoleteCode:'native-consequence-admission-obsolete',
+  copyResources:(value,cut)=>copyTaskRouteResources(value,cut,16,'nativeTaskConsequenceBinding',copyNativeTaskConsequenceAttestation),
+  copyAttestation:copyNativeTaskConsequenceAttestation,
+  sameAttestation:(a,b)=>sameTaskRouteAttestation(a,b,sameNativeTaskConsequenceReference),sameReference:sameNativeTaskConsequenceReference
+ })],
+ [17,Object.freeze({
+  kind:17,admission:undefined,executionKind:'native-settled-worker-execution',maxGates:0,
+  bindingField:'nativeTaskSettlementBinding',clockField:'nativeSettlement',
+  obsoleteCode:'native-settlement-admission-obsolete',copyResources:copyNativeTaskSettlementResources,copyAttestation:copyNativeTaskSettlementAttestation,
+  sameAttestation:sameNativeTaskSettlementAttestation,sameReference:sameNativeTaskSettlementReference
+ })],
+ [18,Object.freeze({
+  kind:18,admission:'native-home',executionKind:'native-home-route-execution',maxGates:1024,
+  bindingField:'nativeHomeRouteBinding',clockField:'nativeHome',proofField:'homeProof',
+  obsoleteCode:'native-home-admission-obsolete',
+  copyResources:copyNativeHomeRouteResources,copyAttestation:copyNativeHomeRouteAttestation,
+  sameAttestation:sameNativeHomeRouteAttestation,sameReference:sameNativeHomeRouteReference
+ })],
+ [21,Object.freeze({
+  kind:21,admission:'native-idle',executionKind:'native-idle-cycle-execution',maxGates:0,
+  bindingField:'nativeIdleCycleBinding',clockField:'nativeIdleCycle',
+  obsoleteCode:'native-idle-cycle-admission-obsolete',
+  copyResources:copyNativeIdleCycleResources,copyAttestation:copyNativeIdleCycleAttestation,
+  sameAttestation:sameNativeIdleCycleAttestation,sameReference:sameNativeIdleCycleReference
+ })],
+ [22,Object.freeze({
+  kind:22,admission:'native-idle-stroll',executionKind:'native-idle-stroll-execution',maxGates:0,
+  bindingField:'nativeIdleStrollBinding',clockField:'nativeStroll',issuedField:'issuedStroll',
+  proofField:'strollProof',admittedField:'strollAdmitted',
+  obsoleteCode:'native-idle-stroll-admission-obsolete',
+  copyResources:copyNativeIdleStrollResources,copyAttestation:copyNativeIdleStrollAttestation,
+  sameAttestation:sameNativeIdleStrollAttestation,sameReference:sameNativeIdleStrollReference
+ })],
+ [23,Object.freeze({
+  kind:23,admission:'native-farm-arrival',executionKind:'native-farm-arrival-route-execution',maxGates:1024,
+  bindingField:'nativeFarmArrivalBinding',clockField:'nativeFarmArrival',issuedField:'issuedFarmArrival',
+  proofField:'farmArrivalProof',admittedField:'farmArrivalAdmitted',
+  obsoleteCode:'native-farm-arrival-admission-obsolete',
+  copyResources:copyNativeFarmArrivalRouteResources,copyAttestation:copyNativeFarmArrivalRouteAttestation,
+  sameAttestation:sameNativeFarmArrivalRouteAttestation,sameReference:sameNativeFarmArrivalRouteReference
+ })],
+ [24,Object.freeze({
+  kind:24,admission:'pending-resources',executionKind:'native-stopped-task-execution',maxGates:0,
+  bindingField:'stoppedTaskBinding',clockField:'nativeStopped',obsoleteCode:'native-farm-arrival-stop-admission-obsolete',
+  stopProjectionMatches:stop24ProjectionMatches,
+  copyResources:copyStop24Resources,copyAttestation:copyStop24Source,sameAttestation:sameStop24Source,sameReference:sameStop24Clock
+ })],
+ [25,Object.freeze({
+  kind:25,admission:'pending-home-resources',executionKind:'native-stopped-home-execution',maxGates:0,
+  bindingField:'stoppedHomeBinding',clockField:'nativeStopped',obsoleteCode:'native-route-admission-obsolete',
+  stopProjectionMatches:task25ProjectionMatches,
+  copyResources:copyTask25HomeResources,copyAttestation:copyTask25HomeSource,sameAttestation:sameTask25HomeSource,sameReference:sameTask25HomeClock
+ })],
+ [26,Object.freeze({
+  kind:26,executionKind:'native-animal-crop-route-execution',maxGates:0,
+  bindingField:'nativeAnimalCropRouteBinding',clockField:'nativeAnimalCrop',
+  obsoleteCode:'native-crop-recovery-obsolete',
+  copyResources:copyCropResources,copyAttestation:copyCropAttestation,
+  sameAttestation:sameCropAttestation,sameReference:sameNativeAnimalCropReference
+ })],
+ [27,Object.freeze({
+  kind:27,executionKind:'native-animal-crop-strike-execution',maxGates:0,
+  bindingField:'nativeAnimalCropStrikeBinding',clockField:'nativeAnimalCrop',
+  obsoleteCode:'native-crop-recovery-obsolete',
+  copyResources:copyStrikeResources,copyAttestation:copyStrikeAttestation,
+  sameAttestation:sameStrikeAttestation,sameReference:sameNativeAnimalCropReference
+ })]
+]);
+
+export function nativeWorkerRouteRecoveryProfile(kind){
+ const profile=profiles.get(kind);
+ if(!profile)throw TypeError('Unsupported worker route recovery kind');
+ return profile;
+}
+
+export function recoveredNativeGateSamples(row){
+ if(row.nativeGates!==undefined)return row.nativeGates;
+ return row.nativeGate===undefined?[]:[{nativeGate:row.nativeGate,gateElapsed:row.gateElapsed}];
+}
+
+export function matchesRecoveredRuinMotorSamples(samples,motors,at){
+ if(!motors)return samples===undefined;
+ return Array.isArray(samples)&&samples.length===motors.gates.length&&motors.gates.every((gate,i)=>{
+  const sample=samples[i],epoch=gate.startTime,end=nativeClockResourceEnd(epoch,gate.endTime);
+  return sample?.nativeGate?.gateId===gate.gateId&&sameNativeWorldBoundary(sample.nativeGate.worldBoundary,motors.worldBoundary)&&
+   sample.gateElapsed===epoch+floorFloat32(Math.min(at,end)-epoch);
+ });
+}
+
+export function copyNativeRuinMotors(value,prepared){
+ if((value!==undefined)!==!!prepared?.retainedGateIds)throw Error('Center ruin recovery needs its retained motor programs');
+ if(value===undefined)return null;
+ const motors=copyNativeGateMotionResources(value);
+ if(motors.phase!=='committed'||!sameNativeWorldBoundary(motors.worldBoundary,prepared.previous)||
+    motors.gates.length!==prepared.retainedGateIds.length||motors.gates.some((gate,i)=>gate.gateId!==prepared.retainedGateIds[i]))
+  throw Error('Recovered motors differ from the acquired center ruin');
+ return motors;
+}
+
+export const nativeRecoverySequence=proof=>proof.cycleSequence??proof.actionSequence??proof.settlementSequence??proof.revokedSequence??proof.assignmentSequence;
+export const nativeRecoveryGates=proof=>proof.gateIds??[];
+export function nativeOrdinaryRecoveryKinds(kinds,withRefuge=false){
+ const [first,second]=kinds;
+ if(withRefuge)return kinds.length===1&&[18,21,22].includes(first);
+ return kinds.length===1&&first===21||kinds.length===2&&
+   (first===21&&second===21||first===18&&[21,22].includes(second));
+}
+
+export function copyNativeIdleCycleRecoveryPhase(value){
+ const {version,actorId,bodyId,cycleSequence,phaseDelay}=value??{};
+ const worldBoundary=copyNativeWorldBoundary(value?.worldBoundary);
+ if(version!==1||![actorId,bodyId,cycleSequence].every(n=>Number.isSafeInteger(n)&&n>0)||!worldBoundary||
+    !Number.isFinite(phaseDelay)||phaseDelay<0||phaseDelay>worldBoundary.effectiveTime)
+   throw TypeError('Invalid retired Idle cycle phase');
+ return Object.freeze({version,actorId,bodyId,cycleSequence,worldBoundary,phaseDelay});
+}
+
+export function nativeIdleCycleRecoveryPhaseMatches(phase,proof){
+ const ref=proof?.reference;
+ return !!phase&&!!ref&&phase.actorId===ref.actorId&&phase.bodyId===ref.bodyId&&phase.cycleSequence===proof.cycleSequence&&
+   sameNativeWorldBoundary(phase.worldBoundary,ref.worldBoundary);
+}
+
+export function nativeRecoveryCovers(world,source){
+ return !!world&&!!source&&world.authorityEpoch===source.authorityEpoch&&world.nativeSession===source.nativeSession&&
+   (sameNativeWorldBoundary(world,source)||world.ticket>source.ticket&&world.effectiveTime>=source.effectiveTime);
+}
+
+export function matchesNativeOrdinaryRefugeContinuation(world,refuge,proof){
+ const home=refuge?.reference,worker=proof?.reference;
+ if(!home||!worker||!matchesNativeOrdinaryRefuge(home.worldBoundary,refuge)||
+    !nativeRecoveryCovers(world,home.worldBoundary)||!nativeRecoveryCovers(world,worker.worldBoundary)||
+    home.actorId===worker.actorId||home.bodyId===worker.bodyId)return false;
+ const sequence=nativeRecoverySequence(proof);
+ return sameNativeWorldBoundary(world,home.worldBoundary)&&sequence<refuge.retiredSequence||
+   sameNativeWorldBoundary(world,worker.worldBoundary)&&sequence>refuge.retiredSequence;
+}
+
+export function matchesNativeRefugeRecovery(world,{reference:home,retiredSequence},{reference:animal,assignmentSequence}){
+ if(!home.sourceHome.reference.sourceRequest?.raidSpawnSequence||animal.actorId===home.actorId||animal.bodyId===home.bodyId)return false;
+ if(sameNativeWorldBoundary(world,animal.worldBoundary)){
+   return nativeRecoveryCovers(world,home.worldBoundary)&&world.ticket>home.worldBoundary.ticket&&
+     !animal.restore&&assignmentSequence>retiredSequence;
+ }
+ // Home19 may itself be the last world operation, retaining the approach
+ // that was acquired before the worker reached the refuge.
+ return animal.kind===26&&animal.purpose!=='retreat'&&sameNativeWorldBoundary(world,home.worldBoundary)&&
+   nativeRecoveryCovers(world,animal.worldBoundary)&&assignmentSequence<retiredSequence;
+}
+
+export function copyRecoveredEncounterFall(value){
+ const {version,workerId,workerBody,hit,x,z,heading,remaining,spawn,impactAt,workerAssignment}=value??{};
+ const positiveId=id=>Number.isSafeInteger(id)&&id>0;
+ if(![1,2].includes(version)||![workerId,workerBody,hit].every(positiveId)||
+    ![x,z,heading,remaining].every(Number.isFinite)||remaining<=0)throw Error('Invalid recovered encounter Fall');
+ if(version===2&&(!positiveId(spawn)||hit<=spawn||!Number.isFinite(impactAt)||impactAt<0||
+    workerAssignment!==undefined&&!positiveId(workerAssignment)))throw Error('Invalid first-impact recovery source');
+ const source=version===2?{spawn,impactAt,...(workerAssignment===undefined?{}:{workerAssignment})}:{};
+ return Object.freeze({version,workerId,workerBody,hit,x,z,heading,remaining,...source});
+}
+
+export function sameRecoveredEncounter(a,b){
+ if(a?.version===3||b?.version===3)return a?.version===3&&b?.version===3&&
+  ['workerId','workerBody','animalId','profile','hit','impactAt','raidEnded','endedAt','at','x','z','heading','remaining','phase']
+   .every(key=>a[key]===b[key])&&(a.home===undefined?b.home===undefined:sameNativeHomeRequestReference(a.home,b.home))&&
+   (a.getUp===null?b.getUp===null:!!a.getUp&&!!b.getUp&&
+    ['duration','elapsed','heading','dx','dz','fraction','travelLimit'].every(key=>a.getUp[key]===b.getUp[key]));
+ return !!a&&!!b&&['version','workerId','workerBody','hit','x','z','heading','remaining','spawn','impactAt','workerAssignment']
+  .every(key=>a[key]===b[key]);
+}
+
+export function copyRecoveredEncounterPose(value){
+ const {version,workerId,workerBody,animalId,profile,hit,impactAt,raidEnded,endedAt,at,x,z,heading,remaining,getUp}=value??{};
+ const duration=LOCOMOTION.sources.find(source=>source.profile===profile)?.fallSeconds;
+ if(version!==3||![workerId,workerBody,animalId,hit,raidEnded].every(id=>Number.isSafeInteger(id)&&id>0)||
+    animalId===workerId||raidEnded<=hit+1||![impactAt,endedAt,at,x,z,heading,remaining,duration].every(Number.isFinite)||
+    impactAt<0||endedAt<impactAt||at<endedAt||remaining<0||remaining>duration)
+  throw Error('Invalid stationary encounter source');
+ const home=value.home===undefined?null:copyNativeHomeRequestReference(value.home);
+ let recovery=null;
+ if(home){
+  if(remaining!==0||getUp!==null||home.version!==3||home.recoveryHit!==hit||home.bodyId!==workerBody||
+     home.actorId!==workerId||home.requestedAt<endedAt||home.requestedAt>at||(home.recoveryExit??RECOVERY_EXIT_SECONDS)!==RECOVERY_EXIT_SECONDS||
+     home.pose.x!==x||home.pose.z!==z||home.pose.yaw!==heading)throw Error('Invalid pending wounded Home source');
+ }else if(remaining===0){
+  const {duration,elapsed,heading:yaw,dx,dz,fraction,travelLimit}=getUp??{};
+  if(duration!==WORKER_RECOVERY[profile]?.duration||![duration,elapsed,yaw,dx,dz,fraction].every(Number.isFinite)||
+     elapsed<0||elapsed>=duration||yaw!==heading||fraction<0||fraction>1||
+     travelLimit!==undefined&&(!Number.isFinite(travelLimit)||travelLimit<0||travelLimit>1))
+   throw Error('Invalid stationary GetUp source');
+  recovery=Object.freeze({duration,elapsed,heading:yaw,dx,dz,fraction,...(travelLimit===undefined?{}:{travelLimit})});
+ }else if(getUp!==null)throw Error('Recovered Fall overlaps GetUp');
+ const phase=home?0:Math.fround(recovery?.elapsed??duration-remaining);
+ if(value.phase!==undefined&&value.phase!==phase)throw Error('Invalid stationary encounter phase');
+ return Object.freeze({version,workerId,workerBody,animalId,profile,hit,impactAt,raidEnded,endedAt,at,x,z,heading,remaining,getUp:recovery,phase,...(home?{home}:{})});
+}
+
+export function copyPendingFlightRecovery(value){
+ const home=copyNativeHomeRequestReference(value?.home),animal=copyPendingAnimalCrop(value?.animal);
+ const at=value.at;
+ if(value.version!==1||Object.keys(value).some(key=>!['version','at','home','animal'].includes(key))||
+    !Number.isFinite(at)||at<home.requestedAt||home.version!==2||animal.purpose!=='center'||
+    animal.authorityEpoch!==home.authorityEpoch||animal.nativeSession!==home.nativeSession||
+    animal.actorId===home.actorId||animal.bodyId===home.bodyId||animal.requestSequence<=home.requestSequence||
+    animal.restore&&(animal.restore.requestedAt!==at||animal.restore.requestedAt!==home.requestedAt)||
+    animal.restoredWorkerImpact||value.animal.previousStrike||value.animal.previousShieldCrop)
+   throw Error('Invalid pending flight recovery');
+ return Object.freeze({version:1,at,home,animal});
+}
+
+export function samePendingFlightRecovery(a,b){
+ try{return JSON.stringify(copyPendingFlightRecovery(a))===JSON.stringify(copyPendingFlightRecovery(b));}catch{return false;}
+}
+
+// The current world can include an exact later mutation that retained the
+// moving actor's acquisition. Each surviving clock keeps its origin.
+export function copyNativeRecoveryGroup(value,world,{awaitingIdleCyclePhase=false}={}){
+ if(value.pendingFlight!==undefined){
+   if(value.version!==2||world!==null||!Array.isArray(value.members)||value.members.length||
+      ['ruin','pendingRuin','ruinMotors','encounter','refuge','idleCyclePhases'].some(key=>value[key]!==undefined))
+     throw Error('Pending flight recovery requires an unacquired world');
+   return {members:[],pendingFlight:copyPendingFlightRecovery(value.pendingFlight)};
+ }
+ if(value.ruinMotors!==undefined&&value.ruin===undefined&&value.pendingRuin===undefined)throw Error('Recovered motors require their center ruin');
+ if(value.pendingRuin!==undefined&&(value.ruin!==undefined||value.encounter!==undefined||value.refuge!==undefined))
+   throw Error('Pending center ruin recovery needs its own cut');
+ const ordinaryWorkers=value.version===2&&Array.isArray(value.members)&&value.ruin===undefined&&
+   value.pendingRuin===undefined&&value.encounter===undefined&&nativeOrdinaryRecoveryKinds(value.members.map(member=>member?.kind),value.refuge!==undefined);
+ if(value.idleCyclePhases!==undefined&&!ordinaryWorkers)throw Error('Idle cycle phases require their recovered cycles');
+ if(value.version===undefined&&value.members===undefined&&value.refuge===undefined&&value.ruin===undefined&&value.pendingRuin===undefined&&value.encounter===undefined)
+   return {members:[{kind:value.kind,proof:nativeWorkerRouteRecoveryProfile(value.kind).copyAttestation(value.proof)}]};
+ if(value.version!==2||!Array.isArray(value.members))throw Error('Invalid recovery membership');
+ if(value.encounter!==undefined){
+   if(value.encounter?.version===3){
+     const encounter=copyRecoveredEncounterPose(value.encounter);
+     if(value.refuge!==undefined||value.ruin!==undefined||value.members.length||
+        !world||world.effectiveTime>encounter.at||encounter.home&&(encounter.home.authorityEpoch!==world.authorityEpoch||
+          encounter.home.nativeSession!==world.nativeSession))throw Error('Stationary encounter recovery cannot supply a moving route');
+     return {members:[],encounter};
+   }
+   if(value.refuge!==undefined||value.ruin!==undefined||value.members.length!==1||value.members[0]?.kind!==26)
+     throw Error('Encounter recovery requires its route and Fall');
+   const proof=copyCropAttestation(value.members[0].proof),encounter=copyRecoveredEncounterFall(value.encounter),ref=proof.reference;
+   if(ref.purpose!==(encounter.version===2?'center':'retreat')||ref.actorId===encounter.workerId||ref.bodyId===encounter.workerBody||
+      encounter.version===2&&encounter.workerAssignment!==undefined&&
+        (encounter.impactAt<ref.worldBoundary.effectiveTime||encounter.workerAssignment>=proof.assignmentSequence)||
+      !sameNativeWorldBoundary(ref.worldBoundary,world))
+     throw Error('Encounter Fall belongs to another acquisition');
+   return {members:[{kind:26,proof}],encounter};
+ }
+ if(value.ruin!==undefined||value.pendingRuin!==undefined){
+   const prepared=centerSource(value.ruin?.prepared??value.pendingRuin),kind=prepared.strike?27:26;
+   const home=prepared.home,member=value.members[home?1:0];
+   if(value.refuge!==undefined||value.members.length!==(home?2:1)||member?.kind!==kind)
+     throw Error('Center ruin recovery requires its surviving animal program');
+   if(home&&(!prepared.approach||value.members[0].kind!==18||
+      !sameNativeHomeRouteAttestation(home,copyNativeHomeRouteAttestation(value.members[0].proof))))
+     throw Error('Recovered Home route differs from the center ruin');
+   const proof=kind===27?copyStrikeAttestation(member.proof):copyCropAttestation(member.proof);
+   const retained=prepared.retreat??prepared.approach??prepared.strike;
+   const cutMatches=value.pendingRuin===undefined?verifiesCenter(prepared,world,value.ruin):
+     !!(prepared.retainedGateIds||home)&&sameNativeWorldBoundary(prepared.previous,world);
+   if(!cutMatches||retained.assignmentSequence!==proof.assignmentSequence||retained.attackId!==proof.attackId||
+      !sameNativeAnimalCropReference(retained.reference,proof.reference)||
+      !sameNativeAnimalCropReference(retained.preparedReference,proof.preparedReference))
+     throw Error('Recovered animal route differs from the acquired center ruin');
+   const motors=copyNativeRuinMotors(value.ruinMotors,prepared);
+   const members=home?[{kind:18,proof:home},{kind,proof}]:[{kind,proof}];
+   if(value.pendingRuin!==undefined)return {members,pendingRuin:prepared,...(motors?{ruinMotors:motors}:{})};
+   const ruin=Object.freeze({prepared,acquired:copyNativeWorldBoundary(world),center:prepared.center,
+     polygon:prepared.polygon,status:'ruined',revisions:Object.freeze([...value.ruin.revisions])});
+   return {members,ruin,...(motors?{ruinMotors:motors}:{})};
+ }
+ if(value.refuge!==undefined&&!ordinaryWorkers){
+   const refuge=copyNativeHomeArrivalAttestation(value.refuge);
+   if(value.members.length===0&&matchesNativeStationaryRefuge(world,refuge))return {members:[],refuge};
+   const member=value.members[0],kind=member?.kind;
+   if(value.members.length!==1||(kind!==26&&kind!==27))throw Error('Refuge recovery requires the surviving animal');
+   const proof=nativeWorkerRouteRecoveryProfile(kind).copyAttestation(member.proof);
+   if(!matchesNativeRefugeRecovery(world,refuge,proof))
+     throw Error('Crop recovery differs from the acquired refuge cut');
+   return {members:[{kind,proof}],refuge};
+ }
+ if(!ordinaryWorkers&&(value.members.length!==2||value.members[0]?.kind!==18||![26,27].includes(value.members[1]?.kind)))
+   throw Error('Invalid mixed recovery membership');
+ const members=value.members.map(({kind,proof})=>({kind,proof:nativeWorkerRouteRecoveryProfile(kind).copyAttestation(proof)}));
+ const refuge=value.refuge===undefined?null:copyNativeHomeArrivalAttestation(value.refuge);
+ if(refuge&&!matchesNativeOrdinaryRefugeContinuation(world,refuge,members[0].proof))
+   throw Error('Civil recovery differs from the acquired refuge cut');
+ let idleCyclePhases=[];
+ if(ordinaryWorkers){
+   const inherited=members.filter(({kind,proof})=>kind===21&&proof.reference.sourceCycleSequence!==0);
+   if(value.idleCyclePhases!==undefined){
+     if(!Array.isArray(value.idleCyclePhases)||value.idleCyclePhases.length!==inherited.length)
+       throw Error('Each inherited Idle cycle requires its retired phase');
+     idleCyclePhases=Object.freeze(value.idleCyclePhases.map(copyNativeIdleCycleRecoveryPhase));
+     for(const [i,member] of inherited.entries()){
+       const phase=idleCyclePhases[i];
+       if(!nativeIdleCycleRecoveryPhaseMatches(phase,member.proof))throw Error('Retired phase differs from its recovered Idle cycle');
+       member.idleCyclePhase=phase;
+     }
+   }else if(inherited.length&&!awaitingIdleCyclePhase)throw Error('Each inherited Idle cycle requires its retired phase');
+   if(!refuge&&members.length===1&&!sameNativeWorldBoundary(world,members[0].proof.reference.worldBoundary))
+     throw Error('Single Idle recovery needs its acquired world cut');
+ }
+ const refs=members.map(member=>member.proof.reference);
+ const strike=!ordinaryWorkers&&members[1].kind===27;
+ // In a live civil pair, Home18 is the only member that can own motor
+ // programs. Its submitted gate clocks stay tied to its acquired boundary.
+ if((ordinaryWorkers?members.some(({kind,proof})=>(nativeRecoveryGates(proof).length&&(kind!==18||!!refuge))||kind===18&&
+    (proof.reference.sourceRequest?.raidSpawnSequence||proof.reference.sourceRequest?.recoveryHit)):
+    !refs[0].sourceRequest?.raidSpawnSequence||refs[1].purpose==='retreat')||
+    strike&&(refs[1].purpose!=='center'||refs[1].restore&&refs[1].restore.requestedAt!==refs[0].sourceRequest?.requestedAt||
+      !sameNativeWorldBoundary(world,refs[1].worldBoundary)||
+      members[0].proof.assignmentSequence>=members[1].proof.assignmentSequence)||
+    new Set(refs.map(ref=>ref.actorId)).size!==members.length||new Set(refs.map(ref=>ref.bodyId)).size!==members.length||
+    new Set(members.map(({proof})=>nativeRecoverySequence(proof))).size!==members.length||
+    !members.every(({proof})=>nativeRecoveryCovers(world,proof.reference.worldBoundary))||
+    !refuge&&members.filter(({proof})=>sameNativeWorldBoundary(world,proof.reference.worldBoundary)).length!==1)
+   throw Error('Mixed recovery requires two current assignments at one world cut');
+ return ordinaryWorkers?{members,ordinaryWorkers:true,...(refuge?{refuge}:{}),...(idleCyclePhases.length?{idleCyclePhases}:{})}:{members};
+}

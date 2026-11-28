@@ -1,0 +1,22 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>Cesión entre pasos</title><body><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+window.audit=async(mode,interrupt,completeAfterPause=false)=>{
+ const worker=new Worker(new URL('./mobility-worker-cooperative.js',import.meta.url),{type:'module'});let pauseSent,startedAt,completedAt,pauseAt,timeout;
+ try{
+  let readyResolve,startedResolve,advanceResolve,pauseResolve,rejectResolve,resumeResolve,remainingResolve,rejectAll;const ready=new Promise(resolve=>readyResolve=resolve),started=new Promise(resolve=>startedResolve=resolve),advance=new Promise(resolve=>advanceResolve=resolve),paused=new Promise(resolve=>pauseResolve=resolve),rejected=new Promise(resolve=>rejectResolve=resolve),resumed=new Promise(resolve=>resumeResolve=resolve),remaining=new Promise(resolve=>remainingResolve=resolve),failure=new Promise((_,reject)=>rejectAll=reject),wait=p=>Promise.race([p,failure]);
+  timeout=setTimeout(()=>rejectAll(Error('Worker timeout')),120000);worker.onerror=e=>rejectAll(Error(e.message));worker.onmessage=e=>{const d=e.data;if(d.kind==='ready')readyResolve(d);else if(d.kind==='started'&&d.request===1){startedAt=performance.now();startedResolve();if(interrupt){pauseSent=performance.now();worker.postMessage({session:'cooperative-test',sequence:2,request:2,action:'pause'});}}else if(d.kind==='advance-result'&&d.request===1){completedAt=performance.now();advanceResolve(d);}else if(d.kind==='advance-result'&&d.request===5)remainingResolve(d);else if(d.kind==='pause-result'){pauseAt=performance.now();pauseResolve(d);}else if(d.kind==='resume-result')resumeResolve(d);else if(d.kind==='rejected')rejectResolve(d);else if(d.kind==='error')rejectAll(Error(d.error));};
+  await wait(ready);const requestAt=performance.now();worker.postMessage({session:'cooperative-test',sequence:1,request:1,action:'advance',steps:40,mode});await wait(started);const result=await wait(advance),pause=interrupt?await wait(paused):null;
+  let resumedResult=null,remainingResult=null,rejectedResult=null,resumeElapsedMs=null;if(completeAfterPause){
+   if(!interrupt)throw Error('Resume audit requires pause');worker.postMessage({session:'cooperative-test',sequence:3,request:3,action:'advance',steps:1,mode});rejectedResult=await wait(rejected);if(rejectedResult.reason!=='paused')throw Error('Paused advance accepted');
+   const start=performance.now();worker.postMessage({session:'cooperative-test',sequence:3,request:4,action:'resume'});resumedResult=await wait(resumed);const left=40-result.performed;
+   if(left){worker.postMessage({session:'cooperative-test',sequence:4,request:5,action:'advance',steps:left,mode});remainingResult=await wait(remaining);}resumeElapsedMs=performance.now()-start;
+   if((remainingResult?.performed??0)!==left||resumedResult.state.pauses.includes('diagnostic'))throw Error('Partial batch did not resume correctly');
+  }
+  const reference=await createSimulation({mangrove:true});let expected;try{for(let i=0;i<result.performed;i++)reference.advanceTick(.05);if(interrupt)reference.pause('diagnostic');if(completeAfterPause){reference.resume('diagnostic');for(let i=result.performed;i<40;i++)reference.advanceTick(.05);}expected=reference.state();}finally{reference.dispose();}
+  if(completeAfterPause){const continuous=await createSimulation({mangrove:true});try{for(let i=0;i<40;i++)continuous.advanceTick(.05);if(continuous.state().snapshot!==expected.snapshot)throw Error('Pause and resume changed simulation');}finally{continuous.dispose();}}
+  const observed=completeAfterPause?(remainingResult?.state??resumedResult.state):interrupt?pause.state:result.state;if(observed.snapshot!==expected.snapshot)throw Error('State differs from ordered reference');
+  if(!interrupt&&result.performed!==40)throw Error('Incomplete full batch');
+  return {mode,interrupt,performed:result.performed,interrupted:result.interrupted,workerMs:result.workerMs,responseMs:completedAt-requestAt,firstTickMs:result.timings[0],pauseLatencyMs:interrupt?pauseAt-pauseSent:null,...(completeAfterPause?{pausedAdvanceRejected:rejectedResult.reason,remainingSteps:remainingResult?.performed??0,totalSteps:result.performed+(remainingResult?.performed??0),resumeElapsedMs}:{}),snapshotEqual:true};
+ }finally{clearTimeout(timeout);worker.terminate();}
+};window.ready=true;
+</script></body></html>

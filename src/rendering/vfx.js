@@ -1,3 +1,4 @@
+import {VfxDepthDemand} from './vfx-depth-demand.js';
 import * as THREE from 'three';
 import {createNativeVfx,createVfxAtlasRects,createVfxGeometries,packVfxSprites,vfxRigidStyles,vfxSpriteVertex,vfxSpriteFragment,vfxGeometryVertex,vfxGeometryFragment,vfxRigidVertex,vfxRigidFragment,vfxShadowVertex,vfxEnvironment,MAX_SPRITES} from './vfx-native.js';
 const glsl=source=>source.replace('#version 300 es\n','');
@@ -60,7 +61,7 @@ export class VfxLibrary {
 
 export class NativeVfx extends THREE.Group {
   constructor(library,id,pipeline,options={}){
-    super();this.library=library;this.pipeline=pipeline;this.surface=options.worldSurface??null;this.surfaceMatrix=new THREE.Matrix4();this.surfaceInverse=new THREE.Matrix4();this.surfacePoint=new THREE.Vector3();this.native=createNativeVfx(id,library.rects,{...options,...(this.surface?{surface:(x,z)=>this.localSurface(x,z)}:{})});this.fragments=options.layers?.fragments!==false;this.softParticleDepth=options.softParticleDepth!==false;this.stopped=false;this.inverse=new THREE.Matrix4();this.point=new THREE.Vector3();this.rigids=new Map();this.buffers=new Map();
+    super();this.depthDemand=new VfxDepthDemand();this.library=library;this.pipeline=pipeline;this.surface=options.worldSurface??null;this.surfaceMatrix=new THREE.Matrix4();this.surfaceInverse=new THREE.Matrix4();this.surfacePoint=new THREE.Vector3();this.native=createNativeVfx(id,library.rects,{...options,...(this.surface?{surface:(x,z)=>this.localSurface(x,z)}:{})});this.fragments=options.layers?.fragments!==false;this.softParticleDepth=options.softParticleDepth!==false&&options.softParticles!==false;this.stopped=false;this.inverse=new THREE.Matrix4();this.point=new THREE.Vector3();this.rigids=new Map();this.buffers=new Map();
     const v=value=>({value});this.uniforms={uVP:v(new THREE.Matrix4()),uView:v(new THREE.Matrix4()),uModel:v(new THREE.Matrix4()),uInst:v(true),uTime:v(0),uWind:v(options.wind??.3),uWet:v(0),uNight:v(0),uEye:v(new THREE.Vector3()),uRight:v(new THREE.Vector3()),uUp:v(new THREE.Vector3()),uScale:v(1),uExposure:v(1.03),uFogColor:v(new THREE.Color()),uFogRange:v(new THREE.Vector2(1e8,1e9)),uAtlas:v(library.texture),uDepth:v(pipeline.smokeDepth.depthTexture),uViewport:v(new THREE.Vector2()),uNear:v(.1),uFar:v(600),uSunDir:v(new THREE.Vector3()),uSun:v(new THREE.Vector3()),uSky:v(new THREE.Vector3()),uGround:v(new THREE.Vector3()),uParticleLight:v(new THREE.Vector3()),uShadowVP:v(new THREE.Matrix4()),uShadow:v(null),uShadowTexel:v(new THREE.Vector2(1/1024,1/1024)),uHasShadow:v(false)};
     for(let i=0;i<2;i++){this.uniforms['uLightPos'+i]=v(new THREE.Vector3());this.uniforms['uLightCol'+i]=v(new THREE.Vector3());}
     this.localLights=options.worldLights===false?[]:Array.from({length:2},()=>new THREE.PointLight(0xffffff,0,0,2));for(const light of this.localLights){light.visible=false;if(!library.worldLights)this.add(light);}
@@ -108,7 +109,7 @@ export class NativeVfx extends THREE.Group {
     for(const [name,key] of [['uSun','sun'],['uSky','sky'],['uGround','ground'],['uParticleLight','particle']])u[name].value.fromArray(env[key]);u.uSunDir.value.fromArray(env.dir).transformDirection(this.inverse);
     this.pipeline.renderer.getDrawingBufferSize(u.uViewport.value);if(world?.fog){u.uFogColor.value.copy(world.fog.color).convertLinearToSRGB();u.uFogRange.value.set(world.fog.near,world.fog.far);}else u.uFogRange.value.set(1e8,1e9);
     const sprites=this.native.sprites(),forward=this.point.setFromMatrixColumn(camera.matrixWorld,2).negate().transformDirection(this.inverse),packed=packVfxSprites(sprites,this.library.rects,{eye:u.uEye.value.toArray(),forward:forward.toArray()},this.spriteBuffer.array);
-    if(packed.count){this.spriteBuffer.clearUpdateRanges();this.spriteBuffer.addUpdateRange(0,packed.count*25);this.spriteBuffer.needsUpdate=true;}
+    this.spriteBuffer.clearUpdateRanges();if(packed.count){this.spriteBuffer.addUpdateRange(0,packed.count*25);this.spriteBuffer.needsUpdate=true;}
     this.sprites.geometry.instanceCount=packed.count;this.sprites.visible=packed.count>0;
     const lights=this.native.lights;for(let i=0;i<2;i++){
       u['uLightPos'+i].value.fromArray(lights.positions[i]);u['uLightCol'+i].value.fromArray(lights.colors[i]);
@@ -117,10 +118,10 @@ export class NativeVfx extends THREE.Group {
       const light=this.localLights[i];if(light){light.position.fromArray(lights.positions[i]);light.color.fromArray(lights.colors[i]);light.intensity=u.uScale.value**2/2.2;light.visible=lights.colors[i].some(c=>c>0);}
     }
     if(this.packedTime!==this.native.time){
-      const solids=this.native.rigidInstances();for(const [id,data] of Object.entries(solids)){const buffer=this.buffers.get(id),m=this.rigids.get(id);buffer.array.set(data.data);buffer.needsUpdate=true;m.geometry.instanceCount=data.count;m.visible=data.count>0&&(this.fragments||['water','corn','leaf'].includes(id));}
-      const vertices=this.native.geometry();if(vertices.length/11>this.ribbonCapacity)this.setRibbonBuffer(vertices.length/11);this.ribbonBuffer.array.set(vertices);this.ribbonBuffer.needsUpdate=true;this.ribbons.geometry.setDrawRange(0,vertices.length/11);this.ribbons.visible=vertices.length>0;this.packedTime=this.native.time;
+      const solids=this.native.rigidInstances();for(const [id,data] of Object.entries(solids)){const buffer=this.buffers.get(id),m=this.rigids.get(id);buffer.clearUpdateRanges();if(data.count){const used=data.count*23;buffer.array.set(data.data.subarray(0,used));buffer.addUpdateRange(0,used);buffer.needsUpdate=true;}m.geometry.instanceCount=data.count;m.visible=data.count>0&&(this.fragments||['water','corn','leaf'].includes(id));}
+      const vertices=this.native.geometry(this.ribbonBuffer.array);if(vertices.length/11>this.ribbonCapacity)this.setRibbonBuffer(vertices.length/11);this.ribbonBuffer.clearUpdateRanges();if(vertices.length){if(vertices.buffer!==this.ribbonBuffer.array.buffer)this.ribbonBuffer.array.set(vertices);this.ribbonBuffer.addUpdateRange(0,vertices.length);this.ribbonBuffer.needsUpdate=true;}this.ribbons.geometry.setDrawRange(0,vertices.length/11);this.ribbons.visible=vertices.length>0;this.packedTime=this.native.time;
     }
-    return packed.count>0&&this.softParticleDepth;
+    return packed.count>0&&this.softParticleDepth&&this.depthDemand.required(packed.data,packed.count,u.uVP.value);
   }
   dispose({retainMaterials=false}={}){
     if(this.disposed)return;this.disposed=true;

@@ -1,0 +1,23 @@
+diff --git a/src/rendering/scene.js b/src/rendering/scene.js
+index d0be92147..5b3443e55 100644
+--- a/src/rendering/scene.js
++++ b/src/rendering/scene.js
+@@ -545,7 +545,17 @@ export class WorldScene {
+   clearVillagePreview() {if(this.villagePreview){this.villagePreview.traverse(o=>{if(o.isMesh)o.material.dispose();});this.scene.remove(this.villagePreview);this.villagePreview=null;}}
+   centerMesh(entity) {
+     const culture=centerCulture(entity,this.state);
+-    return new NativeBuilding(this.buildingTemplates.get(culture),entity,this.destructionPass,this.state.elapsed);
++    const building=new NativeBuilding(this.buildingTemplates.get(culture),entity,this.destructionPass,this.state.elapsed);
++    if(import.meta.env.DEV&&new URLSearchParams(this.requestedVisualSearch).get('qaDebrisLiveWarm')==='1'&&!this.qaDebrisLiveWarm){
++      this.qaDebrisLiveWarm='scheduled';requestAnimationFrame(()=>{
++        if(this.disposed||!building.parent){this.qaDebrisLiveWarm='cancelled';return;}
++        this.qaDebrisLiveWarm='pending';this.qaDebrisLiveStart=performance.now();this.qaDebrisLiveSpans=[];
++        const cancelled=()=>this.disposed||this.loading.signal.aborted||!building.parent;
++        const compile=(scene,camera,world)=>compileLoadingPrograms(this.renderer,scene,camera,world,{screen:true,signal:this.loading.signal,cancelled,getEpoch:()=>this.glResourceEpoch?.stats.epoch??0,scheduler:this.frameScheduler,onSubmit:span=>this.qaDebrisLiveSpans.push(span)});
++        prepareDebrisProgram(this.renderer,this.scene,this.camera,building.effects.debris,{compile,cancelled}).then(()=>{this.qaDebrisLiveWarm='prepared';},()=>{this.qaDebrisLiveWarm='failed';}).finally(()=>{this.qaDebrisLiveEnd=performance.now();});
++      });
++    }
++    return building;
+   }
+   async warmAnimalModels(species){
+     await Promise.all(species.filter(id=>id&&!this.warmedAnimals.has(id)).map(async id=>{

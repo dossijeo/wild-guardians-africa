@@ -1,0 +1,116 @@
+{
+  "scenario": "Desierto desde RaidSpawned con el READY de la marcha al centro sucesor retenido hasta el subpaso de derrumbe",
+  "base": "bbd2c4fa5ff17696eff554d893d5829bfc101e02",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 120.2000000178814
+    }
+  },
+  "artifacts": {
+    "live-birth-late-successor-ruin-nvidia-20261127.json": "4c44146f2dda48c80c1c726c86413e66e4d7af4f6dfacfeff2c96689a784c1ba"
+  },
+  "snapshotSHA256": "361118c96b849226cfd890cc7f806e6b9499905a7a4cec25627b81eef19ecd05",
+  "birth": {
+    "time": 0.05,
+    "actor": "animal-4"
+  },
+  "withheld": {
+    "ticket": 13,
+    "issuedAt": 22.19999999999983,
+    "lastPublishedAt": 25.299999999999873,
+    "lastPublication": 509,
+    "collapseHitAt": 22.149999999999828
+  },
+  "acquired": {
+    "body": 1,
+    "target": "structure-2",
+    "time": 25.339999999999872,
+    "draw": {
+      "sequence": 171,
+      "ticket": 14,
+      "executionEpoch": 25.339999999999872,
+      "relativeTime": 0
+    }
+  },
+  "ruin": {
+    "target": "structure-3",
+    "polygon": 10,
+    "minPublication": 510,
+    "preparedAt": 25.339999999999872,
+    "acquiredAt": 25.349999999999874,
+    "draw": {
+      "sequence": 180,
+      "ticket": 15,
+      "executionEpoch": 25.339999999999872,
+      "relativeTime": 0.009999999776482582
+    }
+  },
+  "hits": [
+    {
+      "id": "attack-5",
+      "center": "structure-3",
+      "time": 16.74999999999975,
+      "hp": 160
+    },
+    {
+      "id": "attack-8",
+      "center": "structure-3",
+      "time": 19.39999999999979,
+      "hp": 140
+    },
+    {
+      "id": "attack-11",
+      "center": "structure-3",
+      "time": 22.149999999999828,
+      "hp": 120
+    },
+    {
+      "id": "attack-15",
+      "center": "structure-2",
+      "time": 54.25000000000186,
+      "hp": 580
+    }
+  ],
+  "reuse": {
+    "root": 488,
+    "geometries": [
+      308,
+      309,
+      310,
+      311
+    ],
+    "attributes": 26
+  },
+  "absence": {
+    "sequence": 559,
+    "at": 1795793659918.8,
+    "worldBoundary": {
+      "version": 1,
+      "authorityEpoch": "9463a870-d493-4224-8541-85579cc99558/1",
+      "nativeSession": 1,
+      "ticket": 19,
+      "effectiveTime": 55.50000000000197
+    },
+    "clockElapsed": 65.25000000000263,
+    "previous": {
+      "actorId": 4,
+      "bodyId": 1,
+      "executionEpoch": 55.50000000000197,
+      "sequence": 557,
+      "at": 1795793659788.4001
+    }
+  },
+  "drained": true,
+  "errors": [],
+  "scope": "Reloj ordinario de Hosted, incursión aislada bajo calificación explícita. READY retenido por el arnés. Recibo de orden y continuidad, sin prueba de cadencia."
+}

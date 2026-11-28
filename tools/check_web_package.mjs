@@ -1,12 +1,17 @@
 import assert from 'node:assert/strict';
-import {createHash} from 'node:crypto';
+import {createHash,webcrypto} from 'node:crypto';
 import {publicText,UNUSED_WORKER_LAB_MODELS,UNUSED_CROP_LAB_MODEL,UNUSED_ANIMAL_LAB_MODELS,QA_ONLY_VISUAL_DIRECTORIES,RETIRED_MENU_ASSETS,QA_ONLY_VILLAGE_FILES,QA_ONLY_GROUND_FILES} from './web-package.mjs';
+import {bakedAnimationSources} from './package-baked-animations.mjs';
+import {BAKE_BANK_DIRECTORY,readPackedBakedAnimation} from '../src/rendering/baked-animation-assets.js';
+import {openCharacterPreviewStream} from '../src/rendering/character-preview-stream.js';
 import {readFile,readdir,stat} from 'node:fs/promises';
 import {resolve,extname,dirname,relative} from 'node:path';
 const root=resolve('dist'),manifest=JSON.parse(await readFile('content/manifests/web-assets.json','utf8'));let files=0,bytes=0,links=0;
 const inventory=new Set();
 async function collect(dir){for(const name of await readdir(dir)){const path=resolve(dir,name);if((await stat(path)).isDirectory())await collect(path);else inventory.add(relative(root,path).replaceAll('\\','/'));}}
 await collect(root);
+// GLB external buffers resolve beside the model, including nested deployment.
+for(const file of inventory){if(!file.endsWith('.glb'))continue;const data=await readFile(resolve(root,file));const json=JSON.parse(data.subarray(20,20+data.readUInt32LE(12)));for(const buffer of json.buffers??[]){if(!buffer.uri)continue;assert(!/^(?:[a-z]+:|\/)/i.test(buffer.uri),'External GLB buffer must be relative');const target=resolve(dirname(resolve(root,file)),buffer.uri);assert(inventory.has(relative(root,target).replaceAll('\\','/')),'Missing GLB buffer: '+file+' -> '+buffer.uri);assert((await stat(target)).size>=buffer.byteLength,'Truncated GLB external buffer');}}
 for(const path of inventory)if(['.js','.mjs','.json','.html','.css'].includes(extname(path))){const text=await readFile(resolve(root,path),'utf8');for(const name of QA_ONLY_VISUAL_DIRECTORIES)assert(!text.includes('assets/visual-lab/'+name+'/'),'Packaged code references excluded QA assets: '+path+' -> '+name);}
 for(const name of QA_ONLY_VISUAL_DIRECTORIES)assert(![...inventory].some(path=>path.startsWith(`assets/visual-lab/${name}/`)),'QA-only visual assets must not ship: '+name);
 for(const name of [...QA_ONLY_VILLAGE_FILES,...QA_ONLY_GROUND_FILES]){assert(!inventory.has('assets/visual-lab/'+name),'Workshop QA asset must not ship: '+name);for(const path of inventory)if(path.endsWith('.js'))assert(!(await readFile(resolve(root,path),'utf8')).includes(name),'Release code references workshop experiment: '+path+' -> '+name);}
@@ -34,6 +39,54 @@ for(const item of manifest.records){
 }
 const packagedModels=JSON.parse(await readFile(resolve(root,'content/models.json'),'utf8'));
 const packagedAssets=JSON.parse(await readFile(resolve(root,'content/web-assets.json'),'utf8'));
+assert(![...inventory].some(path=>path.startsWith('qa/')),'Development fixtures must not ship');
+for(const [profile,sources] of bakedAnimationSources){
+ const bank=`${BAKE_BANK_DIRECTORY}/${profile}`;
+ const [index,binary]=await Promise.all([readFile(resolve(root,bank+'.json')),readFile(resolve(root,bank+'.bin'))]);
+ assert.deepEqual(Object.keys(JSON.parse(index).clips),sources.map(([clip])=>clip),'Incorrect bank inventory: '+profile);
+ const fetcher=async(url,{headers})=>{
+  if(url===bank+'.json')return new Response(index);
+  assert.equal(url,bank+'.bin');
+  const [,start,end]=/^bytes=(\d+)-(\d+)$/.exec(headers.Range).map(Number);
+  return new Response(binary.subarray(start,end+1),{status:206,headers:{'Content-Range':`bytes ${start}-${end}/${binary.length}`}});
+ };
+ for(const [clip,path] of sources){
+  assert(!inventory.has(path+'.json')&&!inventory.has(path+'.bin'),'Individual bake shipped: '+path);
+  const [meta,bytes]=await readPackedBakedAnimation(bank,clip,{fetcher});
+  const source=JSON.parse(publicText(await readFile('public/'+path+'.json','utf8'),path+'.json',packagedAssets));
+  assert.deepEqual(meta,source,'Authored bake metadata changed: '+path);
+  assert.equal(createHash('sha256').update(new Uint8Array(bytes)).digest('hex'),source.sha256,'Authored bake bytes changed: '+path);
+ }
+}
+for(const profile of bakedAnimationSources.keys()){
+ const dir=`content/character-preview/${profile}/`, path=dir+'package.json';
+ const source=JSON.parse(publicText(await readFile('public/'+path,'utf8'),path,packagedAssets));
+ const packaged=JSON.parse(await readFile(resolve(root,path),'utf8'));
+ const {stored,...preview}=packaged.preview;
+ assert.deepEqual(preview,source.preview,'Character preview identity changed: '+profile);
+ if(stored)assert(!inventory.has(dir+preview.path),'Standalone character preview shipped: '+profile);
+ const fetchImpl=async url=>{
+  const name=new URL(url).pathname.slice(1);
+  assert(name.startsWith(dir)&&inventory.has(name),'Character resource missing: '+name);
+  return new Response(await readFile(resolve(root,name)));
+ };
+ for(const name of ['bc7','webp']){
+  const {textureBank,...variant}=packaged.variants[name];
+  assert(textureBank,'Missing character texture bank: '+profile+'/'+name);
+  assert.deepEqual(variant,source.variants[name],'Character variant identity changed: '+profile+'/'+name);
+  for(const file of variant.files.filter(file=>/\.(ktx2|webp)$/.test(file.path)))
+   assert(!inventory.has(dir+file.path),'Standalone character texture shipped: '+dir+file.path);
+  const stream=await openCharacterPreviewStream('https://package.test/'+path,{
+   features:name==='bc7'?['texture-compression-bc']:[],fetchImpl,subtle:webcrypto.subtle
+  });
+  try{
+   assert.equal(stream.variant,name);
+   await stream.loadPreview();
+   const textures=await stream.loadTextures(await stream.loadMetadata());
+   assert.equal(textures.size,variant.files.filter(file=>/\.(ktx2|webp)$/.test(file.path)).length);
+  }finally{stream.close();}
+ }
+}
 for(const source of [...UNUSED_WORKER_LAB_MODELS,UNUSED_CROP_LAB_MODEL,...UNUSED_ANIMAL_LAB_MODELS]){
  assert(!packagedModels.some(model=>model.url.replace(/^\//,'')===source),'Unused worker lab model listed in runtime catalogue');
  assert(!packagedAssets.records.some(item=>item.source===source),'Unused worker lab model listed in runtime asset map');
@@ -101,6 +154,13 @@ for(const record of retiredBiomes.records){
  assert.equal(pack.binary.url.replace(/^(?:\.\.\/|\.\/|\/)+/,''),record.current.slice(1));
  for(const file of inventory)if(/\.(json|js|mjs|html|css)$/.test(file))assert(!(await readFile(resolve(root,file),'utf8')).includes(record.archive.split('/').at(-1)),'Packaged reference to retired geometry: '+file);
 }
-assert(files<=1000,'itch.io package exceeds 1000 files');
-assert(bytes<=500_000_000,'itch.io package exceeds 500 MB');
+const cueBank=JSON.parse(await readFile(resolve(root,'content/guardian/lipsync/bank.json'),'utf8'));
+assert.equal(cueBank.version,1);const allSpiritRecords=[...spiritManifest.records,...JSON.parse(await readFile('content/manifests/agricultural-spirit-voices.json','utf8')).records,...JSON.parse(await readFile('content/manifests/awakening-spirit-voices.json','utf8')).records];
+assert.equal(Object.keys(cueBank.records).length,allSpiritRecords.length);
+for(const record of allSpiritRecords){
+ assert.deepEqual(cueBank.records[record.id],JSON.parse(publicText(await readFile(`public/content/guardian/lipsync/${record.id}.json`,'utf8'),`content/guardian/lipsync/${record.id}.json`,packagedAssets)),'Packed cues must preserve every authored timing and gesture');
+ assert(!inventory.has(`content/guardian/lipsync/${record.id}.json`),'Individual cues duplicated in release');
+}
+assert(files<=1000&&bytes<=500_000_000,
+ `itch.io package has ${files} files and ${bytes} bytes; limits are 1000 files and 500000000 bytes`);
 console.log(`PASS: ${files} files / ${bytes} bytes, ${links} relative links, ${packagedAssets.records.filter(item=>item.runtime.endsWith('.glb')).length} runtime GLBs, no unused worker labs, original GLBs, demo village or superseded ground duplicates`);

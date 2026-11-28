@@ -101,3 +101,23 @@ test('release includes the endpoint when the final coalesced sample precedes the
  f.event('pointermove',70,20,1,{getCoalescedEvents:()=>[{clientX:40,clientY:50}]});
  f.event('pointerup',70,20);assert.deepEqual(f.strokes,[[[1,1],[4,5],[7,2]]]);
 });
+test('asynchronous GPU strokes retain order and cancellation never dispatches stale work',async()=>{const tasks=[],f=fixture({screenSpace:true,resolveStroke:samples=>new Promise((resolve,reject)=>tasks.push({samples,resolve,reject}))});f.event('pointerdown',0,0);f.event('pointermove',40,0);f.event('pointerup',40,0);f.event('pointerdown',0,10);f.event('pointermove',40,10);f.event('pointerup',40,10);await Promise.resolve();assert.equal(tasks.length,2);tasks[1].resolve([[0,1],[4,1]]);await new Promise(r=>setImmediate(r));assert.equal(f.strokes.length,0);tasks[0].resolve([[0,0],[4,0]]);await new Promise(r=>setImmediate(r));assert.deepEqual(f.strokes,[[[0,0],[4,0]],[[0,1],[4,1]]]);f.event('pointerdown',0,0);f.event('pointermove',40,0);f.event('pointerup',40,0);await Promise.resolve();f.drawing.setEnabled(false);tasks[2].resolve([[0,0],[4,0]]);await new Promise(r=>setImmediate(r));assert.equal(f.strokes.length,2);});
+test('a camera or viewport change during a screen stroke cancels it before terrain work',async()=>{
+ for(const change of ['camera','viewport','returned']){
+  let context='camera-1/viewport-1',resolved=0;const errors=[],activities=[];
+  const f=fixture({screenSpace:true,strokeContext:()=>context,activity:a=>activities.push(a),onResolveError:e=>errors.push(e.message),resolveStroke:async()=>{resolved++;return [[0,0],[4,0]];}});
+  f.event('pointerdown',0,0);f.event('pointermove',20,0);
+  context=change==='viewport'?'camera-1/viewport-2':'camera-2/viewport-1';
+  f.event('pointermove',40,0);if(change==='returned')context='camera-1/viewport-1';
+  f.event('pointerup',50,0);await new Promise(r=>setImmediate(r));
+  assert.equal(resolved,0);assert.deepEqual(f.strokes,[]);assert.deepEqual(f.previews.at(-1),[]);
+  assert.deepEqual(errors,['Stale WebGPU pick']);assert.deepEqual(activities,['begin','drag','cancel']);
+ }
+});
+test('an unchanged screen stroke resolves every sample and a tap still follows its own selection path',async()=>{
+ let context='same';const errors=[],f=fixture({screenSpace:true,strokeContext:()=>context,onResolveError:e=>errors.push(e.message),resolveStroke:async samples=>samples.map(([x,y])=>[x/10,y/10])});
+ f.event('pointerdown',0,0);f.event('pointermove',40,10);f.event('pointerup',70,20);await new Promise(r=>setImmediate(r));
+ assert.deepEqual(f.strokes,[[[0,0],[4,1],[7,2]]]);
+ f.event('pointerdown',0,0);context='changed';f.event('pointerup',2,1);
+ assert.equal(f.taps.length,1);assert.deepEqual(errors,[]);
+});

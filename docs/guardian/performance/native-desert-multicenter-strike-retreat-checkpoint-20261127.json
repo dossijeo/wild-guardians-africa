@@ -1,0 +1,219 @@
+{
+  "base": "2c8a9cfd71b6e114b32b981ab027f62296f56689",
+  "input": {
+    "path": ".cache/flee-return/mixed-two-center-physical-input.json",
+    "sha256": "d9cdd4ea976f04dd72b6049118b8a8a98b200b40b6ff34980272e34ee8cc189f"
+  },
+  "sourceRefuge": {
+    "path": "D:/wild-guardians-qa/mixed-two-centers-checkpoint-nvidia-20261127.refuge.save.json",
+    "sha256": "c80055f9847287e7326fee90f7553256fe22e92dda4e32c7b62ee3b793a9714a"
+  },
+  "validation": {
+    "path": ".cache/multicenter-terminal-checkpoint-final.tap",
+    "sha256": "c4b508f8d740b534a7adce711baa2cdb158c5224af934f6b0bd9b98089b13f19",
+    "passed": 10,
+    "failed": 0
+  },
+  "ordinary": {
+    "elapsed": 68.55000000000244,
+    "raidEnded": true,
+    "firstRetarget": {
+      "at": 30.79999999999995,
+      "before": {
+        "at": 30.74999999999995,
+        "x": 109.42925281093073,
+        "z": 23.521629889372903,
+        "targetId": "structure-3",
+        "hitsRemaining": 2
+      },
+      "animal": {
+        "x": 109.39919895507883,
+        "z": 23.555122660957725,
+        "targetId": "structure-2",
+        "status": "walking",
+        "hitsRemaining": 1
+      }
+    },
+    "currentAtRuin": {
+      "targetId": "structure-2",
+      "status": "walking",
+      "x": 104.7977253989326,
+      "z": 24,
+      "hitsRemaining": 1,
+      "at": 34.000000000000135
+    },
+    "hits": [
+      [
+        "structure-3",
+        5.289999999999967,
+        160
+      ],
+      [
+        "structure-3",
+        17.789999999999765,
+        140
+      ],
+      [
+        "structure-3",
+        30.76999999999995,
+        120
+      ],
+      [
+        "structure-2",
+        58.82000000000225,
+        580
+      ]
+    ],
+    "ruin": {
+      "id": "event-16",
+      "type": "StructureRuined",
+      "targetId": "structure-3",
+      "structureKind": "center",
+      "presentation": {
+        "x": 108,
+        "z": 20
+      },
+      "simulationTime": 33.970000000000134
+    },
+    "end": {
+      "id": "event-21",
+      "type": "RaidEnded",
+      "simulationTime": 68.55000000000244
+    }
+  },
+  "hardware": {
+    "raw": {
+      "path": "D:/wild-guardians-qa/multicenter-terminal-checkpoint-nvidia-20261127.json",
+      "sha256": "f551732bbba6025ce4d7c54fc0d5a4b320dafc93c5c099d717538a865610e1fc"
+    },
+    "adapter": "NVIDIA Turing",
+    "sourceDrain": {
+      "disposed": true
+    },
+    "phases": [
+      {
+        "phase": "strike",
+        "disk": {
+          "path": "D:/wild-guardians-qa/multicenter-terminal-checkpoint-nvidia-20261127.strike.save.json",
+          "sha256": "15c81661d4dfd71f5491cfa7d55adfe9f866d28bc537d6d7916d8075965353d2"
+        },
+        "at": 41.30000000000089,
+        "sample": {
+          "sequence": 136,
+          "relativeAge": 0.27579978108406067
+        },
+        "savedPose": {
+          "x": -17.663236618041992,
+          "z": -15.632244110107422,
+          "heading": -0.09245066456966995,
+          "phase": 16.60730847723299
+        },
+        "firstCold": {
+          "sequence": 20,
+          "epoch": "592f8d17-a40c-4e45-973e-75e8694c0954/1",
+          "kind": 27,
+          "purpose": "center",
+          "relativeAge": 0
+        },
+        "strike": {
+          "attackId": "attack-29209",
+          "remaining": 1.141666705161299,
+          "clipAge": 0.4000000000000341
+        },
+        "hits": [
+          {
+            "attackId": "attack-29209",
+            "targetId": "structure-1000000",
+            "simulationTime": 42.45000000000099
+          },
+          {
+            "attackId": "attack-29212",
+            "targetId": "structure-1000000",
+            "simulationTime": 46.75000000000136
+          },
+          {
+            "attackId": "attack-29215",
+            "targetId": "structure-1000000",
+            "simulationTime": 52.90000000000188
+          },
+          {
+            "attackId": "attack-29218",
+            "targetId": "structure-1000000",
+            "simulationTime": 58.070000000002324
+          }
+        ],
+        "civil": {
+          "center": "structure-2",
+          "worker": "worker-900011",
+          "atIdle": 70.25000000000247,
+          "ledgerBalance": {
+            "n": "100000",
+            "d": "1"
+          }
+        },
+        "drain": {
+          "disposed": true
+        }
+      },
+      {
+        "phase": "retreat",
+        "disk": {
+          "path": "D:/wild-guardians-qa/multicenter-terminal-checkpoint-nvidia-20261127.retreat.save.json",
+          "sha256": "4034cb1b2de664b24dc23faae509313084de801469c027da404a7e68432b32f9"
+        },
+        "at": 57.65000000000229,
+        "sample": {
+          "sequence": 262,
+          "relativeAge": 0.25919994711875916
+        },
+        "savedPose": {
+          "x": -17.55588940874092,
+          "z": -17.14844877197061,
+          "heading": 3.0709106503688117,
+          "phase": 17.007308477233025
+        },
+        "firstCold": {
+          "sequence": 13,
+          "epoch": "7128cb06-11ff-4c0d-9fe3-ca022830fd9b/1",
+          "kind": 26,
+          "purpose": "retreat",
+          "relativeAge": 0
+        },
+        "hits": [
+          {
+            "attackId": "attack-29209",
+            "targetId": "structure-1000000",
+            "simulationTime": 42.45000000000099
+          },
+          {
+            "attackId": "attack-29212",
+            "targetId": "structure-1000000",
+            "simulationTime": 45.40000000000124
+          },
+          {
+            "attackId": "attack-29215",
+            "targetId": "structure-1000000",
+            "simulationTime": 51.300000000001745
+          },
+          {
+            "attackId": "attack-29218",
+            "targetId": "structure-1000000",
+            "simulationTime": 56.37000000000218
+          }
+        ],
+        "civil": {
+          "center": "structure-2",
+          "worker": "worker-900011",
+          "atIdle": 66.95000000000266,
+          "ledgerBalance": {
+            "n": "100000",
+            "d": "1"
+          }
+        },
+        "drain": {
+          "disposed": true
+        }
+      }
+    ]
+  }
+}

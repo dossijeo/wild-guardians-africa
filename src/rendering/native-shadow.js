@@ -32,7 +32,7 @@ export function updateNativeShadowUniforms(uniforms,renderer,light){
 }
 
 export function installNativeShadow(renderer,light,uniforms){
-  let map=renderer.shadowMap,original=map.render;const cache=new ShadowCache();
+  let map=renderer.shadowMap,original=map.render;const cache=new ShadowCache();const viewport=new THREE.Vector4(),scissor=new THREE.Vector4();
   const canvas=renderer.domElement,reset=()=>cache.invalidate();
   const restore=()=>{reset();const next=renderer.shadowMap;if(next===map)return;if(map.render===render)map.render=original;map=next;original=map.render;map.render=render;};
   canvas?.addEventListener('webglcontextlost',reset);canvas?.addEventListener('webglcontextrestored',restore);
@@ -46,10 +46,17 @@ export function installNativeShadow(renderer,light,uniforms){
       cache.stats.hits++;updateNativeShadowUniforms(uniforms,renderer,light);return;
     }
     cache.invalidate();
+    // Three restores the previous target only on successful shadow traversal.
+    // Save it before drawing so a thrown callback cannot leave later draws
+    // directed into the shadow map. Test doubles may omit renderer APIs.
+    const canRestore=typeof renderer.getRenderTarget==='function'&&typeof renderer.setRenderTarget==='function';
+    const target=canRestore?renderer.getRenderTarget():null,cube=renderer.getActiveCubeFace?.()??0,mip=renderer.getActiveMipmapLevel?.()??0;
+    const hasViewport=typeof renderer.getViewport==='function'&&typeof renderer.setViewport==='function',hasScissor=typeof renderer.getScissor==='function'&&typeof renderer.setScissor==='function',hasScissorTest=typeof renderer.getScissorTest==='function'&&typeof renderer.setScissorTest==='function';
+    if(hasViewport)renderer.getViewport(viewport);if(hasScissor)renderer.getScissor(scissor);const vx=viewport.x,vy=viewport.y,vw=viewport.z,vh=viewport.w,sx=scissor.x,sy=scissor.y,sw=scissor.z,sh=scissor.w,scissorTest=hasScissorTest?renderer.getScissorTest():false;
     const originalDraw=renderer.renderBufferDirect,materials=new Map();
     function draw(...args){const material=args[3];if(!materials.has(material))materials.set(material,[material.polygonOffset,material.polygonOffsetFactor,material.polygonOffsetUnits]);material.polygonOffset=true;material.polygonOffsetFactor=material.polygonOffsetUnits=1;return originalDraw.apply(this,args);}
     renderer.renderBufferDirect=draw;
-    try{const result=original.call(this,lights,scene,camera);cache.commit(snapshot);return result;}
+    try{const result=original.call(this,lights,scene,camera);cache.commit(snapshot);return result;}catch(error){if(canRestore){try{renderer.setRenderTarget(target,cube,mip);if(hasViewport)renderer.setViewport(vx,vy,vw,vh);if(hasScissor)renderer.setScissor(sx,sy,sw,sh);if(hasScissorTest)renderer.setScissorTest(scissorTest);}catch{/* Preserve the original draw error, including during context loss. */}}throw error;}
     finally{if(renderer.renderBufferDirect===draw)renderer.renderBufferDirect=originalDraw;for(const [material,saved] of materials)[material.polygonOffset,material.polygonOffsetFactor,material.polygonOffsetUnits]=saved;updateNativeShadowUniforms(uniforms,renderer,light);}
   }
   map.render=render;let released=false;

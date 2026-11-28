@@ -1,0 +1,208 @@
+{
+  "baseline": "6a986233735a6b7ed29b68b771544df62c9a1570",
+  "scope": "Prototipo privado en Edge. Ejecuta Authority Worker, WorldSurface con los rigs originales, Draw y el transporte de recursos. El recibo incluye callbacks de Three al grabar ambos rigs y el acuse del envío del Host.",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 87.30000000447035
+    }
+  },
+  "recorded": {
+    "kind": "recorded-rigs",
+    "at": 12.619999999999944,
+    "worker": [
+      {
+        "mesh": 878,
+        "geometry": 325,
+        "phase": 0.4600000000000004
+      },
+      {
+        "mesh": 880,
+        "geometry": 327,
+        "phase": 0.4600000000000004
+      },
+      {
+        "mesh": 881,
+        "geometry": 328,
+        "phase": 0.4600000000000004
+      },
+      {
+        "mesh": 879,
+        "geometry": 326,
+        "phase": 0.4600000000000004
+      }
+    ],
+    "animal": [
+      {
+        "mesh": 833,
+        "geometry": 363,
+        "phase": 0
+      },
+      {
+        "mesh": 831,
+        "geometry": 361,
+        "phase": 0
+      },
+      {
+        "mesh": 832,
+        "geometry": 362,
+        "phase": 0
+      },
+      {
+        "mesh": 830,
+        "geometry": 360,
+        "phase": 0
+      }
+    ]
+  },
+  "request": {
+    "kind": "encounter-request",
+    "id": 6,
+    "at": 12.619999999999944,
+    "worker": {
+      "id": "worker-900011",
+      "body": 1,
+      "fromTime": 12.599999999999945,
+      "at": 12.619999999999944,
+      "span": 0.02,
+      "x": -14.520928903743672,
+      "z": 2.5523155738541687,
+      "heading": 0,
+      "from": 3.101666507720947,
+      "remaining": 3.081666507720947
+    }
+  },
+  "ready": {
+    "kind": "encounter-ready",
+    "id": 6,
+    "sequence": 87
+  },
+  "drawn": {
+    "version": 1,
+    "sequence": 87,
+    "worldBoundary": {
+      "version": 1,
+      "authorityEpoch": "304eab31-3aab-4218-a4f0-532d2982c8df/1",
+      "nativeSession": 1,
+      "ticket": 11,
+      "effectiveTime": 12.619999999999944
+    },
+    "elapsed": 12.619999999999944,
+    "assignment": 12
+  },
+  "ack": {
+    "id": 6,
+    "heldMainProjectionAt": 12.599999999999945,
+    "afterAck": 12.639999999999944
+  },
+  "events": [
+    {
+      "id": "event-29209",
+      "type": "WorkerHit",
+      "simulationTime": 12.179999999999954
+    },
+    {
+      "id": "event-29210",
+      "type": "WorkerIncapacitated",
+      "simulationTime": 12.619999999999944
+    },
+    {
+      "id": "event-29211",
+      "type": "AnimalRetreating",
+      "simulationTime": 12.619999999999944
+    },
+    {
+      "id": "event-29212",
+      "type": "RaidEnded",
+      "simulationTime": 14.339999999999907
+    }
+  ],
+  "getUpEndedAt": 18.91999999999981,
+  "drained": true,
+  "priorPhysical": {
+    "submitted": {
+      "version": 1,
+      "sequence": 70,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "eebcc062-63e7-42e5-90bb-7737f83fd3f2/1",
+        "nativeSession": 1,
+        "ticket": 11,
+        "effectiveTime": 12.619999999999944
+      },
+      "elapsed": 12.619999999999944,
+      "assignment": 12
+    },
+    "elapsed": 18.91999999999981
+  },
+  "physicalTimeout": {
+    "elapsed": 12.599999999999945,
+    "error": "Error: Retreat submit Error: Error: Error: Native resource preparation timed out",
+    "atStage": "Retreat READY and first submit",
+    "exactPendingOperandCaptured": false
+  },
+  "queuedHomeCpu": {
+    "before": {
+      "sequence": 6,
+      "pending": 6,
+      "drawn": 5,
+      "status": null,
+      "opportunity": {
+        "at": 9007199254740991,
+        "intervalMs": 0,
+        "outcome": "stale-binding",
+        "holdId": null,
+        "sequence": 5
+      },
+      "at": 12.179999999999954
+    },
+    "after": {
+      "sequence": 6,
+      "pending": null,
+      "drawn": 5,
+      "status": "remote-frame-native-route-obsolete",
+      "opportunity": {
+        "at": 9007199254740991,
+        "intervalMs": 0,
+        "outcome": "submitted",
+        "holdId": null,
+        "sequence": 5
+      },
+      "at": 12.179999999999954
+    }
+  },
+  "regression": {
+    "passed": 214,
+    "failed": 0,
+    "command": "node --test --test-concurrency=1 tests/native-home-route-remote.test.js tests/native-home-arrival-remote.test.js tests/native-route-control.test.js tests/native-ordinary-animal-crop-host.test.js tests/remote-webgpu.test.js"
+  },
+  "limits": [
+    "La captura positiva no ejercita la retirada de un Home pendiente en Draw. Ese orden está demostrado en CPU.",
+    "El registro de Three acredita las mallas y la fase al grabar. No hay lectura de uniformes GPU ni métrica C4.",
+    "El código de encuentro y su WASM siguen en una copia privada."
+  ],
+  "sha256": {
+    ".cache/flee-mixed/encounter-surface-home-release-physical.json": "e7214dd968208dcc1c94d8facc735a3d7bbc466b5de95a69aa280fae23eb8714",
+    ".cache/flee-mixed/encounter-surface-first-impact.json": "03f23fddb924d1dfcb8535ab9815e9b5c5df52add17d0655fb8069373090b720",
+    ".cache/flee-mixed/encounter-surface-rigs-physical.json": "9a37ea057e4207df286da445a2ac5b87f92c84afaccfe7b6aa5679e02acdb731",
+    ".cache/flee-mixed/encounter-home-queued-before.log": "695e008b418b8fe458c22ff251f4907bdf00ae7609afa4fe18dd58e0eee32e57",
+    ".cache/flee-mixed/encounter-home-queued-after.log": "d991d500c1bbabc3b5184e6a0277c86f900cf11aa037b4448512c14080f76ef4",
+    ".cache/flee-mixed/home-pending-impact.tap": "894e8ca260674d016b8f37435272bc749ae984ac52b2a525608596489cf74968",
+    "E:/wild-guardians-qa/encounter-retreat-go-5b5ba3f6/build/standalone/spatial-savanna.wasm": "6cd961fa4530e0228b68ac478a6c60ddfc5673db324ada1f3a0c63fee8b802c8",
+    ".cache/flee-mixed/run-encounter-surface.mjs": "b628972501dda6bda80f3a1eced2a28ea068d88c00a2c36a81813e96f87a2635",
+    ".cache/flee-mixed/encounter-surface-loader.mjs": "3b7a19038b2760ce692f590af93f6084465c2f4674a2b13ef5490fad92e09a73",
+    ".cache/flee-mixed/encounter-surface-browser.js": "1b77e6b1c3d5113387f319d6e7702f64a68ab3e0a5fec8b7623fb6f4eb324bf0",
+    ".cache/flee-mixed/encounter-surface-worker.js": "9f681fdc4d6c20cc8d4e3f588d10cc65bf085503874b84d97a62fa654cb82325",
+    ".cache/flee-mixed/encounter-home-queued-loader.mjs": "4977aa54b66b0e2b78f3906743bde37afda1da8e380d370ba9cadd1800139f0f",
+    ".cache/flee-mixed/record-encounter-surface.mjs": "f7a96ccc59010e4c84306908c938e3854eebfaf33f47dc598f31c08533bc74bb"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "revision": "129dd67ecac3e70fe691f31a35bcdc71b7f0da58",
+  "artifact": "native-menu-campaign-714-released-floor-buffer-batches-extended.json",
+  "sha256": "a656fcda2cc495a8030cdfd5a7f895eb32eca397196ff83d82352d487c9484aa",
+  "scenario": {
+    "biome": "sabana",
+    "seed": 714,
+    "adapter": "NVIDIA Turing",
+    "clock": "Hosted ordinario",
+    "nativeWorkerLifecycle": true,
+    "resourceBatchVersion": 1
+  },
+  "home": {
+    "worker": "worker-6",
+    "x": 60,
+    "z": 0,
+    "absenceFrame": 1084,
+    "ticket": 47,
+    "clockElapsed": 295.69999999996526
+  },
+  "historicalFailure": {
+    "code": "historical-playback-invalidated",
+    "reason": "watchdog",
+    "eventPublication": 7059
+  },
+  "recovery": {
+    "request": "markVisualLost",
+    "holdId": 2774,
+    "holdAfterTriggerMs": 3.10009765625,
+    "preparationReceipt": { "version": 1 },
+    "terminalMode": false,
+    "drawDrainedAtHold": false,
+    "floor": 7148,
+    "authorityElapsed": 323.7999999999667,
+    "checkpointBase": 7021,
+    "checkpointCandidate": 7086,
+    "journalThrough": 7148,
+    "journalEntries": 127,
+    "journalHighWatermark": 128,
+    "journalSaturated": false,
+    "stream": { "acknowledged": 7058, "lastReceived": 7090, "detached": false },
+    "unchangedFromHoldToTimeout": true,
+    "error": "Recovery activation idle timeout",
+    "errorStage": "prepareNativeRecoveryCheckpoint",
+    "errorAfterTriggerMs": 120014.48510742188,
+    "startedActivation": false,
+    "observedDrain": false
+  },
+  "pageErrors": [],
+  "httpErrors": []
+}

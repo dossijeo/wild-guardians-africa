@@ -1,0 +1,283 @@
+{
+  "scope": "Read-only terrain diagnostic after normal startup and menu pause; no physical-playback validation",
+  "source": ".cache/historical-terrain-detail.json",
+  "started": "2026-11-07T13:23:46.700Z",
+  "backend": "WebGPU",
+  "device": {
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "isFallbackAdapter": false
+    },
+    "maxVertexBuffers": 8
+  },
+  "terrain": {
+    "manifestMatches": true,
+    "chunks": [
+      {
+        "cx": 2,
+        "cz": 0,
+        "manifest": true,
+        "resident": true,
+        "visible": true,
+        "canonical": false,
+        "details": {
+          "type": "Mesh",
+          "parent": true,
+          "skinned": false,
+          "morphTargetInfluences": false,
+          "ancestors": [
+            {
+              "type": "Mesh",
+              "visible": true
+            },
+            {
+              "type": "Group",
+              "visible": true
+            },
+            {
+              "type": "Scene",
+              "visible": true
+            }
+          ],
+          "material": {
+            "type": "MeshBasicNodeMaterial",
+            "visible": true,
+            "positionNode": false,
+            "vertexNode": false,
+            "displacementMap": false,
+            "transparent": false,
+            "opacity": 1,
+            "alphaTest": 0,
+            "clippingPlanes": 0
+          },
+          "geometry": {
+            "type": "BufferGeometry",
+            "positionCount": 2401,
+            "positionItemSize": 3,
+            "positionArray": "Float32Array",
+            "indexCount": 13824,
+            "indexArray": "Uint32Array",
+            "drawStart": 0,
+            "drawCount": null,
+            "positionMismatch": null,
+            "indexMismatch": null
+          },
+          "matrix": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            96,
+            0,
+            0,
+            1
+          ],
+          "expectedMatrix": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            96,
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      {
+        "cx": 1,
+        "cz": 0,
+        "manifest": true,
+        "resident": true,
+        "visible": true,
+        "canonical": false,
+        "details": {
+          "type": "Mesh",
+          "parent": true,
+          "skinned": false,
+          "morphTargetInfluences": false,
+          "ancestors": [
+            {
+              "type": "Mesh",
+              "visible": true
+            },
+            {
+              "type": "Group",
+              "visible": true
+            },
+            {
+              "type": "Scene",
+              "visible": true
+            }
+          ],
+          "material": {
+            "type": "MeshBasicNodeMaterial",
+            "visible": true,
+            "positionNode": false,
+            "vertexNode": false,
+            "displacementMap": false,
+            "transparent": false,
+            "opacity": 1,
+            "alphaTest": 0,
+            "clippingPlanes": 0
+          },
+          "geometry": {
+            "type": "BufferGeometry",
+            "positionCount": 2401,
+            "positionItemSize": 3,
+            "positionArray": "Float32Array",
+            "indexCount": 13824,
+            "indexArray": "Uint32Array",
+            "drawStart": 0,
+            "drawCount": null,
+            "positionMismatch": null,
+            "indexMismatch": null
+          },
+          "matrix": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            48,
+            0,
+            0,
+            1
+          ],
+          "expectedMatrix": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            48,
+            0,
+            0,
+            1
+          ]
+        }
+      }
+    ],
+    "points": [
+      {
+        "actorId": "animal-17",
+        "x": 100,
+        "z": 5.055596490248717,
+        "exact": 3.319999933242798,
+        "sampled": 3.319999933242798
+      },
+      {
+        "actorId": "animal-17",
+        "x": 100,
+        "z": 4.905596490248716,
+        "exact": 3.319999933242798,
+        "sampled": 3.319999933242798
+      },
+      {
+        "actorId": "animal-18",
+        "x": 101.92276146451135,
+        "z": 0.795954387769114,
+        "exact": 3.319999933242798,
+        "sampled": 3.319999933242798
+      },
+      {
+        "actorId": "animal-18",
+        "x": 101.92581297184938,
+        "z": 0.6459854299712882,
+        "exact": 3.319999933242798,
+        "sampled": 3.319999933242798
+      },
+      {
+        "actorId": "animal-19",
+        "x": 88.03108657489788,
+        "z": 11,
+        "exact": 3.319999933242798,
+        "sampled": 3.319999933242798
+      },
+      {
+        "actorId": "animal-19",
+        "x": 88,
+        "z": 10.881086574897884,
+        "exact": 3.319999933242798,
+        "sampled": 3.319999933242798
+      },
+      {
+        "actorId": "animal-20",
+        "x": 102.21617602853185,
+        "z": 6.97859180474507,
+        "exact": 3.319999933242798,
+        "sampled": 3.319999933242798
+      },
+      {
+        "actorId": "animal-20",
+        "x": 102.26129875101476,
+        "z": 6.835539576815089,
+        "exact": 3.319999933242798,
+        "sampled": 3.319999933242798
+      },
+      {
+        "actorId": "animal-21",
+        "x": 91.04011991265946,
+        "z": 14.12675394180536,
+        "exact": 3.319999933242798,
+        "sampled": 3.319999933242798
+      },
+      {
+        "actorId": "animal-21",
+        "x": 91.04011991265946,
+        "z": 14.12675394180536,
+        "exact": 3.319999933242798,
+        "sampled": 3.319999933242798
+      },
+      {
+        "actorId": "worker-12",
+        "x": 71.59110991546882,
+        "z": 3.105828541230249,
+        "exact": 3.319999933242798,
+        "sampled": 3.319999933242798
+      },
+      {
+        "actorId": "worker-12",
+        "x": 71.59110991546882,
+        "z": 3.105828541230249,
+        "exact": 3.319999933242798,
+        "sampled": 3.319999933242798
+      }
+    ],
+    "pointLimit": 128,
+    "note": "Endpoint diagnostics only; segment cuts and limits are not re-evaluated."
+  }
+}

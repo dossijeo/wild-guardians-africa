@@ -17,16 +17,29 @@ const domain=s=>JSON.parse(serialize(s));
 function fixture(culture,seed){
  const s=Game.newGame({seed,culture,slotId:`frontal-${culture}-${seed}`});Game.resume(s,'intro');s.ledger.balance=rational(10000);const nav=navigation(s,seed);
  Game.placeStructure(s,'center',{x:-12,z:0},nav);Game.plant(s,'crop','mijo',20.83,0,nav);s.day=3;s.completedNights=2;s.initialPreparation=false;s.tutorial.step='done';Game.pause(s,'hiring');Game.hire(s,'hire',{olderFemale:1});s.dayPlan={done:true};s.nightPlan={done:true};
- for(let i=0;i<2000&&s.workers[0].status!=='acting';i++)Game.tick(s,.05,nav);assert.equal(s.workers[0].status,'acting');assert.ok(Math.abs(s.workers[0].x-20)<1e-8&&Math.abs(s.workers[0].z)<1e-8);spawnRaid(s,{group:['warthog']},nav);
- for(let i=0;i<2000&&!eligible(s)&&s.raid;i++)Game.tick(s,.05,nav);assert.ok(eligible(s));return {s,nav};
+ for(let i=0;i<2000&&s.workers[0].status!=='acting';i++)Game.tick(s,.05,nav);assert.equal(s.workers[0].status,'acting');assert.ok(Math.abs(s.workers[0].x-20)<1e-8&&Math.abs(s.workers[0].z)<1e-8);
+ // Keep the spawn on the return corridor so the later frontal approach follows a real collision.
+ nav.setRaidView({x:15.9,z:2},{x:24,z:2});
+ spawnRaid(s,{group:['warthog']},nav);
+ const firstCollision=()=>s.workers[0].hits===1&&s.events.some(event=>event.type==='WorkerHit'&&event.collision);
+ for(let i=0;i<2000&&s.raid&&!(firstCollision()&&eligible(s));i++)Game.tick(s,.05,nav);
+ assert.ok(firstCollision());assert.ok(eligible(s));return {s,nav};
 }
 for(const culture of Game.CULTURES)for(const [seed,accepted] of [[21,true],[152,false]])test(`QA-105: ${culture} real non-collision frontal ${accepted?'hit':'rejection'} rolls once and retains contact on reload`,()=>{
  const {s,nav}=fixture(culture,seed),x=actors(s),beforeHits=x.w.hits,budget=x.a.hitsRemaining,probe={...s},roll=nextRandom(probe);
  assert.equal(roll<.6,accepted);assert.equal(x.collision,false);assert.equal(x.frontal,true);
  const before=saved(s),beforeNav=navigation(before,seed);assert.equal(serialize(before),serialize(s));
+ const priorEvents=new Set(s.events.map(event=>event.id));
  Game.tick(s,.05,nav);Game.tick(before,.05,beforeNav);assert.deepEqual(domain(before),domain(s));
  assert.equal(s.rng,probe.rng);assert.equal(x.w.hits,beforeHits+Number(accepted));assert.equal(x.a.hitsRemaining,budget-Number(accepted));
- if(accepted)assert.equal(s.events.at(-1).pushed,0);assert.ok(s.raid.encounterContacts.includes(x.pair));
+ const encounterEvents=s.events.filter(event=>!priorEvents.has(event.id)&&['WorkerHit','WorkerIncapacitated'].includes(event.type));
+ assert.equal(encounterEvents.length,Number(accepted));
+ if(accepted){
+  const [event]=encounterEvents;
+  assert.deepEqual([event.type,event.targetId,event.animalId,event.collision,event.pushed],['WorkerIncapacitated',x.w.id,x.a.id,false,0]);
+  assert.equal(x.w.incapacitated,true);
+ }
+ assert.ok(s.raid.encounterContacts.includes(x.pair));
  const restored=saved(s),fresh=navigation(restored,seed),rng=s.rng,hits=x.w.hits;
  Game.pause(restored,'qa');const frozen=serialize(restored);Game.tick(restored,30,fresh);assert.equal(serialize(restored),frozen);Game.resume(restored,'qa');
  let continued=0;

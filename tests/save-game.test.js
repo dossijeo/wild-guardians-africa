@@ -2,7 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as Game from '../src/simulation/game.js';
 import {SaveRepository,serialize} from '../src/persistence/snapshots.js';
-import {saveGame} from '../src/app/save-game.js';
+import {saveGame,saveWorkerGame} from '../src/app/save-game.js';
+
+test('worker save confirms only a committed checkpoint and reports unavailable physics',async()=>{
+ const errors=[];let confirms=0;const options={confirm:true,onError:message=>errors.push(message),onConfirm:()=>confirms++};
+ assert.equal(await saveWorkerGame({request:async()=>({saved:false,reason:'physics-active'})},options),false);assert.equal(confirms,0);assert.match(errors[0],/caída física/);
+ assert.equal(await saveWorkerGame({request:async()=>{throw Error('storage failed');}},options),false);assert.equal(confirms,0);assert.match(errors[1],/storage failed/);
+ assert.equal(await saveWorkerGame({request:async()=>({saved:true})},options),true);assert.equal(confirms,1);
+});
 
 test('failed staging, backup or primary writes never announce success or lose the previous playable save',()=>{
  for(const failAt of [':pending',':backup','primary']){

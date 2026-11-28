@@ -1,0 +1,250 @@
+{
+  "scenario": "Two terminal Draw losses in the same gated Desert raid, while Home18 is active and after Home19.",
+  "qualification": {
+    "qualifyAnimalCrop": true,
+    "qualifyFarmFlee": true,
+    "ordinary": false,
+    "workers": 1,
+    "animals": 1
+  },
+  "hardware": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "edge": "158.0.4370.33",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja"
+  },
+  "phases": [
+    {
+      "phase": "acquired Home18",
+      "hold": 6,
+      "checkpoint": 131,
+      "heldPublication": 203,
+      "activatedPublication": 204,
+      "worldTicket": 9,
+      "sources": [
+        {
+          "kind": 18,
+          "ticket": 7,
+          "assignment": 7,
+          "body": 1,
+          "actor": 900011,
+          "elapsed": 19.99999999999993,
+          "position": [
+            -13.992461644967058,
+            10.906603723027661
+          ],
+          "phase": 1.900000000000027
+        },
+        {
+          "kind": 26,
+          "ticket": 9,
+          "assignment": 8,
+          "body": 2,
+          "actor": 1000001,
+          "elapsed": 19.99999999999993,
+          "position": [
+            -17.72768943743825,
+            -27
+          ],
+          "phase": 0.30000000000000426
+        }
+      ],
+      "first": {
+        "sequence": 1,
+        "elapsed": 19.99999999999993,
+        "ticket": 9,
+        "clocks": [
+          {
+            "field": "nativeHome",
+            "actor": 900011,
+            "body": 1,
+            "ticket": 7,
+            "executionEpoch": 18.099999999999902,
+            "age": 1.899999976158142,
+            "elapsed": 19.999999976158044
+          },
+          {
+            "field": "nativeGate",
+            "gate": 1000000,
+            "ticket": 7,
+            "elapsed": 19.999999976158044
+          },
+          {
+            "field": "nativeAnimalCrop",
+            "actor": 1000001,
+            "body": 2,
+            "ticket": 9,
+            "executionEpoch": 19.699999999999925,
+            "age": 0.29999998211860657,
+            "elapsed": 19.99999998211853
+          }
+        ]
+      },
+      "old": {
+        "sequence": 63,
+        "elapsed": 19.899999999999928,
+        "ticket": 9,
+        "clocks": [
+          {
+            "field": "nativeHome",
+            "actor": 900011,
+            "body": 1,
+            "ticket": 6,
+            "executionEpoch": 18.099999999999902,
+            "age": 1.7999999523162842,
+            "elapsed": 17.499999952316163
+          },
+          {
+            "field": "nativeGate",
+            "gate": 1000000,
+            "ticket": 6,
+            "elapsed": 17.499999952316163
+          },
+          {
+            "field": "nativeAnimalCrop",
+            "actor": 1000001,
+            "body": 2,
+            "ticket": 8,
+            "executionEpoch": 19.699999999999925,
+            "age": 0.19999998807907104,
+            "elapsed": 18.349999988078974
+          }
+        ]
+      },
+      "gateOpeningAtFirstSubmit": 1
+    },
+    {
+      "phase": "after Home19",
+      "hold": 15,
+      "checkpoint": 204,
+      "heldPublication": 221,
+      "activatedPublication": 221,
+      "worldTicket": 11,
+      "sources": [
+        {
+          "kind": 26,
+          "ticket": 9,
+          "assignment": 8,
+          "body": 2,
+          "actor": 1000001,
+          "elapsed": 20.89999999999994,
+          "position": [
+            -21.1476894374383,
+            -27
+          ],
+          "phase": 1.200000000000017
+        }
+      ],
+      "first": {
+        "sequence": 1,
+        "elapsed": 20.89999999999994,
+        "ticket": 11,
+        "clocks": [
+          {
+            "field": "nativeAnimalCrop",
+            "actor": 1000001,
+            "body": 2,
+            "ticket": 9,
+            "executionEpoch": 19.699999999999925,
+            "age": 1.1999999284744263,
+            "elapsed": 20.89999992847435
+          }
+        ]
+      },
+      "old": {
+        "sequence": 11,
+        "elapsed": 20.69999999999994,
+        "ticket": 11,
+        "clocks": [
+          {
+            "field": "nativeGate",
+            "gate": 1000000,
+            "ticket": 7,
+            "elapsed": 20.53893051147451
+          },
+          {
+            "field": "nativeAnimalCrop",
+            "actor": 1000001,
+            "body": 2,
+            "ticket": 9,
+            "executionEpoch": 19.699999999999925,
+            "age": 1,
+            "elapsed": 20.699999999999925
+          }
+        ]
+      }
+    }
+  ],
+  "refuge": {
+    "actor": 900011,
+    "body": 1,
+    "ticket": 11,
+    "retiredSequence": 9,
+    "position": [
+      -14,
+      11.800000190734863
+    ]
+  },
+  "impacts": [
+    {
+      "id": "event-29210",
+      "elapsed": 45.70000000000127,
+      "previousHp": 600,
+      "hp": 580
+    },
+    {
+      "id": "event-29213",
+      "elapsed": 48.90000000000154,
+      "previousHp": 580,
+      "hp": 560
+    },
+    {
+      "id": "event-29216",
+      "elapsed": 54.950000000002056,
+      "previousHp": 560,
+      "hp": 540
+    },
+    {
+      "id": "event-29219",
+      "elapsed": 60.1700000000025,
+      "previousHp": 540,
+      "hp": 520
+    }
+  ],
+  "raidEnd": {
+    "event": "event-29222",
+    "elapsed": 68.64000000000256
+  },
+  "civilReturn": {
+    "actor": 900011,
+    "newBody": 3,
+    "sourceRefugeSequence": 9,
+    "status": "native-idle",
+    "drewWithoutAnimal": true
+  },
+  "checks": {
+    "refugeAcquiredOnce": true,
+    "originalCenterRouteAcquiredOnce": true,
+    "ledgerUnchanged": true,
+    "expectedDevicePageErrors": 1,
+    "deviceLosses": 2,
+    "drawDrained": true,
+    "unexpectedErrors": []
+  },
+  "evidence": {
+    "trace": {
+      "bytes": 76937629,
+      "sha256": "a33f179348039cc25320ecd4a9a0de42a091106c71a50eefdb34abb4be4aff69",
+      "dataLoss": false
+    },
+    "rawReceiptSha256": "3a95e939e69e04fde5a53aa7f68736aa2eaa4fdcb104edb3027558f39f91319e"
+  },
+  "limits": [
+    "The gate is settled when the first device is lost. The retained motor clock is still bound to Home18.",
+    "This is a qualified development cohort. Ordinary rollout and 60 Hz acceptance remain open."
+  ]
+}

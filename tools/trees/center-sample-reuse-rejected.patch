@@ -1,0 +1,61 @@
+diff --git a/src/world/wild-engine/spatial-savanna.cpp b/src/world/wild-engine/spatial-savanna.cpp
+index 410e2ab7b..381160d3a 100644
+--- a/src/world/wild-engine/spatial-savanna.cpp
++++ b/src/world/wild-engine/spatial-savanna.cpp
+@@ -684,6 +684,13 @@ void buildWaterMesh(int cx,int cz){
+     for(size_t i=1;i+1<outline.size();i++)waterTriangle(outline[0],outline[i+1],outline[i],p.level);
+   }
+ }
++#ifdef WILD_CENTER_SAMPLE_REUSE
++struct CenterSampleKey{uint64_t x,z;int cx,cz;bool operator==(const CenterSampleKey& other)const{return x==other.x&&z==other.z&&cx==other.cx&&cz==other.cz;}};
++struct CenterSampleHash{size_t operator()(const CenterSampleKey& key)const{uint64_t h=key.x^(key.z*0x9e3779b97f4a7c15ULL)^(uint64_t(uint32_t(key.cx))<<32)^uint32_t(key.cz);h^=h>>33;h*=0xff51afd7ed558ccdULL;h^=h>>33;h*=0xc4ceb9fe1a85ec53ULL;h^=h>>33;return size_t(h);}};
++WILD_SAMPLING_LOCAL bool centerSampleReuseActive=false;
++WILD_SAMPLING_LOCAL std::unordered_map<CenterSampleKey,bool,CenterSampleHash> centerSamples;
++struct CenterSampleScope{CenterSampleScope(){centerSamples.clear();centerSampleReuseActive=true;}~CenterSampleScope(){centerSampleReuseActive=false;std::unordered_map<CenterSampleKey,bool,CenterSampleHash>().swap(centerSamples);}};
++#endif
+ bool terrainValid(double x,double z,float radius,bool worker){
+   auto travelSurface=[&](double px,double pz){
+     const double ground=surface(px,pz);
+@@ -692,9 +699,16 @@ bool terrainValid(double x,double z,float radius,bool worker){
+   };
+   for(int i=0;i<5;i++){
+     const double px=x+(i==1?radius:i==2?-radius:0),pz=z+(i==3?radius:i==4?-radius:0);
+-    if(worldBiome!=4&&!(worldBiome==5&&worker)&&fluid(px,pz))return false;
+-    if(std::hypot(travelSurface(px+.8,pz)-travelSurface(px-.8,pz),
+-      travelSurface(px,pz+.8)-travelSurface(px,pz-.8))/1.6>.5)return false;
++#ifdef WILD_CENTER_SAMPLE_REUSE
++    CenterSampleKey key{};if(i==0&&centerSampleReuseActive){std::memcpy(&key.x,&px,sizeof(px));std::memcpy(&key.z,&pz,sizeof(pz));key.cx=chunkX;key.cz=chunkZ;const auto found=centerSamples.find(key);if(found!=centerSamples.end()){if(!found->second)return false;continue;}}
++#endif
++    const bool valid=!(worldBiome!=4&&!(worldBiome==5&&worker)&&fluid(px,pz))&&
++      !(std::hypot(travelSurface(px+.8,pz)-travelSurface(px-.8,pz),
++      travelSurface(px,pz+.8)-travelSurface(px,pz-.8))/1.6>.5);
++#ifdef WILD_CENTER_SAMPLE_REUSE
++    if(i==0&&centerSampleReuseActive&&centerSamples.size()<500000)centerSamples.emplace(key,valid);
++#endif
++    if(!valid)return false;
+   }
+   return true;
+ }
+@@ -2086,6 +2100,9 @@ int spatial_build_nav_profile(int index,float radius,int worker){
+   if(loadedChunks.empty()||!chunkRasters||radius<=0||radius>maxIndexedRadius)return 0;
+   selectProfile(index);
+   if(navReady&&radiusNow==radius)return lazy_loaded_sectors();
++#ifdef WILD_CENTER_SAMPLE_REUSE
++  CenterSampleScope centerSampleScope;
++#endif
+   radiusNow=radius;workerNow=worker!=0;
+   if(!lazy_init(sector))return 0;
+   const int selectedX=chunkX,selectedZ=chunkZ;
+diff --git a/tools/trees/build_spatial_route_trace.py b/tools/trees/build_spatial_route_trace.py
+index 224af8bdf..97298e5f9 100644
+--- a/tools/trees/build_spatial_route_trace.py
++++ b/tools/trees/build_spatial_route_trace.py
+@@ -56,6 +56,8 @@ if central_mobility:
+     flags.append('-DWILD_CENTRAL_MOBILITY')
+ if spatial_profile:
+     flags.append('-DWILD_SPATIAL_PROFILE')
++if os.environ.get('SPATIAL_CENTER_SAMPLE_REUSE') == '1':
++    flags.append('-DWILD_CENTER_SAMPLE_REUSE')
+ if os.environ.get('SPATIAL_PROFILE_TWO_PASS') == '1':
+     flags.append('-DWILD_PROFILE_TWO_PASS')
+ command = [compiler, *(str(root / 'src/world/wild-engine' / name) for name in sources),

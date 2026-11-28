@@ -1,0 +1,219 @@
+TAP version 13
+# (node:10668) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:10668) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: an idle frame or unrelated new worker event never reuses an old dawn
+ok 1 - an idle frame or unrelated new worker event never reuses an old dawn
+  ---
+  duration_ms: 2.0694
+  ...
+# Subtest: fresh boundaries work with repeated IDs in separate slots and a rolled-over event buffer
+ok 2 - fresh boundaries work with repeated IDs in separate slots and a rolled-over event buffer
+  ---
+  duration_ms: 0.3556
+  ...
+# Subtest: confirmed batches request one autosave for any boundary and none for unrelated events
+ok 3 - confirmed batches request one autosave for any boundary and none for unrelated events
+  ---
+  duration_ms: 0.7172
+  ...
+# Subtest: unavailable Worker autosave waits for confirmed availability before retrying
+ok 4 - unavailable Worker autosave waits for confirmed availability before retrying
+  ---
+  duration_ms: 8.935
+  ...
+# Subtest: new confirmed boundaries during a save produce one later checkpoint and disposal stops retries
+ok 5 - new confirmed boundaries during a save produce one later checkpoint and disposal stops retries
+  ---
+  duration_ms: 1.2936
+  ...
+# Subtest: a checkpoint failure after availability recovered retries only once
+ok 6 - a checkpoint failure after availability recovered retries only once
+  ---
+  duration_ms: 1.2299
+  ...
+# Subtest: storage errors are reported without an automatic retry loop
+ok 7 - storage errors are reported without an automatic retry loop
+  ---
+  duration_ms: 2.1471
+  ...
+# Subtest: a later confirmed sequence rearms autosave even if the unavailable interval was not observed
+ok 8 - a later confirmed sequence rearms autosave even if the unavailable interval was not observed
+  ---
+  duration_ms: 1.8658
+  ...
+# Subtest: a later available sequence received before the failed save result is not lost
+ok 9 - a later available sequence received before the failed save result is not lost
+  ---
+  duration_ms: 1.4393
+  ...
+# Subtest: confirmed autosave persists the next available Worker checkpoint through the real coordinator
+ok 10 - confirmed autosave persists the next available Worker checkpoint through the real coordinator
+  ---
+  duration_ms: 13.6871
+  ...
+# Subtest: actual dawn saves after agriculture and queue rebuild, once, without changing another slot
+ok 11 - actual dawn saves after agriculture and queue rebuild, once, without changing another slot
+  ---
+  duration_ms: 10.4331
+  ...
+# Subtest: actual raid exit saves its final state once, with reservations and queues resolved
+ok 12 - actual raid exit saves its final state once, with reservations and queues resolved
+  ---
+  duration_ms: 11.8392
+  ...
+# Subtest: economic defeat at dawn saves the terminal state even though no hiring Dawn is emitted
+ok 13 - economic defeat at dawn saves the terminal state even though no hiring Dawn is emitted
+  ---
+  duration_ms: 2.3874
+  ...
+# Subtest: hundredth-night victory saves the final outcome once rather than waiting for a hiring Dawn
+ok 14 - hundredth-night victory saves the final outcome once rather than waiting for a hiring Dawn
+  ---
+  duration_ms: 1.6513
+  ...
+# Subtest: purchase and return-to-menu snapshots preserve the current slot and command identities
+ok 15 - purchase and return-to-menu snapshots preserve the current slot and command identities
+  ---
+  duration_ms: 6.4949
+  ...
+# Subtest: recovery suspension keeps confirmed autosave boundaries pending until surface publication
+ok 16 - recovery suspension keeps confirmed autosave boundaries pending until surface publication
+  ---
+  duration_ms: 4.9093
+  ...
+# Subtest: confirmed tutorial changes use the same recovery fence as boundary autosaves
+ok 17 - confirmed tutorial changes use the same recovery fence as boundary autosaves
+  ---
+  duration_ms: 2.0701
+  ...
+# (node:3284) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:3284) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: worker checkpoints are captured immediately and written in request order
+ok 18 - worker checkpoints are captured immediately and written in request order
+  ---
+  duration_ms: 12.1725
+  ...
+# Subtest: an initial Worker checkpoint is ordered before a subsequent cinematic without blocking submission
+ok 19 - an initial Worker checkpoint is ordered before a subsequent cinematic without blocking submission
+  ---
+  duration_ms: 0.9675
+  ...
+# Subtest: worker persistence forwards the confirmed checkpoint without parsing it on the UI thread
+ok 20 - worker persistence forwards the confirmed checkpoint without parsing it on the UI thread
+  ---
+  duration_ms: 0.9769
+  ...
+# Subtest: unsafe physics checkpoint does not write or wait for the simulation to resume
+ok 21 - unsafe physics checkpoint does not write or wait for the simulation to resume
+  ---
+  duration_ms: 0.6495
+  ...
+# Subtest: experimental physics save accepts an encoded supported checkpoint but not an unavailable one
+ok 22 - experimental physics save accepts an encoded supported checkpoint but not an unavailable one
+  ---
+  duration_ms: 1.8176
+  ...
+# Subtest: failed and cross-slot checkpoints do not block later saves
+ok 23 - failed and cross-slot checkpoints do not block later saves
+  ---
+  duration_ms: 2.5371
+  ...
+# Subtest: invalid navigation wait bindings cannot be persisted
+ok 24 - invalid navigation wait bindings cannot be persisted
+  ---
+  duration_ms: 0.5802
+  ...
+# Subtest: native checkpoint is saved only when requested and validates before persistence
+ok 25 - native checkpoint is saved only when requested and validates before persistence
+  ---
+  duration_ms: 1.8281
+  ...
+# Subtest: explicit checkpoint policy requests native and physical state without QA options
+ok 26 - explicit checkpoint policy requests native and physical state without QA options
+  ---
+  duration_ms: 1.4427
+  ...
+# Subtest: voice completion during recovery is retained once, after earlier reading intervals, and saved only on confirmation
+ok 27 - voice completion during recovery is retained once, after earlier reading intervals, and saved only on confirmation
+  ---
+  duration_ms: 13.6194
+  ...
+# Subtest: stale or disposed deferred voice completion cannot dismiss another message or request a save
+ok 28 - stale or disposed deferred voice completion cannot dismiss another message or request a save
+  ---
+  duration_ms: 1.5329
+  ...
+# Subtest: recovery fence defers automatic tutorial traffic without accruing hidden reading time
+ok 29 - recovery fence defers automatic tutorial traffic without accruing hidden reading time
+  ---
+  duration_ms: 6.303
+  ...
+# Subtest: hidden advance resets once, preserves visible ordering and repeats for identity changes
+ok 30 - hidden advance resets once, preserves visible ordering and repeats for identity changes
+  ---
+  duration_ms: 2.4506
+  ...
+# Subtest: failed hidden reset is retried without replaying stale failures
+ok 31 - failed hidden reset is retried without replaying stale failures
+  ---
+  duration_ms: 1.4284
+  ...
+# Subtest: absent and narrated messages reset once without accumulating presentation age
+ok 32 - absent and narrated messages reset once without accumulating presentation age
+  ---
+  duration_ms: 2.0791
+  ...
+# Subtest: unconfirmed or narrated messages never accrue visible authority time
+ok 33 - unconfirmed or narrated messages never accrue visible authority time
+  ---
+  duration_ms: 2.4102
+  ...
+# Subtest: a rejected tutorial presentation retries without flooding the simulation
+ok 34 - a rejected tutorial presentation retries without flooding the simulation
+  ---
+  duration_ms: 2.1105
+  ...
+# Subtest: an old rejection does not reset a newer tutorial presentation
+ok 35 - an old rejection does not reset a newer tutorial presentation
+  ---
+  duration_ms: 3.7055
+  ...
+# (node:18540) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:18540) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: authority suppresses only unchanged update inputs, including internal state and voice
+ok 36 - authority suppresses only unchanged update inputs, including internal state and voice
+  ---
+  duration_ms: 6.1827
+  ...
+# Subtest: bridge obeys only confirmed clean certificates and invalidates on voice change
+ok 37 - bridge obeys only confirmed clean certificates and invalidates on voice change
+  ---
+  duration_ms: 6.7911
+  ...
+# Subtest: real authority attaches exact input certificate to confirmed publications
+ok 38 - real authority attaches exact input certificate to confirmed publications
+  ---
+  duration_ms: 3810.7385
+  ...
+# Subtest: skipping certified repeated updates preserves tutorial results and pause state
+ok 39 - skipping certified repeated updates preserves tutorial results and pause state
+  ---
+  duration_ms: 7.7896
+  ...
+# Subtest: tutorial update status rejects incomplete and unknown metadata
+ok 40 - tutorial update status rejects incomplete and unknown metadata
+  ---
+  duration_ms: 6.7577
+  ...
+1..40
+# tests 40
+# suites 0
+# pass 40
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4459.5719

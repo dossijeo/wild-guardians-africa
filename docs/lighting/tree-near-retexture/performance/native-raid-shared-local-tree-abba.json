@@ -1,0 +1,34 @@
+{
+  "scope": "Four fresh native sessions per block, nine controlled retreat routes; measured preparation and searches only, excludes GPU and full simulation. Each route is checked against the captured reference.",
+  "binarySha256": [
+    "e4dc46ecb3476ce10b4f1e4c1dcc71a14e74675a35c0eff894db72a6c3a42fe5",
+    "80b6340ef4a289d76fe38a08ec97a0ad68f1fae478b086e476add171e04663e8"
+  ],
+  "parity": true,
+  "blocks": [
+    {
+      "kind": "baseline",
+      "preparationMs": 3312.4763999999996,
+      "searchMs": 758.0919000000013,
+      "queries": 9
+    },
+    {
+      "kind": "candidate",
+      "preparationMs": 3348.408599999999,
+      "searchMs": 765.7031999999963,
+      "queries": 9
+    },
+    {
+      "kind": "candidate",
+      "preparationMs": 3306.603900000002,
+      "searchMs": 748.9210999999959,
+      "queries": 9
+    },
+    {
+      "kind": "baseline",
+      "preparationMs": 3294.795000000002,
+      "searchMs": 747.0159000000021,
+      "queries": 9
+    }
+  ]
+}

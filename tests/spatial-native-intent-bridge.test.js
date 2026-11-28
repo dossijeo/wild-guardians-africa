@@ -69,13 +69,17 @@ test('a saved exhausted buffalo uses a physically clear continuous exit instead 
 });
 
 test('the intent bridge projects a scaled gate using the physical wall frame',()=>{
- const memory={buffer:new ArrayBuffer(2048)},batches=[];
- const wasm=new Proxy({memory,
+ const memory={buffer:new ArrayBuffer(2048)},batches=[],width=15;
+  const wasm=new Proxy({memory,
+   nav_intent_protocol_version:()=>2,nav_intent_change_width:()=>width,
+   nav_intent_route_timing_width:()=>20,nav_intent_route_sample_width:()=>18,
+   nav_intent_props_mutation_version:()=>1,nav_intent_terrain_mutation_version:()=>1,
+   nav_intent_set_time:()=>1,
   nav_intent_changes_ptr:()=>8,
   nav_intent_apply_changes:(sequence,count)=>{
-   const values=new Float64Array(memory.buffer,8,count*10);
+   const values=new Float64Array(memory.buffer,8,count*width);
    batches.push({sequence,rows:Array.from({length:count},(_,index)=>
-     Array.from(values.slice(index*10,index*10+10)))});
+     Array.from(values.slice(index*width,(index+1)*width)))});
    return 1;
   }},{get:(target,key)=>key in target?target[key]:()=>0});
  const state={workers:[],tasks:[],plants:[],crates:[],structures:[{
@@ -392,6 +396,18 @@ test('loading during a committed strike applies its damage frame exactly once',
     assert.equal(actual.awakenings.current.cropValueLost,11);
     delete actual.awakenings;
    }
+   // This fixture predates timestamps and presentation versions on these
+   // events. Its logical hit already records the impact time and target pose.
+   const hit=reference.events.find(event=>event.type==='AnimalLogicalHit'&&event.attackId==='attack-662');
+   const {elapsed:impact,target}=hit.presentation;
+   hit.simulationTime??=impact;
+   hit.presentation.version??=1;
+   const cropHit=reference.events.find(event=>event.type==='CropHit'&&event.id==='event-663');
+   const destroyed=reference.events.find(event=>event.type==='CropDestroyed'&&event.id==='event-664');
+   cropHit.simulationTime??=impact;
+   cropHit.presentation??={elapsed:impact};
+   destroyed.simulationTime??=impact;
+   destroyed.presentation??={...target};
    // A restored session has a fresh navigation revision. Those counters are
    // internal; the confirmed world, event order and RNG must still match.
    for(const state of [actual,reference])for(const animal of state.raid.animals){

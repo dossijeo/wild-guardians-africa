@@ -1,0 +1,28 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {serializeConfirmedState} from '../../src/simulation/confirmed-live-state.js';
+import {prepareStructurePlacement,placeStructure,advanceReal,observeGameEvents} from '../../src/simulation/game.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ let fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),{game,nav}=fixture.diagnosticWorld();game.raid=null;game.time=100;game.pauses=[];game.dayPlan=null;game.nightPlan=null;game.structures=game.structures.filter(s=>s.kind==='center');nav.setState(game);
+ const center=game.structures.find(s=>s.kind==='center'&&s.status==='intact');if(!center)throw Error('Missing center');let newCenter=null,gate=null;
+ for(let dz=-48;dz<=48&&!newCenter;dz+=4)for(let dx=-48;dx<=48&&!newCenter;dx+=4){const candidate={kind:'center',x:center.x+dx,z:center.z+dz,yaw:0};try{if(prepareStructurePlacement(game,candidate,nav))newCenter=candidate;}catch(error){if(!['SpatialChunkUnavailable','Error'].includes(error.name))throw error;}}
+ for(let dz=-60;dz<=60&&!gate;dz+=4)for(let dx=-60;dx<=60&&!gate;dx+=4){const candidate={kind:'wall',material:'zarzas',gate:true,x:center.x+dx,z:center.z+dz,yaw:0};try{if(prepareStructurePlacement(game,candidate,nav))gate=candidate;}catch(error){if(error.name!=='SpatialChunkUnavailable')throw error;}}
+ if(!newCenter||!gate)throw Error('No valid center or gate fixture '+JSON.stringify({newCenter,gate}));const source=serialize(game);fixture.dispose();fixture=await createSimulation({mangrove:true,snapshotSource:source,chunkKeys:chunks});({game,nav}=fixture.diagnosticWorld());
+ const client=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,session:'place-structure'}),events=[],stop=observeGameEvents(game,e=>events.push(structuredClone(e)));let sequence=0;
+ try{await client.ready;
+  async function compare(command,fn){let value=null,rejection=null;try{value=fn()??null;}catch(error){rejection=error.message;}const expectedEvents=events.splice(0),request=client.submit(command);if(!request.accepted)throw Error('Command not admitted');const result=await request.result,local=serializeConfirmedState(game);if(result.sequence!==++sequence||result.value!==(rejection?false:value)||(result.rejection??null)!==rejection||result.snapshot!==local||JSON.stringify(result.events)!==JSON.stringify(expectedEvents))throw Error('Placement divergence at '+sequence+': '+JSON.stringify({rejection,remote:result.rejection,value,remoteValue:result.value}));return result;}
+  const input={kind:'placeStructure',id:'new-center',structure:newCenter},built=await compare(input,()=>placeStructure(game,'new-center',newCenter,nav));
+  const duplicate=await compare(input,()=>placeStructure(game,'new-center',newCenter,nav));
+  const blocked={kind:'center',x:center.x,z:center.z,yaw:0},invalid=await compare({kind:'placeStructure',id:'blocked-center',structure:blocked},()=>placeStructure(game,'blocked-center',blocked,nav));
+  const placedGate=await compare({kind:'placeStructure',id:'new-gate',structure:gate},()=>placeStructure(game,'new-gate',gate,nav));
+  for(let i=0;i<10;i++)await compare({kind:'advance',seconds:.05,nightFastForward:true},()=>{advanceReal(game,.05,nav,{nightFastForward:true});nav.serviceRaidConnectivityDemand?.();});
+  if(!built.value||!built.events.some(e=>e.type==='PlacementCommitted')||duplicate.value!==false||!invalid.rejection||!placedGate.value||!placedGate.events.some(e=>e.type==='PlacementCommitted')||client.status().state!=='ready')throw Error('Incomplete placement coverage');
+  const empty=createSimulationAuthorityClient({snapshot:source,chunkKeys:[],session:'place-center-empty'});let incompleteResidency;
+  try{await empty.ready;const request=empty.submit(input),result=await request.result;if(!result.value||!result.commandLoadedChunks?.length||result.snapshot!==built.snapshot||JSON.stringify(result.events)!==JSON.stringify(built.events))throw Error('Center gave an incorrect result with missing regions');const follow=empty.submit({kind:'snapshot'});if(!follow.accepted||(await follow.result).sequence!==2||empty.status().state!=='ready')throw Error('Worker did not continue after center placement');incompleteResidency={outcome:'loaded',chunks:result.commandLoadedChunks};}finally{empty.dispose();}
+  return {sequence,newCenter,gate,centerEvent:built.events.find(e=>e.type==='PlacementCommitted'),gateEvent:placedGate.events.find(e=>e.type==='PlacementCommitted'),duplicate:duplicate.value,invalid:invalid.rejection,incompleteResidency,subsequentAdvances:10,scope:'Programmatic center and individual gate placement in a modified peaceful island-mangrove capture compared with direct Game functions. The empty-residency Worker completes the same center placement. No player UI, active raid, save/restore or production integration.'};
+ }finally{stop();client.dispose();fixture.dispose();}
+};window.ready=true;
+</script>

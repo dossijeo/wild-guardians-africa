@@ -1,0 +1,273 @@
+{
+  "base": "1086ca0bc4967e25cb5ac404f360ba42efef060c",
+  "input": {
+    "path": ".cache/flee-return/center-after-collapse-physical-input.json",
+    "sha256": "a129e8d9796555bc61574f89cee6d0126e7399283d678039b195e17ceb4f68b1",
+    "snapshotSHA256": "5a5a9b7bf5a9e5bad91e39642edb42e4b1918d946bbbcf5360c2b26dcecbdfa8"
+  },
+  "wasm": {
+    "standalone": {
+      "path": "src/world/wild-engine/spatial-savanna.wasm",
+      "sha256": "3f6dbf536c062332673fd7324af872cef81b850a75ab07442475d13682a231dc"
+    },
+    "pthread": {
+      "path": "public/wild-engine/spatial-threaded.wasm",
+      "sha256": "1ca2103f404cbe3b1efb34cb9aa055e3c458056e7579bcbe54b3a215c5a39b31"
+    },
+    "pthreadModule": {
+      "path": "public/wild-engine/spatial-threaded.mjs",
+      "sha256": "af4d14881387450286ec3fc479a0b1c4f7de4a0615f5f500e8fed0706e949ed3"
+    }
+  },
+  "validation": {
+    "baseline": {
+      "path": ".cache/center-after-collapse-before.tap",
+      "sha256": "a584263bbdc93a5bb4229a01bc0fc8c964dc3891c8a4c6fa5a136dd46675df77"
+    },
+    "held": {
+      "path": ".cache/center-after-collapse-first.tap",
+      "sha256": "fa16b11a48869aa3f1948ac0c189766ac5adf636c651bd20539708a3b6271bfd"
+    },
+    "final": {
+      "path": ".cache/center-after-collapse-final.tap",
+      "sha256": "c73a45fc9788a04db9c28b1a5be728367f245d3e900cee48813cdfe0941ca12f"
+    },
+    "passed": 28,
+    "failed": 0,
+    "pthreadRuntime": {
+      "path": ".cache/center-after-collapse-pthread.log",
+      "sha256": "9ba91d7cc713ce4b2446ee6038954de82ad5b1e1bde8901d7d452d7c1dfe3f33"
+    }
+  },
+  "hardware": {
+    "raw": {
+      "path": "D:/wild-guardians-qa/center-after-collapse-nvidia-20261127.json",
+      "sha256": "d91515ca6e321b7fc7d9b1ffacb5a4947fd143b855086b4413e800b85e746ea6"
+    },
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 127.09999999403954
+      }
+    },
+    "center": "structure-1000000",
+    "polygon": 10,
+    "hits": [
+      {
+        "attackId": "attack-29209",
+        "targetId": "structure-1000000",
+        "simulationTime": 39.50000000000074
+      },
+      {
+        "attackId": "attack-29212",
+        "targetId": "structure-1000000",
+        "simulationTime": 42.30000000000098
+      },
+      {
+        "attackId": "attack-29215",
+        "targetId": "structure-1000000",
+        "simulationTime": 48.500000000001506
+      },
+      {
+        "attackId": "attack-29219",
+        "targetId": "structure-2",
+        "simulationTime": 69.87000000000249
+      }
+    ],
+    "ruin": {
+      "prepared": {
+        "version": 1,
+        "authorityEpoch": "8e3f2162-e72d-4e6c-aa03-5613323efa78/1",
+        "nativeSession": 1,
+        "ticket": 24,
+        "effectiveTime": 51.69000000000178
+      },
+      "acquired": {
+        "version": 1,
+        "authorityEpoch": "8e3f2162-e72d-4e6c-aa03-5613323efa78/1",
+        "nativeSession": 1,
+        "ticket": 24,
+        "effectiveTime": 51.70000000000178
+      },
+      "sequence": 315,
+      "capture": {
+        "id": "structure-1000000",
+        "p": 51.650000000001775,
+        "end": 51.70000000000178,
+        "meshes": [
+          {
+            "mesh": 608,
+            "geometry": 299,
+            "material": 182,
+            "visible": false,
+            "instances": null
+          },
+          {
+            "mesh": 609,
+            "geometry": 300,
+            "material": 181,
+            "visible": true,
+            "instances": null
+          },
+          {
+            "mesh": 611,
+            "geometry": 301,
+            "material": 183,
+            "visible": true,
+            "instances": 270
+          },
+          {
+            "mesh": 612,
+            "geometry": 302,
+            "material": 184,
+            "visible": true,
+            "instances": 81
+          }
+        ],
+        "effects": {
+          "smoke": 81,
+          "debris": 270,
+          "emitted": 105
+        }
+      },
+      "approach": {
+        "nativeAnimalCrop": {
+          "version": 1,
+          "kind": 26,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "8e3f2162-e72d-4e6c-aa03-5613323efa78/1",
+            "nativeSession": 1,
+            "ticket": 22,
+            "effectiveTime": 48.55000000000151
+          },
+          "sourceControlSequence": 20,
+          "endTime": 64.49414881486241,
+          "purpose": "center",
+          "actorId": 1000001,
+          "bodyId": 2,
+          "targetId": 2,
+          "centerId": 2,
+          "requestSequence": 20,
+          "slot": 0,
+          "generation": 15,
+          "radius": 1.1,
+          "x": -17.663236618041992,
+          "z": -15.632244110107422,
+          "phase": 16.607308477232987,
+          "yaw": -0.09245066456966995,
+          "targetX": -10.75499877929687,
+          "targetZ": 0.2,
+          "centerX": -10.75499877929687,
+          "centerZ": 0.2
+        },
+        "relativeTime": 2.549999952316284,
+        "semantic": "relative",
+        "epoch": 48.55000000000151,
+        "executionEpoch": 49.15000000000156,
+        "elapsed": 51.099999952317795
+      }
+    },
+    "centers": [
+      {
+        "id": "structure-2",
+        "hp": 580
+      },
+      {
+        "id": "structure-1000000",
+        "hp": 0
+      }
+    ],
+    "retreatAbsence": {
+      "sequence": 558,
+      "at": 1795779988882.5999,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "8e3f2162-e72d-4e6c-aa03-5613323efa78/1",
+        "nativeSession": 1,
+        "ticket": 28,
+        "effectiveTime": 70.50000000000246
+      },
+      "clockElapsed": 77.65000000000205,
+      "previous": {
+        "actorId": 1000001,
+        "bodyId": 2,
+        "executionEpoch": 70.50000000000246,
+        "sequence": 556,
+        "at": 1795779988715.9
+      }
+    },
+    "raidEndedAt": 77.65000000000205,
+    "civilReturn": {
+      "worker": "worker-900011",
+      "contract": 15,
+      "center": "structure-2",
+      "atIdle": 82.50000000000178,
+      "balance": {
+        "n": "100000",
+        "d": "1"
+      }
+    },
+    "drain": {
+      "disposed": true
+    }
+  },
+  "cadence": {
+    "accepted": false,
+    "targetFrameMs": 16.666666666666668,
+    "declaredSamples": null,
+    "recordedSamples": 2412,
+    "recordedIntervals": 2411,
+    "completeHistory": true,
+    "missingPredecessors": 0,
+    "recordedOpportunities": 1284,
+    "intervalsAboveTarget": 2410,
+    "maxRecordedIntervalMs": 166.699951171875,
+    "topIntervals": [
+      {
+        "at": 1795779988882.5999,
+        "intervalMs": 166.699951171875,
+        "drawMs": 3.699951171875,
+        "sequence": 558,
+        "trigger": "raf",
+        "from": 1795779988715.9,
+        "excessOverTargetMs": 150.03328450520834,
+        "previousDrawMs": 2.39990234375,
+        "afterPreviousDrawUntilCurrentStartMs": 164.300048828125
+      },
+      {
+        "at": 1795779953515.7,
+        "intervalMs": 133.400146484375,
+        "drawMs": 3.199951171875,
+        "sequence": 237,
+        "trigger": "raf",
+        "from": 1795779953382.2998,
+        "excessOverTargetMs": 116.73347981770833,
+        "previousDrawMs": 3.2001953125,
+        "afterPreviousDrawUntilCurrentStartMs": 130.199951171875
+      },
+      {
+        "at": 1795779981149.2998,
+        "intervalMs": 133.39990234375,
+        "drawMs": 3,
+        "sequence": 486,
+        "trigger": "raf",
+        "from": 1795779981015.9,
+        "excessOverTargetMs": 116.73323567708333,
+        "previousDrawMs": 2.699951171875,
+        "afterPreviousDrawUntilCurrentStartMs": 130.699951171875
+      }
+    ],
+    "attribution": "Unattributed: intervals are Host draw-start spacing, drawMs is instrumented host wall time; neither is GPU execution or scanout.",
+    "coverage": "Contiguous recorded history only; this does not establish full-session or physical-presentation coverage."
+  }
+}

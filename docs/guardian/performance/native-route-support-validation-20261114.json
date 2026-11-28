@@ -1,0 +1,85 @@
+{
+  "date": "2026-11-14",
+  "baseRevision": "ed2f4b5e1",
+  "branch": "codex/guardian-3d-animation",
+  "scope": "Copied complete native assignment timetable and exact resident triangle support; no GPU character playback or ordinary autonomy activated.",
+  "tests": {
+    "directedRegression": {
+      "log": ".cache/native-route-support-directed-regression.tap",
+      "tests": 241,
+      "pass": 241,
+      "fail": 0,
+      "skipped": 0
+    },
+    "finalNativeTerrainSupport": {
+      "log": ".cache/native-route-terrain-support-directed.tap",
+      "tests": 9,
+      "pass": 9,
+      "fail": 0,
+      "skipped": 0
+    },
+    "expandedRegression": {
+      "log": ".cache/native-route-presentation-regression.tap",
+      "tests": 869,
+      "pass": 863,
+      "fail": 6,
+      "skipped": 0
+    },
+    "previousRevisionComparison": {
+      "log": ".cache/native-route-support-baseline.tap",
+      "tests": 30,
+      "pass": 24,
+      "fail": 6,
+      "skipped": 0
+    }
+  },
+  "expandedTestFiles": 117,
+  "baselineComparison": {
+    "restoredOnly": [
+      "src/rendering/confirmed-terrain-support.js",
+      "src/rendering/remote-clock-bindings.js",
+      "src/world/wild-engine/spatial-intent-bridge.js"
+    ],
+    "unchangedRemainderOfCheckout": true,
+    "restoredWorkingChangesAfterComparison": true,
+    "sameSixFailuresReproduced": true,
+    "failures": [
+      "confirmed-motion-preview: missing clock reason",
+      "confirmed-presentation-timeline: visual handshake timeout",
+      "native-ambient-visibility: source geometry hash mismatch",
+      "native-obstacle-aware-contour: two missing smoothPath calls and one missing approachGroupBlocked call"
+    ]
+  },
+  "build": {
+    "command": "VITE_WEBGPU_REMOTE_DRAW=true .cache/tooling/node20.exe node_modules/vite/bin/vite.js build",
+    "exitCode": 0,
+    "seconds": 43.45,
+    "log": ".cache/native-route-support-build.log",
+    "existingWarnings": [
+      "mixed static/dynamic imports",
+      "large output chunks"
+    ]
+  },
+  "research": [
+    "https://github.com/mrdoob/three.js/blob/r180/src/objects/Mesh.js",
+    "https://github.com/mrdoob/three.js/blob/r180/src/math/Triangle.js",
+    "src/world/wild-engine/spatial-route-motion.h",
+    "src/world/wild-engine/spatial-route-reservations.h"
+  ],
+  "verified": [
+    "actual WASM route knots and all sixteen sample columns",
+    "full 130-point path without truncation",
+    "native worker run exhaustion and two gate waits",
+    "copied data survives WASM scratch reuse, execution and revocation",
+    "height interpolation agrees with Three raycast on actual resident WASM triangles",
+    "unchanged support retained after replacing unrelated chunk",
+    "used mesh/revision/buffer/disposal invalidation",
+    "capacity/data/session rejection and already-arrived zero-duration route"
+  ],
+  "notClaimed": [
+    "moving original characters in GPU",
+    "real GPU upload cost or late-factory counters for this new route resource",
+    "normal native gameplay authority",
+    "closure of f-R4, e-R3/e-R4, the eleven A6 parents or A/B/C acceptance"
+  ]
+}

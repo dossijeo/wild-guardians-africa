@@ -17,16 +17,17 @@ void main(){vec4 texel=texture2D(uAtlas,vUv);if(vMode>.5)texel=vec4(vec3(1.),pow
 }`;
 // A single instanced, depth-tested world mesh. No extra canvas, renderer or DOM particles.
 export class MicroeventBillboards {
- constructor(world,{capacity=160,texture}={}){
+ constructor(world,{capacity=160,texture,materialAdapter=null}={}){
   this.world=world;this.capacity=capacity;this.center=new Vector3();this.color=new Color();this.glow=new Color();this.count=0;
   const geometry=new InstancedBufferGeometry();geometry.setAttribute('position',new BufferAttribute(new Float32Array([-.5,-.5,0,.5,-.5,0,.5,.5,0,-.5,-.5,0,.5,.5,0,-.5,.5,0]),3));
   this.buffer=new InstancedInterleavedBuffer(new Float32Array(capacity*15),15);this.buffer.setUsage(DynamicDrawUsage);
   for(const [name,size,offset] of [['aCenter',3,0],['aSizeRotation',3,3],['aAtlas',4,6],['aTint',4,10],['aMode',1,14]])geometry.setAttribute(name,new InterleavedBufferAttribute(this.buffer,size,offset));
   geometry.instanceCount=0;
-  this.material=new ShaderMaterial({uniforms:{uAtlas:{value:texture??null},uLight:{value:1}},vertexShader:billboardVertex,fragmentShader:billboardFragment,transparent:true,depthTest:true,depthWrite:false,side:DoubleSide,toneMapped:false});
+  if(materialAdapter!==null&&(!materialAdapter.material?.isMaterial||typeof materialAdapter.setAtlas!=='function'||typeof materialAdapter.setLight!=='function'))throw TypeError('Invalid microevent material adapter');
+  this.materialAdapter=materialAdapter;this.material=materialAdapter?.material??new ShaderMaterial({uniforms:{uAtlas:{value:texture??null},uLight:{value:1}},vertexShader:billboardVertex,fragmentShader:billboardFragment,transparent:true,depthTest:true,depthWrite:false,side:DoubleSide,toneMapped:false});
   this.mesh=new Mesh(geometry,this.material);this.mesh.name='microevent-world-billboards';this.mesh.frustumCulled=false;this.mesh.raycast=()=>{};
   this.root=new Group();this.root.name='microevent-world';this.root.userData.materialRegistryExcluded=true;this.root.add(this.mesh);this.root.visible=false;world.scene.add(this.root);
-  this.ready=(texture?Promise.resolve(texture):new TextureLoader().loadAsync(assetUrl(MICROEVENT_ATLAS.url))).then(atlas=>{if(this.disposed){atlas.dispose();return;}atlas.colorSpace=SRGBColorSpace;this.texture=atlas;this.material.uniforms.uAtlas.value=atlas;});
+  this.ready=(texture?Promise.resolve(texture):new TextureLoader().loadAsync(assetUrl(MICROEVENT_ATLAS.url))).then(atlas=>{if(this.disposed){atlas.dispose();return;}atlas.colorSpace=SRGBColorSpace;this.texture=atlas;if(this.materialAdapter)this.materialAdapter.setAtlas(atlas);else this.material.uniforms.uAtlas.value=atlas;});
  }
  emit(space,x,y,size,sx,sy,alpha,rotation=0,phase=0,{lift=0,mode=0,tint=null,height=size}={}){
   if(this.count>=this.capacity||alpha<=.005)return;
@@ -36,7 +37,7 @@ export class MicroeventBillboards {
  }
  draw(particles,space,{ending=0,outcome=null,reducedMotion=false}={}){
   const def=particles.def,t=particles.time,hint=!reducedMotion&&!particles.engaged&&!particles.learned&&t>2.3&&t<4?1+.035*Math.sin((t-2.3)*8):1,fade=Math.min(1,t/.25)*(ending?Math.max(0,1-ending/.55):Math.min(1,(def.lifetime-t)/.45));this.count=0;
-  space.origin(this.root.position);this.material.uniforms.uLight.value=def.glow?1:this.world.state?.time>=300?.68:1;
+  space.origin(this.root.position);const light=def.glow?1:this.world.state?.time>=300?.68:1;if(this.materialAdapter)this.materialAdapter.setLight(light);else this.material.uniforms.uLight.value=light;
   if(def.objective==='gather'){const target=def.targetSprite??{x:128,y:128,size:24};this.emit(space,0,0,target.size,target.x,target.y,fade*.65);}
   if(def.glow)this.glow.set(def.glow[0]);
   for(let order=0;order<particles.count;order++){

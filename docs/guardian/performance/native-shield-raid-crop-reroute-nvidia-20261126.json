@@ -1,0 +1,322 @@
+{
+  "scenario": "Sabana712, animal-396 approaches plant-373 and Shield (84,21) intersects the future corridor",
+  "qualification": [
+    "qualifyAnimalCrop",
+    "qualifyRunningShield",
+    "qualifyShieldExpiry"
+  ],
+  "device": {
+    "name": "NVIDIA GeForce GTX 1660",
+    "architecture": "turing",
+    "display": [
+      3840,
+      2160,
+      30
+    ],
+    "canvas": [
+      640,
+      480
+    ],
+    "edge": "158.0.4370.33"
+  },
+  "input": {
+    "file": "tests/fixtures/sabana712-d1-native-active-raid.json.gz",
+    "sha256": "8520884802b64d0bd89644ddcb4252dad60a0ba1b81b77ffc722a53fe95e5c81"
+  },
+  "native": {
+    "standalone": "a5ac715e711ebcd270e59260017ea1e2444b1cbfce65288a7a5e401272b43f4a",
+    "pthread": "be9bbc44eec7848a527f5e32e1999b65b5ada6ae0564b7c78c2d6d2b3cd323ae"
+  },
+  "source": {
+    "sequence": 49,
+    "clockElapsed": 375.0000000000071,
+    "presentationElapsed": 375,
+    "worldBoundary": {
+      "version": 1,
+      "authorityEpoch": "fb58a1bb-ba24-4c7c-8456-5a693aa57128/1",
+      "nativeSession": 1,
+      "ticket": 2,
+      "effectiveTime": 375.0000000000071
+    },
+    "bindings": [
+      {
+        "nativeAnimalCrop": {
+          "version": 1,
+          "kind": 26,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "fb58a1bb-ba24-4c7c-8456-5a693aa57128/1",
+            "nativeSession": 1,
+            "ticket": 1,
+            "effectiveTime": 375.0000000000071
+          },
+          "sourceControlSequence": 10,
+          "endTime": 391.3467996957248,
+          "actorId": 396,
+          "bodyId": 1,
+          "targetId": 373,
+          "centerId": 2,
+          "requestSequence": 10,
+          "slot": 0,
+          "generation": 3,
+          "radius": 1.1,
+          "x": 84,
+          "z": 30.51480569445,
+          "phase": 4.497729763870326,
+          "yaw": 3.141592653589793,
+          "targetX": 90,
+          "targetZ": 7.5,
+          "centerX": 83,
+          "centerZ": 0
+        },
+        "relativeTime": 0,
+        "semantic": "relative",
+        "epoch": 375.0000000000071,
+        "executionEpoch": 375.0000000000071,
+        "elapsed": 375.0000000000071
+      }
+    ]
+  },
+  "prepared": {
+    "version": 1,
+    "worldBoundary": {
+      "version": 1,
+      "authorityEpoch": "fb58a1bb-ba24-4c7c-8456-5a693aa57128/1",
+      "nativeSession": 1,
+      "ticket": 3,
+      "effectiveTime": 375.0000000000071
+    },
+    "slot": 0,
+    "actorId": 396,
+    "assignmentSequence": 11,
+    "generation": 3,
+    "bodyId": 1,
+    "targetId": 373,
+    "routeTicket": 2,
+    "x": 84,
+    "z": 30.51480569445,
+    "phase": 4.497729763870326,
+    "yaw": 3.141592653589793
+  },
+  "timings": {
+    "requestToReadyMs": 1771.699951171875,
+    "readyToCommitMs": 391.5,
+    "commitToFirstSubmitMs": 7,
+    "all": {
+      "intervals": 471,
+      "above16_667ms": 471,
+      "maxMs": 39.199951171875
+    },
+    "shield": {
+      "intervals": 16,
+      "above16_667ms": 16,
+      "maxMs": 35.2998046875
+    },
+    "detour": {
+      "intervals": 128,
+      "above16_667ms": 128,
+      "maxMs": 36.7998046875
+    }
+  },
+  "shield": {
+    "spellId": "spell-397",
+    "polygonId": 10,
+    "world": {
+      "version": 1,
+      "authorityEpoch": "fb58a1bb-ba24-4c7c-8456-5a693aa57128/1",
+      "nativeSession": 1,
+      "ticket": 3,
+      "effectiveTime": 375.0000000000071
+    },
+    "submit": {
+      "at": 1795651623677.6,
+      "sequence": 50,
+      "trigger": "raf",
+      "nativeWorldBoundary": {
+        "version": 1,
+        "authorityEpoch": "fb58a1bb-ba24-4c7c-8456-5a693aa57128/1",
+        "nativeSession": 1,
+        "ticket": 3,
+        "effectiveTime": 375.0000000000071
+      },
+      "intervalMs": 33.199951171875,
+      "drawMs": 3.599853515625,
+      "replay": false,
+      "clockElapsed": 375.0000000000071,
+      "safeUntil": 375.0000000000071,
+      "cameraVersion": null
+    },
+    "bindings": [],
+    "firstEffect": {
+      "id": "spell-397",
+      "family": "shield",
+      "time": 0,
+      "visible": true,
+      "sprites": 10,
+      "fragments": 0,
+      "geometryVertices": 0
+    },
+    "settledEffect": {
+      "id": "spell-397",
+      "family": "shield",
+      "time": 4.049999999999992,
+      "visible": true,
+      "sprites": 10,
+      "fragments": 0,
+      "geometryVertices": 5568
+    }
+  },
+  "detour": {
+    "acquisition": {
+      "version": 1,
+      "reference": {
+        "version": 1,
+        "kind": 26,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "fb58a1bb-ba24-4c7c-8456-5a693aa57128/1",
+          "nativeSession": 1,
+          "ticket": 5,
+          "effectiveTime": 375.0000000000071
+        },
+        "sourceControlSequence": 13,
+        "endTime": 387.38373966153466,
+        "actorId": 396,
+        "bodyId": 1,
+        "targetId": 373,
+        "centerId": 2,
+        "requestSequence": 13,
+        "slot": 0,
+        "generation": 8,
+        "radius": 1.1,
+        "x": 84,
+        "z": 30.51480569445,
+        "phase": 4.497729763870326,
+        "yaw": 3.141592653589793,
+        "targetX": 90,
+        "targetZ": 7.5,
+        "centerX": 83,
+        "centerZ": 0
+      },
+      "preparedReference": {
+        "version": 1,
+        "kind": 26,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "fb58a1bb-ba24-4c7c-8456-5a693aa57128/1",
+          "nativeSession": 1,
+          "ticket": 4,
+          "effectiveTime": 375.0000000000071
+        },
+        "sourceControlSequence": 13,
+        "endTime": 387.38373966153466,
+        "actorId": 396,
+        "bodyId": 1,
+        "targetId": 373,
+        "centerId": 2,
+        "requestSequence": 13,
+        "slot": 0,
+        "generation": 8,
+        "radius": 1.1,
+        "x": 84,
+        "z": 30.51480569445,
+        "phase": 4.497729763870326,
+        "yaw": 3.141592653589793,
+        "targetX": 90,
+        "targetZ": 7.5,
+        "centerX": 83,
+        "centerZ": 0
+      },
+      "assignmentSequence": 14
+    },
+    "firstSubmit": {
+      "at": 1795651624210.9001,
+      "sequence": 51,
+      "trigger": "raf",
+      "nativeWorldBoundary": {
+        "version": 1,
+        "authorityEpoch": "fb58a1bb-ba24-4c7c-8456-5a693aa57128/1",
+        "nativeSession": 1,
+        "ticket": 5,
+        "effectiveTime": 375.0000000000071
+      },
+      "intervalMs": 33.2001953125,
+      "drawMs": 2.89990234375,
+      "replay": false,
+      "clockElapsed": 375.05000000000706,
+      "safeUntil": 375.05000000000706,
+      "cameraVersion": null
+    },
+    "presentedBinding": {
+      "nativeAnimalCrop": {
+        "version": 1,
+        "kind": 26,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "fb58a1bb-ba24-4c7c-8456-5a693aa57128/1",
+          "nativeSession": 1,
+          "ticket": 4,
+          "effectiveTime": 375.0000000000071
+        },
+        "sourceControlSequence": 13,
+        "endTime": 387.38373966153466,
+        "actorId": 396,
+        "bodyId": 1,
+        "targetId": 373,
+        "centerId": 2,
+        "requestSequence": 13,
+        "slot": 0,
+        "generation": 8,
+        "radius": 1.1,
+        "x": 84,
+        "z": 30.51480569445,
+        "phase": 4.497729763870326,
+        "yaw": 3.141592653589793,
+        "targetX": 90,
+        "targetZ": 7.5,
+        "centerX": 83,
+        "centerZ": 0
+      },
+      "relativeTime": 0.3499999940395355,
+      "semantic": "relative",
+      "epoch": 375.0000000000071,
+      "executionEpoch": 375.0000000000071,
+      "elapsed": 375.34999999404664
+    }
+  },
+  "confirmed": {
+    "checkpoint": {
+      "sequence": 87,
+      "elapsed": 379.0500000000034
+    },
+    "animal": {
+      "id": "animal-396",
+      "x": 87.40034287468377,
+      "z": 21.328147690736017,
+      "heading": 2.9065576914306024,
+      "motionPhase": 8.547729763866641,
+      "targetId": "plant-373",
+      "hitsRemaining": 2,
+      "reservation": "crop:plant-373"
+    },
+    "exactSpellActivated": 1,
+    "unchangedLedger": true,
+    "drained": true,
+    "errors": []
+  },
+  "controlWithoutPreparedDispatch": {
+    "lastStage": "hold Shield READY",
+    "failure": "Animal crop preparation lacks its current native source",
+    "receiptSha256": "95c606b4df5b210a09a7378098457d5ebf138fac2a1b335665d18e177ac19d2c",
+    "fixedBy": "Use the existing hosted preparation flag and reject unprepared casts when a native raid route owns the actor."
+  },
+  "trace": {
+    "anchor": 1795651609548,
+    "complete": true,
+    "dataLossOccurred": false,
+    "peakBufferUsage": 0.12695980072021484,
+    "exportedBytes": 19851643,
+    "sha256": "3e51c67baf42037c95be965876d672f75208a0bd1edfcd1cbfe85e262c0d6711",
+    "rawReceiptSha256": "f206bf56fc24140bb5dbb82bab939e8966170b0e653d5a39b8c76ee07d7e88fa"
+  }
+}

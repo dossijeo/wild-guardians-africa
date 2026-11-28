@@ -1,0 +1,60 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createWebGpuMangroveGround,initializeMangroveGround,mangroveGroundSeed} from '../src/rendering/webgpu-mangrove-ground.js';
+import {hashCell} from '../src/world/terrain.js';
+import {newGame} from '../src/simulation/game.js';
+import {serialize,deserialize} from '../src/persistence/snapshots.js';
+import {serializeConfirmedPresentationState,deserializeConfirmedState} from '../src/simulation/confirmed-live-state.js';
+import {createSpatialTerrainView} from '../src/world/wild-engine/spatial-terrain-view.js';
+import * as THREE from 'three';
+import {WebGPURenderer} from 'three/webgpu';
+import {texture,uniform} from 'three/tsl';
+import {mangroveGroundRecipe} from '../src/rendering/webgpu-material-graph-catalog.js';
+
+test('failed mangrove initialization reports and releases the provider; cancellation propagates',async()=>{
+ const errors=[],failure=Error('ground unavailable');let disposed=0;
+ const value=await initializeMangroveGround({create:async()=>({update(){throw failure;},dispose(){disposed++;}}),state:{},onError:error=>errors.push(error)});
+ assert.equal(value.ground,null);assert.equal(value.error,'ground unavailable');assert.equal(disposed,1);assert.deepEqual(errors,[failure]);
+ const controller=new AbortController();controller.abort();await assert.rejects(initializeMangroveGround({create:async()=>{throw failure;},signal:controller.signal,onError:()=>assert.fail('cancel must not produce fallback')}),failure);
+});
+
+test('mangrove reflection reuses live environment bindings without owning them',async()=>{
+ const day=new THREE.DataTexture(new Uint8Array([64,64,64,255]),1,1);day.magFilter=THREE.LinearFilter;day.minFilter=THREE.LinearMipmapLinearFilter;day.wrapS=THREE.RepeatWrapping;const dark=day.clone(),environment={day:texture(day),dark:texture(dark),night:uniform(0),blend:uniform(0)},tile={base:'base',normal:'normal',arh:'arh',scale:.115,normalBoost:1.3},fetchImpl=async()=>({ok:true,json:async()=>({mangrove:tile})}),provider=await createWebGpuMangroveGround({fetchImpl,environment,imageLoader:async()=>({close(){}})}),canvas={width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}},renderer=new WebGPURenderer({canvas}),geometry=new THREE.PlaneGeometry(),version=provider.sharedMaterial.version,graph=provider.sharedMaterial.outputNode;renderer.hasFeature=()=>true;
+ let disposed=0;day.addEventListener('dispose',()=>disposed++);dark.addEventListener('dispose',()=>disposed++);
+ try{const args={textures:[new THREE.Texture(),new THREE.Texture(),new THREE.Texture()],scale:.115,normalBoost:1.3,environment},recipe=mangroveGroundRecipe(args);assert.notEqual(recipe.key,mangroveGroundRecipe({...args,environment:null}).key);const builder=renderer.backend.createNodeBuilder(new THREE.Mesh(geometry,provider.sharedMaterial),renderer);builder.scene=new THREE.Scene();builder.camera=new THREE.PerspectiveCamera();builder.build();assert.match(builder.fragmentShader,/textureSampleLevel/);environment.blend.value=1;environment.night.value=.5;assert.equal(recipe.key,mangroveGroundRecipe(args).key);assert.equal(provider.sharedMaterial.outputNode,graph);assert.equal(provider.sharedMaterial.version,version);provider.dispose();assert.equal(disposed,0);args.textures.forEach(t=>t.dispose());}finally{provider.dispose();day.dispose();dark.dispose();geometry.dispose();}
+});
+
+test('mangrove atlas offset matches the authored seed and stays a dynamic uniform',async()=>{
+ const tile={base:'base',normal:'normal',arh:'arh',scale:1,normalBoost:1},fetchImpl=async()=>({ok:true,json:async()=>({mangrove:tile})}),provider=await createWebGpuMangroveGround({fetchImpl,imageLoader:async()=>({close(){}})});
+ try{const initial=newGame({biome:'manglares',seed:'1730000000712',slotId:'seed-test'}),saved=deserialize(serialize(initial)),presented=deserializeConfirmedState(serializeConfirmedPresentationState(saved)),field=createSpatialTerrainView({terrainState:()=>({seed:Number(saved.seed)>>>0,biome:'mangrove'}),fluidSurfaceLevel:()=>0}),vector=mangroveGroundSeed(presented.seed),fieldSeed=field.seed;assert.deepEqual(vector.toArray(),[hashCell(fieldSeed,0,1,417)/4294967296,hashCell(fieldSeed,1,0,417)/4294967296]);const material=provider.sharedMaterial,graph=material.outputNode,offset=material.userData.groundSeed;provider.update(presented);assert.deepEqual(offset.value.toArray(),vector.toArray());provider.update({...presented,seed:'1730000000713'});assert.notDeepEqual(offset.value.toArray(),vector.toArray());assert.equal(material.outputNode,graph);}finally{provider.dispose();}
+});
+
+test('shared mangrove material uses the same shader graph without a per-chunk mask',async()=>{
+ const old=globalThis.createImageBitmap,closed=[];globalThis.createImageBitmap=async()=>({close(){closed.push(true);}});
+ const tile={base:'base',normal:'normal',arh:'arh',scale:1,normalBoost:1},fetchImpl=async url=>url.endsWith('ground-materials.json')?{ok:true,json:async()=>({mangrove:tile})}:{ok:true,blob:async()=>new Blob()},provider=await createWebGpuMangroveGround({fetchImpl});
+ try{const material=provider.create({groundMask:new Uint8Array(35*35*4)});assert.equal(material.outputNode,provider.sharedMaterial.outputNode);assert.equal(provider.sharedMaterial.userData.confirmedGroundMask,undefined);assert.ok(material.userData.confirmedGroundMask?.isDataTexture);material.dispose();let disposed=0;provider.sharedMaterial.addEventListener('dispose',()=>disposed++);provider.dispose();provider.dispose();assert.equal(disposed,1);assert.equal(closed.length,3);}finally{provider.dispose();globalThis.createImageBitmap=old;}
+});
+
+test('ground loads images through the auxiliary loader and closes them on disposal',async()=>{
+ const tile={base:'base',normal:'normal',arh:'arh',scale:1,normalBoost:1},images=[],requests=[],fetchImpl=async url=>{assert.ok(url.endsWith('ground-materials.json'));return {ok:true,json:async()=>({mangrove:tile})};},imageLoader=async(url,{signal})=>{requests.push({url,signal});const image={close(){this.closed=true;}};images.push(image);return image;},controller=new AbortController(),provider=await createWebGpuMangroveGround({signal:controller.signal,fetchImpl,imageLoader});
+ assert.deepEqual(requests.map(request=>request.url),['base','normal','arh']);assert.ok(requests.every(request=>request.signal===controller.signal));provider.dispose();assert.ok(images.every(image=>image.closed));
+});
+
+test('ground atlas upload completes before the shared material is returned',async()=>{
+ const tile={base:'base',normal:'normal',arh:'arh',scale:1,normalBoost:1},images=[],uploads=[],waiters=[],renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:()=>new Promise(resolve=>waiters.push(resolve))}}},initTexture(texture){uploads.push(texture);}},fetchImpl=async()=>({ok:true,json:async()=>({mangrove:tile})}),imageLoader=async()=>{const bitmap={closed:false,close(){this.closed=true;}};images.push(bitmap);return bitmap;};
+ let ready=false;const pending=createWebGpuMangroveGround({renderer,fetchImpl,imageLoader}).then(value=>{ready=true;return value;});for(let i=0;i<3;i++){for(let tries=0;tries<10&&waiters.length<=i;tries++)await new Promise(resolve=>setImmediate(resolve));assert.equal(uploads.length,i+1);assert.equal(ready,false);waiters[i]();}const provider=await pending;assert.equal(uploads.length,3);assert.equal(ready,true);provider.dispose();assert.ok(images.every(image=>image.closed));
+});
+
+test('cancelled ground upload defers release until submitted GPU work settles',async()=>{
+ const tile={base:'base',normal:'normal',arh:'arh',scale:1,normalBoost:1},controller=new AbortController(),bitmap={closed:false,close(){this.closed=true;}},fetchImpl=async()=>({ok:true,json:async()=>({mangrove:tile})});let finish,disposed=0;const renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:()=>new Promise(resolve=>{finish=resolve;})}}},initTexture(texture){texture.addEventListener('dispose',()=>disposed++);}};
+ const pending=createWebGpuMangroveGround({renderer,signal:controller.signal,fetchImpl,imageLoader:async()=>bitmap});for(let tries=0;tries<10&&!finish;tries++)await new Promise(resolve=>setImmediate(resolve));assert.equal(typeof finish,'function');const rejected=assert.rejects(pending,{name:'AbortError'});controller.abort();await rejected;assert.equal(bitmap.closed,false);assert.equal(disposed,0);finish();await new Promise(resolve=>setImmediate(resolve));assert.equal(bitmap.closed,true);assert.equal(disposed,1);
+});
+
+test('cancelled ground decoding releases all images including a late result',async()=>{
+ const tile={base:'base',normal:'normal',arh:'arh',scale:1,normalBoost:1},images=[],controller=new AbortController();let finish;const fetchImpl=async()=>({ok:true,json:async()=>({mangrove:tile})}),imageLoader=async()=>{const image={close(){this.closed=true;}};images.push(image);if(images.length===2)await new Promise(resolve=>{finish=resolve;});return image;},pending=createWebGpuMangroveGround({signal:controller.signal,fetchImpl,imageLoader});
+ await new Promise(resolve=>setImmediate(resolve));const rejected=assert.rejects(pending,{name:'AbortError'});controller.abort();finish();await rejected;assert.equal(images.length,2);assert.ok(images.every(image=>image.closed));
+});
+
+test('mangrove foliage leases keep the ground atlas alive until the final release',async()=>{
+ const tile={base:'base',normal:'normal',arh:'arh',scale:.115,normalBoost:1.3},images=[],provider=await createWebGpuMangroveGround({fetchImpl:async()=>({ok:true,json:async()=>({mangrove:tile})}),imageLoader:async()=>{const image={closed:0,close(){this.closed++;}};images.push(image);return image;}}),a=provider.acquireGrassResources(),b=provider.acquireGrassResources();let disposed=0;a.atlas.addEventListener('dispose',()=>disposed++);provider.update({seed:'123',elapsed:0});assert.deepEqual(a.seed.value.toArray(),mangroveGroundSeed('123').toArray());assert.equal(a.atlas,b.atlas);provider.dispose();assert.throws(()=>provider.acquireGrassResources(),/disposed/);assert.equal(disposed,0);a.release();a.release();assert.equal(disposed,0);b.release();b.release();assert.equal(disposed,1);assert.ok(images.every(image=>image.closed===1));
+});

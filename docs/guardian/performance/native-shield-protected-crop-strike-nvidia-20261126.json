@@ -1,0 +1,732 @@
+{
+  "qualification": {
+    "profile": "DEV",
+    "biome": "sabana",
+    "fixture": "sabana712-d1-native-active-raid.json.gz",
+    "displayHz": 30,
+    "budgetMs": 16.666666666666668,
+    "hardware": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 117.69999999925494
+      }
+    },
+    "browser": "158.0.4370.33"
+  },
+  "scope": {
+    "cast": [
+      90,
+      7.5
+    ],
+    "bodyId": 1,
+    "actorId": "animal-396",
+    "targetId": "plant-373",
+    "spell": "spell-397",
+    "polygon": 10,
+    "expiresInFirst": true
+  },
+  "submitted": {
+    "cast": {
+      "sequence": 48,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "47dc1a66-da75-4719-9182-216ce22b7686/1",
+        "nativeSession": 1,
+        "ticket": 3,
+        "effectiveTime": 375.0000000000071
+      },
+      "clockElapsed": 375.0000000000071,
+      "bindings": []
+    },
+    "border": {
+      "sequence": 49,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "47dc1a66-da75-4719-9182-216ce22b7686/1",
+        "nativeSession": 1,
+        "ticket": 5,
+        "effectiveTime": 375.05000000000706
+      },
+      "clockElapsed": 375.05000000000706,
+      "bindings": [
+        {
+          "kind": 26,
+          "actorId": 396,
+          "bodyId": 1,
+          "generation": 8,
+          "targetId": 373,
+          "ticket": 4,
+          "relativeTime": 0,
+          "executionEpoch": 375.05000000000706
+        }
+      ]
+    },
+    "firstStrike": {
+      "sequence": 194,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "47dc1a66-da75-4719-9182-216ce22b7686/1",
+        "nativeSession": 1,
+        "ticket": 7,
+        "effectiveTime": 390.54999999999296
+      },
+      "clockElapsed": 390.54999999999296,
+      "bindings": [
+        {
+          "kind": 27,
+          "actorId": 396,
+          "bodyId": 1,
+          "generation": 8,
+          "targetId": 373,
+          "ticket": 6,
+          "relativeTime": 0,
+          "executionEpoch": 390.54999999999296
+        }
+      ]
+    },
+    "secondStrike": {
+      "sequence": 253,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "47dc1a66-da75-4719-9182-216ce22b7686/1",
+        "nativeSession": 1,
+        "ticket": 12,
+        "effectiveTime": 397.59999999998655
+      },
+      "clockElapsed": 397.59999999998655,
+      "bindings": [
+        {
+          "kind": 27,
+          "actorId": 396,
+          "bodyId": 1,
+          "generation": 12,
+          "targetId": 373,
+          "ticket": 11,
+          "relativeTime": 0,
+          "executionEpoch": 397.59999999998655
+        }
+      ]
+    },
+    "expiry": {
+      "sequence": 239,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "47dc1a66-da75-4719-9182-216ce22b7686/1",
+        "nativeSession": 1,
+        "ticket": 8,
+        "effectiveTime": 394.9999999999889
+      },
+      "clockElapsed": 395.04999999998887,
+      "bindings": [
+        {
+          "kind": 27,
+          "actorId": 396,
+          "bodyId": 1,
+          "generation": 8,
+          "targetId": 373,
+          "ticket": 6,
+          "relativeTime": 4.499999523162842,
+          "executionEpoch": 390.54999999999296
+        }
+      ]
+    },
+    "reapproach": {
+      "sequence": 241,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "47dc1a66-da75-4719-9182-216ce22b7686/1",
+        "nativeSession": 1,
+        "ticket": 10,
+        "effectiveTime": 396.14999999998787
+      },
+      "clockElapsed": 396.14999999998787,
+      "bindings": [
+        {
+          "kind": 26,
+          "actorId": 396,
+          "bodyId": 1,
+          "generation": 12,
+          "targetId": 373,
+          "ticket": 9,
+          "relativeTime": 0,
+          "executionEpoch": 396.14999999998787
+        }
+      ]
+    },
+    "retreat": {
+      "sequence": 301,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "47dc1a66-da75-4719-9182-216ce22b7686/1",
+        "nativeSession": 1,
+        "ticket": 14,
+        "effectiveTime": 402.8499999999818
+      },
+      "clockElapsed": 402.8499999999818,
+      "bindings": [
+        {
+          "kind": 26,
+          "actorId": 396,
+          "bodyId": 1,
+          "generation": 16,
+          "targetId": null,
+          "ticket": 13,
+          "purpose": "retreat",
+          "relativeTime": 0,
+          "executionEpoch": 402.8499999999818
+        }
+      ]
+    },
+    "absence": {
+      "sequence": 383,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "47dc1a66-da75-4719-9182-216ce22b7686/1",
+        "nativeSession": 1,
+        "ticket": 14,
+        "effectiveTime": 402.8499999999818
+      },
+      "clockElapsed": 411.1199999999744,
+      "bindings": []
+    }
+  },
+  "facts": {
+    "hit": {
+      "id": "event-667",
+      "type": "AnimalLogicalHit",
+      "attackId": "attack-664",
+      "targetId": "plant-373",
+      "species": "warthog",
+      "presentation": {
+        "version": 1,
+        "elapsed": 402.1499999999824,
+        "animal": {
+          "x": 89.5711441040039,
+          "z": 9.145017623901367,
+          "heading": 2.886569143624617
+        },
+        "target": {
+          "x": 90,
+          "z": 7.5
+        },
+        "shield": null
+      },
+      "simulationTime": 402.1499999999824
+    },
+    "miss": {
+      "id": "event-663",
+      "type": "AnimalLogicalMiss",
+      "attackId": "attack-662",
+      "targetId": "plant-373",
+      "species": "warthog",
+      "reason": "shield-expired",
+      "simulationTime": 395.0999999999888
+    },
+    "ending": {
+      "id": "event-669",
+      "type": "RaidEnded",
+      "simulationTime": 410.9699999999744
+    },
+    "originalCrop": {
+      "alive": true,
+      "hp": 1
+    },
+    "finalAnimalBudget": 0,
+    "checkpoint": {
+      "sequence": 729,
+      "elapsed": 411.8699999999746
+    },
+    "drain": {
+      "disposed": true
+    }
+  },
+  "holds": {
+    "additionMs": 361.89990234375,
+    "expiryMs": 366.89990234375
+  },
+  "submitIntervals": {
+    "fromCastToAbsence": {
+      "intervalCount": 1072,
+      "overBudget": 1072,
+      "mean": 34.110727566391674,
+      "p95": 35.300048828125,
+      "p99": 37.099853515625,
+      "longest": {
+        "at": 1795653790016.9,
+        "sequence": 241,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "47dc1a66-da75-4719-9182-216ce22b7686/1",
+          "nativeSession": 1,
+          "ticket": 10,
+          "effectiveTime": 396.14999999998787
+        },
+        "intervalMs": 666.800048828125,
+        "drawMs": 3.5,
+        "replay": false,
+        "clockElapsed": 396.14999999998787,
+        "safeUntil": 396.14999999998787,
+        "cameraVersion": null
+      },
+      "largest": [
+        {
+          "at": 1795653790016.9,
+          "sequence": 241,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "47dc1a66-da75-4719-9182-216ce22b7686/1",
+            "nativeSession": 1,
+            "ticket": 10,
+            "effectiveTime": 396.14999999998787
+          },
+          "intervalMs": 666.800048828125,
+          "drawMs": 3.5,
+          "replay": false,
+          "clockElapsed": 396.14999999998787,
+          "safeUntil": 396.14999999998787,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795653796117,
+          "sequence": 299,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "47dc1a66-da75-4719-9182-216ce22b7686/1",
+            "nativeSession": 1,
+            "ticket": 12,
+            "effectiveTime": 397.59999999998655
+          },
+          "intervalMs": 131.800048828125,
+          "drawMs": 2.699951171875,
+          "replay": false,
+          "clockElapsed": 402.1499999999824,
+          "safeUntil": 402.1499999999824,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795653804950.0999,
+          "sequence": 383,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "47dc1a66-da75-4719-9182-216ce22b7686/1",
+            "nativeSession": 1,
+            "ticket": 14,
+            "effectiveTime": 402.8499999999818
+          },
+          "intervalMs": 130.800048828125,
+          "drawMs": 4.400146484375,
+          "replay": false,
+          "clockElapsed": 411.1199999999744,
+          "safeUntil": 411.1199999999744,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795653791557.0999,
+          "sequence": 253,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "47dc1a66-da75-4719-9182-216ce22b7686/1",
+            "nativeSession": 1,
+            "ticket": 12,
+            "effectiveTime": 397.59999999998655
+          },
+          "intervalMs": 40.300048828125,
+          "drawMs": 5.199951171875,
+          "replay": true,
+          "clockElapsed": 397.6499999999865,
+          "safeUntil": 397.6499999999865,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795653769722.2,
+          "sequence": 55,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "47dc1a66-da75-4719-9182-216ce22b7686/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 375.05000000000706
+          },
+          "intervalMs": 38.800048828125,
+          "drawMs": 5,
+          "replay": true,
+          "clockElapsed": 375.85000000000633,
+          "safeUntil": 375.85000000000633,
+          "cameraVersion": null
+        }
+      ]
+    },
+    "full": {
+      "intervalCount": 1396,
+      "overBudget": 1396,
+      "mean": 33.93051575931232,
+      "p95": 35.10009765625,
+      "p99": 36.900146484375,
+      "longest": {
+        "at": 1795653790016.9,
+        "sequence": 241,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "47dc1a66-da75-4719-9182-216ce22b7686/1",
+          "nativeSession": 1,
+          "ticket": 10,
+          "effectiveTime": 396.14999999998787
+        },
+        "intervalMs": 666.800048828125,
+        "drawMs": 3.5,
+        "replay": false,
+        "clockElapsed": 396.14999999998787,
+        "safeUntil": 396.14999999998787,
+        "cameraVersion": null
+      },
+      "largest": [
+        {
+          "at": 1795653790016.9,
+          "sequence": 241,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "47dc1a66-da75-4719-9182-216ce22b7686/1",
+            "nativeSession": 1,
+            "ticket": 10,
+            "effectiveTime": 396.14999999998787
+          },
+          "intervalMs": 666.800048828125,
+          "drawMs": 3.5,
+          "replay": false,
+          "clockElapsed": 396.14999999998787,
+          "safeUntil": 396.14999999998787,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795653796117,
+          "sequence": 299,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "47dc1a66-da75-4719-9182-216ce22b7686/1",
+            "nativeSession": 1,
+            "ticket": 12,
+            "effectiveTime": 397.59999999998655
+          },
+          "intervalMs": 131.800048828125,
+          "drawMs": 2.699951171875,
+          "replay": false,
+          "clockElapsed": 402.1499999999824,
+          "safeUntil": 402.1499999999824,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795653804950.0999,
+          "sequence": 383,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "47dc1a66-da75-4719-9182-216ce22b7686/1",
+            "nativeSession": 1,
+            "ticket": 14,
+            "effectiveTime": 402.8499999999818
+          },
+          "intervalMs": 130.800048828125,
+          "drawMs": 4.400146484375,
+          "replay": false,
+          "clockElapsed": 411.1199999999744,
+          "safeUntil": 411.1199999999744,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795653791557.0999,
+          "sequence": 253,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "47dc1a66-da75-4719-9182-216ce22b7686/1",
+            "nativeSession": 1,
+            "ticket": 12,
+            "effectiveTime": 397.59999999998655
+          },
+          "intervalMs": 40.300048828125,
+          "drawMs": 5.199951171875,
+          "replay": true,
+          "clockElapsed": 397.6499999999865,
+          "safeUntil": 397.6499999999865,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795653769722.2,
+          "sequence": 55,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "47dc1a66-da75-4719-9182-216ce22b7686/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 375.05000000000706
+          },
+          "intervalMs": 38.800048828125,
+          "drawMs": 5,
+          "replay": true,
+          "clockElapsed": 375.85000000000633,
+          "safeUntil": 375.85000000000633,
+          "cameraVersion": null
+        }
+      ]
+    }
+  },
+  "transportCuts": [
+    {
+      "sequence": 241,
+      "previousSequence": 239,
+      "intervalMs": 666.800048828125,
+      "stagesFromPreviousSubmitMs": {
+        "endFrameCalledAt": 572.800048828125,
+        "workerReceivedAt": 579.300048828125,
+        "admissionStartedAt": 586.10009765625,
+        "resourcesWaitStartedAt": 593.900146484375,
+        "resourcesReadyAt": 593.900146484375,
+        "admittedAt": 606.800048828125,
+        "firstDrawStartedAt": 666.800048828125,
+        "firstDrawCompletedAt": 670.300048828125
+      },
+      "resourcesWaitMs": 0,
+      "opportunitiesCoverWholeInterval": true,
+      "opportunities": [
+        {
+          "atMs": 33.300048828125,
+          "sequence": 239,
+          "outcome": "stale-binding"
+        },
+        {
+          "atMs": 66.699951171875,
+          "sequence": 239,
+          "outcome": "stale-binding"
+        },
+        {
+          "atMs": 99.900146484375,
+          "sequence": 239,
+          "outcome": "stale-binding"
+        },
+        {
+          "atMs": 133.300048828125,
+          "sequence": 239,
+          "outcome": "stale-binding"
+        },
+        {
+          "atMs": 166.60009765625,
+          "sequence": 239,
+          "outcome": "stale-binding"
+        },
+        {
+          "atMs": 200.10009765625,
+          "sequence": 239,
+          "outcome": "stale-binding"
+        },
+        {
+          "atMs": 233.400146484375,
+          "sequence": 239,
+          "outcome": "stale-binding"
+        },
+        {
+          "atMs": 266.800048828125,
+          "sequence": 239,
+          "outcome": "stale-binding"
+        },
+        {
+          "atMs": 300.10009765625,
+          "sequence": 239,
+          "outcome": "stale-binding"
+        },
+        {
+          "atMs": 333.5,
+          "sequence": 239,
+          "outcome": "stale-binding"
+        },
+        {
+          "atMs": 366.699951171875,
+          "sequence": 239,
+          "outcome": "stale-binding"
+        },
+        {
+          "atMs": 400.400146484375,
+          "sequence": 239,
+          "outcome": "stale-binding"
+        },
+        {
+          "atMs": 433.300048828125,
+          "sequence": 239,
+          "outcome": "stale-binding"
+        },
+        {
+          "atMs": 466.699951171875,
+          "sequence": 239,
+          "outcome": "stale-binding"
+        },
+        {
+          "atMs": 500,
+          "sequence": 239,
+          "outcome": "stale-binding"
+        },
+        {
+          "atMs": 533.400146484375,
+          "sequence": 239,
+          "outcome": "stale-binding"
+        },
+        {
+          "atMs": 566.60009765625,
+          "sequence": 239,
+          "outcome": "stale-binding"
+        },
+        {
+          "atMs": 600.300048828125,
+          "sequence": 239,
+          "outcome": "stale-binding"
+        },
+        {
+          "atMs": 633.300048828125,
+          "sequence": 239,
+          "outcome": "stale-binding"
+        },
+        {
+          "atMs": 666.800048828125,
+          "sequence": 241,
+          "outcome": "submitted"
+        }
+      ]
+    },
+    {
+      "sequence": 299,
+      "previousSequence": 297,
+      "intervalMs": 131.800048828125,
+      "stagesFromPreviousSubmitMs": {
+        "endFrameCalledAt": 93,
+        "endFrameReturnedAt": 94.5,
+        "sendStartedAt": 94.60009765625,
+        "postedAt": 94.60009765625,
+        "workerReceivedAt": 100.5,
+        "admissionStartedAt": 106.699951171875,
+        "resourcesWaitStartedAt": 114.300048828125,
+        "resourcesReadyAt": 114.300048828125,
+        "admittedAt": 117.39990234375,
+        "firstDrawStartedAt": 131.800048828125,
+        "firstDrawCompletedAt": 134.5
+      },
+      "resourcesWaitMs": 0,
+      "opportunitiesCoverWholeInterval": true,
+      "opportunities": [
+        {
+          "atMs": 31.599853515625,
+          "sequence": 297,
+          "outcome": "stale-binding"
+        },
+        {
+          "atMs": 65.099853515625,
+          "sequence": 297,
+          "outcome": "stale-binding"
+        },
+        {
+          "atMs": 100.599853515625,
+          "sequence": 297,
+          "outcome": "stale-binding"
+        },
+        {
+          "atMs": 131.699951171875,
+          "sequence": 299,
+          "outcome": "submitted"
+        }
+      ]
+    },
+    {
+      "sequence": 383,
+      "previousSequence": 381,
+      "intervalMs": 130.800048828125,
+      "stagesFromPreviousSubmitMs": {
+        "endFrameCalledAt": 87.500244140625,
+        "endFrameReturnedAt": 89.000244140625,
+        "sendStartedAt": 89.10009765625,
+        "postedAt": 89.10009765625,
+        "workerReceivedAt": 94.5,
+        "admissionStartedAt": 101.300048828125,
+        "resourcesWaitStartedAt": 109.300048828125,
+        "resourcesReadyAt": 109.300048828125,
+        "admittedAt": 113.300048828125,
+        "firstDrawStartedAt": 130.800048828125,
+        "firstDrawCompletedAt": 135.2001953125
+      },
+      "resourcesWaitMs": 0,
+      "opportunitiesCoverWholeInterval": true,
+      "opportunities": [
+        {
+          "atMs": 31.60009765625,
+          "sequence": 381,
+          "outcome": "stale-binding"
+        },
+        {
+          "atMs": 64.300048828125,
+          "sequence": 381,
+          "outcome": "stale-binding"
+        },
+        {
+          "atMs": 98.800048828125,
+          "sequence": 381,
+          "outcome": "stale-binding"
+        },
+        {
+          "atMs": 130.800048828125,
+          "sequence": 383,
+          "outcome": "submitted"
+        }
+      ]
+    }
+  ],
+  "evidence": {
+    "input": ".cache/shield-protected-crop/physical-complete.json",
+    "rawSha256": "9c13abb3fb3bc5790b9767caa3ede32848e306c164fc53055ddbd727e84bbf9e",
+    "traceSha256": "6a0fe68e826ef20797ddd69bab2d53e35f35c813caafc16963c9632c986b1ade",
+    "traceBytes": 35962734,
+    "traceLoss": false
+  },
+  "longestIntervalTrace": {
+    "previousSequence": 239,
+    "replacementSequence": 241,
+    "fence": {
+      "request": "request:6662",
+      "caller": "pipeline admission retirement flushUploads",
+      "retainedWrites": 61,
+      "requestedMs": 92.2,
+      "receivedMs": 392,
+      "finishedMs": 393.4
+    },
+    "preparer": {
+      "microtasksStartMs": 100.215,
+      "microtasksWallMs": 280.717,
+      "pipelinePumpStartMs": 146.369,
+      "pipelinePumpWallMs": 234.558,
+      "pipelinePumpCpuMs": 235.592
+    },
+    "unverified": [
+      "time of fence postMessage after transport credit",
+      "pipeline request and shader owner",
+      "contribution to replacement frame delay"
+    ],
+    "nextObservation": [
+      "mark the fence send after transport credit",
+      "correlate pipeline request, object, pass and compileAsync start and return"
+    ]
+  }
+}

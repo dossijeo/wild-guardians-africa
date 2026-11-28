@@ -1,0 +1,48 @@
+{
+  "result": {
+    "checklistId": "A6-04.f-R3",
+    "backend": "webgpu",
+    "scope": "Cohort handoff, device loss and silent-channel safety using native execution and diagnostic triangles; product/entity acceptance remains open.",
+    "block": {
+      "start": 1794584821042.275,
+      "end": 1794584821542.3398,
+      "blockedMs": 500.06494140625,
+      "handoffAt": 1794584821155.285,
+      "retiredAt": 1794584821154.79,
+      "oldFrames": 4,
+      "afterRetirementFrames": 0
+    },
+    "temporaryConsumer": {
+      "mutation": "control-failed",
+      "worldUnchanged": true
+    },
+    "replacement": {
+      "mutation": "committed",
+      "consumers": 1
+    },
+    "deviceLoss": {
+      "drained": true,
+      "authorityEpoch": "849ee539-d943-4d05-9837-18bcbde22a33/1"
+    },
+    "silentChannel": {
+      "mutation": "control-failed",
+      "worldUnchanged": true,
+      "closed": true,
+      "presentedThrough": 10.25,
+      "committedThrough": 10.25
+    },
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "authorizedAutonomy": false,
+    "authorizedPassage": false
+  },
+  "errors": [],
+  "httpFailures": [],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ]
+}

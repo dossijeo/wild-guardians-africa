@@ -1,0 +1,115 @@
+{
+  "ready": true,
+  "campaign": false,
+  "paused": false,
+  "workerCandidate": null,
+  "workerGround": null,
+  "workers": [
+    {
+      "id": "worker-28",
+      "profile": "olderMale",
+      "x": 60,
+      "z": 0,
+      "status": "arriving",
+      "hits": 0
+    }
+  ],
+  "faceCandidate": false,
+  "faceCandidateSpecies": null,
+  "expressions": [],
+  "entityCounts": {
+    "workers": 1,
+    "structures": 1,
+    "crops": 12,
+    "animals": 0
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 1,
+  "maxVisibleGuardians": 1,
+  "guideTrial": true,
+  "guideOrigin": {
+    "x": 90.24416209178152,
+    "y": 15.62561650618919,
+    "z": -5.443605882463444
+  },
+  "guidePosition": [
+    90.24416209178152,
+    15.625616506189193,
+    -5.443605882463444
+  ],
+  "guidePlanAt": 86.85755999994278,
+  "elapsed": 3149.5482800000077,
+  "simulate": false,
+  "clockMode": "presentation-only",
+  "shields": [],
+  "active": 1,
+  "origins": [],
+  "retainedAttacks": [],
+  "retainedDraws": 0,
+  "attackVisual": [],
+  "reused": 0,
+  "draws": 61,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "spirit_appear",
+      "at": 3105.8744650000017,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3105.8744650000017,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3108.0931900000014,
+      "emitter": "guardian-world",
+      "played": false
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 0,
+    "maxStepMs": 0,
+    "solverMs": 0,
+    "solverSteps": 0,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": null
+  },
+  "physicsWorlds": 0,
+  "physicalBodies": 0,
+  "errors": [],
+  "report": null,
+  "commandCosts": [
+    {
+      "kind": "growth",
+      "targetId": "plant-3",
+      "position": {
+        "x": 87.5,
+        "z": -6
+      },
+      "origin": {
+        "x": 84.96859800235222,
+        "y": 14.235480448781068,
+        "z": -7.196663664654723
+      },
+      "plan": 3.2100000381469727,
+      "logic": 1.0500000715255737,
+      "render": 11.759999990463257,
+      "total": 16.020000100135803
+    }
+  ]
+}

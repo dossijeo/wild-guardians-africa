@@ -1,0 +1,142 @@
+{
+  "scenario": "Terminal loss during a center approach and its acquired Strike27 in a single Desert raid.",
+  "qualification": {
+    "qualifyAnimalCrop": true,
+    "ordinary": false,
+    "workers": 0,
+    "animals": 1
+  },
+  "hardware": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "edge": "158.0.4370.33",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja"
+  },
+  "phases": [
+    {
+      "kind": 26,
+      "hold": 6,
+      "basePublication": 1,
+      "heldPublication": 70,
+      "activatedPublication": 70,
+      "body": 1,
+      "assignment": 2,
+      "ticket": 2,
+      "preparedTicket": 1,
+      "cutPose": {
+        "x": 112.20949767243062,
+        "z": 33,
+        "yaw": -1.5707963267948966,
+        "phase": 0.29999999999999893
+      },
+      "old": {
+        "sequence": 12,
+        "elapsed": 3.2999999999999967,
+        "worldTicket": 2,
+        "registeredTicket": 1,
+        "executionEpoch": 3.0499999999999976,
+        "age": 0.2499999850988388
+      },
+      "replacement": {
+        "sequence": 1,
+        "elapsed": 3.3499999999999965,
+        "worldTicket": 2,
+        "registeredTicket": 2,
+        "executionEpoch": 3.0499999999999976,
+        "age": 0.29999998211860657
+      },
+      "continued": {
+        "sequence": 2,
+        "elapsed": 3.3999999999999964,
+        "worldTicket": 2,
+        "registeredTicket": 2,
+        "executionEpoch": 3.0499999999999976,
+        "age": 0.3499999940395355
+      }
+    },
+    {
+      "kind": 27,
+      "hold": 15,
+      "basePublication": 851,
+      "heldPublication": 914,
+      "activatedPublication": 915,
+      "body": 1,
+      "assignment": 3,
+      "ticket": 4,
+      "preparedTicket": 3,
+      "attackId": "attack-5",
+      "clip": 0,
+      "remaining": 1.141666705161299,
+      "cutPose": {
+        "x": 96.88103485107422,
+        "z": 3.443208694458008,
+        "yaw": -2.6415923475521557,
+        "phase": 39.73470339522885
+      },
+      "old": {
+        "sequence": 445,
+        "elapsed": 45.45000000000111,
+        "worldTicket": 4,
+        "registeredTicket": 3,
+        "executionEpoch": 45.150000000001086,
+        "age": 0.29999998211860657
+      },
+      "replacement": {
+        "sequence": 1,
+        "elapsed": 45.55000000000112,
+        "worldTicket": 4,
+        "registeredTicket": 4,
+        "executionEpoch": 45.150000000001086,
+        "age": 0.3999999761581421
+      },
+      "continued": {
+        "sequence": 2,
+        "elapsed": 45.65000000000113,
+        "worldTicket": 4,
+        "registeredTicket": 4,
+        "executionEpoch": 45.150000000001086,
+        "age": 0.5
+      }
+    }
+  ],
+  "target": "structure-2",
+  "impact": {
+    "eventId": "event-7",
+    "attackId": "attack-5",
+    "targetId": "structure-2",
+    "simulationTime": 46.70000000000122,
+    "previousHp": 600,
+    "hp": 580,
+    "occurrences": 1
+  },
+  "afterImpact": {
+    "sequence": 14,
+    "elapsed": 46.75000000000122,
+    "retiredStrikeAbsent": true
+  },
+  "checks": {
+    "originalAcquisitionsRetained": true,
+    "ledgerUnchanged": true,
+    "deviceLosses": 2,
+    "expectedDevicePageErrors": 2,
+    "replacementDrained": true,
+    "unexpectedErrors": []
+  },
+  "evidence": {
+    "trace": {
+      "bytes": 58123250,
+      "sha256": "43cb335988c4152acdf16c316e7e8eb57ec756f6d52efd2a6464ec438410471c",
+      "dataLoss": false
+    },
+    "rawReceiptSha256": "a9a33fe28d7cafa1677b73ac44a7755e3bdc0c59f07d1ae2a797f2bc7c4352a9"
+  },
+  "limits": [
+    "One warthog with a resident route and a live center target.",
+    "A live acquired strike was recovered in the same native session.",
+    "Ordinary rollout and presentation at 60 Hz remain open."
+  ]
+}

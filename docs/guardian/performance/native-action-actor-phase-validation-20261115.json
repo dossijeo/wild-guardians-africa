@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "date": "2026-11-15",
+  "baseCommit": "fe55fef0e9d9dbf8eb308e51c00212f6385563ca",
+  "scope": "Existing roster prepares finite action TSL phases on the active original actor mesh and shared baked data, stationary terrain support, staged rollback/retirement and bootstrap from real native identity. Surface/retained packet/action coordinator/Game effects remain pending.",
+  "sourceHashes": {
+    "src/rendering/confirmed-terrain-support.js": "f279d673ec143e29ff94e98bf149339ba6c4c2d313f12d2639e7a234a5157326",
+    "src/rendering/native-task-action-gpu-motion.js": "d90b25f0623e907762ecb27f6712d1b8be947ad2dde34e28c1eab4dc8454fe4e",
+    "src/rendering/webgpu-worker-roster.js": "ab8372078b51f85943f9a0b95cd5fac9c4c71b553b8eb29c81bb22d3dd0588a5",
+    "tests/native-task-action-graphics.test.js": "3c80d1eee3f205cb23be137b01f711c1ed2ebbf1eea84616043ea2614c6a6a61"
+  },
+  "unchangedContextHashes": {
+    "src/world/wild-engine/spatial-savanna.wasm": "4f4ab08989e43be6693f853d01201039ac380605a414ea665e87ddb63ed72df3",
+    "public/wild-engine/spatial-threaded.wasm": "b3025060595e8ab81c8139985f9dd45bfab647e1896d9be99281494d6c8388c8",
+    "src/simulation/game.js": "744e505ce303e1ebaddd18ba3579a194ac8c82f06261ab9e161c942afc8c72e4",
+    "src/rendering/webgpu-baked-walk.js": "5b58e808708c5666a51cb346a94fe3ed5bb2a2f213698434d39c48edcd1ef484",
+    "src/rendering/webgpu-confirmed-worker.js": "e08f0734b7053af8c23f1ced1319b700ac4cff25c5aab3a24ab0927eae889fb4",
+    "src/rendering/remote-webgpu-host.js": "149af97684696e028e7c0d61af0c7e36dea869f25507afe51e72cc56dd43ee70",
+    "src/world/native-task-action-presentation.js": "5a5c2007d72358a4a1828fd875689626fa0731fc716e43c8dc75b24a45b4ee8e"
+  },
+  "newCases": 19,
+  "directed": {
+    "tests": 138,
+    "pass": 138,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "regression": {
+    "tests": 1976,
+    "pass": 1971,
+    "fail": 5,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "wideSelectionFiles": 180,
+  "knownFailures": [
+    "the intent bridge projects a scaled gate using the physical wall frame",
+    "loading during a committed strike applies its damage frame exactly once",
+    "event-fed native intent bridge replays live state and only changes on explicit deltas",
+    "late crate admission is rejected after drop and retries a later pickup",
+    "confirmed harvest installs its sampled GPU horizon and cancels on changed target"
+  ],
+  "functionalEvidence": "Actual Game harvest arrival then explicit trusted native action ABI, real actor/roster/GLB/bakes/material binding/terrain kernel. Exact and retained source, rollback, task/receipt mismatch, cancellation/unload ownership, bootstrap without a fake route, current-foot invalidation, clock-only retargeting. Synthetic graphical declarations check the five phase policies and do not issue those five classes in the ordinary game.",
+  "visualEvidence": {
+    "allFourProfiles": "Sampled body and Plant/Water tool vertices compared against authored CPU rig, maximum asserted error <0.02 units",
+    "programConstruction": "Actual Three NodeBuilder emits new typed-action Harvest shader and original shadow override sharing the same positionNode",
+    "limit": "No new action shader/controller/GPU frame execution is claimed; normal action resource admission is not connected yet."
+  },
+  "resources": "Existing active body mesh/geometry/index and actor retained; no new trajectory DataTexture. Revalidation preserves graph and uniform node without new materials/textures. Does not close 3,123 resource reconstruction or ordinary resource budgets.",
+  "build": {
+    "native": "No native changes; standalone/pthread frozen unchanged",
+    "productSeconds": 42.06
+  },
+  "browserSyntax": {
+    "files": 367,
+    "scripts": 309,
+    "failures": []
+  },
+  "gpu": {
+    "record": "native-action-actor-phase-gpu-regression-20261115.json",
+    "source": "Existing first-task scenario, SpatialGameSession in page plus actual prep/draw workers; not the new action",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "block": {
+      "start": 1794727121178.7651,
+      "end": 1794727122978.83,
+      "committedAt": 1794727121184.445,
+      "drawFrames": 54,
+      "minClock": 13.159999999999933,
+      "maxClock": 14.779999999999898,
+      "resourcesAfterReady": 0
+    },
+    "drained": true
+  },
+  "resumeGpu": {
+    "record": "native-action-actor-phase-resume-gpu-20261115.json",
+    "block": {
+      "start": 1794727141836.18,
+      "end": 1794727143636.2349,
+      "committedAt": 1794727141852.555,
+      "drawFrames": 54,
+      "minClock": 60.816297002722166,
+      "maxClock": 62.39629700272241,
+      "resourcesAfterReady": 0
+    },
+    "drained": true,
+    "metricLimit": "Tool does not record requestFailures"
+  },
+  "research": [
+    {
+      "project": "Babylon.js",
+      "revision": "8.0.0",
+      "source": "https://github.com/BabylonJS/Babylon.js/blob/8.0.0/packages/dev/core/src/BakedVertexAnimation/bakedVertexAnimationManager.ts",
+      "function": "bind",
+      "lines": "125-138"
+    },
+    {
+      "project": "Babylon.js",
+      "revision": "8.0.0",
+      "source": "https://github.com/BabylonJS/Babylon.js/blob/8.0.0/packages/dev/core/src/Shaders/ShadersInclude/bakedVertexAnimation.fx",
+      "lines": "8-25",
+      "decision": "Resident baked matrices plus shader playback selection; adapt existing native causal time and authored workerPose timing, no new dependency or global engine clock."
+    },
+    {
+      "project": "Three.js",
+      "revision": "Installed 0.180.0 with existing repository postinstall patch",
+      "sources": {
+        "node_modules/three/src/renderers/common/Renderer.js": "9a91bd98d9f898098f086ad9b1fcb297cc88e9a5bb931f7432ddcae25511a8ee",
+        "node_modules/three/src/materials/nodes/NodeMaterial.js": "444b2e1e3ad3f3d9bbf601b0c96143700acedf3b3d3fc2399578ece374f92b85",
+        "tools/patch-three-webgpu-pipeline.mjs": "feab94d0e1026a87aafa7ea2bbc0497a07ed453712a2cb5848da88b839a75388"
+      },
+      "functions": [
+        "Renderer.renderObject",
+        "NodeMaterial.setupPosition"
+      ],
+      "decision": "Exercise the actual existing override-material positionNode propagation and common local transform; no separate shadow implementation."
+    }
+  ],
+  "acceptanceClosed": []
+}

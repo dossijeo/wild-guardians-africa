@@ -1,0 +1,72 @@
+{
+  "scope": "Reclassification of immutable actual GPU receipt, no new GPU run. Seven in-memory receipt corruptions, restored after each. Component-schema tests supply the additional negatives.",
+  "classifierSha256": "a42eb0bbb8b756032ecf12ba7e12c5f2c24cfcbb2ac6d2db908850f8b92eec47",
+  "rawSha256": "a366cbc4b822876bf13735892f6189e46e965e726f55a5f8552db9a3f903b899",
+  "result": {
+    "accepted": true,
+    "violations": [],
+    "reuse": {
+      "accepted": true,
+      "violations": [],
+      "residentDataRows": 15423,
+      "referenceWindows": 2,
+      "retainedRecoveries": 2,
+      "producerResourcesCreated": 26666,
+      "compiles": 907,
+      "scope": "Settled paused actual-main reuse; not cold allocation minimality, native WALK integration or cadence acceptance."
+    },
+    "privateBuffersChecked": 10476,
+    "attributedGeometryBuffersChecked": 10584,
+    "scope": "A–F instrumented component evidence; no gate closure, driver-memory bound, minimum allocation or cadence claim."
+  },
+  "negatives": [
+    {
+      "name": "warm reconstruction",
+      "violations": [
+        "far-identities-3"
+      ]
+    },
+    {
+      "name": "extra factory",
+      "violations": [
+        "settled-main-reuse"
+      ]
+    },
+    {
+      "name": "premature disposal",
+      "violations": [
+        "unaffected-owners-local",
+        "live-resources-local"
+      ]
+    },
+    {
+      "name": "GPU alias",
+      "violations": [
+        "far-identities-0",
+        "far-identities-1",
+        "far-identities-2",
+        "far-identities-3",
+        "far-identities-4",
+        "independent-gpu-lifetimes-366"
+      ]
+    },
+    {
+      "name": "missing progressive data",
+      "violations": [
+        "cold-and-progressive-evidence"
+      ]
+    },
+    {
+      "name": "undrained retirement",
+      "violations": [
+        "final-retirement-and-drain"
+      ]
+    },
+    {
+      "name": "leaked atlas lease",
+      "violations": [
+        "atlas-leases-and-textures-released"
+      ]
+    }
+  ]
+}

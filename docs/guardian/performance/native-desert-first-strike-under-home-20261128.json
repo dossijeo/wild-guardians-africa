@@ -1,0 +1,174 @@
+{
+  "schema": 1,
+  "product": "06f3acbfac661bfa7b573a5407fc5139fd04ee53",
+  "fixture": "Desierto 983",
+  "qualification": "Development cohort. The production Strike27 producer is served unmodified in both tests. The harness retains selected READY messages and destroys the device at an exact step.",
+  "native": {
+    "export": "nav_center_flight_strike_ready",
+    "standalone": {
+      "spatial-savanna.wasm": "f92146017a5013e47039f44a2f91108bfa1f8424fbe36f7c59e899c63050c94e"
+    },
+    "pthread": {
+      "spatial-threaded.mjs": "d2561540188556a8ba08d8a79889c791067845d1e334381e1ac24d8371026547",
+      "spatial-threaded.wasm": "9304b2494f04ff1b16e564e501ff1f893aa3671c34299852b5c17679fad10d6b",
+      "spatial-threaded.worker.mjs": "7e6dad4bca61807357acfcb3789c781deaca3e20214ccd76dd82ddcb0be0a153"
+    },
+    "importsUnchanged": true
+  },
+  "strikeUnderHome": {
+    "sourceSHA256": "9b8b77329dd2c80fedfe93ab990dbe960b66b56d954a6bab733f34e21e1e75ec",
+    "snapshotSHA256": "3d5f06f0f8ca7c873bdd22b4c787e5a6b735073774a64bef4613fc14964405cd",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 126.5
+      }
+    },
+    "attackId": 29209,
+    "sequence": 40,
+    "worldBoundary": {
+      "version": 1,
+      "authorityEpoch": "584e8e95-d44f-4a99-b815-282deaa73c9f/1",
+      "nativeSession": 1,
+      "ticket": 9,
+      "effectiveTime": 11.999999999999957
+    },
+    "elapsed": 11.999999999999957,
+    "bindings": [
+      {
+        "kind": 18,
+        "bodyId": 1,
+        "actorId": 900011,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "584e8e95-d44f-4a99-b815-282deaa73c9f/1",
+          "nativeSession": 1,
+          "ticket": 4,
+          "effectiveTime": 10.799999999999983
+        },
+        "relativeTime": 1.1999999284744263
+      },
+      {
+        "kind": "gate",
+        "gateId": 1000000,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "584e8e95-d44f-4a99-b815-282deaa73c9f/1",
+          "nativeSession": 1,
+          "ticket": 4,
+          "effectiveTime": 10.799999999999983
+        },
+        "elapsed": 11.99999992847441
+      },
+      {
+        "kind": 27,
+        "bodyId": 2,
+        "actorId": 1000003,
+        "relativeTime": 0,
+        "preparedWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "584e8e95-d44f-4a99-b815-282deaa73c9f/1",
+          "nativeSession": 1,
+          "ticket": 8,
+          "effectiveTime": 11.799999999999962
+        }
+      }
+    ]
+  },
+  "ruinContinuation": {
+    "sourceSHA256": "6472abd16c2aa86a2ff3ca853dfaac300513013a5b2f862a92b6e7ef009af911",
+    "snapshotSHA256": "3d5f06f0f8ca7c873bdd22b4c787e5a6b735073774a64bef4613fc14964405cd",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 87.7000000178814
+      }
+    },
+    "homeTicket": 5,
+    "newApproachTicket": 11,
+    "oldReady": 12,
+    "recoveredAt": 16.739999999999856,
+    "recoveredFrame": 1,
+    "picking": {
+      "animal": "animal-1000003",
+      "samples": [
+        {
+          "age": 2.739999771118164,
+          "actorId": 1000003,
+          "bodyId": 2,
+          "at": 16.739999999999856
+        },
+        {
+          "age": 2.739999771118164,
+          "actorId": 1000003,
+          "bodyId": 2,
+          "at": 16.739999999999856
+        },
+        {
+          "age": 2.739999771118164,
+          "actorId": 1000003,
+          "bodyId": 2,
+          "at": 16.739999999999856
+        },
+        {
+          "age": 2.739999771118164,
+          "actorId": 1000003,
+          "bodyId": 2,
+          "at": 16.739999999999856
+        },
+        {
+          "age": 2.739999771118164,
+          "actorId": 1000003,
+          "bodyId": 2,
+          "at": 16.739999999999856
+        },
+        {
+          "age": 2.739999771118164,
+          "actorId": 1000003,
+          "bodyId": 2,
+          "at": 16.739999999999856
+        }
+      ]
+    },
+    "ruin": {
+      "id": "event-29212",
+      "type": "StructureRuined",
+      "targetId": "structure-1000002",
+      "structureKind": "center",
+      "presentation": {
+        "x": -18,
+        "z": -12
+      },
+      "simulationTime": 16.759999999999856
+    },
+    "ruinTicket": 13,
+    "homeArrival": 18,
+    "drain": "production-gpu-drained"
+  },
+  "deviceLossDuringAcquiredStrike": {
+    "elapsed": 12.019999999999957,
+    "attackId": "attack-29209",
+    "remaining": 1.5216667051613335,
+    "workerAdmission": "native-home",
+    "reason": "Recovery activation idle timeout",
+    "terminalRoute": null
+  }
+}

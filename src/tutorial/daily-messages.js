@@ -5,7 +5,7 @@ export function dailyTutorialMessages(state){
  if(tutorial.shownToday?.day!==state.day)tutorial.shownToday={day:state.day,ids:[]};
  return tutorial.shownToday.ids;
 }
-export function tutorialMessageShownToday(state,id){return dailyTutorialMessages(state).includes(id);}
+export function tutorialMessageShownToday(state,id){const shown=state.tutorial.shownToday;return shown?.day===state.day&&shown.ids.includes(id);}
 export function recordTutorialMessageToday(state,id){
  const ids=dailyTutorialMessages(state);if(ids.includes(id))return false;
  ids.push(id);return true;

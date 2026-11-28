@@ -1,0 +1,79 @@
+{
+  "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "slot": 1,
+  "tree": {
+    "x": -18.38006261751503,
+    "y": 4.0847649574279785,
+    "z": -67.74871893730959
+  },
+  "camera": [
+    70.00828503080339,
+    104.08476495742798,
+    20.639628711008854
+  ],
+  "target": [
+    -18.38006261751503,
+    9.084764957427979,
+    -67.74871893730959
+  ],
+  "coverageProbe": {
+    "angle": 45,
+    "changed": 977,
+    "position": [
+      70.00828503080339,
+      104.08476495742798,
+      20.639628711008854
+    ]
+  },
+  "coverageAfterStreaming": 829,
+  "chunks": 25,
+  "records": [
+    {
+      "phase": "day",
+      "mode": "original",
+      "compressed": false,
+      "nightAmount": 0,
+      "instances": 2,
+      "calls": 47,
+      "triangles": 163685,
+      "error": 0
+    },
+    {
+      "phase": "day",
+      "mode": "native",
+      "compressed": true,
+      "nightAmount": 0,
+      "instances": 2,
+      "calls": 47,
+      "triangles": 163685,
+      "error": 0
+    },
+    {
+      "phase": "night",
+      "mode": "original",
+      "compressed": false,
+      "nightAmount": 1,
+      "instances": 2,
+      "calls": 47,
+      "triangles": 163685,
+      "error": 0
+    },
+    {
+      "phase": "night",
+      "mode": "native",
+      "compressed": true,
+      "nightAmount": 1,
+      "instances": 2,
+      "calls": 47,
+      "triangles": 163685,
+      "error": 0
+    }
+  ],
+  "stateUnchanged": true,
+  "scope": "Frozen canyon campaign fixture; terrain and far regions prepared after camera move, then one resident atlas pair replaced. Direct scene draw; no cold load or performance benchmark.",
+  "pixelChanges": {
+    "day": 182,
+    "night": 50
+  },
+  "requests": []
+}

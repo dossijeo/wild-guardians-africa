@@ -9,3 +9,13 @@ export function saveGame(state,repository,{confirm=false,onError=()=>{},onConfir
  catch(error){onError('No se pudo guardar la partida: '+error.message);return false;}
  return done();
 }
+
+// Unlike local saves, a Worker checkpoint may be temporarily unavailable while
+// an active physics state cannot yet be restored. Never report it as saved.
+export async function saveWorkerGame(coordinator,{confirm=false,onError=()=>{},onConfirm=()=>{}}={}){
+ try{
+  const result=await coordinator.request();
+  if(!result?.saved){onError('No se pudo guardar la partida: espera a que termine la caída física.');return false;}
+  if(confirm)onConfirm();return true;
+ }catch(error){onError('No se pudo guardar la partida: '+error.message);return false;}
+}

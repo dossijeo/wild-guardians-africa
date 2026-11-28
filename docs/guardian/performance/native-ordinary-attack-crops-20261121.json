@@ -1,0 +1,295 @@
+{
+  "source": "17a94bf096591b86f064580459e83d27d8a743db",
+  "fixture": "tests/fixtures/sabana712-d1-native-active-raid.json.gz",
+  "chunkKeys": [
+    "1,-1",
+    "2,-1",
+    "3,-1",
+    "1,0",
+    "2,0",
+    "3,0",
+    "1,1",
+    "2,1",
+    "3,1"
+  ],
+  "authority": {
+    "actorId": "animal-396",
+    "initialTarget": "plant-373",
+    "initialElapsed": 375.0000000000071,
+    "observations": [
+      {
+        "at": 375.100000000007,
+        "status": "entering",
+        "x": 84,
+        "z": 30.134805694449998,
+        "target": "plant-373",
+        "remaining": 2,
+        "pathPoints": 29,
+        "admission": null
+      },
+      {
+        "at": 376.50000000000574,
+        "status": "walking",
+        "x": 84,
+        "z": 24.88380569444996,
+        "target": "plant-373",
+        "remaining": 2,
+        "pathPoints": 23,
+        "admission": null
+      },
+      {
+        "at": 391.3999999999922,
+        "status": "attacking",
+        "x": 90.31144781401126,
+        "z": 9.171227171615998,
+        "target": "plant-373",
+        "remaining": 2,
+        "pathPoints": 0,
+        "admission": null
+      },
+      {
+        "at": 395.8999999999881,
+        "status": "walking",
+        "x": 90.30042309791742,
+        "z": 9.161055857293348,
+        "target": "plant-337",
+        "remaining": 1,
+        "pathPoints": 1,
+        "admission": null
+      }
+    ],
+    "movementPublications": 169,
+    "publications": 214,
+    "nativeWorldResourceKinds": [],
+    "initialPermission": {
+      "actorId": 396,
+      "hasMotion": false
+    },
+    "transitions": [
+      {
+        "type": "IntentBaseline",
+        "sequence": 1
+      },
+      {
+        "type": "RouteInvalidated",
+        "sequence": 2
+      },
+      {
+        "type": "RouteAssigned",
+        "sequence": 3
+      },
+      {
+        "type": "RouteCompleted",
+        "sequence": 4
+      },
+      {
+        "type": "IntentChanged",
+        "sequence": 5
+      },
+      {
+        "type": "RouteAssigned",
+        "sequence": 6
+      },
+      {
+        "type": "RouteInvalidated",
+        "sequence": 7
+      },
+      {
+        "type": "RouteAssigned",
+        "sequence": 8
+      },
+      {
+        "type": "RouteCompleted",
+        "sequence": 9
+      }
+    ],
+    "firstAttack": {
+      "at": 391.3999999999922,
+      "attackId": "attack-661",
+      "target": "plant-373",
+      "remaining": 2
+    },
+    "firstLogicalHit": {
+      "id": "event-664",
+      "type": "AnimalLogicalHit",
+      "attackId": "attack-661",
+      "targetId": "plant-373",
+      "species": "warthog",
+      "presentation": {
+        "version": 1,
+        "elapsed": 395.8899999999881,
+        "animal": {
+          "x": 90.31144781401126,
+          "z": 9.171227171615998,
+          "heading": -2.957347417417587
+        },
+        "target": {
+          "x": 90,
+          "z": 7.5
+        },
+        "shield": null
+      },
+      "simulationTime": 395.8899999999881
+    },
+    "firstCropHit": {
+      "id": "event-662",
+      "type": "CropHit",
+      "targetId": "plant-373",
+      "requestedDamage": 1,
+      "damage": 1,
+      "before": 0,
+      "after": 1,
+      "destroyed": true,
+      "hits": 1,
+      "presentation": {
+        "elapsed": 395.8899999999881
+      },
+      "simulationTime": 395.8899999999881
+    }
+  },
+  "hosted": {
+    "browser": "Edge",
+    "quality": "muy_baja",
+    "viewport": [
+      640,
+      480
+    ],
+    "displayHz": 30,
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing"
+    },
+    "phases": {
+      "before": {
+        "root": 337,
+        "geometryIds": [
+          257,
+          258,
+          259,
+          260
+        ],
+        "visibleMeshes": 4,
+        "visibleAnimals": 1,
+        "bakedWalking": 0,
+        "nativeWorldTickets": [],
+        "nativeRouteBindings": 0,
+        "activeSequence": 32
+      },
+      "walk": {
+        "root": 337,
+        "geometryIds": [
+          257,
+          258,
+          259,
+          260
+        ],
+        "visibleMeshes": 4,
+        "visibleAnimals": 1,
+        "bakedWalking": 0,
+        "nativeWorldTickets": [],
+        "nativeRouteBindings": 0,
+        "activeSequence": 44
+      },
+      "attack": {
+        "root": 337,
+        "geometryIds": [
+          257,
+          258,
+          259,
+          260
+        ],
+        "visibleMeshes": 4,
+        "visibleAnimals": 1,
+        "bakedWalking": 1,
+        "nativeWorldTickets": [],
+        "nativeRouteBindings": 0,
+        "activeSequence": 313
+      },
+      "after": {
+        "root": 337,
+        "geometryIds": [
+          257,
+          258,
+          259,
+          260
+        ],
+        "visibleMeshes": 4,
+        "visibleAnimals": 1,
+        "bakedWalking": 0,
+        "nativeWorldTickets": [],
+        "nativeRouteBindings": 0,
+        "activeSequence": 555
+      }
+    },
+    "reachedLogicalAndDamage": [
+      {
+        "id": "event-662",
+        "type": "CropHit",
+        "targetId": "plant-373",
+        "damage": 1,
+        "simulationTime": 395.8899999999881
+      },
+      {
+        "id": "event-664",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-661",
+        "targetId": "plant-373",
+        "simulationTime": 395.8899999999881
+      },
+      {
+        "id": "event-666",
+        "type": "CropHit",
+        "targetId": "plant-337",
+        "damage": 1,
+        "simulationTime": 400.9499999999835
+      },
+      {
+        "id": "event-668",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-665",
+        "targetId": "plant-337",
+        "simulationTime": 400.9499999999835
+      }
+    ],
+    "elapsedAfterPause": 406.39999999997855,
+    "drawSamplesSinceResume": 1333,
+    "attackDrawSamples": 138,
+    "maxIntervals": [
+      {
+        "at": 1795247172494.4001,
+        "intervalMs": 48.7001953125,
+        "sequence": 49,
+        "replay": true,
+        "drawMs": 10
+      },
+      {
+        "at": 1795247212116.9001,
+        "intervalMs": 37.7001953125,
+        "sequence": 532,
+        "replay": true,
+        "drawMs": 2.099853515625
+      },
+      {
+        "at": 1795247183816.7,
+        "intervalMs": 37.699951171875,
+        "sequence": 162,
+        "replay": true,
+        "drawMs": 2.400146484375
+      },
+      {
+        "at": 1795247202016.8,
+        "intervalMs": 37.699951171875,
+        "sequence": 397,
+        "replay": true,
+        "drawMs": 3.300048828125
+      }
+    ],
+    "drained": true,
+    "errors": [],
+    "interpretation": "Legacy presentation baseline. The high interval is unattributed. The two hits have distinct targets and attacks. Resource totals span initial preparation and later frames."
+  },
+  "diagnosticSha256": {
+    "cpu": "a860bbb0d03424e1dfdac3ad2b7919a23e8b735a1504441929a136c66d6b7ef9",
+    "hosted": "0fe16734853af0460af3ca2fa6324d545a8371db44884c61b22330a1eb6c2011"
+  }
+}

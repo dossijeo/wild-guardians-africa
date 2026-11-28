@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "model": "kinematic-union",
+  "sourceHashPolicy": "JSON normalized to LF; binary assets exact",
+  "scope": "Canonical frame/leaf triangle union; no internal occupied region is removed. Same cut and rigid hinge as rendering. Native support is validated separately.",
+  "sources": {
+    "content/manifests/gate-leaf-calibration.json": "b74b76592bc834f14a975ba6046d583892706b36037ad0f9d368a5d6792fce60",
+    "public/content/walls.json": "0f6eaf0a7bf4816243d9cf888e6cadb96c03e18c55f97208faaf9ec21f2fea30",
+    "content/manifests/gate-frames-native.json": "0f02472ccdf45631485b29ad21d295afc8341e647bbc561b8c7438ea47b00d4d",
+    "public/assets/35af330911d752ce012c1d75ea9f5a2bde68241d3b4872277ae0b24de476725d.bin": "35af330911d752ce012c1d75ea9f5a2bde68241d3b4872277ae0b24de476725d",
+    "public/assets/eb6766fa7a5ae66919aa6fc9e9dde8ef9cbe376b445d9b552bb602428d62a807.bin": "eb6766fa7a5ae66919aa6fc9e9dde8ef9cbe376b445d9b552bb602428d62a807",
+    "public/assets/e23ccb63b6a6d5a4f1e6373e6b5e6904be3bb7b8eeb456e78dff045babddd71c.bin": "e23ccb63b6a6d5a4f1e6373e6b5e6904be3bb7b8eeb456e78dff045babddd71c",
+    "public/assets/fc65ff995d95325cec161e2b9bdd0963a42a85b6e3426479095ec33dd923fede.bin": "fc65ff995d95325cec161e2b9bdd0963a42a85b6e3426479095ec33dd923fede",
+    "public/assets/186e5d11680c392ab8714477e55a92a7a4a21f26ee5f91e69db9295007aab095.bin": "186e5d11680c392ab8714477e55a92a7a4a21f26ee5f91e69db9295007aab095",
+    "public/assets/ae2b865cd658e398633020abf5658f94f4f64f214cad05393bb9548a3d46777f.bin": "ae2b865cd658e398633020abf5658f94f4f64f214cad05393bb9548a3d46777f"
+  },
+  "models": [
+    {
+      "id": 1,
+      "material": "zarzas",
+      "vertices": 17415,
+      "leafVertices": 5964,
+      "frameVertices": 11451
+    },
+    {
+      "id": 2,
+      "material": "empalizada",
+      "vertices": 6081,
+      "leafVertices": 2268,
+      "frameVertices": 3813
+    },
+    {
+      "id": 3,
+      "material": "reforzado",
+      "vertices": 6861,
+      "leafVertices": 1698,
+      "frameVertices": 5163
+    }
+  ],
+  "headerSha256": "5dbd5fb7c962cbf4067267f2036f030aaaad465ffb70efad104b75c01dbc3f04"
+}

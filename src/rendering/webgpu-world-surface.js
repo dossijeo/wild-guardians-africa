@@ -1,0 +1,1024 @@
+import {nativeHomeWorkerStatus,sameNativeHomeRequestReference} from '../world/native-home-request-reference.js';
+import {centerSource,matchesCenterRuinCommit,verifiesCenter} from '../world/native-center-ruin-source.js';
+import {copyNativeRuinMotors,copyPendingFlightRecovery,nativeOrdinaryRecoveryKinds,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
+import {copyNativeAnimalCropReference,copyNativeAnimalCropProposal,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference,nativeAnimalCropSuccessor} from '../world/native-animal-crop-resource.js';
+import {nativeAnimalCropPublicationMatches} from '../simulation/raids.js';
+import {nativeMotionPresentationMatches} from '../world/native-motion-presentation-match.js';
+import {copyNativeBarrierAdditionProposal,copyNativeBarrierAdditionReference,copyNativeBarrierAdditionAttestation,nativeBarrierAdditionOwners,nativeBarrierAdditionPresentationMatches} from '../world/native-barrier-addition.js';
+import {spatialStructureBarriers} from '../world/wild-engine/spatial-wall-bridge.js';
+import {gateScale,nativeGateModelId} from '../world/gate-passages.js';
+import {terrainStopProposalProtocol,terrainStopWireProtocol,hasOtherTerrainStopField} from '../simulation/terrain-stop-reservation.js';
+import {nativeIdleCycleBodyState} from '../world/native-idle-cycle-body-source.js';
+import {copyNativeIdleCycleProposal,copyNativeIdleCycleAttestation,copyNativeIdleCycleResources,nativeIdleCyclePresentationMatches,nativeIdleCycleSuccessor} from '../world/native-idle-cycle.js';
+import {copyNativeFarmArrivalRouteProposal,copyNativeFarmArrivalRouteAttestation,copyNativeFarmArrivalRouteResources,nativeFarmArrivalRoutePresentationMatches,nativeFarmArrivalRouteSuccessor} from '../world/native-farm-arrival-route.js';
+import {nativeFarmArrivalExecutionState,nativeFarmFlightState} from '../world/native-farm-arrival-state.js';
+import {copyNativeIdleStrollProposal,copyNativeIdleStrollAttestation,copyNativeIdleStrollResources,nativeIdleStrollPresentationMatches,nativeIdleStrollSuccessor,nativeIdleStrollWalkRemaining,nativeIdleStrollApproachesAnchor} from '../world/native-idle-stroll.js';
+import {nativeIdleStrollLiveState} from '../world/native-idle-stroll-state.js';
+import {nativeEntityNumericId} from '../world/native-entity-id.js';
+import {copyNativeHomeArrivalProposal,copyNativeHomeArrivalAttestation,copyNativeHomeArrivalResources,nativeHomeArrivalPresentationMatches,nativeHomeArrivalSuccessor} from '../world/native-home-arrival.js';
+import {copyNativeTaskSettlementProposal,copyNativeTaskSettlementAttestation,copyNativeTaskSettlementResources,nativeTaskSettlementPresentationMatches,nativeTaskSettlementSuccessor} from '../world/native-task-settlement.js';
+import {copyNativeInitialIdleBodyProposal,copyNativeInitialIdleBodyAttestation,copyNativeInitialIdleBodyResources,nativeInitialIdleBodyPresentationMatches,nativeInitialIdleBodySuccessor} from '../world/native-initial-idle-body.js';
+import {copyNativeHomeRouteProposal,copyNativeHomeRouteAttestation,nativeHomeRoutePresentationMatches,nativeHomeRouteSuccessor,nativeHomeRouteSource} from '../world/native-home-route.js';
+import {copyNativeTaskConsequenceProposal,copyNativeTaskConsequenceAttestation,nativeTaskConsequencePresentationMatches,nativeTaskConsequenceSuccessor} from '../world/native-task-consequence.js';
+import {copyNativeTaskActionProposal,nativeTaskActionReferenceFromProposal,nativeTaskActionSuccessor,nativeTaskActionActor} from '../world/native-task-action-presentation.js';
+import {copyNativeTaskActionAttestation,copyNativeTaskActionResources,nativeTaskActionPresentationMatches} from '../world/native-task-action-attestation.js';
+import {copyNativeTaskStartProposal} from '../world/native-task-start-presentation.js';
+import {copyNativeTaskStartAttestation,nativeTaskStartPresentationMatches} from '../world/native-task-start-attestation.js';
+import {nativeTaskStartSuccessor} from '../world/native-task-start-reference.js';
+import {copyNativeResumeAttestation,nativeResumePresentationMatches} from '../world/native-resume-attestation.js';
+import {nativeResumeSuccessor} from '../world/native-resume-reference.js';
+import {nativeFrameReadiness,rejectedNativeFrameTarget,rejectedHistoricalIntervalTarget} from './webgpu-frame-recovery.js';
+import {withNativeRoutePickFrame} from './native-route-pick-frame.js';
+import {copyNativeGateMotionResources} from '../world/native-gate-motion-resources.js';
+import {sameNativeGatePresentations,sampleNativeGateOpening} from '../world/native-gate-presentation.js';
+import {installRemoteTexturePreparation} from './remote-texture-preparation.js';
+import {assertNativeTerrainPresentationSupport} from './native-terrain-presentation-support.js';
+import {copyNativeWorldBoundary,reconcileNativeWorldResources,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
+import {copyNativeCenterPlacement,sameNativeCenterPlacement} from '../world/native-center-placement.js';
+import {copyNativeShieldWorld,nativeShieldWorldKind,sameNativeShieldWorld,copyNativeShieldCropStop,sameNativeShieldCropStop,copyNativeShieldCropExpiry,sameNativeShieldCropExpiry} from '../world/native-shield-world.js';
+import {copyNativeResumeProposal} from '../world/native-resume-presentation.js';
+import {prepareNativeWorldFrameBoundary} from './webgpu-native-world-admission.js';
+import {installWebGpuTextureBindingInitialization} from './webgpu-texture-binding-initialization.js';
+import {installRemoteCameraEnvelope} from './remote-camera-envelope.js';
+import {installRemoteClockBindings} from './remote-clock-bindings.js';
+import {installRemoteCameraBindings} from './remote-camera-bindings.js';
+import {createStableMaterialKeys} from './webgpu-stable-material-keys.js';
+import {createWebGpuGrassOwner,grassPresentationTrackedKeys} from './webgpu-grass-owner.js';
+import {createGrassGenerationQueue} from './grass-generation-queue.js';
+import {createGrassSurfaceTimeline} from './webgpu-grass-timeline.js';
+import {webGpuWorldRenderOptions} from './webgpu-world-render-options.js';
+import {guardianGeometryDependencies} from '../simulation/guardian-geometry-dependencies.js';
+import {createWebGpuResourceRegistry} from './webgpu-resource-registry.js';
+import * as THREE from 'three';
+import {WebGPURenderer,MeshBasicNodeMaterial} from 'three/webgpu';
+import {createWebGpuGroundDepthCapture} from './webgpu-ground-depth-capture.js';
+import {createWebGpuVfxTerrainDepth} from './webgpu-vfx-terrain-depth.js';
+import {createWebGpuVfxSoftDepth} from './webgpu-vfx-sprite-material.js';
+import {diffuseColor,mix,shadow,vec4} from 'three/tsl';
+import {configureShadowCamera,updateShadowCamera} from './shadow-camera.js';
+import {createWebGpuTerrainResidency} from './webgpu-terrain-residency.js';
+import {createWebGpuMangroveGround,initializeMangroveGround} from './webgpu-mangrove-ground.js';
+import {createWebGpuGroundContacts} from './webgpu-ground-contacts.js';
+import {prepareWebGpuTexture} from './webgpu-texture-upload.js';
+import {createWebGpuVolcanicGround} from './webgpu-volcanic-ground.js';
+import {createWebGpuSavannaGround,grassGroundBiome} from './webgpu-savanna-ground.js';
+import {createWebGpuDesertGround} from './webgpu-desert-ground.js';
+import {createConfirmedTerrainReceiver} from './confirmed-terrain-receiver.js';
+import {createConfirmedPresentationStream} from './confirmed-presentation-stream.js';
+import {acceptLiveTerrainCheckpoint} from './live-terrain-checkpoint.js';
+import {pickTerrainStroke} from './webgpu-terrain-stroke.js';
+import {confirmedAnimalPoses} from './confirmed-animal-poses.js';
+import {deserializeConfirmedState,serializeConfirmedState} from '../simulation/confirmed-live-state.js';
+import {createWebGpuAnimalBank} from './webgpu-animal-bank.js';
+import {createSharedIdleAssetBudget} from './webgpu-idle-assets.js';
+import {createWebGpuBeastStyle} from './webgpu-beast-toon.js';
+import {createWebGpuAnimalRoster} from './webgpu-animal-roster.js';
+import {createWebGpuPicker,webGpuPickerReady} from './webgpu-picker.js';
+import {loadBakedWalkAsset,loadBakedAnimalRunAsset,createBakedAnimalAttackBank,ownDirectBakedWalkAsset,createBakedWalkBank,closeBakedWalkResources} from './baked-walk-catalog.js';
+import {createBakedWorkerWalkBank,createBakedWorkerRunBank,createBakedWorkerHarvestBank,createBakedWorkerIdleBank,createBakedWorkerAlertBank,createBakedWorkerWaterBank,createBakedWorkerPlantBank,createBakedWorkerCarryBank,createBakedWorkerFallBank,createBakedWorkerGetUpBank} from './baked-worker-walk-catalog.js';
+import {createCharacterPreviewDataClient} from './character-preview-worker-client.js';
+import {createWebGpuWorkerBank} from './webgpu-worker-bank.js';
+import {createWebGpuWorkerRoster} from './webgpu-worker-roster.js';
+import {createWebGpuCrateRoster} from './webgpu-crate-roster.js';
+import {createWebGpuSettlements} from './webgpu-settlements.js';
+import {createWebGpuCropRoster} from './webgpu-crop-roster.js';
+import {createWebGpuVfxWorldLights} from './webgpu-vfx-world-lights.js';
+import {createWebGpuAgricultureVfx} from './webgpu-agriculture-vfx.js';
+import {createWebGpuBlessingVfx} from './webgpu-blessing-vfx.js';
+import {createWebGpuBlessingGlow} from './webgpu-blessing-glow.js';
+import {createWebGpuBiomeProps,loadWebGpuBiomePack} from './webgpu-biome-props.js';
+import {createWebGpuFarCoverage} from './webgpu-far-coverage.js';
+import {createWebGpuFarShadowReservation,advanceWebGpuFarShadow} from './webgpu-far-shadow-reservation.js';
+import {createWebGpuLavaMaterial,lavaWorldSeed} from './webgpu-lava-material.js';
+import {createWebGpuWaterEnvironment} from './webgpu-water-environment.js';
+import {createWebGpuWaterMaterial} from './webgpu-water-material.js';
+import {createWebGpuWaterReflectionCapture} from './webgpu-water-reflection-capture.js';
+import {createWebGpuWaterHiSsrBindings} from './webgpu-water-hissr.js';
+import {createConfirmedMotionFeed} from './confirmed-motion-feed.js';
+import {createPresentationWorkerHeadingMap,assertPresentationWorkerHeadingCheckpoint} from '../simulation/presentation-worker-headings.js';
+import {createConfirmedPresentationClock} from './confirmed-presentation-clock.js';
+import {createConfirmedHistoricalClock} from './confirmed-historical-clock.js';
+import {createConfirmedHistoricalMotionGroup} from './confirmed-historical-motion-group.js';
+import {createHistoricalPreviewSupportSelector} from './historical-preview-support.js';
+import {historicalInactiveActor} from '../simulation/historical-inactive-actors.js';
+import {createConfirmedTerrainSupport} from './confirmed-terrain-support.js';
+import {createConfirmedTimelinePump} from './confirmed-timeline-pump.js';
+import {createWebGpuSharedShadow} from './webgpu-shared-shadow.js';
+import {syncWebGpuWorldLighting} from './webgpu-world-lighting.js';
+import {createWebGpuNativeSky} from './webgpu-native-sky.js';
+import {createWebGpuGuardianAttack} from './webgpu-guardian-attack.js';
+import {createWebGpuPipelineAdmission} from './webgpu-pipeline-admission.js';
+import {createChunkPublicationCoordinator} from './webgpu-chunk-publication.js';
+import {prepareWebGpuTemporalTerrain,prepareWebGpuTemporalCheckpoint} from './webgpu-temporal-terrain.js';
+import {createTemporalSurfaceRecovery,assertRetainedTemporalPresentation} from './temporal-surface-recovery.js';
+import {estimateRetainedBytes} from '../simulation/retained-size.js';
+import {createVisibleCameraTerrain} from './visible-camera-terrain.js';
+import {syncWebGpuHistoricalBoundary} from './webgpu-historical-boundary-sync.js';
+import {webGpuPresentationCapabilities,webGpuWorkerBakedWalking} from './webgpu-presentation-capabilities.js';
+import {createWebGpuMicroeventReceiver} from '../microevents/webgpu-billboard-receiver.js';
+import {createWebGpuMicroeventVisibility} from './webgpu-microevent-visibility.js';
+import {vertexTerrainRecipe} from './webgpu-material-graph-catalog.js';
+import {createWebGpuLocomotionWater} from './webgpu-locomotion-water.js';
+import {createWebGpuMudPreparer} from './webgpu-mud-preparer.js';
+import {createWebGpuMudMaterial} from './webgpu-mud-material.js';
+
+// Defer until reconciliation completes; multiple terrain callbacks in one
+// publication collapse to its final structure snapshot.
+export function createCameraStructurePublisher({epoch,sequence,closed,send}){let queued=null,revision=0;return data=>{if(!epoch())return false;const first=queued===null;queued=data;if(first)queueMicrotask(()=>{const next=queued;queued=null;if(closed()||!next)return;send({...next,epoch:epoch(),sequence:sequence(),revision:++revision});});};}
+export function closeWebGpuRenderer(renderer,admission){if(!renderer)return Promise.resolve();return new Promise((resolve,reject)=>{const release=()=>{try{renderer.dispose();resolve();}catch(error){reject(error);}};if(typeof admission?.deferCompilations==='function')admission.deferCompilations(release);else release();});}
+// Keep legacy checkpoint identities distinct from every wire epoch. These
+// identifiers are visual-only and never replace authority metadata.
+export function createChunkPublicationEpochs(){let next=0,order=0;return {live:epoch=>'wire:'+JSON.stringify(epoch),checkpoint(){if(next===Number.MAX_SAFE_INTEGER)throw Error('Checkpoint publication identity exhausted');return 'checkpoint:'+ ++next;},order(){if(order===Number.MAX_SAFE_INTEGER)throw Error('Chunk publication order exhausted');return ++order;}};}
+export function assertCoordinatedChunkInstances(payload){if(!Array.isArray(payload?.instances)||payload.instances.length!==20||payload.instances.some((list,slot)=>!Array.isArray(list)||list.some(item=>item?.slot!==slot||typeof item.id!=='string'||![item.x,item.y,item.z,item.yaw,item.sx,item.sy,item.sz].every(Number.isFinite))))throw TypeError('Coordinated chunk requires valid biome instances');}
+
+// Worker-owned foundation for the WebGPU world. The simulation supplies state
+// and terrain; this surface owns GPU resources, never the authoritative state.
+// The terrain material is provisional until the world material is migrated.
+export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,remoteGpu=null,camera:initialCamera=null,getBootstrapCamera=null,onPresentationReady=()=>{},onBootstrapStage=()=>{},session,terrainPort,presentationPort=null,snapshot=null,presentationWorkerHeadingSeed=null,experimentalActorId=null,experimentalAllActors=false,experimentalActorPackageUrl=null,experimentalMinimalWorld=false,experimentalEarlyBiome=false,experimentalMotionFeed=false,experimentalPresentationInputs=false,presentationInputs=false,farVisualQueries=false,quality='media',reducedMotion=false,experimentalBakedHyena=false,experimentalBakedWorkerWalk=false,experimentalConfirmedClock=false,experimentalShadows=true,experimentalWaterHiSsr=false,buildingContacts=false,experimentalMangroveGround=false,experimentalPicking=false,experimentalWallFragments=false,experimentalBiomeAttributes=false,experimentalBiomeShadowCutout=false,experimentalWorkRecovery=false,presentationRecovery=false,presentationWorkRecovery=false,experimentalTimelineRecovery=false,experimentalCameraTerrain=false,experimentalTemporalPresentation=null,presentationCapabilities={},experimentalTiming=false,resourcePressureBytes=256*1024*1024,resourceIdleBytes=96*1024*1024,initialSequence=0,width=512,height=512,onError=()=>{},onResourceError=()=>{},onCameraTerrain=()=>{},onCameraTreeChunk=()=>{},onCameraStructures=()=>{},onGuardianError=()=>{},onGuardianPresence=()=>{},onConfirmed=()=>{},onActorReady=()=>{},onActorTextured=()=>{},onActorTextureError=()=>{},onSettlementTextureError=()=>{}}={}){
+ if(getBootstrapCamera!==null&&typeof getBootstrapCamera!=='function')throw TypeError('Invalid bootstrap camera source');
+ if(typeof document!=='undefined'||!canvas||!terrainPort||typeof session!=='string'||!session||!Number.isInteger(width)||width<1||!Number.isInteger(height)||height<1||typeof onError!=='function'||typeof onResourceError!=='function'||typeof onConfirmed!=='function'||typeof onActorReady!=='function'||Boolean(presentationPort)!==Boolean(snapshot)||typeof presentationRecovery!=='boolean'||typeof presentationWorkRecovery!=='boolean'||typeof presentationInputs!=='boolean'||typeof farVisualQueries!=='boolean'||!['muy_baja','baja','media','alta'].includes(quality)||typeof reducedMotion!=='boolean'||farVisualQueries&&!presentationPort||presentationWorkRecovery&&!presentationRecovery)throw TypeError('Invalid WebGPU world surface');
+ const capabilities=webGpuPresentationCapabilities(presentationCapabilities),coordinatedChunks=capabilities.coordinatedChunks===true,cameraTerrainEnabled=capabilities.cameraTerrain||import.meta.env?.DEV===true&&experimentalCameraTerrain,inputsEnabled=presentationInputs||capabilities.causalInputs,temporal=experimentalTemporalPresentation,retainedTimelineRecovery=!!remoteGpu&&temporal?.checkpoints===true&&presentationRecovery&&coordinatedChunks;
+ if(temporal?.mudPresentation!==undefined&&typeof temporal.mudPresentation!=='boolean')throw TypeError('Invalid mud presentation profile');
+ if(temporal?.historicalEvents!==undefined&&typeof temporal.historicalEvents!=='boolean'||temporal?.historicalEvents===true&&(!temporal.product||!presentationRecovery||!presentationWorkRecovery||!experimentalMotionFeed||!experimentalAllActors))throw TypeError('Invalid historical event profile');
+ if(typeof experimentalTimelineRecovery!=='boolean'||experimentalTimelineRecovery&&(!temporal||!presentationRecovery||initialSequence<1||temporal.checkpoints!==true))throw TypeError('Invalid temporal recovery profile');
+ if(temporal!==null&&(!temporal||typeof temporal!=='object'||Array.isArray(temporal)||['maxPublications','maxBytes','maxHistory','maxHistoryBytes'].some(key=>!Number.isSafeInteger(temporal[key])||temporal[key]<1)||temporal.checkpoints!==undefined&&typeof temporal.checkpoints!=='boolean'||temporal.checkpoints===true&&(!presentationRecovery||!presentationWorkRecovery)||!coordinatedChunks||!presentationPort||!experimentalTimelineRecovery&&(initialSequence!==0||temporal.checkpoints!==true&&(presentationRecovery||presentationWorkRecovery||experimentalWorkRecovery))))throw TypeError('Invalid temporal presentation profile');
+ if(!Number.isSafeInteger(resourcePressureBytes)||resourcePressureBytes<0||!Number.isSafeInteger(resourceIdleBytes)||resourceIdleBytes<0)throw TypeError('Invalid resource pressure policy');
+ if(signal!==undefined&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Invalid WebGPU startup signal');
+ let grassOwner=null,grassTimeline=null,farCoverage=null,farShadow=null,farAbort=null,farShadowSuspended=false,farCoveragePhase=farVisualQueries?'waiting':'disabled',farCoverageError=null,farCoverageDetail=null,groundDepth=null,softDepth=null,depthController=null,blessingGlow=null;
+ let preparedNativeWorldBoundary=null,nativeWorldFrameAdmission=null,nativeResumeTarget=null,nativeRejectedFrame=null,nativeRouteRejected=false,nativeRoutePreparations=0,nativePickFrame=null,nativePickPresentation=null,nativeRouteResourceRevision=0,nativeGateProposal=null,retainedCenterRuin=null;
+ let remoteTexturePreparation=null,textureBindingInitialization=null,remoteClockBindings=null,remoteCameraBindings=null,remoteMotionGroup=null,remoteCameraEnvelope=null,remoteEnvelope=null,remoteCameraCompatible=true;let waterReflectionFrames=0;let renderer,scene,camera,vfxWorldLights,material,waterMaterial,waterAssetMaterial,waterEnvironment,waterReflection,residency,terrain,stream,roster,workers,crates,settlements,crops,agricultureVfx,blessingVfx,guardianAttack,sky,biomeProps,motionFeed,beastStyle,bakedWalk,bakedWalkBank,bakedAnimalRunBank,bakedAnimalAttackBank,bakedWorkerWalkBank,bakedWorkerRunBank,bakedWorkerHarvestBank,bakedWorkerIdleBank,bakedWorkerAlertBank,bakedWorkerWaterBank,bakedWorkerPlantBank,bakedWorkerCarryBank,bakedWorkerFallBank,bakedWorkerGetUpBank,visualClock,historicalClock=null,historicalActorIds=null,historicalWorkerIds=null,terrainSupport=null,ground,groundContacts=null,mudMaterial=null,mudPreparer=null,temporalShadow=null,timelinePump=null,historicalPreviewSupport=null,groundError=null,lightingNight=0,closed=false,recoveringPublication=false,timelineRecovering=experimentalTimelineRecovery,recoveryTransportPending=false,cameraStructureEpoch=null,cameraStructureSequence=initialSequence,guardianCaptureRevision=0,selectableGeneration=0,pipelineAdmission=null,workerAssetBank=null,idleAssetBudget=null,resourceRegistry=null,rendererLease=null,biomePropsLease=null,characterData=null,biomePackAbort=null,chunkCoordinator=null,visibleCameraTerrain=null;
+ const closeBakedResources=()=>closeBakedWalkResources({bank:bakedWalkBank,animalRunBank:bakedAnimalRunBank,animalAttackBank:bakedAnimalAttackBank,workerBank:bakedWorkerWalkBank,workerRunBank:bakedWorkerRunBank,workerHarvestBank:bakedWorkerHarvestBank,workerIdleBank:bakedWorkerIdleBank,workerAlertBank:bakedWorkerAlertBank,workerWaterBank:bakedWorkerWaterBank,workerPlantBank:bakedWorkerPlantBank,workerCarryBank:bakedWorkerCarryBank,workerFallBank:bakedWorkerFallBank,workerGetUpBank:bakedWorkerGetUpBank,bake:bakedWalk,admission:pipelineAdmission});
+ const surfaceLeases=new Map(),releasedSurfaceResources=new WeakSet();let nextSurfaceResource=0;
+ function ownSurfaceResource(value,kind){if(!value||!resourceRegistry||surfaceLeases.has(value))return;let lease;try{lease=resourceRegistry.adopt({namespace:'world-surface',key:kind+':'+(++nextSurfaceResource),dispose:()=>value.dispose()});lease.commit();surfaceLeases.set(value,lease);}catch(error){if(lease){lease.release();releasedSurfaceResources.add(value);}throw error;}}
+ function releaseSurfaceResource(value){if(!value||releasedSurfaceResources.has(value))return;releasedSurfaceResources.add(value);const lease=surfaceLeases.get(value);surfaceLeases.delete(value);if(lease)lease.release();else value.dispose();}
+ let resolveTemporalStream;const temporalStreamReady=temporal?new Promise(resolve=>{resolveTemporalStream=resolve;}):null;
+ async function temporalSuppression(sequence,abortSignal,initial){if(sequence===0)return [...initial];if(!stream){await new Promise((resolve,reject)=>{if(abortSignal?.aborted){reject(new DOMException('Temporal terrain cancelled','AbortError'));return;}const abort=()=>reject(new DOMException('Temporal terrain cancelled','AbortError'));abortSignal?.addEventListener('abort',abort,{once:true});temporalStreamReady.then(()=>{abortSignal?.removeEventListener('abort',abort);resolve();});});}return stream.waitForTerrainSuppression(sequence,{signal:abortSignal});}
+ const abortBootstrap=()=>biomePackAbort?.abort();signal?.addEventListener('abort',abortBootstrap,{once:true});
+ function checkBootstrap(){if(signal?.aborted)throw new DOMException('WebGPU startup cancelled','AbortError');}
+ async function admitRecoveredNativeWorld(boundary,sequence,recoverySignal,presentationState,{unacquiredFlight=false}={}){
+  if(!boundary&&!unacquiredFlight){nativeWorldFrameAdmission=null;return null;}
+  const current=()=>{if(closed||stream.status().sequence!==sequence)throw Error('Native world replay boundary changed');};
+  if(recoverySignal?.aborted)throw new DOMException('Native world admission cancelled','AbortError');
+  current();
+  // Retain the existing full-scene admission proof, not a cached native permit.
+  // Its own owner, readiness, material, geometry and pass read sets stay live.
+  if(nativeWorldFrameAdmission?.valid()&&sameNativeWorldBoundary(boundary,nativeWorldFrameAdmission.worldBoundary))return nativeWorldFrameAdmission.worldBoundary;
+  const prepared=await prepareNativeWorldFrameBoundary({worldBoundary:boundary,scene,admission:pipelineAdmission,signal:recoverySignal,unacquiredFlight,
+   assertCurrent:current,isReady:()=>webGpuPickerReady(presentationState,{animals:roster?.status(),workers:workers?.status(),settlements:settlements?.status(),
+    crops:crops?.status(),crates:crates?.status(),biome:biomeProps?.status(),terrain:terrain.status()})});
+  if(!prepared.valid())throw Error('Native world frame admission became stale');nativeWorldFrameAdmission=prepared;return prepared.worldBoundary;
+ }
+ function remotePresentationBlockers(){const blockers=[],crop=crops?.status(),structure=settlements?.status();if(crop?.provisional>0)blockers.push('crop-provisional-transition');if(structure?.provisional>0)blockers.push('structure-provisional-transition');for(const type of ['center','wall','village'])if(structure?.[type+'Previews']>structure?.[type+'Textured'])blockers.push(type+'-texture-transition');return blockers;}
+ function remoteCameraBlockers(){const reasons=remotePresentationBlockers(),vfx=agricultureVfx?.status(),guardian=guardianAttack?.status(),structure=settlements?.status();if(!remoteCameraCompatible)reasons.push('unsupported-camera-binding');if(!vfx?.cameraAutonomous&&(vfx?.effects||vfx?.aura||vfx?.locomotion?.steps||vfx?.locomotion?.ripples))reasons.push(vfx?.cameraAutonomyBlocker??'cpu-sorted-native-vfx');if(guardian?.active||guardianAttack?.guideVisible())reasons.push('guardian-transparent-order');if(structure?.damagedCenters)reasons.push('cpu-oriented-destruction');return reasons;}
+ function closeRenderer(){remoteGpu?.endFrameProduction?.();remoteCameraBindings?.dispose();remoteClockBindings?.dispose();remoteCameraEnvelope?.dispose();const owner=renderer,lease=rendererLease;renderer=null;rendererLease=null;return closeWebGpuRenderer(lease?{dispose:()=>lease.release()}:owner,pipelineAdmission).finally(()=>{remoteTexturePreparation?.dispose();textureBindingInitialization?.dispose();owner?._wgMaterialKeys?.dispose();temporalShadow?.release();temporalShadow=null;return remoteGpu?.disposeAsync?.()??remoteGpu?.dispose();});}
+ function closeTerrainMaterials(){mudPreparer?.dispose();const release=()=>{releaseSurfaceResource(mudMaterial);releaseSurfaceResource(ground);releaseSurfaceResource(groundContacts);releaseSurfaceResource(material);releaseSurfaceResource(waterMaterial);releaseSurfaceResource(waterAssetMaterial);waterEnvironment?.dispose();};if(pipelineAdmission)pipelineAdmission.deferCompilations(release);else release();}
+ const publicationEpochs=createChunkPublicationEpochs(),livePublicationEpoch=publicationEpochs.live,incomingChunkOrders=new WeakMap();
+ const onSelectableChange=()=>{if(inputsEnabled||import.meta.env?.DEV&&experimentalPresentationInputs)selectableGeneration++;};
+ const maybeResumeWorkCheckpoint=()=>{if(stream?.workCheckpointReady&&agricultureVfx?.workCheckpointInputsReady())stream.workCheckpointReady();};
+ try{
+  checkBootstrap();renderer=new WebGPURenderer({...webGpuWorldRenderOptions(canvas,import.meta.env?.VITE_WEBGPU_ANTIALIAS),...(remoteGpu?{device:remoteGpu.device,context:remoteGpu.context}:{})});if(import.meta.env?.VITE_WEBGPU_STABLE_MATERIAL_KEYS!=='false')renderer._wgMaterialKeys=createStableMaterialKeys({audit:import.meta.env?.VITE_WEBGPU_AUDIT_MATERIAL_KEYS==='true'});onBootstrapStage('device');await renderer.init();if(remoteGpu)remoteTexturePreparation=installRemoteTexturePreparation(renderer,remoteGpu);textureBindingInitialization=installWebGpuTextureBindingInitialization(renderer);if(remoteGpu)remoteClockBindings=installRemoteClockBindings(renderer,remoteGpu);checkBootstrap();if(!renderer.backend?.isWebGPUBackend)throw Error('WebGPU backend unavailable');renderer.backend.device.lost.then(info=>{if(!closed)onError(Error('WebGPU device lost: '+(info?.message||info?.reason||'unknown')));});renderer.setSize(width,height,false);renderer.outputColorSpace=THREE.LinearSRGBColorSpace;
+  const state=presentationPort?deserializeConfirmedState(snapshot):null,presentationWorkerHeadings=presentationWorkerHeadingSeed===null?null:createPresentationWorkerHeadingMap(presentationWorkerHeadingSeed);const temporalInitialSuppressed=temporal?[...(state?.suppressed??[])]:null;if(presentationWorkerHeadings&&!state)throw Error('Presentation heading baseline requires state');if(coordinatedChunks&&(!state||import.meta.env?.DEV===true&&experimentalMinimalWorld&&!experimentalEarlyBiome))throw Error('Coordinated chunks require biome presentation');if(state){idleAssetBudget=createSharedIdleAssetBudget(resourceIdleBytes);resourceRegistry=createWebGpuResourceRegistry({idleBudget:idleAssetBudget,maxTrackedBytes:resourcePressureBytes});const renderOwner=renderer;rendererLease=resourceRegistry.adopt({namespace:'renderer',key:'main',dispose:()=>renderOwner.dispose()});rendererLease.commit();visualClock=createConfirmedPresentationClock(state.elapsed);if(temporal&&(import.meta.env?.DEV===true||temporal.product===true)&&experimentalMotionFeed&&(experimentalAllActors||typeof experimentalActorId==='string'&&experimentalActorId)){historicalActorIds=experimentalAllActors?(state.raid?.animals??[]).map(actor=>actor.id):[experimentalActorId];historicalWorkerIds=experimentalAllActors?(state.workers??[]).map(actor=>actor.id):[];historicalClock=createConfirmedHistoricalClock({initialElapsed:state.elapsed,initialSequence});visualClock.dispose();visualClock=historicalClock;}characterData=createCharacterPreviewDataClient();}else if(capabilities.bakedWalking||capabilities.bakedHyenaWalking||capabilities.bakedWorkerWalking||experimentalConfirmedClock||import.meta.env?.DEV===true&&experimentalMotionFeed)throw Error('Confirmed clock requires confirmed state');let biomePack=null;if(state){biomePackAbort=new AbortController();checkBootstrap();onBootstrapStage('biome');biomePack=await loadWebGpuBiomePack(state.biome,{signal:biomePackAbort.signal});if(typeof biomePack.profile?.colors?.water!=='string'||state.biome==='volcanes'&&biomePack.profile?.fluid!=='lava')throw Error('Invalid biome fluid profile');{const contacts=createWebGpuGroundContacts({pack:biomePack,buildings:buildingContacts,onError});if(buildingContacts)contacts.setBuildings(state);await prepareWebGpuTexture({renderer,texture:contacts.texture,signal:biomePackAbort.signal,release:()=>contacts.dispose()});groundContacts=contacts;try{ownSurfaceResource(contacts,'ground-contacts');}catch(error){groundContacts=null;contacts.dispose();throw error;}checkBootstrap();}}scene=new THREE.Scene();if(state)vfxWorldLights=createWebGpuVfxWorldLights({scene});scene.background=new THREE.Color('#9eb3b0');const ambient=new THREE.HemisphereLight('#ebf1d9','#765b3b',2);scene.add(ambient);const sun=new THREE.DirectionalLight('#ffe2a8',3);sun.position.set(-30,55,25);scene.add(sun,sun.target);if(experimentalShadows){renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFShadowMap;sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);configureShadowCamera(sun);if(temporal)temporalShadow=createWebGpuSharedShadow(sun,{onInvalidated:()=>{if(!closed)onError(Error('Shared WebGPU shadow node was disposed'));}});}const terrainRecipe=vertexTerrainRecipe({shadows:experimentalShadows});material=experimentalShadows?new MeshBasicNodeMaterial(terrainRecipe.structural.state):new THREE.MeshBasicMaterial(terrainRecipe.structural.state);if(experimentalShadows)material.outputNode=vec4(diffuseColor.rgb.mul(mix(.58,1,(temporalShadow?.node??shadow(sun)).r)),diffuseColor.a);if(state){waterEnvironment=createWebGpuWaterEnvironment({renderer,resourceRegistry,clockNode:visualClock.node,deferredPublication:temporal?.checkpoints===true,slopeRequired:state.biome!=='volcanes'&&state.biome!=='desierto',onError});waterEnvironment.update(state,sun);}if(state&&state.biome!=='volcanes'&&state.biome!=='desierto'){const options={color:biomePack.profile.colors.water,biome:state.biome,seed:lavaWorldSeed(state.seed),clockNode:visualClock.node,environment:waterEnvironment,globalSurface:true,sun:experimentalShadows?sun:null,...(temporalShadow?{shadowNode:temporalShadow.node}:{})};if(import.meta.env?.DEV===true&&experimentalWaterHiSsr){waterReflection=createWebGpuWaterReflectionCapture(width,height,{resourceRegistry});options.reflectionBindings=createWebGpuWaterHiSsrBindings(waterReflection);}waterMaterial=createWebGpuWaterMaterial(options);waterAssetMaterial=createWebGpuWaterMaterial({...options,clip:true});}else waterMaterial=state?.biome==='volcanes'?createWebGpuLavaMaterial({color:biomePack.profile.colors.water,seed:lavaWorldSeed(state.seed),clockNode:visualClock.node,clip:false}):new THREE.MeshBasicMaterial({color:'#366f75',side:THREE.DoubleSide,toneMapped:false});if(experimentalMangroveGround&&state?.biome==='manglares'){const preparedGround=await initializeMangroveGround({create:()=>createWebGpuMangroveGround({contact:groundContacts,renderer,signal:biomePackAbort.signal,imageLoader:(url,options)=>characterData.loadBitmap(url,options),light:sun,environment:waterEnvironment,shadows:experimentalShadows,...(temporalShadow?{shadowNode:temporalShadow.node}:{})}),state,signal,onError:error=>{if(capabilities.causalInputs)onResourceError('ground',error);}});ground=preparedGround.ground;groundError=preparedGround.error;}else if(capabilities.causalInputs&&state?.biome==='volcanes'){const preparedGround=await initializeMangroveGround({create:()=>createWebGpuVolcanicGround({contact:groundContacts,renderer,signal:biomePackAbort.signal,imageLoader:(url,options)=>characterData.loadBitmap(url,options),light:sun,environment:waterEnvironment,shadows:experimentalShadows,...(temporalShadow?{shadowNode:temporalShadow.node}:{})}),state,signal,onError:error=>onResourceError('ground',error)});ground=preparedGround.ground;groundError=preparedGround.error;}else if(capabilities.causalInputs&&state?.biome==='desierto'){const preparedGround=await initializeMangroveGround({create:()=>createWebGpuDesertGround({contact:groundContacts,renderer,signal:biomePackAbort.signal,imageLoader:(url,options)=>characterData.loadBitmap(url,options),light:sun,environment:waterEnvironment,shadows:experimentalShadows,...(temporalShadow?{shadowNode:temporalShadow.node}:{})}),state,signal,onError:error=>onResourceError('ground',error)});ground=preparedGround.ground;groundError=preparedGround.error;}else if(capabilities.causalInputs&&grassGroundBiome(state?.biome)){const preparedGround=await initializeMangroveGround({create:()=>createWebGpuSavannaGround({contact:groundContacts,biome:grassGroundBiome(state.biome),renderer,signal:biomePackAbort.signal,imageLoader:(url,options)=>characterData.loadBitmap(url,options),light:sun,environment:waterEnvironment,shadows:experimentalShadows,...(temporalShadow?{shadowNode:temporalShadow.node}:{})}),state,signal,onError:error=>onResourceError('ground',error)});ground=preparedGround.ground;groundError=preparedGround.error;}ground?.setQuality?.(quality);ownSurfaceResource(ground,'ground');ownSurfaceResource(material,'terrain');ownSurfaceResource(waterMaterial,'fluid');ownSurfaceResource(waterAssetMaterial,'asset-fluid');camera=new THREE.PerspectiveCamera(45,width/height,.1,500);camera.coordinateSystem=renderer.coordinateSystem;if(remoteGpu){remoteCameraBindings=installRemoteCameraBindings({renderer,remote:remoteGpu,camera,onUnsupported:()=>{remoteCameraCompatible=false;}});remoteCameraEnvelope=installRemoteCameraEnvelope({renderer,camera});}const bootstrapCamera=getBootstrapCamera?.()??initialCamera;if(bootstrapCamera)setCamera(bootstrapCamera);if(state)pipelineAdmission=createWebGpuPipelineAdmission({renderer,scene,camera,pendingFramePost:remoteGpu?.pendingFramePost,onFatal:onError,shadowLights:[sun],includeShadowPass:experimentalShadows,sharedSceneLighting:import.meta.env?.VITE_WEBGPU_ADMISSION_SHARED_LIGHTS!=='false'});if(coordinatedChunks)chunkCoordinator=createChunkPublicationCoordinator({admission:pipelineAdmission,onError,bootstrapTerrain:true});if(waterEnvironment&&pipelineAdmission)waterEnvironment.setAdmission(pipelineAdmission);if(waterReflection){waterReflection.registerObjects(pipelineAdmission);await waterReflection.prepareHierarchy(pipelineAdmission,{signal});checkBootstrap();}if(temporal?.mudPresentation===true&&state?.biome==='manglares'){mudMaterial=await createWebGpuMudMaterial({renderer,signal:biomePackAbort.signal,imageLoader:(url,options)=>characterData.loadBitmap(url,options),environment:waterEnvironment,...(experimentalShadows?{light:sun,...(temporalShadow?{shadowNode:temporalShadow.node}:{})}:{})});ownSurfaceResource(mudMaterial,'mud-material');checkBootstrap();mudPreparer=createWebGpuMudPreparer();}residency=createWebGpuTerrainResidency({scene,material,waterMaterial,mudMaterial:mudMaterial?.material??null,pipelineAdmission,resourceRegistry,coordinator:chunkCoordinator,onAdmissionError:onError,canEvictVisualLocal:identity=>grassTimeline?.canEvictVisualLocal(identity)===true&&biomeProps?.canReadmitVisualLocal?.(identity)===true,onPublished:(key,identity)=>{if(grassTimeline)grassTimeline.published(key,identity);else grassOwner?.syncChunk(key);depthController?.invalidate();visibleCameraTerrain?.published(key);farCoverage?.retry();onSelectableChange();if(!historicalClock){roster?.sync();workers?.sync();}crates?.sync();settlements?.terrainChanged();crops?.terrainChanged();agricultureVfx?.terrainChanged();blessingVfx?.terrainChanged();maybeResumeWorkCheckpoint();},onRevision:change=>{if(change.kind==='remove'){if(grassTimeline){if(change.cause==='visual-local')grassTimeline.visualLocalEvicted(change);else if(change.cause==='confirmed')grassTimeline.confirmedRemoval(change);else grassTimeline.unsequencedEviction();}else grassOwner?.removeChunk(`${change.cx},${change.cz}`);}depthController?.invalidate();if(experimentalMotionFeed)motionFeed?.invalidateTerrain(change);},materialUsesCanonicalTerrainOnly:true,...(ground?ground.sharedMaterial?{sharedMaterials:[ground.sharedMaterial],materialFactory:()=>ground.sharedMaterial}:{materialFactory:payload=>ground.create(payload)}:{})});if(cameraTerrainEnabled)visibleCameraTerrain=createVisibleCameraTerrain({residency,send:onCameraTerrain});if(((temporal?.product===true&&capabilities.causalInputs&&import.meta.env?.VITE_WEBGPU_GRASS!=='false')||((!temporal||import.meta.env?.VITE_WEBGPU_TEMPORAL_GRASS==='true')&&import.meta.env?.DEV===true&&import.meta.env?.VITE_WEBGPU_GRASS==='true'))&&ground?.acquireGrassResources&&['sabana','gran-rio','manglares'].includes(state?.biome)){let generationQueue=null;try{if(import.meta.env?.VITE_WEBGPU_GRASS_WORKER==='true')try{generationQueue=createGrassGenerationQueue(new Worker(new URL('./grass-generation-worker.js',import.meta.url),{type:'module'}));}catch(error){onResourceError('grass-worker',error);}grassOwner=createWebGpuGrassOwner({scene,camera,residency,biome:state.biome,state,ground,clock:visualClock.node,admission:pipelineAdmission,quality,generationQueue,initiallySuspended:!!temporal,requireTerrainRevision:!!temporal,reuseOnResume:import.meta.env?.VITE_WEBGPU_GRASS_RESUME_REUSE!=='false',fern:state.biome==='manglares'&&(temporal?.product===true?import.meta.env?.VITE_WEBGPU_MANGROVE_FERN!=='false':import.meta.env?.VITE_WEBGPU_MANGROVE_FERN==='true'),renderer,imageLoader:(url,options)=>characterData.loadBitmap(url,options),onError:error=>onResourceError('grass',error)});grassOwner.syncState();}catch(error){grassOwner?.dispose();generationQueue?.dispose();grassOwner=null;onResourceError('grass',error);}}if(temporal&&grassOwner)grassTimeline=createGrassSurfaceTimeline({owner:grassOwner,residency,initialSequence,onError:error=>onResourceError('grass',error)});const receiverResidency=coordinatedChunks?Object.assign(Object.create(residency),{replace:(payload,revision,epoch)=>{assertCoordinatedChunkInstances(payload);const publicationOrder=publicationEpochs.order();incomingChunkOrders.set(payload,publicationOrder);return residency.replace(payload,revision,epoch,{publicationEpoch:livePublicationEpoch(epoch),publicationOrder});}}):residency;terrain=createConfirmedTerrainReceiver({port:terrainPort,session,residency:receiverResidency,confirmedSequence:initialSequence,confirmedElapsed:state?.elapsed??null,onError,onSelectableChange,...(temporal?{retainRevisions:true,autoBootstrap:!experimentalTimelineRecovery,allowReplay:experimentalTimelineRecovery,allowRetainedReplay:retainedTimelineRecovery,maxHistory:temporal.maxHistory,maxHistoryBytes:temporal.maxHistoryBytes,validateRevision:(payload,revision,epoch)=>{assertCoordinatedChunkInstances(payload);residency.validateRevision(payload,revision,epoch);},onReady:()=>{stream?.terrainReady();onPresentationReady();},prepareGraphicalProposal:prepareNativeTerrainProposal,prepareGraphicalBatch:async(messages,{signal})=>{const sequence=messages[0]?.sequence;if(!messages.every(message=>message.sequence===sequence))throw Error('Mixed temporal terrain boundary');const suppressed=await temporalSuppression(sequence,signal,temporalInitialSuppressed);return prepareWebGpuTemporalTerrain(messages,{signal,scene,residency,biome:biomeProps,coordinator:chunkCoordinator,publicationEpoch:livePublicationEpoch,publicationOrder:()=>publicationEpochs.order(),validateInstances:assertCoordinatedChunkInstances,suppressed,mudPreparer,...(grassTimeline?{onPreparedIdentity:grassTimeline.prepared,onDiscardIdentity:grassTimeline.discarded}:{})});}}:{}),...(temporal?{onRemoved:(payload,revision,metadata)=>{
+   if(metadata.epoch){cameraStructureEpoch=metadata.epoch;cameraStructureSequence=Math.max(cameraStructureSequence,metadata.sequence);}
+   visibleCameraTerrain?.removed(payload,revision,metadata);
+   crates?.sync();settlements?.terrainChanged();crops?.terrainChanged();agricultureVfx?.terrainChanged();blessingVfx?.terrainChanged();onSelectableChange();maybeResumeWorkCheckpoint();
+  }}:{}),onApplied:(payload,revision,metadata)=>{grassTimeline?.applied(payload,revision,metadata);if(metadata.epoch){cameraStructureEpoch=metadata.epoch;cameraStructureSequence=Math.max(cameraStructureSequence,metadata.sequence);}if(visibleCameraTerrain&&metadata.epoch){visibleCameraTerrain.stage(payload,revision,metadata);if(temporal)visibleCameraTerrain.published(`${payload.cx},${payload.cz}`);}if(!temporal)biomeProps?.replace(payload,revision,metadata,coordinatedChunks?{publicationEpoch:livePublicationEpoch(metadata.epoch),publicationOrder:incomingChunkOrders.get(payload)}:undefined);if(!historicalClock){roster?.sync();workers?.sync();}crates?.sync();settlements?.terrainChanged();crops?.terrainChanged();agricultureVfx?.terrainChanged();blessingVfx?.terrainChanged();maybeResumeWorkCheckpoint();}});
+  if(state)lightingNight=syncWebGpuWorldLighting(state,sun,ambient);if(experimentalMotionFeed){if(!state)throw Error('Motion feed requires confirmed state');if(historicalClock)terrainSupport=createConfirmedTerrainSupport({residency});motionFeed=createConfirmedMotionFeed(terrainSupport?{prepareTerrainSupport:value=>terrainSupport.prepare(value,{actorIds:value.trace.actors.filter(actor=>!historicalInactiveActor(actor,value.trace.actorTickStates,value.start,value.end)).map(actor=>actor.actorId)})}:{});}
+  if(state)sky=createWebGpuNativeSky({scene,pipelineAdmission,resourceRegistry,onError,...(waterEnvironment?{onEnvironment:(images,slope)=>waterEnvironment.install(images,state.biome==='volcanes'||state.biome==='desierto'?null:slope)}:{})});
+  const earlyBiome=import.meta.env?.DEV&&experimentalMinimalWorld&&experimentalEarlyBiome;
+  if(state&&(!(import.meta.env?.DEV&&experimentalMinimalWorld)||earlyBiome)){const biomeOwner=resourceRegistry.createBank({namespace:'world-biome',load:()=>createWebGpuBiomeProps({scene,state,pipelineAdmission,resourceRegistry,coordinator:chunkCoordinator,onGroundContactChange:event=>{if(event.kind==='replace')groundContacts?.replace(event.payload);else if(event.kind==='remove')groundContacts?.remove(event.cx,event.cz);if(grassTimeline)grassTimeline.biome(event);else if(event.kind==='replace')grassOwner?.syncChunk(`${event.payload.cx},${event.payload.cz}`);else if(event.kind==='remove')grassOwner?.removeChunk(`${event.cx},${event.cz}`);},onError,onSelectableChange:()=>{if(closed)return;onSelectableChange();farCoverage?.retry();},initialLodEye:()=>{const pose=getBootstrapCamera?.()??initialCamera;return pose?[pose.x,pose.y,pose.z]:null;},instanceContract:experimentalBiomeAttributes?'attributes':'native',confirmedClock:visualClock,biomePack,demandDriven:!earlyBiome,imageLoader:(url,options)=>characterData.loadBitmap(url,options),byteLoader:(url,options)=>characterData.loadArrayBuffer(url,options),nativeBc7:renderer.hasFeature('texture-compression-bc'),bc7Loader:(url,options)=>characterData.loadNativeBc7(url,options),fluidMaterial:waterAssetMaterial??null,experimentalShadowCutout:experimentalBiomeShadowCutout,...(cameraTerrainEnabled?{onCameraTreeChunk}:{}),...(earlyBiome?{initialSlots:[0]}:{})}),validate:value=>typeof value?.dispose==='function'});biomePropsLease=await biomeOwner.acquire(state.biome);biomeProps=biomePropsLease.asset;checkBootstrap();if(earlyBiome){const props=biomeProps;void (async()=>{if(!await props.ready)return;for(let slot=1;slot<20&&!closed;slot++){await new Promise(resolve=>setTimeout(resolve,0));if(closed)return;await props.requestSlots([slot]);}})().catch(()=>{});}}
+  async function prepareNativeTerrainDependents(view,{signal,nativeStop=null}={}){
+   const parts=[];try{
+    parts.push(...(roster?.prepareCropTerrainRetention(view)??[]));
+    // A Task stop changes the selected bodies while every terrain batch stays resident.
+    if(nativeStop?.protocol?.codec.kind!==25||view.changedKeys.size){
+     parts.push(...(settlements?.prepareVillageTerrain(view)??[]));
+     parts.push(...(crates?.prepareTerrainSupport(view)??[]));
+     parts.push(...(await crops?.prepareTerrainSupport(view,{signal})??[]));
+    }
+    if(nativeStop?.stopEffects?.routeEffects.rows.length){
+    terrainSupport??=createConfirmedTerrainSupport({residency});
+    const projected=await workers.prepareNativeTerrainStops(view,{stopEffects:nativeStop.stopEffects,boundary:nativeStop.boundary,prepareBodySupport:(reference,pose)=>terrainSupport.prepareNativeBody(reference,pose),retainNativeGate:(presentation,options)=>settlements.prepareNativeGateRetention(presentation,{...options,signal}),prepareStoppedGate:(presentation,options)=>settlements.prepareNativeStoppedGate(presentation,{...options,signal,getStoppedProjection:(selector,epoch)=>{if(!nativePickFrame)throw Error('Native stopped gate requires a submitted frame');return nativePickFrame.getStoppedGate(selector,epoch);}}),...(nativeStop.protocol?{[nativeStop.protocol.wireTemplateField]:nativeStop.template}:{}),getStoppedProjection:(selector,epoch)=>{if(!nativePickFrame)throw Error('Native stopped input requires a consumer frame');return nativePickFrame.getStoppedBody(selector,epoch);},getPickTime:(reference,epoch)=>{if(!nativePickFrame)throw Error('Native suspended input requires a consumer frame');return nativePickFrame.getSuspendedTime(reference,epoch);}});parts.push(...projected.parts);
+    const gates=settlements.prepareNativeGateMotors({gates:projected.gates},{signal,getPickTime:(reference,epoch)=>{if(!nativePickFrame)throw Error('Native stopped gate input requires a consumer frame');return nativePickFrame.getGateTime(reference,epoch);}});
+    try{parts.push(...gates.map(part=>part.chunkParticipant()));}catch(error){for(const gate of gates)gate.cancel();throw error;}
+   }else parts.push(...(workers?.prepareNativeTerrainRetention(view)??[]));return parts;}catch(error){for(const part of parts.reverse())part.cancel();throw error;}
+  }
+  async function prepareNativeTerrainProposal(messages,options){
+   const {signal:proposalSignal,proposedWorldBoundary,retainsNativeAssignments=false,stopEffects=null,proposalOwner=null,nativeShieldProposal=null,nativeCenterRuin=null}=options;
+   const terminalCrop=nativeShieldProposal?.nativeShieldCropExpiry?.completionSequence!==undefined;
+   const stopProtocol=terrainStopWireProtocol(options,'Native stopped Surface mixes source families');
+   const stopTemplate=stopProtocol?stopProtocol.codec.copyReference(options[stopProtocol.wireTemplateField]):null;
+   const barrierTemplate=options.nativeBarrierAdditionTemplate?copyNativeBarrierAdditionReference(options.nativeBarrierAdditionTemplate):null;
+   const center=options.nativeCenterPlacement?copyNativeCenterPlacement(options.nativeCenterPlacement):null;
+   if(center&&(!remoteGpu||!retainsNativeAssignments||stopTemplate||barrierTemplate||nativeShieldProposal||nativeCenterRuin||
+       stopEffects?.routeEffects.rows.length||stopEffects?.gateEffects.rows.length))throw Error('Native center requires its retained terrain batch');
+   if(barrierTemplate&&(stopTemplate||messages.length||!retainsNativeAssignments||!sameNativeWorldBoundary(barrierTemplate.worldBoundary,proposedWorldBoundary)))throw Error('Native solid additions require their geometry-only proposal');
+   if(nativeShieldProposal&&(barrierTemplate||stopTemplate||messages.length||!retainsNativeAssignments&&!nativeShieldProposal.nativeShieldCropStop))throw Error('Native shield requires its retained geometry-only proposal');
+   if(nativeCenterRuin&&(nativeShieldProposal||barrierTemplate||stopTemplate||messages.length||!retainsNativeAssignments||
+      !sameNativeWorldBoundary(nativeCenterRuin.boundary,proposedWorldBoundary)))throw Error('Native center ruin requires its own geometry-only proposal');
+   if(stopTemplate&&messages.length)throw Error('Native moving stop cannot prepare terrain geometry');
+   if(stopEffects?.gateEffects.rows.length&&!stopEffects?.routeEffects.rows.length)throw Error('Native stop requires a coordinated terrain/body/motor batch');
+   const routesRetainable=()=>{const status=workers?.status();return !status?.nativePreparing&&(!status?.native||retainsNativeAssignments||!!stopEffects?.routeEffects.rows.length);};
+   if(remoteGpu&&(nativeGateProposal&&nativeGateProposal!==proposalOwner||nativeRoutePreparations||!routesRetainable()))throw Error('Native terrain commands require projected route assignments before recording moving actors');
+   const routeRevision=nativeRouteResourceRevision,suppressed=[...(state.suppressed??[])],suppressionBefore=JSON.stringify(suppressed),
+     suppressionAfter=center?JSON.stringify([...new Set([...suppressed,...center.suppressed])].sort()):null;
+   const finalSuppression=()=>JSON.stringify([...new Set(state.suppressed??[])].sort())===suppressionAfter;
+   const unchanged=({applying=false}={})=>!closed&&!proposalSignal.aborted&&nativeRouteResourceRevision===routeRevision&&(!remoteGpu||routesRetainable())&&
+     (applying&&center?finalSuppression():JSON.stringify(state.suppressed??[])===suppressionBefore);
+   let stoppedParts=[],shieldCropPart=null,centerPart=null;
+   const dependents=async(view,{signal})=>{
+    const parts=await prepareNativeTerrainDependents(view,{signal,nativeStop:{stopEffects,boundary:proposedWorldBoundary,template:stopTemplate,protocol:stopProtocol}});
+    if(!center)return parts;
+    try{centerPart=await settlements.prepareNativeCenterPlacement(center,view,{signal});parts.push(centerPart);return parts;}
+    catch(error){for(const part of parts.reverse())part.cancel();throw error;}
+   };
+   let raw=messages.length?await prepareWebGpuTemporalTerrain(messages,{signal:proposalSignal,scene,residency,biome:biomeProps,coordinator:chunkCoordinator,publicationEpoch:livePublicationEpoch,publicationOrder:()=>publicationEpochs.order(),validateInstances:assertCoordinatedChunkInstances,suppressed,mudPreparer,...(remoteGpu?{validatePresentationSupport:(view,participants)=>assertNativeTerrainPresentationSupport({state,residency,view,participants})}:{}),prepareDependents:dependents,...(grassTimeline?{onPreparedIdentity:grassTimeline.prepared,onDiscardIdentity:grassTimeline.discarded}:{})}):null;
+   if(!messages.length&&(stopEffects?.routeEffects.rows.length||barrierTemplate||nativeShieldProposal||nativeCenterRuin||center)){
+    const view={get:(cx,cz)=>(residency.getVisible??residency.get).call(residency,cx,cz),changedKeys:new Set()};
+    const parts=nativeCenterRuin?[settlements.prepareCenterRuin(nativeCenterRuin,{signal:proposalSignal})]:options.shieldGeometry?[options.shieldGeometry.part]:nativeShieldProposal?[await agricultureVfx.prepareNativeShield(nativeShieldProposal.nativeShield.spell,{camera,signal:proposalSignal,removing:nativeShieldProposal.kind===4})]:
+     barrierTemplate?(barrierTemplate.removal?settlements.prepareNativeWallRemoval(options.nativeBarrierWallEntities,{signal:proposalSignal,template:barrierTemplate}):await settlements.prepareNativeWallAdditions(options.nativeBarrierWallEntities,{signal:proposalSignal,template:barrierTemplate})):await dependents(view,{signal:proposalSignal});
+    stoppedParts=parts;try{
+     const cropExpiry=nativeShieldProposal?.nativeShieldCropExpiry;
+     const shieldStop=nativeShieldProposal?.nativeShieldCropStop??(cropExpiry?.completionSequence===undefined?null:cropExpiry);
+     if(shieldStop){
+      terrainSupport??=createConfirmedTerrainSupport({residency});
+      const support=terrainSupport.prepareShieldCropStop(shieldStop);
+      shieldCropPart=await roster.prepareShieldCropStop(shieldStop,support,{signal:proposalSignal});
+      parts.push(shieldCropPart);
+     }
+     assertNativeTerrainPresentationSupport({state,residency,view,participants:parts});raw=options.shieldGeometry?.batch??await chunkCoordinator.prepareBatch([],{signal:proposalSignal,scene,dependents:parts});}
+    catch(error){for(const part of parts.reverse())try{part.cancel();}catch{}throw error;}
+   }
+   try{
+    // A revoked strike can leave uploads that only a replacement packet can
+    // own. The remote prepared packet completes its own uploads and first use.
+    if(!remoteGpu||!terminalCrop)await pipelineAdmission.completePreparation({signal:proposalSignal});
+    if(!unchanged())throw new DOMException('Native terrain proposal cancelled','AbortError');
+   }catch(error){raw?.abort();throw error;}
+   let active=true,preparedFrame=null,blocked=false;
+   const unblock=()=>{if(!blocked)return;blocked=false;nativeRoutePreparations--;onPresentationReady();};
+   try{if(remoteGpu){
+    const boundary=copyNativeWorldBoundary(proposedWorldBoundary);if(!boundary)throw Error('Native terrain frame requires a proposed boundary');
+    nativeRoutePreparations++;blocked=true;
+    try{await remoteGpu.whenFrameSettled();}catch(error){if(!['remote-frame-native-route-obsolete','remote-frame-native-mutation-obsolete','remote-frame-native-clock-obsolete'].includes(error?.code))throw error;}
+    if(!unchanged()||raw&&raw.valid()!==true)throw Error('Native terrain changed before recording');
+    remoteGpu.beginFrame({nativeWorldBoundary:boundary});sun.shadow.needsUpdate=true;renderer.shadowMap.needsUpdate=true;
+    try{
+     const record=()=>{if(!renderScene({preparedTerrain:true}))throw Error('Native prepared terrain scene is not ready');};
+     if(raw)raw.capturePresentation(record);else record();
+     // A pending solid addition describes the retained graph at the proposal
+     // time. Surface may already display a later Game publication. Draw still
+     // takes execution time from the independently acquired native clock.
+     const coverage=barrierTemplate||nativeShieldProposal||center?{start:boundary.effectiveTime,end:remoteClockLease()?.safeUntil??boundary.effectiveTime}:stopEffects?.routeEffects.rows.length?{start:boundary.effectiveTime,end:Number.MAX_SAFE_INTEGER}:null;
+     const metadata=remoteFrameMetadata(boundary,coverage);
+     if(nativeShieldProposal?.nativeShieldCropStop)metadata.preparedShieldCropStop=nativeShieldProposal.nativeShieldCropStop;
+     if(nativeShieldProposal?.nativeShieldCropExpiry)metadata.preparedShieldCropExpiry=nativeShieldProposal.nativeShieldCropExpiry;
+     if(nativeCenterRuin){
+      const start=boundary.effectiveTime,end=nativeCenterRuin.end;
+      metadata.preparedCenterRuin=nativeCenterRuin;
+      metadata.clock={...metadata.clock,elapsed:start,safeUntil:end,paused:false,segments:[{start,end,rate:1,realDuration:end-start}]};
+     }
+     preparedFrame=await remoteGpu.prepareNativeWorldFrame({...metadata,...(stopTemplate?{[stopProtocol.wireTemplateField]:stopTemplate}:{}),...(barrierTemplate?{nativeBarrierAdditionTemplate:barrierTemplate}:{})},{signal:proposalSignal});
+    }catch(error){remoteGpu.cancelFrame();throw error;}
+   }}catch(error){raw?.abort();preparedFrame?.abort();unblock();throw error;}
+   return {get presented(){return preparedFrame?.presented;},canonicalPropsUnmasked:raw?.canonicalPropsUnmasked??true,...(stopTemplate?{[stopProtocol.preparedTemplateField]:stopTemplate}:{}),...(preparedFrame?{preparedWorldBoundary:preparedFrame.preparedWorldBoundary}:{}),valid:()=>active&&unchanged()&&(!raw||raw.valid()===true)&&(!preparedFrame||preparedFrame.valid()),
+    commit(data={}){const {worldBoundary=proposedWorldBoundary}=data;if(!active||!unchanged({applying:true})){raw?.abort();preparedFrame?.abort();active=false;unblock();throw Error('Native terrain proposal suppression became stale');}active=false;
+     if(center)try{
+      const final=copyNativeCenterPlacement(data.nativeCenterPlacement,{committed:true});
+      if(!sameNativeCenterPlacement(center,final)||!sameNativeWorldBoundary(proposedWorldBoundary,worldBoundary))throw Error('Native center lost its final boundary');
+      centerPart.acceptCenterPlacement(final);
+     }catch(error){raw?.abort();preparedFrame?.abort();unblock();throw error;}
+     try{if(hasOtherTerrainStopField(data,'bindingField',stopProtocol))throw Error('Native stopped Surface mixes final source families');const proof=nativeCenterRuin?data.nativeCenterRuin:barrierTemplate?copyNativeBarrierAdditionAttestation(data.nativeBarrierAdditionBinding):stopTemplate?stopProtocol.codec.copyAttestation(data[stopProtocol.bindingField]):null;if(barrierTemplate&&!sameNativeWorldBoundary(proof.reference.worldBoundary,worldBoundary))throw Error('Native solid additions lost their final boundary');if(stopTemplate&&proof){if(!proof.projection||!stopProtocol.codec.sameReference(proof.preparedReference,stopTemplate)||!sameNativeWorldBoundary(proof.reference.worldBoundary,worldBoundary))throw Error('Native stopped Surface lost its final source');for(const part of stoppedParts)part.acceptNativeStopBinding?.(proof);}if(barrierTemplate)for(const part of stoppedParts)part.acceptNativeBarrierBinding?.(proof);if(nativeCenterRuin){if(!verifiesCenter(nativeCenterRuin,worldBoundary,proof))throw Error('Native center ruin lost its final boundary');stoppedParts[0].acceptCenterRuin(worldBoundary,proof);}if(shieldCropPart)shieldCropPart.accept(data.resources.nativeShieldCropStop??data.resources.nativeShieldCropExpiry);const result=raw?.commit()??true;if(result!==true)throw Error('Native prepared terrain batch not retained');if(preparedFrame){if(!preparedFrame.commit(worldBoundary,proof))throw Error('Native prepared terrain commands not retained');void preparedFrame.presented.then(unblock,error=>{unblock();if(!closed&&!proposalOwner)onError(error);});}else unblock();return true;}catch(error){preparedFrame?.abort();unblock();throw error;}},
+    abort(){if(!active)return false;active=false;preparedFrame?.abort();unblock();return raw?.abort()??true;},identityFor:payload=>raw?.identityFor?.(payload)??null};
+  }
+  const nativePublicationWaiters=new Set();
+  function wakeNativePublications(error=null){for(const item of nativePublicationWaiters){let failure=error;try{if(!failure&&((stream?.status().sequence??-1)<item.sequence||!item.predicate()))continue;}catch(reason){failure=reason;}nativePublicationWaiters.delete(item);item.cleanup();failure?item.reject(failure):item.resolve();}}
+  function waitNativePublication(sequence,signal,predicate=()=>true){if((stream?.status().sequence??-1)>=sequence&&predicate())return Promise.resolve();return new Promise((resolve,reject)=>{const abort=()=>{if(nativePublicationWaiters.delete(item)){item.cleanup();reject(new DOMException('Native publication wait cancelled','AbortError'));}},timer=setTimeout(()=>{if(nativePublicationWaiters.delete(item)){item.cleanup();reject(Error('Native publication boundary did not arrive'));}},10000),item={sequence,predicate,resolve,reject,cleanup(){clearTimeout(timer);signal.removeEventListener('abort',abort);}};nativePublicationWaiters.add(item);signal.addEventListener('abort',abort,{once:true});if(signal.aborted)abort();});}
+  const nativeFrameState=()=>({closed,prepared:preparedNativeWorldBoundary,required:remoteGpu?.requiredNativeWorldBoundary()??null,proposal:nativeGateProposal?.descriptor??terrain?.status().nativeProposal??null,resumeTarget:nativeResumeTarget});
+  const nativeDrawReadiness=()=>{if(timelineRecovering||nativeRoutePreparations||nativeRouteRejected)return 'waiting';const result=nativeFrameReadiness(nativeFrameState());return result==='ready'&&nativeRejectedFrame!==null&&renderer.info.frame<=nativeRejectedFrame?'next-frame':result;};
+  function onNativeCropStrikeRetired(reference){
+   if(closed||!(reference?.kind===27||reference?.kind===26&&reference.purpose==='retreat'))return;
+   if(!sameNativeWorldBoundary(reference.worldBoundary,preparedNativeWorldBoundary)){
+    if(!retainedCenterRuin||
+       !sameNativeWorldBoundary(retainedCenterRuin.worldBoundary,preparedNativeWorldBoundary)||
+       !sameNativeAnimalCropReference(reference,retainedCenterRuin.binding.reference))return;
+    retainedCenterRuin=null;
+   }
+   // The confirmed roster detached the acquired program. Wake its replacement
+   // even if the center ruin already advanced the world this Retreat retained.
+   nativeRouteResourceRevision++;nativeRouteRejected=false;onPresentationReady();
+  }
+  function retainRejectedNativeFrame(error,metadata){
+   if(remoteGpu&&error?.code==='remote-frame-native-route-obsolete'&&error.resourcePreparationsRetained===true){nativeRouteRejected=metadata?.nativeRouteResourceRevision===undefined||metadata.nativeRouteResourceRevision===nativeRouteResourceRevision;return true;}
+   if(!remoteGpu||!temporal||!Number.isSafeInteger(renderer.info.frame)||renderer.info.frame<0)return false;
+   const state=nativeFrameState();
+   let target=rejectedNativeFrameTarget(error,metadata,state);
+   if(!target){
+    target=rejectedHistoricalIntervalTarget(error,metadata,state);
+    if(!target||timelinePump?.discardExpiredPreparedInterval(metadata.preparedInterval,error.clockRejection.mutationFloor??error.clockRejection.presentedThrough)!==true)return false;
+   }
+   nativeResumeTarget=target;nativeRejectedFrame=renderer.info.frame;
+   // Three's per-frame nodes must execute on its next real Animation frame.
+   // Recreate shadow commands, not targets, geometries, materials or pipelines.
+   sun.shadow.needsUpdate=true;renderer.shadowMap.needsUpdate=true;return true;
+  }
+  function acceptPreparedNativeTerrain(message){
+   if(!temporal||recoveringPublication)return;
+   const admitted=terrain.admittedBoundary(message.sequence),next=reconcileNativeWorldResources({publication:message,admitted,previous:preparedNativeWorldBoundary});
+   if(!sameNativeWorldBoundary(next,preparedNativeWorldBoundary)){
+    const direct=acquiredDirectWorldPublication(message,admitted,next),requiresDirect=message.nativeWorldResources?.some(record=>record.kind===2||nativeShieldWorldKind(record.kind)&&record.nativeCenterPlacement===undefined);
+    if(requiresDirect?!direct:!sameNativeWorldBoundary(next,admitted?.nativeWorldBoundary)&&!direct)throw Error('Live native terrain did not consume its prepared proposal');
+    const ruin=nativeGateProposal?.acquiredWorld?.centerRuin;
+    const binding=ruin?.retreat??ruin?.strike;
+    retainedCenterRuin=direct&&binding?{worldBoundary:next,binding}:null;
+    preparedNativeWorldBoundary=next;
+   }
+  }
+  if(state&&pipelineAdmission){try{groundDepth=createWebGpuGroundDepthCapture({renderer,scene,camera,residency,admission:pipelineAdmission,resourceRegistry,width,height});onBootstrapStage('ground-depth');await groundDepth.initialize({signal:biomePackAbort.signal});checkBootstrap();softDepth=createWebGpuVfxSoftDepth(groundDepth.depth);depthController=createWebGpuVfxTerrainDepth({capture:groundDepth,binding:softDepth,signal:biomePackAbort.signal,onError:onResourceError});}catch(error){groundDepth?.dispose();groundDepth=null;softDepth=null;if(signal?.aborted)throw error;onResourceError('ground-depth',error);}}
+  const publishCameraStructures=createCameraStructurePublisher({epoch:()=>cameraStructureEpoch,sequence:()=>cameraStructureSequence,closed:()=>closed,send:onCameraStructures});
+  if(state){settlements=createWebGpuSettlements({scene,state,residency,renderer,pipelineAdmission,resourceRegistry,characterData,softDepth,confirmedClock:visualClock,getRepairAge:reference=>{if(!nativePickFrame)throw Error('Native wall morph input requires a consumer frame');return reference.kind==='restored-wall-repair-reference'?nativePickFrame.getRestoredWallRepairElapsed(reference):nativePickFrame.getBarrierRepairElapsed(reference);},getPresentationTime:()=>{if(!nativePickFrame)throw Error('Native gate morph input requires a consumer frame');return nativePickFrame.getPresentationTime();},blessingVisibleAt:id=>blessingVfx?.visibleAt(id)??Infinity,blessingWoundAt:id=>blessingVfx?.woundAt(id)??-1000,onError:error=>onResourceError('structure',error),onSelectableChange:()=>{wakeNativePublications();onSelectableChange?.();},onTextureError:onSettlementTextureError,enableStructurePreviews:capabilities.provisionalStructures||import.meta.env?.DEV&&experimentalMinimalWorld,enableStructureIndicator:capabilities.provisionalStructures,...(inputsEnabled||cameraTerrainEnabled?{onCameraStructures:cameraTerrainEnabled?publishCameraStructures:()=>true}:{})});onBootstrapStage('structure-indicator');await settlements.prepareIndicator(signal);checkBootstrap();settlements.sync();}
+  if(state){crops=createWebGpuCropRoster({scene,state,residency,renderer,camera,pipelineAdmission,resourceRegistry,characterData,confirmedClock:visualClock,onError:error=>onResourceError('crop',error),onSelectableChange,onMetadataReady:()=>blessingVfx?.sync(true,[]),blessingVisibleAt:id=>blessingVfx?.visibleAt(id)??Infinity,blessingWoundAt:id=>blessingVfx?.woundAt(id)??-1000,enableProvisional:capabilities.provisionalCrops||import.meta.env?.DEV&&experimentalMinimalWorld});try{onBootstrapStage('crop-preview');await crops.preparePreviewFallback(signal);}catch(error){if(signal?.aborted)throw error;onResourceError('crop-preview',error);}checkBootstrap();crops.sync();}
+  if(state){agricultureVfx=createWebGpuAgricultureVfx({scene,state,residency,renderer,remoteGpu:!!remoteGpu,pipelineAdmission,resourceRegistry,softDepth,worldLights:vfxWorldLights??null,includeCombat:true,includeShield:true,includeWallImpact:true,includeWallFragments:capabilities.wallImpactFragments||experimentalWallFragments,includeWork:true,includeLocomotion:true,locomotionWater:createWebGpuLocomotionWater({residency,enabled:state.biome==='gran-canon'}),authoritativeWorkTerrain:!!(presentationWorkRecovery||import.meta.env?.DEV&&experimentalWorkRecovery),presentationWorkerHeadings,confirmedClock:visualClock??null,onWorkCheckpointReady:()=>{maybeResumeWorkCheckpoint();onPresentationReady();},onError:error=>onResourceError('agriculture-vfx',error)});agricultureVfx.sync();}
+  if(state){blessingVfx=createWebGpuBlessingVfx({scene,state,residency,motion:!reducedMotion,height:target=>target.species?(crops?.sampleHeight(target.species,target.growth)??NaN):1,confirmedClock:visualClock??null,pipelineAdmission,resourceRegistry,onError:error=>onResourceError('blessing-vfx',error)});if(pipelineAdmission&&import.meta.env?.VITE_WEBGPU_BLESSING_GLOW!=='false')blessingGlow=createWebGpuBlessingGlow({renderer,admission:pipelineAdmission,signal:biomePackAbort.signal,onError:error=>onResourceError('blessing-glow',error)});settlements?.sync();crops?.sync();}
+  if(state){guardianAttack=createWebGpuGuardianAttack({scene,state,renderer,pipelineAdmission,resourceRegistry,confirmedClock:visualClock??null,onError:onGuardianError,onPresence:onGuardianPresence,onCheckpointReady:maybeResumeWorkCheckpoint,aura:plan=>agricultureVfx?.setGuardianAura(plan)});}
+  if(capabilities.bakedWalking||capabilities.bakedHyenaWalking)bakedWalkBank=createBakedWalkBank({renderer,resourceRegistry});
+  if(historicalClock&&!bakedWalkBank)bakedWalkBank=createBakedWalkBank({renderer,resourceRegistry});if(bakedWalkBank){bakedAnimalRunBank=createBakedWalkBank({renderer,resourceRegistry,load:loadBakedAnimalRunAsset});bakedAnimalAttackBank=createBakedAnimalAttackBank({renderer,resourceRegistry});}if(experimentalBakedHyena&&!bakedWalkBank){try{bakedWalk=ownDirectBakedWalkAsset(await loadBakedWalkAsset('hyena'),resourceRegistry);}catch(error){onActorTextureError(error);}}
+  if(experimentalActorId!==null||experimentalAllActors){if(!state)throw Error('Animal requires confirmed state');const chosen=state.raid?.animals.find(item=>item.id===experimentalActorId),packages=experimentalAllActors?Object.fromEntries(['buffalo','hyena','lion','rhino','warthog'].map(species=>[species,`/content/character-preview/${species}/package.json`])):{};if(experimentalActorPackageUrl&&chosen)packages[chosen.species]=experimentalActorPackageUrl;beastStyle=createWebGpuBeastStyle({renderer,light:sun,environment:waterEnvironment??null,...(temporalShadow?{visibility:temporalShadow.node.r}:{})});beastStyle.update(state);const assetBank=createWebGpuAnimalBank({renderer,characterData,resourceRegistry,packages,onSelectableChange,materialStyle:beastStyle,onTextured:onActorTextured,onTextureError:onActorTextureError});roster=createWebGpuAnimalRoster({scene,residency,state,renderer,assetBank,pipelineAdmission,resourceRegistry,bakedWalk,bakedWalkBank,bakedRunBank:bakedAnimalRunBank??null,bakedAttackBank:bakedAnimalAttackBank??null,bakedWalkSpecies:capabilities.bakedWalking?null:capabilities.bakedHyenaWalking?'hyena':null,onBakedWalkError:(species,error)=>onResourceError('baked-walk:'+species,error),confirmedClock:visualClock,...(historicalClock?{experimentalHistoricalMotion:{actorIds:historicalActorIds,clock:historicalClock}}:{}),experimentalProvisionalFall:experimentalBakedHyena,provisionalBakedFall:capabilities.causalInputs,onlyActorId:experimentalAllActors?null:experimentalActorId,onNativeCropStrikeRetired,onSelectableChange,onError,onReady:onActorReady});roster.sync();}
+  if(experimentalAllActors){if(historicalClock||webGpuWorkerBakedWalking(capabilities,{experimental:experimentalBakedWorkerWalk}))bakedWorkerWalkBank=createBakedWorkerWalkBank({renderer,resourceRegistry});if(bakedWorkerWalkBank){bakedWorkerRunBank=createBakedWorkerRunBank({renderer,resourceRegistry});bakedWorkerHarvestBank=createBakedWorkerHarvestBank({renderer,resourceRegistry});bakedWorkerIdleBank=createBakedWorkerIdleBank({renderer,resourceRegistry});bakedWorkerAlertBank=createBakedWorkerAlertBank({renderer,resourceRegistry});bakedWorkerWaterBank=createBakedWorkerWaterBank({renderer,resourceRegistry});bakedWorkerPlantBank=createBakedWorkerPlantBank({renderer,resourceRegistry});bakedWorkerCarryBank=createBakedWorkerCarryBank({renderer,resourceRegistry});bakedWorkerFallBank=createBakedWorkerFallBank({renderer,resourceRegistry});bakedWorkerGetUpBank=createBakedWorkerGetUpBank({renderer,resourceRegistry});}const assetBank=workerAssetBank=createWebGpuWorkerBank({renderer,characterData,resourceRegistry,onSelectableChange});workers=createWebGpuWorkerRoster({scene,residency,state,assetBank,renderer,resourceRegistry,bakedWalkBank:bakedWorkerWalkBank??null,bakedRunBank:bakedWorkerRunBank??null,bakedHarvestBank:bakedWorkerHarvestBank??null,bakedIdleBank:bakedWorkerIdleBank??null,bakedAlertBank:bakedWorkerAlertBank??null,bakedWaterBank:bakedWorkerWaterBank??null,bakedPlantBank:bakedWorkerPlantBank??null,bakedCarryBank:bakedWorkerCarryBank??null,bakedFallBank:bakedWorkerFallBank??null,bakedGetUpBank:bakedWorkerGetUpBank??null,ownsAssetBank:false,pipelineAdmission,presentationWorkerHeadings,confirmedClock:visualClock??null,...(historicalClock?{experimentalHistoricalMotion:{actorIds:historicalWorkerIds,clock:historicalClock}}:{}),onSelectableChange:()=>{onSelectableChange();wakeNativePublications();},onNativeHomeImpact(){
+       nativeRouteResourceRevision++;nativeRouteRejected=false;onPresentationReady();
+     },onError,onBakedWalkError:(profile,error)=>onResourceError('baked-worker-walk:'+profile,error)});crates=createWebGpuCrateRoster({scene,residency,state,assetBank,pipelineAdmission,onError,onSelectableChange});workers.sync();crates.sync();}
+  const syncTiming=experimentalTiming||import.meta.env?.DEV&&experimentalPresentationInputs?new Map():null,measure=(name,fn)=>{const at=performance.now();try{return fn();}finally{const a=syncTiming.get(name)??[];a.push(performance.now()-at);if(a.length>512)a.shift();syncTiming.set(name,a);}},syncStatus=()=>{if(!syncTiming)return null;return Object.fromEntries([...syncTiming].map(([name,a])=>{const sorted=[...a].sort((x,y)=>x-y);return [name,{samples:a.length,mean:a.reduce((x,y)=>x+y,0)/a.length,p95:sorted[Math.floor((a.length-1)*.95)],max:sorted.at(-1)}];}));};
+  let lastTerrainCheckpoint=null;
+  function restoreTerrainCheckpoint(message){
+   if(copyNativeWorldBoundary(message?.terrainCheckpoint?.nativeWorldBoundary??null))throw Error('Native world checkpoint requires prepared temporal recovery');
+   const checkpoint=message?.terrainCheckpoint;
+   if(!checkpoint||message.session!==session||!Array.isArray(checkpoint.chunks)||checkpoint.sequence!==message.sequence)throw Error('Invalid terrain checkpoint identity');
+   if(checkpoint.workerHeadings!==undefined)assertPresentationWorkerHeadingCheckpoint(presentationWorkerHeadings,checkpoint.workerHeadings);
+   if(stream?.status().sequence!==message.sequence)throw Error('Terrain checkpoint sequence does not match presentation');
+   if(message.snapshot!==serializeConfirmedState(state)){
+    const left=JSON.parse(message.snapshot),right=JSON.parse(serializeConfirmedState(state));
+    const canonical=value=>Array.isArray(value)?value.map(canonical):value&&typeof value==='object'?Object.fromEntries(Object.keys(value).sort().map(key=>[key,canonical(value[key])])):value;
+    if(JSON.stringify(canonical(left))!==JSON.stringify(canonical(right))){
+     const mismatch=(a,b,path='')=>{if(a&&b&&typeof a==='object'&&typeof b==='object'){for(const key of new Set([...Object.keys(a),...Object.keys(b)])){const d=mismatch(a[key],b[key],path+'/'+key);if(d)return d;}return null;}return Object.is(a,b)?null:path;};
+     throw Error('Terrain checkpoint snapshot does not match presentation: '+mismatch(left,right));
+    }
+   }
+   const poses=confirmedAnimalPoses(message,state);roster?.validatePoses(poses);
+   const keys=new Set();for(const payload of checkpoint.chunks){
+    const t=payload?.terrain,key=`${payload?.cx},${payload?.cz}`;
+    if(payload?.capturedAt!==undefined&&(!Number.isFinite(payload.capturedAt)||payload.capturedAt<0||state&&payload.capturedAt>state.elapsed)||payload?.authority!=='spatial-wasm'||!Number.isSafeInteger(payload.cx)||!Number.isSafeInteger(payload.cz)||keys.has(key)||!(t?.positions instanceof Float32Array)||t.positions.length!==49*49*3||!(t.colors instanceof Float32Array)||t.colors.length!==t.positions.length||!(t.indices instanceof Uint16Array)||t.indices.length!==48*48*6||payload.water!==undefined&&(!(payload.water instanceof Float32Array)||payload.water.length%9)||payload.groundMask!==undefined&&(!(payload.groundMask instanceof Uint8Array)||payload.groundMask.length!==35*35*4)||coordinatedChunks&&payload.instances===undefined||payload.instances!==undefined&&(!Array.isArray(payload.instances)||payload.instances.length!==20||payload.instances.some((list,slot)=>!Array.isArray(list)||list.some(item=>item?.slot!==slot||typeof item.id!=='string'||![item.x,item.y,item.z,item.yaw,item.sx,item.sy,item.sz].every(Number.isFinite)))))throw TypeError('Invalid terrain checkpoint chunk');
+    if(!t.positions.every(Number.isFinite)||!t.colors.every(Number.isFinite)||!t.indices.every(index=>index<49*49)||payload.water&&!payload.water.every(Number.isFinite))throw TypeError('Invalid terrain checkpoint values');
+    keys.add(key);
+   }
+   const manifest=checkpoint.terrainManifest??null,metadata=new Map();if(manifest){if(typeof manifest.epoch!=='string'||!manifest.epoch||!Array.isArray(manifest.chunks)||manifest.chunks.length!==checkpoint.chunks.length)throw Error('Invalid camera terrain checkpoint manifest');for(const item of manifest.chunks){const key=item?.cx+','+item?.cz;if(!Number.isSafeInteger(item?.cx)||!Number.isSafeInteger(item?.cz)||!Number.isSafeInteger(item?.revision)||item.revision<1||metadata.has(key)||!keys.has(key))throw Error('Invalid camera terrain checkpoint manifest');metadata.set(key,{epoch:manifest.epoch,revision:item.revision,sequence:message.sequence});}}
+   const checkpointEpoch=coordinatedChunks&&!manifest?publicationEpochs.checkpoint():null;terrain.checkpoint(message.sequence);if(manifest){cameraStructureEpoch=manifest.epoch;cameraStructureSequence=Math.max(cameraStructureSequence,message.sequence);}
+   for(const payload of checkpoint.chunks){const info=manifest?metadata.get(payload.cx+','+payload.cz):null;const publication=coordinatedChunks?{publicationEpoch:info?livePublicationEpoch(info.epoch):checkpointEpoch,publicationOrder:publicationEpochs.order(),...(!info?{publicationRevision:1}:{})}:undefined;const changed=info?residency.restoreCheckpoint(payload,info,publication):residency.restoreCheckpoint(payload,null,publication);if(info&&!changed&&(!residency.matchesCheckpoint(payload,info)||biomeProps&&!biomeProps.matchesCheckpoint(payload,info)))throw Error('Stale camera terrain checkpoint');if(!info||changed)biomeProps?.restoreCheckpoint(payload,info,publication);if(visibleCameraTerrain&&info&&changed)visibleCameraTerrain.stage(payload,info.revision,info);}
+   for(const payload of checkpoint.chunks){const mesh=residency.get(payload.cx,payload.cz),a=mesh?.geometry.attributes.position.array,b=payload.terrain.positions;if(!a||a.length!==b.length||!a.every((v,i)=>v===b[i]))throw Error('Restored terrain differs from checkpoint');}
+   roster?.setPoses(poses);roster?.sync();workers?.sync();crates?.sync();settlements?.terrainChanged();crops?.terrainChanged();agricultureVfx?.terrainChanged();blessingVfx?.terrainChanged();
+   return {sequence:message.sequence,chunks:checkpoint.chunks.length,activePoses:poses.size};
+  }
+  function prepareTemporalWorkCheckpoint(message){const work=agricultureVfx.tryPrepareWorkCheckpoint(message.sequence);let presentation;try{presentation=captureTemporalPresentationCheckpoint(message.sequence);}catch(error){if(error?.message==='Guardian presentation checkpoint unavailable'){error.code='work-checkpoint-terrain-pending';}throw error;}const checkpoint={...work,presentation};if(estimateRetainedBytes(checkpoint)>temporal.maxBytes){const error=Error('Temporal presentation checkpoint exceeds capacity');error.code='work-checkpoint-terrain-pending';throw error;}return checkpoint;}
+  if(state)stream=createConfirmedPresentationStream({port:presentationPort,session,state,terrain,initialSequence,onError,presentationWorkerHeadings,presentationClock:visualClock,...(grassTimeline?{onMutationPhase:grassTimeline.mutationPhase}:{}),diagnostics:!!syncTiming,trackChangedKeys:grassPresentationTrackedKeys(buildingContacts,!!grassOwner),...(temporal?{timeline:{handshake:true,manualBoundaries:true,replay:experimentalTimelineRecovery,retainedReplay:retainedTimelineRecovery,checkpoints:temporal.checkpoints===true,presentationCheckpoint:temporal.checkpoints===true,workRecovery:presentationWorkRecovery,experimentalHistoricalEvents:temporal.historicalEvents===true,historicalEventDiagnostics:import.meta.env?.DEV===true&&temporal.historicalEvents===true,maxPublications:temporal.maxPublications,maxBytes:temporal.maxBytes}}:{}),...(temporal?.checkpoints===true&&waterEnvironment?{waterEnvironmentActivation:{
+   propose:waterEnvironment.proposeActivation,confirm:record=>{waterEnvironment.confirmActivation(record);onPresentationReady();}
+  }}:{}),allowPresentationHold:!!remoteGpu||!temporal&&import.meta.env?.DEV===true,onQueued:onPresentationReady,allowPresentationInputs:inputsEnabled||import.meta.env?.DEV===true&&experimentalPresentationInputs,allowFarVisualQueries:farVisualQueries,allowRecovery:!temporal&&presentationRecovery,prepareWorkCheckpoint:temporal?.checkpoints===true?prepareTemporalWorkCheckpoint:!temporal&&(presentationWorkRecovery||import.meta.env?.DEV&&experimentalWorkRecovery)?message=>agricultureVfx.tryPrepareWorkCheckpoint(message.sequence):null,onMotion:motionFeed?event=>motionFeed.accept(event):null,...(temporal?{onHistoricalBoundary:(boundary,changedKeys)=>{grassTimeline?.historicalChanged(boundary.sequence,changedKeys);return syncWebGpuHistoricalBoundary({boundary,changedKeys,state,clock:visualClock,buildingContacts,groundContacts,lighting:()=>{lightingNight=syncWebGpuWorldLighting(state,sun,ambient);waterEnvironment?.update(state,sun);beastStyle?.update(state);ground?.update(state);},afterLighting:()=>farCoverage?.setNight(lightingNight),animals:roster,workers,crates,settlements,crops,agriculture:agricultureVfx,blessings:blessingVfx,guardian:guardianAttack});}}:{}),...(historicalClock?{onTimelineBoundary:({sequence,elapsed})=>{const current=historicalClock.status();if(current.sequence!==sequence||current.elapsed!==elapsed)throw Error('Historical clock differs from committed boundary');}}:{}),onPhysics:roster?poses=>roster.setPoses(poses):null,validatePhysics:roster?poses=>roster.validatePoses(poses):null,onUnchanged:message=>{acceptPreparedNativeTerrain(message);grassTimeline?.confirmed(message.sequence,new Set());cameraStructureSequence=message.sequence;if(farCoverage){biomeProps?.sync(message.sequence,{suppressionChanged:false});farCoverage.confirmRevision(stream.farVisualRevision());}wakeNativePublications();onConfirmed(message);},onConfirmed:(message,changedKeys)=>{if(grassTimeline)grassTimeline.confirmed(message.sequence,changedKeys);else if(!changedKeys||['structures','villages','plants','culture'].some(key=>changedKeys.has(key)))grassOwner?.syncState();if(buildingContacts&&(!changedKeys||changedKeys.has('structures')||changedKeys.has('villages')||changedKeys.has('culture')))groundContacts?.setBuildings(state);if(historicalClock&&experimentalAllActors){const animals=(state.raid?.animals??[]).map(actor=>actor.id),people=(state.workers??[]).map(actor=>actor.id);roster.setHistoricalActors(animals);workers.setHistoricalActors(people);historicalActorIds=animals;historicalWorkerIds=people;}cameraStructureSequence=message.sequence;if(temporal&&message.terrainCheckpoint&&!recoveringPublication&&temporal.checkpoints!==true)throw Error('Temporal presentation checkpoint recovery unavailable');if(!temporal&&(presentationRecovery||import.meta.env?.DEV)&&message.terrainCheckpoint)lastTerrainCheckpoint=acceptLiveTerrainCheckpoint(message,session,restoreTerrainCheckpoint);if(syncTiming){measure('lighting',()=>{lightingNight=syncWebGpuWorldLighting(state,sun,ambient);waterEnvironment?.update(state,sun);beastStyle?.update(state);ground?.update(state);});measure('biomeProps',()=>biomeProps?.sync(message.sequence,{suppressionChanged:changedKeys?.has('suppressed')??true}));measure('animals',()=>roster?.sync());measure('workers',()=>workers?.sync());measure('crates',()=>crates?.syncConfirmed(changedKeys));measure('blessingVfx',()=>blessingVfx?.syncConfirmed(changedKeys,message.events));measure('settlements',()=>settlements?.sync(message.events,{ignoreUnmatched:recoveringPublication}));measure('crops',()=>crops?.sync(message.events,{ignoreUnmatched:recoveringPublication}));measure('agricultureVfx',()=>agricultureVfx?.sync(message.events));measure('guardian',()=>guardianAttack?.sync(message.presentationJournal,message.events));}else{lightingNight=syncWebGpuWorldLighting(state,sun,ambient);waterEnvironment?.update(state,sun);beastStyle?.update(state);ground?.update(state);biomeProps?.sync(message.sequence,{suppressionChanged:changedKeys?.has('suppressed')??true});roster?.sync();workers?.sync();crates?.syncConfirmed(changedKeys);blessingVfx?.syncConfirmed(changedKeys,message.events);settlements?.sync(message.events,{ignoreUnmatched:recoveringPublication});crops?.sync(message.events,{ignoreUnmatched:recoveringPublication});agricultureVfx?.sync(message.events);guardianAttack?.sync(message.presentationJournal,message.events);}maybeResumeWorkCheckpoint();if(farCoverage){farCoverage.confirmRevision(stream.farVisualRevision());farCoverage.setNight(lightingNight);if(changedKeys?.has('suppressed'))farCoverage.setSuppressed(state.suppressed??[]);if(message.terrainChanged===true||changedKeys?.has('structures')===true&&stream.farVisualRevision()===null)farCoverage.invalidate({reason:'world'});}acceptPreparedNativeTerrain(message);wakeNativePublications();onConfirmed(message);}});
+  // Optional only: failure or missing shadow coverage leaves the existing 3D.
+  if(farVisualQueries&&state&&biomeProps&&experimentalShadows){farCoveragePhase='loading';try{farShadow=createWebGpuFarShadowReservation({scene,camera,shadowLights:[sun],auxiliaryCameras:waterReflection?[camera]:[],renderer});farAbort=new AbortController();biomeProps.sync(stream.status().sequence,{suppressionChanged:false});void createWebGpuFarCoverage({stream,biome:biomeProps,state,camera,renderer,admission:pipelineAdmission,shadowContract:()=>farShadow,onChange:onSelectableChange,onProgress:(phase,detail=null)=>{farCoveragePhase=phase;farCoverageDetail=detail;},onError:error=>onResourceError('far-vegetation',error),signal:farAbort.signal}).then(owner=>{if(closed||farAbort.signal.aborted){owner.dispose();return;}farCoverage=owner;farCoveragePhase='ready';biomeProps.sync(stream.status().sequence,{suppressionChanged:false});owner.updateCamera();owner.setNight(lightingNight);}).catch(error=>{if(!closed&&!farAbort.signal.aborted){farCoveragePhase='failed';farCoverageError=String(error?.message??error);onResourceError('far-vegetation',error);}});}catch(error){farCoveragePhase='failed';farCoverageError=String(error?.message??error);farShadow?.dispose();farShadow=null;onResourceError('far-vegetation',error);}}
+  // Playback stays closed until direct input, all other actors and effects
+  // can be reconciled at the same historical instant without visual jumps.
+  if(temporal){const getPreviewSupport=historicalClock?createHistoricalPreviewSupportSelector({motionFeed,terrainSupport,diagnostics:import.meta.env?.DEV===true&&temporal.historicalEvents===true}):null;historicalPreviewSupport=getPreviewSupport;const group=historicalClock?createConfirmedHistoricalMotionGroup({animals:roster,workers,effects:agricultureVfx,otherEffectsQuiet:preview=>blessingVfx?.canReplayHistoricalInterval(preview)===true&&guardianAttack?.status().active===null&&guardianAttack?.guideVisible()===false,getSupport:getPreviewSupport,inputPolicy:'ordered-boundary',diagnostics:import.meta.env?.DEV===true&&temporal.historicalEvents===true}):null;remoteMotionGroup=group;timelinePump=createConfirmedTimelinePump({stream,preparedIntervals:!!remoteGpu&&!!historicalClock,...(motionFeed?{onPreview:motionFeed.offerPreview,deferredEventObserver:true}:{}),...(historicalClock?{historicalPlayback:{clock:historicalClock,canPrepareInterval:()=>{const blockers=remotePresentationBlockers();if(nativeResourceLease())blockers.push('native-resource-clock');const lease=group.remoteLease(historicalClock,{blockers});return {ready:lease.remoteBlockers.length===0,remoteBlockers:lease.remoteBlockers,clock:{sequence:lease.sequence,elapsed:lease.elapsed,safeUntil:lease.safeUntil,paused:lease.paused}};},certify:group.certify,hasNativeCropOwner:group.hasNativeCropOwner,lastRejection:group.lastRejection,canStart:group.canStart,start:group.start,finish:group.finish,afterCommit:group.afterCommit,cancel:group.cancel,abort:group.abort,isCurrent:group.isCurrent,onInvalidated:(preview,reason)=>{const error=Error(`Historical presentation invalidated at sequence ${preview.sequence}: ${reason}`);error.code='historical-playback-invalidated';throw error;}}}:{})});resolveTemporalStream(stream);}
+  function validateTemporalCheckpoint(message,{retainCurrent=false}={}){
+   if(closed||stream.status().closed||message?.session!==session||message.sequence!==stream.status().sequence||message.elapsed!==state.elapsed||typeof message.snapshot!=='string')throw Error('Temporal checkpoint state boundary mismatch');
+   const canonical=value=>Array.isArray(value)?value.map(canonical):value&&typeof value==='object'?Object.fromEntries(Object.keys(value).sort().map(key=>[key,canonical(value[key])])):value;
+   if(JSON.stringify(canonical(JSON.parse(message.snapshot)))!==JSON.stringify(canonical(JSON.parse(serializeConfirmedState(state)))))throw Error('Temporal checkpoint snapshot mismatch');
+   if(message.terrainCheckpoint?.workerHeadings!==undefined)assertPresentationWorkerHeadingCheckpoint(presentationWorkerHeadings,message.terrainCheckpoint.workerHeadings);roster?.validatePoses(confirmedAnimalPoses(message,state));
+   if(retainCurrent){const work=presentationWorkRecovery||experimentalWorkRecovery?agricultureVfx.exportWorkCheckpoint(message.sequence,{allowHidden:true}):null;assertRetainedTemporalPresentation(message,{work,presentation:captureTemporalPresentationCheckpoint(message.sequence,{retainCurrent:true})});}
+  }
+  async function restoreWaterEnvironment(checkpoint,record,sequence,signal,atBoundary=false){
+   if(record!==undefined&&(!Number.isSafeInteger(record?.sequence)||record.sequence<1||record.sequence>sequence||
+      atBoundary&&(record.sequence!==sequence||record.readyAt!==Math.fround(state.elapsed))||
+      checkpoint&&(checkpoint.version!==record.version||checkpoint.readyAt!==record.readyAt)))
+    throw Error('Recovery water environment publication mismatch');
+   if(record===undefined&&checkpoint===undefined)return;
+   if(!waterEnvironment||!sky)throw Error('Recovery water environment unavailable');
+   await waterEnvironment.restoreRecoveryCheckpoint(record??checkpoint,{elapsed:state.elapsed,ready:sky.environmentReady,signal});
+  }
+  const temporalRecoverySurface=experimentalTimelineRecovery||retainedTimelineRecovery?createTemporalSurfaceRecovery({stream,terrain,onError,validateCheckpoint:validateTemporalCheckpoint,
+   prepareCheckpoint:(message,{signal:recoverySignal,retainCurrent=false})=>prepareWebGpuTemporalCheckpoint(message,{session,signal:recoverySignal,scene,residency,biome:biomeProps,coordinator:chunkCoordinator,publicationEpoch:livePublicationEpoch,publicationOrder:()=>publicationEpochs.order(),validateInstances:assertCoordinatedChunkInstances,mudPreparer,...(retainCurrent?{retainCurrent:true,assertCurrent:()=>validateTemporalCheckpoint(message,{retainCurrent:true}),prepareDependents:prepareNativeTerrainDependents,validatePresentationSupport:(view,participants)=>assertNativeTerrainPresentationSupport({state,residency,view,participants})}:{}),...(grassTimeline?{onPreparedIdentity:grassTimeline.prepared,onDiscardIdentity:grassTimeline.discarded}:{})}),onCheckpoint:async(message,prepared,{signal:recoverySignal,retainCurrent=false})=>{
+   cameraStructureEpoch=prepared.epoch;cameraStructureSequence=prepared.sequence;for(const {payload,revision,epoch,sequence} of prepared.chunks){visibleCameraTerrain?.stage(payload,revision,{epoch,sequence});visibleCameraTerrain?.published(`${payload.cx},${payload.cz}`);}
+   if(retainCurrent){
+    validateTemporalCheckpoint(message,{retainCurrent:true});
+    if(presentationWorkRecovery||experimentalWorkRecovery)await agricultureVfx.ensureRecoveryWorkReady({signal:recoverySignal??null});
+    validateTemporalCheckpoint(message,{retainCurrent:true});
+    await restoreWaterEnvironment(undefined,message.waterEnvironmentActivation,message.sequence,recoverySignal);
+    const boundary=await admitRecoveredNativeWorld(copyNativeWorldBoundary(prepared.nativeWorldBoundary),message.sequence,recoverySignal,state);
+    validateTemporalCheckpoint(message,{retainCurrent:true});preparedNativeWorldBoundary=boundary;return;
+   }
+   roster?.setPoses(confirmedAnimalPoses(message,state));roster?.sync();workers?.sync();crates?.sync();settlements?.terrainChanged();crops?.terrainChanged();agricultureVfx?.terrainChanged();blessingVfx?.terrainChanged();
+   const presentation=message.presentationCheckpoint??message.workCheckpoint?.presentation;if(!presentation||presentation.version!==1||presentation.sequence!==message.sequence||presentation.elapsed!==state.elapsed)throw Error('Temporal presentation checkpoint unavailable');agricultureVfx.restorePresentationCheckpoint(presentation.agriculture,message.sequence);blessingVfx.restoreRecoveryCheckpoint(presentation.blessing,message.sequence);if(presentation.centerDamage!==undefined)await settlements.restoreCenterDamageCheckpoint(presentation.centerDamage,recoverySignal);settlements?.sync();crops?.sync();guardianAttack.restoreRecoveryCheckpoint(presentation.guardian,message.sequence);
+   await restoreWaterEnvironment(presentation.waterEnvironment,message.waterEnvironmentActivation,message.sequence,recoverySignal);
+   if(presentation.guardian.active)await guardianAttack.prepare({awakening:presentation.guardian.active.kind==='awakening'});
+   if(presentationWorkRecovery||experimentalWorkRecovery){if(!message.workCheckpoint)throw Error('Temporal work checkpoint unavailable');await agricultureVfx.restoreWorkCheckpoint(message.workCheckpoint,message.sequence);await agricultureVfx.ensureRecoveryWorkReady({signal:recoverySignal??null});}else if(message.workCheckpoint.effects?.length)throw Error('Temporal work recovery disabled');if(recoverySignal?.aborted)throw new DOMException('Temporal recovery cancelled','AbortError');
+   preparedNativeWorldBoundary=await admitRecoveredNativeWorld(copyNativeWorldBoundary(prepared.nativeWorldBoundary),message.sequence,recoverySignal,state);
+  },onBoundary:async(boundary,{signal:recoverySignal})=>{
+   if(boundary.waterEnvironmentActivation!==undefined)await restoreWaterEnvironment(undefined,boundary.waterEnvironmentActivation,boundary.sequence,recoverySignal,true);
+   const next=reconcileNativeWorldResources({publication:boundary.publication,admitted:terrain.admittedBoundary(boundary.sequence),previous:preparedNativeWorldBoundary});
+   if(presentationWorkRecovery||experimentalWorkRecovery)await agricultureVfx.ensureRecoveryWorkReady({signal:recoverySignal??null});
+   if(!sameNativeWorldBoundary(next,preparedNativeWorldBoundary))preparedNativeWorldBoundary=await admitRecoveredNativeWorld(next,boundary.sequence,recoverySignal,state);
+  }}):null;
+  function rebindTimelineRecovery({terrainPort:nextTerrainPort,presentationPort:nextPresentationPort}={}){
+   const recovery=temporalRecoverySurface?.status(),sequence=stream?.status().sequence,elapsed=state?.elapsed,pump=timelinePump?.status();
+   if(closed||!retainedTimelineRecovery||timelineRecovering||recovery?.busy||!['checkpoint','live'].includes(recovery?.phase)||nativeGateProposal||nativeRoutePreparations||pump?.closed||pump?.historicalPending!==null&&pump?.historicalPending!==undefined||historicalClock?.status().active||nextTerrainPort===nextPresentationPort)throw Error('Retained Surface transport unavailable');
+   const boundary={sequence,elapsed};stream.assertRecoveryTransport({port:nextPresentationPort,...boundary});terrain.assertRecoveryTransport({port:nextTerrainPort,...boundary});
+   const work=presentationWorkRecovery||experimentalWorkRecovery?agricultureVfx.exportWorkCheckpoint(sequence,{allowHidden:true}):null,presentation=captureTemporalPresentationCheckpoint(sequence,{retainCurrent:true});
+   timelineRecovering=true;recoveryTransportPending=true;grassTimeline?.beginRecovery();
+   try{terrain.rebindForRecovery({port:nextTerrainPort,...boundary});stream.rebindForRecovery({port:nextPresentationPort,...boundary});waterEnvironment?.resetPendingActivation();}catch(error){try{onError(error);}catch{}throw error;}
+   return {sequence,presentationCheckpoint:presentation,...(work===null?{}:{workCheckpoint:work})};
+  }
+  function captureTemporalPresentationCheckpoint(sequence,{retainCurrent=false}={}){
+   if(!temporal||!stream||sequence!==stream.status().sequence||visualClock.elapsed!==state.elapsed)throw Error('Temporal presentation checkpoint boundary unavailable');
+   const centerDamage=settlements?.exportCenterDamageCheckpoint();
+   // The retained Surface keeps its existing environment owner.
+   const environment=retainCurrent?null:waterEnvironment?.exportRecoveryCheckpoint();
+   return {version:1,sequence,elapsed:state.elapsed,...(centerDamage?{centerDamage}:{}),...(environment?{waterEnvironment:environment}:{}),
+    guardian:guardianAttack.exportRecoveryCheckpoint(sequence),agriculture:agricultureVfx.exportPresentationCheckpoint(sequence),blessing:blessingVfx.exportRecoveryCheckpoint(sequence)};
+  }
+  const terrainReady=()=>{const status=terrain.status();return nativeDrawReadiness()==='ready'&&!status.closed&&!status.pending&&!status.presentationPending;};
+  const terrainStatusForRay=(ray,limit)=>{const status=terrain.status();return {...status,presentationPending:status.presentationPending&&!residency.visualRayReady(ray,limit)};};
+  const terrainRayReady=(ray,limit)=>{const status=terrainStatusForRay(ray,limit);return !status.closed&&!status.pending&&!status.presentationPending;};
+  const pickerReady=(ray,limit)=>{if(nativeDrawReadiness()!=='ready')return false;const status=settlements?.status();return webGpuPickerReady(state,{animals:roster?.status(),workers:workers?.status(),settlements:status,settlementsRayReady:status?.selectableReady===false&&settlements?.pendingRayReady(ray,limit)===true,crops:crops?.status(),crates:crates?.status(),biome:biomeProps?.status(),terrain:terrainStatusForRay(ray,limit)});};
+  const picker=(experimentalPicking||capabilities.picking)&&state?createWebGpuPicker({isTerrainReady:terrainRayReady,scene,camera,state,animals:roster??{get:()=>null},workers:workers??{get:()=>null},cropBounds:()=>crops?.pickBounds()??[],sequence:()=>stream?.status().sequence??-1,isReady:(ray,limit)=>pickerReady(ray,limit)}):null;
+  const microeventVisibility=picker?createWebGpuMicroeventVisibility({scene,camera,isReady:(ray,limit)=>pickerReady(ray,limit)&&terrainRayReady(ray,limit)}):null;
+  function setCamera({x,y,z,targetX,targetY,targetZ,fov=camera.fov,near=camera.near,far=camera.far}){if(closed)throw Error('World surface disposed');if(![x,y,z,targetX,targetY,targetZ,fov,near,far].every(Number.isFinite)||fov<=0||fov>=180||near<=0||far<=near)throw TypeError('Invalid camera');camera.position.set(x,y,z);camera.fov=fov;camera.near=near;camera.far=far;camera.lookAt(targetX,targetY,targetZ);if(experimentalShadows){updateShadowCamera(sun,new THREE.Vector3(targetX,targetY,targetZ));beastStyle?.update(state);ground?.update(state);}camera.updateProjectionMatrix();camera.updateMatrixWorld(true);biomeProps?.updateCamera(camera);farCoverage?.updateCamera();grassOwner?.updateCamera();}
+  function guardianContext(){if(!(inputsEnabled||cameraTerrainEnabled)||!cameraStructureEpoch||!stream||!terrainReady())return null;const sequence=stream.status().sequence,structures=settlements?.guardianStructures();if(!structures?.complete||cameraStructureSequence!==sequence||terrain.status().confirmedSequence<sequence)return null;camera.updateWorldMatrix(true,false);const dependencies=guardianGeometryDependencies(state,(cx,cz)=>residency.revisionAt(cx,cz));return {epoch:cameraStructureEpoch,publication:{...structures,epoch:cameraStructureEpoch,sequence,revision:++guardianCaptureRevision,...(dependencies?{dependencies}:{})},camera:{position:camera.position.toArray(),quaternion:camera.quaternion.toArray(),projection:camera.projectionMatrix.toArray(),near:camera.near,far:camera.far}};}
+  // Resource preparation only. Permission and elapsed time remain owned by
+  // native direct control on the draw Worker; this API cannot authorize either.
+  async function prepareNativeRoute(actorId,packet,{terrainManifest,signal:routeSignal}={}){
+   const status=terrain.status();if(closed||!remoteGpu||!workers||!state||nativeFrameReadiness(nativeFrameState())!=='ready'||status.closed||status.nativeProposal||status.pending||status.presentationPending)throw Error('Native route surface unavailable');
+   nativeRoutePreparations++;
+   try{
+    terrainSupport??=createConfirmedTerrainSupport({residency});
+    const support=terrainSupport.prepareNativeRoute(packet,{terrainManifest});if(!support?.valid())throw Error('Native route terrain support unavailable');
+    const {nativeRoute,startTime}=support.presentation;
+    const result=await workers.prepareNativeRoute(actorId,support,{signal:routeSignal,getPickTime:()=>{if(!nativePickFrame)throw Error('Native pick requires a consumer frame time');return nativePickFrame.getTime(nativeRoute,startTime);},prepareGateParticipants:options=>settlements.prepareNativeRouteGates(options),isCurrent:()=>!closed});
+    if(!result.reused)nativeRouteResourceRevision++;nativeRouteRejected=false;return result;
+   }finally{nativeRoutePreparations--;onPresentationReady();}
+  }
+  async function prepareNativeShieldGeometry(source,{signal,minSequence}){
+   const shield=copyNativeShieldWorld(source,3,{proposal:true});
+   await waitNativePublication(minSequence,signal);
+   if(closed||!remoteGpu||signal.aborted)throw Error('Native Shield geometry unavailable');
+   const part=await agricultureVfx.prepareNativeShield(shield.spell,{camera,signal});
+   let batch;
+   try{batch=await chunkCoordinator.prepareBatch([],{scene,signal,dependents:[part]});}
+   catch(error){part.cancel();throw error;}
+   return {shield,part,batch,abort:()=>batch.abort()};
+  }
+  async function prepareDirectNativeWorldResources(resources,stop,{signal:callerSignal,minSequence=-1,nativeBarrierWallEntities,shieldGeometry}={}){
+   const ruin=resources?.kind==='native-center-ruin-proposal'?centerSource(resources.nativeCenterRuin):null;
+   const shield=nativeShieldWorldKind(resources?.kind),barrier=stop===null&&!shield&&!ruin;
+   const proposal=ruin?resources:shield?{...resources,worldBoundary:copyNativeWorldBoundary(resources.worldBoundary),nativeShield:copyNativeShieldWorld(resources.nativeShield,resources.kind,{proposal:true})}:
+    barrier?copyNativeBarrierAdditionProposal(resources):stop.codec.copyProposal(resources);
+   const boundary=proposal.worldBoundary,template=ruin??(barrier?proposal.nativeBarrierAddition:proposal.nativeStop);
+   const preparedField=ruin?'preparedCenterRuin':barrier?'preparedBarrierAdditionTemplate':stop?.preparedTemplateField;
+   const emptyResources=(value,kind,world)=>!!world&&value?.version===1&&value.kind===kind&&
+    value.nativeSession===world.nativeSession&&value.ticket===world.ticket&&value.effectiveTime===world.effectiveTime&&
+    Array.isArray(value.chunks)&&!value.chunks.length&&Array.isArray(value.removed)&&!value.removed.length;
+   if(ruin&&(proposal.version!==1||stop||shieldGeometry||!sameNativeWorldBoundary(ruin.boundary,boundary)))throw Error('Invalid center ruin Surface proposal');
+   if(shieldGeometry&&(proposal.kind!==3||!sameNativeShieldWorld(shieldGeometry.shield,proposal.nativeShield)||!shieldGeometry.batch.valid()))throw Error('Shield geometry differs from the FIFO proposal');
+   const shieldStop=shield&&proposal.nativeShieldCropStop?copyNativeShieldCropStop(proposal.nativeShieldCropStop):null;
+   const cropExpiry=shield&&proposal.nativeShieldCropExpiry?copyNativeShieldCropExpiry(proposal.nativeShieldCropExpiry):null;
+   if(cropExpiry){
+    if(proposal.kind!==4||shieldStop||cropExpiry.polygonId!==proposal.nativeShield.polygonId||
+       !sameNativeWorldBoundary(cropExpiry.worldBoundary,boundary))throw Error('Invalid Shield expiry after a crop strike');
+    proposal.nativeShieldCropExpiry=cropExpiry;
+   }
+   if(shieldStop){
+    const row=proposal.routeEffects?.rows;
+    if(shieldGeometry||!!shieldStop.removal!==(proposal.kind===4)||!sameNativeWorldBoundary(boundary,shieldStop.worldBoundary)||
+       proposal.retainsNativeAssignments!==false||!(row instanceof Float64Array)||row.length!==26||
+       ![shieldStop.actorId,shieldStop.assignmentSequence,shieldStop.slot,shieldStop.generation,shieldStop.bodyId,0,boundary.effectiveTime,0]
+         .every((value,i)=>value===row[i])||!['x','z','phase','yaw'].every((key,i)=>shieldStop[key]===row[[8,9,11,12][i]]))
+      throw Error('Invalid Shield crop stop Surface proposal');
+    proposal.nativeShieldCropStop=shieldStop;
+   }
+   if(shield&&(!emptyResources(proposal,proposal.kind,boundary)||proposal.phase!=='proposal'||!shieldStop&&(
+      proposal.retainsNativeAssignments!==true||proposal.routeEffects?.rows?.length!==0)||proposal.gateEffects?.rows?.length!==0))throw Error('Native shield changed unprepared terrain or routes');
+   if(barrier){
+    const removal=template.removal,targets=nativeBarrierAdditionOwners(template);
+    if(!Array.isArray(nativeBarrierWallEntities)||nativeBarrierWallEntities.length!==targets.length||nativeBarrierWallEntities.some((wall,index)=>{
+     const expected=targets[index],gate=expected.proxies?expected:null;
+     if(!wall||wall.id!==expected.entityId||wall.kind!=='wall'||Boolean(wall.gate)!==Boolean(gate||removal))return true;
+     if(removal)return false;
+     if(gate){
+      const scale=gateScale(wall);
+      return nativeGateModelId(wall.material)!==gate.modelId||wall.gateOpen!==gate.opening||wall.gateOpenDirection!==gate.openingDirection||wall.gateOpenDegrees!==gate.openingDegrees||wall.x!==gate.x||wall.z!==gate.z||
+       (wall.yaw??0)!==gate.yaw||scale!==gate.sz||scale*(wall.baseScaleX??1)!==gate.sx;
+     }
+     const parts=spatialStructureBarriers(wall);
+     return parts.length!==1||['x','z','halfX','halfZ','yaw'].some(key=>Math.fround(parts[0][key])!==expected[key])||(parts[0].passMask??0)!==expected.passMask;
+    }))throw Error('Prepared walls differ from their native barriers');
+   }
+   if(closed||!remoteGpu||!stream||callerSignal?.aborted||!Number.isSafeInteger(minSequence)||minSequence< -1)throw Error('Direct native resource surface unavailable');
+   const controller=new AbortController(),abort=()=>cancel();let raw=null,finished=false,publicationHeld=false,preparedSequence=null;
+   const item={descriptor:{phase:'preparing',worldBoundary:boundary},cancel};
+   const releasePublication=()=>{if(!publicationHeld)return;publicationHeld=false;if(!stream.status().closed&&stream.status().holding)stream.releasePresentation();};
+   const current=()=>!closed&&!finished&&!controller.signal.aborted&&nativeGateProposal===item&&publicationHeld&&stream.status().holding&&stream.status().sequence===preparedSequence;
+   function cancel(){if(finished)return false;finished=true;controller.abort();raw?.abort();if(nativeGateProposal===item)nativeGateProposal=null;callerSignal?.removeEventListener('abort',abort);releasePublication();wakeNativePublications();onPresentationReady();return true;}
+   callerSignal?.addEventListener('abort',abort,{once:true});
+   const holdSource=async historicalSequence=>{
+    if(Number.isSafeInteger(historicalSequence))await waitNativePublication(historicalSequence,controller.signal);
+    if(nativeGateProposal?.descriptor.phase==='adopting')await waitNativePublication(minSequence,controller.signal,()=>!nativeGateProposal);
+    await waitNativePublication(minSequence,controller.signal);
+    const status=terrain.status();
+    if(closed||finished||callerSignal?.aborted||nativeGateProposal||nativeRoutePreparations||status.closed||status.nativeProposal||status.pending||status.presentationPending)throw Error('Direct native resource surface unavailable');
+    if(ruin&&!sameNativeWorldBoundary(ruin.previous,preparedNativeWorldBoundary))throw Error('Center ruin lost its previous Surface boundary');
+    nativeGateProposal=item;stream.holdPresentation({releaseOnInput:false});publicationHeld=true;preparedSequence=stream.status().sequence;
+   };
+   try{
+    // Finish any accepted interval before the hold hides its next boundary.
+    if(timelinePump)await timelinePump.withOrdinaryPublications(holdSource,{minSequence});
+    else await holdSource(null);
+    raw=await prepareNativeTerrainProposal([],{signal:controller.signal,proposedWorldBoundary:boundary,retainsNativeAssignments:barrier||shield&&!shieldStop||!!ruin,
+     ...(ruin?{nativeCenterRuin:ruin}:shield?{nativeShieldProposal:proposal,shieldGeometry}:barrier?{nativeBarrierAdditionTemplate:template,nativeBarrierWallEntities}:{stopEffects:proposal,[stop.wireTemplateField]:template}),proposalOwner:item});
+    if(!current()||!raw.valid()){raw.abort();throw Error('Direct native resources became stale');}
+    item.descriptor.phase='ready';
+    return {canonicalPropsUnmasked:true,preparedWorldBoundary:raw.preparedWorldBoundary,...(preparedField?{[preparedField]:template}:{}),valid:()=>current()&&item.descriptor.phase==='ready'&&raw.valid(),abort:cancel,
+     commit(data){
+      if(!current()||!raw.valid())throw Error('Direct native resources not retained');
+      if(hasOtherTerrainStopField(data,'bindingField',stop))throw Error('Native stopped Surface mixes final source families');
+      const r=data.resources,proof=ruin?data.nativeCenterRuin:shield?copyNativeShieldWorld(r?.nativeShield,proposal.kind):barrier?copyNativeBarrierAdditionAttestation(data?.nativeBarrierAdditionBinding):stop.codec.copyAttestation(data?.[stop.bindingField]);
+      const actual=ruin?data.worldBoundary:shield?boundary:proof.reference.worldBoundary;
+      if(ruin&&!matchesCenterRuinCommit(ruin,data))throw Error('Center ruin differs from its prepared Surface resources');
+      if(barrier?(!sameNativeWorldBoundary(data.worldBoundary,actual)||!nativeBarrierAdditionPresentationMatches(proposal,r,proof)):data?.nativeBarrierAdditionBinding!==undefined)throw Error('Native solid addition commit differs from its prepared walls');
+      if(shield&&(!sameNativeWorldBoundary(data.worldBoundary,actual)||!emptyResources(r,proposal.kind,actual)||r.phase!=='committed'||
+         !sameNativeShieldWorld(proof,proposal.nativeShield,{addition:proposal.kind===3})||!!r.nativeShieldCropStop!==!!shieldStop||shieldStop&&!sameNativeShieldCropStop(shieldStop,copyNativeShieldCropStop(r.nativeShieldCropStop))))throw Error('Native shield differs from its prepared spell or polygon');
+      if(shield&&(!!r.nativeShieldCropExpiry!==!!cropExpiry||cropExpiry&&
+         !sameNativeShieldCropExpiry(cropExpiry,r.nativeShieldCropExpiry)))throw Error('Shield expiry lost the completed crop strike');
+      if(stop&&(!proof.projection||!stop.codec.sameReference(proof.preparedReference,template)||!sameNativeWorldBoundary(data.worldBoundary,actual)||!emptyResources(r,stop.codec.kind,actual)))throw Error('Native stopped commit differs from its acquired body-only proposal');
+      try{if(raw.commit(data)!==true)throw Error('Direct native commands not retained');}catch(error){cancel();throw error;}
+      finished=true;callerSignal?.removeEventListener('abort',abort);item.descriptor={phase:'adopting',worldBoundary:actual};item.acquiredWorld={kind:ruin?4:shield?proposal.kind:barrier?2:stop.codec.kind,proof,worldBoundary:actual,centerRuin:ruin};
+      // The actual empty terrain publication must adopt this exact acquired
+      // packet. It cannot borrow a motor boundary or bypass terrain history.
+      if(stop||shieldStop||cropExpiry)nativeRouteResourceRevision++;nativeRouteRejected=false;nativePickPresentation=raw.presented;onSelectableChange();
+      void raw.presented.then(async()=>{
+       if(nativePickPresentation===raw.presented)nativePickPresentation=null;
+       const adoptPublication=async()=>{
+        releasePublication();onPresentationReady();
+        await waitNativePublication(preparedSequence+1,controller.signal,()=>sameNativeWorldBoundary(preparedNativeWorldBoundary,actual));
+       };
+       // A historical interval would need another draw while recording is
+       // blocked on this acquired world. Confirm the queued publications first.
+       if(timelinePump)await timelinePump.withOrdinaryPublications(adoptPublication);
+       else await adoptPublication();
+       if(nativeGateProposal===item)nativeGateProposal=null;wakeNativePublications();onPresentationReady();
+      }).catch(error=>{if(nativePickPresentation===raw.presented)nativePickPresentation=null;releasePublication();if(nativeGateProposal===item)nativeGateProposal=null;wakeNativePublications(error);if(!closed)onError(error);});return true;
+     }};
+   }catch(error){cancel();throw error;}
+  }
+  function acquiredDirectWorldPublication(message,admitted,next){
+   const acquired=nativeGateProposal?.descriptor.phase==='adopting'&&nativeGateProposal.acquiredWorld,records=message.nativeWorldResources;
+   if(!acquired||!sameNativeWorldBoundary(acquired.worldBoundary,next)||admitted?.empty!==true||admitted.changes?.length!==0||!Array.isArray(records)||records.length!==1)return false;
+   const record=records[0];if(record.kind!==acquired.kind||!sameNativeWorldBoundary(record.worldBoundary,next)||record.chunks.length||record.removed.length)return false;
+   if(acquired.centerRuin){
+    const center=state.structures.find(entry=>entry.id===acquired.centerRuin.center);
+    return center?.kind==='center'&&center.status==='ruined'&&center.hp===0&&
+     verifiesCenter(acquired.centerRuin,next,record.nativeCenterRuin);
+   }
+   if(record.kind===2)return JSON.stringify(copyNativeBarrierAdditionAttestation(record.nativeBarrierAdditionBinding))===JSON.stringify(acquired.proof);
+   if(nativeShieldWorldKind(record.kind)){
+    const shield=copyNativeShieldWorld(record.nativeShield,record.kind),confirmed=state.spells.find(spell=>spell.id===shield.spell.id);
+    return sameNativeShieldWorld(shield,acquired.proof)&&(record.kind===4?!confirmed:
+      confirmed?.kind==='shield'&&sameNativeShieldWorld({spell:confirmed,polygonId:shield.polygonId},shield));
+   }
+   return true;
+  }
+
+  function prepareNativeGateResources(value,options){const stop=terrainStopProposalProtocol(value);return stop||nativeShieldWorldKind(value?.kind)||value?.kind==='native-center-ruin-proposal'?prepareDirectNativeWorldResources(value,stop,options):prepareNativeResources(copyNativeGateMotionResources(value),options);}
+  function prepareNativeBarrierAdditionResources(value,options){return prepareDirectNativeWorldResources(value,null,options);}
+  function prepareNativeResumeResources(value,options){return prepareNativeResources(copyNativeResumeProposal(value),options);}
+  function prepareFirstNativeWorkerResources(resources,options){
+   const prepare=()=>prepareNativeResources(resources,{...options,deferredStart:options.deferredStart??true});
+   const behind=Number.isSafeInteger(options.minSequence)&&(stream?.status().sequence??-1)<options.minSequence;
+   if(!timelinePump||!behind||state.workers.length||state.raid?.animals.some(animal=>animal.status!=='gone'))return prepare();
+   // While the confirmed view still has no actors, let its current interval
+   // finish and apply following publications through the ordinary stream.
+   return timelinePump.withOrdinaryPublications(async sequence=>{
+    if(Number.isSafeInteger(sequence))await waitNativePublication(sequence,options.signal??new AbortController().signal);
+    return prepare();
+   });
+  }
+  function prepareNativeTaskStartResources(value,options={}){return prepareFirstNativeWorkerResources(copyNativeTaskStartProposal(value),options);}
+  function prepareNativeTaskConsequenceResources(value,options={}){return prepareNativeResources(copyNativeTaskConsequenceProposal(value),{...options,deferredStart:options.deferredStart??true});}
+  function prepareNativeTaskActionResources(value,options={}){return prepareNativeResources(copyNativeTaskActionProposal(value),{...options,deferredStart:options.deferredStart??true});}
+  function prepareNativeHomeArrivalResources(value,options={}){return prepareNativeResources(copyNativeHomeArrivalProposal(value),{...options,deferredStart:options.deferredStart??true});}
+  function prepareNativeHomeRouteResources(value,options={}){return prepareNativeResources(copyNativeHomeRouteProposal(value),{...options,deferredStart:options.deferredStart??true});}
+  function prepareNativeTaskSettlementResources(value,options={}){return prepareNativeResources(copyNativeTaskSettlementProposal(value),{...options,deferredStart:options.deferredStart??true});}
+  function prepareNativeInitialIdleBodyResources(value,options={}){return prepareNativeResources(copyNativeInitialIdleBodyProposal(value),{...options,deferredStart:options.deferredStart??true});}
+  function prepareNativeIdleCycleResources(value,options={}){return prepareNativeResources(copyNativeIdleCycleProposal(value),{...options,deferredStart:options.deferredStart??true});}
+  async function prepareAnimalCropResources(input,kind,options={}){
+   const resources=copyNativeAnimalCropProposal(input,kind);
+   // A request can arrive before its source publication. Keep the pump free
+   // to commit that source, without lending the roster to another interval.
+   const prepare=async sequence=>{
+    if(Number.isSafeInteger(sequence)){
+     await waitNativePublication(sequence,options.signal??new AbortController().signal);
+    }
+    return prepareNativeResources(resources,{...options,deferredStart:true});
+   };
+   return timelinePump?timelinePump.withOrdinaryPublications(prepare,{minSequence:options.minSequence}):prepare(null);
+  }
+  const prepareNativeAnimalCropRouteResources=(p,o)=>prepareAnimalCropResources(p,26,o);
+  const prepareNativeAnimalCropStrikeResources=(p,o)=>prepareAnimalCropResources(p,27,o);
+  function prepareNativeFarmArrivalResources(value,options={}){return prepareFirstNativeWorkerResources(copyNativeFarmArrivalRouteProposal(value),options);}
+  function prepareNativeIdleStrollResources(value,options={}){return prepareNativeResources(copyNativeIdleStrollProposal(value),{...options,deferredStart:options.deferredStart??true});}
+  async function prepareNativeResources(resources,{signal:callerSignal,minSequence=-1,terrainManifest,deferredStart=false,encounterRetreat=null,confirmGateMotion=false}={}){
+   const crop=['native-animal-crop-route-proposal','native-animal-crop-strike-proposal'].includes(resources.kind)?resources.reference.kind:null;
+   if(encounterRetreat&&(crop!==26||resources.reference.purpose!=='retreat'||
+      !sameNativeAnimalCropReference(encounterRetreat.source.reference,resources.reference)||
+      resources.worldBoundary.effectiveTime!==encounterRetreat.workerFall.fromTime||
+      encounterRetreat.source.at!==encounterRetreat.workerFall.at||encounterRetreat.source.workerBody!==encounterRetreat.workerFall.body||
+      encounterRetreat.workerFall.id!=='worker-'+encounterRetreat.source.worker))
+     throw Error('Surface encounter lost its worker and route source');
+   const cropKey=crop===26?'nativeAnimalCropRouteBinding':'nativeAnimalCropStrikeBinding';
+   const cropMatches=(prepared,data,proof)=>{
+     if(data.kind!==crop||!sameNativeAnimalCropReference(proof.preparedReference,prepared.reference))return false;
+     const committed=copyNativeAnimalCropAttestation(data[cropKey],crop);
+     if(committed.assignmentSequence!==proof.assignmentSequence||committed.attackId!==proof.attackId||
+        !sameNativeAnimalCropReference(committed.reference,proof.reference)||!sameNativeAnimalCropReference(committed.preparedReference,proof.preparedReference))return false;
+     if(crop===27)return true;
+     const p=data.presentation,r=proof.reference,h=p?.nativeRoute?.routeHandle;
+     return p?.nativeRoute?.actorId===r.actorId&&p.nativeRoute.assignmentSequence===proof.assignmentSequence&&
+       h?.authorityEpoch===r.worldBoundary.authorityEpoch&&h.session===r.worldBoundary.nativeSession&&h.slot===r.slot&&h.generation===r.generation&&
+       p.startTime===r.worldBoundary.effectiveTime&&p.endTime===r.endTime&&nativeMotionPresentationMatches(prepared,p,[]);
+   };
+   const farm=resources.kind==='native-farm-arrival-route-proposal',stroll=resources.kind==='native-idle-stroll-proposal',arrival=resources.kind==='native-home-arrival-proposal',home=resources.kind==='native-home-route-proposal',initialBody=resources.kind==='native-initial-idle-body-proposal',cycle=resources.kind==='native-idle-cycle-proposal',settling=resources.kind==='native-task-settlement-proposal',consequence=resources.kind==='native-task-consequence-proposal',acting=resources.kind==='native-task-action-proposal',starting=resources.kind==='native-task-start-proposal',resumed=!!crop||farm||stroll||cycle||initialBody||arrival||home||settling||consequence||acting||starting||resources.kind==='native-route-resume-proposal',copyMotion=farm?copyNativeFarmArrivalRouteProposal:stroll?copyNativeIdleStrollProposal:arrival?copyNativeHomeArrivalProposal:home?copyNativeHomeRouteProposal:cycle?copyNativeIdleCycleProposal:initialBody?copyNativeInitialIdleBodyProposal:settling?copyNativeTaskSettlementProposal:consequence?copyNativeTaskConsequenceProposal:acting?copyNativeTaskActionProposal:starting?copyNativeTaskStartProposal:copyNativeResumeProposal,copyBinding=crop?v=>copyNativeAnimalCropAttestation(v,crop):farm?copyNativeFarmArrivalRouteAttestation:stroll?copyNativeIdleStrollAttestation:arrival?copyNativeHomeArrivalAttestation:home?copyNativeHomeRouteAttestation:cycle?copyNativeIdleCycleAttestation:initialBody?copyNativeInitialIdleBodyAttestation:settling?copyNativeTaskSettlementAttestation:consequence?copyNativeTaskConsequenceAttestation:acting?copyNativeTaskActionAttestation:starting?copyNativeTaskStartAttestation:copyNativeResumeAttestation,matches=crop?cropMatches:farm?nativeFarmArrivalRoutePresentationMatches:stroll?nativeIdleStrollPresentationMatches:arrival?nativeHomeArrivalPresentationMatches:home?nativeHomeRoutePresentationMatches:cycle?nativeIdleCyclePresentationMatches:initialBody?nativeInitialIdleBodyPresentationMatches:settling?nativeTaskSettlementPresentationMatches:consequence?nativeTaskConsequencePresentationMatches:acting?nativeTaskActionPresentationMatches:starting?nativeTaskStartPresentationMatches:nativeResumePresentationMatches,successor=farm?nativeFarmArrivalRouteSuccessor:stroll?nativeIdleStrollSuccessor:arrival?nativeHomeArrivalSuccessor:home?nativeHomeRouteSuccessor:cycle?nativeIdleCycleSuccessor:initialBody?nativeInitialIdleBodySuccessor:settling?nativeTaskSettlementSuccessor:consequence?nativeTaskConsequenceSuccessor:acting?nativeTaskActionSuccessor:starting?nativeTaskStartSuccessor:nativeResumeSuccessor,key=farm?'nativeFarmArrival':stroll?'nativeIdleStroll':arrival?'nativeHomeArrival':home?'nativeHome':cycle?'nativeIdleCycle':initialBody?'nativeInitialIdleBody':settling?'nativeSettlement':consequence?'nativeConsequence':starting?'nativeStart':'nativeResume',templateKey=crop?'nativeAnimalCropTemplate':farm?'nativeFarmArrivalTemplate':stroll?'nativeIdleStrollTemplate':arrival?'nativeHomeArrivalTemplate':home?'nativeHomeRouteTemplate':cycle?'nativeIdleCycleTemplate':initialBody?'nativeInitialIdleBodyTemplate':settling?'nativeTaskSettlementTemplate':consequence?'nativeTaskConsequenceTemplate':acting?'nativeTaskActionTemplate':starting?'nativeTaskStartTemplate':'nativeResumeTemplate',motionRef=value=>crop?value.reference:acting?nativeTaskActionReferenceFromProposal(value):value[key],gates=value=>cycle||initialBody||arrival||acting||settling?[]:value.gates;let boundary=resources.worldBoundary;if(typeof deferredStart!=='boolean'||deferredStart&&!resumed||(farm||stroll||cycle||initialBody||arrival||home||starting||acting||consequence||settling)&&!deferredStart)throw TypeError('Invalid native deferred template');
+   if(closed||callerSignal?.aborted||!Number.isSafeInteger(minSequence)||minSequence< -1)throw Error('Native gate resource surface unavailable');
+   // A real next task can arrive while the preceding delivered image is
+   // adopting. Wait on the existing publication predicate before claiming the
+   // same preparation slot; no retry timer or second retained queue is needed.
+   if(nativeGateProposal?.descriptor.phase==='adopting')await waitNativePublication(minSequence,callerSignal??new AbortController().signal,()=>!nativeGateProposal);
+   // The source can request resources before its latest terrain publication
+   // finishes adopting. Check the existing preflight at that actual boundary.
+   await waitNativePublication(minSequence,callerSignal??new AbortController().signal);
+   // A confirmed publication can precede its wall's asynchronous compilation.
+   // Await only the required owners before holding publication or claiming a
+   // route-preparation slot, so their original admission can finish normally.
+   const terminalGateIds=arrival||settling?(motionRef(resources).sourceHome??motionRef(resources).sourceCarry).gateIds:[];
+   const gateOwners=arrival||settling?{gates:terminalGateIds.map(gateId=>({gateId,entityId:`structure-${gateId}`}))}:resources;
+   const gateOwnersReady=gateOwners.gates?.length?settlements.nativeGatePreparationReadiness(gateOwners):()=>true;
+   await waitNativePublication(minSequence,callerSignal??new AbortController().signal,gateOwnersReady);
+   if(crop===27&&resources.reference.purpose==='center')await settlements.prepareCenterStrike(resources.reference.targetId,callerSignal);
+   if(closed||!remoteGpu||!state||nativeGateProposal||!resumed&&resources.phase!=='proposal'||callerSignal?.aborted||!Number.isSafeInteger(minSequence)||minSequence< -1||terrain.status().nativeProposal||terrain.status().pending||terrain.status().presentationPending)throw Error('Native gate resource surface unavailable');
+   // Deferred tasks capture the same immutable packet as locomotion. Keep
+   // their source publication stable through draw, then adopt the issued
+   // assignment using the existing stream hold.
+   const holdsPublication=!!crop||farm||stroll||cycle||initialBody||arrival||home||consequence||settling||starting||acting;
+   const controller=new AbortController(),abort=()=>controller.abort(),item={descriptor:{phase:'preparing',worldBoundary:boundary},controller};nativeGateProposal=item;nativeRoutePreparations++;callerSignal?.addEventListener('abort',abort,{once:true});
+   let participants=[],tickets=[],finished=false,preparedFrame=null,preparedSequence=null,publicationHeld=false;
+   const releasePublication=()=>{if(!publicationHeld)return;publicationHeld=false;if(!stream.status().closed&&stream.status().holding)stream.releasePresentation();};
+   const current=()=>!closed&&!finished&&!controller.signal.aborted&&nativeGateProposal===item&&(!holdsPublication||publicationHeld&&stream.status().holding);
+   function cancel(){if(finished)return;finished=true;controller.abort();preparedFrame?.abort();for(const participant of participants)participant.cancel();if(nativeGateProposal===item)nativeGateProposal=null;nativeRoutePreparations--;callerSignal?.removeEventListener('abort',abort);releasePublication();wakeNativePublications();onPresentationReady();}
+   item.cancel=cancel;
+   try{
+    await waitNativePublication(minSequence,controller.signal,encounterRetreat?()=>state.elapsed===encounterRetreat.workerFall.fromTime&&
+      workers?.get(encounterRetreat.workerFall.id)?.isBakedFalling():undefined);
+     terrainSupport??=createConfirmedTerrainSupport({residency});
+    if(holdsPublication){stream.holdPresentation({releaseOnInput:false});publicationHeld=true;}
+    if(!gateOwnersReady())throw Error('Native gate owner lost admission before preparation');
+    participants=crop||cycle||initialBody||arrival||acting||settling?[]:settlements.prepareNativeGateMotors(resources,{signal:controller.signal,getPickTime:(ref,epoch)=>{if(!nativePickFrame)throw Error('Native gate input requires a consumer frame');return nativePickFrame.getGateTime(ref,epoch);}});
+    if(crop){const support=terrainSupport.prepareAnimalCrop(resources,{terrainManifest});if(!support?.valid())throw Error("Native crop terrain unavailable");participants.unshift(await roster.prepareAnimalCrop(resources,support,{signal:controller.signal,encounterRetreat:encounterRetreat?.source,getPickAge:r=>nativePickFrame.getAnimalCropAge(r)}));}
+    else if(arrival)participants.unshift(await workers.prepareNativeHomeArrivalProposal(resources,{signal:controller.signal}));
+    else if(cycle){const support=terrainSupport.prepareNativeIdleCycle(motionRef(resources));if(!support?.valid())throw Error('Native Idle cycle terrain support unavailable');participants.unshift(await workers.prepareNativeIdleCycleProposal(support,{signal:controller.signal,reuseClock:remoteClockBindings.reuseNativeIdleCycle,getPickAge:reference=>{if(!nativePickFrame)throw Error('Native Idle cycle input requires a consumer frame');return nativePickFrame.getIdleCycleElapsed(reference);},getPickPhaseOffset:(reference,period)=>{if(!nativePickFrame)throw Error('Native Idle cycle input requires a consumer frame');return nativePickFrame.getIdleCyclePhaseOffset(reference,period);}}));}
+    else if(initialBody){const support=terrainSupport.prepareNativeInitialIdleBody(motionRef(resources));if(!support?.valid())throw Error('Native initial Idle body terrain support unavailable');participants.unshift(await workers.prepareNativeInitialIdleBodyProposal(support,{signal:controller.signal,getPickAge:reference=>{if(!nativePickFrame)throw Error('Native initial Idle body input requires a consumer frame');return nativePickFrame.getInitialIdleBodyElapsed(reference);}}));}
+    else if(settling){const support=terrainSupport.prepareNativeTaskSettlement(motionRef(resources));if(!support?.valid())throw Error('Native settlement terrain support unavailable');participants.unshift(await workers.prepareNativeTaskSettlementProposal(support,{signal:controller.signal,getPickAge:reference=>{if(!nativePickFrame)throw Error('Native settlement input requires a consumer frame');return nativePickFrame.getSettlementElapsed(reference);}}));}
+    else if(acting){const support=terrainSupport.prepareNativeTaskAction(motionRef(resources));if(!support?.valid())throw Error('Native action terrain support unavailable');participants.unshift(await workers.prepareNativeTaskActionProposal(support,{signal:controller.signal,getPickAge:reference=>{if(!nativePickFrame)throw Error('Native action input requires a consumer frame');return nativePickFrame.getActionElapsed(reference);}}));}
+    else if(resumed){const support=terrainSupport[farm?'prepareNativeFarmArrivalProposal':stroll?'prepareNativeIdleStrollProposal':home?'prepareNativeHomeRouteProposal':consequence?'prepareNativeTaskConsequenceProposal':starting?'prepareNativeTaskStartProposal':'prepareNativeResumeProposal'](resources,{terrainManifest});if(!support?.valid())throw Error('Native resume terrain support unavailable');participants.unshift(await workers[farm?'prepareNativeFarmArrivalProposal':stroll?'prepareNativeIdleStrollProposal':home?'prepareNativeHomeRouteProposal':consequence?'prepareNativeTaskConsequenceProposal':starting?'prepareNativeTaskStartProposal':'prepareNativeResumeProposal'](support,{signal:controller.signal,...(farm||stroll?{getPickIdleOffset:(reference,epoch,period)=>{if(!nativePickFrame)throw Error('Native Farm Idle input requires a consumer frame');return nativePickFrame[farm?'getFarmArrivalIdleOffset':'getStrollIdleOffset'](reference,epoch,period);}}:{}),getPickTime:(reference,epoch)=>{if(!nativePickFrame)throw Error('Native resume input requires a consumer frame');return nativePickFrame[farm?'getFarmArrivalTime':stroll?'getStrollTime':home?'getHomeTime':consequence?'getConsequenceTime':starting?'getStartTime':'getResumeTime'](reference,epoch);}}));}
+    if(arrival||settling)participants.push(...settlements.prepareNativeTerminalGates(resources,participants[0].retainedGatePresentations,{signal:controller.signal}));
+    if(consequence)participants.push(await crops.prepareNativeTaskConsequence(motionRef(resources),{signal:controller.signal}));
+    if(participants[0]?.withSourcePresentation&&(participants.length===1||arrival||settling))item.withSourcePresentation=operation=>{
+     if(!current())throw Error('Native source presentation unavailable');return participants[0].withSourcePresentation(operation);
+    };
+    async function prepareFrame(){
+    for(;;){
+     if(!current()||participants.some(participant=>!participant.valid()))throw new DOMException('Native gate resources changed','AbortError');
+     const requests=participants.flatMap(participant=>participant.requests??[participant.request]);for(let i=0;i<requests.length;i++)if(!tickets[i]?.valid())tickets[i]=await pipelineAdmission.prepareTicket(requests[i].object,requests[i].options);
+     if(!current()||participants.some(participant=>!participant.valid()))throw new DOMException('Native gate resources changed','AbortError');
+     if(tickets.every(ticket=>ticket.valid()))break;
+    }
+    try{await remoteGpu.whenFrameSettled();}catch(error){if(!['remote-frame-native-route-obsolete','remote-frame-native-mutation-obsolete','remote-frame-native-clock-obsolete'].includes(error?.code))throw error;}
+    if(!current()||participants.some(participant=>!participant.valid())||tickets.some(ticket=>!ticket.valid()))throw Error('Native gate changed before frame capture');
+    for(const participant of participants)participant.activate();
+    remoteGpu.beginFrame({nativeWorldBoundary:boundary});
+    try{
+      const worker=encounterRetreat?workers.get(encounterRetreat.workerFall.id):null;
+      const rendered=worker?worker.withPreparedFall(encounterRetreat.workerFall,renderScene):renderScene();
+      if(!rendered)throw Error('Native prepared scene is not ready');preparedSequence=stream.status().sequence;const capturing=remoteGpu.prepareNativeWorldFrame({...remoteFrameMetadata(boundary,resumed?{start:crop?resources.worldBoundary.effectiveTime:cycle||initialBody||arrival||settling?motionRef(resources).worldBoundary.effectiveTime:resources.startTime,end:crop?resources.reference.endTime:cycle||initialBody||arrival||settling?Number.MAX_SAFE_INTEGER:resources.endTime}:null),nativeRouteResourceRevision:nativeRouteResourceRevision+1,...(encounterRetreat?{encounterRetreatDraft:encounterRetreat.source}:{}),...(confirmGateMotion?{preparedGateMotorIds:resources.gates.map(gate=>gate.gateId)}:{}),...(deferredStart?{[templateKey]:motionRef(resources)}:{})},{signal:controller.signal});capturing.catch(()=>{});for(const participant of participants)participant.afterCapture?.();preparedFrame=await capturing;}catch(error){remoteGpu.cancelFrame();throw error;}
+    if(consequence)participants[0].markReady();
+    item.descriptor.phase='ready';
+    }
+    function invalidate(){if(!resumed||!current())return false;if(item.descriptor.phase==='invalidated')return true;preparedFrame?.abort();preparedFrame=null;for(const participant of [...participants].reverse())participant.rollback();item.descriptor.phase='invalidated';return true;}
+    async function refresh(value,{terrainManifest:nextManifest=terrainManifest}={}){
+     if(crop){cancel();return false;}
+     if(!resumed||!current())throw Error('Native resume refresh unavailable');const next=copyMotion(value);
+     if(!successor(motionRef(resources),motionRef(next))||gates(next).length!==gates(resources).length||gates(next).some((gate,i)=>gate.gateId!==gates(resources)[i].gateId))return false;
+     if(!invalidate())return false;
+     try{const support=arrival?next:cycle?terrainSupport.prepareNativeIdleCycle(motionRef(next)):initialBody?terrainSupport.prepareNativeInitialIdleBody(motionRef(next)):settling?terrainSupport.prepareNativeTaskSettlement(motionRef(next)):acting?terrainSupport.prepareNativeTaskAction(motionRef(next)):terrainSupport[farm?'prepareNativeFarmArrivalProposal':stroll?'prepareNativeIdleStrollProposal':home?'prepareNativeHomeRouteProposal':consequence?'prepareNativeTaskConsequenceProposal':starting?'prepareNativeTaskStartProposal':'prepareNativeResumeProposal'](next,{terrainManifest:nextManifest});if(!arrival&&!support?.valid())throw Error('Native resumed support unavailable');
+      if(!participants[0].retarget(support,{retagClock:remoteClockBindings[farm?'retagNativeFarmArrival':stroll?'retagNativeIdleStroll':home?'retagNativeHomeRoute':cycle?'retagNativeIdleCycle':initialBody?'retagNativeInitialIdleBody':settling?'retagNativeTaskSettlement':consequence?'retagNativeTaskConsequence':acting?'retagNativeTaskAction':starting?'retagNativeTaskStart':'retagNativeResume']})){cancel();return false;}
+      if(arrival||settling)for(const participant of participants.slice(1))if(!participant.retarget(next)){cancel();return false;}
+      for(let i=0;i<gates(next).length;i++)if(!participants[i+1].retarget(gates(next)[i],{retagClock:remoteClockBindings.retagNativeGate})){cancel();return false;}
+      if(consequence&&!participants.at(-1).retargetNativeTaskConsequence(motionRef(next))){cancel();return false;}resources=next;boundary=next.worldBoundary;terrainManifest=nextManifest;item.descriptor.worldBoundary=boundary;item.descriptor.phase='preparing';await prepareFrame();return true;
+     }catch(error){cancel();throw error;}
+    }
+    await prepareFrame();
+    // The alternative-material tickets were consumed by activation/capture.
+    // From here the retained immutable consumer packet proves resource readiness.
+    return {...(encounterRetreat||confirmGateMotion?{get preparedFrameSequence(){return preparedFrame.sequence;},get presented(){return preparedFrame.presented;}}:{}),...(deferredStart?{get [crop?(crop===26?'preparedAnimalCropRouteTemplate':'preparedAnimalCropStrikeTemplate'):farm?'preparedFarmArrivalTemplate':stroll?'preparedIdleStrollTemplate':arrival?'preparedHomeArrivalTemplate':home?'preparedHomeRouteTemplate':cycle?'preparedIdleCycleTemplate':initialBody?'preparedInitialIdleBodyTemplate':settling?'preparedTaskSettlementTemplate':consequence?'preparedTaskConsequenceTemplate':acting?'preparedTaskActionTemplate':starting?'preparedTaskStartTemplate':'preparedResumeTemplate'](){return motionRef(resources);}}:{}),get preparedWorldBoundary(){return boundary;},...(resumed?{refresh,invalidate}:{}),valid:()=>current()&&item.descriptor.phase==='ready'&&stream.status().sequence===preparedSequence&&preparedFrame?.valid()&&participants.every(participant=>participant.valid()),
+     commit(data){const confirmed=farm?copyNativeFarmArrivalRouteResources(data.resources):stroll?copyNativeIdleStrollResources(data.resources):arrival?copyNativeHomeArrivalResources(data.resources):cycle?copyNativeIdleCycleResources(data.resources):initialBody?copyNativeInitialIdleBodyResources(data.resources):settling?copyNativeTaskSettlementResources(data.resources):acting?copyNativeTaskActionResources(data.resources):resumed?data.resources:copyNativeGateMotionResources(data.resources),binding=deferredStart?copyBinding(data[crop?cropKey:farm?'nativeFarmArrivalBinding':stroll?'nativeIdleStrollBinding':arrival?'nativeHomeArrivalBinding':home?'nativeHomeRouteBinding':cycle?'nativeIdleCycleBinding':initialBody?'nativeInitialIdleBodyBinding':settling?'nativeTaskSettlementBinding':consequence?'nativeTaskConsequenceBinding':acting?'nativeTaskActionBinding':starting?'nativeTaskStartBinding':'nativeResumeBinding']):null,committedBoundary=binding?.reference.worldBoundary??boundary;if(deferredStart&&!matches(resources,crop||cycle||initialBody||arrival||acting||settling?confirmed:confirmed.presentation,binding))throw Error('Deferred native resources differ from their issued motion');if(confirmed.phase!=='committed'||!sameNativeWorldBoundary(confirmed.worldBoundary,committedBoundary)||!resumed&&!sameNativeGatePresentations(confirmed.gates,resources.gates)||!current()||!sameNativeWorldBoundary(data.worldBoundary,committedBoundary)||participants.some(participant=>!participant.valid()))throw Error('Native graphical resources not retained');
+      for(const participant of participants)participant.validateCommit?.(data);
+      try{if(stream.status().sequence!==preparedSequence||!preparedFrame.commit(committedBoundary,binding))throw Error('Native prepared command packet unavailable');for(const participant of participants)participant.finalize(data);}catch(error){cancel();throw error;}
+      if(home&&recoveredFall?.sample.home&&sameNativeHomeRequestReference(recoveredFall.sample.home,binding.reference.sourceRequest))
+        recoveredFall=null;
+      finished=true;nativePickPresentation=preparedFrame.presented;if(!holdsPublication)nativeGateProposal=null;else item.descriptor.phase='adopting';callerSignal?.removeEventListener('abort',abort);preparedNativeWorldBoundary=committedBoundary;nativeRouteResourceRevision++;nativeRouteRejected=false;onSelectableChange();
+      void preparedFrame.presented.then(async()=>{if(nativePickPresentation===preparedFrame.presented)nativePickPresentation=null;
+       for(const participant of participants)participant.retire?.();releasePublication();
+       if(crop){
+         onPresentationReady();
+         await waitNativePublication(preparedSequence+1,controller.signal,()=>nativeAnimalCropPublicationMatches(state,binding));
+         if(nativeGateProposal===item)nativeGateProposal=null;
+       }
+       if(farm){const q=binding.reference.sourceRequest,projected=()=>{
+        const worker=state.workers.find(w=>w.id===`worker-${q.actorId}`);
+        try{const semantic=worker?.nativeRouteAdmission==='pending-farm-flight-stop'?nativeFarmFlightState(state,worker,{executing:true}):nativeFarmArrivalExecutionState(state,worker);return (!worker.raidReturn||q.refugeSequence===worker.nativeRefugeSequence)&&worker.profile===q.workerProfile&&semantic.centerId===q.centerId&&Object.keys(semantic.goal).every(k=>semantic.goal[k]===q.goal[k]);}catch{return false;}
+       };onPresentationReady();await waitNativePublication(preparedSequence+1,controller.signal,projected);if(nativeGateProposal===item)nativeGateProposal=null;}
+       if(stroll){const r=binding.reference,anchorId=`${r.anchor.kind===1?'farm-plant':'farm-structure'}-${r.anchor.id}`,projected=()=>{
+        const worker=state.workers.find(w=>w.id===`worker-${r.actorId}`);if(worker?.nativeRouteAdmission!=='native-idle-stroll')return false;
+        try{const {idleState}=nativeIdleStrollLiveState(state,worker);return worker.profile===r.workerProfile&&nativeEntityNumericId(worker.centerId)===r.centerId&&idleState.remaining===nativeIdleStrollWalkRemaining(r)&&idleState.anchorId===anchorId&&idleState.rng===r.walkRng&&worker.destinationId===(nativeIdleStrollApproachesAnchor(r)?anchorId:`idle-${worker.id}`)&&idleState.destination.id===worker.destinationId&&idleState.destination.x===r.destination.x&&idleState.destination.z===r.destination.z;}catch{return false;}
+       };onPresentationReady();await waitNativePublication(preparedSequence+1,controller.signal,projected);if(nativeGateProposal===item)nativeGateProposal=null;}
+       if(arrival){const r=binding.reference,home=nativeHomeRouteSource(r.sourceHome.reference).home,projected=()=>{const worker=state.workers.find(w=>w.id===`worker-${r.actorId}`);return !!worker&&worker.status==='home'&&worker.nativeRouteAdmission===undefined&&!worker.taskId&&!worker.crateId&&worker.villageId===`village-${home.villageId}`&&worker.x===home.x&&worker.z===home.z;};onPresentationReady();await waitNativePublication(-1,controller.signal,projected);if(nativeGateProposal===item)nativeGateProposal=null;}
+       if(home){const r=binding.reference,projected=()=>{const worker=state.workers.find(w=>w.id===`worker-${r.actorId}`);return !!worker&&worker.status===nativeHomeWorkerStatus(r.sourceRequest)&&worker.nativeRouteAdmission==='native-home'&&!worker.taskId&&!worker.crateId&&worker.villageId===`village-${nativeHomeRouteSource(r).home.villageId}`;};onPresentationReady();await waitNativePublication(-1,controller.signal,projected);if(nativeGateProposal===item)nativeGateProposal=null;}
+       if(starting){const r=binding.reference,projected=()=>{
+        const worker=state.workers.find(w=>w.id===`worker-${r.actorId}`),task=state.tasks.find(t=>t.id===`task-${r.taskId}`);
+        return !!worker&&!!task&&['native-task','pending-action-resources'].includes(worker.nativeRouteAdmission)&&worker.taskId===task.id&&task.workerId===worker.id&&nativeEntityNumericId(task.targetId)===r.targetId;
+       };onPresentationReady();await waitNativePublication(preparedSequence+1,controller.signal,projected);if(nativeGateProposal===item)nativeGateProposal=null;}
+       if(acting){const q=binding.reference.request,actorId=`worker-${nativeTaskActionActor(q)}`,projected=()=>{
+        const worker=state.workers.find(w=>w.id===actorId),task=state.tasks.find(t=>t.id===`task-${q.taskId}`);
+        return !!worker&&!!task&&worker.nativeRouteAdmission==='native-action'&&worker.status==='acting'&&worker.taskId===task.id&&task.workerId===actorId&&nativeEntityNumericId(task.targetId)===q.targetId&&worker.nativeTaskAction?.kind===q.actionKind&&worker.nativeTaskAction.duration===q.duration;
+       };onPresentationReady();await waitNativePublication(preparedSequence+1,controller.signal,projected);if(nativeGateProposal===item)nativeGateProposal=null;}
+       if(cycle){const q=nativeIdleCycleBodyState(binding.reference.sourceBody),p=q.pose,projected=()=>{
+        const worker=state.workers.find(w=>w.id===`worker-${q.actorId}`);
+        if(!worker||worker.profile!==q.workerProfile||nativeEntityNumericId(worker.centerId)!==q.centerId||worker.crateId||worker.incapacitated||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining||worker.raidReturn||worker.running!==false||worker.gateWaiting!==false||worker.heading!==p.yaw||['x','z','runPhase','walkPhase','carryPhase','runRemaining'].some(k=>worker[k]!==p[k]))return false;
+        const idle=worker.status==='idle'&&worker.nativeRouteAdmission==='native-idle'&&!worker.taskId&&worker.path===null&&!!worker.idleState&&['rest','watch'].includes(worker.idleState.mode),
+          pendingTask=worker.status==='waiting-task'&&worker.nativeRouteAdmission==='pending-resources'&&!!worker.taskId&&worker.path===null&&worker.idleState===null,
+          pendingHome=worker.status==='returning'&&worker.nativeRouteAdmission==='pending-home-resources'&&!worker.taskId&&worker.path===null&&worker.idleState===null;
+        return idle||pendingTask||pendingHome;
+       };onPresentationReady();await waitNativePublication(preparedSequence+1,controller.signal,projected);if(nativeGateProposal===item)nativeGateProposal=null;}
+       if(initialBody){const q=binding.reference.sourceRequest,p=q.pose,projected=()=>{
+        const worker=state.workers.find(w=>w.id===`worker-${q.actorId}`);
+        if(!worker||worker.profile!==q.workerProfile||nativeEntityNumericId(worker.centerId)!==q.centerId||worker.crateId||worker.incapacitated||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining||worker.raidReturn||worker.running!==false||worker.gateWaiting!==false||worker.heading!==p.yaw||['x','z','runPhase','walkPhase','carryPhase','runRemaining'].some(k=>worker[k]!==p[k]))return false;
+        const idle=worker.status==='idle'&&worker.nativeRouteAdmission==='native-idle'&&!worker.taskId&&worker.path===null&&JSON.stringify(worker.idleState)===JSON.stringify(q.idleState),
+          pendingTask=worker.status==='waiting-task'&&worker.nativeRouteAdmission==='pending-resources'&&!!worker.taskId&&worker.path===null&&worker.idleState===null,
+          pendingHome=worker.status==='returning'&&worker.nativeRouteAdmission==='pending-home-resources'&&!worker.taskId&&worker.path===null&&worker.idleState===null;
+        return idle||pendingTask||pendingHome;
+       };onPresentationReady();await waitNativePublication(-1,controller.signal,projected);if(nativeGateProposal===item)nativeGateProposal=null;}
+       if(settling){const r=binding.reference,projected=()=>{
+        const worker=state.workers.find(w=>w.id===`worker-${r.actorId}`),crate=state.crates.find(c=>c.id===`crate-${r.crateId}`),p=r.pose;
+        // A new Home may be requested before this already committed Idle is
+        // adopted. Its direct Idle proof still owns this exact held body.
+        const pendingHome=!!worker&&worker.status==='returning'&&worker.nativeRouteAdmission==='pending-home-resources'&&!worker.taskId&&worker.path===null&&worker.running===false&&worker.gateWaiting===false&&!worker.incapacitated&&!worker.recovery&&!worker.recoveryExitRemaining&&!worker.fallRemaining&&!worker.raidReturn&&worker.heading===p.yaw&&['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>worker[k]===p[k]);
+        return !!worker&&!!crate&&crate.delivered&&crate.carrierId===null&&!worker.crateId&&(r.home?worker.status==='returning'&&!worker.taskId&&worker.villageId===`village-${r.home.villageId}`:worker.status==='idle'||worker.status==='waiting-task'&&worker.nativeRouteAdmission==='pending-resources'||pendingHome);
+       };onPresentationReady();await waitNativePublication(-1,controller.signal,projected);if(nativeGateProposal===item)nativeGateProposal=null;}
+       if(consequence){const r=binding.reference,q=r.sourceAction.reference.request,projected=()=>!state.plants.some(plant=>plant.id===`plant-${q.targetId}`&&plant.alive)&&!state.tasks.some(task=>task.id===`task-${q.taskId}`)&&state.crates.some(crate=>crate.id===`crate-${r.crateId}`&&crate.sourcePlantId===`plant-${q.targetId}`);onPresentationReady();await waitNativePublication(-1,controller.signal,projected);if(nativeGateProposal===item)nativeGateProposal=null;}
+       nativeRoutePreparations--;wakeNativePublications();onPresentationReady();
+      }).catch(error=>{if(nativePickPresentation===preparedFrame.presented)nativePickPresentation=null;releasePublication();if(nativeGateProposal===item)nativeGateProposal=null;nativeRoutePreparations--;wakeNativePublications(error);if(!closed)onError(error);});return true;
+     },abort:cancel};
+   }catch(error){cancel();throw error;}
+  }
+  function releaseNativeRoute(actorId,ref){const result=workers?.releaseNativeRoute(actorId,ref)??false;if(result){nativeRouteResourceRevision++;nativeRouteRejected=false;onPresentationReady();}return result;}
+  function nativeResourceLease(){const live=[workers?.nativeRouteLease(),settlements?.nativeGateLease(),roster?.nativeCropLease()].filter(Boolean);return live.length?{start:Math.max(...live.map(value=>value.start)),end:Math.max(...live.map(value=>value.end))}:null;}
+  function withNativePickTime(operation){
+   return withNativeRoutePickFrame({inspect:()=>remoteGpu.inspectAsync(),isClosed:()=>closed,readOwner(){
+    const revision=nativeRouteResourceRevision,proposal=nativeGateProposal,phase=proposal?.descriptor.phase,
+      generation=selectableGeneration,boundary=preparedNativeWorldBoundary;
+    return {native:!!nativeResourceLease(),presented:nativePickPresentation,worldBoundary:boundary,
+     current:()=>revision===nativeRouteResourceRevision&&proposal===nativeGateProposal&&phase===proposal?.descriptor.phase&&generation===selectableGeneration&&boundary===preparedNativeWorldBoundary};
+   }},frame=>{const previous=nativePickFrame;nativePickFrame=frame;try{return operation();}finally{nativePickFrame=previous;}});
+  }
+
+  let firstReplacementFrame=null,recoveredFall=null,recoveredPendingFlight=null;
+  async function prepareRecoveredWorkerRoute(source,ownerSignal){
+    const grouped=source?.version===2,inputs=grouped?source.members:[source],sequence=source?.publicationSequence;
+    const members=inputs.map(({resources,execution})=>{
+      const profile=nativeWorkerRouteRecoveryProfile(resources?.kind),crop=profile.kind===26||profile.kind===27;
+      const ref=resources[profile.bindingField].reference;
+      return {resources,execution,profile,crop,ref,actorId:(crop?'animal-':'worker-')+execution.actorId};
+    });
+    const replayed=preparedNativeWorldBoundary,boundary=grouped?source.worldBoundary:members[0].ref.worldBoundary;
+    const flightHome=members.length===2&&members[0].profile.kind===18?members[0].execution.binding:null;
+    const unacquiredFlight=source.pendingFlight===undefined?null:copyPendingFlightRecovery(source.pendingFlight);
+    if(unacquiredFlight&&(!grouped||members.length||boundary!==null))throw Error('Pending flight has an acquired route');
+    const {ruin,pendingRuin,encounter}=source;
+    const ruinMotors=copyNativeRuinMotors(source.ruinMotors,ruin?.prepared??pendingRuin);
+    const stationaryRefuge=!!source.refuge&&members.length===0;
+    const stationary=encounter?.version===3,at=members[0]?.execution.executedThrough??encounter?.at??unacquiredFlight?.at??state.elapsed;
+    const fallCurrent=()=>workers?.get('worker-'+encounter.workerId)?.recoveredFallCurrent(encounter)===true;
+    const approach=encounter?.version===2;
+    const hitAt=approach||stationary?encounter.impactAt:boundary?.effectiveTime;
+    const encounterCurrent=()=>!encounter||(!stationary||!state.raid&&state.events.some(event=>
+      event.id==='event-'+encounter.raidEnded&&event.type==='RaidEnded'&&event.simulationTime===encounter.endedAt))&&state.events.some(fact=>{
+      if(fact.id!=='event-'+encounter.hit||fact.type!==(approach?'WorkerHit':'WorkerIncapacitated')||
+         fact.targetId!=='worker-'+encounter.workerId||fact.animalId!==(stationary?'animal-'+encounter.animalId:members[0].actorId)||
+         fact.simulationTime!==hitAt||fact.simulationTime>at)return false;
+      if(!approach)return true;
+      const impact=fact.nativeHomeImpact,home=impact?.home;
+      return impact?.at===encounter.impactAt&&impact.event===encounter.hit&&
+        home?.reference?.sourceRequest?.raidSpawnSequence===encounter.spawn&&
+        (encounter.workerAssignment===undefined||home.assignmentSequence===encounter.workerAssignment&&
+          home.reference.bodyId===encounter.workerBody);
+    });
+    const ruinCurrent=()=>{
+      if(!ruin&&!pendingRuin)return true;
+      const center=state.structures.find(row=>row.id===(ruin??pendingRuin).center);
+      const centerCurrent=pendingRuin?center?.status==='collapsing'&&at===pendingRuin.boundary.effectiveTime:
+        center?.status==='ruined'&&center.hp===0;
+      return center?.kind==='center'&&centerCurrent&&(!ruinMotors||ruinMotors.gates.every(gate=>{
+        const wall=state.structures.find(row=>row.id===gate.entityId);
+        return wall?.gate===true&&wall.status==='intact'&&wall.hp===wall.maxHp&&!wall.wallPresentation&&
+          Math.abs(wall.gateOpen-sampleNativeGateOpening(gate,at))<=1e-9;
+      }));
+    };
+    const arrival=source.refuge?.reference;
+    const ordinaryWorkers=grouped&&nativeOrdinaryRecoveryKinds(members.map(({profile})=>profile.kind),!!arrival);
+    const homeSource=arrival&&nativeHomeRouteSource(arrival.sourceHome.reference);
+    const destination=homeSource?.home;
+    const refugeCurrent=()=>{
+      if(!arrival)return true;
+      const worker=state.workers.find(worker=>worker.id==='worker-'+arrival.actorId);
+      return worker?.status==='home'&&!worker.nativeRouteAdmission&&worker.heading===arrival.pose.yaw&&
+        (!ordinaryWorkers||!state.raid&&state.workers.length===2&&!worker.incapacitated&&workers?.get(worker.id)===null)&&
+        (!stationaryRefuge||!state.raid&&state.workers.every(peer=>
+         peer.status==='home'&&!peer.nativeRouteAdmission&&workers?.get(peer.id)===null)&&
+         (homeSource.recoveryHit?worker.incapacitated===true&&worker.hits===2:!worker.incapacitated))&&
+        worker.villageId==='village-'+destination.villageId&&worker.x===destination.x&&worker.z===destination.z&&
+        ['runPhase','walkPhase','carryPhase','runRemaining'].every(key=>worker[key]===arrival.pose[key]);
+    };
+    const unacquiredFlightCurrent=()=>{
+      if(!unacquiredFlight)return true;
+      const {home,animal}=unacquiredFlight,worker=state.workers[0],beast=state.raid?.animals[0];
+      return state.elapsed===unacquiredFlight.at&&state.workers.length===1&&state.raid?.animals.length===1&&
+        worker.id==='worker-'+home.actorId&&worker.nativeRouteAdmission==='pending-raid-flight-resources'&&
+        worker.status==='fleeing'&&worker.running===false&&worker.gateWaiting===false&&worker.heading===home.pose.yaw&&
+        ['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(key=>worker[key]===home.pose[key])&&
+        beast.id==='animal-'+animal.actorId&&['entering','walking'].includes(beast.status)&&
+        beast.targetId==='structure-'+animal.targetId&&beast.x===animal.x&&beast.z===animal.z&&
+        (beast.heading??0)===animal.yaw&&(beast.motionPhase??0)===animal.phase;
+    };
+    // A motion-only GO can postdate the retained terrain checkpoint without
+    // writing a terrain record into the journal. The frozen source, current
+    // Draw and terrain support must all attest the route before publishing it.
+    const woundedHome=members.length===1&&members[0].profile.kind===18&&
+      members[0].ref.sourceRequest?.recoveryHit&&members[0].resources.presentation?.gates.length===0;
+    const pendingFlight=!grouped&&members[0].profile.kind===18&&!!members[0].ref.sourceRequest?.raidSpawnSequence;
+    const workerTask=members.length===1&&([14,15,16,17].includes(members[0].profile.kind)||members[0].profile.stopProjectionMatches);
+    const replayMatches=sameNativeWorldBoundary(replayed,boundary)||(stationary||woundedHome||pendingFlight||stationaryRefuge||ordinaryWorkers||workerTask||members.some(member=>member.crop))&&
+      (!replayed||nativeRecoveryCovers(boundary,replayed));
+    let recoveredStoppedGatesCurrent=()=>true;
+    const current=()=>!closed&&timelineRecovering&&firstReplacementFrame===null&&recoveryHold!==null&&recoveryHold===source.holdId&&
+      stream.status().sequence===sequence&&state.elapsed===at&&refugeCurrent()&&ruinCurrent()&&encounterCurrent()&&unacquiredFlightCurrent()&&
+      replayMatches&&recoveredStoppedGatesCurrent()&&sameNativeWorldBoundary(preparedNativeWorldBoundary,replayed)&&
+      sameNativeWorldBoundary(remoteGpu.requiredNativeWorldBoundary(),boundary);
+    if(!Number.isSafeInteger(recoveryHold)||recoveryHold<1||!remoteGpu||
+       !members.every(member=>member.execution.executedThrough===at&&(member.crop?roster:workers))||ownerSignal?.aborted||!current())
+      throw Error('Route recovery needs its replayed publication and current Draw');
+    terrainSupport??=createConfirmedTerrainSupport({residency});
+    nativeRoutePreparations++;
+    try{
+      if(encounter)await waitNativePublication(sequence,ownerSignal??new AbortController().signal,fallCurrent);
+      if(!current())throw Error('Recovered Fall is no longer current');
+      for(const {resources,execution,profile,crop,ref} of members){
+        const input={resources,execution,terrainManifest:source.terrainManifest,recoveryCut:grouped||pendingFlight?boundary:null,ruin,pendingRuin,flightHome};
+        if(crop){
+          if(profile.kind===27&&ref.purpose==='center')await settlements.prepareCenterStrike(ref.targetId,ownerSignal);
+          await roster.prepareRecoveredCrop(input,terrainSupport,{signal:ownerSignal,isCurrent:current,
+            getPickAge:reference=>nativePickFrame.getAnimalCropAge(reference)});
+        }else if(profile.kind===15){
+          const support=terrainSupport.prepareNativeTaskAction(ref,{terrainManifest:source.terrainManifest});
+          if(!support?.valid())throw Error('Recovered action terrain is unavailable');
+          await workers.prepareRecoveredTaskAction(input,support,{signal:ownerSignal,isCurrent:current,
+            getPickAge:reference=>nativePickFrame.getActionElapsed(reference)});
+        }else if(profile.kind===17){
+          const support=terrainSupport.prepareNativeTaskSettlement(ref,{terrainManifest:source.terrainManifest});
+          if(!support?.valid())throw Error('Recovered delivery settlement terrain is unavailable');
+          await workers.prepareRecoveredTaskSettlement(input,support,{signal:ownerSignal,isCurrent:current,
+            getPickAge:reference=>nativePickFrame.getSettlementElapsed(reference)});
+        }else if(profile.stopProjectionMatches){
+          const template=resources.strollTemplate??resources.farmTemplate??resources.taskTemplate;
+          const gates=template?.gates.length?
+            settlements.recoveredStoppedGateOwners(template,resources[profile.bindingField],{
+              getStoppedProjection:(selector,epoch)=>nativePickFrame.getStoppedGate(selector,epoch)
+            }):null;
+          if(gates){
+            await waitNativePublication(sequence,ownerSignal??new AbortController().signal,gates.current);
+            recoveredStoppedGatesCurrent=gates.current;
+          }
+          await workers.prepareRecoveredStoppedWorker({...input,terrain:terrainSupport},{signal:ownerSignal,isCurrent:current,
+            ...(gates?{prepareGateParticipants:gates.prepare}:{}),
+            getProjection:(selector,epoch)=>nativePickFrame.getStoppedBody(selector,epoch)});
+        }else if(profile.kind===21){
+          const support=terrainSupport.prepareNativeIdleCycle(ref);
+          if(!support?.valid())throw Error('Recovered Idle terrain is unavailable');
+          await workers.prepareRecoveredIdleCycle(input,support,{signal:ownerSignal,isCurrent:current,
+            getPickAge:reference=>nativePickFrame.getIdleCycleElapsed(reference),
+            getPickPhaseOffset:(reference,period)=>nativePickFrame.getIdleCyclePhaseOffset(reference,period)});
+        }else{
+          const home=profile.kind===18,farm=profile.kind===23,task=profile.kind===14,carry=profile.kind===16;
+          const gates=(resources.presentation?.gates??[]).map(({nativeRoute,...gate})=>({...gate,worldBoundary:ref.worldBoundary}));
+          if(gates.length){
+            const gatesReady=settlements.nativeGatePreparationReadiness({gates});
+            await waitNativePublication(sequence,ownerSignal??new AbortController().signal,gatesReady);
+            if(ownerSignal?.aborted||!current())throw Error('Recovered gate source is no longer current');
+          }
+          await workers.prepareRecoveredWorkerRoute({...input,terrain:terrainSupport},{signal:ownerSignal,isCurrent:current,
+            getPickTime:()=>nativePickFrame[home?'getHomeTime':farm?'getFarmArrivalTime':task?'getStartTime':carry?'getConsequenceTime':'getStrollTime'](ref,ref.worldBoundary.effectiveTime),
+            ...(home||task||carry?{}:{getPickIdleOffset:duration=>nativePickFrame[farm?'getFarmArrivalIdleOffset':'getStrollIdleOffset'](ref,ref.worldBoundary.effectiveTime,duration)}),
+            prepareGateParticipants:({signal})=>settlements.prepareNativeGateMotors({gates},{signal,
+              getPickTime:(gate,epoch)=>nativePickFrame.getGateTime(gate,epoch)})});
+        }
+      }
+      if(ruinMotors){
+        const gatesReady=settlements.nativeGatePreparationReadiness(ruinMotors);
+        await waitNativePublication(sequence,ownerSignal??new AbortController().signal,gatesReady);
+        if(!current()||ownerSignal?.aborted)throw Error('Recovered center ruin motors are stale');
+        const parts=settlements.prepareNativeGateMotors(ruinMotors,{signal:ownerSignal,
+          getPickTime:(gate,epoch)=>nativePickFrame.getGateTime(gate,epoch)});
+        try{
+          await pipelineAdmission.prepareManyAndPublish(parts.map(part=>part.request),()=>{
+            if(!current()||parts.some(part=>!part.valid()))throw Error('Recovered center ruin motor owners changed');
+            for(const part of parts)part.activate();
+            for(const part of parts)part.finalize();
+          });
+        }catch(error){for(const part of parts.reverse())part.cancel();throw error;}
+      }
+      if(!current()||!members.every(({crop,actorId,resources,profile,ref})=>
+        crop?roster.hasNativeCropOwner():profile.kind===15?workers.recoveredTaskActionCurrent(actorId,ref):
+          profile.kind===17?workers.recoveredTaskSettlementCurrent(actorId,ref):profile.stopProjectionMatches?workers.recoveredStoppedWorkerCurrent(actorId,ref,profile):profile.kind===21?workers.recoveredIdleCycleCurrent(actorId,ref):
+          workers.nativeRouteCurrent(actorId,resources.nativeRoute)))
+        throw Error('Replayed rig is no longer current');
+      // The static replay may already have admitted the scene without the typed rig.
+      // Re-establish the full-scene proof against the newly installed materials.
+      nativeWorldFrameAdmission=null;
+      const admitted=await admitRecoveredNativeWorld(boundary,sequence,ownerSignal,state,{unacquiredFlight:!!unacquiredFlight});
+      if(!current())throw Error('Recovered route changed during frame admission');
+      preparedNativeWorldBoundary=admitted;
+      const retained=ruin?.prepared.retreat??ruin?.prepared.strike;
+      if(retained)retainedCenterRuin={worldBoundary:admitted,binding:retained};
+      if(encounter)recoveredFall={at,sequence,sample:encounter,current:fallCurrent,witness:null};
+      if(unacquiredFlight)recoveredPendingFlight={sequence,proof:unacquiredFlight,current:unacquiredFlightCurrent};
+      nativeRouteResourceRevision++;nativeRouteRejected=false;
+      firstReplacementFrame={at:state.elapsed,sequence,worldBoundary:preparedNativeWorldBoundary,revision:nativeRouteResourceRevision};
+    }finally{nativeRoutePreparations--;onPresentationReady();}
+  }
+  function remoteClockLease(preparedNative=null){
+
+   if(firstReplacementFrame&&!preparedNative){
+     if(stream.status().sequence!==firstReplacementFrame.sequence||state.elapsed!==firstReplacementFrame.at||
+        nativeRouteResourceRevision!==firstReplacementFrame.revision||!sameNativeWorldBoundary(firstReplacementFrame.worldBoundary,preparedNativeWorldBoundary))
+       throw Error('First replacement packet lost its frozen source');
+     const at=firstReplacementFrame.at;
+     return {...visualClock.remoteLease(),elapsed:at,safeUntil:at,paused:true,segments:[]};
+   }
+   const native=preparedNative??nativeResourceLease();
+   if(!native)return remoteMotionGroup?remoteMotionGroup.remoteLease(visualClock,{blockers:remotePresentationBlockers()}):visualClock?.remoteLease?.()??null;
+   const base=visualClock.remoteLease(),elapsed=preparedNative?native.start:Math.max(base.elapsed,native.start);
+   // This paused envelope describes resident graph coverage. Only the direct
+   // C++ lease can advance the draw clock; producer segments grant no time.
+   return {...base,elapsed,safeUntil:Math.max(elapsed,native.end),paused:true,segments:[]};
+  }
+  function renderScene({preparedTerrain=false}={}){if(closed)throw Error('World surface disposed');const fallback=()=>{const status=timelinePump?.status(),sequence=status?.historicalPending;if(!Number.isSafeInteger(sequence)||!timelinePump.fallbackHistorical({ready:terrain.ready(sequence)}))return false;timelinePump.advance();return timelinePump.status().historicalFallback===null;};if(timelinePump?.status().historicalHold==='fallback'&&!fallback())return false;if(farCoverage)farShadowSuspended=advanceWebGpuFarShadow(farShadow,farCoverage,farShadowSuspended);const now=performance.now();if(historicalClock?.status().active)onSelectableChange();roster?.tick(now);workers?.tick(now);if(!preparedTerrain)crops?.tick();guardianAttack?.tick();settlements?.tick(now);sky?.update(camera,state);if(agricultureVfx?.prepare(camera)===false){if(!fallback()||agricultureVfx?.prepare(camera)===false)return false;}if(remoteCameraEnvelope)remoteEnvelope=remoteCameraEnvelope.begin();try{settlements?.prepare(camera);depthController?.afterPrepare({get needsSoftDepth(){return !!(agricultureVfx?.needsSoftDepth||settlements?.needsSoftDepth);},setSoftDepthEnabled(value){agricultureVfx?.setSoftDepthEnabled(value);settlements?.setSoftDepthEnabled(value);}});blessingVfx?.prepare(camera);if(waterReflection){waterReflection.render(renderer,scene,camera);waterReflectionFrames++;}crops?.startMainDraw();try{renderer.render(scene,camera);}finally{crops?.endMainDraw();}pipelineAdmission?.notifyShadowTargets();if(blessingVfx?.hasConfirmedGlowSources||blessingVfx?.hasVisibleParticles)blessingGlow?.render();return true;}finally{remoteCameraEnvelope?.end();}}
+  function retireRecoveredPose(){
+   if(!recoveredFall)return;
+   const {at,sequence,sample}=recoveredFall;
+   const history=sample.version===3?historicalClock?.status().active:null;
+   if(state.elapsed!==at||history&&!history.invalid&&history.sequence>sequence&&history.start===at&&history.end>at)
+     recoveredFall=null;
+  }
+  function remoteFrameMetadata(boundary=preparedNativeWorldBoundary,preparedNative=null){const cameraBlockers=remoteCameraBlockers();
+   retireRecoveredPose();
+   const pose=recoveredFall?.sample.home&&!sameNativeWorldBoundary(boundary,preparedNativeWorldBoundary)?null:recoveredFall;
+   if(pose&&!pose.current())throw Error('Recovered frame lost its encounter pose');
+   const flight=boundary===null&&recoveredPendingFlight?.sequence===stream?.status().sequence&&recoveredPendingFlight?.current()?recoveredPendingFlight.proof:null;
+   return {nativeWorldBoundary:boundary,...(pose?{recoveredEncounterFall:pose.sample}:{}),
+    ...(flight?{recoveredPendingFlight:flight}:{}),
+    ...(pose?.witness?{recoveryPoseWitness:pose.witness}:{}),nativeRouteResourceRevision,preparedInterval:timelinePump?.preparedInterval?.()??null,clock:remoteClockLease(preparedNative),cameraSafe:cameraBlockers.length===0,cameraBlockers,cameraEnvelope:remoteEnvelope};}
+  function renderCurrentScene(){
+   retireRecoveredPose();
+   if(recoveredFall?.sample.version!==3)return renderScene();
+   const worker=workers.get('worker-'+recoveredFall.sample.workerId);
+   const {rendered,witness}=worker.captureRecoveredPose(recoveredFall.sample,camera,renderScene);
+   if(rendered&&!witness)throw Error('Recovered encounter pose has no drawn uniform');
+   recoveredFall.witness=witness;
+   return rendered;
+  }
+  checkBootstrap();signal?.removeEventListener('abort',abortBootstrap);
+  const microevents=state?createWebGpuMicroeventReceiver({scene,state,pipelineAdmission}):null;
+  return {prepareNativeAnimalCropRouteResources,prepareNativeAnimalCropStrikeResources,prepareNativeShieldGeometry,prepareNativeGateResources,prepareNativeBarrierAdditionResources,prepareNativeFarmArrivalResources,prepareNativeIdleStrollResources,prepareNativeResumeResources,prepareNativeTaskStartResources,prepareNativeTaskActionResources,prepareNativeTaskConsequenceResources,prepareNativeTaskSettlementResources,prepareNativeInitialIdleBodyResources,prepareNativeIdleCycleResources,prepareNativeHomeArrivalResources,prepareNativeHomeRouteResources,prepareNativeRoute,releaseNativeRoute,withNativePickTime,nativeRouteCurrent:(actorId,ref)=>workers?.nativeRouteCurrent(actorId,ref)??false,retainRejectedNativeFrame,get nativeFrameReadiness(){return nativeDrawReadiness();},finishNativeFrameContinuation(){if(firstReplacementFrame){firstReplacementFrame=null;recoveryHold=null;}if(nativeResumeTarget)timelinePump?.finishOrdinaryContinuation();nativeResumeTarget=null;nativeRejectedFrame=null;},...(import.meta.env?.DEV?{auditHistoricalPreview:()=>historicalPreviewSupport?.audit?.()??null}:{}),get preparationStatus(){return {admission:pipelineAdmission?.status(),timeline:stream?.timelineStatus?.(),pump:timelinePump?.status()};},guardianContext,microevents,microeventVisibility,renderer,scene,camera,residency,terrain,stream,state,motionFeed,timelinePump,...(temporal?{captureTemporalPresentationCheckpoint}:{}),...(temporalRecoverySurface?{...(retainedTimelineRecovery?{rebindTimelineRecovery}:{}),async restoreTimelineCheckpoint(message,options={}){const status=temporalRecoverySurface.status(),retainCurrent=options.retainCurrent===undefined?status.phase==='live'||!experimentalTimelineRecovery:options.retainCurrent;if(typeof retainCurrent!=='boolean')throw TypeError('Invalid retained temporal recovery mode');if(retainCurrent&&!retainedTimelineRecovery||recoveryTransportPending&&!retainCurrent)throw Error('Retained temporal recovery unavailable');if(status.busy||!['checkpoint','live'].includes(status.phase)||timelineRecovering&&status.phase==='live'&&!recoveryTransportPending)throw Error('Temporal checkpoint unavailable');const rebound=recoveryTransportPending;recoveryTransportPending=false;timelineRecovering=true;if(!rebound)grassTimeline?.beginRecovery();return temporalRecoverySurface.restoreTimelineCheckpoint(message,{...options,retainCurrent});},async applyTimelineRecoveryBoundary(boundary,options){if(!timelineRecovering||recoveringPublication)throw Error('Nested or inactive temporal recovery');recoveringPublication=true;try{return await temporalRecoverySurface.applyTimelineRecoveryBoundary(boundary,options);}finally{recoveringPublication=false;}},prepareRecoveredWorkerRoute,finishTimelineRecovery(){if(recoveryHold!==null&&!firstReplacementFrame)throw Error('Replacement worker route has no prepared rig');if(!timelineRecovering)throw Error('Temporal recovery is not active');const required=remoteGpu?.requiredNativeWorldBoundary();if(required&&!sameNativeWorldBoundary(required,preparedNativeWorldBoundary))throw Error('Native world recovery has not reached the draw consumer boundary');const result=temporalRecoverySurface.finishTimelineRecovery();if(result){grassTimeline?.finishRecovery(stream.status().sequence);timelineRecovering=false;onPresentationReady();}return result;}}:{}),get nativeWorldBoundary(){return preparedNativeWorldBoundary;},get selectableGeneration(){return selectableGeneration;},get lastTerrainCheckpoint(){return lastTerrainCheckpoint;},sealPreparedFrame(token){return timelinePump.sealPreparedInterval(token);},remoteFrameMetadata,get presentationClock(){return visualClock?{elapsed:visualClock.elapsed}:null;},...(!temporal&&(presentationRecovery||import.meta.env?.DEV)?{restoreTerrainCheckpoint,acceptRecoveryPublication(publication,tick,options={},beforeConfirmed=null,firstSequence=publication.sequence){if(recoveringPublication)throw Error('Nested recovery publication');recoveringPublication=true;try{stream.acceptRecovery({kind:'publication',session,publication,tick,backgroundView:options.backgroundView===true,firstSequence},beforeConfirmed);}finally{recoveringPublication=false;}}}:{}),pick:picker?options=>{const pending=nativeGateProposal;return pending&&['preparing','ready'].includes(pending.descriptor.phase)&&pending.withSourcePresentation?pending.withSourcePresentation(()=>picker.pick(options)):picker.pick(options);}:null,pickTerrainStroke:picker?(samples,cameraView=null)=>pickTerrainStroke({scene,camera,cameraView,samples,isReady:terrainReady,sequence:()=>stream?.status().sequence??-1}):null,get sky(){return sky??null;},get syncTiming(){return syncStatus();},get waterReflectionStatus(){return {active:!!waterReflection,frames:waterReflectionFrames,waterChunks:residency?.waterSize??0,sample:residency?.waterSample()??null,width:waterReflection?.depth.image.width??0,height:waterReflection?.depth.image.height??0};},get farCoverageStatus(){return import.meta.env?.DEV?farCoverage?.status()??null:null;},get farCoverageDiagnostic(){return import.meta.env?.DEV?{requested:farVisualQueries,phase:farCoveragePhase,error:farCoverageError,detail:farCoverageDetail,hasState:!!state,hasBiome:!!biomeProps,shadows:experimentalShadows}:null;},get grassStatus(){return grassOwner?.status()??null;},get groundStatus(){return {experimental:!!ground,error:groundError,chunks:residency.groundMaterialCount};},get lighting(){return {night:lightingNight,sun:sun.intensity,ambient:ambient.intensity};},get assetBudget(){return idleAssetBudget?.status()??null;},get resourceRegistry(){return resourceRegistry?.status()??null;},get biomeProps(){return biomeProps??null;},get animal(){return roster?.first()??null;},get animalRoster(){return roster??null;},get workerRoster(){return workers??null;},get crateRoster(){return crates??null;},get settlements(){return settlements??null;},get crops(){return crops??null;},get agricultureVfx(){return agricultureVfx??null;},get blessingVfx(){return blessingVfx??null;},get guardianAttack(){return guardianAttack??null;},setQuality(value){if(closed)throw Error('World surface disposed');if(!['muy_baja','baja','media','alta'].includes(value))throw TypeError('Invalid world quality');quality=value;ground?.setQuality?.(value);grassOwner?.setQuality(value);},setCamera,resize(w,h){if(closed)throw Error('World surface disposed');if(!Number.isInteger(w)||w<1||!Number.isInteger(h)||h<1)throw TypeError('Invalid surface size');camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false);depthController?.resize(w,h);},render(){if(closed)throw Error('World surface disposed');if(timelineRecovering||remoteGpu&&nativeDrawReadiness()!=='ready')return false;return renderCurrentScene();},dispose(){if(closed)return;nativeGateProposal?.cancel();closed=true;nativeWorldFrameAdmission=null;wakeNativePublications(Error('World surface disposed'));grassTimeline?.dispose();grassOwner?.dispose();farAbort?.abort();farCoverage?.dispose();farShadow?.dispose();microevents?.dispose();biomePackAbort?.abort();timelinePump?.dispose();stream?.dispose();motionFeed?.dispose();terrain.dispose();roster?.dispose();workers?.dispose();closeBakedResources();visualClock?.dispose();historicalClock?.dispose();terrainSupport?.dispose();beastStyle?.dispose();crates?.dispose();workerAssetBank?.dispose();biomePropsLease?.release();resourceRegistry?.dispose();settlements?.dispose();characterData?.dispose();crops?.dispose();agricultureVfx?.dispose();vfxWorldLights?.dispose();blessingGlow?.dispose();blessingVfx?.dispose();guardianAttack?.dispose();waterReflection?.dispose();sky?.dispose();visibleCameraTerrain?.dispose();depthController?.dispose();if(!depthController)groundDepth?.dispose();residency.dispose();chunkCoordinator?.dispose();pipelineAdmission?.dispose();closeTerrainMaterials();return closeRenderer();}};
+ }catch(error){signal?.removeEventListener('abort',abortBootstrap);closed=true;grassTimeline?.dispose();grassOwner?.dispose();farAbort?.abort();farCoverage?.dispose();farShadow?.dispose();biomePackAbort?.abort();timelinePump?.dispose();stream?.dispose();motionFeed?.dispose();terrain?.dispose();roster?.dispose();workers?.dispose();closeBakedResources();visualClock?.dispose();historicalClock?.dispose();terrainSupport?.dispose();beastStyle?.dispose();crates?.dispose();workerAssetBank?.dispose();biomePropsLease?.release();resourceRegistry?.dispose();settlements?.dispose();characterData?.dispose();crops?.dispose();agricultureVfx?.dispose();vfxWorldLights?.dispose();blessingGlow?.dispose();blessingVfx?.dispose();guardianAttack?.dispose();waterReflection?.dispose();sky?.dispose();visibleCameraTerrain?.dispose();depthController?.dispose();if(!depthController)groundDepth?.dispose();residency?.dispose();chunkCoordinator?.dispose();pipelineAdmission?.dispose();closeTerrainMaterials();await closeRenderer().catch(()=>{});throw error;}
+}

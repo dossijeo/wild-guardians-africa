@@ -1,0 +1,251 @@
+{
+  "version": 1,
+  "baseCommit": "6445f17ae99b054b85c42acd43904598c71c3cd5",
+  "scope": "A1 prerequisites discovered while validating actual ordinary retained-recovery UI:read-only daily-history query on frozen confirmed view;filter presentation-only narrator identity before strict tutorial authority protocol. No renderer/Surface handoff acceptance.",
+  "productionChangedFiles": [
+    "src/tutorial/daily-messages.js",
+    "src/tutorial/worker-bridge.js"
+  ],
+  "changedFiles": [
+    "src/tutorial/daily-messages.js",
+    "src/tutorial/worker-bridge.js",
+    "tests/tutorial-daily-messages.test.js",
+    "tests/worker-tutorial-bridge-retry.test.js"
+  ],
+  "testedInputs": {
+    "src/simulation/confirmed-actor-audio.js": "abe1a4f3dcfabd6b94bcbbe9aac79ae7dbfb38d6847c0eb7cfb609b9325fda85",
+    "src/simulation/simulation-authority.js": "1c87e18f1754098c500e68b2e1b1e743a549f350005512f8cf09d4469566ade4",
+    "src/simulation/worker-tutorial.js": "e07dc8f5e372303bfc8475f3f0773a42634dda31b155b03535e37b259febc9fd",
+    "src/tutorial/controller.js": "3890eb47c336148cd347602cc695ddf3c3a7b224ad10fad9f78b416c711ad71e",
+    "src/tutorial/daily-messages.js": "0dddfac28fae8b6020b8e214e75474ca217e7f70f348afaaad9a3bd17d897272",
+    "src/tutorial/messages.js": "8cb9659754aa26233c6c753ca59e60f380387e7d5d70a117f6ebda05bb7d627d",
+    "src/tutorial/worker-bridge.js": "c158d6abd0f147b7d4234a3bee5a0aaac6b4a8b5a018fe1e671ca8723ee0c4ca",
+    "tests/confirmed-tutorial-view.test.js": "4c4bad5828b273853685fb24acc7c2ecb44c933835d5a468379e69207d3b8817",
+    "tests/tutorial-daily-messages.test.js": "accfdeb7c87a9ef5f25f5df5a1125c5c7872b8d8000f8c56c6b1c5fa835f112a",
+    "tests/worker-tutorial-atomic-resume.test.js": "d578de6de5e0e25d2882a4e765b002599817110b817217c44dce5a94196061dd",
+    "tests/worker-tutorial-bridge-retry.test.js": "3f00342731332da1b14dd455af14a4aab635a0b07d6ae37316f1326dbaeba0ad",
+    "tests/worker-tutorial-update-invalidation.test.js": "2c6f204be6108c209c9cee2477d09d6b04f0480963d963eed8ce74c4dfae3aac"
+  },
+  "nativeBuiltInputs": {
+    "public/wild-engine/spatial-threaded.mjs": "41a09faf5b9ac40ba2a37b58888300555d0fa94cbe7b81102574253d6c46903e",
+    "public/wild-engine/spatial-threaded.wasm": "afb4e1c817690bdddd7586b46d1d0fbbe65a2ebd1b68c1c686ebaf77cf8aa8e4",
+    "src/world/wild-engine/core.cpp": "014965a8a6b0aa20c71caee6ab1cef7714976c62515a5ddf38412d6e5be2c351",
+    "src/world/wild-engine/lazy-sectors.cpp": "246e79512f5332289056fd055c4e4f7fe63410d1f3b1967a79398919a5d2bac4",
+    "src/world/wild-engine/local-enclosure-cut.h": "6f00c19044df9634632d4b69f930b4d724a4430c1d2b5d1e48ebea6e4d400de1",
+    "src/world/wild-engine/spatial-action-planner.cpp": "432c59b2a5ee1c4b45dbd000c1715d77ddbc8decc0d36ecfc1574a14c98c76f2",
+    "src/world/wild-engine/spatial-causal-clock-api.inc": "f7beff8fae596743f8290742d4eaf170f3b8708188aa58fe5e66f178f684f36c",
+    "src/world/wild-engine/spatial-dynamic-bodies.cpp": "1e455cb451f97cb29c0ff6e2d15dc632ad52cf5ba6db981beaa3b0104fe51b17",
+    "src/world/wild-engine/spatial-dynamic-bodies.h": "8e2ed6161692268d553c4cde7b4bbe17cafea847dde8d1f3b0f282ca7e8facf1",
+    "src/world/wild-engine/spatial-execution-clearance.h": "006aa9daa39f3240f66fb0eeb585e7e696da339c3dc09713f5bfcd4ea79ea095",
+    "src/world/wild-engine/spatial-farm-arrival-resource-request.inc": "99bec5fbbb4e7c6d13d48d5b2d1a8f435f609e451edee1675fca070f55f210d7",
+    "src/world/wild-engine/spatial-farm-arrival-route-proposal.inc": "bc0ffda125bd2cd23f98293d87db36829367fc7a1ddcdda72e81abf9c0084e6e",
+    "src/world/wild-engine/spatial-gate-api.inc": "087914a6641a585c0fbd3b2a5f3c6452f2406d0480473d710a4855e732b30f6e",
+    "src/world/wild-engine/spatial-gate-controller.h": "8c6d6c4e2ec92507c128cd935638a5eaf7054afc1e1959d7a0bad93c42613c64",
+    "src/world/wild-engine/spatial-gate-crossing-api.inc": "4341c61e86a268f34223d84aef8eb2ed487452c97f57b64cf3ada41134351ae3",
+    "src/world/wild-engine/spatial-gate-crossings.h": "464f6fb4a5110491a251dcd3d46a9110d432f64ba8366a30b41f062f3a7016d4",
+    "src/world/wild-engine/spatial-gate-intents.h": "fffcfa53a6353d2f5196f9634d8f519823aacbeaaae0375f521b023613e944ac",
+    "src/world/wild-engine/spatial-gate-mechanism-api.inc": "9948a7588986a67e23858d57e8dbff0df4db0f4840b8dc88c5d41ea7b8f9819d",
+    "src/world/wild-engine/spatial-gate-mechanism.h": "074699c70b383ee09487e6a2cc304631813d1f00bc6f5361028fd7d443d9b4ff",
+    "src/world/wild-engine/spatial-gate-mechanisms-native.h": "5dbd5fb7c962cbf4067267f2036f030aaaad465ffb70efad104b75c01dbc3f04",
+    "src/world/wild-engine/spatial-gate-route-ranges.inc": "9814e77ff14f471add1dd6c84d69012293011355092d8e7813d64cc8189093f4",
+    "src/world/wild-engine/spatial-gate-route-waits.h": "0be17ea833deb96d8e8d30789771d872040f694166a72b695f1bb3a689636c9e",
+    "src/world/wild-engine/spatial-gate-state.h": "be5f10fcc03438f8dfe8be2334397d86a9fc10384cc0193e598a2a10f6b71236",
+    "src/world/wild-engine/spatial-gate-static-fences.h": "eac43e9b3d4fb4a2d4e277e0cda6d8d2cdf49acc7e2e769233ea1e33b782527f",
+    "src/world/wild-engine/spatial-gate-static-sweep.h": "2457fc2cea0d22bc04db04bcefcc454365cbbad52bc9dd83713f56f1d522559f",
+    "src/world/wild-engine/spatial-gate-sweep.h": "2eca14acace0821374551a8a19467c862741c0f22756460018df024b8b49a1d5",
+    "src/world/wild-engine/spatial-gate-transactions.h": "8c78033c3fc0d6e20a7654db4ea28394eaef75eaf7547b0109eca854d71ffbbd",
+    "src/world/wild-engine/spatial-gate-world.inc": "01724ac7902747fbdcb75d938b4d4c24657aa3358ff9424f1149e5a4673edc27",
+    "src/world/wild-engine/spatial-home-arrival-proposal.inc": "9d5d5db1bc5b95522a810f57e123e2e3d83d168f84e8853bdfd3155c1546de7c",
+    "src/world/wild-engine/spatial-home-resource-request.inc": "4ccb6ec3d12540bcc998bad2c25e4495bf4d8d4badb60af601a34de9706625ce",
+    "src/world/wild-engine/spatial-home-route-proposal.inc": "b9188d65d5778e2a860db7e85e11567926d9673ff914d8deb6008eb82a4d0916",
+    "src/world/wild-engine/spatial-idle-cycle-proposal.inc": "abedf54243b36e24f5b3511db812288c6506a7ed7359addc0375dfc70097e3bb",
+    "src/world/wild-engine/spatial-idle-cycle.h": "4e6d0c29330af4f492c6d18bab88c85555da53fd18f9649a331d4c39366c604e",
+    "src/world/wild-engine/spatial-idle-stroll-proposal.inc": "2aa25f1afb503c2192e91237ff097eee754e850ceb91ef4607bf402e4b69ac22",
+    "src/world/wild-engine/spatial-idle-stroll-resource-request.inc": "c7a7e536b139f8e34844eff7a487c5cd9c33e30f6856db3e91b1f7154b69391d",
+    "src/world/wild-engine/spatial-idle-stroll-source.h": "77d9724301c69580405ab04fb2ac6ad2adbcc48a9afab88649fde97a4f2a0ff4",
+    "src/world/wild-engine/spatial-initial-idle-body-proposal.inc": "0fc78ef54991761a25e5df1be4735291c4b25c6caf8886113e9bd20aaf648597",
+    "src/world/wild-engine/spatial-initial-idle-resource-request.inc": "26a79b1351e8b10fe2549adc825a5b125066ab103b6eeb486b336becb75f23d0",
+    "src/world/wild-engine/spatial-intent-state.cpp": "76883e25b75530e2fc283f0ea2ad1b38a18e2e393932b3c7d6fb37aa3a0ff9ca",
+    "src/world/wild-engine/spatial-preparation-worker.inc": "6a011ca138ae16f16ea60eba2269c0097485d400db659e754977693b551f3534",
+    "src/world/wild-engine/spatial-prepared-water.inc": "05fee0a04e8801df2d580309053c213e5989c19842e75c71a006c699d6b23a77",
+    "src/world/wild-engine/spatial-prop-mutation-state.h": "d4ce762e97629a2cb05e9f8950280f2af989fbb43d061bf53b797ca4e07c41f7",
+    "src/world/wild-engine/spatial-prop-mutations.h": "8aeca3bf36c647fcd939b4c1f364b2c89f175a01d0de67fcbb03e53541f42a84",
+    "src/world/wild-engine/spatial-prop-transaction.inc": "1932b53853696f926b334c4be9bfa3d7bba9590d4e3ed087c5e658238b93a7d8",
+    "src/world/wild-engine/spatial-residency-mutation-state.h": "16da64ed858080b9256d3fa49c745a61f15e81b9b429578b594c64c05f712041",
+    "src/world/wild-engine/spatial-residency-mutations.h": "c10f49f766694180036183a56e43f66611541521d6755571e1eed61e06b2bc5b",
+    "src/world/wild-engine/spatial-route-execution.h": "6e99013ad3091ed6319f4ec8f003988150cc431a32c204103b6e574825dbc05f",
+    "src/world/wild-engine/spatial-route-motion.h": "5f6786c23665d99526b443dba75c9ec9167f249ab0f1a4b374d159bd929a3267",
+    "src/world/wild-engine/spatial-route-planner.cpp": "7150a195c99847cc61b9e90cca76e39675418ea10a6907f15d37c94e6191d044",
+    "src/world/wild-engine/spatial-route-reservations.h": "22414e668535dbe31e9bba11bee64bcea93193cacbd804b5663dcf2bf7b07d7c",
+    "src/world/wild-engine/spatial-savanna.cpp": "a8f495a11a03f475b1c35df8866cbe3691d8a58d190baa9fac9ca59f3265e43f",
+    "src/world/wild-engine/spatial-savanna.wasm": "405cee099428ccaca118abb9a3a22c4b04caa17de9632e687333206f9e726ac4",
+    "src/world/wild-engine/spatial-static-mutation-state.h": "35f384828180768f377336b74a82759c8cc056652a754b2968c1644a28aef814",
+    "src/world/wild-engine/spatial-static-mutations.h": "3d986cbd8d959c73953ddaa5f4bcc3294db487af65134bd2a2d3a3bc569fa3ec",
+    "src/world/wild-engine/spatial-task-action-proposal.inc": "579781a3e4a37416d860ec6417d7c93cc5f93404368b909f80c84e01387337b9",
+    "src/world/wild-engine/spatial-task-consequence-proposal.inc": "eaae3049eb5ddfeb01b8832de5dc69fc727dd38e7f578a250eff8a923745bb3f",
+    "src/world/wild-engine/spatial-task-execution.inc": "92c894970e76e090162f1d8f2a9860e83e60ae7db65dbb3612df3c623025d51d",
+    "src/world/wild-engine/spatial-task-resource-requests.inc": "8fbe8d8b79826e41ab6475630530f93bb027abbc90add990854c164fe5f92889",
+    "src/world/wild-engine/spatial-task-settlement-proposal.inc": "2ba4b5e3dca48dc6c2a5bdd18cb5936ae15f611bbd0aeeca68994971d3f46c77",
+    "src/world/wild-engine/spatial-task-start-proposal.inc": "b03c52886540ff98d2049988604475b23853af9a7a59d0b4b0e6561567b81bdb",
+    "src/world/wild-engine/spatial-terrain-mutation-state.h": "b48135343d411ba88f22a7a1624f6f5ec2cb484dab35aa28340e901931262bae",
+    "src/world/wild-engine/spatial-terrain-mutations.h": "455e702cbf75688d58d35c64d59b46a5fd8c73eea44269625811ee869669c8e5",
+    "src/world/wild-engine/spatial-terrain-transaction.inc": "8c43ec45a00e78310e323af5ac1b6d7051ccee16fde3892892dfce69253e7f79",
+    "tools/build-spatial-savanna-wasm.sh": "4cde62241fcc8db3bb3309f5b45dac37b5cd46dc9c65cc0fbbb2b81382ae8843"
+  },
+  "preservedFiles": {
+    "docs/guardian/gpu-animation/eyelid-shadow-animal-buffalo-settled/openOriginal.png": "3a5e1bb81198872e37d8302b14e91341cdd4e5dd77f1b6c921bcb5971554efc6",
+    "docs/guardian/webgpu-stable-raid-qa.md": "c7356699d916cbed7945ab500fead9bbada6d9f8baa40bf568892df99883610c",
+    "docs/lighting/tree-near-retexture/performance/mobility-guarded-world-stop.json": "eacd911505f3e91e52432be46bae46da5dce654cb8891161f94247ab974a7366",
+    "src/rendering/character-preload.js": "b1637fb2ed5d0cf0aa12a1ab5eac5923319a0096413071d28376992314be2835",
+    "src/rendering/destruction-effects-native.js": "0f3e27f5b379370c53e5472a921b6c983708abf07fa65bd08cc1fe829e473aae",
+    "src/rendering/destruction-native.js": "363ffd6447b051739da75d65a6a2be1431094f0df588361158de83023ceab7b4",
+    "src/rendering/scene.js": "1cfefd4f86dee90af82300fe6762a29408d798dbb852605f5b30a45493c198da",
+    "src/simulation/worker-game-runtime.js": "d1bbedaf3ae9278c9bc49317c3f074900a8feee70d721ff42820100f5e980f4b",
+    "tests/browser/mobility-worker-latency.js": "8f7a12e9ce88c83ed3fbda4973c000465aff479c0d17129ab3abf848e9567b56",
+    "tests/character-preload.test.js": "5d757f97f606638f9f4e73086583947a92c774c261d2310c2101635831664383",
+    "tests/historical-event-boundaries.test.js": "1f2558f7ba2dcb889872fb2e455f14f8506243c54c314d570b85221d0cb2d013",
+    "tests/worker-game-runtime.test.js": "5f150f6c0071e8ab1b571d65f8fdb299a238d754ecf0476cedc6bb0d50387c27",
+    "tools/experiments/audit-character-primer-coverage.mjs": "828820af7495133ee15a95f90085a65edc042283388b660f9078d22b1d604f0e",
+    "tools/experiments/audit_worker_attack_gl.mjs": "65ba19872859982378fc50c1f5496f8fad4c1347ce1e8779ad575213385a9b98",
+    "tools/guardian/audit_pending_worker_game_wall.mjs": "bfd5365cb026aa330ff1c357250bfb5e1dbb88eec579ecceaa53dd9608a68225",
+    "public/wild-engine/spatial-threaded.worker.mjs": "7e6dad4bca61807357acfcb3789c781deaca3e20214ccd76dd82ddcb0be0a153"
+  },
+  "preservedWorkInProgress": {
+    "src/rendering/webgpu-world-worker.js": "85911f598a0b8d879690f6734d0fb5ce1689923e5d301f02b477d58d7949e98e",
+    "src/rendering/webgpu-world-client.js": "a3621d4946603820e97a4eea3c6224f601bc7bd63b2baec1fce2a0ddcc343b59",
+    "src/app/webgpu-surface-handoff.js": "2f47388db0d427c7f61cf993da0bedbc7952e5a92e0dea696df1220e902706c3",
+    "src/app/main.js": "0059bd458c5546138da06b476974b93e3b827dd5b6b5c146c4cbdb5f634fab30",
+    "src/microevents/webgpu-billboard-sender.js": "7a838dc70e39621ac7db85e7ff4d0841447f64a59436686137d90785cf2f7a95",
+    "src/rendering/webgpu-world-surface.js": "25c4c808ab1a480089042ef19aa8e7edec568306688f14f59879463b3d66184c",
+    "tests/webgpu-retained-handoff.test.js": "69e7a84a6abe5dbf9188e044dbc5c154b38846562d294537c7c09910a97dff7d",
+    "tests/webgpu-retained-worker.test.js": "a618dc4d9c31a8554b8e5d2a6efe745ad3fae13365437ffde5778142d9dd98b8"
+  },
+  "tests": {
+    "baseline": {
+      "original": {
+        "source": ".cache/native-confirmed-tutorial-read-baseline.log",
+        "sha256": "15ae4e7eb60ee3db9e0630cb31cf28e250d16fdaab5bf60b7b5a2d6f58f6905a"
+      },
+      "raw": {
+        "source": "docs/guardian/performance/native-confirmed-tutorial-read-20261119/native-confirmed-tutorial-read-baseline.log.gz",
+        "sha256": "1a12d06b01777410135181673f60b47c1e18b7df4cc79c9c7445043c89d07696"
+      },
+      "tests": 22,
+      "pass": 20,
+      "fail": 2,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    "current": {
+      "original": {
+        "source": ".cache/native-confirmed-tutorial-read-current.log",
+        "sha256": "5ce5a31f4ede2403b24f44fcb2391b8768645df97facff14256fd41d45431823"
+      },
+      "raw": {
+        "source": "docs/guardian/performance/native-confirmed-tutorial-read-20261119/native-confirmed-tutorial-read-current.log.gz",
+        "sha256": "a591d47a759667f9db5a4080c70cc6de413866e2d8d90bbcf267cddd40ee65c7"
+      },
+      "tests": 22,
+      "pass": 22,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    }
+  },
+  "testFiles": [
+    "tests/tutorial-daily-messages.test.js",
+    "tests/confirmed-tutorial-view.test.js",
+    "tests/worker-tutorial-bridge-retry.test.js",
+    "tests/worker-tutorial-update-invalidation.test.js",
+    "tests/worker-tutorial-atomic-resume.test.js"
+  ],
+  "syntax": [
+    {
+      "file": "src/tutorial/daily-messages.js",
+      "sha256": "0dddfac28fae8b6020b8e214e75474ca217e7f70f348afaaad9a3bd17d897272",
+      "exitCode": 0
+    },
+    {
+      "file": "src/tutorial/worker-bridge.js",
+      "sha256": "c158d6abd0f147b7d4234a3bee5a0aaac6b4a8b5a018fe1e671ca8723ee0c4ca",
+      "exitCode": 0
+    },
+    {
+      "file": "tests/tutorial-daily-messages.test.js",
+      "sha256": "accfdeb7c87a9ef5f25f5df5a1125c5c7872b8d8000f8c56c6b1c5fa835f112a",
+      "exitCode": 0
+    },
+    {
+      "file": "tests/worker-tutorial-bridge-retry.test.js",
+      "sha256": "3f00342731332da1b14dd455af14a4aab635a0b07d6ae37316f1326dbaeba0ad",
+      "exitCode": 0
+    }
+  ],
+  "productionBefore": [
+    {
+      "file": "src/tutorial/daily-messages.js",
+      "snapshot": {
+        "original": {
+          "source": ".cache/native-retained-handoff-daily-messages.js.before",
+          "sha256": "7209344849340937c0b10478a4200e0b68ed5773256f492bc51e8baa7d2dad60"
+        },
+        "raw": {
+          "source": "docs/guardian/performance/native-confirmed-tutorial-read-20261119/native-retained-handoff-daily-messages.js.before.gz",
+          "sha256": "55a31aee72eec8fa049cfa79c9ad1ec2fd66ccf3198f1b66e3246c9b059bb6ac"
+        }
+      }
+    },
+    {
+      "file": "src/tutorial/worker-bridge.js",
+      "snapshot": {
+        "original": {
+          "source": ".cache/native-retained-handoff-worker-bridge.js.before",
+          "sha256": "de35cc452d13ce6d3ed500f801c6b9185c443c30cc97fb62cd8433933e526e1f"
+        },
+        "raw": {
+          "source": "docs/guardian/performance/native-confirmed-tutorial-read-20261119/native-retained-handoff-worker-bridge.js.before.gz",
+          "sha256": "5424f50b3ecb4b8010e429e21427a5c9deedf418f3bbe965345d33b8dc1d1a23"
+        }
+      }
+    }
+  ],
+  "artifactsEvidence": [
+    {
+      "original": {
+        "source": ".cache/native-confirmed-tutorial-read-baseline-loader.mjs",
+        "sha256": "3b6e48f3aa72ffde91491820960befca2d0f12f43d380baa9b10e40a7f7d40c5"
+      },
+      "raw": {
+        "source": "docs/guardian/performance/native-confirmed-tutorial-read-20261119/native-confirmed-tutorial-read-baseline-loader.mjs.gz",
+        "sha256": "3acaca8d28514f624b8fcf775036cfdd45d6dc9aa5035e0684c36e6de7cb4103"
+      }
+    },
+    {
+      "original": {
+        "source": ".cache/native-confirmed-tutorial-read-test-files.json",
+        "sha256": "44435a79eec3b6d1829ab25b63df273e290cf7073baed494d9012f4d3ab85061"
+      },
+      "raw": {
+        "source": "docs/guardian/performance/native-confirmed-tutorial-read-20261119/native-confirmed-tutorial-read-test-files.json.gz",
+        "sha256": "2adfd44c96f01ebb5a8b25ba9f96b62fe85a36b6e6c89a3b7259afc0df529133"
+      }
+    }
+  ],
+  "newTests": 2,
+  "gpu": {
+    "newAcceptedRuns": 0,
+    "note": "Exploratory UI runs exposed the prerequisites;not performance or retained-handoff acceptance. Renderer/client/Surface wiring remains uncommitted work in progress."
+  },
+  "notes": [
+    "Daily query never initializes or resets caller history;owned dailyTutorialMessages/recordTutorialMessageToday still mutate only the authoritative controller state as before.",
+    "Bridge normalizes external narrator IDs to null using existing TUTORIAL_IDS;real authority still rejects budget.reserve as a narrated tutorial ID. Valid catalog voice is preserved.",
+    "Existing bridge ordering/hidden-time fixtures now use actual catalog IDs instead of first/second/welcome;their timing/order/count assertions are unchanged. Original/current22cases yield20pass2fail vs22pass.",
+    "Only scoped CPU tests and4syntaxchecks;no build/GPU/cadence/global-suite claim. Full migration and retained-handoff validation continue;A6/A/B/C open,D not begun."
+  ],
+  "primaryBefore": {
+    "docs/guardian/integrated-gpu-migration-plan-20261104.md": "60d68f7d4f0da081b5812d17e2291017413e265f40d67e8feb2c35a26dd162bf",
+    "docs/guardian/MIGRATION-OBJECTIVE.md": "8324bde8200b7d05205bcc96147c8d47d372c15543d7038b0cfdd967cdec112b",
+    "docs/guardian/A6-CHECKLIST.md": "df83516d669b62cfc1b9a9e0e17052efee22676b63e8f86b8d235f237078f334",
+    "docs/guardian/CURRENT-STATUS.md": "a94850d054e623747b71f8ffa0ac9a06a187aead6ef692b22f805edb7cb96990"
+  }
+}

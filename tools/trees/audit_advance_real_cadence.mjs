@@ -1,0 +1,12 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
+import {createHash} from 'node:crypto';
+import {deserialize,serialize} from '../../src/persistence/snapshots.js';
+import {advanceReal} from '../../src/simulation/game.js';
+import {Navigation} from '../../src/world/navigation.js';
+const path='docs/qa/campaign-ci/desierto-saheliana-failure-37870712064/desierto-saheliana-failure-state.json.gz';
+const saved=gunzipSync(readFileSync(path)).toString(),pack=JSON.parse(readFileSync('public/content/biome-desert.json','utf8'));
+const run=(seconds,count)=>{const state=deserialize(saved),nav=new Navigation(state.seed,state.biome,pack.profile);nav.setState(state);const t=performance.now();for(let i=0;i<count;i++)advanceReal(state,seconds,nav);const elapsedMs=performance.now()-t,snapshot=serialize(state),actors=state.raid?.animals.map(({id,x,z,status,path})=>({id,x,z,status,path}))??[];return {seconds,count,elapsedMs,gameTime:state.elapsed,actors,snapshotHash:createHash('sha256').update(snapshot).digest('hex'),snapshot};};
+const configs=[[.02,10],[.01,20],[1/60,12]],runs=configs.map(([dt,count])=>run(dt,count));
+const ref=JSON.parse(runs[0].snapshot),differences=[];function compare(a,b,path=''){if(Object.is(a,b))return;if(a&&b&&typeof a==='object'&&typeof b==='object'){for(const k of new Set([...Object.keys(a),...Object.keys(b)]))compare(a[k],b[k],path?`${path}.${k}`:k);}else if(differences.length<50)differences.push({path,reference:a,other:b});}compare(ref,JSON.parse(runs[2].snapshot));
+const output={scope:'Recorded retreat capture; same 0.2 real seconds, three call cadences, no renderer or worker; differences do not prove a perceptible gameplay change.',runs:runs.map(({snapshot,...row})=>row),firstDifferencesReferenceVs60Hz:differences};writeFileSync('docs/lighting/tree-near-retexture/performance/advance-real-cadence-retreat.json',JSON.stringify(output,null,2)+'\n');console.log(JSON.stringify(output));

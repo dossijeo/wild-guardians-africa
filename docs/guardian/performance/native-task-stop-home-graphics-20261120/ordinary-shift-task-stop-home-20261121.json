@@ -1,0 +1,401 @@
+{
+  "baseline": "fefc7eea0ee56be34e9018c30fb1bb1b710587eb",
+  "environment": {
+    "date": "2026-11-21",
+    "browser": "Edge Chromium",
+    "adapter": "NVIDIA Turing",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja",
+    "scope": "WorkerHostedRuntime, production WASM, resource preparation and separate draw Worker"
+  },
+  "cohorts": {
+    "olderMale": {
+      "mode": "Integrated source",
+      "shiftEnd": 250,
+      "taskActor": 900011,
+      "taskBody": 1,
+      "taskAcquisition": {
+        "dayTime": 247,
+        "elapsed": 12,
+        "x": -17.8,
+        "z": 0.2,
+        "admission": "pending-resources",
+        "sequence": 193
+      },
+      "heldTask": {
+        "before": {
+          "dayTime": 250.45,
+          "elapsed": 15.45,
+          "x": -21,
+          "z": 0.443157,
+          "admission": "native-task",
+          "sequence": 274
+        },
+        "after": {
+          "dayTime": 250.6,
+          "elapsed": 15.6,
+          "x": -21,
+          "z": 0.605157,
+          "admission": "native-task",
+          "sequence": 277
+        },
+        "distance": 0.162
+      },
+      "idle": {
+        "ticket": 2,
+        "effectiveElapsed": 10,
+        "nativeSession": 1
+      },
+      "task": {
+        "ticket": 5,
+        "effectiveElapsed": 12,
+        "nativeSession": 1
+      },
+      "stop": {
+        "prepared": {
+          "ticket": 6,
+          "effectiveElapsed": 15,
+          "nativeSession": 1
+        },
+        "acquired": {
+          "ticket": 7,
+          "effectiveElapsed": 15.6,
+          "nativeSession": 1
+        }
+      },
+      "home": {
+        "ticket": 9,
+        "effectiveElapsed": 16.1,
+        "nativeSession": 1
+      },
+      "arrival": {
+        "ticket": 11,
+        "effectiveElapsed": 31.75,
+        "nativeSession": 1
+      },
+      "drawnBefore": [
+        2,
+        5
+      ],
+      "drawnHome": [
+        2,
+        5,
+        7,
+        9
+      ],
+      "drawnAfterArrival": [
+        2,
+        5,
+        7,
+        9,
+        11
+      ],
+      "rootPreserved": true,
+      "meshGeometryOwnersPreserved": 33,
+      "actorRetired": true,
+      "drained": true
+    },
+    "olderFemale": {
+      "mode": "Integrated source",
+      "shiftEnd": 300,
+      "taskActor": 900011,
+      "taskBody": 1,
+      "taskAcquisition": {
+        "dayTime": 297.55,
+        "elapsed": 12.55,
+        "x": -17.8,
+        "z": 0.2,
+        "admission": "pending-resources",
+        "sequence": 261
+      },
+      "heldTask": {
+        "before": {
+          "dayTime": 302.25,
+          "elapsed": 17.25,
+          "x": -21,
+          "z": 1.793157,
+          "admission": "native-task",
+          "sequence": 328
+        },
+        "after": {
+          "dayTime": 302.5,
+          "elapsed": 17.5,
+          "x": -21,
+          "z": 2.063157,
+          "admission": "native-task",
+          "sequence": 329
+        },
+        "distance": 0.27
+      },
+      "idle": {
+        "ticket": 2,
+        "effectiveElapsed": 10,
+        "nativeSession": 1
+      },
+      "task": {
+        "ticket": 5,
+        "effectiveElapsed": 12.55,
+        "nativeSession": 1
+      },
+      "stop": {
+        "prepared": {
+          "ticket": 6,
+          "effectiveElapsed": 15,
+          "nativeSession": 1
+        },
+        "acquired": {
+          "ticket": 7,
+          "effectiveElapsed": 17.5,
+          "nativeSession": 1
+        }
+      },
+      "home": {
+        "ticket": 9,
+        "effectiveElapsed": 19.75,
+        "nativeSession": 1
+      },
+      "arrival": {
+        "ticket": 11,
+        "effectiveElapsed": 37.25,
+        "nativeSession": 1
+      },
+      "drawnBefore": [
+        2,
+        5
+      ],
+      "drawnHome": [
+        2,
+        5,
+        7,
+        9
+      ],
+      "drawnAfterArrival": [
+        2,
+        5,
+        7,
+        9,
+        11
+      ],
+      "rootPreserved": true,
+      "meshGeometryOwnersPreserved": 33,
+      "actorRetired": true,
+      "drained": true
+    },
+    "youngMale": {
+      "mode": "Private adapter served in existing production modules",
+      "shiftEnd": 250,
+      "taskActor": 900011,
+      "taskBody": 1,
+      "taskAcquisition": {
+        "dayTime": 247.9,
+        "elapsed": 12.9,
+        "x": -17.8,
+        "z": 0.2,
+        "admission": "pending-resources",
+        "sequence": 267
+      },
+      "heldTask": {
+        "before": {
+          "dayTime": 250.5,
+          "elapsed": 15.5,
+          "x": -20.525157,
+          "z": 0,
+          "admission": "native-task",
+          "sequence": 329
+        },
+        "after": {
+          "dayTime": 250.65,
+          "elapsed": 15.65,
+          "x": -20.687157,
+          "z": 0,
+          "admission": "native-task",
+          "sequence": 332
+        },
+        "distance": 0.162
+      },
+      "idle": {
+        "ticket": 2,
+        "effectiveElapsed": 10,
+        "nativeSession": 1
+      },
+      "task": {
+        "ticket": 5,
+        "effectiveElapsed": 12.9,
+        "nativeSession": 1
+      },
+      "stop": {
+        "prepared": {
+          "ticket": 6,
+          "effectiveElapsed": 15,
+          "nativeSession": 1
+        },
+        "acquired": {
+          "ticket": 7,
+          "effectiveElapsed": 15.7,
+          "nativeSession": 1
+        }
+      },
+      "home": {
+        "ticket": 9,
+        "effectiveElapsed": 16.25,
+        "nativeSession": 1
+      },
+      "arrival": {
+        "ticket": 11,
+        "effectiveElapsed": 30.85,
+        "nativeSession": 1
+      },
+      "drawnBefore": [
+        2,
+        5
+      ],
+      "drawnHome": [
+        2,
+        5,
+        7,
+        9
+      ],
+      "drawnAfterArrival": [
+        2,
+        5,
+        7,
+        9,
+        11
+      ],
+      "rootPreserved": true,
+      "meshGeometryOwnersPreserved": 36,
+      "actorRetired": true,
+      "drained": true
+    },
+    "youngFemale": {
+      "mode": "Integrated source",
+      "shiftEnd": 300,
+      "taskActor": 900011,
+      "taskBody": 1,
+      "taskAcquisition": {
+        "dayTime": 297.45,
+        "elapsed": 12.45,
+        "x": -17.8,
+        "z": 0.2,
+        "admission": "pending-resources",
+        "sequence": 229
+      },
+      "heldTask": {
+        "before": {
+          "dayTime": 303.25,
+          "elapsed": 18.25,
+          "x": -21,
+          "z": 2.981157,
+          "admission": "native-task",
+          "sequence": 302
+        },
+        "after": {
+          "dayTime": 303.5,
+          "elapsed": 18.5,
+          "x": -21,
+          "z": 3.251157,
+          "admission": "native-task",
+          "sequence": 303
+        },
+        "distance": 0.27
+      },
+      "idle": {
+        "ticket": 2,
+        "effectiveElapsed": 10,
+        "nativeSession": 1
+      },
+      "task": {
+        "ticket": 5,
+        "effectiveElapsed": 12.45,
+        "nativeSession": 1
+      },
+      "stop": {
+        "prepared": {
+          "ticket": 6,
+          "effectiveElapsed": 15,
+          "nativeSession": 1
+        },
+        "acquired": {
+          "ticket": 7,
+          "effectiveElapsed": 18.5,
+          "nativeSession": 1
+        }
+      },
+      "home": {
+        "ticket": 9,
+        "effectiveElapsed": 21.75,
+        "nativeSession": 1
+      },
+      "arrival": {
+        "ticket": 11,
+        "effectiveElapsed": 39.75,
+        "nativeSession": 1
+      },
+      "drawnBefore": [
+        2,
+        5
+      ],
+      "drawnHome": [
+        2,
+        5,
+        7,
+        9
+      ],
+      "drawnAfterArrival": [
+        2,
+        5,
+        7,
+        9,
+        11
+      ],
+      "rootPreserved": true,
+      "meshGeometryOwnersPreserved": 36,
+      "actorRetired": true,
+      "drained": true
+    }
+  },
+  "interruptedBootstrap": [
+    {
+      "run": "final1",
+      "profile": "youngMale",
+      "stage": "ordinary Idle20 acquisition",
+      "sequence": 128,
+      "recoveryBase": 1,
+      "unacknowledgedCheckpoint": 128,
+      "journalEntries": 128,
+      "journalSaturated": true,
+      "reason": "Error: Worker command not admitted: failed"
+    },
+    {
+      "run": "final2",
+      "profile": "youngMale",
+      "stage": "ordinary Idle20 acquisition",
+      "sequence": 29,
+      "recoveryBase": 1,
+      "unacknowledgedCheckpoint": null,
+      "journalEntries": 29,
+      "journalSaturated": false,
+      "reason": "Error: Worker command not admitted: failed"
+    },
+    {
+      "run": "final3",
+      "profile": "youngMale",
+      "stage": "ordinary Idle20 acquisition",
+      "sequence": 28,
+      "recoveryBase": 1,
+      "unacknowledgedCheckpoint": null,
+      "journalEntries": 28,
+      "journalSaturated": false,
+      "reason": "Error: Worker command not admitted: failed",
+      "diagnostics": [
+        {
+          "type": "authority-client-fail",
+          "error": "Error: Native resource preparation timed out"
+        }
+      ]
+    }
+  ]
+}

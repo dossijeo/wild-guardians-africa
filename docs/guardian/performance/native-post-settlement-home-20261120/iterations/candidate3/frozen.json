@@ -1,0 +1,29 @@
+{
+  "baseCommit": "b49250b658eefb64192065e52dbf34e08db8622b",
+  "files": {
+    "tools/guardian/audit_native_farm_birth_world_owner.mjs": "193f1ba7b8b8ccc0ae5794a2bca07e455d95d5e18e88320194fa260fe361a635",
+    "tests/browser/native-farm-birth-world-owner.js": "b166e90c222f65bbf4a92c1b43a2227b49ed42b80abd5db069dab11ef646ec9a",
+    "tests/browser/native-farm-birth-task-scenario.js": "9fc7de219b9234ae5e4c79dccee99699b8347bb76516d570a4cf2a89089762d5",
+    "tests/browser/fixtures/native-farm-birth-audit-worker.js": "5612bb9d0abc9a1e57ee8f15ebd90662983d846a726a95b0a4c36f4cc0d0f89a",
+    "src/simulation/game.js": "876ee91bdf167516ed780fa3378a1113493973db0903ecc861cade19ea7a37c7",
+    "src/simulation/native-intent-production.js": "f20d239083016b9a06a500f52deb4ab766d8e602a4228107e4ca602f9cfebf24",
+    "src/world/wild-engine/spatial-intent-bridge.js": "d740785528233498ec8c5619e2a61c27b1dcaaef3b48e65a1365b396c83ce571",
+    "tests/native-idle-stroll-game.test.js": "1a123e60e8a3ba9d5d99545f1be748d1459d1e799c7feb26e95f42469cf3d8a5",
+    "tests/browser/native-post-settlement-home-scenario.js": "979a2513c72155749e8436cc399d11f3b2d3031cf71b1d770ede24133f77d897",
+    "tests/native-idle-stroll-contract-home.test.js": "376bf1e3468363a78396432413da2aa9649fb352c46846102fd1318e9ba23697"
+  },
+  "cases": [
+    {
+      "label": "olderMale",
+      "profile": "olderMale",
+      "followHome": true,
+      "output": ".cache/native-post-settlement-home-reviewed-olderMale.json",
+      "log": ".cache/native-post-settlement-home-reviewed-olderMale.log",
+      "startedAt": "2026-11-20T07:04:57.865Z",
+      "finishedAt": "2026-11-20T07:07:36.528Z",
+      "wallMs": 158661,
+      "exitCode": 1
+    }
+  ],
+  "scope": "Original ordinary settlement body to contract Home/absence; live WALK peer uses existing prepared family12. QA compares immutable prepared Home template and actual execution epoch. No new native ABI."
+}

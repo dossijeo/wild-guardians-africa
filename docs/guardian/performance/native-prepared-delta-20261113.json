@@ -1,0 +1,210 @@
+[
+  {
+    "ok": true,
+    "backend": "WebGPU",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "mode": "prepared-native-delta",
+    "before": {
+      "resourcesCreated": 2158,
+      "resourceTypes": {
+        "createBindGroup": 460,
+        "createBindGroupLayout": 272,
+        "createBuffer": 960,
+        "createPipelineLayout": 126,
+        "createRenderPipeline": 8,
+        "createRenderPipelineAsync": 120,
+        "createSampler": 36,
+        "createShaderModule": 139,
+        "createTexture": 37
+      },
+      "unchangedGpuBuffers": {
+        "position": "Buffer:2125",
+        "color": "Buffer:2123",
+        "normal": "Buffer:2124",
+        "index": "Buffer:2126"
+      },
+      "frames": 172,
+      "biomeChunks": 9
+    },
+    "after": {
+      "resourcesCreated": 2519,
+      "resourceTypes": {
+        "createBindGroup": 550,
+        "createBindGroupLayout": 306,
+        "createBuffer": 1153,
+        "createPipelineLayout": 140,
+        "createRenderPipeline": 8,
+        "createRenderPipelineAsync": 134,
+        "createSampler": 37,
+        "createShaderModule": 153,
+        "createTexture": 38
+      },
+      "unchangedGpuBuffers": {
+        "position": "Buffer:2125",
+        "color": "Buffer:2123",
+        "normal": "Buffer:2124",
+        "index": "Buffer:2126"
+      },
+      "bufferForks": 0,
+      "bindingForks": 0,
+      "frames": 205,
+      "resident": 9
+    },
+    "mutations": [
+      {
+        "sequence": 2,
+        "mutation": {
+          "type": "removeChunks",
+          "chunks": [
+            [
+              -1,
+              -1
+            ]
+          ],
+          "releaseOnly": true
+        },
+        "proposed": {
+          "version": 1,
+          "authorityEpoch": "10699219-9697-4bd1-a271-ed6bf4706f29/1",
+          "nativeSession": 1,
+          "ticket": 1,
+          "effectiveTime": 10
+        },
+        "world": {
+          "version": 1,
+          "authorityEpoch": "10699219-9697-4bd1-a271-ed6bf4706f29/1",
+          "nativeSession": 1,
+          "ticket": 1,
+          "effectiveTime": 10
+        },
+        "preparationMs": 1.900146484375,
+        "readyBeforePhysicalCommitMs": 5.39990234375,
+        "drainMs": 1.300048828125,
+        "physicalCommitAndProjectionMs": 3.599853515625,
+        "resident": 8,
+        "resourcesCreated": 2247,
+        "resourceTypesReady": {
+          "createBindGroup": 460,
+          "createBindGroupLayout": 272,
+          "createBuffer": 960,
+          "createPipelineLayout": 126,
+          "createRenderPipeline": 8,
+          "createRenderPipelineAsync": 120,
+          "createSampler": 36,
+          "createShaderModule": 139,
+          "createTexture": 37
+        },
+        "resourceTypesAfter": {
+          "createBindGroup": 489,
+          "createBindGroupLayout": 274,
+          "createBuffer": 1018,
+          "createPipelineLayout": 126,
+          "createRenderPipeline": 8,
+          "createRenderPipelineAsync": 120,
+          "createSampler": 36,
+          "createShaderModule": 139,
+          "createTexture": 37
+        }
+      },
+      {
+        "sequence": 3,
+        "mutation": {
+          "type": "addChunk",
+          "cx": -1,
+          "cz": -1
+        },
+        "proposed": {
+          "version": 1,
+          "authorityEpoch": "10699219-9697-4bd1-a271-ed6bf4706f29/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 10
+        },
+        "world": {
+          "version": 1,
+          "authorityEpoch": "10699219-9697-4bd1-a271-ed6bf4706f29/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 10
+        },
+        "preparationMs": 386.7001953125,
+        "readyBeforePhysicalCommitMs": 542.39990234375,
+        "drainMs": 0.5,
+        "physicalCommitAndProjectionMs": 39.89990234375,
+        "blockedPreparation": {
+          "durationMs": 500.70000000298023,
+          "nativeFrames": 15,
+          "worldBefore": {
+            "version": 1,
+            "authorityEpoch": "10699219-9697-4bd1-a271-ed6bf4706f29/1",
+            "nativeSession": 1,
+            "ticket": 1,
+            "effectiveTime": 10
+          },
+          "worldAfter": {
+            "version": 1,
+            "authorityEpoch": "10699219-9697-4bd1-a271-ed6bf4706f29/1",
+            "nativeSession": 1,
+            "ticket": 1,
+            "effectiveTime": 10
+          },
+          "holdBefore": null,
+          "holdAfter": null
+        },
+        "resident": 9,
+        "resourcesCreated": 2519,
+        "resourceTypesReady": {
+          "createBindGroup": 519,
+          "createBindGroupLayout": 304,
+          "createBuffer": 1089,
+          "createPipelineLayout": 140,
+          "createRenderPipeline": 8,
+          "createRenderPipelineAsync": 134,
+          "createSampler": 37,
+          "createShaderModule": 153,
+          "createTexture": 38
+        },
+        "resourceTypesAfter": {
+          "createBindGroup": 550,
+          "createBindGroupLayout": 306,
+          "createBuffer": 1153,
+          "createPipelineLayout": 140,
+          "createRenderPipeline": 8,
+          "createRenderPipelineAsync": 134,
+          "createSampler": 37,
+          "createShaderModule": 153,
+          "createTexture": 38
+        }
+      }
+    ],
+    "sameRenderer": true,
+    "sameDevice": true,
+    "sameScene": true,
+    "sameWorkerRoot": true,
+    "unchangedTerrainMesh": true,
+    "unchangedTerrainGeometry": true,
+    "preparedWorld": {
+      "version": 1,
+      "authorityEpoch": "10699219-9697-4bd1-a271-ed6bf4706f29/1",
+      "nativeSession": 1,
+      "ticket": 2,
+      "effectiveTime": 10
+    },
+    "requiredWorld": {
+      "version": 1,
+      "authorityEpoch": "10699219-9697-4bd1-a271-ed6bf4706f29/1",
+      "nativeSession": 1,
+      "ticket": 2,
+      "effectiveTime": 10
+    },
+    "gpuErrors": 0,
+    "errors": [],
+    "scope": "Real native precommit resource proposal through the existing terrain channel and real product surface owners, one GPU device/draw Worker. Removal/readmission of one chunk; one stationary worker. No ordinary gameplay activation, blocked-preparer locomotion or no-stutter acceptance.",
+    "daylight": true
+  }
+]

@@ -1,0 +1,188 @@
+{
+  "date": "2026-11-16",
+  "sourceBaseCommit": "f0aa9534e",
+  "branch": "codex/guardian-3d-animation",
+  "scope": "Immediate current Idle to Home while the existing Surface is adopting the already committed Idle. Original resident authored actors, actual resource/control ports and actual submitted GPU drain. Source remains in-page, minimal desert640x360 muy_baja; B remains an explicit independent legacy Home fixture. This is not ordinary producer, initial Idle, live-world replacement or full healthy3123 incremental recovery acceptance.",
+  "research": [
+    {
+      "source": "https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp#L573-L777",
+      "decision": "Keep the same active body and separate semantic request from executable movement; the previous stationary graphical owner remains available during preparation."
+    },
+    {
+      "source": "node_modules/three/src/renderers/common/RenderObjects.js",
+      "installedVersion": "0.180.0",
+      "read": "get, getChainMap and render-object creation/invalidation",
+      "decision": "Preserve resident object/geometry identities and replace only the prepared material/motion delta. Establish immutable association at receive/install boundaries; replay reads the installed proof identity and live sequence. No new dependency or renderer."
+    }
+  ],
+  "regression": {
+    "files": 9,
+    "tests": 66,
+    "passed": 66,
+    "failed": 0,
+    "durationMs": 57738.5094,
+    "log": ".cache/native-idle-home-consumer-regression-final.log",
+    "newCase": "Home is requested inside the prepared Idle commit callback before its retained frame is adopted."
+  },
+  "strengthenedProjectionRegression": {
+    "tests": 13,
+    "passed": 13,
+    "failed": 0,
+    "durationMs": 11870.2596,
+    "log": ".cache/native-idle-home-consumer-strengthened-test.log",
+    "meaning": "The same current Idle read projection is explicitly required to stay coherent while its exact pending Home request owns the held body."
+  },
+  "parentControl": {
+    "parentModule": "src/world/wild-engine/spatial-intent-bridge.js at f0aa9534e, original module URL; all other modules and WASM current",
+    "readOnlyLoader": ".cache/native-idle-home-parent-bridge-loader.mjs",
+    "expectedExit": 1,
+    "failed": 1,
+    "skipped": 12,
+    "error": "Native idle projection is not the executed game boundary",
+    "log": ".cache/native-idle-home-parent-bridge-control-final.log",
+    "limits": "The first control passed because the test only exercised the channel chain. The strengthened assertion explicitly reads the pending-Home Idle projection. This reproduces only that missing projection case, not the Surface adoption predicate or a whole-parent benchmark."
+  },
+  "hardware": {
+    "status": "passed",
+    "runnerExit": 0,
+    "artifact": "native-idle-home-gpu-20261116.json",
+    "log": ".cache/native-idle-home-gpu-final.log",
+    "runner": "tools/guardian/audit_native_first_task_world_owner.mjs",
+    "mode": "QA_NATIVE_IDLE_HOME=true; all other QA_NATIVE modes false",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "idle": {
+      "resources": [
+        2694,
+        2790,
+        2790
+      ],
+      "resourcesPrepared": 96,
+      "resourcesAfterReady": 0,
+      "postCommitPreparationBlock": {
+        "start": 1794785528320.825,
+        "end": 1794785530120.8499,
+        "committedAt": 1794785528345.165,
+        "drawFrames": 53
+      },
+      "stalePublicationAcknowledged": true,
+      "inputPick": {
+        "entityId": "worker-900011",
+        "hitPoint": {
+          "x": -7.4742348268931735,
+          "y": 17.23330511761339,
+          "z": -7.440427692011864
+        },
+        "point": {
+          "x": -7.204374587826549,
+          "z": -9.102374630439911
+        },
+        "sequence": 7
+      }
+    },
+    "home": {
+      "resources": [
+        2790,
+        2888,
+        2888
+      ],
+      "resourcesPrepared": 98,
+      "resourcesAfterReady": 0,
+      "initialPreparationBlock": {
+        "start": 1794785531839.43,
+        "end": 1794785533639.4448,
+        "drawFrames": 54
+      },
+      "postCommitPreparationBlock": {
+        "start": 1794785534910.73,
+        "end": 1794785536710.7449,
+        "committedAt": 1794785534920.8599,
+        "drawFrames": 53
+      },
+      "rootsBefore": [
+        681,
+        682
+      ],
+      "rootsAfter": [
+        681,
+        682
+      ],
+      "inputPick": {
+        "entityId": "worker-900011",
+        "hitPoint": {
+          "x": -4.930508859680266,
+          "y": 17.230739516738613,
+          "z": -7.865528357087024
+        },
+        "point": {
+          "x": -4.503489645635715,
+          "z": -9.54796747967477
+        },
+        "sequence": 9
+      }
+    },
+    "allActorBonesAndExistingMeshGeometryIdentitiesPreserved": true,
+    "worldInstanceBatchesPreserved": true,
+    "independentActorContinues": true,
+    "economyCreditedOnceAndUnchangedDuringHome": true,
+    "finalGpuErrors": 0,
+    "finalConsumerRetirementDrained": true,
+    "pageErrors": [],
+    "consoleErrors": [],
+    "httpFailures": [],
+    "requestFailures": [],
+    "screenshotsViewed": [
+      "native-idle-home-before-20261116.png",
+      "native-idle-home-after-20261116.png"
+    ],
+    "firstHardwareRun": {
+      "status": "passed",
+      "artifact": ".cache/native-idle-home-gpu-first.json",
+      "log": ".cache/native-idle-home-gpu-first.log",
+      "reasonForFinalRun": "Add explicit frame count for the initial 1.8 s Home preparation stall. The first run already covered the postcommit stall, resources, identities, picking and drain."
+    }
+  },
+  "productBuild": {
+    "status": "passed",
+    "durationSeconds": 46.13,
+    "log": ".cache/native-idle-home-consumer-product-build.log",
+    "command": ".cache/tooling/node20.exe node_modules/vite/bin/vite.js build",
+    "warnings": "Existing import and large chunk warnings. Final hardware frame-count field changes only the browser QA module, outside the product entry."
+  },
+  "nativeBuild": "Unchanged from f0aa9534e; no native source/binary edits in this increment.",
+  "preservation": {
+    "unchangedOriginalPathCount": 16,
+    "paths": [
+      "docs/guardian/gpu-animation/eyelid-shadow-animal-buffalo-settled/openOriginal.png",
+      "docs/guardian/webgpu-stable-raid-qa.md",
+      "docs/lighting/tree-near-retexture/performance/mobility-guarded-world-stop.json",
+      "src/rendering/character-preload.js",
+      "src/rendering/destruction-effects-native.js",
+      "src/rendering/destruction-native.js",
+      "src/rendering/scene.js",
+      "src/simulation/worker-game-runtime.js",
+      "tests/browser/mobility-worker-latency.js",
+      "tests/character-preload.test.js",
+      "tests/historical-event-boundaries.test.js",
+      "tests/worker-game-runtime.test.js",
+      "tools/experiments/audit-character-primer-coverage.mjs",
+      "tools/experiments/audit_worker_attack_gl.mjs",
+      "tools/guardian/audit_pending_worker_game_wall.mjs",
+      "public/wild-engine/spatial-threaded.worker.mjs"
+    ]
+  },
+  "open": [
+    "initial Idle and fresh stationary admission",
+    "other task expiry/cancellation/final classes",
+    "gated classes",
+    "ordinary producer",
+    "live-world replacement",
+    "full healthy3123 incremental recovery",
+    "remaining A/B/C acceptance before D"
+  ],
+  "closureChanges": []
+}

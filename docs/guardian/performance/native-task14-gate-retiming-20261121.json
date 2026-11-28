@@ -1,0 +1,758 @@
+{
+  "base": "498d7f4eb567470944ca0f551d5ff747bc4b9e95",
+  "workingChanges": "Damaged-gate candidate present. The gate remained healthy.",
+  "baseline": {
+    "sha256": "829d690f53c25e3d0f3f08e25ddc8332e3639d43801df9a170662813b823a7a7",
+    "error": "Error: Error: Native resumed worker differs from its committed resources"
+  },
+  "checkout": {
+    "sha256": "a333c5ba6379de24c48e0046c441311b680602f891db1fc50536db192a55b434",
+    "adapter": [
+      "nvidia",
+      "turing"
+    ],
+    "displayHz": 30,
+    "targetIntervalMs": 16.666666666666668,
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja",
+    "body": 1,
+    "actorRoot": 696,
+    "actorMeshes": 36,
+    "actorMeshesRetained": true,
+    "gateIds": [
+      1000000
+    ],
+    "gateRoot": 518,
+    "gateMesh": 246,
+    "prepared": {
+      "version": 1,
+      "authorityEpoch": "6ad4d3a9-7157-48fd-99fe-6eedab509e4b/1",
+      "nativeSession": 1,
+      "ticket": 5,
+      "effectiveTime": 10.049999999999999
+    },
+    "acquired": {
+      "version": 1,
+      "authorityEpoch": "6ad4d3a9-7157-48fd-99fe-6eedab509e4b/1",
+      "nativeSession": 1,
+      "ticket": 6,
+      "effectiveTime": 12.249999999999952
+    },
+    "held": {
+      "pose": {
+        "time": 151.7500000000004,
+        "elapsed": 11.749999999999963,
+        "x": -14,
+        "z": 5.7,
+        "admission": "pending-resources",
+        "status": "waiting-task",
+        "sequence": 258
+      },
+      "at": 11.749999999999963,
+      "minimumSimulatedHold": 0.45
+    },
+    "crossing": {
+      "time": 155.20000000000118,
+      "elapsed": 15.19999999999989,
+      "x": -13.949600219726562,
+      "z": 8.237190688284306,
+      "admission": "native-task",
+      "status": "walking",
+      "sequence": 327,
+      "opening": 1
+    },
+    "final": {
+      "time": 155.7000000000013,
+      "elapsed": 15.699999999999878,
+      "x": -13.949600219726562,
+      "z": 8.777190688284294,
+      "admission": "native-task",
+      "status": "walking",
+      "sequence": 337
+    },
+    "firstTicketDraw": {
+      "at": 1795261706531.8,
+      "sequence": 31,
+      "ticket": 6,
+      "intervalMs": 33.39990234375,
+      "drawMs": 2.60009765625,
+      "trigger": "raf",
+      "replay": false
+    },
+    "peakInterval": {
+      "at": 1795261707736.6,
+      "sequence": 41,
+      "ticket": 6,
+      "intervalMs": 37.900146484375,
+      "drawMs": 1.800048828125,
+      "trigger": "raf",
+      "replay": true
+    },
+    "gpuErrors": 0,
+    "drained": true
+  },
+  "targeted": {
+    "previousGuardFails": true,
+    "acquiredRelativeProjectionPasses": true,
+    "exactAbsoluteBypassWithoutProofRejected": true,
+    "gateTimingGeometryAndIdentityChangesRejected": true
+  },
+  "regression": {
+    "passed": 981,
+    "total": 981,
+    "sha256": "8931ade885b3f2fabd135b6e94f45664ff09f50884d6228eac84af2b5048bfd8",
+    "previousTestExpectationsFixedIn": "f54c80dde6ad573795e9e8ae3c99a720f2cd45f3"
+  },
+  "build": {
+    "backend": "webgpu-worker",
+    "remoteDraw": true,
+    "reportedDuration": "1m52s",
+    "sha256": "2c5bd3feac596b43c72a1f01d1f8e5ffb96b83e0c572c95f4a30c6b438f8e8d5"
+  },
+  "ordinaryRoundTrip": {
+    "base": "3319f09ef3f7ee584d0f2acca225be1a5f46f38c",
+    "workingChanges": "Damaged-gate candidate present. Gate was healthy throughout.",
+    "sha256": "2155e5a5e38890601d372bd272a505818009e4410367e3222ee454d496830924",
+    "tickets": {
+      "task": 6,
+      "action": 8,
+      "carry": 10
+    },
+    "body": 1,
+    "gateIds": [
+      1000000
+    ],
+    "gateRoot": 393,
+    "gateGeometry": 151,
+    "actorRoot": 695,
+    "actorMeshes": [
+      36,
+      49
+    ],
+    "newActorMeshes": 13,
+    "newGeometryIds": [],
+    "firstCrossing": {
+      "time": 155.55000000000126,
+      "elapsed": 15.549999999999882,
+      "x": -13.949600219726562,
+      "z": 8.237190688284306,
+      "admission": "native-task",
+      "status": "walking",
+      "sequence": 296,
+      "opening": 1
+    },
+    "returnCrossing": {
+      "time": 168.10000000000412,
+      "elapsed": 28.100000000000044,
+      "x": -13.949600219726562,
+      "z": 8.182641535657085,
+      "admission": "native-delivery",
+      "status": "carrying",
+      "sequence": 547,
+      "opening": 1
+    },
+    "cropPicked": {
+      "id": "event-29209",
+      "type": "CropPicked",
+      "workerId": "worker-900011",
+      "targetId": "plant-1000001",
+      "crateId": "crate-1000003",
+      "simulationTime": 24.749999999999996,
+      "presentation": {
+        "x": -14,
+        "z": 11.8
+      }
+    },
+    "crateId": "crate-1000003",
+    "observedFirstCarryDraw": {
+      "at": 1795262458301.4,
+      "sequence": 126,
+      "ticket": 10,
+      "intervalMs": 33.39990234375,
+      "drawMs": 3.10009765625,
+      "trigger": "raf",
+      "replay": false
+    },
+    "twoLargestIntervals": [
+      {
+        "at": 1795262456241.0999,
+        "sequence": 125,
+        "ticket": 8,
+        "intervalMs": 39.7998046875,
+        "drawMs": 2.5,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795262447340.2,
+        "sequence": 40,
+        "ticket": 6,
+        "intervalMs": 39,
+        "drawMs": 3.5,
+        "trigger": "raf",
+        "replay": true
+      }
+    ],
+    "displayHz": 30,
+    "gpuErrors": 0,
+    "drained": true
+  },
+  "cadence": {
+    "base": "f347aac95d341841d5f53ab20bc97819e44d1e2f",
+    "targetIntervalMs": 16.666666666666668,
+    "workingChanges": "Damaged-gate candidate present. Gate was healthy throughout.",
+    "instrumentation": "Native CDP trace and samples retained by the physical GPU consumer. Durations overlap across threads.",
+    "trace30": {
+      "sha256": "53b6b25e742f7ce501b327623acdfc679d311b13fdfebdc2c429c444d64026c0",
+      "eventCount": 1069131,
+      "largest": {
+        "at": 1795262672307.1,
+        "sequence": 85,
+        "ticket": 6,
+        "intervalMs": 38.300048828125,
+        "drawMs": 1.89990234375,
+        "trigger": "raf",
+        "replay": true
+      }
+    },
+    "trace60": {
+      "sha256": "5f5d4fe7a9538bb459c914fc80e03b786e97532b1411d01676510c13bab30738",
+      "eventCount": 1332770,
+      "rawSha256": "6cc916c58247930b6066ebf8838748bf438c4e0919d74b911129752566ca3f2f",
+      "summaries": [
+        {
+          "name": "task",
+          "ticket": 6,
+          "observed": 434,
+          "overBudget": 243,
+          "p50": 16.699951171875,
+          "p95": 17.89990234375,
+          "p99": 18.89990234375,
+          "largest": {
+            "at": 1795262836341.3,
+            "sequence": 55,
+            "ticket": 6,
+            "intervalMs": 21.699951171875,
+            "drawMs": 2.5,
+            "trigger": "raf",
+            "replay": true
+          }
+        },
+        {
+          "name": "action",
+          "ticket": 8,
+          "observed": 300,
+          "overBudget": 175,
+          "p50": 16.699951171875,
+          "p95": 16.900146484375,
+          "p99": 18.800048828125,
+          "largest": {
+            "at": 1795262845111.5,
+            "sequence": 180,
+            "ticket": 8,
+            "intervalMs": 25.300048828125,
+            "drawMs": 6.300048828125,
+            "trigger": "raf",
+            "replay": true
+          }
+        },
+        {
+          "name": "carry",
+          "ticket": 10,
+          "observed": 230,
+          "overBudget": 131,
+          "p50": 16.699951171875,
+          "p95": 18.300048828125,
+          "p99": 19.5,
+          "largest": {
+            "at": 1795262847342.8,
+            "sequence": 181,
+            "ticket": 10,
+            "intervalMs": 23.199951171875,
+            "drawMs": 2.5,
+            "trigger": "mutation-release",
+            "replay": false
+          }
+        }
+      ],
+      "scope": "Intervals between starts of draws that were submitted, with tracing enabled. The panel mode was set to 60 Hz during the run.",
+      "actionLargest": {
+        "opportunities": [
+          {
+            "at": 1795262845086.2,
+            "intervalMs": 16.5,
+            "outcome": "submitted",
+            "holdId": null,
+            "sequence": 180
+          },
+          {
+            "at": 1795262845111.5,
+            "intervalMs": 25.300048828125,
+            "outcome": "submitted",
+            "holdId": null,
+            "sequence": 180
+          }
+        ],
+        "authorityMs": 11.231,
+        "gpuFlushMs": 12.873,
+        "callbackStartAtUnixMs": [
+          1795262845086.104,
+          1795262845111.399
+        ],
+        "nearbyVizBeginFrameAtUnixMs": [
+          1795262845085.908,
+          1795262845102.447,
+          1795262845119.122
+        ],
+        "nearestVizToCallbackMs": [
+          0.196,
+          8.952
+        ],
+        "gpuFlushEndedAtUnixMs": 1795262845094.635
+      },
+      "carryFirst": {
+        "opportunities": [
+          {
+            "at": 1795262847319.6,
+            "intervalMs": 16.900146484375,
+            "outcome": "submitted",
+            "holdId": null,
+            "sequence": 180
+          },
+          {
+            "at": 1795262847336.2,
+            "intervalMs": 16.599853515625,
+            "outcome": "mutation-hold",
+            "holdId": 5,
+            "sequence": 180
+          }
+        ],
+        "preparationWorkerMs": 13.963
+      },
+      "actionPreparation": {
+        "function": "webgpu-pipeline-admission.js pump",
+        "taskAt": 1795262844766.83,
+        "taskMs": 225.351,
+        "nearestReportedInterval": {
+          "at": 1795262845008.1,
+          "sequence": 180,
+          "ticket": 8,
+          "intervalMs": 21.900146484375,
+          "drawMs": 2.599853515625,
+          "trigger": "raf",
+          "replay": true
+        }
+      },
+      "gpuErrors": 0,
+      "drained": true
+    },
+    "display": {
+      "apply": {
+        "atUnixMs": 1795262797980.912,
+        "action": "apply",
+        "device": "\\\\.\\DISPLAY1",
+        "before": {
+          "width": 3840,
+          "height": 2160,
+          "hz": 30,
+          "bpp": 32,
+          "x": 0,
+          "y": 0
+        },
+        "after": {
+          "width": 3840,
+          "height": 2160,
+          "hz": 60,
+          "bpp": 32,
+          "x": 0,
+          "y": 0
+        },
+        "testResult": 0,
+        "changeResult": 0,
+        "registryPersisted": false,
+        "savedOriginalSha256": "cc7b5abd26c4e1f748670dbf82858319b701880e57a968edaf0df66dff39d72f"
+      },
+      "restore": {
+        "atUnixMs": 1795262871965.9504,
+        "action": "restore",
+        "device": "\\\\.\\DISPLAY1",
+        "before": {
+          "width": 3840,
+          "height": 2160,
+          "hz": 60,
+          "bpp": 32,
+          "x": 0,
+          "y": 0
+        },
+        "after": {
+          "width": 3840,
+          "height": 2160,
+          "hz": 30,
+          "bpp": 32,
+          "x": 0,
+          "y": 0
+        },
+        "testResult": 0,
+        "changeResult": 0,
+        "registryPersisted": false,
+        "savedOriginalSha256": "cc7b5abd26c4e1f748670dbf82858319b701880e57a968edaf0df66dff39d72f"
+      }
+    },
+    "blinkStartup": {
+      "reference": "Separate diagnostic with blink, mojom and sequence_manager tracing. It failed before Idle20 and did not repeat the Action15 measurement.",
+      "traceSha256": "1090487157a9b66a80d563585d3e1bd54b261d67148c54cde052dc4371a1329e",
+      "traceEventCount": 1103879,
+      "drawCallbackIntervals": 1050,
+      "dataLossOccurred": false,
+      "failure": {
+        "stage": "ordinary Idle20 acquisition",
+        "reason": "Worker command not admitted: failed",
+        "confirmedSequence": 128,
+        "confirmedElapsed": 10,
+        "actorAdmission": "pending-idle-resources"
+      },
+      "largest": [
+        {
+          "id": 958,
+          "intervalMs": 207.902,
+          "priorCallbackMs": 1.629,
+          "drawCallbackMs": 4.999,
+          "thread": "10660:452",
+          "vizAtUs": 679766493416,
+          "providerAtUs": 679766495751,
+          "dispatchAtUs": 679766495754,
+          "callbackAtUs": 679766495773,
+          "drawAtUs": 679766495779,
+          "nearestVizToProviderMs": 2.335,
+          "providerToDrawMs": 0.028,
+          "nativeMicrotaskToDrawMs": 0.006
+        },
+        {
+          "id": 945,
+          "intervalMs": 143.87,
+          "priorCallbackMs": 142.707,
+          "drawCallbackMs": 25.814,
+          "thread": "10660:452",
+          "vizAtUs": 679766059974,
+          "providerAtUs": 679766061254,
+          "dispatchAtUs": 679766061256,
+          "callbackAtUs": 679766061269,
+          "drawAtUs": 679766061273,
+          "nearestVizToProviderMs": 1.28,
+          "providerToDrawMs": 0.019,
+          "nativeMicrotaskToDrawMs": 0.004
+        },
+        {
+          "id": 1035,
+          "intervalMs": 67.751,
+          "priorCallbackMs": 65.15,
+          "drawCallbackMs": 5.473,
+          "thread": "10660:452",
+          "vizAtUs": 679767860083,
+          "providerAtUs": 679767875888,
+          "dispatchAtUs": 679767875890,
+          "callbackAtUs": 679767875903,
+          "drawAtUs": 679767875908,
+          "nearestVizToProviderMs": 15.805,
+          "providerToDrawMs": 0.02,
+          "nativeMicrotaskToDrawMs": 0.005
+        }
+      ],
+      "sameThreadSpans": [
+        {
+          "name": "Receive mojo message",
+          "startTraceUs": 679766293151,
+          "durationMs": 190,
+          "interface": "viz.mojom.CompositorFrameSinkClient",
+          "ipcHash": 2378294256,
+          "method": "viz::mojom::CompositorFrameSinkClient::OnBeginFrame",
+          "hashHex": "8dc1e3f0",
+          "vizBeginFramesWhileOccupied": 12,
+          "additionalNestedDrawEvents": 0,
+          "detailsSha256": "1c223fcd0f391cacb6d0cfbd73656d6dec8c026789f05a11b4853b65cca7aaac"
+        },
+        {
+          "name": "FunctionCall",
+          "startTraceUs": 679765917419,
+          "durationMs": 142.685,
+          "callback": "present"
+        },
+        {
+          "name": "CommandBufferProxyImpl::Flush",
+          "startTraceUs": 679767809234,
+          "durationMs": 63.253
+        }
+      ],
+      "display": {
+        "apply": {
+          "atUnixMs": 1795263365484.2754,
+          "action": "apply",
+          "device": "\\\\.\\DISPLAY1",
+          "before": {
+            "width": 3840,
+            "height": 2160,
+            "hz": 30,
+            "bpp": 32,
+            "x": 0,
+            "y": 0
+          },
+          "after": {
+            "width": 3840,
+            "height": 2160,
+            "hz": 60,
+            "bpp": 32,
+            "x": 0,
+            "y": 0
+          },
+          "testResult": 0,
+          "changeResult": 0,
+          "registryPersisted": false,
+          "savedOriginalSha256": "cc7b5abd26c4e1f748670dbf82858319b701880e57a968edaf0df66dff39d72f"
+        },
+        "restore": {
+          "atUnixMs": 1795263411075.0444,
+          "action": "restore",
+          "device": "\\\\.\\DISPLAY1",
+          "before": {
+            "width": 3840,
+            "height": 2160,
+            "hz": 60,
+            "bpp": 32,
+            "x": 0,
+            "y": 0
+          },
+          "after": {
+            "width": 3840,
+            "height": 2160,
+            "hz": 30,
+            "bpp": 32,
+            "x": 0,
+            "y": 0
+          },
+          "testResult": 0,
+          "changeResult": 0,
+          "registryPersisted": false,
+          "savedOriginalSha256": "cc7b5abd26c4e1f748670dbf82858319b701880e57a968edaf0df66dff39d72f"
+        }
+      }
+    },
+    "trace60Warm": {
+      "base": "c98b2de59d0dcd0fb5c09c30aedda677934b775c",
+      "staging": "The confirmed visual bootstrap finished before the route phase.",
+      "rawSha256": "f21508a5a5643dda7b3bf0b965942a1c5d34074bea9c6edfcf10ba7206341548",
+      "traceSha256": "fa21bdb21a17f326a3da205ae80976a3d58abe4690406ab518ac03ab23b26a22",
+      "eventCount": 1524398,
+      "dataLossOccurred": false,
+      "stages": [
+        {
+          "stage": "task",
+          "ticket": 6,
+          "samples": 437,
+          "overBudget": 249,
+          "p95": 18,
+          "max": {
+            "at": 1795265890036.2,
+            "sequence": 44,
+            "ticket": 6,
+            "intervalMs": 22.199951171875,
+            "drawMs": 3.400146484375,
+            "trigger": "mutation-release",
+            "replay": false
+          }
+        },
+        {
+          "stage": "action",
+          "ticket": 8,
+          "samples": 317,
+          "overBudget": 179,
+          "p95": 17.199951171875,
+          "max": {
+            "at": 1795265900191,
+            "sequence": 171,
+            "ticket": 8,
+            "intervalMs": 26.800048828125,
+            "drawMs": 4.300048828125,
+            "trigger": "raf",
+            "replay": true
+          }
+        },
+        {
+          "stage": "carry",
+          "ticket": 10,
+          "samples": 226,
+          "overBudget": 128,
+          "p95": 18.300048828125,
+          "max": {
+            "at": 1795265902603.6,
+            "sequence": 172,
+            "ticket": 10,
+            "intervalMs": 22.900146484375,
+            "drawMs": 4.5,
+            "trigger": "mutation-release",
+            "replay": false
+          }
+        }
+      ],
+      "total": {
+        "samples": 980,
+        "overBudget": 556
+      },
+      "action": {
+        "sample": {
+          "at": 1795265900191,
+          "sequence": 171,
+          "ticket": 8,
+          "intervalMs": 26.800048828125,
+          "drawMs": 4.300048828125,
+          "trigger": "raf",
+          "replay": true
+        },
+        "opportunities": [
+          {
+            "at": 1795265900164.2,
+            "intervalMs": 13,
+            "outcome": "submitted",
+            "holdId": null,
+            "sequence": 171
+          },
+          {
+            "at": 1795265900191,
+            "intervalMs": 26.800048828125,
+            "outcome": "submitted",
+            "holdId": null,
+            "sequence": 171
+          }
+        ],
+        "latestVizAt": 1795265900180.321,
+        "drawWatcherAt": 1795265900190.775,
+        "drawProviderAt": 1795265900190.793,
+        "drawRafAt": 1795265900190.815,
+        "vizToWatcherMs": 10.454,
+        "vizToProviderMs": 10.472,
+        "providerToCallbackMs": 0.022,
+        "drawThreadSpansBeforeProvider": [
+          {
+            "name": "ThreadControllerImpl::RunTask",
+            "at": 1795265900190.775,
+            "ms": 0.031
+          },
+          {
+            "name": "Edge_RunTask",
+            "at": 1795265900190.779,
+            "ms": 0.026
+          },
+          {
+            "name": "SimpleWatcher::OnHandleReady",
+            "at": 1795265900190.782,
+            "ms": 0.022
+          },
+          {
+            "name": "Receive mojo message",
+            "at": 1795265900190.788,
+            "ms": 0.013
+          }
+        ],
+        "overlappingMain": {
+          "name": "FunctionCall",
+          "phase": "X",
+          "key": "4532:25504",
+          "role": "CrRendererMain",
+          "category": "devtools.timeline",
+          "at": 1795265900179.306,
+          "ms": 10.715,
+          "args": {
+            "data": {
+              "columnNumber": 19,
+              "frame": "00BCA569B167ECB8A94ED9ACD352CA00",
+              "functionName": "worker.onmessage",
+              "isolate": "1162274372155572068",
+              "lineNumber": 30,
+              "sampleTraceId": 7173558716878568,
+              "scriptId": "15",
+              "url": "http://127.0.0.1:5218/src/simulation/worker-hosted-runtime.js"
+            }
+          }
+        },
+        "overlappingAuthority": {
+          "name": "FunctionCall",
+          "phase": "X",
+          "key": "4532:25556",
+          "role": "Authority",
+          "category": "devtools.timeline",
+          "at": 1795265900180.082,
+          "ms": 11.536,
+          "args": {
+            "data": {
+              "columnNumber": 16,
+              "functionName": "self.onmessage",
+              "isolate": "8253285948403766524",
+              "lineNumber": 31,
+              "sampleTraceId": 7173558716878567,
+              "scriptId": "3",
+              "url": "http://127.0.0.1:5218/src/simulation/simulation-authority-worker.js?worker_file&type=module"
+            }
+          }
+        }
+      },
+      "display": {
+        "apply": {
+          "atUnixMs": 1795265860866.1543,
+          "action": "apply",
+          "device": "\\\\.\\DISPLAY1",
+          "before": {
+            "width": 3840,
+            "height": 2160,
+            "hz": 30,
+            "bpp": 32,
+            "x": 0,
+            "y": 0
+          },
+          "after": {
+            "width": 3840,
+            "height": 2160,
+            "hz": 60,
+            "bpp": 32,
+            "x": 0,
+            "y": 0
+          },
+          "testResult": 0,
+          "changeResult": 0,
+          "registryPersisted": false,
+          "savedOriginalSha256": "cc7b5abd26c4e1f748670dbf82858319b701880e57a968edaf0df66dff39d72f"
+        },
+        "restore": {
+          "atUnixMs": 1795265928399.0308,
+          "action": "restore",
+          "device": "\\\\.\\DISPLAY1",
+          "before": {
+            "width": 3840,
+            "height": 2160,
+            "hz": 60,
+            "bpp": 32,
+            "x": 0,
+            "y": 0
+          },
+          "after": {
+            "width": 3840,
+            "height": 2160,
+            "hz": 30,
+            "bpp": 32,
+            "x": 0,
+            "y": 0
+          },
+          "testResult": 0,
+          "changeResult": 0,
+          "registryPersisted": false,
+          "savedOriginalSha256": "cc7b5abd26c4e1f748670dbf82858319b701880e57a968edaf0df66dff39d72f"
+        }
+      },
+      "bodyId": 1,
+      "crateId": "crate-1000003",
+      "gpuErrors": 0,
+      "drained": true
+    }
+  }
+}

@@ -1,0 +1,423 @@
+TAP version 13
+# Subtest: original normal lifecycle emits entry/exit once and keeps the approved full exit tail
+ok 1 - original normal lifecycle emits entry/exit once and keeps the approved full exit tail
+  ---
+  duration_ms: 12.7536
+  ...
+# Subtest: original reduced lifecycle emits entry/exit once and keeps the approved full exit tail
+ok 2 - original reduced lifecycle emits entry/exit once and keeps the approved full exit tail
+  ---
+  duration_ms: 1.3837
+  ...
+# Subtest: late portrait asset load still has one genuine entry when first rendered during reading
+ok 3 - late portrait asset load still has one genuine entry when first rendered during reading
+  ---
+  duration_ms: 0.9692
+  ...
+# Subtest: reopening during farewell or outro supersedes the old withdrawal
+ok 4 - reopening during farewell or outro supersedes the old withdrawal
+  ---
+  duration_ms: 1.3459
+  ...
+# Subtest: immediate hiding from intro cancels every owned source and pending request
+ok 5 - immediate hiding from intro cancels every owned source and pending request
+  ---
+  duration_ms: 0.8277
+  ...
+# Subtest: immediate hiding from reading cancels every owned source and pending request
+ok 6 - immediate hiding from reading cancels every owned source and pending request
+  ---
+  duration_ms: 0.5938
+  ...
+# Subtest: immediate hiding from outro cancels every owned source and pending request
+ok 7 - immediate hiding from outro cancels every owned source and pending request
+  ---
+  duration_ms: 0.5166
+  ...
+# Subtest: immediate hiding from closed cancels every owned source and pending request
+ok 8 - immediate hiding from closed cancels every owned source and pending request
+  ---
+  duration_ms: 1.3852
+  ...
+# Subtest: hidden invalidates a pending withdrawal decode
+ok 9 - hidden invalidates a pending withdrawal decode
+  ---
+  duration_ms: 0.8776
+  ...
+# Subtest: disposed invalidates a pending withdrawal decode
+ok 10 - disposed invalidates a pending withdrawal decode
+  ---
+  duration_ms: 0.9107
+  ...
+# Subtest: reentry invalidates a pending withdrawal decode
+ok 11 - reentry invalidates a pending withdrawal decode
+  ---
+  duration_ms: 1.1117
+  ...
+# Subtest: expiry invalidates a pending withdrawal decode
+ok 12 - expiry invalidates a pending withdrawal decode
+  ---
+  duration_ms: 0.794
+  ...
+# Subtest: suspend invalidates a pending withdrawal decode
+ok 13 - suspend invalidates a pending withdrawal decode
+  ---
+  duration_ms: 0.6029
+  ...
+# Subtest: a normal closed portrait still accepts its timely pending exit tail
+ok 14 - a normal closed portrait still accepts its timely pending exit tail
+  ---
+  duration_ms: 2.2547
+  ...
+# Subtest: suspension cancels voices and silently seeds the unchanged portrait on resume
+ok 15 - suspension cancels voices and silently seeds the unchanged portrait on resume
+  ---
+  duration_ms: 0.9903
+  ...
+# Subtest: presentation callback failures do not form a per-frame retry loop
+ok 16 - presentation callback failures do not form a per-frame retry loop
+  ---
+  duration_ms: 0.8174
+  ...
+# Subtest: portrait cues use the UI bus and avatar emitter without a fictitious world position
+ok 17 - portrait cues use the UI bus and avatar emitter without a fictitious world position
+  ---
+  duration_ms: 0.8688
+  ...
+# Subtest: all supplied Spirit replacements preserve the exact Spanish and paired English copy
+ok 18 - all supplied Spirit replacements preserve the exact Spanish and paired English copy
+  ---
+  duration_ms: 3.4096
+  ...
+# Subtest: tutorial and post-raid copy use supplied replacements while unrelated messages stay unchanged
+ok 19 - tutorial and post-raid copy use supplied replacements while unrelated messages stay unchanged
+  ---
+  duration_ms: 0.2619
+  ...
+# Subtest: audio-clock sampling is normalized and continuous across cues, seeks and low FPS
+ok 20 - audio-clock sampling is normalized and continuous across cues, seeks and low FPS
+  ---
+  duration_ms: 13.7653
+  ...
+# Subtest: short, repeated and missing cues remain finite
+ok 21 - short, repeated and missing cues remain finite
+  ---
+  duration_ms: 0.4272
+  ...
+# Subtest: a late language response cannot animate the newer recording; pausing preserves the pose
+ok 22 - a late language response cannot animate the newer recording; pausing preserves the pose
+  ---
+  duration_ms: 1.0307
+  ...
+# Subtest: all 54 real recordings have bounded Rhubarb cues and matching source identities
+ok 23 - all 54 real recordings have bounded Rhubarb cues and matching source identities
+  ---
+  duration_ms: 94.8686
+  ...
+# Subtest: blink closes fully and returns to rest
+ok 24 - blink closes fully and returns to rest
+  ---
+  duration_ms: 0.8768
+  ...
+# Subtest: Lifecycle preserves original transition timings in both motion modes
+ok 25 - Lifecycle preserves original transition timings in both motion modes
+  ---
+  duration_ms: 9.6491
+  ...
+# Subtest: Entrance leads to reading and rest without closing or advancing text
+ok 26 - Entrance leads to reading and rest without closing or advancing text
+  ---
+  duration_ms: 0.7398
+  ...
+# Subtest: Closing performs farewell and native exit, repeated hide calls do not restart it
+ok 27 - Closing performs farewell and native exit, repeated hide calls do not restart it
+  ---
+  duration_ms: 0.4397
+  ...
+# Subtest: New message cancels withdrawal and cannot be closed by a stale transition
+ok 28 - New message cancels withdrawal and cannot be closed by a stale transition
+  ---
+  duration_ms: 0.4331
+  ...
+# Subtest: Reduced motion still has explicit entry and exit and native neutral poses
+ok 29 - Reduced motion still has explicit entry and exit and native neutral poses
+  ---
+  duration_ms: 1.0376
+  ...
+# Subtest: shipping rig is floating, bounded, and has all facial controls
+ok 30 - shipping rig is floating, bounded, and has all facial controls
+  ---
+  duration_ms: 2.1915
+  ...
+# Subtest: cloth and body clips have disjoint properties and eyes are free for gaze
+ok 31 - cloth and body clips have disjoint properties and eyes are free for gaze
+  ---
+  duration_ms: 0.6725
+  ...
+# Subtest: Extracted renderer and native source retain their registered hashes
+ok 32 - Extracted renderer and native source retain their registered hashes
+  ---
+  duration_ms: 7.3069
+  ...
+# Subtest: Native greeting curves match the original V8 source at every sampled phase
+ok 33 - Native greeting curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 11.9758
+  ...
+# Subtest: Native speak curves match the original V8 source at every sampled phase
+ok 34 - Native speak curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 4.5239
+  ...
+# Subtest: Native acknowledge curves match the original V8 source at every sampled phase
+ok 35 - Native acknowledge curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 3.9475
+  ...
+# Subtest: Native curious curves match the original V8 source at every sampled phase
+ok 36 - Native curious curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 2.6633
+  ...
+# Subtest: Native warning curves match the original V8 source at every sampled phase
+ok 37 - Native warning curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 5.0933
+  ...
+# Subtest: Native reveal curves match the original V8 source at every sampled phase
+ok 38 - Native reveal curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 5.417
+  ...
+# Subtest: Native idle curves match the original V8 source at every sampled phase
+ok 39 - Native idle curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 3.1502
+  ...
+# Subtest: Native farewell curves match the original V8 source at every sampled phase
+ok 40 - Native farewell curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 2.6186
+  ...
+# Subtest: Native ornament springs remain finite across reading, rest and gesture changes
+ok 41 - Native ornament springs remain finite across reading, rest and gesture changes
+  ---
+  duration_ms: 59.8489
+  ...
+# Subtest: closeAfter cannot retire loading or playing voice on a caption timer; real ended closes once
+ok 42 - closeAfter cannot retire loading or playing voice on a caption timer; real ended closes once
+  ---
+  duration_ms: 7.3303
+  ...
+# Subtest: a superseded ended callback cannot close the next presentation
+ok 43 - a superseded ended callback cannot close the next presentation
+  ---
+  duration_ms: 1.108
+  ...
+# Subtest: closeAfter retains timed fallback when media is unavailable or no voice exists
+ok 44 - closeAfter retains timed fallback when media is unavailable or no voice exists
+  ---
+  duration_ms: 1.858
+  ...
+# (node:27704) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: 54 original Opus stereo clips match registered bytes, hashes and both current text catalogs
+ok 45 - 54 original Opus stereo clips match registered bytes, hashes and both current text catalogs
+  ---
+  duration_ms: 42.2661
+  ...
+# Subtest: muted narration skips loading, and muting active audio switches to identified text fallback
+ok 46 - muted narration skips loading, and muting active audio switches to identified text fallback
+  ---
+  duration_ms: 1.5254
+  ...
+# Subtest: replacement stops/releases old media immediately and ignores stale ended and play promises
+ok 47 - replacement stops/releases old media immediately and ignores stale ended and play promises
+  ---
+  duration_ms: 0.4499
+  ...
+# Subtest: blocked autoplay, load error, hung loading and stalled playback fall back without advancing
+ok 48 - blocked autoplay, load error, hung loading and stalled playback fall back without advancing
+  ---
+  duration_ms: 85.033
+  ...
+# Subtest: actual ended preserves uncompleted center and planting actions, their hands and signaled pause
+ok 49 - actual ended preserves uncompleted center and planting actions, their hands and signaled pause
+  ---
+  duration_ms: 8.1313
+  ...
+# Subtest: a delayed play resolution cannot cancel recovery after media starts waiting
+ok 50 - a delayed play resolution cannot cancel recovery after media starts waiting
+  ---
+  duration_ms: 30.2579
+  ...
+# Subtest: playing after waiting cancels recovery and advances only on actual ended
+ok 51 - playing after waiting cancels recovery and advances only on actual ended
+  ---
+  duration_ms: 31.5122
+  ...
+# Subtest: a stalled download cannot cut buffered narration or advance its tutorial caption
+ok 52 - a stalled download cannot cut buffered narration or advance its tutorial caption
+  ---
+  duration_ms: 31.0355
+  ...
+# Subtest: buffered download stalls do not disable real waiting recovery
+ok 53 - buffered download stalls do not disable real waiting recovery
+  ---
+  duration_ms: 30.9672
+  ...
+# Subtest: ignoring a buffered download stall does not cancel a hung initial play watchdog
+ok 54 - ignoring a buffered download stall does not cancel a hung initial play watchdog
+  ---
+  duration_ms: 30.0369
+  ...
+# (node:19392) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: completing placement immediately advances the visible text and hand without acknowledging the old instruction
+ok 55 - completing placement immediately advances the visible text and hand without acknowledging the old instruction
+  ---
+  duration_ms: 13.7667
+  ...
+# Subtest: actual paid worker watering, automatic pickup and delivery advance explanations without extra clicks
+ok 56 - actual paid worker watering, automatic pickup and delivery advance explanations without extra clicks
+  ---
+  duration_ms: 78.1054
+  ...
+# Subtest: reload preserves unfinished instructions but advances instructions whose actions already completed
+ok 57 - reload preserves unfinished instructions but advances instructions whose actions already completed
+  ---
+  duration_ms: 2.7829
+  ...
+# (node:3812) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: mapungubwe completion follows paid physical watering, pickup and first delivery only
+ok 58 - mapungubwe completion follows paid physical watering, pickup and first delivery only
+  ---
+  duration_ms: 77.2371
+  ...
+# Subtest: saheliana completion follows paid physical watering, pickup and first delivery only
+ok 59 - saheliana completion follows paid physical watering, pickup and first delivery only
+  ---
+  duration_ms: 42.4178
+  ...
+# Subtest: suajili completion follows paid physical watering, pickup and first delivery only
+ok 60 - suajili completion follows paid physical watering, pickup and first delivery only
+  ---
+  duration_ms: 49.0327
+  ...
+# Subtest: musgum completion follows paid physical watering, pickup and first delivery only
+ok 61 - musgum completion follows paid physical watering, pickup and first delivery only
+  ---
+  duration_ms: 42.8006
+  ...
+# Subtest: etiope completion follows paid physical watering, pickup and first delivery only
+ok 62 - etiope completion follows paid physical watering, pickup and first delivery only
+  ---
+  duration_ms: 39.3842
+  ...
+# Subtest: skipping and already completed tutorial do not issue an objective cue on delivery
+ok 63 - skipping and already completed tutorial do not issue an objective cue on delivery
+  ---
+  duration_ms: 71.4437
+  ...
+# Subtest: completion audio is UI-only, deduplicated and does not replay saved history or mutate the farm
+ok 64 - completion audio is UI-only, deduplicated and does not replay saved history or mutate the farm
+  ---
+  duration_ms: 25.9983
+  ...
+# Subtest: late decode, hidden/menu pause and scene disposal suppress a stale completion
+ok 65 - late decode, hidden/menu pause and scene disposal suppress a stale completion
+  ---
+  duration_ms: 10.6595
+  ...
+# (node:11296) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Basic readings advance only manually and do not create, plant or pay anything
+ok 66 - Basic readings advance only manually and do not create, plant or pay anything
+  ---
+  duration_ms: 7.2372
+  ...
+# Subtest: An already placed native center is recognized without charging a second one
+ok 67 - An already placed native center is recognized without charging a second one
+  ---
+  duration_ms: 492.9985
+  ...
+# Subtest: The native farm resumes physical worker actions after reading, and completes only after a paid delivery
+ok 68 - The native farm resumes physical worker actions after reading, and completes only after a paid delivery
+  ---
+  duration_ms: 522.3774
+  ...
+# Subtest: Only a previously completed basic tutorial can be skipped; new magic still interrupts the second slot
+ok 69 - Only a previously completed basic tutorial can be skipped; new magic still interrupts the second slot
+  ---
+  duration_ms: 0.9475
+  ...
+# Subtest: The first unknown raid and Shield pause together; known later raids never add another tutorial pause
+ok 70 - The first unknown raid and Shield pause together; known later raids never add another tutorial pause
+  ---
+  duration_ms: 0.7504
+  ...
+# Subtest: Growth, Multiply and recovery have independent IDs; repeats and unrelated pauses remain intact
+ok 71 - Growth, Multiply and recovery have independent IDs; repeats and unrelated pauses remain intact
+  ---
+  duration_ms: 0.4796
+  ...
+# Subtest: Loading preserves an unfinished reading and queue without replaying its sound or silently acknowledging it
+ok 72 - Loading preserves an unfinished reading and queue without replaying its sound or silently acknowledging it
+  ---
+  duration_ms: 3.0321
+  ...
+# Subtest: Global profile writes merge seen IDs and malformed or unknown data cannot silence messages
+ok 73 - Global profile writes merge seen IDs and malformed or unknown data cannot silence messages
+  ---
+  duration_ms: 1.4796
+  ...
+# Subtest: Storage failure leaves the slot acknowledged and playable without manufacturing a global completion
+ok 74 - Storage failure leaves the slot acknowledged and playable without manufacturing a global completion
+  ---
+  duration_ms: 0.7549
+  ...
+# Subtest: Victory is narrated per campaign before the result choices, and expansion appears after hiring
+ok 75 - Victory is narrated per campaign before the result choices, and expansion appears after hiring
+  ---
+  duration_ms: 0.7529
+  ...
+# Subtest: Snapshots reject unknown tutorial IDs and incoherent modal pauses while retaining legacy slots
+ok 76 - Snapshots reject unknown tutorial IDs and incoherent modal pauses while retaining legacy slots
+  ---
+  duration_ms: 1.2393
+  ...
+# Subtest: A loaded defeat takes priority over an unfinished explanation without marking that message seen
+ok 77 - A loaded defeat takes priority over an unfinished explanation without marking that message seen
+  ---
+  duration_ms: 0.338
+  ...
+# Subtest: Profile memory lives outside slot listings and never changes another slot snapshot
+ok 78 - Profile memory lives outside slot listings and never changes another slot snapshot
+  ---
+  duration_ms: 1.198
+  ...
+# Subtest: a first paid crop completed after day one still closes the basic tutorial after actual delivery
+ok 79 - a first paid crop completed after day one still closes the basic tutorial after actual delivery
+  ---
+  duration_ms: 397.4558
+  ...
+# Subtest: an expired raid instruction is dropped unread while the Shield lesson remains available
+ok 80 - an expired raid instruction is dropped unread while the Shield lesson remains available
+  ---
+  duration_ms: 1.1397
+  ...
+# Subtest: a deliberately finished basic tutorial is not reopened by missing early game entities
+ok 81 - a deliberately finished basic tutorial is not reopened by missing early game entities
+  ---
+  duration_ms: 0.2971
+  ...
+1..81
+# tests 81
+# suites 0
+# pass 81
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3086.6453

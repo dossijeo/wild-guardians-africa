@@ -17,6 +17,14 @@ export function previewBlessing(s,targetId){
     description:target?.species?'Fuente permanente: +20 % de crecimiento y valor base de cosecha en cultivos próximos. No se cosecha ni necesita riego.':
       'Muralla permanente: recibe un 25 % menos de daño; protege un 10 % a las secciones físicamente contiguas.'};
 }
+// Presentation-only, immutable event context. This is not a game entity and
+// must never be used to restore a blessing or authorize an action.
+export function blessingPresentationSource(target){
+  const source={id:target.id,kind:target.species?'plant':target.kind,x:target.x,z:target.z};
+  if(typeof target.species==='string')source.species=target.species;
+  if(Number.isFinite(target.growth))source.growth=target.growth;
+  return source;
+}
 // A source is lost exactly once. Other charges, progress and sources are independent.
 export function loseBlessing(s,target,{removed=false}={}){
   if(!target.blessing)return null;
@@ -24,7 +32,7 @@ export function loseBlessing(s,target,{removed=false}={}){
   const a=awakeningState(s);a.destroyed++;
   invalidateBlessingInfluence(s);
   return {targetId:target.id,kind:target.species?'plant':target.kind,blessing,
-    removed,presentation:{x:target.x,z:target.z,elapsed:s.elapsed}};
+    removed,presentation:{x:target.x,z:target.z,elapsed:s.elapsed,source:blessingPresentationSource(target)}};
 }
 export function validateBlessings(s){
   const blessed=[...s.plants,...s.structures].filter(p=>p.blessing!==undefined);

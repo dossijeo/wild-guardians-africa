@@ -1,0 +1,313 @@
+{
+  "schema": 1,
+  "productCommit": "db87a9a6bbf46f74b36c9a6f475fc0dc7c779d94",
+  "seed": 712,
+  "biome": "desierto",
+  "day": 2,
+  "qualification": "Public native checkpoint after the paid enclosure closed for the second night",
+  "fixture": {
+    "path": "tests/fixtures/desierto712-d2-enclosed-hyena-before-raid.json.gz",
+    "sha256": "ce144ee814aa407559bb8dbfb70ec197a10627955b37d2e7424f9f92678b195e",
+    "snapshotSHA256": "baa76c5cb300cd6346a551accb30405dbeeb51ebcb2817389dab6580a6d4b89c"
+  },
+  "base": {
+    "commit": "92942350eb2d47abf11890f6e7796bb48cfc4612",
+    "path": ".cache/desert-menu-712/night-two-hyena-red.tap",
+    "sha256": "1c4fb970896346c4be605b39e47015970e62d3f0ede750ffb63343908b71b08a",
+    "birthElapsed": 1022.6082024584188,
+    "target": "structure-2",
+    "corridorNodes": 74,
+    "error": "Native task game cohort contains an unsupported mover"
+  },
+  "code": [
+    {
+      "path": "src/simulation/raids.js",
+      "sha256": "3a35557571eb00d0f95f3770f0182c479565369005eb2720b4970594e5361e47"
+    },
+    {
+      "path": "src/simulation/simulation-authority.js",
+      "sha256": "dde348dd90b6a9265657dd7ad596784b130533291cbb65519a3bfbc3e11349b8"
+    },
+    {
+      "path": "src/world/wild-engine/spatial-intent-bridge.js",
+      "sha256": "f9bb8f3193ed7dcb3ee4280f78ca7458d902830c9606f38bc650e72d92f5f140"
+    }
+  ],
+  "deterministic": {
+    "focused": {
+      "path": ".cache/desert-menu-712/night-two-focal-candidate.json",
+      "sha256": "6baac043b2860732b60642c5604161992939267420b8cab6f490aa5b52a3fc61"
+    },
+    "strikeReload": {
+      "path": ".cache/desert-menu-712/night-two-hyena-active-strike-reload-cpu.json",
+      "sha256": "fddf7f5969c66419e5d4d4c252002dec732495b380fb7c71740084177fd26fbc"
+    },
+    "regression": {
+      "path": ".cache/desert-menu-712/night-two-hyena-regression.tap",
+      "sha256": "391e42d57b32be9e85d168455d646fb0f4b68607052924243b0e868e6690577c",
+      "passed": 106,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "productBuild": {
+    "path": ".cache/desert-menu-712/hyena-product-build.log",
+    "sha256": "f74831c8352beb973a800c6794f162ea0d3915566a8b15e41e3ef2ce39ddd006",
+    "backend": "webgpu-worker",
+    "remoteDraw": true,
+    "completed": true
+  },
+  "hardware": {
+    "path": ".cache/desert-menu-712/night-two-hyena-isolated-vite.json",
+    "sha256": "2c427d9200c130deb4e19bb26b8adf6906c1eee079cbb0e429c01eb9b4eed6f6",
+    "runner": {
+      "path": ".cache/flee-return/desert-hyena-night-physical.mjs",
+      "sha256": "f1624d7f958b2fcc12bf4c02a96f8ebaf396187c57c6299203470ced525c37c5"
+    },
+    "harness": {
+      "path": ".cache/flee-return/desert-hyena-night-browser.js",
+      "sha256": "aab09f0161a6ca334ac950817ff45506ba6bf0ed177c02e24d2d186e88d50032"
+    },
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing"
+    },
+    "birth": {
+      "id": "event-55",
+      "type": "RaidSpawned",
+      "raidFacts": {
+        "id": "raid-2-night",
+        "day": 2,
+        "daytime": false,
+        "elapsed": 1022.6082024584188,
+        "waveIndex": 0,
+        "pressureFacts": {
+          "night": 2,
+          "observedValue": 534,
+          "capturedValue": 534,
+          "effectiveValue": 534,
+          "pressure": 0.07677575339433225,
+          "targetAnimals": 1,
+          "areaCap": 1,
+          "introductory": true,
+          "candidateVersion": 5,
+          "experimentId": "v1-pressure",
+          "experimentSignature": "[1500,[0.35,0.6],[0.75,0.18],[0.8,0.15]]",
+          "budget": 3,
+          "potential": 3,
+          "composition": {
+            "hyena": 1
+          },
+          "referenceEnvelope": null,
+          "compositionAdjustments": [],
+          "qRaisedForRangeSafety": false
+        },
+        "exposedLiving": 2,
+        "exposedWounded": 0,
+        "actors": [
+          {
+            "id": "animal-33",
+            "species": "hyena",
+            "hitsRemaining": 3,
+            "spawn": {
+              "x": 113.09280938219484,
+              "z": 33.11866542539152
+            },
+            "exit": {
+              "x": 114.53108599800746,
+              "z": 35.75141311106264
+            }
+          }
+        ]
+      },
+      "simulationTime": 1022.6082024584188
+    },
+    "hold": {
+      "approach": {
+        "heldAt": 1027.1865619666087,
+        "initial": [
+          113.09280938219484,
+          33.11866542539152,
+          null,
+          560,
+          3
+        ]
+      },
+      "strike": {
+        "heldAt": 1069.78656196657,
+        "initial": [
+          96.78514862060547,
+          3.2676920890808105,
+          40.19830193762042,
+          560,
+          3
+        ]
+      }
+    },
+    "draws": [
+      {
+        "ticket": 2,
+        "sequence": 31,
+        "kind": 26,
+        "purpose": "center",
+        "bodyId": 1,
+        "relativeTime": 0
+      },
+      {
+        "ticket": 4,
+        "sequence": 153,
+        "kind": 27,
+        "purpose": "center",
+        "bodyId": 1,
+        "relativeTime": 0
+      },
+      {
+        "ticket": 6,
+        "sequence": 159,
+        "kind": 26,
+        "purpose": "center",
+        "bodyId": 1,
+        "relativeTime": 0
+      },
+      {
+        "ticket": 8,
+        "sequence": 161,
+        "kind": 27,
+        "purpose": "center",
+        "bodyId": 1,
+        "relativeTime": 0
+      },
+      {
+        "ticket": 10,
+        "sequence": 171,
+        "kind": 26,
+        "purpose": "center",
+        "bodyId": 1,
+        "relativeTime": 0
+      },
+      {
+        "ticket": 12,
+        "sequence": 174,
+        "kind": 27,
+        "purpose": "center",
+        "bodyId": 1,
+        "relativeTime": 0
+      },
+      {
+        "ticket": 14,
+        "sequence": 181,
+        "kind": 26,
+        "purpose": "retreat",
+        "bodyId": 1,
+        "relativeTime": 0
+      }
+    ],
+    "phases": [
+      {
+        "attackId": "attack-56",
+        "simulationTime": 1071.3865619665685,
+        "species": "hyena",
+        "targetId": "structure-2",
+        "hp": 535
+      },
+      {
+        "attackId": "attack-59",
+        "simulationTime": 1076.4565619665639,
+        "species": "hyena",
+        "targetId": "structure-2",
+        "hp": 510
+      },
+      {
+        "attackId": "attack-62",
+        "simulationTime": 1079.7865619665608,
+        "species": "hyena",
+        "targetId": "structure-2",
+        "hp": 485
+      }
+    ],
+    "actorRig": {
+      "root": 619,
+      "geometries": [
+        413,
+        414,
+        415,
+        416
+      ],
+      "attributes": 26
+    },
+    "absence": {
+      "sequence": 245,
+      "clockElapsed": 1104.1365619665387
+    },
+    "defenses": [
+      "structure-10",
+      "structure-11",
+      "structure-12",
+      "structure-13",
+      "structure-14",
+      "structure-15",
+      "structure-16",
+      "structure-17",
+      "structure-18",
+      "structure-19",
+      "structure-7",
+      "structure-8",
+      "structure-9"
+    ],
+    "protectedCrops": [
+      {
+        "id": "plant-3",
+        "alive": true
+      },
+      {
+        "id": "plant-5",
+        "alive": true
+      }
+    ],
+    "strikeSnapshot": {
+      "path": ".cache/desert-menu-712/night-two-hyena-active-strike.json",
+      "sha256": "5a09aec053cf4bcf62a4610e81c196aa273850e2651248e94fff0ccf8ad4d851"
+    },
+    "strikeSnapshotReloaded": true,
+    "drained": true,
+    "errors": []
+  },
+  "strikeReload": {
+    "path": ".cache/desert-menu-712/night-two-hyena-reloaded-nvidia.json",
+    "sha256": "8bb43cce06aacbd1b50ed7df027c562996149c5adc87124b00bfbdd19694e53f",
+    "runner": {
+      "path": ".cache/flee-return/desert-hyena-reload-physical.mjs",
+      "sha256": "e82b2a1262ba33bef94c54d585c877227a2fa89341c34b710154aef52a767fe2"
+    },
+    "harness": {
+      "path": ".cache/flee-return/desert-hyena-reload-browser.js",
+      "sha256": "4dccc41a3cf5b864131c7090dc38e30c63d4042e6801fe692705adf5770dc511"
+    },
+    "initialTime": 1070.1365619665696,
+    "attackId": "attack-56",
+    "remaining": 1.241666705161606,
+    "firstDraw": {
+      "sequence": 27,
+      "ticket": 2,
+      "bodyId": 1,
+      "relativeTime": 0,
+      "clipAge": 0.30000001192092896
+    },
+    "hitIds": [
+      "attack-56",
+      "attack-59",
+      "attack-62"
+    ],
+    "centerHp": [
+      535,
+      510,
+      485
+    ],
+    "absence": {
+      "sequence": 321,
+      "clockElapsed": 1103.9865619665388
+    },
+    "drained": true,
+    "errors": []
+  }
+}

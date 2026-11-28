@@ -1,0 +1,443 @@
+{
+  "sourceSha256": "af562cf27ea9b073cb2fd90e7ab127b472a7b08add56d5848f71a1b60b36ad3f",
+  "cut": {
+    "version": 2,
+    "at": 20.249999999999844,
+    "spawnSequence": 29208,
+    "actorId": 900011,
+    "animalId": 1000002,
+    "personId": "person-5",
+    "contractDay": 15,
+    "villageId": "village-1",
+    "centerId": "structure-2",
+    "workerPose": {
+      "x": -13.994054916816337,
+      "z": 3.6799632295903213,
+      "yaw": 0.012385906651936982,
+      "runPhase": 23.44999999999999,
+      "walkPhase": 19.070768645524318,
+      "carryPhase": 9.5,
+      "runRemaining": 40
+    },
+    "animalPose": {
+      "x": -16.968654150055205,
+      "z": -27.0078364624862,
+      "yaw": -1.3258176636680283,
+      "phase": 0.0999999999999943,
+      "targetId": "structure-2",
+      "reservation": "center:structure-2:animal-1000002"
+    },
+    "homePath": [
+      {
+        "x": -13.949600219726562,
+        "z": 7.268915176391602
+      },
+      {
+        "x": -13.949600219726562,
+        "z": 9.819999694824219
+      },
+      {
+        "x": -14,
+        "z": 11.800000190734863
+      }
+    ],
+    "gates": [
+      {
+        "id": "structure-1000000",
+        "opening": 1,
+        "reservedByHome": true
+      },
+      {
+        "id": "structure-1000001",
+        "opening": 1,
+        "reservedByHome": true
+      }
+    ]
+  },
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 107.90000000596046
+    }
+  },
+  "firstSubmit": {
+    "row": {
+      "at": 1795774585701.3,
+      "sequence": 19,
+      "ticket": 4,
+      "key": "20.249999999999844:0|center:20.249999999999844:0",
+      "home": {
+        "nativeHome": {
+          "kind": "native-home-route-reference",
+          "version": 1,
+          "actorId": 900011,
+          "bodyId": 1,
+          "sourceRequest": {
+            "kind": "native-home-request-reference",
+            "version": 2,
+            "raidSpawnSequence": 29208,
+            "authorityEpoch": "cfb5ee77-92f9-4f7e-9a5e-d201b46d6876/1",
+            "nativeSession": 1,
+            "actorId": 900011,
+            "bodyId": 1,
+            "bodyFlags": 1,
+            "requestSequence": 3,
+            "requestedAt": 20.249999999999844,
+            "profile": 1,
+            "home": {
+              "villageId": 1,
+              "x": -14,
+              "z": 11.799999999999999
+            },
+            "pose": {
+              "x": -13.994054916816337,
+              "z": 3.6799632295903213,
+              "yaw": 0.012385906651936982,
+              "radius": 0.28,
+              "runPhase": 23.44999999999999,
+              "walkPhase": 19.070768645524318,
+              "carryPhase": 9.5,
+              "runRemaining": 40
+            }
+          },
+          "expectedRouteHandle": {
+            "authorityEpoch": "cfb5ee77-92f9-4f7e-9a5e-d201b46d6876/1",
+            "session": 1,
+            "slot": 1,
+            "generation": 2
+          },
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "cfb5ee77-92f9-4f7e-9a5e-d201b46d6876/1",
+            "nativeSession": 1,
+            "ticket": 1,
+            "effectiveTime": 20.249999999999844
+          },
+          "sourceControlSequence": 4,
+          "endTime": 23.633730673104274
+        },
+        "relativeTime": 0,
+        "semantic": "relative",
+        "epoch": 20.249999999999844,
+        "executionEpoch": 20.249999999999844,
+        "elapsed": 20.249999999999844
+      },
+      "animal": {
+        "nativeAnimalCrop": {
+          "version": 1,
+          "kind": 26,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "cfb5ee77-92f9-4f7e-9a5e-d201b46d6876/1",
+            "nativeSession": 1,
+            "ticket": 3,
+            "effectiveTime": 20.249999999999844
+          },
+          "sourceControlSequence": 5,
+          "endTime": 42.49519651059927,
+          "purpose": "center",
+          "actorId": 1000002,
+          "bodyId": 2,
+          "targetId": 2,
+          "centerId": 2,
+          "requestSequence": 4,
+          "slot": 0,
+          "generation": 3,
+          "radius": 1.1,
+          "x": -16.968654150055205,
+          "z": -27.0078364624862,
+          "phase": 0.0999999999999943,
+          "yaw": -1.3258176636680283,
+          "targetX": -18.954998779296876,
+          "targetZ": 3.2,
+          "centerX": -18.954998779296876,
+          "centerZ": 3.2
+        },
+        "relativeTime": 0,
+        "semantic": "relative",
+        "epoch": 20.249999999999844,
+        "executionEpoch": 20.249999999999844,
+        "elapsed": 20.249999999999844
+      }
+    },
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 107.90000000596046
+      }
+    },
+    "motors": [
+      {
+        "nativeGate": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "cfb5ee77-92f9-4f7e-9a5e-d201b46d6876/1",
+            "nativeSession": 1,
+            "ticket": 1,
+            "effectiveTime": 20.249999999999844
+          }
+        },
+        "semantic": "relative",
+        "epoch": 20.249999999999844,
+        "elapsed": 20.249999999999844
+      },
+      {
+        "nativeGate": {
+          "gateId": 1000001,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "cfb5ee77-92f9-4f7e-9a5e-d201b46d6876/1",
+            "nativeSession": 1,
+            "ticket": 1,
+            "effectiveTime": 20.249999999999844
+          }
+        },
+        "semantic": "relative",
+        "epoch": 20.249999999999844,
+        "elapsed": 20.249999999999844
+      }
+    ],
+    "openings": [
+      1,
+      1
+    ]
+  },
+  "nextSubmit": {
+    "sequence": 23,
+    "ticket": 4,
+    "homeAge": 0.29999998211860657,
+    "animalAge": 0.29999998211860657
+  },
+  "arrival": {
+    "bodyId": 1,
+    "worldBoundary": {
+      "version": 1,
+      "authorityEpoch": "cfb5ee77-92f9-4f7e-9a5e-d201b46d6876/1",
+      "nativeSession": 1,
+      "ticket": 6,
+      "effectiveTime": 23.799999999999894
+    },
+    "retiredSequence": 7,
+    "gateIds": [
+      1000001,
+      1000000
+    ]
+  },
+  "returnToFarm": {
+    "bodyId": 3,
+    "worldBoundary": {
+      "version": 1,
+      "authorityEpoch": "cfb5ee77-92f9-4f7e-9a5e-d201b46d6876/1",
+      "nativeSession": 1,
+      "ticket": 24,
+      "effectiveTime": 72.00000000000229
+    },
+    "refugeSequence": 7,
+    "gateIds": [
+      1000000,
+      1000001
+    ]
+  },
+  "hits": [
+    {
+      "id": "event-29211",
+      "attackId": "attack-29209",
+      "simulationTime": 45.90000000000119,
+      "targetId": "structure-2"
+    },
+    {
+      "id": "event-29214",
+      "attackId": "attack-29212",
+      "simulationTime": 48.90000000000145,
+      "targetId": "structure-2"
+    },
+    {
+      "id": "event-29217",
+      "attackId": "attack-29215",
+      "simulationTime": 55.00000000000197,
+      "targetId": "structure-2"
+    },
+    {
+      "id": "event-29220",
+      "attackId": "attack-29218",
+      "simulationTime": 60.27000000000242,
+      "targetId": "structure-2"
+    }
+  ],
+  "centerHealth": [
+    580,
+    560,
+    540,
+    520
+  ],
+  "raidEnd": {
+    "id": "event-29222",
+    "type": "RaidEnded",
+    "simulationTime": 68.74000000000247
+  },
+  "final": {
+    "elapsed": 81.25000000000176,
+    "personId": "person-5",
+    "contractDay": 15,
+    "admission": "native-idle",
+    "balance": {
+      "n": "163",
+      "d": "1"
+    },
+    "gateOpenings": [
+      {
+        "id": "structure-1000000",
+        "gateOpen": 1
+      },
+      {
+        "id": "structure-1000001",
+        "gateOpen": 1
+      }
+    ]
+  },
+  "drain": {
+    "disposed": true
+  },
+  "errors": [],
+  "initialAppCut": {
+    "home": {
+      "clock": 20.499999999999847,
+      "sequence": 16
+    },
+    "elapsed": 21.649999999999864,
+    "notice": "QA UI No se pudo guardar la partida: espera a que termine la caída física."
+  },
+  "appNativeSave": {
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "isFallbackAdapter": null
+    },
+    "firstHome": {
+      "sequence": 17,
+      "elapsed": 20.499999999999847,
+      "world": {
+        "version": 1,
+        "authorityEpoch": "f019cf45-a7aa-47f6-853f-d923e0f9d504/1",
+        "nativeSession": 1,
+        "ticket": 2,
+        "effectiveTime": 20.499999999999847
+      },
+      "gateIds": [
+        1000000,
+        1000001
+      ],
+      "bodyId": 1,
+      "age": 0
+    },
+    "jointSubmit": {
+      "sequence": 26,
+      "elapsed": 23.249999999999886,
+      "world": {
+        "version": 1,
+        "authorityEpoch": "f019cf45-a7aa-47f6-853f-d923e0f9d504/1",
+        "nativeSession": 1,
+        "ticket": 4,
+        "effectiveTime": 23.249999999999886
+      },
+      "gateIds": [
+        1000000,
+        1000001
+      ],
+      "animalBodyId": 2,
+      "homeAge": 2.75,
+      "animalAge": 0
+    },
+    "returnToFarm": {
+      "sequence": 319,
+      "elapsed": 79.60000000000186,
+      "world": {
+        "version": 1,
+        "authorityEpoch": "f019cf45-a7aa-47f6-853f-d923e0f9d504/1",
+        "nativeSession": 1,
+        "ticket": 24,
+        "effectiveTime": 79.60000000000186
+      },
+      "gateIds": [
+        1000000,
+        1000001
+      ],
+      "bodyId": 3
+    },
+    "idle": {
+      "sequence": 357,
+      "elapsed": 89.5000000000013,
+      "world": {
+        "version": 1,
+        "authorityEpoch": "f019cf45-a7aa-47f6-853f-d923e0f9d504/1",
+        "nativeSession": 1,
+        "ticket": 26,
+        "effectiveTime": 89.5000000000013
+      }
+    },
+    "events": [
+      {
+        "id": "event-29212",
+        "type": "StructureHit",
+        "hp": 580,
+        "at": 49.95000000000154
+      },
+      {
+        "id": "event-29215",
+        "type": "StructureHit",
+        "hp": 560,
+        "at": 53.70000000000186
+      },
+      {
+        "id": "event-29218",
+        "type": "StructureHit",
+        "hp": 540,
+        "at": 60.600000000002446
+      },
+      {
+        "id": "event-29221",
+        "type": "StructureHit",
+        "hp": 520,
+        "at": 66.4200000000026
+      },
+      {
+        "id": "event-29225",
+        "type": "RaidEnded",
+        "at": 75.59000000000208
+      }
+    ],
+    "final": {
+      "elapsed": 89.70000000000128,
+      "confirmedSequence": 1711,
+      "saveAvailable": true
+    },
+    "drain": {
+      "disposed": true
+    },
+    "errors": [],
+    "notices": [
+      "QA UI No se pudo guardar la partida: espera a que termine la caída física."
+    ]
+  }
+}

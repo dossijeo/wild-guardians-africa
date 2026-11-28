@@ -46,3 +46,17 @@ test('the guardian explanation is available in Spanish and English',()=>{
   assert.equal(translate(text,'es'),text);assert.equal(translate(text,'en'),messages[text]);
   assert.match(messages[text],/crop or a wall/);assert.match(messages[text],/cancel/i);
 });
+
+import {tutorialHudHandTarget} from '../src/ui/tutorial-hud-hand.js';
+import {syncTutorialActionPause} from '../src/tutorial/action-pause.js';
+test('3D Guardian points at the available Awakening button beyond the opening tutorial without pausing',()=>{
+ const {state}=setup();state.day=4;state.tutorial.basicSkipped=true;state.tutorial.step='done';state.tutorial.reading=id;state.awakenings.progress=100;
+ // The existing HUD permission requires a live operational center.
+ state.structures.push({id:'guide-center',kind:'center',status:'intact'});
+ assert.equal(tutorialHudHandTarget(state,{id}),'#awakeningButton');
+ assert.equal(syncTutorialActionPause(state,{hudTarget:true}),false);assert.deepEqual(state.pauses,[]);
+ assert.equal(tutorialHudHandTarget(state,{id},'awakening'),null);
+ state.awakenings.progress=99;assert.equal(tutorialHudHandTarget(state,{id}),null);
+ state.awakenings.progress=100;state.pauses=['menu'];assert.equal(tutorialHudHandTarget(state,{id}),null);
+ state.pauses=[];state.result={won:true};assert.equal(tutorialHudHandTarget(state,{id}),null);
+});

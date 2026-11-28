@@ -8,7 +8,9 @@ export class WallStrokePreview{
   this.canvas.setAttribute('aria-hidden','true');this.canvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;display:none';
   canvas.parentElement.append(this.canvas);this.context=this.canvas.getContext('2d');
  }
- showScreen(points){this.show(points);this.screenSpace=true;}
+ // Screen-space strokes have no dependency on a renderer frame. Draw on input
+ // so the Worker-only presentation can show the guide while WebGPU renders.
+ showScreen(points){this.show(points);this.screenSpace=true;if(points.length)this.render(null,null);}
  show(points){this.screenSpace=false;this.points=points;this.dirty=true;this.canvas.style.display=points.length?'block':'none';}
  render(camera,field){
   if(!this.points.length)return;

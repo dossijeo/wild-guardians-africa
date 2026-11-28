@@ -1,0 +1,998 @@
+{
+  "version": 1,
+  "periodMs": 60000,
+  "phaseWindowMs": 1000,
+  "longGapMs": 100,
+  "cases": [
+    {
+      "label": "next-task:olderMale",
+      "samples": 2459,
+      "first": 1795166067462.34,
+      "last": 1795166149760.84,
+      "coverageMs": 82298.5,
+      "phaseExposureMs": 1000,
+      "longGaps": 3,
+      "inPhase": 3,
+      "gaps": [
+        {
+          "from": 1795166100260.74,
+          "through": 1795166100433.135,
+          "milliseconds": 172.39501953125,
+          "utc": "2026-11-20T09:15:00.260Z",
+          "phaseMs": 260.739990234375,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 2.31005859375,
+          "captures": []
+        },
+        {
+          "from": 1795166100460.69,
+          "through": 1795166100615.275,
+          "milliseconds": 154.5849609375,
+          "utc": "2026-11-20T09:15:00.460Z",
+          "phaseMs": 460.68994140625,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 2.905029296875,
+          "captures": []
+        },
+        {
+          "from": 1795166100660.655,
+          "through": 1795166100760.905,
+          "milliseconds": 100.25,
+          "utc": "2026-11-20T09:15:00.660Z",
+          "phaseMs": 660.655029296875,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 2.989990234375,
+          "captures": []
+        }
+      ]
+    },
+    {
+      "label": "next-task:olderFemale",
+      "samples": 2428,
+      "first": 1795166298594.665,
+      "last": 1795166379961.675,
+      "coverageMs": 81367.01000976562,
+      "phaseExposureMs": 1000,
+      "longGaps": 3,
+      "inPhase": 3,
+      "gaps": [
+        {
+          "from": 1795166340194.85,
+          "through": 1795166340444.3901,
+          "milliseconds": 249.5400390625,
+          "utc": "2026-11-20T09:19:00.194Z",
+          "phaseMs": 194.85009765625,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 1.764892578125,
+          "captures": []
+        },
+        {
+          "from": 1795166340461.5452,
+          "through": 1795166340600.1802,
+          "milliseconds": 138.635009765625,
+          "utc": "2026-11-20T09:19:00.461Z",
+          "phaseMs": 461.545166015625,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 2.974853515625,
+          "captures": []
+        },
+        {
+          "from": 1795166340661.635,
+          "through": 1795166340780.75,
+          "milliseconds": 119.114990234375,
+          "utc": "2026-11-20T09:19:00.661Z",
+          "phaseMs": 661.635009765625,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 2.795166015625,
+          "captures": []
+        }
+      ]
+    },
+    {
+      "label": "next-task:youngMale",
+      "samples": 2429,
+      "first": 1795166410328.355,
+      "last": 1795166491762.2551,
+      "coverageMs": 81433.90014648438,
+      "phaseExposureMs": 1000,
+      "longGaps": 2,
+      "inPhase": 1,
+      "gaps": [
+        {
+          "from": 1795166414268.335,
+          "through": 1795166414374.705,
+          "milliseconds": 106.3701171875,
+          "utc": "2026-11-20T09:20:14.268Z",
+          "phaseMs": 14268.3349609375,
+          "inPhase": false,
+          "trigger": "raf",
+          "drawMs": 3.875,
+          "captures": []
+        },
+        {
+          "from": 1795166460228.695,
+          "through": 1795166460653.09,
+          "milliseconds": 424.39501953125,
+          "utc": "2026-11-20T09:21:00.228Z",
+          "phaseMs": 228.695068359375,
+          "inPhase": true,
+          "trigger": "mutation-release",
+          "drawMs": 4.14990234375,
+          "captures": []
+        }
+      ]
+    },
+    {
+      "label": "next-task:youngFemale",
+      "samples": 2425,
+      "first": 1795166523428.775,
+      "last": 1795166604764.43,
+      "coverageMs": 81335.65502929688,
+      "phaseExposureMs": 1000,
+      "longGaps": 3,
+      "inPhase": 3,
+      "gaps": [
+        {
+          "from": 1795166580195.855,
+          "through": 1795166580444.47,
+          "milliseconds": 248.614990234375,
+          "utc": "2026-11-20T09:23:00.195Z",
+          "phaseMs": 195.85498046875,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 3.320068359375,
+          "captures": []
+        },
+        {
+          "from": 1795166580462.43,
+          "through": 1795166580653.345,
+          "milliseconds": 190.9150390625,
+          "utc": "2026-11-20T09:23:00.462Z",
+          "phaseMs": 462.429931640625,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 2.219970703125,
+          "captures": []
+        },
+        {
+          "from": 1795166580662.295,
+          "through": 1795166580841.88,
+          "milliseconds": 179.5849609375,
+          "utc": "2026-11-20T09:23:00.662Z",
+          "phaseMs": 662.294921875,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 3.364990234375,
+          "captures": []
+        }
+      ]
+    },
+    {
+      "label": "next-task:settlement-control",
+      "samples": 1561,
+      "first": 1795166634862.7551,
+      "last": 1795166687296.21,
+      "coverageMs": 52433.454833984375,
+      "phaseExposureMs": 1000,
+      "longGaps": 4,
+      "inPhase": 3,
+      "gaps": [
+        {
+          "from": 1795166636962.69,
+          "through": 1795166637072.575,
+          "milliseconds": 109.885009765625,
+          "utc": "2026-11-20T09:23:56.962Z",
+          "phaseMs": 56962.68994140625,
+          "inPhase": false,
+          "trigger": "raf",
+          "drawMs": 0.47021484375,
+          "captures": []
+        },
+        {
+          "from": 1795166640229.345,
+          "through": 1795166640435.825,
+          "milliseconds": 206.47998046875,
+          "utc": "2026-11-20T09:24:00.229Z",
+          "phaseMs": 229.344970703125,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 1.14013671875,
+          "captures": []
+        },
+        {
+          "from": 1795166640462.72,
+          "through": 1795166640612.135,
+          "milliseconds": 149.4150390625,
+          "utc": "2026-11-20T09:24:00.462Z",
+          "phaseMs": 462.719970703125,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 1.219970703125,
+          "captures": []
+        },
+        {
+          "from": 1795166640662.57,
+          "through": 1795166640797.3052,
+          "milliseconds": 134.735107421875,
+          "utc": "2026-11-20T09:24:00.662Z",
+          "phaseMs": 662.570068359375,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 1.294921875,
+          "captures": []
+        }
+      ]
+    },
+    {
+      "label": "first-use:olderMale",
+      "samples": 1571,
+      "first": 1795155768459.1501,
+      "last": 1795155821088.9001,
+      "coverageMs": 52629.75,
+      "phaseExposureMs": 1000,
+      "longGaps": 2,
+      "inPhase": 2,
+      "gaps": [
+        {
+          "from": 1795155780188.735,
+          "through": 1795155780370.2651,
+          "milliseconds": 181.530029296875,
+          "utc": "2026-11-20T06:23:00.188Z",
+          "phaseMs": 188.735107421875,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 1.184814453125,
+          "captures": []
+        },
+        {
+          "from": 1795155780388.84,
+          "through": 1795155780499.605,
+          "milliseconds": 110.764892578125,
+          "utc": "2026-11-20T06:23:00.388Z",
+          "phaseMs": 388.840087890625,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 1.93017578125,
+          "captures": []
+        }
+      ]
+    },
+    {
+      "label": "first-use:olderFemale",
+      "samples": 1562,
+      "first": 1795155846555.515,
+      "last": 1795155898622.53,
+      "coverageMs": 52067.01513671875,
+      "phaseExposureMs": 0,
+      "longGaps": 0,
+      "inPhase": 0,
+      "gaps": []
+    },
+    {
+      "label": "first-use:youngFemale",
+      "samples": 1565,
+      "first": 1795155923955.785,
+      "last": 1795155976522.895,
+      "coverageMs": 52567.110107421875,
+      "phaseExposureMs": 1000,
+      "longGaps": 3,
+      "inPhase": 3,
+      "gaps": [
+        {
+          "from": 1795155960222.7551,
+          "through": 1795155960441.875,
+          "milliseconds": 219.119873046875,
+          "utc": "2026-11-20T06:26:00.222Z",
+          "phaseMs": 222.755126953125,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 4.830078125,
+          "captures": []
+        },
+        {
+          "from": 1795155960456.04,
+          "through": 1795155960610.1301,
+          "milliseconds": 154.090087890625,
+          "utc": "2026-11-20T06:26:00.456Z",
+          "phaseMs": 456.0400390625,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 4.369873046875,
+          "captures": []
+        },
+        {
+          "from": 1795155960655.965,
+          "through": 1795155960813.035,
+          "milliseconds": 157.06982421875,
+          "utc": "2026-11-20T06:26:00.655Z",
+          "phaseMs": 655.965087890625,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 4.610107421875,
+          "captures": []
+        }
+      ]
+    },
+    {
+      "label": "first-use:youngMale",
+      "samples": 1565,
+      "first": 1795156001592.935,
+      "last": 1795156054089.9001,
+      "coverageMs": 52496.965087890625,
+      "phaseExposureMs": 1000,
+      "longGaps": 3,
+      "inPhase": 2,
+      "gaps": [
+        {
+          "from": 1795156003656.1702,
+          "through": 1795156003772.58,
+          "milliseconds": 116.409912109375,
+          "utc": "2026-11-20T06:26:43.656Z",
+          "phaseMs": 43656.170166015625,
+          "inPhase": false,
+          "trigger": "raf",
+          "drawMs": 0.405029296875,
+          "captures": []
+        },
+        {
+          "from": 1795156020223.03,
+          "through": 1795156020412.445,
+          "milliseconds": 189.4150390625,
+          "utc": "2026-11-20T06:27:00.223Z",
+          "phaseMs": 223.030029296875,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 3.080078125,
+          "captures": []
+        },
+        {
+          "from": 1795156020422.85,
+          "through": 1795156020592.33,
+          "milliseconds": 169.47998046875,
+          "utc": "2026-11-20T06:27:00.422Z",
+          "phaseMs": 422.85009765625,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 3.5048828125,
+          "captures": []
+        }
+      ]
+    },
+    {
+      "label": "first-use:task-control",
+      "samples": 528,
+      "first": 1795156077989.72,
+      "last": 1795156096156.5898,
+      "coverageMs": 18166.869873046875,
+      "phaseExposureMs": 1000,
+      "longGaps": 3,
+      "inPhase": 3,
+      "gaps": [
+        {
+          "from": 1795156080089.74,
+          "through": 1795156080195.1099,
+          "milliseconds": 105.369873046875,
+          "utc": "2026-11-20T06:28:00.089Z",
+          "phaseMs": 89.739990234375,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 0.440185546875,
+          "captures": []
+        },
+        {
+          "from": 1795156080223.065,
+          "through": 1795156080548.785,
+          "milliseconds": 325.719970703125,
+          "utc": "2026-11-20T06:28:00.223Z",
+          "phaseMs": 223.06494140625,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 0.4150390625,
+          "captures": []
+        },
+        {
+          "from": 1795156080556.39,
+          "through": 1795156080756.57,
+          "milliseconds": 200.18017578125,
+          "utc": "2026-11-20T06:28:00.556Z",
+          "phaseMs": 556.389892578125,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 0.324951171875,
+          "captures": []
+        }
+      ]
+    },
+    {
+      "label": "home:olderMale",
+      "samples": 5341,
+      "first": 1795162826348.19,
+      "last": 1795163005248.9849,
+      "coverageMs": 178900.794921875,
+      "phaseExposureMs": 3000,
+      "longGaps": 7,
+      "inPhase": 7,
+      "gaps": [
+        {
+          "from": 1795162860181.785,
+          "through": 1795162860376.265,
+          "milliseconds": 194.47998046875,
+          "utc": "2026-11-20T08:21:00.181Z",
+          "phaseMs": 181.784912109375,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 3.4599609375,
+          "captures": []
+        },
+        {
+          "from": 1795162860381.605,
+          "through": 1795162860519.035,
+          "milliseconds": 137.429931640625,
+          "utc": "2026-11-20T08:21:00.381Z",
+          "phaseMs": 381.60498046875,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 2.68505859375,
+          "captures": []
+        },
+        {
+          "from": 1795162920181.98,
+          "through": 1795162920372.68,
+          "milliseconds": 190.699951171875,
+          "utc": "2026-11-20T08:22:00.181Z",
+          "phaseMs": 181.97998046875,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 1.485107421875,
+          "captures": []
+        },
+        {
+          "from": 1795162920386,
+          "through": 1795162920557.24,
+          "milliseconds": 171.239990234375,
+          "utc": "2026-11-20T08:22:00.386Z",
+          "phaseMs": 386,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 2.5849609375,
+          "captures": []
+        },
+        {
+          "from": 1795162920582.055,
+          "through": 1795162920691.835,
+          "milliseconds": 109.780029296875,
+          "utc": "2026-11-20T08:22:00.582Z",
+          "phaseMs": 582.054931640625,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 1.744873046875,
+          "captures": []
+        },
+        {
+          "from": 1795162980215.5698,
+          "through": 1795162980396.2048,
+          "milliseconds": 180.635009765625,
+          "utc": "2026-11-20T08:23:00.215Z",
+          "phaseMs": 215.56982421875,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 2.1650390625,
+          "captures": []
+        },
+        {
+          "from": 1795162980415.535,
+          "through": 1795162980529.05,
+          "milliseconds": 113.51513671875,
+          "utc": "2026-11-20T08:23:00.415Z",
+          "phaseMs": 415.534912109375,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 3.559814453125,
+          "captures": []
+        }
+      ]
+    },
+    {
+      "label": "home:olderFemale",
+      "samples": 6051,
+      "first": 1795163038349,
+      "last": 1795163241883.295,
+      "coverageMs": 203534.294921875,
+      "phaseExposureMs": 4000,
+      "longGaps": 13,
+      "inPhase": 9,
+      "gaps": [
+        {
+          "from": 1795163040215.68,
+          "through": 1795163040318.92,
+          "milliseconds": 103.239990234375,
+          "utc": "2026-11-20T08:24:00.215Z",
+          "phaseMs": 215.679931640625,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 0.385009765625,
+          "captures": []
+        },
+        {
+          "from": 1795163040349.08,
+          "through": 1795163040550.635,
+          "milliseconds": 201.554931640625,
+          "utc": "2026-11-20T08:24:00.349Z",
+          "phaseMs": 349.080078125,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 0.43994140625,
+          "captures": []
+        },
+        {
+          "from": 1795163040582.48,
+          "through": 1795163040749.0151,
+          "milliseconds": 166.53515625,
+          "utc": "2026-11-20T08:24:00.582Z",
+          "phaseMs": 582.47998046875,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 0.4599609375,
+          "captures": []
+        },
+        {
+          "from": 1795163040782.465,
+          "through": 1795163040915.925,
+          "milliseconds": 133.4599609375,
+          "utc": "2026-11-20T08:24:00.782Z",
+          "phaseMs": 782.465087890625,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 0.52490234375,
+          "captures": []
+        },
+        {
+          "from": 1795163100216.04,
+          "through": 1795163100385.97,
+          "milliseconds": 169.929931640625,
+          "utc": "2026-11-20T08:25:00.216Z",
+          "phaseMs": 216.0400390625,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 1.56005859375,
+          "captures": []
+        },
+        {
+          "from": 1795163100415.9001,
+          "through": 1795163100564.915,
+          "milliseconds": 149.014892578125,
+          "utc": "2026-11-20T08:25:00.415Z",
+          "phaseMs": 415.900146484375,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 2.6201171875,
+          "captures": []
+        },
+        {
+          "from": 1795163160216.35,
+          "through": 1795163160517.425,
+          "milliseconds": 301.074951171875,
+          "utc": "2026-11-20T08:26:00.216Z",
+          "phaseMs": 216.35009765625,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 2.280029296875,
+          "captures": []
+        },
+        {
+          "from": 1795163180050.81,
+          "through": 1795163180236.71,
+          "milliseconds": 185.89990234375,
+          "utc": "2026-11-20T08:26:20.050Z",
+          "phaseMs": 20050.81005859375,
+          "inPhase": false,
+          "trigger": "raf",
+          "drawMs": 3.68505859375,
+          "captures": []
+        },
+        {
+          "from": 1795163180250.09,
+          "through": 1795163180441.44,
+          "milliseconds": 191.349853515625,
+          "utc": "2026-11-20T08:26:20.250Z",
+          "phaseMs": 20250.090087890625,
+          "inPhase": false,
+          "trigger": "raf",
+          "drawMs": 2.655029296875,
+          "captures": []
+        },
+        {
+          "from": 1795163180483.09,
+          "through": 1795163180621.53,
+          "milliseconds": 138.43994140625,
+          "utc": "2026-11-20T08:26:20.483Z",
+          "phaseMs": 20483.090087890625,
+          "inPhase": false,
+          "trigger": "raf",
+          "drawMs": 2.074951171875,
+          "captures": []
+        },
+        {
+          "from": 1795163180816.245,
+          "through": 1795163180917.37,
+          "milliseconds": 101.125,
+          "utc": "2026-11-20T08:26:20.816Z",
+          "phaseMs": 20816.2451171875,
+          "inPhase": false,
+          "trigger": "raf",
+          "drawMs": 2.784912109375,
+          "captures": []
+        },
+        {
+          "from": 1795163220216.615,
+          "through": 1795163220385.0051,
+          "milliseconds": 168.39013671875,
+          "utc": "2026-11-20T08:27:00.216Z",
+          "phaseMs": 216.614990234375,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 3.679931640625,
+          "captures": []
+        },
+        {
+          "from": 1795163220416.445,
+          "through": 1795163220516.5,
+          "milliseconds": 100.054931640625,
+          "utc": "2026-11-20T08:27:00.416Z",
+          "phaseMs": 416.445068359375,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 3.275146484375,
+          "captures": []
+        }
+      ]
+    },
+    {
+      "label": "home:youngMale",
+      "samples": 4423,
+      "first": 1795163276483.225,
+      "last": 1795163425183.98,
+      "coverageMs": 148700.7548828125,
+      "phaseExposureMs": 3000,
+      "longGaps": 7,
+      "inPhase": 7,
+      "gaps": [
+        {
+          "from": 1795163280221.395,
+          "through": 1795163280400.995,
+          "milliseconds": 179.60009765625,
+          "utc": "2026-11-20T08:28:00.221Z",
+          "phaseMs": 221.39501953125,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 0.849853515625,
+          "captures": []
+        },
+        {
+          "from": 1795163280418.9,
+          "through": 1795163280605.13,
+          "milliseconds": 186.22998046875,
+          "utc": "2026-11-20T08:28:00.418Z",
+          "phaseMs": 418.89990234375,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 1.76513671875,
+          "captures": []
+        },
+        {
+          "from": 1795163280616.66,
+          "through": 1795163280798.675,
+          "milliseconds": 182.01513671875,
+          "utc": "2026-11-20T08:28:00.616Z",
+          "phaseMs": 616.659912109375,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 0.81005859375,
+          "captures": []
+        },
+        {
+          "from": 1795163340217.05,
+          "through": 1795163340498.97,
+          "milliseconds": 281.919921875,
+          "utc": "2026-11-20T08:29:00.217Z",
+          "phaseMs": 217.050048828125,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 1.97509765625,
+          "captures": []
+        },
+        {
+          "from": 1795163340516.97,
+          "through": 1795163340649.58,
+          "milliseconds": 132.610107421875,
+          "utc": "2026-11-20T08:29:00.516Z",
+          "phaseMs": 516.969970703125,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 2.469970703125,
+          "captures": []
+        },
+        {
+          "from": 1795163340683.59,
+          "through": 1795163340815.25,
+          "milliseconds": 131.659912109375,
+          "utc": "2026-11-20T08:29:00.683Z",
+          "phaseMs": 683.590087890625,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 2.659912109375,
+          "captures": []
+        },
+        {
+          "from": 1795163400217.175,
+          "through": 1795163400687.075,
+          "milliseconds": 469.89990234375,
+          "utc": "2026-11-20T08:30:00.217Z",
+          "phaseMs": 217.175048828125,
+          "inPhase": true,
+          "trigger": "mutation-release",
+          "drawMs": 2.97998046875,
+          "captures": []
+        }
+      ]
+    },
+    {
+      "label": "home:youngFemale",
+      "samples": 6910,
+      "first": 1795163458150.615,
+      "last": 1795163689918.365,
+      "coverageMs": 231767.75,
+      "phaseExposureMs": 4000,
+      "longGaps": 10,
+      "inPhase": 10,
+      "gaps": [
+        {
+          "from": 1795163460284.0398,
+          "through": 1795163460551.4448,
+          "milliseconds": 267.405029296875,
+          "utc": "2026-11-20T08:31:00.284Z",
+          "phaseMs": 284.039794921875,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 0.47998046875,
+          "captures": []
+        },
+        {
+          "from": 1795163460584.085,
+          "through": 1795163460739.395,
+          "milliseconds": 155.31005859375,
+          "utc": "2026-11-20T08:31:00.584Z",
+          "phaseMs": 584.0849609375,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 0.4599609375,
+          "captures": []
+        },
+        {
+          "from": 1795163460884.045,
+          "through": 1795163461018.4,
+          "milliseconds": 134.35498046875,
+          "utc": "2026-11-20T08:31:00.884Z",
+          "phaseMs": 884.044921875,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 0.530029296875,
+          "captures": []
+        },
+        {
+          "from": 1795163520217.66,
+          "through": 1795163520409.0498,
+          "milliseconds": 191.389892578125,
+          "utc": "2026-11-20T08:32:00.217Z",
+          "phaseMs": 217.659912109375,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 2.30517578125,
+          "captures": []
+        },
+        {
+          "from": 1795163520419.5,
+          "through": 1795163520577.02,
+          "milliseconds": 157.52001953125,
+          "utc": "2026-11-20T08:32:00.419Z",
+          "phaseMs": 419.5,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 4.93994140625,
+          "captures": []
+        },
+        {
+          "from": 1795163520617.69,
+          "through": 1795163520732.0398,
+          "milliseconds": 114.349853515625,
+          "utc": "2026-11-20T08:32:00.617Z",
+          "phaseMs": 617.68994140625,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 2.875,
+          "captures": []
+        },
+        {
+          "from": 1795163580217.94,
+          "through": 1795163580387.47,
+          "milliseconds": 169.530029296875,
+          "utc": "2026-11-20T08:33:00.217Z",
+          "phaseMs": 217.93994140625,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 2.079833984375,
+          "captures": []
+        },
+        {
+          "from": 1795163580417.865,
+          "through": 1795163580531.255,
+          "milliseconds": 113.389892578125,
+          "utc": "2026-11-20T08:33:00.417Z",
+          "phaseMs": 417.864990234375,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 2.51513671875,
+          "captures": []
+        },
+        {
+          "from": 1795163640218.1199,
+          "through": 1795163640514.9949,
+          "milliseconds": 296.875,
+          "utc": "2026-11-20T08:34:00.218Z",
+          "phaseMs": 218.119873046875,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 3.72509765625,
+          "captures": []
+        },
+        {
+          "from": 1795163640519.16,
+          "through": 1795163640688.91,
+          "milliseconds": 169.75,
+          "utc": "2026-11-20T08:34:00.519Z",
+          "phaseMs": 519.159912109375,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 1.919921875,
+          "captures": []
+        }
+      ]
+    },
+    {
+      "label": "home:settlement-control",
+      "samples": 1560,
+      "first": 1795163726251.645,
+      "last": 1795163778518.685,
+      "coverageMs": 52267.0400390625,
+      "phaseExposureMs": 1000,
+      "longGaps": 3,
+      "inPhase": 3,
+      "gaps": [
+        {
+          "from": 1795163760251.87,
+          "through": 1795163760425.705,
+          "milliseconds": 173.8349609375,
+          "utc": "2026-11-20T08:36:00.251Z",
+          "phaseMs": 251.8701171875,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 4.22998046875,
+          "captures": []
+        },
+        {
+          "from": 1795163760451.87,
+          "through": 1795163760569.08,
+          "milliseconds": 117.2099609375,
+          "utc": "2026-11-20T08:36:00.451Z",
+          "phaseMs": 451.8701171875,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 2.699951171875,
+          "captures": []
+        },
+        {
+          "from": 1795163760585.08,
+          "through": 1795163760701.0852,
+          "milliseconds": 116.005126953125,
+          "utc": "2026-11-20T08:36:00.585Z",
+          "phaseMs": 585.080078125,
+          "inPhase": true,
+          "trigger": "raf",
+          "drawMs": 4.294921875,
+          "captures": []
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "cases": 15,
+    "coverageMs": 1421966.8649902344,
+    "phaseExposureMs": 24000,
+    "longGaps": 66,
+    "inPhase": 59
+  },
+  "limit": "Exploratory absolute-clock phase association. No randomization, independence assumption, causal claim, CPU/GPU-time equivalence or cadence acceptance. Coverage is the recorded Host history, not the whole process lifetime.",
+  "inputs": [
+    {
+      "label": "next-task:olderMale",
+      "path": "docs/guardian/performance/native-post-settlement-next-task-20261120/olderMale.json.gz",
+      "sha256": "2ee69309c0805d7c0fda82e5c34fb2a8f33323905e8787e931f4e68da912527b"
+    },
+    {
+      "label": "next-task:olderFemale",
+      "path": "docs/guardian/performance/native-post-settlement-next-task-20261120/olderFemale.json.gz",
+      "sha256": "1106878bf976bb47b0b5f3315d7bcc8e22e8b6f3dc8a12237d842e6e7537788a"
+    },
+    {
+      "label": "next-task:youngMale",
+      "path": "docs/guardian/performance/native-post-settlement-next-task-20261120/youngMale.json.gz",
+      "sha256": "1dc7d68ffcca46f8d5562031443ecbf072ba3ff0f79116d14dc2578b1d61c444"
+    },
+    {
+      "label": "next-task:youngFemale",
+      "path": "docs/guardian/performance/native-post-settlement-next-task-20261120/youngFemale.json.gz",
+      "sha256": "65a4d2eda33593b6667d7ab9d04abcc16e63d564002bd33f1063a98cdb29aaf0"
+    },
+    {
+      "label": "next-task:settlement-control",
+      "path": "docs/guardian/performance/native-post-settlement-next-task-20261120/settlement-control.json.gz",
+      "sha256": "2c5b633f85edc0d4e59e8810320023dff39e585bbe974aace91a4ef4c5a1ecb8"
+    },
+    {
+      "label": "first-use:olderMale",
+      "path": "docs/guardian/performance/native-prepared-first-use-20261120/olderMale.json.gz",
+      "sha256": "d53eff55498af969b0a6f65eedd188fe18c8a3014bf6f9e3f71b7aa1409a5024"
+    },
+    {
+      "label": "first-use:olderFemale",
+      "path": "docs/guardian/performance/native-prepared-first-use-20261120/olderFemale.json.gz",
+      "sha256": "cdd252e2e2fe0fd5e2adcd6f5de8f781d1bf95128c9660833d7e92c160bd36ee"
+    },
+    {
+      "label": "first-use:youngFemale",
+      "path": "docs/guardian/performance/native-prepared-first-use-20261120/youngFemale.json.gz",
+      "sha256": "2d5d3b99b57fe6c11b14b01341cee4750dbc5357b3f9eff85867e563f686f1e0"
+    },
+    {
+      "label": "first-use:youngMale",
+      "path": "docs/guardian/performance/native-prepared-first-use-20261120/youngMale.json.gz",
+      "sha256": "ea2109ebf37b04196ac34df3a7d1cd238803c9577b521e284824ba236c3a1feb"
+    },
+    {
+      "label": "first-use:task-control",
+      "path": "docs/guardian/performance/native-prepared-first-use-20261120/task-control.json.gz",
+      "sha256": "7e074ce1e01062d5db114fdefe6240476772d845015373b8eb30b64fa94b3d2f"
+    },
+    {
+      "label": "home:olderMale",
+      "path": "docs/guardian/performance/native-post-settlement-home-20261120/olderMale.json.gz",
+      "sha256": "c213159f6643585eed8bf8c4a821c3073085739ba796e91ac3499158c5908444"
+    },
+    {
+      "label": "home:olderFemale",
+      "path": "docs/guardian/performance/native-post-settlement-home-20261120/olderFemale.json.gz",
+      "sha256": "c3d290700800da01b8b0988f1633fa934022d76e187654e930917d415189ed32"
+    },
+    {
+      "label": "home:youngMale",
+      "path": "docs/guardian/performance/native-post-settlement-home-20261120/youngMale.json.gz",
+      "sha256": "729c9d90884f030578f7c4ae1db13e4a9ba1fa162176955c140b3d2d881a5cd5"
+    },
+    {
+      "label": "home:youngFemale",
+      "path": "docs/guardian/performance/native-post-settlement-home-20261120/youngFemale.json.gz",
+      "sha256": "24f98e9ad757766d9a9949f2c2ff115801690f636028312acade390b4f602f3e"
+    },
+    {
+      "label": "home:settlement-control",
+      "path": "docs/guardian/performance/native-post-settlement-home-20261120/settlement-control.json.gz",
+      "sha256": "943294a65eecf294f2e6be62c177ee1ea48c32a7beb85d85844e4f0dd66b7eb4"
+    }
+  ]
+}

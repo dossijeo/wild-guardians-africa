@@ -1,0 +1,12 @@
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+page.evaluate: Error: {"errors":[],"results":[{"format":"rgba8unorm","flipY":false,"premultipliedAlpha":false,"mismatches":302815},{"format":"rgba8unorm","flipY":false,"premultipliedAlpha":true,"mismatches":11905},{"format":"rgba8unorm","flipY":true,"premultipliedAlpha":false,"mismatches":302815},{"format":"rgba8unorm","flipY":true,"premultipliedAlpha":true,"mismatches":11905},{"format":"rgba8unorm-srgb","flipY":false,"premultipliedAlpha":false,"mismatches":304694},{"format":"rgba8unorm-srgb","flipY":false,"premultipliedAlpha":true,"mismatches":17326},{"format":"rgba8unorm-srgb","flipY":true,"premultipliedAlpha":false,"mismatches":304694},{"format":"rgba8unorm-srgb","flipY":true,"premultipliedAlpha":true,"mismatches":17326}]}
+    at window.runRemoteImageRegions (http://127.0.0.1:5218/tests/browser/remote-image-regions.js:32:57)
+    at async <anonymous>:381:23
+    at C:\Users\Gabriel\source\repos\wild-guardians-africa\.cache\native-resource-image-pixels.mjs:1:462 {
+  log: []
+}
+
+Node.js v20.19.0

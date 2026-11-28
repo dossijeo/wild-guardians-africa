@@ -1,0 +1,6549 @@
+{
+  "protocol": {
+    "id": "native-constant-economy-v3-q6",
+    "seeds": [
+      712,
+      123,
+      2026
+    ],
+    "strategies": [
+      "expansive",
+      "good",
+      "bad",
+      "no-walls",
+      "no-shield"
+    ],
+    "strategyVariant": "five-strategies-with-D/E-shield-control",
+    "shieldByStrategy": {
+      "expansive": true,
+      "good": true,
+      "bad": true,
+      "no-walls": true,
+      "no-shield": false
+    },
+    "defensePriority": "physical walls and repairs before discretionary village savings; wages protected",
+    "daySeconds": 300,
+    "combatNights": 100,
+    "postgamePeaceNights": 80,
+    "minDailyCropPurchases": 60,
+    "strictMaximumIdleFraction": 0.25,
+    "profile": "olderFemale",
+    "plantsPerWorker": 6,
+    "plotSpacing": 1.5,
+    "plantDecisionSeconds": 1,
+    "seedPricing": "constant production prices",
+    "income": "native CrateDelivered only",
+    "damage": "native contacts/occlusion only; no assumed exposure",
+    "labourPolicy": "10s incremental measured-service queue ratio; full selected-crew next wage; funded dawn continuity",
+    "evaluationSeconds": 10,
+    "serviceWindowSeconds": 30,
+    "backlogPerWorker": 6,
+    "maximumClearanceSeconds": 60,
+    "dawnFunding": "payable current full crew salary; disclose workingCapitalShortfall; subsequent purchases protect complete next wage"
+  },
+  "strategy": "good",
+  "labourPolicy": "q6",
+  "labourHistory": [
+    {
+      "day": 1,
+      "time": 0,
+      "id": "intensive-hire-1",
+      "kind": "daily",
+      "staff": 1,
+      "cost": 30,
+      "cash": 695,
+      "desired": 1,
+      "afterPayment": 665,
+      "recoveryReserve": 30,
+      "pendingRepair": 0,
+      "seedCost": 5,
+      "workingCapitalShortfall": 0,
+      "purchaseBudgetShortfall": 0,
+      "risk": false,
+      "capacityReduced": false,
+      "reason": "payable funded crew continuity",
+      "paidCoins": 30
+    },
+    {
+      "day": 1,
+      "time": 30.000000000000156,
+      "id": "intensive-hire-33",
+      "kind": "additional",
+      "cash": 235,
+      "recoveryReserve": 60,
+      "workingCapitalShortfall": 0,
+      "count": 1,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 28,
+          "active": 1,
+          "busy": 1,
+          "living": 31
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 28,
+          "active": 1,
+          "busy": 1,
+          "living": 31,
+          "completed": 2,
+          "serviceRate": 0.06666666666666667,
+          "backlogRatio": 28,
+          "clearanceSeconds": 420
+        }
+      ],
+      "centerId": "structure-2",
+      "cost": 27,
+      "required": 92,
+      "measurement": {
+        "centerId": "structure-2",
+        "pending": 28,
+        "active": 1,
+        "busy": 1,
+        "living": 31,
+        "completed": 2,
+        "serviceRate": 0.06666666666666667,
+        "backlogRatio": 28,
+        "clearanceSeconds": 420
+      },
+      "reason": "funded measured service saturation",
+      "currentRecoveryReserve": 30,
+      "paidCoins": 27
+    },
+    {
+      "day": 1,
+      "time": 40.0000000000003,
+      "id": "intensive-hire-44",
+      "kind": "additional",
+      "cash": 158,
+      "recoveryReserve": 90,
+      "workingCapitalShortfall": 0,
+      "count": 1,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 36,
+          "active": 2,
+          "busy": 2,
+          "living": 41
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 36,
+          "active": 2,
+          "busy": 2,
+          "living": 41,
+          "completed": 3,
+          "serviceRate": 0.1,
+          "backlogRatio": 18,
+          "clearanceSeconds": 360
+        }
+      ],
+      "centerId": "structure-2",
+      "cost": 26,
+      "required": 121,
+      "measurement": {
+        "centerId": "structure-2",
+        "pending": 36,
+        "active": 2,
+        "busy": 2,
+        "living": 41,
+        "completed": 3,
+        "serviceRate": 0.1,
+        "backlogRatio": 18,
+        "clearanceSeconds": 360
+      },
+      "reason": "funded measured service saturation",
+      "currentRecoveryReserve": 60,
+      "paidCoins": 26
+    }
+  ],
+  "labourObservations": [
+    {
+      "day": 1,
+      "time": 9.99999999999998,
+      "cash": 335,
+      "recoveryReserve": 30,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 10,
+          "active": 1,
+          "busy": 1,
+          "living": 11
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 10,
+          "active": 1,
+          "busy": 1,
+          "living": 11,
+          "completed": 0,
+          "serviceRate": 0,
+          "backlogRatio": 10,
+          "clearanceSeconds": null
+        }
+      ],
+      "reason": "no measured service saturation",
+      "currentRecoveryReserve": 30
+    },
+    {
+      "day": 1,
+      "time": 20.000000000000014,
+      "cash": 285,
+      "recoveryReserve": 30,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 20,
+          "active": 1,
+          "busy": 1,
+          "living": 21
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 20,
+          "active": 1,
+          "busy": 1,
+          "living": 21,
+          "completed": 0,
+          "serviceRate": 0,
+          "backlogRatio": 20,
+          "clearanceSeconds": null
+        }
+      ],
+      "reason": "no measured service saturation",
+      "currentRecoveryReserve": 30
+    },
+    {
+      "day": 1,
+      "time": 30.000000000000156,
+      "cash": 235,
+      "recoveryReserve": 60,
+      "workingCapitalShortfall": 0,
+      "count": 1,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 28,
+          "active": 1,
+          "busy": 1,
+          "living": 31
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 28,
+          "active": 1,
+          "busy": 1,
+          "living": 31,
+          "completed": 2,
+          "serviceRate": 0.06666666666666667,
+          "backlogRatio": 28,
+          "clearanceSeconds": 420
+        }
+      ],
+      "centerId": "structure-2",
+      "cost": 27,
+      "required": 92,
+      "measurement": {
+        "centerId": "structure-2",
+        "pending": 28,
+        "active": 1,
+        "busy": 1,
+        "living": 31,
+        "completed": 2,
+        "serviceRate": 0.06666666666666667,
+        "backlogRatio": 28,
+        "clearanceSeconds": 420
+      },
+      "reason": "funded measured service saturation",
+      "currentRecoveryReserve": 30
+    },
+    {
+      "day": 1,
+      "time": 40.0000000000003,
+      "cash": 158,
+      "recoveryReserve": 90,
+      "workingCapitalShortfall": 0,
+      "count": 1,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 36,
+          "active": 2,
+          "busy": 2,
+          "living": 41
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 36,
+          "active": 2,
+          "busy": 2,
+          "living": 41,
+          "completed": 3,
+          "serviceRate": 0.1,
+          "backlogRatio": 18,
+          "clearanceSeconds": 360
+        }
+      ],
+      "centerId": "structure-2",
+      "cost": 26,
+      "required": 121,
+      "measurement": {
+        "centerId": "structure-2",
+        "pending": 36,
+        "active": 2,
+        "busy": 2,
+        "living": 41,
+        "completed": 3,
+        "serviceRate": 0.1,
+        "backlogRatio": 18,
+        "clearanceSeconds": 360
+      },
+      "reason": "funded measured service saturation",
+      "currentRecoveryReserve": 60
+    },
+    {
+      "day": 1,
+      "time": 50.00000000000044,
+      "cash": 92,
+      "recoveryReserve": 120,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 42,
+          "active": 3,
+          "busy": 3,
+          "living": 49
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 42,
+          "active": 3,
+          "busy": 3,
+          "living": 49,
+          "completed": 4,
+          "serviceRate": 0.13333333333333333,
+          "backlogRatio": 14,
+          "clearanceSeconds": 315
+        }
+      ],
+      "centerId": "structure-2",
+      "cost": 25,
+      "required": 150,
+      "measurement": {
+        "centerId": "structure-2",
+        "pending": 42,
+        "active": 3,
+        "busy": 3,
+        "living": 49,
+        "completed": 4,
+        "serviceRate": 0.13333333333333333,
+        "backlogRatio": 14,
+        "clearanceSeconds": 315
+      },
+      "reason": "cash reserved for full renewal",
+      "currentRecoveryReserve": 90
+    },
+    {
+      "day": 1,
+      "time": 60.00000000000058,
+      "cash": 92,
+      "recoveryReserve": 120,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 39,
+          "active": 3,
+          "busy": 3,
+          "living": 49
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 39,
+          "active": 3,
+          "busy": 3,
+          "living": 49,
+          "completed": 5,
+          "serviceRate": 0.16666666666666666,
+          "backlogRatio": 13,
+          "clearanceSeconds": 234
+        }
+      ],
+      "centerId": "structure-2",
+      "cost": 24,
+      "required": 149,
+      "measurement": {
+        "centerId": "structure-2",
+        "pending": 39,
+        "active": 3,
+        "busy": 3,
+        "living": 49,
+        "completed": 5,
+        "serviceRate": 0.16666666666666666,
+        "backlogRatio": 13,
+        "clearanceSeconds": 234
+      },
+      "reason": "cash reserved for full renewal",
+      "currentRecoveryReserve": 90
+    },
+    {
+      "day": 1,
+      "time": 70.0000000000003,
+      "cash": 92,
+      "recoveryReserve": 120,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 35,
+          "active": 3,
+          "busy": 3,
+          "living": 49
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 35,
+          "active": 3,
+          "busy": 3,
+          "living": 49,
+          "completed": 8,
+          "serviceRate": 0.26666666666666666,
+          "backlogRatio": 11.666666666666666,
+          "clearanceSeconds": 131.25
+        }
+      ],
+      "centerId": "structure-2",
+      "cost": 23,
+      "required": 148,
+      "measurement": {
+        "centerId": "structure-2",
+        "pending": 35,
+        "active": 3,
+        "busy": 3,
+        "living": 49,
+        "completed": 8,
+        "serviceRate": 0.26666666666666666,
+        "backlogRatio": 11.666666666666666,
+        "clearanceSeconds": 131.25
+      },
+      "reason": "cash reserved for full renewal",
+      "currentRecoveryReserve": 90
+    },
+    {
+      "day": 1,
+      "time": 79.99999999999973,
+      "cash": 92,
+      "recoveryReserve": 120,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 33,
+          "active": 3,
+          "busy": 3,
+          "living": 49
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 33,
+          "active": 3,
+          "busy": 3,
+          "living": 49,
+          "completed": 9,
+          "serviceRate": 0.3,
+          "backlogRatio": 11,
+          "clearanceSeconds": 110
+        }
+      ],
+      "centerId": "structure-2",
+      "cost": 23,
+      "required": 148,
+      "measurement": {
+        "centerId": "structure-2",
+        "pending": 33,
+        "active": 3,
+        "busy": 3,
+        "living": 49,
+        "completed": 9,
+        "serviceRate": 0.3,
+        "backlogRatio": 11,
+        "clearanceSeconds": 110
+      },
+      "reason": "cash reserved for full renewal",
+      "currentRecoveryReserve": 90
+    },
+    {
+      "day": 1,
+      "time": 89.99999999999916,
+      "cash": 92,
+      "recoveryReserve": 120,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 30,
+          "active": 3,
+          "busy": 3,
+          "living": 49
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 30,
+          "active": 3,
+          "busy": 3,
+          "living": 49,
+          "completed": 10,
+          "serviceRate": 0.3333333333333333,
+          "backlogRatio": 10,
+          "clearanceSeconds": 90
+        }
+      ],
+      "centerId": "structure-2",
+      "cost": 22,
+      "required": 147,
+      "measurement": {
+        "centerId": "structure-2",
+        "pending": 30,
+        "active": 3,
+        "busy": 3,
+        "living": 49,
+        "completed": 10,
+        "serviceRate": 0.3333333333333333,
+        "backlogRatio": 10,
+        "clearanceSeconds": 90
+      },
+      "reason": "cash reserved for full renewal",
+      "currentRecoveryReserve": 90
+    },
+    {
+      "day": 1,
+      "time": 99.9999999999986,
+      "cash": 92,
+      "recoveryReserve": 120,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 29,
+          "active": 3,
+          "busy": 3,
+          "living": 49
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 29,
+          "active": 3,
+          "busy": 3,
+          "living": 49,
+          "completed": 9,
+          "serviceRate": 0.3,
+          "backlogRatio": 9.666666666666666,
+          "clearanceSeconds": 96.66666666666667
+        }
+      ],
+      "centerId": "structure-2",
+      "cost": 21,
+      "required": 146,
+      "measurement": {
+        "centerId": "structure-2",
+        "pending": 29,
+        "active": 3,
+        "busy": 3,
+        "living": 49,
+        "completed": 9,
+        "serviceRate": 0.3,
+        "backlogRatio": 9.666666666666666,
+        "clearanceSeconds": 96.66666666666667
+      },
+      "reason": "cash reserved for full renewal",
+      "currentRecoveryReserve": 90
+    },
+    {
+      "day": 1,
+      "time": 109.99999999999802,
+      "cash": 92,
+      "recoveryReserve": 120,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 28,
+          "active": 3,
+          "busy": 3,
+          "living": 49
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 28,
+          "active": 3,
+          "busy": 3,
+          "living": 49,
+          "completed": 8,
+          "serviceRate": 0.26666666666666666,
+          "backlogRatio": 9.333333333333334,
+          "clearanceSeconds": 105
+        }
+      ],
+      "centerId": "structure-2",
+      "cost": 20,
+      "required": 145,
+      "measurement": {
+        "centerId": "structure-2",
+        "pending": 28,
+        "active": 3,
+        "busy": 3,
+        "living": 49,
+        "completed": 8,
+        "serviceRate": 0.26666666666666666,
+        "backlogRatio": 9.333333333333334,
+        "clearanceSeconds": 105
+      },
+      "reason": "cash reserved for full renewal",
+      "currentRecoveryReserve": 90
+    },
+    {
+      "day": 1,
+      "time": 119.99999999999746,
+      "cash": 92,
+      "recoveryReserve": 120,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 26,
+          "active": 3,
+          "busy": 3,
+          "living": 49
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 26,
+          "active": 3,
+          "busy": 3,
+          "living": 49,
+          "completed": 9,
+          "serviceRate": 0.3,
+          "backlogRatio": 8.666666666666666,
+          "clearanceSeconds": 86.66666666666667
+        }
+      ],
+      "centerId": "structure-2",
+      "cost": 19,
+      "required": 144,
+      "measurement": {
+        "centerId": "structure-2",
+        "pending": 26,
+        "active": 3,
+        "busy": 3,
+        "living": 49,
+        "completed": 9,
+        "serviceRate": 0.3,
+        "backlogRatio": 8.666666666666666,
+        "clearanceSeconds": 86.66666666666667
+      },
+      "reason": "cash reserved for full renewal",
+      "currentRecoveryReserve": 90
+    },
+    {
+      "day": 1,
+      "time": 129.9999999999969,
+      "cash": 92,
+      "recoveryReserve": 120,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 29,
+          "active": 3,
+          "busy": 3,
+          "living": 49
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 29,
+          "active": 3,
+          "busy": 3,
+          "living": 49,
+          "completed": 6,
+          "serviceRate": 0.2,
+          "backlogRatio": 9.666666666666666,
+          "clearanceSeconds": 145
+        }
+      ],
+      "centerId": "structure-2",
+      "cost": 18,
+      "required": 143,
+      "measurement": {
+        "centerId": "structure-2",
+        "pending": 29,
+        "active": 3,
+        "busy": 3,
+        "living": 49,
+        "completed": 6,
+        "serviceRate": 0.2,
+        "backlogRatio": 9.666666666666666,
+        "clearanceSeconds": 145
+      },
+      "reason": "cash reserved for full renewal",
+      "currentRecoveryReserve": 90
+    },
+    {
+      "day": 1,
+      "time": 139.99999999999633,
+      "cash": 92,
+      "recoveryReserve": 120,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 32,
+          "active": 3,
+          "busy": 3,
+          "living": 49
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 32,
+          "active": 3,
+          "busy": 3,
+          "living": 49,
+          "completed": 4,
+          "serviceRate": 0.13333333333333333,
+          "backlogRatio": 10.666666666666666,
+          "clearanceSeconds": 240
+        }
+      ],
+      "centerId": "structure-2",
+      "cost": 17,
+      "required": 142,
+      "measurement": {
+        "centerId": "structure-2",
+        "pending": 32,
+        "active": 3,
+        "busy": 3,
+        "living": 49,
+        "completed": 4,
+        "serviceRate": 0.13333333333333333,
+        "backlogRatio": 10.666666666666666,
+        "clearanceSeconds": 240
+      },
+      "reason": "cash reserved for full renewal",
+      "currentRecoveryReserve": 90
+    },
+    {
+      "day": 1,
+      "time": 149.99999999999577,
+      "cash": 92,
+      "recoveryReserve": 120,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 31,
+          "active": 3,
+          "busy": 3,
+          "living": 49
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 31,
+          "active": 3,
+          "busy": 3,
+          "living": 49,
+          "completed": 4,
+          "serviceRate": 0.13333333333333333,
+          "backlogRatio": 10.333333333333334,
+          "clearanceSeconds": 232.5
+        }
+      ],
+      "centerId": "structure-2",
+      "cost": 16,
+      "required": 141,
+      "measurement": {
+        "centerId": "structure-2",
+        "pending": 31,
+        "active": 3,
+        "busy": 3,
+        "living": 49,
+        "completed": 4,
+        "serviceRate": 0.13333333333333333,
+        "backlogRatio": 10.333333333333334,
+        "clearanceSeconds": 232.5
+      },
+      "reason": "cash reserved for full renewal",
+      "currentRecoveryReserve": 90
+    },
+    {
+      "day": 1,
+      "time": 159.9999999999952,
+      "cash": 92,
+      "recoveryReserve": 120,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 33,
+          "active": 3,
+          "busy": 3,
+          "living": 49
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 33,
+          "active": 3,
+          "busy": 3,
+          "living": 49,
+          "completed": 5,
+          "serviceRate": 0.16666666666666666,
+          "backlogRatio": 11,
+          "clearanceSeconds": 198
+        }
+      ],
+      "centerId": "structure-2",
+      "cost": 15,
+      "required": 140,
+      "measurement": {
+        "centerId": "structure-2",
+        "pending": 33,
+        "active": 3,
+        "busy": 3,
+        "living": 49,
+        "completed": 5,
+        "serviceRate": 0.16666666666666666,
+        "backlogRatio": 11,
+        "clearanceSeconds": 198
+      },
+      "reason": "cash reserved for full renewal",
+      "currentRecoveryReserve": 90
+    },
+    {
+      "day": 1,
+      "time": 169.99999999999463,
+      "cash": 92,
+      "recoveryReserve": 120,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 36,
+          "active": 3,
+          "busy": 3,
+          "living": 49
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 36,
+          "active": 3,
+          "busy": 3,
+          "living": 49,
+          "completed": 4,
+          "serviceRate": 0.13333333333333333,
+          "backlogRatio": 12,
+          "clearanceSeconds": 270
+        }
+      ],
+      "centerId": "structure-2",
+      "cost": 14,
+      "required": 139,
+      "measurement": {
+        "centerId": "structure-2",
+        "pending": 36,
+        "active": 3,
+        "busy": 3,
+        "living": 49,
+        "completed": 4,
+        "serviceRate": 0.13333333333333333,
+        "backlogRatio": 12,
+        "clearanceSeconds": 270
+      },
+      "reason": "cash reserved for full renewal",
+      "currentRecoveryReserve": 90
+    },
+    {
+      "day": 1,
+      "time": 179.99999999999406,
+      "cash": 92,
+      "recoveryReserve": 120,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 38,
+          "active": 3,
+          "busy": 3,
+          "living": 49
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 38,
+          "active": 3,
+          "busy": 3,
+          "living": 49,
+          "completed": 2,
+          "serviceRate": 0.06666666666666667,
+          "backlogRatio": 12.666666666666666,
+          "clearanceSeconds": 570
+        }
+      ],
+      "centerId": "structure-2",
+      "cost": 13,
+      "required": 138,
+      "measurement": {
+        "centerId": "structure-2",
+        "pending": 38,
+        "active": 3,
+        "busy": 3,
+        "living": 49,
+        "completed": 2,
+        "serviceRate": 0.06666666666666667,
+        "backlogRatio": 12.666666666666666,
+        "clearanceSeconds": 570
+      },
+      "reason": "cash reserved for full renewal",
+      "currentRecoveryReserve": 90
+    },
+    {
+      "day": 1,
+      "time": 189.9999999999935,
+      "cash": 92,
+      "recoveryReserve": 90,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 41,
+          "active": 3,
+          "busy": 3,
+          "living": 49
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 41,
+          "active": 3,
+          "busy": 3,
+          "living": 49,
+          "completed": 0,
+          "serviceRate": 0,
+          "backlogRatio": 13.666666666666666,
+          "clearanceSeconds": null
+        }
+      ],
+      "reason": "no measured service saturation",
+      "currentRecoveryReserve": 90
+    },
+    {
+      "day": 1,
+      "time": 199.99999999999292,
+      "cash": 92,
+      "recoveryReserve": 120,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 39,
+          "active": 3,
+          "busy": 3,
+          "living": 49
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 39,
+          "active": 3,
+          "busy": 3,
+          "living": 49,
+          "completed": 2,
+          "serviceRate": 0.06666666666666667,
+          "backlogRatio": 13,
+          "clearanceSeconds": 585
+        }
+      ],
+      "centerId": "structure-2",
+      "cost": 11,
+      "required": 136,
+      "measurement": {
+        "centerId": "structure-2",
+        "pending": 39,
+        "active": 3,
+        "busy": 3,
+        "living": 49,
+        "completed": 2,
+        "serviceRate": 0.06666666666666667,
+        "backlogRatio": 13,
+        "clearanceSeconds": 585
+      },
+      "reason": "cash reserved for full renewal",
+      "currentRecoveryReserve": 90
+    },
+    {
+      "day": 1,
+      "time": 209.99999999999235,
+      "cash": 92,
+      "recoveryReserve": 120,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 38,
+          "active": 3,
+          "busy": 3,
+          "living": 49
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 38,
+          "active": 3,
+          "busy": 3,
+          "living": 49,
+          "completed": 4,
+          "serviceRate": 0.13333333333333333,
+          "backlogRatio": 12.666666666666666,
+          "clearanceSeconds": 285
+        }
+      ],
+      "centerId": "structure-2",
+      "cost": 10,
+      "required": 135,
+      "measurement": {
+        "centerId": "structure-2",
+        "pending": 38,
+        "active": 3,
+        "busy": 3,
+        "living": 49,
+        "completed": 4,
+        "serviceRate": 0.13333333333333333,
+        "backlogRatio": 12.666666666666666,
+        "clearanceSeconds": 285
+      },
+      "reason": "cash reserved for full renewal",
+      "currentRecoveryReserve": 90
+    },
+    {
+      "day": 1,
+      "time": 219.9999999999918,
+      "cash": 92,
+      "recoveryReserve": 120,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 41,
+          "active": 3,
+          "busy": 3,
+          "living": 49
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 41,
+          "active": 3,
+          "busy": 3,
+          "living": 49,
+          "completed": 4,
+          "serviceRate": 0.13333333333333333,
+          "backlogRatio": 13.666666666666666,
+          "clearanceSeconds": 307.5
+        }
+      ],
+      "centerId": "structure-2",
+      "cost": 9,
+      "required": 134,
+      "measurement": {
+        "centerId": "structure-2",
+        "pending": 41,
+        "active": 3,
+        "busy": 3,
+        "living": 49,
+        "completed": 4,
+        "serviceRate": 0.13333333333333333,
+        "backlogRatio": 13.666666666666666,
+        "clearanceSeconds": 307.5
+      },
+      "reason": "cash reserved for full renewal",
+      "currentRecoveryReserve": 90
+    },
+    {
+      "day": 1,
+      "time": 229.99999999999122,
+      "cash": 92,
+      "recoveryReserve": 120,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 42,
+          "active": 3,
+          "busy": 3,
+          "living": 49
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 42,
+          "active": 3,
+          "busy": 3,
+          "living": 49,
+          "completed": 3,
+          "serviceRate": 0.1,
+          "backlogRatio": 14,
+          "clearanceSeconds": 420
+        }
+      ],
+      "centerId": "structure-2",
+      "cost": 8,
+      "required": 133,
+      "measurement": {
+        "centerId": "structure-2",
+        "pending": 42,
+        "active": 3,
+        "busy": 3,
+        "living": 49,
+        "completed": 3,
+        "serviceRate": 0.1,
+        "backlogRatio": 14,
+        "clearanceSeconds": 420
+      },
+      "reason": "cash reserved for full renewal",
+      "currentRecoveryReserve": 90
+    },
+    {
+      "day": 1,
+      "time": 239.99999999999065,
+      "cash": 92,
+      "recoveryReserve": 90,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 42,
+          "active": 3,
+          "busy": 3,
+          "living": 49
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 42,
+          "active": 3,
+          "busy": 3,
+          "living": 49,
+          "completed": 0,
+          "serviceRate": 0,
+          "backlogRatio": 14,
+          "clearanceSeconds": null
+        }
+      ],
+      "reason": "no measured service saturation",
+      "currentRecoveryReserve": 90
+    },
+    {
+      "day": 1,
+      "time": 250,
+      "cash": 92,
+      "recoveryReserve": 90,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 42,
+          "active": 3,
+          "busy": 3,
+          "living": 49
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 42,
+          "active": 3,
+          "busy": 3,
+          "living": 49,
+          "completed": 0,
+          "serviceRate": 0,
+          "backlogRatio": 14,
+          "clearanceSeconds": null
+        }
+      ],
+      "reason": "no measured service saturation",
+      "currentRecoveryReserve": 90
+    },
+    {
+      "day": 1,
+      "time": 260.00000000000057,
+      "cash": 92,
+      "recoveryReserve": 120,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 39,
+          "active": 3,
+          "busy": 3,
+          "living": 49
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 39,
+          "active": 3,
+          "busy": 3,
+          "living": 49,
+          "completed": 3,
+          "serviceRate": 0.1,
+          "backlogRatio": 13,
+          "clearanceSeconds": 390
+        }
+      ],
+      "centerId": "structure-2",
+      "cost": 4,
+      "required": 129,
+      "measurement": {
+        "centerId": "structure-2",
+        "pending": 39,
+        "active": 3,
+        "busy": 3,
+        "living": 49,
+        "completed": 3,
+        "serviceRate": 0.1,
+        "backlogRatio": 13,
+        "clearanceSeconds": 390
+      },
+      "reason": "cash reserved for full renewal",
+      "currentRecoveryReserve": 90
+    },
+    {
+      "day": 1,
+      "time": 270.00000000000284,
+      "cash": 92,
+      "recoveryReserve": 120,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 39,
+          "active": 3,
+          "busy": 3,
+          "living": 49
+        }
+      ],
+      "measurements": [
+        {
+          "centerId": "structure-2",
+          "pending": 39,
+          "active": 3,
+          "busy": 3,
+          "living": 49,
+          "completed": 5,
+          "serviceRate": 0.16666666666666666,
+          "backlogRatio": 13,
+          "clearanceSeconds": 234
+        }
+      ],
+      "centerId": "structure-2",
+      "cost": 3,
+      "required": 128,
+      "measurement": {
+        "centerId": "structure-2",
+        "pending": 39,
+        "active": 3,
+        "busy": 3,
+        "living": 49,
+        "completed": 5,
+        "serviceRate": 0.16666666666666666,
+        "backlogRatio": 13,
+        "clearanceSeconds": 234
+      },
+      "reason": "cash reserved for full renewal",
+      "currentRecoveryReserve": 90
+    },
+    {
+      "day": 1,
+      "time": 280.0000000000051,
+      "cash": 92,
+      "recoveryReserve": 90,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 40,
+          "active": 3,
+          "busy": 3,
+          "living": 49
+        }
+      ],
+      "reason": "native contract unavailable",
+      "currentRecoveryReserve": 90
+    },
+    {
+      "day": 1,
+      "time": 290.0000000000074,
+      "cash": 92,
+      "recoveryReserve": 90,
+      "workingCapitalShortfall": 0,
+      "count": 0,
+      "workload": [
+        {
+          "centerId": "structure-2",
+          "pending": 39,
+          "active": 3,
+          "busy": 3,
+          "living": 49
+        }
+      ],
+      "reason": "native contract unavailable",
+      "currentRecoveryReserve": 90
+    }
+  ],
+  "labourReasons": {
+    "no measured service saturation": 5,
+    "funded measured service saturation": 2,
+    "cash reserved for full renewal": 20,
+    "native contract unavailable": 2
+  },
+  "raidEvidence": {
+    "status": "verified",
+    "coverageLost": false,
+    "issues": [],
+    "raids": [
+      {
+        "id": "raid-1-night",
+        "day": 1,
+        "daytime": false,
+        "spawnElapsed": 370.50227023613576,
+        "exposureStatus": "exact-native-spawn",
+        "observedAt": 375.0000000000071,
+        "ended": true,
+        "species": {
+          "warthog": {
+            "generated": 1,
+            "initialHitBudget": 2,
+            "maximumStructureDamage": 40,
+            "contacts": 2,
+            "misses": 0,
+            "cropHits": 0,
+            "structureHits": 0,
+            "shieldContacts": 2,
+            "workerHits": 0,
+            "observedBudgetConsumed": 2,
+            "unconsumedOrUnobservedBudget": 0
+          }
+        },
+        "cropHits": 0,
+        "cropsDestroyed": 0,
+        "cropReplacementCost": 0,
+        "lostBaseHarvestValue": 0,
+        "structureHits": 0,
+        "wallHits": 0,
+        "centerHits": 0,
+        "structureHpLost": 0,
+        "wallHpLost": 0,
+        "structuresRuined": [],
+        "shieldContacts": 2,
+        "misses": 0,
+        "logicalContacts": 2,
+        "workerHits": 0,
+        "actors": [
+          {
+            "id": "animal-169",
+            "species": "warthog",
+            "spawn": {
+              "x": 85.11728651272196,
+              "z": 19.656443938823518
+            },
+            "exit": {
+              "x": 85.43857191925696,
+              "z": 22.639190271911136
+            }
+          }
+        ],
+        "pressureFacts": {
+          "night": 1,
+          "observedValue": 539,
+          "capturedValue": 539,
+          "effectiveValue": 539,
+          "pressure": 0.07277963295562875,
+          "targetAnimals": 1,
+          "areaCap": 1,
+          "introductory": true,
+          "budget": 2,
+          "potential": 2,
+          "composition": {
+            "warthog": 1
+          },
+          "referenceEnvelope": null,
+          "compositionAdjustments": [],
+          "qRaisedForRangeSafety": false
+        },
+        "waves": [
+          {
+            "index": 0,
+            "elapsed": 370.50227023613576,
+            "actors": 1
+          }
+        ],
+        "livingBeforeSpawnObservation": 49,
+        "livingAfterSpawnObservation": 49,
+        "exposedLivingAtSpawn": 49,
+        "exposedWoundedAtSpawn": 0,
+        "initialCropDamage": 0,
+        "retirements": [
+          {
+            "id": "animal-169",
+            "species": "warthog",
+            "hitsRemaining": 0,
+            "reason": "budget-exhausted"
+          }
+        ],
+        "endedAt": 393.0000000000112,
+        "woundedAfterAttack": 0,
+        "plantsReached": 0,
+        "potentialAgriculturalHp": 2,
+        "effectiveAgriculturalHp": 0,
+        "agriculturalEfficiency": 0,
+        "destroyedFraction": 0
+      }
+    ],
+    "scope": "Native budgets, wave receipts, clamped agricultural HP and structural HP; E divides actual HP by the recorded directional reference potential, never by guaranteed casualties. A partial encounter is not its final efficiency. Unavailable target/route events are real decisions, not fabricated consumed hits. Costs and lost base value are diagnostics, never ledger expenses or projected income. Exact exposure requires native spawn receipt. Completed observer coverage is not proof of legal spawn geometry, rendered visibility or economic acceptance."
+  },
+  "entryTransport": {
+    "mode": "real-node-worker-with-production-cooperative-fallback",
+    "updates": 750,
+    "waits": [],
+    "readyContexts": [],
+    "preparer": {
+      "requests": 1,
+      "accepted": 0,
+      "obsolete": 1,
+      "used": 0,
+      "failed": 0
+    },
+    "workerFailure": null,
+    "scope": "Wall-clock waits are separate from simulated activity; no clock, RNG or geometry patches"
+  },
+  "peaceAfter100": true,
+  "expansion": {
+    "receipts": [],
+    "attempts": [],
+    "scope": "Only accepted native purchases; village permission respected. Bounds and paths can reject a site; no manual entities or free workers."
+  },
+  "plotSearch": {
+    "plots": 49,
+    "transitions": [
+      {
+        "day": 1,
+        "time": 0,
+        "key": "2,1",
+        "bounds": [
+          -24,
+          -72,
+          216,
+          168
+        ],
+        "centerId": "structure-2"
+      }
+    ],
+    "checksPerDecision": 8,
+    "scope": "Native finite resident regions; every placement requires legal outward and return paths. Exhaustion preserved; no inaccessible logical crops."
+  },
+  "nativeEvidence": {
+    "coverageLost": false,
+    "status": "verified",
+    "deliveries": [],
+    "daily": [
+      {
+        "day": 1,
+        "cropPurchases": 49,
+        "wallPieces": 28,
+        "wallOrders": 1,
+        "income": 0,
+        "deliveries": 0,
+        "structureContacts": 0,
+        "atLeast60CropPurchases": false
+      }
+    ],
+    "repairSettlements": {
+      "status": "verified",
+      "coverageLost": false,
+      "baselinePayments": [],
+      "unobservedPayments": [],
+      "completedRepairs": 0,
+      "paidRepairs": 0,
+      "paidCoins": "0",
+      "restoredHp": 0,
+      "receipts": [],
+      "scope": "Observed repair completions and settled payments after observer creation. Arrival endpoints are recorded, not independent proof of route traversal. Pre-existing payments are excluded. No requests, policies, RNG or world state are changed."
+    },
+    "requests": [],
+    "decisions": [
+      {
+        "day": 1,
+        "time": 0,
+        "elapsed": 0,
+        "daylightSeconds": 0.9999999999999999,
+        "reason": "active",
+        "otherActions": 2,
+        "actualSeconds": 0.9999999999999999
+      },
+      {
+        "day": 1,
+        "time": 0.9999999999999999,
+        "elapsed": 0.9999999999999999,
+        "daylightSeconds": 1.0000000000000004,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000004
+      },
+      {
+        "day": 1,
+        "time": 2.0000000000000004,
+        "elapsed": 2.0000000000000004,
+        "daylightSeconds": 1.0000000000000009,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000009
+      },
+      {
+        "day": 1,
+        "time": 3.0000000000000013,
+        "elapsed": 3.0000000000000013,
+        "daylightSeconds": 1.0000000000000004,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000004
+      },
+      {
+        "day": 1,
+        "time": 4.000000000000002,
+        "elapsed": 4.000000000000002,
+        "daylightSeconds": 0.9999999999999964,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 0.9999999999999964
+      },
+      {
+        "day": 1,
+        "time": 4.999999999999998,
+        "elapsed": 4.999999999999998,
+        "daylightSeconds": 0.9999999999999964,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 0.9999999999999964
+      },
+      {
+        "day": 1,
+        "time": 5.999999999999995,
+        "elapsed": 5.999999999999995,
+        "daylightSeconds": 0.9999999999999964,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 0.9999999999999964
+      },
+      {
+        "day": 1,
+        "time": 6.999999999999991,
+        "elapsed": 6.999999999999991,
+        "daylightSeconds": 0.9999999999999964,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 0.9999999999999964
+      },
+      {
+        "day": 1,
+        "time": 7.999999999999988,
+        "elapsed": 7.999999999999988,
+        "daylightSeconds": 0.9999999999999964,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 0.9999999999999964
+      },
+      {
+        "day": 1,
+        "time": 8.999999999999984,
+        "elapsed": 8.999999999999984,
+        "daylightSeconds": 0.9999999999999964,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 0.9999999999999964
+      },
+      {
+        "day": 1,
+        "time": 9.99999999999998,
+        "elapsed": 9.99999999999998,
+        "daylightSeconds": 0.9999999999999964,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 0.9999999999999964
+      },
+      {
+        "day": 1,
+        "time": 10.999999999999977,
+        "elapsed": 10.999999999999977,
+        "daylightSeconds": 0.9999999999999964,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 0.9999999999999964
+      },
+      {
+        "day": 1,
+        "time": 11.999999999999973,
+        "elapsed": 11.999999999999973,
+        "daylightSeconds": 0.9999999999999964,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 0.9999999999999964
+      },
+      {
+        "day": 1,
+        "time": 12.99999999999997,
+        "elapsed": 12.99999999999997,
+        "daylightSeconds": 0.9999999999999964,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 0.9999999999999964
+      },
+      {
+        "day": 1,
+        "time": 13.999999999999966,
+        "elapsed": 13.999999999999966,
+        "daylightSeconds": 0.9999999999999964,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 0.9999999999999964
+      },
+      {
+        "day": 1,
+        "time": 14.999999999999963,
+        "elapsed": 14.999999999999963,
+        "daylightSeconds": 0.9999999999999964,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 0.9999999999999964
+      },
+      {
+        "day": 1,
+        "time": 15.99999999999996,
+        "elapsed": 15.99999999999996,
+        "daylightSeconds": 1.0000000000000124,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000124
+      },
+      {
+        "day": 1,
+        "time": 16.99999999999997,
+        "elapsed": 16.99999999999997,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 17.999999999999986,
+        "elapsed": 17.999999999999986,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 19,
+        "elapsed": 19,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 20.000000000000014,
+        "elapsed": 20.000000000000014,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 21.00000000000003,
+        "elapsed": 21.00000000000003,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 22.000000000000043,
+        "elapsed": 22.000000000000043,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 23.000000000000057,
+        "elapsed": 23.000000000000057,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 24.00000000000007,
+        "elapsed": 24.00000000000007,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 25.000000000000085,
+        "elapsed": 25.000000000000085,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 26.0000000000001,
+        "elapsed": 26.0000000000001,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 27.000000000000114,
+        "elapsed": 27.000000000000114,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 28.000000000000128,
+        "elapsed": 28.000000000000128,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 29.000000000000142,
+        "elapsed": 29.000000000000142,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 30.000000000000156,
+        "elapsed": 30.000000000000156,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 2,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 31.00000000000017,
+        "elapsed": 31.00000000000017,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 32.000000000000185,
+        "elapsed": 32.000000000000185,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 33.0000000000002,
+        "elapsed": 33.0000000000002,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 34.00000000000021,
+        "elapsed": 34.00000000000021,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 35.00000000000023,
+        "elapsed": 35.00000000000023,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 36.00000000000024,
+        "elapsed": 36.00000000000024,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 37.000000000000256,
+        "elapsed": 37.000000000000256,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 38.00000000000027,
+        "elapsed": 38.00000000000027,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 39.000000000000284,
+        "elapsed": 39.000000000000284,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 40.0000000000003,
+        "elapsed": 40.0000000000003,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 2,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 41.00000000000031,
+        "elapsed": 41.00000000000031,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 42.00000000000033,
+        "elapsed": 42.00000000000033,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 43.00000000000034,
+        "elapsed": 43.00000000000034,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 44.000000000000355,
+        "elapsed": 44.000000000000355,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 45.00000000000037,
+        "elapsed": 45.00000000000037,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 46.000000000000384,
+        "elapsed": 46.000000000000384,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 47.0000000000004,
+        "elapsed": 47.0000000000004,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 48.00000000000041,
+        "elapsed": 48.00000000000041,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 49.000000000000426,
+        "elapsed": 49.000000000000426,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 50.00000000000044,
+        "elapsed": 50.00000000000044,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 51.000000000000455,
+        "elapsed": 51.000000000000455,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 52.00000000000047,
+        "elapsed": 52.00000000000047,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 53.00000000000048,
+        "elapsed": 53.00000000000048,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 54.0000000000005,
+        "elapsed": 54.0000000000005,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 55.00000000000051,
+        "elapsed": 55.00000000000051,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 56.000000000000526,
+        "elapsed": 56.000000000000526,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 57.00000000000054,
+        "elapsed": 57.00000000000054,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 58.000000000000554,
+        "elapsed": 58.000000000000554,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 59.00000000000057,
+        "elapsed": 59.00000000000057,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 60.00000000000058,
+        "elapsed": 60.00000000000058,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 61.0000000000006,
+        "elapsed": 61.0000000000006,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 62.00000000000061,
+        "elapsed": 62.00000000000061,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 63.000000000000625,
+        "elapsed": 63.000000000000625,
+        "daylightSeconds": 1.0000000000000142,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000000142
+      },
+      {
+        "day": 1,
+        "time": 64.00000000000064,
+        "elapsed": 64.00000000000064,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 65.00000000000058,
+        "elapsed": 65.00000000000058,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 66.00000000000053,
+        "elapsed": 66.00000000000053,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 67.00000000000047,
+        "elapsed": 67.00000000000047,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 68.00000000000041,
+        "elapsed": 68.00000000000041,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 69.00000000000036,
+        "elapsed": 69.00000000000036,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 70.0000000000003,
+        "elapsed": 70.0000000000003,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 71.00000000000024,
+        "elapsed": 71.00000000000024,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 72.00000000000018,
+        "elapsed": 72.00000000000018,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 73.00000000000013,
+        "elapsed": 73.00000000000013,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 74.00000000000007,
+        "elapsed": 74.00000000000007,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 75.00000000000001,
+        "elapsed": 75.00000000000001,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 75.99999999999996,
+        "elapsed": 75.99999999999996,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 76.9999999999999,
+        "elapsed": 76.9999999999999,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 77.99999999999984,
+        "elapsed": 77.99999999999984,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 78.99999999999979,
+        "elapsed": 78.99999999999979,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 79.99999999999973,
+        "elapsed": 79.99999999999973,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 80.99999999999967,
+        "elapsed": 80.99999999999967,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 81.99999999999962,
+        "elapsed": 81.99999999999962,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 82.99999999999956,
+        "elapsed": 82.99999999999956,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 83.9999999999995,
+        "elapsed": 83.9999999999995,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 84.99999999999945,
+        "elapsed": 84.99999999999945,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 85.99999999999939,
+        "elapsed": 85.99999999999939,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 86.99999999999933,
+        "elapsed": 86.99999999999933,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 87.99999999999928,
+        "elapsed": 87.99999999999928,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 88.99999999999922,
+        "elapsed": 88.99999999999922,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 89.99999999999916,
+        "elapsed": 89.99999999999916,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 90.9999999999991,
+        "elapsed": 90.9999999999991,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 91.99999999999905,
+        "elapsed": 91.99999999999905,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 92.99999999999899,
+        "elapsed": 92.99999999999899,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 93.99999999999893,
+        "elapsed": 93.99999999999893,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 94.99999999999888,
+        "elapsed": 94.99999999999888,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 95.99999999999882,
+        "elapsed": 95.99999999999882,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 96.99999999999876,
+        "elapsed": 96.99999999999876,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 97.9999999999987,
+        "elapsed": 97.9999999999987,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 98.99999999999865,
+        "elapsed": 98.99999999999865,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 99.9999999999986,
+        "elapsed": 99.9999999999986,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 100.99999999999854,
+        "elapsed": 100.99999999999854,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 101.99999999999848,
+        "elapsed": 101.99999999999848,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 102.99999999999842,
+        "elapsed": 102.99999999999842,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 103.99999999999837,
+        "elapsed": 103.99999999999837,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 104.99999999999831,
+        "elapsed": 104.99999999999831,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 105.99999999999825,
+        "elapsed": 105.99999999999825,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 106.9999999999982,
+        "elapsed": 106.9999999999982,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 107.99999999999814,
+        "elapsed": 107.99999999999814,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 108.99999999999808,
+        "elapsed": 108.99999999999808,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 109.99999999999802,
+        "elapsed": 109.99999999999802,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 110.99999999999797,
+        "elapsed": 110.99999999999797,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 111.99999999999791,
+        "elapsed": 111.99999999999791,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 112.99999999999785,
+        "elapsed": 112.99999999999785,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 113.9999999999978,
+        "elapsed": 113.9999999999978,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 114.99999999999774,
+        "elapsed": 114.99999999999774,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 115.99999999999768,
+        "elapsed": 115.99999999999768,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 116.99999999999763,
+        "elapsed": 116.99999999999763,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 117.99999999999757,
+        "elapsed": 117.99999999999757,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 118.99999999999751,
+        "elapsed": 118.99999999999751,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 119.99999999999746,
+        "elapsed": 119.99999999999746,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 120.9999999999974,
+        "elapsed": 120.9999999999974,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 121.99999999999734,
+        "elapsed": 121.99999999999734,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 122.99999999999729,
+        "elapsed": 122.99999999999729,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 123.99999999999723,
+        "elapsed": 123.99999999999723,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 124.99999999999717,
+        "elapsed": 124.99999999999717,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 125.99999999999712,
+        "elapsed": 125.99999999999712,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 126.99999999999706,
+        "elapsed": 126.99999999999706,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 127.999999999997,
+        "elapsed": 127.999999999997,
+        "daylightSeconds": 0.9999999999999574,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999574
+      },
+      {
+        "day": 1,
+        "time": 128.99999999999696,
+        "elapsed": 128.99999999999696,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 129.9999999999969,
+        "elapsed": 129.9999999999969,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 130.99999999999685,
+        "elapsed": 130.99999999999685,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 131.9999999999968,
+        "elapsed": 131.9999999999968,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 132.99999999999673,
+        "elapsed": 132.99999999999673,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 133.99999999999667,
+        "elapsed": 133.99999999999667,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 134.99999999999662,
+        "elapsed": 134.99999999999662,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 135.99999999999656,
+        "elapsed": 135.99999999999656,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 136.9999999999965,
+        "elapsed": 136.9999999999965,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 137.99999999999645,
+        "elapsed": 137.99999999999645,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 138.9999999999964,
+        "elapsed": 138.9999999999964,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 139.99999999999633,
+        "elapsed": 139.99999999999633,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 140.99999999999628,
+        "elapsed": 140.99999999999628,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 141.99999999999622,
+        "elapsed": 141.99999999999622,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 142.99999999999616,
+        "elapsed": 142.99999999999616,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 143.9999999999961,
+        "elapsed": 143.9999999999961,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 144.99999999999605,
+        "elapsed": 144.99999999999605,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 145.999999999996,
+        "elapsed": 145.999999999996,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 146.99999999999594,
+        "elapsed": 146.99999999999594,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 147.99999999999588,
+        "elapsed": 147.99999999999588,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 148.99999999999582,
+        "elapsed": 148.99999999999582,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 149.99999999999577,
+        "elapsed": 149.99999999999577,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 150.9999999999957,
+        "elapsed": 150.9999999999957,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 151.99999999999565,
+        "elapsed": 151.99999999999565,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 152.9999999999956,
+        "elapsed": 152.9999999999956,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 153.99999999999554,
+        "elapsed": 153.99999999999554,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 154.99999999999548,
+        "elapsed": 154.99999999999548,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 155.99999999999542,
+        "elapsed": 155.99999999999542,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 156.99999999999537,
+        "elapsed": 156.99999999999537,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 157.9999999999953,
+        "elapsed": 157.9999999999953,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 158.99999999999525,
+        "elapsed": 158.99999999999525,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 159.9999999999952,
+        "elapsed": 159.9999999999952,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 160.99999999999514,
+        "elapsed": 160.99999999999514,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 161.99999999999508,
+        "elapsed": 161.99999999999508,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 162.99999999999503,
+        "elapsed": 162.99999999999503,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 163.99999999999497,
+        "elapsed": 163.99999999999497,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 164.9999999999949,
+        "elapsed": 164.9999999999949,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 165.99999999999486,
+        "elapsed": 165.99999999999486,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 166.9999999999948,
+        "elapsed": 166.9999999999948,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 167.99999999999474,
+        "elapsed": 167.99999999999474,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 168.99999999999469,
+        "elapsed": 168.99999999999469,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 169.99999999999463,
+        "elapsed": 169.99999999999463,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 170.99999999999457,
+        "elapsed": 170.99999999999457,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 171.99999999999451,
+        "elapsed": 171.99999999999451,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 172.99999999999446,
+        "elapsed": 172.99999999999446,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 173.9999999999944,
+        "elapsed": 173.9999999999944,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 174.99999999999434,
+        "elapsed": 174.99999999999434,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 175.9999999999943,
+        "elapsed": 175.9999999999943,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 176.99999999999423,
+        "elapsed": 176.99999999999423,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 177.99999999999417,
+        "elapsed": 177.99999999999417,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 178.99999999999412,
+        "elapsed": 178.99999999999412,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 179.99999999999406,
+        "elapsed": 179.99999999999406,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 180.999999999994,
+        "elapsed": 180.999999999994,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 181.99999999999395,
+        "elapsed": 181.99999999999395,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 182.9999999999939,
+        "elapsed": 182.9999999999939,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 183.99999999999383,
+        "elapsed": 183.99999999999383,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 184.99999999999378,
+        "elapsed": 184.99999999999378,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 185.99999999999372,
+        "elapsed": 185.99999999999372,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 186.99999999999366,
+        "elapsed": 186.99999999999366,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 187.9999999999936,
+        "elapsed": 187.9999999999936,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 188.99999999999355,
+        "elapsed": 188.99999999999355,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 189.9999999999935,
+        "elapsed": 189.9999999999935,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 190.99999999999343,
+        "elapsed": 190.99999999999343,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 191.99999999999338,
+        "elapsed": 191.99999999999338,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 192.99999999999332,
+        "elapsed": 192.99999999999332,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 193.99999999999326,
+        "elapsed": 193.99999999999326,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 194.9999999999932,
+        "elapsed": 194.9999999999932,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 195.99999999999315,
+        "elapsed": 195.99999999999315,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 196.9999999999931,
+        "elapsed": 196.9999999999931,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 197.99999999999304,
+        "elapsed": 197.99999999999304,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 198.99999999999298,
+        "elapsed": 198.99999999999298,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 199.99999999999292,
+        "elapsed": 199.99999999999292,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 200.99999999999287,
+        "elapsed": 200.99999999999287,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 201.9999999999928,
+        "elapsed": 201.9999999999928,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 202.99999999999275,
+        "elapsed": 202.99999999999275,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 203.9999999999927,
+        "elapsed": 203.9999999999927,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 204.99999999999264,
+        "elapsed": 204.99999999999264,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 205.99999999999258,
+        "elapsed": 205.99999999999258,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 206.99999999999253,
+        "elapsed": 206.99999999999253,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 207.99999999999247,
+        "elapsed": 207.99999999999247,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 208.9999999999924,
+        "elapsed": 208.9999999999924,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 209.99999999999235,
+        "elapsed": 209.99999999999235,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 210.9999999999923,
+        "elapsed": 210.9999999999923,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 211.99999999999224,
+        "elapsed": 211.99999999999224,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 212.99999999999218,
+        "elapsed": 212.99999999999218,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 213.99999999999213,
+        "elapsed": 213.99999999999213,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 214.99999999999207,
+        "elapsed": 214.99999999999207,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 215.999999999992,
+        "elapsed": 215.999999999992,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 216.99999999999196,
+        "elapsed": 216.99999999999196,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 217.9999999999919,
+        "elapsed": 217.9999999999919,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 218.99999999999184,
+        "elapsed": 218.99999999999184,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 219.9999999999918,
+        "elapsed": 219.9999999999918,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 220.99999999999173,
+        "elapsed": 220.99999999999173,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 221.99999999999167,
+        "elapsed": 221.99999999999167,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 222.99999999999162,
+        "elapsed": 222.99999999999162,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 223.99999999999156,
+        "elapsed": 223.99999999999156,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 224.9999999999915,
+        "elapsed": 224.9999999999915,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 225.99999999999145,
+        "elapsed": 225.99999999999145,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 226.9999999999914,
+        "elapsed": 226.9999999999914,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 227.99999999999133,
+        "elapsed": 227.99999999999133,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 228.99999999999127,
+        "elapsed": 228.99999999999127,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 229.99999999999122,
+        "elapsed": 229.99999999999122,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 230.99999999999116,
+        "elapsed": 230.99999999999116,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 231.9999999999911,
+        "elapsed": 231.9999999999911,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 232.99999999999105,
+        "elapsed": 232.99999999999105,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 233.999999999991,
+        "elapsed": 233.999999999991,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 234.99999999999093,
+        "elapsed": 234.99999999999093,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 235.99999999999088,
+        "elapsed": 235.99999999999088,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 236.99999999999082,
+        "elapsed": 236.99999999999082,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 237.99999999999076,
+        "elapsed": 237.99999999999076,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 238.9999999999907,
+        "elapsed": 238.9999999999907,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 239.99999999999065,
+        "elapsed": 239.99999999999065,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 240.9999999999906,
+        "elapsed": 240.9999999999906,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 241.99999999999054,
+        "elapsed": 241.99999999999054,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 242.99999999999048,
+        "elapsed": 242.99999999999048,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 243.99999999999042,
+        "elapsed": 243.99999999999042,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 244.99999999999037,
+        "elapsed": 244.99999999999037,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 245.9999999999903,
+        "elapsed": 245.9999999999903,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 246.99999999999025,
+        "elapsed": 246.99999999999025,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 247.9999999999902,
+        "elapsed": 247.9999999999902,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 248.99999999999014,
+        "elapsed": 248.99999999999014,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 250,
+        "elapsed": 249.99999999999008,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 250.99999999999994,
+        "elapsed": 250.99999999999002,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 251.9999999999999,
+        "elapsed": 251.99999999998997,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 252.99999999999983,
+        "elapsed": 252.9999999999899,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 253.99999999999977,
+        "elapsed": 253.99999999998985,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 254.99999999999972,
+        "elapsed": 254.9999999999898,
+        "daylightSeconds": 0.9999999999999432,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 0.9999999999999432
+      },
+      {
+        "day": 1,
+        "time": 255.99999999999966,
+        "elapsed": 255.99999999998974,
+        "daylightSeconds": 1.000000000000199,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.000000000000199
+      },
+      {
+        "day": 1,
+        "time": 256.9999999999999,
+        "elapsed": 256.99999999998994,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 258.0000000000001,
+        "elapsed": 257.99999999999017,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 259.00000000000034,
+        "elapsed": 258.9999999999904,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 260.00000000000057,
+        "elapsed": 259.9999999999906,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 261.0000000000008,
+        "elapsed": 260.99999999999085,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 262.000000000001,
+        "elapsed": 261.9999999999911,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 263.00000000000125,
+        "elapsed": 262.9999999999913,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 264.0000000000015,
+        "elapsed": 263.99999999999153,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 265.0000000000017,
+        "elapsed": 264.99999999999176,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 266.00000000000193,
+        "elapsed": 265.999999999992,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 267.00000000000216,
+        "elapsed": 266.9999999999922,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 268.0000000000024,
+        "elapsed": 267.99999999999244,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 269.0000000000026,
+        "elapsed": 268.99999999999267,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 270.00000000000284,
+        "elapsed": 269.9999999999929,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 271.00000000000307,
+        "elapsed": 270.9999999999931,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 272.0000000000033,
+        "elapsed": 271.99999999999335,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 273.0000000000035,
+        "elapsed": 272.9999999999936,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 274.00000000000375,
+        "elapsed": 273.9999999999938,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 275.000000000004,
+        "elapsed": 274.99999999999403,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 276.0000000000042,
+        "elapsed": 275.99999999999426,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 277.00000000000443,
+        "elapsed": 276.9999999999945,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 278.00000000000466,
+        "elapsed": 277.9999999999947,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 279.0000000000049,
+        "elapsed": 278.99999999999494,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "budget",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 280.0000000000051,
+        "elapsed": 279.99999999999517,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "shift-end",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 281.00000000000534,
+        "elapsed": 280.9999999999954,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "shift-end",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 282.00000000000557,
+        "elapsed": 281.9999999999956,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "shift-end",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 283.0000000000058,
+        "elapsed": 282.99999999999585,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "shift-end",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 284.000000000006,
+        "elapsed": 283.9999999999961,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "shift-end",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 285.00000000000625,
+        "elapsed": 284.9999999999963,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "shift-end",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 286.0000000000065,
+        "elapsed": 285.99999999999653,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "shift-end",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 287.0000000000067,
+        "elapsed": 286.99999999999676,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "shift-end",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 288.00000000000693,
+        "elapsed": 287.999999999997,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "shift-end",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 289.00000000000716,
+        "elapsed": 288.9999999999972,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "shift-end",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 290.0000000000074,
+        "elapsed": 289.99999999999744,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "shift-end",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 291.0000000000076,
+        "elapsed": 290.99999999999767,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "shift-end",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 292.00000000000784,
+        "elapsed": 291.9999999999979,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "shift-end",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 293.0000000000081,
+        "elapsed": 292.9999999999981,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "shift-end",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 294.0000000000083,
+        "elapsed": 293.99999999999835,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "shift-end",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 295.0000000000085,
+        "elapsed": 294.9999999999986,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "shift-end",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 296.00000000000875,
+        "elapsed": 295.9999999999988,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "shift-end",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 297.000000000009,
+        "elapsed": 296.99999999999903,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "shift-end",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 298.0000000000092,
+        "elapsed": 297.99999999999926,
+        "daylightSeconds": 1.0000000000002274,
+        "reason": "shift-end",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 299.00000000000944,
+        "elapsed": 298.9999999999995,
+        "daylightSeconds": 0.999999999990564,
+        "reason": "shift-end",
+        "otherActions": 0,
+        "actualSeconds": 0.999999999990564
+      },
+      {
+        "day": 1,
+        "time": 300,
+        "elapsed": 299.99999999999005,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 305.00000000000114,
+        "elapsed": 304.9999999999912,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 310.0000000000023,
+        "elapsed": 309.9999999999923,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 315.0000000000034,
+        "elapsed": 314.99999999999346,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 320.00000000000455,
+        "elapsed": 319.9999999999946,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 325.0000000000057,
+        "elapsed": 324.99999999999574,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 330.0000000000068,
+        "elapsed": 329.9999999999969,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 335.00000000000796,
+        "elapsed": 334.999999999998,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 340.0000000000091,
+        "elapsed": 339.99999999999915,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 345.00000000001023,
+        "elapsed": 345.0000000000003,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 350.00000000001137,
+        "elapsed": 350.0000000000014,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 355.0000000000125,
+        "elapsed": 355.00000000000256,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 360.00000000001364,
+        "elapsed": 360.0000000000037,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 365.0000000000148,
+        "elapsed": 365.00000000000483,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 370.0000000000159,
+        "elapsed": 370.00000000000597,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 375.00000000001705,
+        "elapsed": 375.0000000000071,
+        "daylightSeconds": 0,
+        "reason": "incursion",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 376.0000000000173,
+        "elapsed": 376.00000000000733,
+        "daylightSeconds": 0,
+        "reason": "active",
+        "otherActions": 1,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 377.0000000000175,
+        "elapsed": 377.00000000000756,
+        "daylightSeconds": 0,
+        "reason": "incursion",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 378.00000000001774,
+        "elapsed": 378.0000000000078,
+        "daylightSeconds": 0,
+        "reason": "incursion",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 379.00000000001796,
+        "elapsed": 379.000000000008,
+        "daylightSeconds": 0,
+        "reason": "incursion",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 380.0000000000182,
+        "elapsed": 380.00000000000824,
+        "daylightSeconds": 0,
+        "reason": "incursion",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 381.0000000000184,
+        "elapsed": 381.00000000000847,
+        "daylightSeconds": 0,
+        "reason": "incursion",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 382.00000000001864,
+        "elapsed": 382.0000000000087,
+        "daylightSeconds": 0,
+        "reason": "incursion",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 383.0000000000189,
+        "elapsed": 383.0000000000089,
+        "daylightSeconds": 0,
+        "reason": "incursion",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 384.0000000000191,
+        "elapsed": 384.00000000000915,
+        "daylightSeconds": 0,
+        "reason": "incursion",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 385.0000000000193,
+        "elapsed": 385.0000000000094,
+        "daylightSeconds": 0,
+        "reason": "incursion",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 386.00000000001955,
+        "elapsed": 386.0000000000096,
+        "daylightSeconds": 0,
+        "reason": "incursion",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 387.0000000000198,
+        "elapsed": 387.00000000000983,
+        "daylightSeconds": 0,
+        "reason": "incursion",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 388.00000000002,
+        "elapsed": 388.00000000001006,
+        "daylightSeconds": 0,
+        "reason": "incursion",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 389.00000000002024,
+        "elapsed": 389.0000000000103,
+        "daylightSeconds": 0,
+        "reason": "incursion",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 390.00000000002046,
+        "elapsed": 390.0000000000105,
+        "daylightSeconds": 0,
+        "reason": "incursion",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 391.0000000000207,
+        "elapsed": 391.00000000001074,
+        "daylightSeconds": 0,
+        "reason": "incursion",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 392.0000000000209,
+        "elapsed": 392.00000000001097,
+        "daylightSeconds": 0,
+        "reason": "incursion",
+        "otherActions": 0,
+        "actualSeconds": 1.0000000000002274
+      },
+      {
+        "day": 1,
+        "time": 393.00000000002115,
+        "elapsed": 393.0000000000112,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.00000000000108
+      },
+      {
+        "day": 1,
+        "time": 398.0000000000222,
+        "elapsed": 398.0000000000123,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 403.00000000002336,
+        "elapsed": 403.0000000000134,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 408.0000000000245,
+        "elapsed": 408.00000000001455,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 413.00000000002564,
+        "elapsed": 413.0000000000157,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 418.0000000000268,
+        "elapsed": 418.0000000000168,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 423.0000000000279,
+        "elapsed": 423.00000000001796,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 428.00000000002905,
+        "elapsed": 428.0000000000191,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 433.0000000000302,
+        "elapsed": 433.00000000002024,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 438.0000000000313,
+        "elapsed": 438.0000000000214,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 443.00000000003246,
+        "elapsed": 443.0000000000225,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 448.0000000000336,
+        "elapsed": 448.00000000002365,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 453.00000000003473,
+        "elapsed": 453.0000000000248,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 458.00000000003587,
+        "elapsed": 458.0000000000259,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 463.000000000037,
+        "elapsed": 463.00000000002706,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 468.00000000003814,
+        "elapsed": 468.0000000000282,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 473.0000000000393,
+        "elapsed": 473.00000000002933,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 478.0000000000404,
+        "elapsed": 478.00000000003047,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 483.00000000004155,
+        "elapsed": 483.0000000000316,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 488.0000000000427,
+        "elapsed": 488.00000000003274,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 493.0000000000438,
+        "elapsed": 493.0000000000339,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 498.00000000004496,
+        "elapsed": 498.000000000035,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 503.0000000000461,
+        "elapsed": 503.00000000003615,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 508.00000000004724,
+        "elapsed": 508.0000000000373,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 513.0000000000483,
+        "elapsed": 513.0000000000384,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 518.0000000000495,
+        "elapsed": 518.0000000000396,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 523.0000000000506,
+        "elapsed": 523.0000000000407,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 528.0000000000517,
+        "elapsed": 528.0000000000418,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 533.0000000000529,
+        "elapsed": 533.000000000043,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 538.000000000054,
+        "elapsed": 538.0000000000441,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 543.0000000000551,
+        "elapsed": 543.0000000000452,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 548.0000000000563,
+        "elapsed": 548.0000000000464,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 553.0000000000574,
+        "elapsed": 553.0000000000475,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 558.0000000000585,
+        "elapsed": 558.0000000000487,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 563.0000000000597,
+        "elapsed": 563.0000000000498,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 568.0000000000608,
+        "elapsed": 568.0000000000509,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 573.000000000062,
+        "elapsed": 573.0000000000521,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 578.0000000000631,
+        "elapsed": 578.0000000000532,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 583.0000000000642,
+        "elapsed": 583.0000000000543,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 588.0000000000654,
+        "elapsed": 588.0000000000555,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 593.0000000000665,
+        "elapsed": 593.0000000000566,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 5.000000000001137
+      },
+      {
+        "day": 1,
+        "time": 598.0000000000676,
+        "elapsed": 598.0000000000578,
+        "daylightSeconds": 0,
+        "reason": "night",
+        "otherActions": 0,
+        "actualSeconds": 1.9999999999323563
+      }
+    ],
+    "meaningfulActivity": {
+      "daylightSeconds": 299.99999999999005,
+      "unoccupiedSeconds": 251.99999999998963,
+      "unoccupiedFraction": 0.8399999999999933,
+      "strictBelow25": false,
+      "creditedPaidRepairDecisionCount": 0
+    },
+    "scope": "Income only native CrateDelivered ledger entries; action time only decisions, paid HP-restoring requests attributed once. Wall purchases do not prove useful interception. Observe at every native tick; record outgoing day before dawn transition."
+  },
+  "biome": "sabana",
+  "culture": "mapungubwe",
+  "seed": "712",
+  "policy": {
+    "profile": "olderFemale",
+    "mixed": true,
+    "middayHiring": true,
+    "plantsPerWorker": 6,
+    "defend": true,
+    "shieldEnabled": true,
+    "cashPolicy": "progressive-village",
+    "reserveMaintenance": true,
+    "burstPlanting": false,
+    "cameraEntry": true,
+    "defensePolicy": "closed"
+  },
+  "defense": {
+    "startDay": 1,
+    "material": "zarzas",
+    "interval": 30,
+    "repairWalls": true,
+    "margin": 3,
+    "maxSlots": 256,
+    "built": {
+      "bounds": [
+        74.12,
+        -6.540000000000001,
+        91.56,
+        6.540000000000001
+      ],
+      "points": [
+        [
+          74.12,
+          -6.540000000000001
+        ],
+        [
+          91.56,
+          -6.540000000000001
+        ],
+        [
+          91.56,
+          6.540000000000001
+        ],
+        [
+          74.12,
+          6.540000000000001
+        ],
+        [
+          74.12,
+          -6.540000000000001
+        ]
+      ],
+      "day": 1,
+      "ids": [
+        "structure-8",
+        "structure-9",
+        "structure-10",
+        "structure-11",
+        "structure-12",
+        "structure-13",
+        "structure-14",
+        "structure-15",
+        "structure-16",
+        "structure-17",
+        "structure-18",
+        "structure-19",
+        "structure-20",
+        "structure-21",
+        "structure-22",
+        "structure-23",
+        "structure-24",
+        "structure-25",
+        "structure-26",
+        "structure-27",
+        "structure-28",
+        "structure-29",
+        "structure-30",
+        "structure-31",
+        "structure-32",
+        "structure-33",
+        "structure-34",
+        "structure-35"
+      ]
+    },
+    "history": [
+      {
+        "day": 1,
+        "time": 0,
+        "elapsed": 0,
+        "protectedCash": 30,
+        "pendingRepairCoins": 0,
+        "funds": 635,
+        "attempts": [
+          {
+            "bounds": [
+              74.12,
+              -6.540000000000001,
+              91.56,
+              6.540000000000001
+            ],
+            "totalSlots": 28,
+            "newSlots": 28,
+            "cost": 280,
+            "reason": "complete-legal-slots"
+          }
+        ],
+        "paidCost": 280,
+        "paidPieces": 28,
+        "repairRequests": 0,
+        "bounds": [
+          74.12,
+          -6.540000000000001,
+          91.56,
+          6.540000000000001
+        ],
+        "paymentId": "intensive-wall-2",
+        "ids": [
+          "structure-8",
+          "structure-9",
+          "structure-10",
+          "structure-11",
+          "structure-12",
+          "structure-13",
+          "structure-14",
+          "structure-15",
+          "structure-16",
+          "structure-17",
+          "structure-18",
+          "structure-19",
+          "structure-20",
+          "structure-21",
+          "structure-22",
+          "structure-23",
+          "structure-24",
+          "structure-25",
+          "structure-26",
+          "structure-27",
+          "structure-28",
+          "structure-29",
+          "structure-30",
+          "structure-31",
+          "structure-32",
+          "structure-33",
+          "structure-34",
+          "structure-35"
+        ],
+        "gates": 1,
+        "reason": "paid-complete-native-contour"
+      },
+      {
+        "day": 1,
+        "time": 30.000000000000156,
+        "elapsed": 30.000000000000156,
+        "protectedCash": 60,
+        "pendingRepairCoins": 0,
+        "funds": 148,
+        "attempts": [
+          {
+            "bounds": [
+              74.12,
+              -8.72,
+              98.10000000000001,
+              8.72
+            ],
+            "totalSlots": 38,
+            "newSlots": 32,
+            "cost": 320,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -8.72,
+              100.28000000000002,
+              8.72
+            ],
+            "totalSlots": 43,
+            "newSlots": 43,
+            "cost": 430,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              74.12,
+              -10.9,
+              98.10000000000001,
+              10.9
+            ],
+            "totalSlots": 42,
+            "newSlots": 36,
+            "cost": 360,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -10.9,
+              100.28000000000002,
+              10.9
+            ],
+            "totalSlots": 47,
+            "newSlots": 47,
+            "cost": 470,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -8.72,
+              102.46000000000001,
+              8.72
+            ],
+            "totalSlots": 46,
+            "newSlots": 46,
+            "cost": 460,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              74.12,
+              -13.080000000000002,
+              98.10000000000001,
+              13.080000000000002
+            ],
+            "totalSlots": 46,
+            "newSlots": 40,
+            "cost": 400,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -10.9,
+              102.46000000000001,
+              10.9
+            ],
+            "totalSlots": 50,
+            "newSlots": 50,
+            "cost": 500,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -13.080000000000002,
+              100.28000000000002,
+              13.080000000000002
+            ],
+            "totalSlots": 51,
+            "newSlots": 51,
+            "cost": 510,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -13.080000000000002,
+              102.46000000000001,
+              13.080000000000002
+            ],
+            "totalSlots": 54,
+            "newSlots": 54,
+            "cost": 540,
+            "reason": "protected-budget"
+          }
+        ],
+        "paidCost": 0,
+        "paidPieces": 0,
+        "repairRequests": 0,
+        "reason": "no-affordable-complete-native-contour"
+      },
+      {
+        "day": 1,
+        "time": 60.00000000000058,
+        "elapsed": 60.00000000000058,
+        "protectedCash": 90,
+        "pendingRepairCoins": 0,
+        "funds": 2,
+        "attempts": [
+          {
+            "bounds": [
+              74.12,
+              -10.9,
+              98.10000000000001,
+              10.9
+            ],
+            "totalSlots": 42,
+            "newSlots": 36,
+            "cost": 360,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -10.9,
+              100.28000000000002,
+              10.9
+            ],
+            "totalSlots": 47,
+            "newSlots": 47,
+            "cost": 470,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              74.12,
+              -13.08,
+              98.10000000000001,
+              13.08
+            ],
+            "totalSlots": 46,
+            "newSlots": 40,
+            "cost": 400,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -13.08,
+              100.28000000000002,
+              13.08
+            ],
+            "totalSlots": 51,
+            "newSlots": 51,
+            "cost": 510,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -10.9,
+              102.46000000000001,
+              10.9
+            ],
+            "totalSlots": 50,
+            "newSlots": 50,
+            "cost": 500,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              74.12,
+              -15.260000000000002,
+              98.10000000000001,
+              15.260000000000002
+            ],
+            "totalSlots": 51,
+            "newSlots": 47,
+            "cost": 470,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -13.08,
+              102.46000000000001,
+              13.08
+            ],
+            "totalSlots": 54,
+            "newSlots": 54,
+            "cost": 540,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -15.260000000000002,
+              100.28000000000002,
+              15.260000000000002
+            ],
+            "totalSlots": 55,
+            "newSlots": 55,
+            "cost": 550,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -15.260000000000002,
+              102.46000000000001,
+              15.260000000000002
+            ],
+            "totalSlots": 59,
+            "newSlots": 59,
+            "cost": 590,
+            "reason": "protected-budget"
+          }
+        ],
+        "paidCost": 0,
+        "paidPieces": 0,
+        "repairRequests": 0,
+        "reason": "no-affordable-complete-native-contour"
+      },
+      {
+        "day": 1,
+        "time": 90.9999999999991,
+        "elapsed": 90.9999999999991,
+        "protectedCash": 90,
+        "pendingRepairCoins": 0,
+        "funds": 2,
+        "attempts": [
+          {
+            "bounds": [
+              74.12,
+              -10.9,
+              98.10000000000001,
+              10.9
+            ],
+            "totalSlots": 42,
+            "newSlots": 36,
+            "cost": 360,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -10.9,
+              100.28000000000002,
+              10.9
+            ],
+            "totalSlots": 47,
+            "newSlots": 47,
+            "cost": 470,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              74.12,
+              -13.08,
+              98.10000000000001,
+              13.08
+            ],
+            "totalSlots": 46,
+            "newSlots": 40,
+            "cost": 400,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -13.08,
+              100.28000000000002,
+              13.08
+            ],
+            "totalSlots": 51,
+            "newSlots": 51,
+            "cost": 510,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -10.9,
+              102.46000000000001,
+              10.9
+            ],
+            "totalSlots": 50,
+            "newSlots": 50,
+            "cost": 500,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              74.12,
+              -15.260000000000002,
+              98.10000000000001,
+              15.260000000000002
+            ],
+            "totalSlots": 51,
+            "newSlots": 47,
+            "cost": 470,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -13.08,
+              102.46000000000001,
+              13.08
+            ],
+            "totalSlots": 54,
+            "newSlots": 54,
+            "cost": 540,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -15.260000000000002,
+              100.28000000000002,
+              15.260000000000002
+            ],
+            "totalSlots": 55,
+            "newSlots": 55,
+            "cost": 550,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -15.260000000000002,
+              102.46000000000001,
+              15.260000000000002
+            ],
+            "totalSlots": 59,
+            "newSlots": 59,
+            "cost": 590,
+            "reason": "protected-budget"
+          }
+        ],
+        "paidCost": 0,
+        "paidPieces": 0,
+        "repairRequests": 0,
+        "reason": "no-affordable-complete-native-contour"
+      },
+      {
+        "day": 1,
+        "time": 121.99999999999734,
+        "elapsed": 121.99999999999734,
+        "protectedCash": 90,
+        "pendingRepairCoins": 0,
+        "funds": 2,
+        "attempts": [
+          {
+            "bounds": [
+              74.12,
+              -10.9,
+              98.10000000000001,
+              10.9
+            ],
+            "totalSlots": 42,
+            "newSlots": 36,
+            "cost": 360,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -10.9,
+              100.28000000000002,
+              10.9
+            ],
+            "totalSlots": 47,
+            "newSlots": 47,
+            "cost": 470,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              74.12,
+              -13.08,
+              98.10000000000001,
+              13.08
+            ],
+            "totalSlots": 46,
+            "newSlots": 40,
+            "cost": 400,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -13.08,
+              100.28000000000002,
+              13.08
+            ],
+            "totalSlots": 51,
+            "newSlots": 51,
+            "cost": 510,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -10.9,
+              102.46000000000001,
+              10.9
+            ],
+            "totalSlots": 50,
+            "newSlots": 50,
+            "cost": 500,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              74.12,
+              -15.260000000000002,
+              98.10000000000001,
+              15.260000000000002
+            ],
+            "totalSlots": 51,
+            "newSlots": 47,
+            "cost": 470,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -13.08,
+              102.46000000000001,
+              13.08
+            ],
+            "totalSlots": 54,
+            "newSlots": 54,
+            "cost": 540,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -15.260000000000002,
+              100.28000000000002,
+              15.260000000000002
+            ],
+            "totalSlots": 55,
+            "newSlots": 55,
+            "cost": 550,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -15.260000000000002,
+              102.46000000000001,
+              15.260000000000002
+            ],
+            "totalSlots": 59,
+            "newSlots": 59,
+            "cost": 590,
+            "reason": "protected-budget"
+          }
+        ],
+        "paidCost": 0,
+        "paidPieces": 0,
+        "repairRequests": 0,
+        "reason": "no-affordable-complete-native-contour"
+      },
+      {
+        "day": 1,
+        "time": 152.9999999999956,
+        "elapsed": 152.9999999999956,
+        "protectedCash": 90,
+        "pendingRepairCoins": 0,
+        "funds": 2,
+        "attempts": [
+          {
+            "bounds": [
+              74.12,
+              -10.9,
+              98.10000000000001,
+              10.9
+            ],
+            "totalSlots": 42,
+            "newSlots": 36,
+            "cost": 360,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -10.9,
+              100.28000000000002,
+              10.9
+            ],
+            "totalSlots": 47,
+            "newSlots": 47,
+            "cost": 470,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              74.12,
+              -13.08,
+              98.10000000000001,
+              13.08
+            ],
+            "totalSlots": 46,
+            "newSlots": 40,
+            "cost": 400,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -13.08,
+              100.28000000000002,
+              13.08
+            ],
+            "totalSlots": 51,
+            "newSlots": 51,
+            "cost": 510,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -10.9,
+              102.46000000000001,
+              10.9
+            ],
+            "totalSlots": 50,
+            "newSlots": 50,
+            "cost": 500,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              74.12,
+              -15.260000000000002,
+              98.10000000000001,
+              15.260000000000002
+            ],
+            "totalSlots": 51,
+            "newSlots": 47,
+            "cost": 470,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -13.08,
+              102.46000000000001,
+              13.08
+            ],
+            "totalSlots": 54,
+            "newSlots": 54,
+            "cost": 540,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -15.260000000000002,
+              100.28000000000002,
+              15.260000000000002
+            ],
+            "totalSlots": 55,
+            "newSlots": 55,
+            "cost": 550,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -15.260000000000002,
+              102.46000000000001,
+              15.260000000000002
+            ],
+            "totalSlots": 59,
+            "newSlots": 59,
+            "cost": 590,
+            "reason": "protected-budget"
+          }
+        ],
+        "paidCost": 0,
+        "paidPieces": 0,
+        "repairRequests": 0,
+        "reason": "no-affordable-complete-native-contour"
+      },
+      {
+        "day": 1,
+        "time": 183.99999999999383,
+        "elapsed": 183.99999999999383,
+        "protectedCash": 90,
+        "pendingRepairCoins": 0,
+        "funds": 2,
+        "attempts": [
+          {
+            "bounds": [
+              74.12,
+              -10.9,
+              98.10000000000001,
+              10.9
+            ],
+            "totalSlots": 42,
+            "newSlots": 36,
+            "cost": 360,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -10.9,
+              100.28000000000002,
+              10.9
+            ],
+            "totalSlots": 47,
+            "newSlots": 47,
+            "cost": 470,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              74.12,
+              -13.08,
+              98.10000000000001,
+              13.08
+            ],
+            "totalSlots": 46,
+            "newSlots": 40,
+            "cost": 400,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -13.08,
+              100.28000000000002,
+              13.08
+            ],
+            "totalSlots": 51,
+            "newSlots": 51,
+            "cost": 510,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -10.9,
+              102.46000000000001,
+              10.9
+            ],
+            "totalSlots": 50,
+            "newSlots": 50,
+            "cost": 500,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              74.12,
+              -15.260000000000002,
+              98.10000000000001,
+              15.260000000000002
+            ],
+            "totalSlots": 51,
+            "newSlots": 47,
+            "cost": 470,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -13.08,
+              102.46000000000001,
+              13.08
+            ],
+            "totalSlots": 54,
+            "newSlots": 54,
+            "cost": 540,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -15.260000000000002,
+              100.28000000000002,
+              15.260000000000002
+            ],
+            "totalSlots": 55,
+            "newSlots": 55,
+            "cost": 550,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -15.260000000000002,
+              102.46000000000001,
+              15.260000000000002
+            ],
+            "totalSlots": 59,
+            "newSlots": 59,
+            "cost": 590,
+            "reason": "protected-budget"
+          }
+        ],
+        "paidCost": 0,
+        "paidPieces": 0,
+        "repairRequests": 0,
+        "reason": "no-affordable-complete-native-contour"
+      },
+      {
+        "day": 1,
+        "time": 214.99999999999207,
+        "elapsed": 214.99999999999207,
+        "protectedCash": 90,
+        "pendingRepairCoins": 0,
+        "funds": 2,
+        "attempts": [
+          {
+            "bounds": [
+              74.12,
+              -10.9,
+              98.10000000000001,
+              10.9
+            ],
+            "totalSlots": 42,
+            "newSlots": 36,
+            "cost": 360,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -10.9,
+              100.28000000000002,
+              10.9
+            ],
+            "totalSlots": 47,
+            "newSlots": 47,
+            "cost": 470,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              74.12,
+              -13.08,
+              98.10000000000001,
+              13.08
+            ],
+            "totalSlots": 46,
+            "newSlots": 40,
+            "cost": 400,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -13.08,
+              100.28000000000002,
+              13.08
+            ],
+            "totalSlots": 51,
+            "newSlots": 51,
+            "cost": 510,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -10.9,
+              102.46000000000001,
+              10.9
+            ],
+            "totalSlots": 50,
+            "newSlots": 50,
+            "cost": 500,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              74.12,
+              -15.260000000000002,
+              98.10000000000001,
+              15.260000000000002
+            ],
+            "totalSlots": 51,
+            "newSlots": 47,
+            "cost": 470,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -13.08,
+              102.46000000000001,
+              13.08
+            ],
+            "totalSlots": 54,
+            "newSlots": 54,
+            "cost": 540,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -15.260000000000002,
+              100.28000000000002,
+              15.260000000000002
+            ],
+            "totalSlots": 55,
+            "newSlots": 55,
+            "cost": 550,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -15.260000000000002,
+              102.46000000000001,
+              15.260000000000002
+            ],
+            "totalSlots": 59,
+            "newSlots": 59,
+            "cost": 590,
+            "reason": "protected-budget"
+          }
+        ],
+        "paidCost": 0,
+        "paidPieces": 0,
+        "repairRequests": 0,
+        "reason": "no-affordable-complete-native-contour"
+      },
+      {
+        "day": 1,
+        "time": 245.9999999999903,
+        "elapsed": 245.9999999999903,
+        "protectedCash": 90,
+        "pendingRepairCoins": 0,
+        "funds": 2,
+        "attempts": [
+          {
+            "bounds": [
+              74.12,
+              -10.9,
+              98.10000000000001,
+              10.9
+            ],
+            "totalSlots": 42,
+            "newSlots": 36,
+            "cost": 360,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -10.9,
+              100.28000000000002,
+              10.9
+            ],
+            "totalSlots": 47,
+            "newSlots": 47,
+            "cost": 470,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              74.12,
+              -13.08,
+              98.10000000000001,
+              13.08
+            ],
+            "totalSlots": 46,
+            "newSlots": 40,
+            "cost": 400,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -13.08,
+              100.28000000000002,
+              13.08
+            ],
+            "totalSlots": 51,
+            "newSlots": 51,
+            "cost": 510,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -10.9,
+              102.46000000000001,
+              10.9
+            ],
+            "totalSlots": 50,
+            "newSlots": 50,
+            "cost": 500,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              74.12,
+              -15.260000000000002,
+              98.10000000000001,
+              15.260000000000002
+            ],
+            "totalSlots": 51,
+            "newSlots": 47,
+            "cost": 470,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -13.08,
+              102.46000000000001,
+              13.08
+            ],
+            "totalSlots": 54,
+            "newSlots": 54,
+            "cost": 540,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -15.260000000000002,
+              100.28000000000002,
+              15.260000000000002
+            ],
+            "totalSlots": 55,
+            "newSlots": 55,
+            "cost": 550,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -15.260000000000002,
+              102.46000000000001,
+              15.260000000000002
+            ],
+            "totalSlots": 59,
+            "newSlots": 59,
+            "cost": 590,
+            "reason": "protected-budget"
+          }
+        ],
+        "paidCost": 0,
+        "paidPieces": 0,
+        "repairRequests": 0,
+        "reason": "no-affordable-complete-native-contour"
+      },
+      {
+        "day": 1,
+        "time": 276.0000000000042,
+        "elapsed": 275.99999999999426,
+        "protectedCash": 90,
+        "pendingRepairCoins": 0,
+        "funds": 2,
+        "attempts": [
+          {
+            "bounds": [
+              74.12,
+              -10.9,
+              98.10000000000001,
+              10.9
+            ],
+            "totalSlots": 42,
+            "newSlots": 36,
+            "cost": 360,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -10.9,
+              100.28000000000002,
+              10.9
+            ],
+            "totalSlots": 47,
+            "newSlots": 47,
+            "cost": 470,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              74.12,
+              -13.08,
+              98.10000000000001,
+              13.08
+            ],
+            "totalSlots": 46,
+            "newSlots": 40,
+            "cost": 400,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -13.08,
+              100.28000000000002,
+              13.08
+            ],
+            "totalSlots": 51,
+            "newSlots": 51,
+            "cost": 510,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -10.9,
+              102.46000000000001,
+              10.9
+            ],
+            "totalSlots": 50,
+            "newSlots": 50,
+            "cost": 500,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              74.12,
+              -15.260000000000002,
+              98.10000000000001,
+              15.260000000000002
+            ],
+            "totalSlots": 51,
+            "newSlots": 47,
+            "cost": 470,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -13.08,
+              102.46000000000001,
+              13.08
+            ],
+            "totalSlots": 54,
+            "newSlots": 54,
+            "cost": 540,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              71.94,
+              -15.260000000000002,
+              100.28000000000002,
+              15.260000000000002
+            ],
+            "totalSlots": 55,
+            "newSlots": 55,
+            "cost": 550,
+            "reason": "protected-budget"
+          },
+          {
+            "bounds": [
+              69.76,
+              -15.260000000000002,
+              102.46000000000001,
+              15.260000000000002
+            ],
+            "totalSlots": 59,
+            "newSlots": 59,
+            "cost": 590,
+            "reason": "protected-budget"
+          }
+        ],
+        "paidCost": 0,
+        "paidPieces": 0,
+        "repairRequests": 0,
+        "reason": "no-affordable-complete-native-contour"
+      }
+    ],
+    "repairRequests": 0,
+    "paidCost": 280,
+    "paidPieces": 28,
+    "scope": "Opt-in all-or-nothing legal paid contours. Complete slot coverage is geometric planning, not an interception/campaign guarantee; native path/contact fixtures provide separate physical evidence. Requests are not paid repairs."
+  },
+  "additionalHiring": {
+    "count": 2,
+    "cost": 53
+  },
+  "result": null,
+  "completedNights": 1,
+  "money": 92,
+  "maximumLiving": 49,
+  "plots": 49,
+  "reloads": 1,
+  "counts": {
+    "PlacementCommitted": 1,
+    "CropPlaced": 49,
+    "HiringConfirmed": 3,
+    "WallChainBuilt": 1,
+    "WaterSatisfied": 41,
+    "NightStarted": 1,
+    "RaidSpawned": 1,
+    "SpellActivated": 1,
+    "AnimalLogicalHit": 2,
+    "AnimalRetreating": 1,
+    "RaidEnded": 1,
+    "Dawn": 1
+  },
+  "activity": {
+    "daylightSeconds": 299.99999999999005,
+    "unoccupiedSeconds": 251.99999999998963,
+    "unoccupiedFraction": 0.8399999999999933,
+    "longestIdle": 251.99999999998963,
+    "p90LongestIdle": 251.99999999998963
+  },
+  "daily": [
+    {
+      "day": 1,
+      "before": 700,
+      "finance": {
+        "opening": 700,
+        "closing": 92,
+        "income": 0,
+        "refunds": 0,
+        "wages": 83,
+        "seeds": 245,
+        "walls": 280,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 0,
+        "otherCredits": 0,
+        "otherDebits": 0,
+        "entries": [
+          {
+            "id": "intensive-plant-0",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-hire-1",
+            "coins": -30,
+            "category": "wages"
+          },
+          {
+            "id": "intensive-wall-2",
+            "coins": -280,
+            "category": "walls"
+          },
+          {
+            "id": "intensive-plant-3",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-4",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-5",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-6",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-7",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-8",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-9",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-10",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-11",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-12",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-13",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-14",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-15",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-16",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-17",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-18",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-19",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-20",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-21",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-22",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-23",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-24",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-25",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-26",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-27",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-28",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-29",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-30",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-31",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-32",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-hire-33",
+            "coins": -27,
+            "category": "wages"
+          },
+          {
+            "id": "intensive-plant-34",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-35",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-36",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-37",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-38",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-39",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-40",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-41",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-42",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-43",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-hire-44",
+            "coins": -26,
+            "category": "wages"
+          },
+          {
+            "id": "intensive-plant-45",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-46",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-47",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-48",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-49",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-50",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-51",
+            "coins": -5,
+            "category": "seeds"
+          },
+          {
+            "id": "intensive-plant-52",
+            "coins": -5,
+            "category": "seeds"
+          }
+        ],
+        "net": -608,
+        "reconciliationDifference": 0
+      },
+      "daylightSeconds": 299.99999999999005,
+      "unoccupiedSeconds": 251.99999999998963,
+      "money": 92,
+      "staff": 1,
+      "wages": 83,
+      "nextLabourReserve": 90,
+      "maintenanceReserve": 0,
+      "pendingTasks": 41,
+      "planted": 48,
+      "delivered": 0,
+      "destroyed": 0,
+      "living": 49,
+      "centerHp": [
+        600
+      ],
+      "actions": 52,
+      "longestIdle": 251.99999999998963,
+      "idle": {
+        "budget": 231.99999999999474,
+        "space": 0,
+        "shift-end": 19.999999999994884,
+        "incursion": 17.000000000003865,
+        "night": 281.99999999999596
+      },
+      "result": null,
+      "workingCapital": {
+        "cash": 92,
+        "recoveryReserve": 90,
+        "workingCapitalShortfall": 0
+      },
+      "additionalStaff": 2,
+      "additionalWages": 53
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "runs": [
+    {
+      "equal": true,
+      "steps": 900,
+      "phases": [
+        "falling",
+        "rolling",
+        "recovering",
+        "released"
+      ],
+      "recoveriesUsed": [
+        "AuthoredBeastRecovery"
+      ],
+      "boneCount": 21,
+      "peerContacts": 0,
+      "barrierContacts": 0,
+      "reconstruction": {
+        "maxError": 0,
+        "boneCount": 21,
+        "rawFloat64Bytes": 1760,
+        "totalApplyMs": 13.280000001192093
+      },
+      "main": {
+        "initializationMs": 182.64000000059605,
+        "runMs": 767.2400000020862
+      },
+      "worker": {
+        "initializationMs": 205.04999999701977,
+        "runMs": 484.8649999946356,
+        "wallMs": 1056.0299999937415
+      }
+    },
+    {
+      "equal": true,
+      "steps": 900,
+      "phases": [
+        "falling",
+        "rolling",
+        "recovering",
+        "released"
+      ],
+      "recoveriesUsed": [
+        "AuthoredBeastRecovery"
+      ],
+      "boneCount": 21,
+      "peerContacts": 0,
+      "barrierContacts": 0,
+      "reconstruction": {
+        "maxError": 0,
+        "boneCount": 21,
+        "rawFloat64Bytes": 1760,
+        "totalApplyMs": 12.57999999821186
+      },
+      "main": {
+        "initializationMs": 180.5050000026822,
+        "runMs": 679.3149999976158
+      },
+      "worker": {
+        "initializationMs": 187.82999999821186,
+        "runMs": 480.679999999702,
+        "wallMs": 1092.3650000020862
+      }
+    },
+    {
+      "equal": true,
+      "steps": 900,
+      "phases": [
+        "falling",
+        "rolling",
+        "recovering",
+        "released"
+      ],
+      "recoveriesUsed": [
+        "AuthoredBeastRecovery"
+      ],
+      "boneCount": 21,
+      "peerContacts": 0,
+      "barrierContacts": 0,
+      "reconstruction": {
+        "maxError": 0,
+        "boneCount": 21,
+        "rawFloat64Bytes": 1760,
+        "totalApplyMs": 12.679999999701977
+      },
+      "main": {
+        "initializationMs": 194.92000000178814,
+        "runMs": 681.125
+      },
+      "worker": {
+        "initializationMs": 210.7850000038743,
+        "runMs": 480.2800000011921,
+        "wallMs": 1059.7849999964237
+      }
+    }
+  ],
+  "scope": "Edge headless, real Rapier, authored recovery clip and geometry-only rigs independently loaded in main thread and browser Worker, flat terrain and repeated hit. One actor. Selected logical fields, physical pose and all bone world matrices compared every step; no Game.tick, WebGL pixels, live GLTF materials or FPS measurement. Timings not comparable as a performance benchmark."
+}

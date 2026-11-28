@@ -1,0 +1,82 @@
+{
+  "baseline": "a18572f1e4d0d73a11b451adb97ad60d32bfaf46",
+  "fixture": "tests/fixtures/sabana712-d1-native-active-raid.json.gz",
+  "scope": "DEV, one acquired AttackCrops approach, terminal Draw loss with live simulation authority",
+  "browser": "Edge 158.0.4370.33",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing"
+  },
+  "oldDraw": {
+    "frame": 38,
+    "time": 375.8000000000064,
+    "age": 0.7999999523162842
+  },
+  "hold": {
+    "id": 5,
+    "replayBase": 1,
+    "frozenPublication": 21,
+    "at": 375.95000000000624
+  },
+  "route": {
+    "actorId": 396,
+    "bodyId": 1,
+    "slot": 0,
+    "generation": 3,
+    "targetId": 373,
+    "assignmentSequence": 11,
+    "preparedTicket": 1,
+    "acquiredTicket": 2,
+    "routeKnots": 31
+  },
+  "pose": {
+    "x": 84,
+    "z": 26.904805694453284,
+    "phase": 5.447729763869462,
+    "yaw": 3.141592653589793
+  },
+  "replacement": {
+    "frame": 1,
+    "time": 375.95000000000624,
+    "age": 0.949999988079071,
+    "activationSequence": 21,
+    "continuedFrame": 6,
+    "continuedAt": 376.3500000000059,
+    "continuedAge": 1.3499999046325684
+  },
+  "strike": {
+    "frame": 157,
+    "age": 0,
+    "attackId": "attack-661",
+    "at": 396.9999999999871,
+    "targetId": "plant-373",
+    "routeTicket": 2,
+    "routeAssignment": 11
+  },
+  "exactOnce": true,
+  "drained": true,
+  "intentionalDeviceLossObserved": true,
+  "expectedDestroyedPageErrors": 4,
+  "unexpectedErrors": 0,
+  "controls": {
+    "preimage": "After terminal loss the ordinary attachment rejects an active crop route because it lacks fresh graphical admission.",
+    "replayDiagnostic": "A cold Draw matched the authority hold, publication and effective time while the replayed terrain boundary was still null. The crop acquisition changes motion without producing a terrain journal record.",
+    "replayDiagnosticSha256": "330d969cb65cad478bdcebc965eb83d29a3123e35a8dcfd34a153a01b256bf28",
+    "regressionTests": 320,
+    "regressionFailures": 0,
+    "regressionSkipped": 0,
+    "regressionTapSha256": "e97f26f3b86314da25b7b780640146d3e490b50419ff6118f2f5343c39431659",
+    "productBuild": {
+      "backend": "webgpu-worker",
+      "remoteDraw": true,
+      "seconds": 49.14,
+      "logSha256": "da3d3176e14fa6108d982de4818c081d0e2616469f13c3ea0aaed5c732fca98f"
+    }
+  },
+  "receiptSha256": "7dc1cd91ddcd0e5d8000d404fd88c6226d4248c8fc2f568be60aed2b49537eda",
+  "trace": {
+    "sha256": "44d91f7ee2d3f154b3ecabb78db4d0d042113155bdc194ceca0cbfadf0ee2454",
+    "bytes": 40974932,
+    "dataLossOccurred": false
+  }
+}

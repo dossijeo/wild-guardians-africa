@@ -1,0 +1,124 @@
+{
+  "version": 1,
+  "revision": "383bf0492",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 88.30000000447035
+    }
+  },
+  "qualifier": "qualifyRaidEncounter",
+  "hiddenBeforeReady": {
+    "sourceSha256": "f7aab2e90d37f0e1c2070f144f89fb4258672e6bc2570a92426a3f8e6686dd01",
+    "forcedPulseWhileHidden": true,
+    "ready": false,
+    "elapsed": 12.599999999999945,
+    "error": "Error: hidden Retreat READY Error: Error: Error: Native resource preparation timed out"
+  },
+  "hiddenAfterReady": {
+    "sourceSha256": "59e679a1ae01fe81018b1a24f62184939834d2c8b1c3042af1667645e6df4165",
+    "hiddenWaitMs": 250,
+    "elapsed": 18.91999999999981,
+    "wire": [
+      {
+        "kind": "encounter-ready",
+        "id": 6,
+        "sequence": 72
+      },
+      {
+        "kind": "hidden-retreat",
+        "confirmedBefore": 12.599999999999945,
+        "pendingSequence": 72,
+        "activeSequence": 71,
+        "clock": 12.619999999999944
+      },
+      {
+        "kind": "gpu-submit",
+        "submission": {
+          "version": 1,
+          "sequence": 72,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "96e1a01e-a1aa-4b25-8a84-a67ac90a9660/1",
+            "nativeSession": 1,
+            "ticket": 11,
+            "effectiveTime": 12.619999999999944
+          },
+          "elapsed": 12.619999999999944,
+          "assignment": 12
+        }
+      },
+      {
+        "kind": "encounter-submit-ack",
+        "id": 6,
+        "result": {
+          "version": 1,
+          "sequence": 72,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "96e1a01e-a1aa-4b25-8a84-a67ac90a9660/1",
+            "nativeSession": 1,
+            "ticket": 11,
+            "effectiveTime": 12.619999999999944
+          },
+          "elapsed": 12.619999999999944,
+          "assignment": 12
+        }
+      },
+      {
+        "kind": "authority-before-receiving-ack",
+        "elapsed": 12.599999999999945
+      },
+      {
+        "kind": "authority-after-receiving-ack",
+        "elapsed": 12.639999999999944
+      },
+      {
+        "kind": "drained"
+      }
+    ],
+    "errors": []
+  },
+  "lossAfterGo": {
+    "sourceSha256": "439b94cb426e1ce5866d9bf3f155861cbefa94a5f66b1e2cf63e3d8003ff5447",
+    "elapsed": 12.599999999999945,
+    "recovery": {
+      "ok": false,
+      "message": "Error: Native production resource drain failed: Native resource preparation already pending\n    at receiveNativeIntentControl (http://127.0.0.1:5286/src/simulation/simulation-authority-client.js:67:54)\n    at worker.onmessage (http://127.0.0.1:5286/src/simulation/simulation-authority-client.js:120:227)",
+      "ms": 3
+    },
+    "wire": [
+      {
+        "kind": "encounter-ready",
+        "id": 6,
+        "sequence": 71
+      },
+      {
+        "kind": "hidden-retreat",
+        "confirmedBefore": 12.599999999999945,
+        "pendingSequence": 71,
+        "activeSequence": 70,
+        "clock": 12.619999999999944
+      }
+    ],
+    "confirmedSequence": 138,
+    "recoveryBaseSequence": 131,
+    "journalThrough": 138,
+    "browserErrors": [
+      "THREE.WebGPURenderer: WebGPU Device Lost:\n\nMessage: Device was destroyed.\nReason: destroyed"
+    ],
+    "errors": [
+      "Error: Error: Native production resource drain failed: Native resource preparation already pending\n    at receiveNativeIntentControl (http://127.0.0.1:5286/src/simulation/simulation-authority-client.js:67:54)\n    at worker.onmessage (http://127.0.0.1:5286/src/simulation/simulation-authority-client.js:120:227)\n    at worker.onmessage (http://127.0.0.1:5286/src/simulation/worker-hosted-runtime.js:35:34)",
+      "Error: Error: WebGPU device lost: Device was destroyed.\n    at http://127.0.0.1:5286/src/rendering/webgpu-world-surface.js:176:833\n    at worker.onmessage (http://127.0.0.1:5286/src/rendering/webgpu-world-client.js:31:760)"
+    ]
+  }
+}

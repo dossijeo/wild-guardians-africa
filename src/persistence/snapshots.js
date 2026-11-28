@@ -1,3 +1,7 @@
+import {nativeFarmArrivalState,nativeFarmArrivalExecutionState,nativeFarmArrivalHeldState,nativeFarmArrivalBoundState} from '../world/native-farm-arrival-state.js';
+import {copyNativeTaskActionProgress} from '../world/native-task-action-presentation.js';
+import {nativeInitialIdleLiveState,nativeInitialIdleSavedState} from '../world/native-initial-idle-state.js';
+import {nativeIdleStrollLiveState,nativeIdleStrollSavedState} from '../world/native-idle-stroll-state.js';
 import {validDamageProfile} from '../simulation/raid-agricultural-impact.js';
 import {validateAwakenings} from '../simulation/awakenings.js';
 import {validateBlessings} from '../simulation/blessings.js';
@@ -11,8 +15,10 @@ export const SAVE_VERSION=1;
 function wholeMoney(value){
   return value&&typeof value.n==='string'&&typeof value.d==='string'&&/^-?\d+$/.test(value.n)&&/^[1-9]\d*$/.test(value.d)&&BigInt(value.n)%BigInt(value.d)===0n;
 }
-export function validateSnapshot(state) {
+export function validateSnapshot(state,{livePhysics=false}={}) {
   if(!state || state.saveVersion!==SAVE_VERSION || typeof state.slotId!=='string')throw new Error('Guardado incompatible');
+  if(state.workerPhysicsCheckpoint!==undefined&&(typeof state.workerPhysicsCheckpoint!=='string'||!state.workerPhysicsCheckpoint.length||state.workerPhysicsCheckpoint.length>32*1024*1024))throw new Error('Física guardada inválida');
+  if(state.guardianAttackStartedAt!==undefined&&(!Number.isFinite(state.guardianAttackStartedAt)||state.guardianAttackStartedAt<0||state.guardianAttackStartedAt>state.elapsed))throw new Error('Gesto de ataque inválido');
   if(state.mangroveSettlementVersion!==undefined&&(![1,2].includes(state.mangroveSettlementVersion)||state.biome!=='manglares'||!state.mangroveNetwork))throw new Error('Reserva de Manglares incompatible');
   if(state.mangroveNetwork!==undefined&&(typeof state.mangroveNetwork!=='boolean'||state.biome!=='manglares'))throw new Error('Variante de Manglares inválida');
   if(state.mangroveChannels!==undefined&&(typeof state.mangroveChannels!=='boolean'||state.biome!=='manglares'))throw new Error('Variante de Manglares inválida');
@@ -37,14 +43,31 @@ export function validateSnapshot(state) {
     if(!m||typeof m!=='object'||Array.isArray(m)||Object.entries(m).some(([key,value])=>key==='shieldRaid'?typeof value!=='string':!['growthAt','multiplyAt','lastAt'].includes(key)||!Number.isFinite(value)||value<0||value>state.elapsed))throw new Error('Recordatorios de magia inválidos');
   }
   if(state.pauses?.includes('tutorial-reading')&&!tutorial.reading)throw new Error('Lectura tutorial incoherente');
+  // A generated raid is created once by its daily plan. A missing night plan
+  // can be recreated on the next tick; a missing day plan can be recreated by
+  // hiring. Arbitrary legacy raid IDs retain their prior compatibility.
+  const raidId=typeof state.raid?.id==='string'?/^raid-(0|[1-9]\d*)-(day|night)$/.exec(state.raid.id):null;
+  if(raidId){const day=Number(raidId[1]),daytime=raidId[2]==='day',plan=daytime?state.dayPlan:state.nightPlan;if(!Number.isSafeInteger(day)||day!==state.day||state.raid.daytime!==undefined&&state.raid.daytime!==daytime||!plan||plan.done!==true)throw new Error('Plan de incursión incoherente');}
   if(state.raid?.cameraFocusedAnimalId!==undefined&&(typeof state.raid.cameraFocusedAnimalId!=='string'||!state.raid.animals.some(a=>a.id===state.raid.cameraFocusedAnimalId)))throw new Error('Foco de incursión inválido');
   if(state.raid?.introCropLimit!==undefined){
     const r=state.raid;
     if(!Number.isSafeInteger(r.introPlantCount)||r.introPlantCount<0||!Number.isSafeInteger(r.introCropLimit)||r.introCropLimit<0||r.introCropLimit>Math.max(0,r.introPlantCount-1)||!Number.isSafeInteger(r.introCropsDestroyed)||r.introCropsDestroyed<0||r.introCropsDestroyed>r.introCropLimit)throw new Error('Límite de incursión inicial inválido');
   }
   if(!validRaidContention(state))throw new Error('Turnos de incursión inválidos');
-  const ids=new Set();
+  // Generated entity numbers share one monotonic counter across all kinds.
+  // Older/imported arbitrary IDs remain valid, but a stale counter must never
+  // silently reuse a live generated identity in this restored session.
+  if(!Number.isSafeInteger(state.nextId)||state.nextId<1||!Number.isSafeInteger(state.sequence)||state.sequence<1)throw new Error('Contadores de identidad inválidos');
+  const ids=new Set(),generated=/^(?:plant|structure|person|worker|crate|spell|task|village|animal)-(0|[1-9]\d*)$/;
+  const addIdentity=entity=>{if(typeof entity?.id!=='string'||!entity.id||ids.has(entity.id))throw new Error('Identidad duplicada');ids.add(entity.id);const match=generated.exec(entity.id);if(match){const n=Number(match[1]);if(!Number.isSafeInteger(n)||n>=state.nextId)throw new Error('Contador de entidad incoherente');}};
+  for(const animal of state.raid?.animals??[])addIdentity(animal);
+  for(const person of state.people??[])addIdentity(person);
+  for(const [list,prefix] of [[state.events??[],'event-'],[state.messages??[],'message-']]){const observed=new Set();for(const item of list){if(typeof item?.id==='string'){if(observed.has(item.id))throw new Error('Identidad duplicada');observed.add(item.id);}const match=typeof item?.id==='string'?/^(?:event|message)-(0|[1-9]\d*)$/.exec(item.id):null;if(match&&item.id.startsWith(prefix)){const n=Number(match[1]);if(!Number.isSafeInteger(n)||n>=state.sequence)throw new Error('Contador de eventos incoherente');}}}
   for(const animal of state.raid?.animals??[]){
+    if(animal.magicDown!==undefined){const d=animal.magicDown;if(!d||!(['falling','recovering'].includes(d.phase)||d.phase==='rolling'&&(livePhysics||state.workerPhysicsCheckpoint!==undefined))||![d.since,d.until].every(Number.isFinite)||d.since<0||d.since>state.elapsed||d.until<d.since||!livePhysics&&state.workerPhysicsCheckpoint===undefined&&d.until-d.since>12)throw new Error('Derribo mágico inválido');}
+    if(animal.magicHealth!==undefined&&(!Number.isFinite(animal.magicHealth)||animal.magicHealth<0||animal.magicHealth>1000))throw new Error('Resistencia mágica inválida');
+    if(animal.magicStunUntil!==undefined&&(!Number.isFinite(animal.magicStunUntil)||animal.magicStunUntil<0))throw new Error('Interrupción mágica inválida');
+    if(animal.magicImpact!==undefined){const h=animal.magicImpact;if(!h||!Number.isFinite(h.at)||h.at<0||h.at>state.elapsed||(h.impactAt!==undefined&&(!Number.isFinite(h.impactAt)||h.impactAt<h.at||h.impactAt-h.at>.5))||(h.ground!==undefined&&!Number.isFinite(h.ground))||(h.intensity!==undefined&&(!Number.isFinite(h.intensity)||h.intensity<0||h.intensity>2))||![h.point,h.direction,h.origin].every(p=>p&&[p.x,p.y,p.z].every(Number.isFinite)))throw new Error('Impacto mágico inválido');}
     if(animal.damageProfile!==undefined&&!validDamageProfile(animal.damageProfile))throw new Error('Perfil de impacto inválido');
     const ids=animal.agriculturalAttackIds;if(ids!==undefined&&(!Array.isArray(ids)||ids.length>64||new Set(ids).size!==ids.length||ids.some(id=>typeof id!=='string'||!id.length||id.length>96)))throw new Error('Impactos agrícolas inválidos');
   }
@@ -68,7 +91,7 @@ export function validateSnapshot(state) {
   for(const name of ['plants','structures','workers','crates','villages','spells','tasks']) {
     if(!Array.isArray(state[name]))throw new Error('Entidades inválidas');
     for(const e of state[name]) {
-      if(typeof e.id!=='string'||ids.has(e.id))throw new Error('Identidad duplicada');ids.add(e.id);
+      addIdentity(e);
       if(['plants','structures','workers','crates','villages','spells'].includes(name) && (!Number.isFinite(e.x)||!Number.isFinite(e.z)))throw new Error('Posición inválida');
     }
   }
@@ -82,7 +105,12 @@ export function validateSnapshot(state) {
   }
   const workers=new Map(state.workers.map(w=>[w.id,w])),crates=new Map(state.crates.map(c=>[c.id,c])),plants=new Map(state.plants.map(p=>[p.id,p]));
   for(const structure of state.structures)if(structure.kind==='wall'&&(structure.baseScaleX!==undefined&&(!Number.isFinite(structure.baseScaleX)||structure.baseScaleX<=0)||structure.autoGate!==undefined&&typeof structure.autoGate!=='boolean'))throw new Error('Módulo de defensa inválido');
-  for(const structure of state.structures)if(structure.gateOpen!==undefined&&(!structure.gate||!Number.isFinite(structure.gateOpen)||structure.gateOpen<0||structure.gateOpen>1))throw new Error('Apertura de puerta inválida');
+  for(const structure of state.structures){
+   if(structure.gateOpen!==undefined&&(!structure.gate||!Number.isFinite(structure.gateOpen)||structure.gateOpen<0||structure.gateOpen>1))throw new Error('Apertura de puerta inválida');
+   if(structure.gateOpenDirection!==undefined&&(!structure.gate||structure.gateOpenDirection!==-1))throw new Error('Sentido de puerta inválido');
+   const degrees=structure.gateOpenDegrees;
+   if(degrees!==undefined&&(!structure.gate||!Number.isInteger(degrees)||degrees<1||degrees>=90))throw new Error('Ángulo de puerta inválido');
+  }
   for(const structure of state.structures)if(structure.wallPresentation!==undefined){
     const p=structure.wallPresentation,ratio=value=>Number.isFinite(value)&&value>=0&&value<=1;
     if(structure.kind!=='wall'||!p||!ratio(p.from)||!ratio(p.to)||!Number.isFinite(p.at)||p.at<0||!Number.isFinite(state.elapsed)||p.at>state.elapsed||p.collapseFrom!==undefined&&!ratio(p.collapseFrom)||structure.status==='collapsing'&&p.collapseFrom===undefined||structure.status==='intact'&&p.collapseFrom!==undefined)throw new Error('Wall presentation invalid');
@@ -101,6 +129,42 @@ export function validateSnapshot(state) {
     }
   }
   for(const worker of state.workers){
+    if(worker.nativeRefugeSequence!==undefined&&(!livePhysics||worker.raidReturn!==true||!Number.isSafeInteger(worker.nativeRefugeSequence)||worker.nativeRefugeSequence<1||!['pending-farm-arrival-resources','native-farm-arrival'].includes(worker.nativeRouteAdmission)))throw Error('Invalid live Farm return');
+    if(worker.nativeFarmFlightSample!==undefined&&(!livePhysics||worker.nativeRouteAdmission!=='pending-farm-flight-stop'))throw Error('Muestra de evacuación fuera de su ejecución nativa');
+    if(worker.nativeIdleFlightSample!==undefined&&(!livePhysics||worker.nativeRouteAdmission!=='pending-idle-flight-stop'))throw Error('Muestra de evacuación fuera de su ejecución nativa');
+    if(worker.nativeTaskFlightSample!==undefined&&(!livePhysics||worker.nativeRouteAdmission!=='pending-task-flight-stop'))throw Error('Muestra de evacuación fuera de su ejecución nativa');
+    if(worker.nativeRouteAdmission!==undefined){
+      const pending=['pending-resources','pending-action-resources'].includes(worker.nativeRouteAdmission)&&worker.status==='waiting-task'&&worker.path===null,
+        executing=worker.nativeRouteAdmission==='native-task'&&worker.status==='walking'&&Array.isArray(worker.path)&&worker.path.length===0,
+        acting=worker.nativeRouteAdmission==='native-action'&&worker.status==='acting'&&Array.isArray(worker.path)&&worker.path.length===0,
+        carrying=worker.nativeRouteAdmission==='native-delivery'&&worker.status==='carrying'&&!worker.taskId&&Array.isArray(worker.path)&&worker.path.length===0,
+        returning=['native-home','pending-home-resources'].includes(worker.nativeRouteAdmission)&&worker.status==='returning'&&!worker.taskId&&!worker.crateId&&worker.path===null,
+        farmArrival=['pending-farm-arrival-resources','native-farm-arrival','native-farm-arrival-held'].includes(worker.nativeRouteAdmission),initialIdle=['pending-idle-resources','native-idle'].includes(worker.nativeRouteAdmission),strolling=worker.nativeRouteAdmission==='native-idle-stroll'||worker.nativeRouteAdmission==='pending-stroll-resources';
+      // An expired live corridor stays owned until prepared24, while a saved
+      // Farm declaration must still have a valid contract before restoration.
+      if(farmArrival){if(worker.nativeRouteAdmission==='native-farm-arrival-held')nativeFarmArrivalHeldState(state,worker);else if(worker.nativeRouteAdmission==='native-farm-arrival')(livePhysics?nativeFarmArrivalBoundState:nativeFarmArrivalExecutionState)(state,worker);else nativeFarmArrivalState(state,worker,{canonical:true});}
+      if(initialIdle)(livePhysics?nativeInitialIdleLiveState:nativeInitialIdleSavedState)(state,worker,{canonical:true});
+      // A live projection does not declare a loadable checkpoint. An approach
+      // retains its actual WALK remaining/anchor; loading requires a fresh declaration.
+      if(strolling)(livePhysics&&worker.nativeRouteAdmission==='native-idle-stroll'?nativeIdleStrollLiveState:nativeIdleStrollSavedState)(state,worker);
+      const liveRaidFlight=livePhysics&&state.raid?.daytime===true&&worker.status==='fleeing'&&worker.path===null&&!worker.taskId&&!worker.crateId&&
+        !worker.incapacitated&&!worker.recovery&&!worker.fallRemaining&&!worker.raidReturn&&
+        ['pending-farm-flight-restore','pending-farm-flight-stop','pending-idle-flight-stop','pending-task-flight-stop','pending-raid-flight-resources','native-home'].includes(worker.nativeRouteAdmission);
+      const recoveringHome=livePhysics&&!state.raid&&worker.status==='incapacitated'&&worker.incapacitated===true&&worker.hits===2&&
+        worker.path===null&&!worker.taskId&&!worker.crateId&&!worker.recovery&&!worker.fallRemaining&&!worker.raidReturn&&
+        ['native-home','pending-home-resources'].includes(worker.nativeRouteAdmission)&&
+        state.events?.some(event=>event.type==='WorkerIncapacitated'&&event.targetId===worker.id&&event.simulationTime<=state.elapsed);
+      if(!liveRaidFlight&&!recoveringHome&&!farmArrival&&!strolling&&!initialIdle&&!carrying&&!returning&&(!worker.taskId||!pending&&!executing&&!acting))throw Error('Solicitud de recursos nativa inválida');
+    }
+    if(worker.nativeDelivery!==undefined||worker.nativeRouteAdmission==='native-delivery'){
+      const delivery=worker.nativeDelivery;
+      if(worker.nativeRouteAdmission!=='native-delivery'||delivery?.version!==1||Object.keys(delivery).some(key=>!['version','crateId','centerId'].includes(key))||delivery.crateId!==worker.crateId||delivery.centerId!==worker.centerId||!worker.crateId||worker.taskId)throw Error('Transporte nativo inválido');
+    }
+    if(worker.nativeTaskAction!==undefined||['native-action','pending-action-resources'].includes(worker.nativeRouteAdmission)){
+      let action;try{action=copyNativeTaskActionProgress(worker.nativeTaskAction);}catch{throw Error('Progreso de acción nativa inválido');}
+      const task=state.tasks.find(t=>t.id===worker.taskId);
+      if(!['native-action','pending-action-resources'].includes(worker.nativeRouteAdmission)||!task||task.workerId!==worker.id||task.kind!==action.kind||worker.actionRemaining!==Math.max(0,action.duration-action.elapsed)||worker.running!==false||worker.gateWaiting!==false)throw Error('Progreso de acción nativa inválido');
+    }
     if(worker.gateWaiting!==undefined&&typeof worker.gateWaiting!=='boolean')throw new Error('Espera de puerta inválida');
     if(worker.terrainAvoidance!==undefined&&(!Array.isArray(worker.terrainAvoidance)||worker.terrainAvoidance.length>8||worker.terrainAvoidance.some(p=>!p||!Number.isFinite(p.x)||!Number.isFinite(p.z))))throw new Error('Desvío de terreno inválido');
     if(worker.crateId){

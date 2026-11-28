@@ -1,0 +1,107 @@
+{
+  "revision": "3bcb9365459c7466ab4cd6a00af3122b422d2dc4",
+  "scenario": {
+    "biome": "sabana",
+    "seed": 714,
+    "profile": "nativeWorkerLifecycle",
+    "adapter": "nvidia Turing",
+    "clock": "Hosted ordinario tras volver del guardado público de Home"
+  },
+  "sources": {
+    "save": {
+      "file": "E:/wild-guardians-qa/native-menu-20261126/native-ordinary-home-source-714.json",
+      "sha256": "872a767c1f52b230fa6965c62e105d42f463779bc70810ac9ae78931dbc5379e"
+    },
+    "probes": {
+      "probe-savanna-natural-night.mjs": "85382d4fff5e10e07c724be1b0522191cbc50847c4d38a7dfea6defc0f7cc98e",
+      "probe-savanna-night-after-subboundary.mjs": "a4030d0b0cf41a1ab99767abc7423a93a3d1a9f238dff5793577924b5d768b25"
+    },
+    "inheritedLocalSources": {
+      "src/rendering/character-preload.js": "b1637fb2ed5d0cf0aa12a1ab5eac5923319a0096413071d28376992314be2835",
+      "src/rendering/destruction-native.js": "363ffd6447b051739da75d65a6a2be1431094f0df588361158de83023ceab7b4",
+      "src/rendering/scene.js": "1cfefd4f86dee90af82300fe6762a29408d798dbb852605f5b30a45493c198da"
+    }
+  },
+  "artifacts": {
+    "native-savanna-natural-night-20261127-extended.json": "c3107e72a3469dbfc6d21dbae15837e137a8a431a711cced1100ee4130b83cd2",
+    "native-savanna-night-after-subboundary-loss-20261127-extended.json": "b99f6356988c62dd76cfab9cdefb4c86d55b066a1abea74baf8250132d3b75cf",
+    "native-savanna-night-after-subboundary-final-20261127-extended.json": "4076f7297514842f020e3c9c0d72d0764d680a704375dc8654b5e5c4348397e8"
+  },
+  "natural": {
+    "home": {
+      "frame": 270,
+      "elapsed": 291.4499999999691,
+      "ticket": 4,
+      "bindings": 0
+    },
+    "event": {
+      "sequence": 1309,
+      "at": 299.99999999996135,
+      "ids": [
+        "event-16"
+      ]
+    },
+    "recoveryTriggered": false,
+    "approach": {
+      "frame": 400,
+      "elapsed": 380.4281464807312,
+      "ticket": 6,
+      "bindings": 1
+    },
+    "drained": true
+  },
+  "withheld": {
+    "stepSeconds": 0.047,
+    "home": {
+      "frame": 277,
+      "elapsed": 291.40699999997963,
+      "ticket": 4,
+      "bindings": 0
+    },
+    "publication": 1316,
+    "eventIds": [
+      "event-16"
+    ],
+    "from": 300,
+    "to": 300.0399999998695,
+    "watchdogAfterMs": 5187.080078125,
+    "code": "historical-event-continuation-lost",
+    "acknowledged": 1315,
+    "received": 1347,
+    "checkpointBase": 1301,
+    "candidateAbandoned": 1366,
+    "publicationFloor": 1428
+  },
+  "retirement": {
+    "callbacksSettled": true,
+    "drawDrained": true
+  },
+  "replacement": {
+    "frame": 1,
+    "elapsed": 347.2749999998837,
+    "ticket": 4,
+    "bindings": 0,
+    "firstDrawAfterTriggerMs": 6868.3798828125,
+    "activationCandidateDrainAtSequence": 1521,
+    "activatedObservedSequence": 1578,
+    "visualDispatchBlocked": false,
+    "eventIds": [
+      "event-16"
+    ]
+  },
+  "approach": {
+    "frame": 10,
+    "elapsed": 383.8911464807432,
+    "ticket": 6,
+    "bindings": 1,
+    "bodyId": 2,
+    "worker": "home",
+    "balance": 510
+  },
+  "shutdown": {
+    "drained": true,
+    "afterFirstApproachMs": 754.579833984375
+  },
+  "errors": [],
+  "scope": "Caso natural y fallo provocado al negar el certificado siguiente a un evento real. Se conserva la investigación del disparador espontáneo de la campaña original."
+}

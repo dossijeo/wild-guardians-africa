@@ -1,0 +1,360 @@
+{
+  "input": ".cache/native-ordinary-60hz-after1.trace.json",
+  "dataLossOccurred": true,
+  "scope": "Serialized trace size attribution, not runtime CPU cost or complete-history acceptance",
+  "events": 3929128,
+  "categories": [
+    {
+      "name": "toplevel",
+      "count": 1058568,
+      "bytes": 272670967
+    },
+    {
+      "name": "gpu,toplevel.flow",
+      "count": 561633,
+      "bytes": 77766724
+    },
+    {
+      "name": "base,toplevel",
+      "count": 343096,
+      "bytes": 68452858
+    },
+    {
+      "name": "disabled-by-default-gpu.dawn",
+      "count": 366262,
+      "bytes": 59230312
+    },
+    {
+      "name": "blink",
+      "count": 381354,
+      "bytes": 55121795
+    },
+    {
+      "name": "devtools.timeline",
+      "count": 169479,
+      "bytes": 51081814
+    },
+    {
+      "name": "toplevel,mojom",
+      "count": 159780,
+      "bytes": 45706356
+    },
+    {
+      "name": "viz,benchmark,graphics.pipeline",
+      "count": 161929,
+      "bytes": 38794547
+    },
+    {
+      "name": "gpu",
+      "count": 249465,
+      "bytes": 38563585
+    },
+    {
+      "name": "viz",
+      "count": 173387,
+      "bytes": 29185527
+    },
+    {
+      "name": "devtools.timeline,disabled-by-default-v8.gc",
+      "count": 119284,
+      "bytes": 21968618
+    },
+    {
+      "name": "blink.user_timing",
+      "count": 30113,
+      "bytes": 13157280
+    },
+    {
+      "name": "v8.execute",
+      "count": 71532,
+      "bytes": 10899415
+    },
+    {
+      "name": "viz,benchmark",
+      "count": 49920,
+      "bytes": 7444367
+    },
+    {
+      "name": "viz,input.scrolling",
+      "count": 10265,
+      "bytes": 2147579
+    },
+    {
+      "name": "cc",
+      "count": 5053,
+      "bytes": 978469
+    },
+    {
+      "name": "benchmark",
+      "count": 4992,
+      "bytes": 906926
+    },
+    {
+      "name": "benchmark,viz,disabled-by-default-display.framedisplayed",
+      "count": 4992,
+      "bytes": 901936
+    },
+    {
+      "name": "v8,devtools.timeline",
+      "count": 1066,
+      "bytes": 435506
+    },
+    {
+      "name": "cc,benchmark,disabled-by-default-devtools.timeline.frame",
+      "count": 1504,
+      "bytes": 368508
+    },
+    {
+      "name": "devtools.timeline,v8",
+      "count": 1591,
+      "bytes": 367263
+    },
+    {
+      "name": "v8,devtools.timeline,disabled-by-default-v8.compile",
+      "count": 1090,
+      "bytes": 276943
+    },
+    {
+      "name": "blink,blink.resource",
+      "count": 1143,
+      "bytes": 272383
+    },
+    {
+      "name": "cc,benchmark",
+      "count": 1042,
+      "bytes": 230433
+    },
+    {
+      "name": "__metadata",
+      "count": 378,
+      "bytes": 61558
+    },
+    {
+      "name": "cc,disabled-by-default-devtools.timeline",
+      "count": 38,
+      "bytes": 10702
+    },
+    {
+      "name": "blink,benchmark",
+      "count": 57,
+      "bytes": 9889
+    },
+    {
+      "name": "benchmark,rail",
+      "count": 30,
+      "bytes": 7128
+    },
+    {
+      "name": "ui,toplevel",
+      "count": 24,
+      "bytes": 5361
+    },
+    {
+      "name": "blink,blink_style",
+      "count": 17,
+      "bytes": 4299
+    },
+    {
+      "name": "blink.user_timing,rail",
+      "count": 15,
+      "bytes": 2530
+    },
+    {
+      "name": "blink,devtools.timeline",
+      "count": 7,
+      "bytes": 1401
+    },
+    {
+      "name": "blink,loading",
+      "count": 7,
+      "bytes": 1101
+    },
+    {
+      "name": "blink,rail",
+      "count": 6,
+      "bytes": 961
+    },
+    {
+      "name": "navigation,benchmark,rail",
+      "count": 3,
+      "bytes": 754
+    }
+  ],
+  "eventsByName": [
+    {
+      "name": "Edge_RunTask",
+      "count": 430766,
+      "bytes": 117761996
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "count": 398908,
+      "bytes": 102824300
+    },
+    {
+      "name": "IOHandler::OnIOCompleted",
+      "count": 343093,
+      "bytes": 68452240
+    },
+    {
+      "name": "Receive mojo message",
+      "count": 150159,
+      "bytes": 43023876
+    },
+    {
+      "name": "Graphics.Pipeline",
+      "count": 161929,
+      "bytes": 38794547
+    },
+    {
+      "name": "SimpleWatcher::OnHandleReady",
+      "count": 154625,
+      "bytes": 35741338
+    },
+    {
+      "name": "FunctionCall",
+      "count": 87989,
+      "bytes": 34223967
+    },
+    {
+      "name": "CommandBuffer::OrderingBarrier",
+      "count": 146177,
+      "bytes": 21417527
+    },
+    {
+      "name": "DawnCommands",
+      "count": 126968,
+      "bytes": 17784055
+    },
+    {
+      "name": "Scheduler::ScheduleTask",
+      "count": 103556,
+      "bytes": 14296747
+    },
+    {
+      "name": "Scheduler::RunTask",
+      "count": 103554,
+      "bytes": 14129481
+    },
+    {
+      "name": "SerializedScriptValueFactory::create",
+      "count": 82858,
+      "bytes": 12742537
+    },
+    {
+      "name": "CommandBuffer::Flush",
+      "count": 73077,
+      "bytes": 10122768
+    },
+    {
+      "name": "DawnReturnCommands",
+      "count": 68441,
+      "bytes": 10000087
+    },
+    {
+      "name": "GpuChannel::Flush",
+      "count": 73077,
+      "bytes": 9390564
+    },
+    {
+      "name": "ThreadPool_RunTask",
+      "count": 31858,
+      "bytes": 9234293
+    },
+    {
+      "name": "AsyncTask Scheduled",
+      "count": 68681,
+      "bytes": 8518784
+    },
+    {
+      "name": "SerializedScriptValueFactory::deserialize",
+      "count": 52936,
+      "bytes": 8401107
+    },
+    {
+      "name": "RunMicrotasks",
+      "count": 46717,
+      "bytes": 7345155
+    },
+    {
+      "name": "WebGPUDecoderImpl::PerformPollingWork",
+      "count": 41405,
+      "bytes": 7287536
+    },
+    {
+      "name": "WebGPUDecoderImpl::HandleDawnCommands",
+      "count": 31742,
+      "bytes": 6076059
+    },
+    {
+      "name": "DawnClientSerializer::GetCommandSpace",
+      "count": 31743,
+      "bytes": 5989907
+    },
+    {
+      "name": "DawnClientSerializer::Flush",
+      "count": 31742,
+      "bytes": 5713694
+    },
+    {
+      "name": "MessagePort::Accept",
+      "count": 38685,
+      "bytes": 5357455
+    },
+    {
+      "name": "BlinkScheduler_PerformMicrotaskCheckpoint",
+      "count": 33409,
+      "bytes": 5195936
+    },
+    {
+      "name": "CommandBufferService:PutChanged",
+      "count": 24359,
+      "bytes": 4765011
+    },
+    {
+      "name": "Scheduler::FinishTask",
+      "count": 34518,
+      "bytes": 4574868
+    },
+    {
+      "name": "CommandBufferStub::OnAsyncFlush",
+      "count": 24359,
+      "bytes": 4032214
+    },
+    {
+      "name": "CommandBufferProxyImpl::Flush",
+      "count": 24076,
+      "bytes": 3923679
+    },
+    {
+      "name": "GpuChannelMessageFilter::FlushDeferredRequests",
+      "count": 24200,
+      "bytes": 3865047
+    },
+    {
+      "name": "AsyncTask Run",
+      "count": 30157,
+      "bytes": 3862029
+    },
+    {
+      "name": "GpuChannel::ExecuteDeferredRequest",
+      "count": 24460,
+      "bytes": 3698503
+    },
+    {
+      "name": "WorkerAnimationFrameProvider::BeginFrame",
+      "count": 24852,
+      "bytes": 3652271
+    },
+    {
+      "name": "BeginFrameProvider::OnBeginFrame",
+      "count": 26214,
+      "bytes": 3642376
+    },
+    {
+      "name": "CommandBufferHelper::Flush",
+      "count": 24088,
+      "bytes": 3439355
+    }
+  ]
+}

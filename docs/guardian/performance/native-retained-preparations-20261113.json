@@ -1,0 +1,90 @@
+{
+  "result": {
+    "checklistId": "A6-04.f-R4",
+    "backend": "webgpu",
+    "kind": "residency-add",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "block": {
+      "start": 1794599468990.61,
+      "end": 1794599469490.695,
+      "blockedMs": 500.0849609375,
+      "drawFramesBeforeQuiescence": 5,
+      "drawFramesAfterRelease": 0
+    },
+    "mutation": {
+      "stagedAt": 1794599469182.435,
+      "committedAt": 1794599469223.15,
+      "sequence": 2,
+      "result": {
+        "status": "committed",
+        "ids": [
+          4,
+          4,
+          11
+        ],
+        "receipt": {
+          "authorityEpoch": "3741de95-af34-4216-8e40-546131579334/1",
+          "session": "world-1281d559-2e36-4a7b-9d57-7e813c3ccd75",
+          "holdId": 1,
+          "sequence": 2,
+          "effectiveTime": 10.25,
+          "clockSequence": 2
+        }
+      },
+      "changes": [],
+      "worldChanged": false,
+      "residencyChanged": true
+    },
+    "drawStats": {
+      "quiescedAt": 1794599469184.69,
+      "releasedAt": 1794599469223.4,
+      "mutationEpoch": 1,
+      "floor": 10.25,
+      "packets": 1,
+      "nativeFrames": 6,
+      "gpuErrors": 0,
+      "failed": false
+    },
+    "retainedPreparations": {
+      "readback": 123,
+      "bufferBefore": "Buffer:5",
+      "bufferAfter": "Buffer:5",
+      "resourcesBefore": 18,
+      "resourcesAfter": 18,
+      "bufferForks": 0,
+      "bindingForks": 0,
+      "retainedBytesBeforeFrame": 16,
+      "retainedResourcesAfterFrame": 0,
+      "consumerNativeFrames": 7,
+      "scope": "Same production draw Worker, GPUDevice, pipeline, groups and buffers; one rejected 16-byte upload reused by fresh world commands, not a character/visible-world delta acceptance."
+    },
+    "resourceIdentity": {
+      "latePacket": "obsolete",
+      "freshPacket": "presented",
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "3741de95-af34-4216-8e40-546131579334/1",
+        "nativeSession": 1,
+        "ticket": 1,
+        "effectiveTime": 10.25
+      },
+      "activeSequence": 3,
+      "packets": 2,
+      "presentedTime": 10.25,
+      "scope": "Native resource identity and packet replacement; unchanged diagnostic route, no characters or visible mutation projection."
+    },
+    "scope": "Retained uploads and original GPU resources after an obsolete frame; diagnostic triangle, not product characters or visible mutation projection.",
+    "authorizedAutonomy": false,
+    "authorizedPassage": false
+  },
+  "errors": [],
+  "httpFailures": [],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ]
+}

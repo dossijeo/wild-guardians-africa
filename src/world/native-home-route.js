@@ -1,0 +1,76 @@
+import {copyNativeWorldBoundary,sameNativeWorldBoundary} from './native-world-boundary.js';
+import {copyNativeTaskSettlementAttestation,sameNativeTaskSettlementReference} from './native-task-settlement.js';
+import {copyNativePresentationSamples} from './native-presentation-samples.js';
+import {copyNativeGatePresentation} from './native-gate-presentation.js';
+import {nativeMotionPresentationMatches} from './native-motion-presentation-match.js';
+import {floorFloat32} from '../float32-time.js';
+import {copyNativeHomeRequestReference,sameNativeHomeRequestReference} from './native-home-request-reference.js';
+import {copyNativeRouteReference} from './native-route-reference.js';
+import {copyNativeRoutePresentation} from './native-route-presentation.js';
+
+const id=n=>Number.isSafeInteger(n)&&n>0;
+const sameHandle=(a,b)=>!!a&&!!b&&['authorityEpoch','session','slot','generation'].every(k=>a[k]===b[k]);
+const sameSource=(a,b)=>a?.settlementSequence===b?.settlementSequence&&sameNativeTaskSettlementReference(a?.reference,b?.reference)&&sameNativeTaskSettlementReference(a?.preparedReference,b?.preparedReference);
+export const nativeHomeRouteSource=value=>value.sourceRequest??value.sourceSettlement.reference;
+export const nativeHomeRouteSourceSequence=value=>value.sourceRequest?.requestSequence??value.sourceSettlement.settlementSequence;
+const homeMotionFlags=source=>source.recoveryHit?38:source.raidSpawnSequence?2:0;
+export function copyNativeHomeRouteReference(value){
+ if(value?.kind!=='native-home-route-reference'||value.version!==1)throw TypeError('Invalid native Home route reference');
+ if((value.sourceRequest!==undefined)===(value.sourceSettlement!==undefined))throw TypeError('Native Home requires exactly one current source');
+ const sourceRequest=value.sourceRequest===undefined?null:copyNativeHomeRequestReference(value.sourceRequest),sourceSettlement=sourceRequest?null:copyNativeTaskSettlementAttestation(value.sourceSettlement),r=sourceRequest??sourceSettlement.reference,worldBoundary=copyNativeWorldBoundary(value.worldBoundary),h=value.expectedRouteHandle;
+ const epoch=sourceRequest?.authorityEpoch??r.worldBoundary.authorityEpoch,session=sourceRequest?.nativeSession??r.worldBoundary.nativeSession,at=sourceRequest?.requestedAt??r.worldBoundary.effectiveTime;
+ if(!r.home||!worldBoundary||value.actorId!==r.actorId||value.bodyId!==r.bodyId||!id(value.sourceControlSequence)||value.sourceControlSequence<(sourceRequest?.requestSequence??sourceSettlement.settlementSequence)||
+  worldBoundary.authorityEpoch!==epoch||worldBoundary.nativeSession!==session||sourceSettlement&&worldBoundary.ticket<=r.worldBoundary.ticket||worldBoundary.effectiveTime<at||!Number.isFinite(value.endTime)||value.endTime<worldBoundary.effectiveTime||
+  h?.authorityEpoch!==worldBoundary.authorityEpoch||h.session!==worldBoundary.nativeSession||!Number.isSafeInteger(h.slot)||h.slot<0||h.slot>0xffffffff||!id(h.generation)||h.generation>0xffffffff)throw TypeError('Native Home route differs from its stationary source');
+ return Object.freeze({kind:value.kind,version:1,actorId:r.actorId,bodyId:r.bodyId,...(sourceRequest?{sourceRequest}:{sourceSettlement}),expectedRouteHandle:Object.freeze({authorityEpoch:h.authorityEpoch,session:h.session,slot:h.slot,generation:h.generation}),worldBoundary,sourceControlSequence:value.sourceControlSequence,endTime:value.endTime});
+}
+const sameIdentity=(a,b)=>a.actorId===b.actorId&&a.bodyId===b.bodyId&&(a.sourceRequest||b.sourceRequest?sameNativeHomeRequestReference(a.sourceRequest,b.sourceRequest):sameSource(a.sourceSettlement,b.sourceSettlement))&&sameHandle(a.expectedRouteHandle,b.expectedRouteHandle);
+export const sameNativeHomeRouteReference=(a,b)=>!!a&&!!b&&sameIdentity(a,b)&&sameNativeWorldBoundary(a.worldBoundary,b.worldBoundary)&&a.sourceControlSequence===b.sourceControlSequence&&a.endTime===b.endTime;
+export const nativeHomeRouteSuccessor=(a,b)=>sameIdentity(a,b)&&b.worldBoundary.ticket>a.worldBoundary.ticket&&b.worldBoundary.effectiveTime>=a.worldBoundary.effectiveTime&&b.sourceControlSequence>=a.sourceControlSequence;
+export function nativeHomeRouteReferenceCovered(reference,boundary){const w=reference.worldBoundary;return !!boundary&&w.authorityEpoch===boundary.authorityEpoch&&w.nativeSession===boundary.nativeSession&&boundary.ticket>=w.ticket&&boundary.effectiveTime>=w.effectiveTime;}
+export function nativeHomeRouteReferenceFromProposal(value){
+ const b=copyNativeWorldBoundary(value?.worldBoundary),t=value?.ticket;
+ if(value?.kind!=='native-home-route-proposal'||value.version!==1||value.authorizedAutonomy!==false||value.authorizedPassage!==false||!b||value.startTime!==b.effectiveTime||t?.kind!=='native-home-route-proposal-ticket'||t.authorityEpoch!==b.authorityEpoch||t.session!==b.nativeSession||t.ticket!==b.ticket||['taskId','targetId','nativeRoute','nativeStart','nativeResume','sourceRequestHandle','sourceResumeHandle','assignmentSequence'].some(k=>value[k]!==undefined))throw TypeError('Invalid native Home route proposal identity');
+ return copyNativeHomeRouteReference({...value,kind:'native-home-route-reference'});
+}
+export function copyNativeHomeRouteProposal(value){
+ const nativeHome=nativeHomeRouteReferenceFromProposal(value),r=nativeHomeRouteSource(nativeHome),p=r.pose,{worldBoundary}=nativeHome;
+ if(value.nativeHome!==undefined&&!sameNativeHomeRouteReference(value.nativeHome,nativeHome)||value.motionMode!=='worker'||value.motionFlags!==homeMotionFlags(r)||(r.raidSpawnSequence||r.recoveryHit)&&(value.runDistance!==value.distance||value.runBudget!==p.runRemaining||Math.abs(value.runSpeed-(r.recoveryHit?.84:2.4))>1e-12)||value.profile!==r.profile||value.radius!==p.radius||value.origin?.x!==p.x||value.origin?.z!==p.z||!['distance','speed','runDistance','runSpeed','runBudget'].every(k=>Number.isFinite(value[k])&&value[k]>=0)||!(value.points instanceof Float32Array)||value.points.length<2||value.points.length%2||value.points.length>8192||!value.points.every(Number.isFinite)||!Array.isArray(value.gates)||value.gates.length>1024)throw TypeError('Invalid native Home route motion');
+ const rows=copyNativePresentationSamples(value),gates=value.gates.map(g=>copyNativeGatePresentation(g,{worldBoundary,startTime:value.startTime,endTime:value.endTime}));
+ if(rows[1]!==p.x||rows[2]!==p.z||value.points.at(-2)!==Math.fround(r.home.x)||value.points.at(-1)!==Math.fround(r.home.z)||[8,9,10,13].some((index,i)=>rows[index]!==[p.runPhase,p.walkPhase,p.carryPhase,p.runRemaining][i])||new Set(gates.map(g=>g.gateId)).size!==gates.length)throw TypeError('Native Home route changed its source pose, phases or destination');
+ return Object.freeze({kind:value.kind,version:1,ticket:Object.freeze({...value.ticket}),worldBoundary,nativeHome,actorId:nativeHome.actorId,bodyId:nativeHome.bodyId,...(nativeHome.sourceRequest?{sourceRequest:nativeHome.sourceRequest}:{sourceSettlement:nativeHome.sourceSettlement}),expectedRouteHandle:nativeHome.expectedRouteHandle,sourceControlSequence:nativeHome.sourceControlSequence,
+  profile:value.profile,motionFlags:value.motionFlags,radius:value.radius,origin:Object.freeze({x:p.x,z:p.z}),startTime:value.startTime,endTime:value.endTime,distance:value.distance,speed:value.speed,runDistance:value.runDistance,runSpeed:value.runSpeed,runBudget:value.runBudget,motionMode:'worker',rowWidth:16,rows,points:value.points.slice(),gates:Object.freeze(gates),authorizedAutonomy:false,authorizedPassage:false});
+}
+export function copyNativeHomeRouteAttestation(value){
+ if(value?.kind!=='native-home-route-attestation'||value.version!==1||value.projectionVersion!==1)throw TypeError('Invalid native Home route attestation');
+ const reference=copyNativeHomeRouteReference(value.reference),preparedReference=copyNativeHomeRouteReference(value.preparedReference),assignmentSequence=value.assignmentSequence,gateIds=value.gateIds;
+ if(!id(assignmentSequence)||assignmentSequence<=reference.sourceControlSequence||!sameIdentity(reference,preparedReference)||reference.worldBoundary.ticket<preparedReference.worldBoundary.ticket||reference.worldBoundary.effectiveTime<preparedReference.worldBoundary.effectiveTime||reference.sourceControlSequence<preparedReference.sourceControlSequence||floorFloat32(reference.endTime-reference.worldBoundary.effectiveTime)!==floorFloat32(preparedReference.endTime-preparedReference.worldBoundary.effectiveTime)||!Array.isArray(gateIds)||gateIds.length>1024||gateIds.some(n=>!id(n))||new Set(gateIds).size!==gateIds.length)throw TypeError('Native Home route differs from its prepared source');
+ return Object.freeze({kind:value.kind,version:1,projectionVersion:1,reference,preparedReference,assignmentSequence,gateIds:Object.freeze([...gateIds])});
+}
+export const nativeHomeRouteAttestationCovers=(proof,reference)=>sameNativeHomeRouteReference(proof?.reference,reference)||sameNativeHomeRouteReference(proof?.preparedReference,reference);
+export const sameNativeHomeRouteAttestation=(a,b)=>!!a&&!!b&&a.assignmentSequence===b.assignmentSequence&&
+ sameNativeHomeRouteReference(a.reference,b.reference)&&sameNativeHomeRouteReference(a.preparedReference,b.preparedReference)&&
+ a.gateIds.length===b.gateIds.length&&a.gateIds.every((id,index)=>id===b.gateIds[index]);
+
+export function copyNativeHomeRouteResources(value,cut=null){
+ if(value?.version!==1||value.kind!==18||value.phase!=='committed'||
+    Object.keys(value).some(key=>!['version','kind','phase','worldBoundary','nativeRoute','nativeHomeRouteBinding','presentation'].includes(key)))
+  throw TypeError('Invalid native Home route resources');
+ const worldBoundary=copyNativeWorldBoundary(value.worldBoundary),nativeRoute=copyNativeRouteReference(value.nativeRoute),
+  nativeHomeRouteBinding=copyNativeHomeRouteAttestation(value.nativeHomeRouteBinding),presentation=copyNativeRoutePresentation(value.presentation);
+ const ref=nativeHomeRouteBinding.reference,source=nativeHomeRouteSource(ref),pose=source.pose,rows=presentation.rows;
+ if(!sameNativeWorldBoundary(worldBoundary,ref.worldBoundary)||!sameNativeWorldBoundary(presentation.worldBoundary,cut??worldBoundary)||
+    nativeRoute.actorId!==ref.actorId||nativeRoute.assignmentSequence!==nativeHomeRouteBinding.assignmentSequence||
+    !sameHandle(nativeRoute.routeHandle,ref.expectedRouteHandle)||JSON.stringify(presentation.nativeRoute)!==JSON.stringify(nativeRoute)||
+    presentation.startTime!==worldBoundary.effectiveTime||presentation.endTime!==ref.endTime||
+    presentation.profile!==source.profile||presentation.radius!==pose.radius||presentation.motionMode!=='worker'||
+    presentation.motionFlags!==homeMotionFlags(source)||
+    rows[1]!==pose.x||rows[2]!==pose.z||[8,9,10,13].some((index,i)=>rows[index]!==[pose.runPhase,pose.walkPhase,pose.carryPhase,pose.runRemaining][i])||
+    presentation.gates.length!==nativeHomeRouteBinding.gateIds.length||presentation.gates.some(gate=>!nativeHomeRouteBinding.gateIds.includes(gate.gateId)))
+  throw TypeError('Native Home route resource association mismatch');
+ return Object.freeze({version:1,kind:18,phase:'committed',worldBoundary,nativeRoute,nativeHomeRouteBinding,presentation});
+}
+export function nativeHomeRoutePresentationMatches(prepared,actual,value){
+ const b=copyNativeHomeRouteAttestation(value),r=b.reference,route=actual?.nativeRoute;
+ return sameNativeHomeRouteReference(b.preparedReference,prepared.nativeHome)&&route?.actorId===r.actorId&&route.assignmentSequence===b.assignmentSequence&&sameHandle(route.routeHandle,r.expectedRouteHandle)&&actual.startTime===r.worldBoundary.effectiveTime&&actual.endTime===r.endTime&&nativeMotionPresentationMatches(prepared,actual,b.gateIds);
+}

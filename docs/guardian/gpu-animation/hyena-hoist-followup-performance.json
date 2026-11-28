@@ -1,0 +1,248 @@
+{
+  "runs": [
+    {
+      "mode": "source",
+      "work": {
+        "count": 120,
+        "mean": 0.8165833334438503,
+        "p95": 1.224999999627471,
+        "p99": 1.3849999997764826,
+        "max": 1.5649999994784594
+      },
+      "render": {
+        "count": 120,
+        "mean": 1.5925000000279397,
+        "p95": 2.125,
+        "p99": 2.3450000006705523,
+        "max": 3.205000000074506
+      },
+      "interval": {
+        "count": 119,
+        "mean": 33.33302521007527,
+        "p95": 33.43500000052154,
+        "p99": 33.519999999552965,
+        "max": 33.60999999940395
+      },
+      "gpu": {
+        "samples": 120,
+        "disjoint": 0,
+        "discarded": 0,
+        "skipped": 0,
+        "pending": 0,
+        "elapsed": {
+          "count": 120,
+          "mean": 2.0784319999999994,
+          "p95": 2.132832,
+          "p99": 2.15696,
+          "max": 2.22208
+        }
+      },
+      "calls": {
+        "count": 120,
+        "mean": 13,
+        "p95": 13,
+        "p99": 13,
+        "max": 13
+      },
+      "triangles": {
+        "count": 120,
+        "mean": 60545,
+        "p95": 60545,
+        "p99": 60545,
+        "max": 60545
+      },
+      "animationEvaluations": 360,
+      "skeletonNoopCalls": 0,
+      "bakedTextureUploads": 0,
+      "boneTextureUploads": 1440,
+      "memory": {
+        "geometries": 5,
+        "textures": 23
+      }
+    },
+    {
+      "mode": "gpu",
+      "work": {
+        "count": 120,
+        "mean": 0.002624999995653828,
+        "p95": 0.009999999776482582,
+        "p99": 0.010000001639127731,
+        "max": 0.015000000596046448
+      },
+      "render": {
+        "count": 120,
+        "mean": 1.157333333340163,
+        "p95": 1.3700000010430813,
+        "p99": 1.5199999995529652,
+        "max": 1.75
+      },
+      "interval": {
+        "count": 119,
+        "mean": 33.33323529412767,
+        "p95": 33.43500000052154,
+        "p99": 33.47499999962747,
+        "max": 33.59500000067055
+      },
+      "gpu": {
+        "samples": 120,
+        "disjoint": 0,
+        "discarded": 0,
+        "skipped": 0,
+        "pending": 0,
+        "elapsed": {
+          "count": 120,
+          "mean": 2.2781442666666667,
+          "p95": 2.633024,
+          "p99": 2.649792,
+          "max": 2.887296
+        }
+      },
+      "calls": {
+        "count": 120,
+        "mean": 13,
+        "p95": 13,
+        "p99": 13,
+        "max": 13
+      },
+      "triangles": {
+        "count": 120,
+        "mean": 60545,
+        "p95": 60545,
+        "p99": 60545,
+        "max": 60545
+      },
+      "animationEvaluations": 0,
+      "skeletonNoopCalls": 1440,
+      "bakedTextureUploads": 0,
+      "boneTextureUploads": 0,
+      "memory": {
+        "geometries": 5,
+        "textures": 23
+      }
+    },
+    {
+      "mode": "gpu",
+      "work": {
+        "count": 120,
+        "mean": 0.002624999980131785,
+        "p95": 0.009999999776482582,
+        "p99": 0.010000001639127731,
+        "max": 0.014999998733401299
+      },
+      "render": {
+        "count": 120,
+        "mean": 1.1324999999410161,
+        "p95": 1.3299999982118607,
+        "p99": 1.4949999991804361,
+        "max": 1.6299999989569187
+      },
+      "interval": {
+        "count": 119,
+        "mean": 33.33210084033238,
+        "p95": 33.41000000014901,
+        "p99": 33.44999999925494,
+        "max": 33.64500000141561
+      },
+      "gpu": {
+        "samples": 120,
+        "disjoint": 0,
+        "discarded": 0,
+        "skipped": 0,
+        "pending": 0,
+        "elapsed": {
+          "count": 120,
+          "mean": 2.6094773333333356,
+          "p95": 2.660608,
+          "p99": 2.682848,
+          "max": 3.915232
+        }
+      },
+      "calls": {
+        "count": 120,
+        "mean": 13,
+        "p95": 13,
+        "p99": 13,
+        "max": 13
+      },
+      "triangles": {
+        "count": 120,
+        "mean": 60545,
+        "p95": 60545,
+        "p99": 60545,
+        "max": 60545
+      },
+      "animationEvaluations": 0,
+      "skeletonNoopCalls": 1440,
+      "bakedTextureUploads": 0,
+      "boneTextureUploads": 0,
+      "memory": {
+        "geometries": 5,
+        "textures": 23
+      }
+    },
+    {
+      "mode": "source",
+      "work": {
+        "count": 120,
+        "mean": 0.7637500000031044,
+        "p95": 0.9900000002235174,
+        "p99": 1.175000000745058,
+        "max": 1.349999999627471
+      },
+      "render": {
+        "count": 120,
+        "mean": 1.495041666707645,
+        "p95": 1.8899999987334013,
+        "p99": 2.3049999997019768,
+        "max": 2.4649999998509884
+      },
+      "interval": {
+        "count": 119,
+        "mean": 33.33348739496237,
+        "p95": 33.45000000111759,
+        "p99": 33.46499999985099,
+        "max": 33.56499999947846
+      },
+      "gpu": {
+        "samples": 120,
+        "disjoint": 0,
+        "discarded": 0,
+        "skipped": 0,
+        "pending": 0,
+        "elapsed": {
+          "count": 120,
+          "mean": 2.7799354666666662,
+          "p95": 2.834432,
+          "p99": 2.857632,
+          "max": 2.875392
+        }
+      },
+      "calls": {
+        "count": 120,
+        "mean": 13,
+        "p95": 13,
+        "p99": 13,
+        "max": 13
+      },
+      "triangles": {
+        "count": 120,
+        "mean": 60545,
+        "p95": 60545,
+        "p99": 60545,
+        "max": 60545
+      },
+      "animationEvaluations": 360,
+      "skeletonNoopCalls": 0,
+      "bakedTextureUploads": 0,
+      "boneTextureUploads": 1440,
+      "memory": {
+        "geometries": 5,
+        "textures": 23
+      }
+    }
+  ],
+  "actorCount": 3,
+  "meshCount": 12,
+  "bakedTextureBytes": 44352,
+  "scope": "One isolated three-hyena lab, synthetic moving roots and shared animation texture, source/gpu/gpu/source. Source evaluates a synthetic moving root, real pose and groundAnimal; GPU updates only shared time but skips terrain support and gameplay; both force native shadow redraw. 30 warm and 120 measured frames per block. Source materials also contain the experimental branch. No initial bake/upload timing, world simulation, real terrain, morph animation, context recovery, crowd, integrated GPU or production behavior."
+}

@@ -1,0 +1,377 @@
+{
+  "scope": "Ordinary Desierto 712 introductory raid from the public refuge checkpoint with two paid workers, a closed gate and four solid walls.",
+  "fixture": {
+    "path": "tests/fixtures/desierto712-d1-paid-defenses-before-night.json.gz",
+    "gzipSha256": "9ea1aa2120487e65e75ef012bf1a99b3fe098fd28de255ae13f490c23c6c2813",
+    "snapshotSha256": "c15d4ed76255e5debbc555fb9565834b638d1f42e4b00cd5a19993d06ac47ce2"
+  },
+  "qualification": {
+    "wallOwners": {
+      "structure-10": [
+        6
+      ],
+      "structure-11": [
+        7
+      ],
+      "structure-7": [
+        1,
+        2,
+        3
+      ],
+      "structure-8": [
+        4
+      ],
+      "structure-9": [
+        5
+      ]
+    },
+    "baselineRejection": "Native task game cohort contains an unsupported mover",
+    "baselineTapSha256": "f618a8735363b96abb231480e13284dfa54f1414cf9f18d7caaa1c705bc68278",
+    "comparisonTargets": [
+      "plant-3",
+      "structure-2"
+    ],
+    "comparisonReceiptSha256": "0e5bb9e9b7534656693a6c56e6fbd07e8e47a2b48819f899f8a57eb6f6f741ec",
+    "cpuDiskCuts": [
+      "crop approach",
+      "crop strike",
+      "center approach",
+      "center strike",
+      "retreat"
+    ],
+    "cpuDrawReplacementCuts": [
+      "crop approach",
+      "crop strike"
+    ]
+  },
+  "physical": {
+    "ordinary": {
+      "birthElapsed": 370.50227023610705,
+      "snapshotSha256": "c15d4ed76255e5debbc555fb9565834b638d1f42e4b00cd5a19993d06ac47ce2",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing"
+      },
+      "programs": [
+        {
+          "kind": 26,
+          "purpose": "crop",
+          "targetId": 3,
+          "bodyId": 1,
+          "ticket": 2,
+          "draw": 18,
+          "firstRelativeAge": 0
+        },
+        {
+          "kind": 27,
+          "purpose": "crop",
+          "targetId": 3,
+          "bodyId": 1,
+          "ticket": 4,
+          "draw": 524,
+          "firstRelativeAge": 0
+        },
+        {
+          "kind": 26,
+          "purpose": "center",
+          "targetId": 2,
+          "bodyId": 1,
+          "ticket": 6,
+          "draw": 570,
+          "firstRelativeAge": 0
+        },
+        {
+          "kind": 27,
+          "purpose": "center",
+          "targetId": 2,
+          "bodyId": 1,
+          "ticket": 8,
+          "draw": 599,
+          "firstRelativeAge": 0
+        },
+        {
+          "kind": 26,
+          "purpose": "retreat",
+          "targetId": null,
+          "bodyId": 1,
+          "ticket": 10,
+          "draw": 646,
+          "firstRelativeAge": 0
+        }
+      ],
+      "hits": [
+        {
+          "attackId": "attack-31",
+          "targetId": "plant-3",
+          "simulationTime": 431.5518161888256
+        },
+        {
+          "attackId": "attack-35",
+          "targetId": "structure-2",
+          "simulationTime": 440.55181618881744
+        }
+      ],
+      "crops": [
+        {
+          "id": "plant-3",
+          "alive": false
+        },
+        {
+          "id": "plant-5",
+          "alive": true
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-13",
+          "status": "home",
+          "hits": 0,
+          "personId": "person-12",
+          "contractDay": 1
+        },
+        {
+          "id": "worker-15",
+          "status": "home",
+          "hits": 0,
+          "personId": "person-14",
+          "contractDay": 1
+        }
+      ],
+      "defenses": [
+        {
+          "id": "structure-7",
+          "hp": 60,
+          "root": 93,
+          "visibleMeshes": 1
+        },
+        {
+          "id": "structure-8",
+          "hp": 100,
+          "root": 96,
+          "visibleMeshes": 1
+        },
+        {
+          "id": "structure-9",
+          "hp": 100,
+          "root": 99,
+          "visibleMeshes": 1
+        },
+        {
+          "id": "structure-10",
+          "hp": 100,
+          "root": 102,
+          "visibleMeshes": 1
+        },
+        {
+          "id": "structure-11",
+          "hp": 100,
+          "root": 105,
+          "visibleMeshes": 1
+        }
+      ],
+      "centerHp": 580,
+      "balance": 270,
+      "absence": {
+        "draw": 910,
+        "elapsed": 468.5218161887922
+      },
+      "drained": true,
+      "errors": [],
+      "receiptSha256": "759e91891ca5f518cebc12311d7f1e680243e1c33847c7a426d3681992761c00"
+    },
+    "coldStrike": {
+      "save": {
+        "attackId": "attack-31",
+        "targetId": "plant-3",
+        "elapsed": 427.3018161888295,
+        "x": 99.0948257446289,
+        "z": -5.302646636962891,
+        "motionPhase": 51.343851761275985,
+        "attackRemaining": 4.2416668243708955,
+        "sha256": "b9fb362764f888aa3d482fc5a1d7dce04064ea3be24dc7868cdf53248e97bb59"
+      },
+      "snapshotSha256": "b9fb362764f888aa3d482fc5a1d7dce04064ea3be24dc7868cdf53248e97bb59",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing"
+      },
+      "programs": [
+        {
+          "kind": 27,
+          "purpose": "crop",
+          "targetId": 3,
+          "bodyId": 1,
+          "ticket": 2,
+          "draw": 40,
+          "firstRelativeAge": 0
+        },
+        {
+          "kind": 26,
+          "purpose": "center",
+          "targetId": 2,
+          "bodyId": 1,
+          "ticket": 4,
+          "draw": 85,
+          "firstRelativeAge": 0
+        },
+        {
+          "kind": 27,
+          "purpose": "center",
+          "targetId": 2,
+          "bodyId": 1,
+          "ticket": 6,
+          "draw": 112,
+          "firstRelativeAge": 0
+        },
+        {
+          "kind": 26,
+          "purpose": "retreat",
+          "targetId": null,
+          "bodyId": 1,
+          "ticket": 8,
+          "draw": 161,
+          "firstRelativeAge": 0
+        }
+      ],
+      "hits": [
+        {
+          "attackId": "attack-31",
+          "targetId": "plant-3",
+          "simulationTime": 431.5518161888256
+        },
+        {
+          "attackId": "attack-35",
+          "targetId": "structure-2",
+          "simulationTime": 441.2518161888168
+        }
+      ],
+      "crops": [
+        {
+          "id": "plant-3",
+          "alive": false
+        },
+        {
+          "id": "plant-5",
+          "alive": true
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-13",
+          "status": "home",
+          "hits": 0,
+          "personId": "person-12",
+          "contractDay": 1
+        },
+        {
+          "id": "worker-15",
+          "status": "home",
+          "hits": 0,
+          "personId": "person-14",
+          "contractDay": 1
+        }
+      ],
+      "defenses": [
+        {
+          "id": "structure-7",
+          "hp": 60,
+          "root": 93,
+          "visibleMeshes": 1
+        },
+        {
+          "id": "structure-8",
+          "hp": 100,
+          "root": 96,
+          "visibleMeshes": 1
+        },
+        {
+          "id": "structure-9",
+          "hp": 100,
+          "root": 99,
+          "visibleMeshes": 1
+        },
+        {
+          "id": "structure-10",
+          "hp": 100,
+          "root": 102,
+          "visibleMeshes": 1
+        },
+        {
+          "id": "structure-11",
+          "hp": 100,
+          "root": 105,
+          "visibleMeshes": 1
+        }
+      ],
+      "centerHp": 580,
+      "balance": 270,
+      "absence": {
+        "draw": 428,
+        "elapsed": 469.2718161887915
+      },
+      "drained": true,
+      "errors": [],
+      "receiptSha256": "2c4174d98dcec71a36112c19c8ce02330c244eae035d900002a7d88e4a79df57"
+    }
+  },
+  "automatedMixedConstruction": {
+    "command": {
+      "kind": "buildWallChain",
+      "id": "paid-sheltered-crops-enclosure",
+      "material": "zarzas",
+      "points": [
+        [
+          96,
+          -5
+        ],
+        [
+          102,
+          -5
+        ],
+        [
+          102,
+          -13
+        ],
+        [
+          96,
+          -13
+        ],
+        [
+          96,
+          -5
+        ]
+      ],
+      "options": {
+        "smooth": false,
+        "snap": false,
+        "requireComplete": true
+      }
+    },
+    "comparison": {
+      "wallCount": 12,
+      "gateCount": 1,
+      "balance": 270
+    },
+    "native": {
+      "rejection": "La construcción nativa necesita un muro sólido o una puerta compatible en regiones residentes",
+      "balance": 400,
+      "newOwners": 0
+    },
+    "receiptSha256": "98d1f1823fe54edec4ce65332e9af317a246ac5486a613d4cd2bf6331107bc3b"
+  },
+  "regression": {
+    "tests": 54,
+    "passed": 54,
+    "failed": 0,
+    "skipped": 0,
+    "tapSha256": "77bd5402fddab9a80e99e7f888111d31019cd3a73f15cbd75b66e4b303113b7f",
+    "productionBuildModules": 755,
+    "buildSha256": "856042aac1091dfe7a303c45a325bb0450b5a3f3b3b800d7d588550c19bd0ba9"
+  },
+  "pending": [
+    "Hardware Draw replacement from this save",
+    "Damage targeting walls or gates",
+    "Default menu activation",
+    "Cadence qualification"
+  ]
+}

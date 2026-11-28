@@ -1,0 +1,7 @@
+# Recuperación gráfica y reloj de simulación
+
+Al detectarse la pérdida de presentación histórica, el host captura el tiempo transcurrido hasta ese instante y suspende la captura de tiempo real mientras prepara y reproduce la recuperación. Los steps y órdenes ya aceptados permanecen en su cola y conservan su orden. Los comandos posteriores pueden entrar en cola sin generar steps nuevos. Al completar o cancelar la recuperación, el reloj se ancla al instante real actual y conserva la fracción anterior; no se simulan ciegamente los minutos transcurridos sin presentación. Los fallos de replay mantienen la suspensión mientras se prepara un reintento.
+
+El watchdog mantiene un plazo corto de 10 segundos para la frontera y el cambio de puerto. La reconstrucción y replay tienen por defecto un plazo de 120 segundos sin ACK y un máximo de 600 segundos, configurables; los ACK válidos reinician el plazo de inactividad y el plazo total no se reinicia. El watermark del journal detiene admisiones, pero no equivale a pérdida de integridad: un journal completo puede reproducirse y, si sigue en presión tras recuperar, solicita una renovación del checkpoint.
+
+Pruebas automatizadas con reloj falso cubren una pérdida de 600 segundos, el orden de steps y comandos, la fracción de tiempo, progreso y vencimientos; las pruebas del host utilizan también Wild Engine real. Falta la validación integrada de pérdida de dispositivo en GPU real.

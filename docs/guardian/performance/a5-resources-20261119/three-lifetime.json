@@ -1,0 +1,42 @@
+[
+  {
+    "kind": "deep-clone",
+    "cpuArrayShared": false,
+    "initialCreates": 4,
+    "disposalError": null,
+    "sourceBuffersSurviveCandidateDisposal": true,
+    "createsOnNextRender": 0,
+    "liveAfterFinalDispose": 0,
+    "scope": "Actual Three Geometries/Attributes/RenderObject; recording backend, not hardware, not a sharing permission for mutable CPU arrays."
+  },
+  {
+    "kind": "shared-attribute",
+    "cpuArrayShared": true,
+    "initialCreates": 2,
+    "disposalError": null,
+    "sourceBuffersSurviveCandidateDisposal": false,
+    "createsOnNextRender": 2,
+    "liveAfterFinalDispose": 0,
+    "scope": "Actual Three Geometries/Attributes/RenderObject; recording backend, not hardware, not a sharing permission for mutable CPU arrays."
+  },
+  {
+    "kind": "shared-attribute-stripped-before-dispose",
+    "cpuArrayShared": true,
+    "initialCreates": 2,
+    "disposalError": "TypeError: Cannot read properties of undefined (reading 'version')",
+    "sourceBuffersSurviveCandidateDisposal": true,
+    "createsOnNextRender": 0,
+    "liveAfterFinalDispose": 0,
+    "scope": "Actual Three Geometries/Attributes/RenderObject; recording backend, not hardware, not a sharing permission for mutable CPU arrays."
+  },
+  {
+    "kind": "cpu-array-shared-private-attributes",
+    "cpuArrayShared": true,
+    "initialCreates": 4,
+    "disposalError": null,
+    "sourceBuffersSurviveCandidateDisposal": true,
+    "createsOnNextRender": 0,
+    "liveAfterFinalDispose": 0,
+    "scope": "Actual Three Geometries/Attributes/RenderObject; recording backend, not hardware, not a sharing permission for mutable CPU arrays."
+  }
+]

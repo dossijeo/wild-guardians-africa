@@ -1,0 +1,166 @@
+{
+  "frozen": {
+    "calls": 1200,
+    "unsampled": 1200,
+    "exactEqual": 1200,
+    "maxError": 0,
+    "examples": [],
+    "counts": {
+      "walking/none/reused": 1200
+    },
+    "costMs": {
+      "sum": 474.53500005602837,
+      "p95": 0.7999999970197678,
+      "p99": 1.0349999964237213,
+      "max": 1.729999989271164
+    }
+  },
+  "active": {
+    "calls": 2400,
+    "unsampled": 400,
+    "exactEqual": 380,
+    "maxError": 1.7763568394002505e-15,
+    "examples": [
+      {
+        "status": "walking",
+        "down": null,
+        "impact": false,
+        "sampled": false,
+        "previous": 0.06455207425005646,
+        "current": 0.06455207425005735,
+        "ms": 0.14499999582767487
+      },
+      {
+        "status": "walking",
+        "down": null,
+        "impact": false,
+        "sampled": false,
+        "previous": 0.022000100850583883,
+        "current": 0.022000100850582995,
+        "ms": 0.45499999821186066
+      },
+      {
+        "status": "walking",
+        "down": null,
+        "impact": false,
+        "sampled": false,
+        "previous": 0.021999373833535098,
+        "current": 0.021999373833536874,
+        "ms": 0.7650000005960464
+      },
+      {
+        "status": "walking",
+        "down": null,
+        "impact": false,
+        "sampled": false,
+        "previous": 0.022000245020138844,
+        "current": 0.022000245020139732,
+        "ms": 0.26500000059604645
+      },
+      {
+        "status": "waiting",
+        "down": null,
+        "impact": false,
+        "sampled": false,
+        "previous": 0.06455207425005646,
+        "current": 0.06455207425005735,
+        "ms": 0.125
+      }
+    ],
+    "counts": {
+      "walking/none/sampled": 1276,
+      "waiting/none/sampled": 544,
+      "walking/none/reused": 273,
+      "waiting/none/reused": 127,
+      "attacking/none/sampled": 180
+    },
+    "costMs": {
+      "sum": 934.890000090003,
+      "p95": 0.8049999922513962,
+      "p99": 0.9449999928474426,
+      "max": 8.475000008940697
+    }
+  },
+  "impacts": {
+    "calls": 5202,
+    "unsampled": 924,
+    "exactEqual": 914,
+    "maxError": 1.7763568394002505e-15,
+    "examples": [
+      {
+        "status": "walking",
+        "down": null,
+        "impact": false,
+        "sampled": false,
+        "previous": 0.022031104971889294,
+        "current": 0.022031104971890182,
+        "ms": 0.5049999952316284
+      },
+      {
+        "status": "walking",
+        "down": null,
+        "impact": false,
+        "sampled": false,
+        "previous": 0.022030341229318774,
+        "current": 0.022030341229316998,
+        "ms": 0.49000000953674316
+      },
+      {
+        "status": "walking",
+        "down": null,
+        "impact": false,
+        "sampled": false,
+        "previous": 0.05514953176133706,
+        "current": 0.05514953176133617,
+        "ms": 0.19499999284744263
+      },
+      {
+        "status": "walking",
+        "down": null,
+        "impact": false,
+        "sampled": false,
+        "previous": 0.022062557108872595,
+        "current": 0.02206255710887082,
+        "ms": 0.5099999904632568
+      },
+      {
+        "status": "walking",
+        "down": "rolling",
+        "impact": true,
+        "sampled": false,
+        "previous": 0.017676907475742555,
+        "current": 0.017676907475743443,
+        "ms": 0.25
+      }
+    ],
+    "counts": {
+      "walking/falling/sampled": 2,
+      "walking/none/sampled": 1566,
+      "waiting/none/reused": 398,
+      "attacking/none/sampled": 1263,
+      "walking/none/reused": 350,
+      "waiting/none/sampled": 1446,
+      "walking/falling/reused": 67,
+      "walking/rolling/reused": 27,
+      "walking/rolling/sampled": 1,
+      "walking/recovering/reused": 82
+    },
+    "costMs": {
+      "sum": 2194.5399998426437,
+      "p95": 0.8199999928474426,
+      "p99": 1.0050000101327896,
+      "max": 9.140000000596046
+    }
+  },
+  "phases": {
+    "falling": 68,
+    "rolling": 27,
+    "recovering": 82,
+    "recoveryExit": 6,
+    "upright": 77
+  },
+  "network": true,
+  "animals": 20,
+  "sceneErrors": [],
+  "scope": "Instrumented single mangrove-islands QA scene with 20 synthetic animals; 60 frozen frames and 120 frames with Game.tick. Full grounding executes each call. Compares prior and current model-local Y only when fixed-pose mixer sampling was skipped; not a proposed cache, benchmark or proof that other dependencies remain unchanged. Impact mode injects two test hits on one actor."
+}

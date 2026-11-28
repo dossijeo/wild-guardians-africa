@@ -1,0 +1,163 @@
+{
+  "version": 1,
+  "parentRevision": "c53200467",
+  "sourceSha256": "8c85acd21b5280ae5f1e32f4bd2df4d9ce909087e293bc29d9e22077aa322408",
+  "wasmSha256": "f5f27821d5a7c33e8c29e4a36ce72ea8cdd626bc5b2ea6206525533438f26ba5",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 101
+    }
+  },
+  "qualification": "DEV qualifyRaidEncounter",
+  "checkpoint": {
+    "elapsed": 12.639999999999944,
+    "worker": "worker-900011",
+    "workerFallRemaining": 3.061666507720947,
+    "animal": "animal-1000000",
+    "animalPhase": 1.6799999999999642,
+    "marker": {
+      "version": 1,
+      "workerId": 900011,
+      "animalId": 1000000,
+      "hit": 29210
+    },
+    "worldBoundary": {
+      "version": 1,
+      "authorityEpoch": "9dee7ca6-d73f-4f0f-9363-798c14509f7b/1",
+      "nativeSession": 1,
+      "ticket": 2,
+      "effectiveTime": 12.639999999999944
+    },
+    "sequence": 15,
+    "relativeTime": 0
+  },
+  "wire": [
+    {
+      "kind": "encounter-submit-ack",
+      "id": 6,
+      "result": {
+        "version": 1,
+        "sequence": 73,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "9e5971e8-cd54-4569-aca7-0afbb3f76840/1",
+          "nativeSession": 1,
+          "ticket": 11,
+          "effectiveTime": 12.619999999999944
+        },
+        "elapsed": 12.619999999999944,
+        "assignment": 12
+      }
+    },
+    {
+      "kind": "drained"
+    },
+    {
+      "kind": "acquired",
+      "family": "nativeAnimalCropRouteBinding",
+      "binding": {
+        "version": 1,
+        "reference": {
+          "version": 1,
+          "kind": 26,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "9dee7ca6-d73f-4f0f-9363-798c14509f7b/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 12.639999999999944
+          },
+          "sourceControlSequence": 2,
+          "endTime": 14.33050764733543,
+          "purpose": "retreat",
+          "actorId": 1000000,
+          "bodyId": 2,
+          "targetId": null,
+          "centerId": null,
+          "requestSequence": 2,
+          "slot": 0,
+          "generation": 3,
+          "radius": 1.1,
+          "x": -16.798109984199314,
+          "z": 2,
+          "phase": 1.6799999999999642,
+          "yaw": -1.5707963267948966,
+          "targetX": -21.94043137942494,
+          "targetZ": 2.786100655199152,
+          "centerX": null,
+          "centerZ": null
+        },
+        "preparedReference": {
+          "version": 1,
+          "kind": 26,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "9dee7ca6-d73f-4f0f-9363-798c14509f7b/1",
+            "nativeSession": 1,
+            "ticket": 1,
+            "effectiveTime": 12.639999999999944
+          },
+          "sourceControlSequence": 2,
+          "endTime": 14.33050764733543,
+          "purpose": "retreat",
+          "actorId": 1000000,
+          "bodyId": 2,
+          "targetId": null,
+          "centerId": null,
+          "requestSequence": 2,
+          "slot": 0,
+          "generation": 3,
+          "radius": 1.1,
+          "x": -16.798109984199314,
+          "z": 2,
+          "phase": 1.6799999999999642,
+          "yaw": -1.5707963267948966,
+          "targetX": -21.94043137942494,
+          "targetZ": 2.786100655199152,
+          "centerX": null,
+          "centerZ": null
+        },
+        "assignmentSequence": 3
+      },
+      "cold": true
+    },
+    {
+      "kind": "drained",
+      "cold": true
+    }
+  ],
+  "events": [
+    {
+      "id": "event-29209",
+      "type": "WorkerHit",
+      "simulationTime": 12.179999999999954
+    },
+    {
+      "id": "event-29210",
+      "type": "WorkerIncapacitated",
+      "simulationTime": 12.619999999999944
+    },
+    {
+      "id": "event-29211",
+      "type": "AnimalRetreating",
+      "simulationTime": 12.619999999999944
+    },
+    {
+      "id": "event-29212",
+      "type": "RaidEnded",
+      "simulationTime": 14.339999999999907
+    }
+  ],
+  "terminalElapsed": 18.91999999999981,
+  "errors": []
+}

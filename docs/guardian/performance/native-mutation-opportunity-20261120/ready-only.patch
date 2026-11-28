@@ -1,0 +1,129 @@
+diff --git a/src/rendering/remote-webgpu-host.js b/src/rendering/remote-webgpu-host.js
+index 0a5dc3f93..d6ae7e3fa 100644
+--- a/src/rendering/remote-webgpu-host.js
++++ b/src/rendering/remote-webgpu-host.js
+@@ -111,6 +111,23 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
+   let retirementScheduled = false;
+   let resolutionResources = null;
+   let admittingFrame=null;
++  let preparedReadyOpportunity=null;
++  function finishPreparedReadyOpportunity(){preparedReadyOpportunity?.();}
++  function waitPreparedReadyOpportunity(signal){
++    // READY enables a physical mutation which must drain and exclude drawing.
++    // Start that handshake just after the existing presentation opportunity,
++    // not at an arbitrary point between callbacks. Bootstrap/hidden consumers
++    // have no active presentation to protect. An attempted draw suffices: the
++    // new world may itself be needed to repair an expired lease or stale image.
++    if(hidden||!deviceConfigured||!active||signal.aborted)return Promise.resolve();
++    return new Promise(resolve=>{
++      const finish=()=>{
++        if(preparedReadyOpportunity===finish)preparedReadyOpportunity=null;
++        signal.removeEventListener('abort',finish);resolve();
++      };
++      preparedReadyOpportunity=finish;signal.addEventListener('abort',finish,{once:true});
++    });
++  }
+   let stagedOperations = [],retainedPreparationSnapshot=null,preparationRecoveryRequired=false,lastReceivedFrameSequence=0,retainedPreparationOperationCount=0;
+   let disposalPromise=null;
+   let active = null, pending = null, stopped = false, failed = false, deviceDestroyRequested = false, frameHandle = null, chain = Promise.resolve();
+@@ -658,6 +675,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
+       outcome, holdId, sequence: active?.sequence ?? null,
+     };
+     previousOpportunityAt = at;
++    finishPreparedReadyOpportunity();
+   }
+   function draw(trigger = 'raf') {
+     if (stopped || failed) return 'stopped';
+@@ -1336,6 +1354,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
+           firstUseComplete.catch(fail); // Cancellation cannot hide a native validation failure.
+           await Promise.race([firstUseComplete,cancelled]);
+           if(!current()||pending!==packet){cancelPreparedWorldFrame(packet.sequence);reply(message,null,Error('Prepared world frame cancelled'));break;}
++          await waitPreparedReadyOpportunity(controller.signal);
++          if(!current()||pending!==packet){cancelPreparedWorldFrame(packet.sequence);reply(message,null,Error('Prepared world frame cancelled'));break;}
+           packet.preparedUploadsComplete=true;
+           reply(message,{version:1,sequence:packet.sequence,worldBoundary:boundary,uploadsSubmitted:true,pipelineFirstUseComplete:true});
+           preparedReady=true;
+@@ -1835,8 +1855,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
+         hiddenStartedAt = null; previousFrameAt = null; previousOpportunityAt = null;
+       }
+       hidden = nextHidden;
++      if(hidden)finishPreparedReadyOpportunity();
+     },
+-    inspect: () => ({ ...metrics, hidden, resources: resources.size, pendingResources: pendingResources.size, activeSequence: active?.sequence || null, pendingSequence: pending?.sequence || null, queuedMessages, stagedOperations: stagedOperations.length,retainedPreparationResources:retainedPreparationSnapshot?.size??0,retainedPreparationBytes:retainedPreparationSnapshot?packetBytes(stagedOperations):0,preparationRecoveryRequired, obsoleteVersions: obsoleteVersions.size, failed, backend: 'webgpu', rafIndependent: true, adapterInfo, frameTime: frameTime.status(), frameTimings: frameTimings.slice(), fenceTimings: fenceTimings.slice(), lease: frameClock(active) || null, nativeCausalClock:routeControl?.status().clock??null, nativeMutationHold:nativeMutationHold?.holdId??null,nativeMutationFloor,nativeMutationEpoch, cameraSafe: active?.metadata?.cameraSafe ?? false, cameraEnvelope: active?.metadata?.cameraEnvelope || null, clockBindings: active?.clockBindings.length || 0, cameraBindings: active?.cameraBindings.length || 0, clockAtHorizon: !!frameClock(active) && frameTime.status().elapsed >= Math.min(routeControl?.status().clock?.committedThrough??Infinity,frameClock(active).safeUntil), nativeRouteFrame: nativeRouteFrame ? structuredClone(nativeRouteFrame) : null, errors: errors.slice(), presentationOpportunities: opportunityCursor < presentationOpportunities.length ? presentationOpportunities.slice(0, opportunityCursor) : [...presentationOpportunities.slice(opportunityCursor % presentationOpportunities.length), ...presentationOpportunities.slice(0, opportunityCursor % presentationOpportunities.length)], samples: sampleCursor < samples.length ? samples.slice(0, sampleCursor) : [...samples.slice(sampleCursor % samples.length), ...samples.slice(0, sampleCursor % samples.length)] }),
++    inspect: () => ({ ...metrics, hidden, preparedReadyWaiting:preparedReadyOpportunity!==null, resources: resources.size, pendingResources: pendingResources.size, activeSequence: active?.sequence || null, pendingSequence: pending?.sequence || null, queuedMessages, stagedOperations: stagedOperations.length,retainedPreparationResources:retainedPreparationSnapshot?.size??0,retainedPreparationBytes:retainedPreparationSnapshot?packetBytes(stagedOperations):0,preparationRecoveryRequired, obsoleteVersions: obsoleteVersions.size, failed, backend: 'webgpu', rafIndependent: true, adapterInfo, frameTime: frameTime.status(), frameTimings: frameTimings.slice(), fenceTimings: fenceTimings.slice(), lease: frameClock(active) || null, nativeCausalClock:routeControl?.status().clock??null, nativeMutationHold:nativeMutationHold?.holdId??null,nativeMutationFloor,nativeMutationEpoch, cameraSafe: active?.metadata?.cameraSafe ?? false, cameraEnvelope: active?.metadata?.cameraEnvelope || null, clockBindings: active?.clockBindings.length || 0, cameraBindings: active?.cameraBindings.length || 0, clockAtHorizon: !!frameClock(active) && frameTime.status().elapsed >= Math.min(routeControl?.status().clock?.committedThrough??Infinity,frameClock(active).safeUntil), nativeRouteFrame: nativeRouteFrame ? structuredClone(nativeRouteFrame) : null, errors: errors.slice(), presentationOpportunities: opportunityCursor < presentationOpportunities.length ? presentationOpportunities.slice(0, opportunityCursor) : [...presentationOpportunities.slice(opportunityCursor % presentationOpportunities.length), ...presentationOpportunities.slice(0, opportunityCursor % presentationOpportunities.length)], samples: sampleCursor < samples.length ? samples.slice(0, sampleCursor) : [...samples.slice(sampleCursor % samples.length), ...samples.slice(0, sampleCursor % samples.length)] }),
+     dispose() {
+       if (stopped) return disposalPromise; stopped = true;
+       admittingFrame?.cancel();discardRetainedPreparations();
+diff --git a/tests/helpers/remote-webgpu-fixture.js b/tests/helpers/remote-webgpu-fixture.js
+index cc91905a6..cf6eee0c6 100644
+--- a/tests/helpers/remote-webgpu-fixture.js
++++ b/tests/helpers/remote-webgpu-fixture.js
+@@ -67,8 +67,22 @@ function preparedWorldDraw(f,boundary,value=77,signal=null){
+ 
+ async function fixture(clientOptions = {}, hostOptions = {}) {
+   const [producerPort, consumerPort] = pair(), gpu = fakeGpu(), errors = [];
+-  const host = createRemoteWebGpuHost({ ...gpu, canvas: { width: 20, height: 10 }, port: consumerPort, requestFrame: () => 0, cancelFrame() {}, ...hostOptions });
++  let virtualFrame=null;
++  const host = createRemoteWebGpuHost({ ...gpu, canvas: { width: 20, height: 10 }, port: consumerPort, requestFrame: callback => {virtualFrame=callback;return 0;}, cancelFrame() {virtualFrame=null;}, ...hostOptions });
+   const client = createRemoteWebGpuClient({ port: producerPort, capabilities: { width: 20, height: 10, format: 'rgba8unorm' }, onError: error => errors.push(error), ...clientOptions });
++  // Most lifecycle tests drive presentation manually. A prepared READY now
++  // depends on the existing RAF opportunity, so drive that callback when its
++  // waiter is reached. Tests supplying their own RAF retain exclusive control.
++  // This calls production present/draw; it does not bypass the new barrier.
++  if(!hostOptions.requestFrame){
++    const prepare=client.prepareNativeWorldFrame.bind(client);
++    client.prepareNativeWorldFrame=(...args)=>{
++      const result=prepare(...args);let settled=false;
++      result.then(()=>{settled=true;},()=>{settled=true;});
++      const pulse=()=>{if(settled)return;if(host.inspect().preparedReadyWaiting)virtualFrame?.();setImmediate(pulse);};
++      setImmediate(pulse);return result;
++    };
++  }
+   client.context.configure({ device: client.device, format: 'rgba8unorm' });
+   const buffer = client.device.createBuffer({ size: 16, usage: 72 });
+   const group = client.device.createBindGroup({ entries: [{ binding: 0, resource: { buffer } }] });
+diff --git a/tests/native-mutation-release-presentation.test.js b/tests/native-mutation-release-presentation.test.js
+index e5cd59c27..64150bdf9 100644
+--- a/tests/native-mutation-release-presentation.test.js
++++ b/tests/native-mutation-release-presentation.test.js
+@@ -6,23 +6,23 @@ import {createNativeIntentControlPublication} from '../src/simulation/native-int
+ 
+ // Real WASM authority, direct publication and Host; simulated GPU and virtual
+ // presentation times. These tests do not measure hardware/compositor cadence.
+-async function setup(){
++async function setup(startAt=1000){
+   const native=createNativeRouteExecutionFixture(),[sourcePort,drawPort]=pair();
+-  const raf=new Map();let serial=0,now=1000;
++  const raf=new Map();let serial=0,now=startAt;
+   const f=await fixture({}, {intentControl:{port:drawPort,session:'release-presentation'},absoluteNow:()=>now,
+     requestFrame:callback=>{raf.set(++serial,callback);return serial;},cancelFrame:id=>raf.delete(id)});
+   native.worker(1,native.point(-6,0),native.point(6,0));
+   native.bridge.beginNativeRouteExecution();native.bridge.commitNativeCausalClock();
+   const source=createNativeIntentControlPublication({port:sourcePort,session:'release-presentation',observe:native.bridge.observeNativeIntentControl,absoluteNow:()=>now});
+   await source.ready;
+-  const clock={version:1,epoch:0,elapsed:10,safeUntil:20,anchorAbsoluteMs:1000,paused:false,segments:[{start:10,end:20,rate:1,realDuration:10}]};
++  const clock={version:1,epoch:0,elapsed:10,safeUntil:20,anchorAbsoluteMs:startAt,paused:false,segments:[{start:10,end:20,rate:1,realDuration:10}]};
+   function step(at){now=at;assert.equal(raf.size,1,'only the original RAF chain');const [id,callback]=raf.entries().next().value;raf.delete(id);callback();assert.equal(raf.size,1);}
+-  const shown=f.frame(1,{clock});await flush();await f.host.idle();step(1000);await shown;
++  const shown=f.frame(1,{clock});await flush();await f.host.idle();step(startAt);await shown;
+   return {...f,native,source,clock,step,setNow:value=>{now=value;},async close(){source.dispose();f.client.dispose();await f.host.dispose();native.session.dispose();assert.equal(raf.size,0);}};
+ }
+ 
+ for(const delay of [30,50,100])test(`a missed presentation resumes at the exact committed release without a second RAF (${delay}ms virtual hold)`,async()=>{
+-  const f=await setup();let prepared,finishDrain,finishReceipt,receiptReady;
++  const f=await setup(984);let prepared,finishDrain,finishReceipt,receiptReady;
+   const receiptReached=new Promise(resolve=>{receiptReady=resolve;});
+   try{
+     const quiesce=f.source.quiesceGpuForMutation.bind(f.source);
+@@ -35,7 +35,10 @@ for(const delay of [30,50,100])test(`a missed presentation resumes at the exact
+       f.gpu.device.queue.onSubmittedWorkDone=()=>new Promise(resolve=>{finishDrain=resolve;});
+       return {preparedWorldBoundary:prepared.preparedWorldBoundary,valid:prepared.valid,commit:data=>prepared.commit(data.worldBoundary),abort:prepared.abort};
+     }});
+-    for(let i=0;i<100&&!finishDrain;i++)await new Promise(resolve=>setTimeout(resolve,1));
++    for(let i=0;i<100&&!finishDrain;i++){
++      if(f.host.inspect().preparedReadyWaiting)f.step(1000);
++      await new Promise(resolve=>setTimeout(resolve,1));
++    }
+     assert.equal(typeof finishDrain,'function');assert(f.host.inspect().nativeMutationHold);
+     const before=f.gpu.submitted.length,resources=f.gpu.buffers.length;
+     f.step(1016);assert.equal(f.gpu.submitted.length,before,'no submit while GPU drain is pending');

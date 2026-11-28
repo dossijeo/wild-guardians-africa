@@ -1,0 +1,218 @@
+{
+  "version": 1,
+  "scope": {
+    "biome": "sabana",
+    "seed": 712,
+    "explicitNativeWorkerLifecycle": true,
+    "worker": "worker-6",
+    "target": "plant-3",
+    "gate": false,
+    "manualClock": true
+  },
+  "raw": {
+    "file": "E:/wild-guardians-qa/savanna-task-stop-exact-20261126/nvidia.json",
+    "sha256": "69905c8c3afaf7dbfbbade805696eb8b99988dd3e61fef63b4b56393218832f2"
+  },
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 87.59999999403954
+    }
+  },
+  "assets": [
+    {
+      "file": "src/world/wild-engine/spatial-savanna.wasm",
+      "sha256": "a5a8e015d3418069eb398b5ad019a1b9fd8992ea308ebebd25612dc5fc227fec"
+    },
+    {
+      "file": "public/wild-engine/spatial-threaded.wasm",
+      "sha256": "9ccbcd2b5a90b1f22ac0c4e74e31e245515780fa452e05976e202a790982c55e"
+    },
+    {
+      "file": "public/wild-engine/spatial-threaded.mjs",
+      "sha256": "7ff2cb7b9b24fe3ddc31ab60e522394d385ff48efe572431dc2721df8e77480f"
+    }
+  ],
+  "negative": {
+    "tap": {
+      "file": "E:/wild-guardians-qa/savanna-task-stop-exact-20261126/before.tap",
+      "sha256": "c52be2e49e3fdd1df51320bae60971bb3529d73bd5528019e9cf71691ff2f229"
+    },
+    "operands": {
+      "file": "E:/wild-guardians-qa/savanna-idle-and-home-20261126/acquired-farm-stop-operands.log",
+      "sha256": "70c2972d385747781b3c5d8fd6b6dc2683eb426f7cafe825fe33c66452611ee5"
+    },
+    "frontier": 8.049999999999908,
+    "poseTime": 8.049999999999907
+  },
+  "focal": {
+    "file": "E:/wild-guardians-qa/savanna-task-stop-exact-20261126/focal3.tap",
+    "sha256": "3af055b47ff6352055e7fe019455af36e7ad831cb2e7b1a770cee4286cc0ee3a"
+  },
+  "farm": {
+    "acquired": {
+      "version": 1,
+      "authorityEpoch": "f4c47c36-643b-468a-b1b6-833e4b02772b/1",
+      "nativeSession": 1,
+      "ticket": 2,
+      "effectiveTime": 0
+    },
+    "body": 1,
+    "assignment": 3
+  },
+  "prepared": {
+    "boundary": {
+      "version": 1,
+      "authorityEpoch": "f4c47c36-643b-468a-b1b6-833e4b02772b/1",
+      "nativeSession": 1,
+      "ticket": 3,
+      "effectiveTime": 0.04
+    },
+    "source": {
+      "actorId": 6,
+      "assignmentSequence": 3,
+      "routeHandle": {
+        "authorityEpoch": "f4c47c36-643b-468a-b1b6-833e4b02772b/1",
+        "session": 1,
+        "slot": 0,
+        "generation": 2
+      }
+    },
+    "pose": [
+      60.0432,
+      0,
+      0.0432,
+      0.04,
+      1.5707963267948966,
+      0,
+      0,
+      0.04,
+      31.48195037135371,
+      0,
+      0.060000000000000005,
+      0,
+      0,
+      0.0432,
+      105.80409353316266,
+      0,
+      0,
+      2
+    ]
+  },
+  "whileHeld": {
+    "x": 61.3392,
+    "z": 0,
+    "walkPhase": 1.8600000000000012,
+    "mode": "native-farm-arrival"
+  },
+  "stop": {
+    "acquired": {
+      "version": 1,
+      "authorityEpoch": "f4c47c36-643b-468a-b1b6-833e4b02772b/1",
+      "nativeSession": 1,
+      "ticket": 4,
+      "effectiveTime": 1.2400000000000007
+    },
+    "pose": [
+      61.3392,
+      0,
+      1.3392000000000008,
+      1.2400000000000007,
+      1.5707963267948966,
+      1,
+      0,
+      1.2400000000000007,
+      31.48195037135371,
+      0,
+      1.8600000000000012,
+      0,
+      0,
+      1.3392000000000008,
+      105.80409353316266,
+      0,
+      0,
+      2
+    ],
+    "display": {
+      "sequence": 26,
+      "clock": 1.2400000000000007,
+      "world": {
+        "version": 1,
+        "authorityEpoch": "f4c47c36-643b-468a-b1b6-833e4b02772b/1",
+        "nativeSession": 1,
+        "ticket": 4,
+        "effectiveTime": 1.2400000000000007
+      },
+      "body": {
+        "kind": "native-suspended-body",
+        "version": 1,
+        "nativeRoute": {
+          "actorId": 6,
+          "assignmentSequence": 3,
+          "routeHandle": {
+            "authorityEpoch": "f4c47c36-643b-468a-b1b6-833e4b02772b/1",
+            "session": 1,
+            "slot": 0,
+            "generation": 2
+          }
+        },
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f4c47c36-643b-468a-b1b6-833e4b02772b/1",
+          "nativeSession": 1,
+          "ticket": 4,
+          "effectiveTime": 1.2400000000000007
+        },
+        "bodyId": 1,
+        "resumeGeneration": 3,
+        "suspendedAt": 1.2400000000000007
+      },
+      "pose": {
+        "age": 1.2399998903274536,
+        "x": 61.33919906616211,
+        "z": 0,
+        "yaw": 1.5707963705062866,
+        "phase": 1.2400000095367432,
+        "runPhase": 0,
+        "walkPhase": 1.8600000143051147,
+        "carryPhase": 0,
+        "arrived": 0
+      }
+    }
+  },
+  "task": {
+    "acquired": {
+      "version": 1,
+      "authorityEpoch": "f4c47c36-643b-468a-b1b6-833e4b02772b/1",
+      "nativeSession": 1,
+      "ticket": 6,
+      "effectiveTime": 2.3200000000000016
+    },
+    "body": 1,
+    "assignment": 6,
+    "target": 3,
+    "display": 27
+  },
+  "final": {
+    "events": [
+      {
+        "id": "event-6",
+        "type": "HiringConfirmed",
+        "count": 1,
+        "cost": 40,
+        "simulationTime": 0
+      }
+    ],
+    "drained": true,
+    "errors": []
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "scope": "Offline research; source hyena Walking from real GLB, canonical root, CPU GroundSkinSampler and Three AnimationMixer; exact matrix samples and sparse world vertex errors at interval midpoints, no GPU rendering, wraparound, morph animation, full vertex/contact coverage, time-dependent terrain, transitions, gameplay or production integration. CPU matrices share one channel across four meshes only when all names and sample values are exactly equal. Bake duration intentionally excluded as non-benchmark.",
+  "species": "hyena",
+  "clip": "Walking",
+  "sourceSha256": "022436860982f39f1bac2989423fcbc9d2be99f6433809ba1f60a664d6be307f",
+  "repeat30HashEqual": true,
+  "rates": [
+    {
+      "sampleRate": 15,
+      "frames": 16,
+      "strideFloats": 337,
+      "sharedMatrixChannels": 1,
+      "byteLength": 21568,
+      "sha256": "62c087b116c76d4f2b9512b4a4a062e1fa714219cdf0abea0a322db493390e0d",
+      "validation": {
+        "exactMismatches": 0,
+        "packedMismatches": 0,
+        "midpointPairs": 15,
+        "maxMatrixElementError": 0.06600567698478699,
+        "maxGroundHeightError": 0.006356578320264816,
+        "vertexComparisons": 6345,
+        "maxWorldVertexError": 0.024918357957699065,
+        "rmsWorldVertexError": 0.005196869605434491
+      }
+    },
+    {
+      "sampleRate": 30,
+      "frames": 32,
+      "strideFloats": 337,
+      "sharedMatrixChannels": 1,
+      "byteLength": 43136,
+      "sha256": "35b8929247d082788107427fa631c942f6350c404beca7ee9609cb1148a84c87",
+      "validation": {
+        "exactMismatches": 0,
+        "packedMismatches": 0,
+        "midpointPairs": 31,
+        "maxMatrixElementError": 0.02783796191215515,
+        "maxGroundHeightError": 0.005176470149308443,
+        "vertexComparisons": 13113,
+        "maxWorldVertexError": 0.009695259158315327,
+        "rmsWorldVertexError": 0.0019206813434930392
+      }
+    },
+    {
+      "sampleRate": 60,
+      "frames": 63,
+      "strideFloats": 337,
+      "sharedMatrixChannels": 1,
+      "byteLength": 84924,
+      "sha256": "c37fadc00832e262dcf40648c786375f54257713ea4d8104d36102af64627cb3",
+      "validation": {
+        "exactMismatches": 0,
+        "packedMismatches": 0,
+        "midpointPairs": 62,
+        "maxMatrixElementError": 0.021549202501773834,
+        "maxGroundHeightError": 0.0026646535843610764,
+        "vertexComparisons": 26226,
+        "maxWorldVertexError": 0.007396665682971143,
+        "rmsWorldVertexError": 0.0006455805422846124
+      }
+    }
+  ]
+}

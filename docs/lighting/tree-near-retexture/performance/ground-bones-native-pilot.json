@@ -1,0 +1,218 @@
+{
+  "runs": [
+    {
+      "requested": "pthreads",
+      "backend": "pthreads",
+      "isolated": true,
+      "chunks": [
+        "0,-1",
+        "0,0",
+        "0,1",
+        "0,2",
+        "1,-1",
+        "1,0",
+        "1,1",
+        "1,2",
+        "2,-1",
+        "2,0",
+        "2,1",
+        "2,2",
+        "3,-1",
+        "3,0",
+        "3,1",
+        "3,2",
+        "4,-1",
+        "4,0",
+        "4,1",
+        "4,2"
+      ],
+      "residency": {
+        "beforeIdle": {
+          "chunks": [
+            "0,-1",
+            "0,0",
+            "0,1",
+            "0,2",
+            "1,-1",
+            "1,0",
+            "1,1",
+            "1,2",
+            "2,-1",
+            "2,0",
+            "2,1",
+            "2,2",
+            "3,-1",
+            "3,0",
+            "3,1",
+            "3,2",
+            "4,-1",
+            "4,0",
+            "4,1",
+            "4,2"
+          ],
+          "desired": [
+            "0,-1",
+            "0,-2",
+            "0,0",
+            "0,1",
+            "0,2",
+            "1,-1",
+            "1,-2",
+            "1,0",
+            "1,1",
+            "1,2",
+            "2,-1",
+            "2,-2",
+            "2,0",
+            "2,1",
+            "2,2",
+            "3,-1",
+            "3,-2",
+            "3,0",
+            "3,1",
+            "3,2",
+            "4,-1",
+            "4,-2",
+            "4,0",
+            "4,1",
+            "4,2"
+          ],
+          "stream": {
+            "created": 25,
+            "discarded": 0,
+            "failed": 0,
+            "fallbacks": 0,
+            "worker": false,
+            "asyncPreparation": true,
+            "queued": 3,
+            "busy": true,
+            "preparing": 2,
+            "stale": 0,
+            "epoch": 0
+          }
+        },
+        "desired": [
+          "0,-1",
+          "0,-2",
+          "0,0",
+          "0,1",
+          "0,2",
+          "1,-1",
+          "1,-2",
+          "1,0",
+          "1,1",
+          "1,2",
+          "2,-1",
+          "2,-2",
+          "2,0",
+          "2,1",
+          "2,2",
+          "3,-1",
+          "3,-2",
+          "3,0",
+          "3,1",
+          "3,2",
+          "4,-1",
+          "4,-2",
+          "4,0",
+          "4,1",
+          "4,2"
+        ],
+        "stream": {
+          "created": 25,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 3,
+          "busy": true,
+          "preparing": 2,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "firstTick": 975.705000013113,
+      "regionCalls": 237,
+      "regionSlow": [
+        {
+          "radius": 0.9,
+          "worker": false,
+          "ms": 242.65000000596046
+        },
+        {
+          "radius": 0.85,
+          "worker": false,
+          "ms": 242.32500000298023
+        },
+        {
+          "radius": 0.97,
+          "worker": false,
+          "ms": 233.875
+        },
+        {
+          "radius": 1.55,
+          "worker": false,
+          "ms": 202.17000000178814
+        }
+      ],
+      "tick": {
+        "count": 120,
+        "p95": 11.844999998807907,
+        "p99": 13.530000001192093,
+        "max": 975.705000013113
+      },
+      "render": {
+        "count": 120,
+        "p95": 51.50500001013279,
+        "p99": 69.70999999344349,
+        "max": 222.125
+      },
+      "total": {
+        "count": 120,
+        "p95": 60.95500001311302,
+        "p99": 80.63499999046326,
+        "max": 1027.2150000035763
+      },
+      "frames": {
+        "count": 119,
+        "p95": 61.269999995827675,
+        "p99": 80.99500000476837,
+        "max": 1027.5450000017881
+      },
+      "gpu": {
+        "samples": 120,
+        "disjoint": 0,
+        "discarded": 0,
+        "elapsed": {
+          "count": 120,
+          "p95": 30.758816,
+          "p99": 48.213824,
+          "max": 192.907232
+        }
+      },
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "sceneErrors": [],
+      "boneStats": {
+        "builds": 0,
+        "binds": 2400,
+        "used": 18240,
+        "total": 123360
+      },
+      "mode": "cache",
+      "hashes": {
+        "initial": "eda7456b3f81ce73b00c474af4217973c92a958cf51b904433364c564d9a9d0e",
+        "final": "353a4b036017374caf7b393601fc5c85a26ac13db44e00b6b1cfd673a0074f9e",
+        "chunks": "850057a3db363cca18e4ce0fdac5d4c1dbbddc6c7f0289664748ce305cf0948c"
+      }
+    }
+  ],
+  "equality": {
+    "initial": true,
+    "final": true,
+    "chunks": true
+  },
+  "waitForIdle": false,
+  "idleLight": false,
+  "scope": "Independent active QA scenes, mangrove island network, 20 synthetic actors, 120 advanceReal(.05) calls in control/cache/cache/control order; active ground bones selection injected in both modes and enabled only for candidate, not production; actual WorldScene and native session per run. Optional WAIT_IDLE=1 pumps the global scheduler while waiting for chunk stream idle; IDLE_LIGHT=1 suppresses drawing only during that wait. Measurement loop is manual and does not pump the global scheduler. First-use instrumentation on regionFor and GPU timers perturb timing. Fixed logical clock and slot ID; no real input, Rapier, complete native-state equivalence, campaign, integrated GPU, or Worker-owned simulation."
+}

@@ -39,6 +39,30 @@ export function validateSpatialTerrainState(state){
   return state;
 }
 
+export function captureSpatialPolygons(wasm,id=null,{includeWorkCenter=false}={}){
+  const polygonCount=wasm.spatial_polygon_state_count();
+  const polygonPointer=wasm.spatial_polygon_state_ptr();
+  const records=new DataView(wasm.memory.buffer,polygonPointer,polygonCount*528);
+  const polygons=[];
+  for(let i=0;i<polygonCount;i++){
+    const at=i*528,polygonId=records.getInt32(at,true);
+    if(id!==null&&id!==polygonId)continue;
+    const count=records.getInt32(at+4,true),points=[];
+    for(let j=0;j<count;j++)points.push({x:records.getFloat32(at+16+j*8,true),
+      z:records.getFloat32(at+20+j*8,true)});
+    polygons.push({id:polygonId,passMask:records.getInt32(at+8,true),points,...(includeWorkCenter?{workCenter:records.getInt32(at+12,true)}:{})});
+    if(id!==null)break;
+  }
+  return polygons;
+}
+
+export function captureSpatialRemovedProps(wasm){
+  const removedProps=[],count=wasm.spatial_removed_prop_count();
+  const removed=new Int32Array(wasm.memory.buffer,wasm.spatial_removed_prop_state_ptr(),count*3);
+  for(let i=0;i<count;i++)removedProps.push({group:removed[i*3],gx:removed[i*3+1],gz:removed[i*3+2]});
+  return removedProps;
+}
+
 // Compact, versioned QA snapshot of the C++ spatial authority. Residency and
 // route trees are derived data; only the seed and authorized topology persist.
 export function captureSpatialState(wasm){
@@ -54,20 +78,8 @@ export function captureSpatialState(wasm){
       halfZ:records.getFloat32(at+16,true),yaw:records.getFloat32(at+20,true),
       passMask:records.getInt32(at+24,true)});
   }
-  const polygons=[];
-  const polygonCount=wasm.spatial_polygon_state_count();
-  const polygonPointer=wasm.spatial_polygon_state_ptr();
-  const polygonRecords=new DataView(wasm.memory.buffer,polygonPointer,polygonCount*528);
-  for(let i=0;i<polygonCount;i++){
-    const at=i*528,count=polygonRecords.getInt32(at+4,true),points=[];
-    for(let j=0;j<count;j++)points.push({x:polygonRecords.getFloat32(at+16+j*8,true),
-      z:polygonRecords.getFloat32(at+20+j*8,true)});
-    polygons.push({id:polygonRecords.getInt32(at,true),
-      passMask:polygonRecords.getInt32(at+8,true),points});
-  }
-  const removedProps=[],removedCount=wasm.spatial_removed_prop_count();
-  const removed=new Int32Array(wasm.memory.buffer,wasm.spatial_removed_prop_state_ptr(),removedCount*3);
-  for(let i=0;i<removedCount;i++)removedProps.push({group:removed[i*3],gx:removed[i*3+1],gz:removed[i*3+2]});
+  const polygons=captureSpatialPolygons(wasm);
+  const removedProps=captureSpatialRemovedProps(wasm);
   return {version:settlements.some(s=>s.waterFalloff!==undefined)?6:5,biome:spatialBiome(wasm),...spatialVariant(wasm),
     seed:wasm.spatial_world_seed()>>>0,settlements,barriers,polygons,removedProps,
     nextBarrierId:wasm.spatial_next_barrier_id(),nextPolygonId:wasm.spatial_next_polygon_id()};
@@ -133,7 +145,7 @@ export function validateSpatialState(state){
   return state;
 }
 
-export function applySpatialState(wasm,state){
+export function applySpatialState(wasm,state,workCenterOwners=null){
   validateSpatialState(state);
   const removed=state.removedProps??[];
   if(removed.length){
@@ -174,7 +186,9 @@ export function applySpatialState(wasm,state){
       records.setInt32(at,polygon.id,true);
       records.setInt32(at+4,polygon.points.length,true);
       records.setInt32(at+8,polygon.passMask,true);
-      records.setInt32(at+12,0,true);
+      // Only the cold Game mirror supplies this owner after matching the whole
+      // reconstructed topology. Public spatial saves still contain no owner tag.
+      records.setInt32(at+12,workCenterOwners?.get(polygon.id)??0,true);
       polygon.points.forEach((point,j)=>{
         records.setFloat32(at+16+j*8,point.x,true);
         records.setFloat32(at+20+j*8,point.z,true);

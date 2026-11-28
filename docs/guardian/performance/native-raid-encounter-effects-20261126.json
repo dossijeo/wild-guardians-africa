@@ -1,0 +1,193 @@
+{
+  "scope": "Product encounter calculation and application, with a separate CPU experiment for route retirement",
+  "comparison": {
+    "baseline": "3d9b459ea011057e933f1b6a5098bb6df0910a9e",
+    "sourceSha256": "a0e03997c5260d7e7d3cc857447ccfb9527a2066edf206725fe89a07952646c8",
+    "matched": 2048,
+    "outcomes": {
+      "WorkerHit": 299,
+      "WorkerIncapacitated": 325,
+      "collision": 570,
+      "withoutPush": 333,
+      "withPush": 291,
+      "rollOnly": 43
+    },
+    "terrainFailure": {
+      "before": {
+        "rng": 19,
+        "hits": 0,
+        "budget": 4
+      },
+      "baseline": {
+        "rng": 5136978,
+        "hits": 1,
+        "budget": 3
+      },
+      "candidate": {
+        "rng": 19,
+        "hits": 0,
+        "budget": 4
+      }
+    },
+    "logSha256": "1960c5443c0bf42da6c1ac6b9b6c3ae89ff837f9c5f106e5703688d1c435743c"
+  },
+  "privateFirstFrontalImpact": {
+    "productEnabled": false,
+    "hardwareValidation": false,
+    "standaloneSha256": "14e035f361654871c4c576a2eaf215b3b152bffc32a7b4cc2dd59814025b3f96",
+    "event": {
+      "id": "event-29209",
+      "type": "WorkerHit",
+      "at": 11.819999999999961,
+      "collision": false,
+      "pushed": 0
+    },
+    "prepared": {
+      "from": 11.799999999999962,
+      "at": 11.819999999999961,
+      "pose": [
+        -16,
+        0.8059572875253171
+      ],
+      "foreign": {
+        "assignment": -2,
+        "origin": -2,
+        "event": -2
+      },
+      "worker": 900011,
+      "animal": 1000000,
+      "workerAssignment": 7,
+      "animalAssignment": 8,
+      "bodies": [
+        1,
+        2
+      ]
+    },
+    "consumed": {
+      "at": 11.819999999999961,
+      "previousClock": 11.799999999999962,
+      "held": [
+        -16,
+        0.8059572875253171
+      ],
+      "body": 1,
+      "actor": 900011,
+      "budget": 3,
+      "rng": 149829618
+    },
+    "routeRetirement": {
+      "actor": 900011,
+      "sequence": 9,
+      "slot": 2,
+      "generation": 2,
+      "clockSequence": 97
+    },
+    "firstFallStep": {
+      "elapsed": 11.83999999999996,
+      "x": -16,
+      "z": 0.8059572875253171,
+      "fall": 3.5016665077209472,
+      "rng": 149829618,
+      "hits": 1,
+      "budget": 3
+    },
+    "lastFallStep": {
+      "elapsed": 12.059999999999956,
+      "x": -16,
+      "z": 0.8059572875253171,
+      "fall": 3.281666507720947,
+      "rng": 149829618,
+      "hits": 1,
+      "budget": 3
+    },
+    "continuedSteps": 12,
+    "withoutPairedRetirement": {
+      "retiredActors": [
+        900011,
+        1000000
+      ],
+      "nextStepError": "Error: Native task game cohort contains an unsupported mover",
+      "logSha256": "7c29e59c0a3af766ac27029845de8e5db1b3b9c204f267c0c2c0e6e7eeff027c"
+    },
+    "logSha256": "a71368da55356c480822a279fda76b7e4bf24caf521672f0cbecb886f6ebef96"
+  },
+  "privatePhysicalCollision": {
+    "inputRng": 3,
+    "frontal": {
+      "at": 11.819999999999961,
+      "collision": false,
+      "beforeRng": 201886211,
+      "afterRng": 3025432647,
+      "hit": null
+    },
+    "physical": {
+      "at": 12.179999999999954,
+      "collision": true,
+      "beforeRng": 3025432647,
+      "afterRng": 1909268553,
+      "hit": {
+        "hits": 1,
+        "incapacitated": false,
+        "fall": 3.5416665077209473,
+        "push": {
+          "x": -14.520928903743672,
+          "z": 2.5523155738541687,
+          "distance": 1.7222681130515411
+        },
+        "presentation": {
+          "elapsed": 12.179999999999954,
+          "x": -16,
+          "z": 1.6699572875252988
+        }
+      }
+    },
+    "event": {
+      "id": "event-29209",
+      "type": "WorkerHit",
+      "at": 12.179999999999954,
+      "collision": true,
+      "pushed": 1.7222681130515411
+    },
+    "consumed": {
+      "at": 12.179999999999954,
+      "previousClock": 12.159999999999954,
+      "held": [
+        -16,
+        1.6699572875252988
+      ],
+      "result": [
+        -14.520928903743672,
+        2.5523155738541687
+      ],
+      "body": 1,
+      "actor": 900011,
+      "budget": 1,
+      "rng": 1909268553
+    },
+    "continuedSteps": 12,
+    "logSha256": "a985b6fe8a29d349869187c7043bbd213f44d0ecec245f4a27fb89cb028d5d8a",
+    "standaloneSha256": "da2eb2e67d8150a6b32cc784d8e5cba9057ba70430d5ab660dcdc1a293cb9840"
+  },
+  "privateGetUpBoundary": {
+    "endFall": {
+      "elapsed": 15.359999999999886,
+      "x": -16,
+      "z": 0.8059572875253171,
+      "fall": 0,
+      "recovery": {
+        "elapsed": 0.01833349227905561,
+        "duration": 3.1999999999999997,
+        "heading": 0,
+        "dx": -0.2701404389954405,
+        "dz": -0.3370517399162054,
+        "fraction": 1
+      },
+      "rng": 149829618,
+      "hits": 1,
+      "budget": 3
+    },
+    "afterHitSteps": 177,
+    "nextStepError": "Error: Native task game cohort contains an unsupported mover",
+    "logSha256": "c76d7d83ab4a55d365bdb32ba00de37543dccdfd1dc5bae5a3de936d78a8f316"
+  }
+}

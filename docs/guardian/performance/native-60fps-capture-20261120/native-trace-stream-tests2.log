@@ -1,0 +1,75 @@
+TAP version 13
+# Subtest: an interval below 50ms is still reported against the caller target, independently of a short draw
+ok 1 - an interval below 50ms is still reported against the caller target, independently of a short draw
+  ---
+  duration_ms: 3.5356
+  ...
+# Subtest: no supplied target means no invented acceptance threshold
+ok 2 - no supplied target means no invented acceptance threshold
+  ---
+  duration_ms: 0.4425
+  ...
+# Subtest: duplicate snapshots are not extra evidence and incomplete or misordered holds are not completed
+ok 3 - duplicate snapshots are not extra evidence and incomplete or misordered holds are not completed
+  ---
+  duration_ms: 1.7974
+  ...
+# Subtest: a truncated ring without whole-history instrumentation cannot substitute for the complete record
+ok 4 - a truncated ring without whole-history instrumentation cannot substitute for the complete record
+  ---
+  duration_ms: 0.8106
+  ...
+# Subtest: trace reconciles a post-inspect tail and only terminal observation can certify its recorded lifetime
+ok 5 - trace reconciles a post-inspect tail and only terminal observation can certify its recorded lifetime
+  ---
+  duration_ms: 1.944
+  ...
+# Subtest: all ordered admission stages are required, including internal work between start and admitted
+ok 6 - all ordered admission stages are required, including internal work between start and admitted
+  ---
+  duration_ms: 2.6361
+  ...
+# Subtest: duplicated or reordered stages cannot masquerade as a complete admission
+ok 7 - duplicated or reordered stages cannot masquerade as a complete admission
+  ---
+  duration_ms: 0.2507
+  ...
+# Subtest: unknown stages and invalid or reversed timestamps are incomplete evidence
+ok 8 - unknown stages and invalid or reversed timestamps are incomplete evidence
+  ---
+  duration_ms: 0.3544
+  ...
+# Subtest: trace capacity is explicit and bounded without dropping categories or switching to a rolling recording
+ok 9 - trace capacity is explicit and bounded without dropping categories or switching to a rolling recording
+  ---
+  duration_ms: 4.3151
+  ...
+# Subtest: compressed binary chunks preserve the original trace with one export and a closed stream
+ok 10 - compressed binary chunks preserve the original trace with one export and a closed stream
+  ---
+  duration_ms: 25.3797
+  ...
+# Subtest: a lossy recording remains a failure while preserving its complete export and loss metadata
+ok 11 - a lossy recording remains a failure while preserving its complete export and loss metadata
+  ---
+  duration_ms: 14.0489
+  ...
+# Subtest: an interrupted export closes its stream and cannot look like complete evidence even with dataLossOccurred false
+ok 12 - an interrupted export closes its stream and cannot look like complete evidence even with dataLossOccurred false
+  ---
+  duration_ms: 14.3236
+  ...
+# Subtest: missing streams and existing evidence are rejected rather than replaced
+ok 13 - missing streams and existing evidence are rejected rather than replaced
+  ---
+  duration_ms: 11.519
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 216.4378

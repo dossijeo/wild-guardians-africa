@@ -1,0 +1,255 @@
+{
+  "base": "531f07919c8ed26df3b95427305bc793667d9d9c",
+  "input": {
+    "path": ".cache/flee-return/mixed-two-center-ruin-physical-input.json",
+    "sha256": "1535334f30bd270563c2647aaf91a6eaa15aa634b4e837fbf7cadbe82d8418aa",
+    "snapshotSHA256": "31a7a7b31f0258bff1be7e5cb88311a522ab6099685a0c98fc1266ba845447ca"
+  },
+  "validation": {
+    "baseline": {
+      "path": ".cache/multicenter-ruin-base.tap",
+      "sha256": "5839df5137cacbfc212ea86ed8f70f189c588c23589d2de3b0b5e1c42a907331"
+    },
+    "held": {
+      "path": ".cache/multicenter-ruin-ready.tap",
+      "sha256": "5aafb8ae2d4d164d777d3621f27b49db781253ac5ea2a16b29dbb3873585acc8"
+    },
+    "final": {
+      "path": ".cache/multicenter-ruin-final.tap",
+      "sha256": "4fda5410094ded4c24ca5184b4e3c398ec9d641a6faac52064753f6c639be5ac"
+    },
+    "passed": 26,
+    "failed": 0
+  },
+  "hardware": {
+    "raw": {
+      "path": "D:/wild-guardians-qa/multicenter-ruin-nvidia-20261127.json",
+      "sha256": "3bf269a0c41c6ac1a2e11ac8f8a91232c0ecab79ab605bea05aa46296805c566"
+    },
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 109.59999999403954
+      }
+    },
+    "center": "structure-1000000",
+    "polygon": 10,
+    "hits": [
+      {
+        "attackId": "attack-29209",
+        "targetId": "structure-1000000",
+        "simulationTime": 37.60000000000058
+      },
+      {
+        "attackId": "attack-29212",
+        "targetId": "structure-1000000",
+        "simulationTime": 40.35000000000081
+      },
+      {
+        "attackId": "attack-29215",
+        "targetId": "structure-1000000",
+        "simulationTime": 46.35000000000132
+      },
+      {
+        "attackId": "attack-29218",
+        "targetId": "structure-1000000",
+        "simulationTime": 51.82000000000179
+      }
+    ],
+    "ruin": {
+      "prepared": {
+        "version": 1,
+        "authorityEpoch": "fb76ed2f-7a42-4979-bacf-976a67c6137e/1",
+        "nativeSession": 1,
+        "ticket": 28,
+        "effectiveTime": 55.00000000000206
+      },
+      "acquired": {
+        "version": 1,
+        "authorityEpoch": "fb76ed2f-7a42-4979-bacf-976a67c6137e/1",
+        "nativeSession": 1,
+        "ticket": 28,
+        "effectiveTime": 55.020000000002064
+      },
+      "sequence": 356,
+      "capture": {
+        "id": "structure-1000000",
+        "p": 55.00000000000206,
+        "end": 55.020000000002064,
+        "meshes": [
+          {
+            "mesh": 58,
+            "geometry": 44,
+            "material": 42,
+            "visible": false,
+            "instances": null
+          },
+          {
+            "mesh": 59,
+            "geometry": 45,
+            "material": 41,
+            "visible": true,
+            "instances": null
+          },
+          {
+            "mesh": 61,
+            "geometry": 46,
+            "material": 43,
+            "visible": true,
+            "instances": 270
+          },
+          {
+            "mesh": 62,
+            "geometry": 47,
+            "material": 44,
+            "visible": true,
+            "instances": 80
+          }
+        ],
+        "effects": {
+          "smoke": 80,
+          "debris": 270,
+          "emitted": 105
+        }
+      },
+      "retreat": {
+        "nativeAnimalCrop": {
+          "version": 1,
+          "kind": 26,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "fb76ed2f-7a42-4979-bacf-976a67c6137e/1",
+            "nativeSession": 1,
+            "ticket": 26,
+            "effectiveTime": 51.85000000000179
+          },
+          "sourceControlSequence": 24,
+          "endTime": 55.66759675661204,
+          "purpose": "retreat",
+          "actorId": 1000001,
+          "bodyId": 2,
+          "targetId": null,
+          "centerId": null,
+          "requestSequence": 24,
+          "slot": 0,
+          "generation": 19,
+          "radius": 1.1,
+          "x": -17.663236618041992,
+          "z": -15.632244110107422,
+          "phase": 16.607308477232987,
+          "yaw": -0.09245066456966995,
+          "targetX": -16.6,
+          "targetZ": -30.1,
+          "centerX": null,
+          "centerZ": null
+        },
+        "relativeTime": 2.5199999809265137,
+        "semantic": "relative",
+        "epoch": 51.85000000000179,
+        "executionEpoch": 52.50000000000185,
+        "elapsed": 54.369999980928306
+      }
+    },
+    "centers": [
+      {
+        "id": "structure-2",
+        "hp": 600
+      },
+      {
+        "id": "structure-1000000",
+        "hp": 0
+      }
+    ],
+    "retreatAbsence": {
+      "sequence": 369,
+      "at": 1795778770812.5,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "fb76ed2f-7a42-4979-bacf-976a67c6137e/1",
+        "nativeSession": 1,
+        "ticket": 28,
+        "effectiveTime": 55.020000000002064
+      },
+      "clockElapsed": 56.40000000000218,
+      "previous": {
+        "actorId": 1000001,
+        "bodyId": 2,
+        "executionEpoch": 52.50000000000185,
+        "sequence": 367,
+        "at": 1795778770645.9001
+      }
+    },
+    "raidEndedAt": 56.320000000002175,
+    "civilReturn": {
+      "worker": "worker-900011",
+      "contract": 15,
+      "center": "structure-2",
+      "atIdle": 61.20000000000259,
+      "balance": {
+        "n": "100000",
+        "d": "1"
+      }
+    },
+    "drain": {
+      "disposed": true
+    }
+  },
+  "cadence": {
+    "accepted": false,
+    "targetFrameMs": 16.666666666666668,
+    "declaredSamples": null,
+    "recordedSamples": 1759,
+    "recordedIntervals": 1758,
+    "completeHistory": true,
+    "missingPredecessors": 0,
+    "recordedOpportunities": 1222,
+    "intervalsAboveTarget": 1758,
+    "maxRecordedIntervalMs": 199.89990234375,
+    "topIntervals": [
+      {
+        "at": 1795778752145.8,
+        "intervalMs": 199.89990234375,
+        "drawMs": 3,
+        "sequence": 220,
+        "trigger": "raf",
+        "from": 1795778751945.9001,
+        "excessOverTargetMs": 183.23323567708334,
+        "previousDrawMs": 2.599853515625,
+        "afterPreviousDrawUntilCurrentStartMs": 197.300048828125
+      },
+      {
+        "at": 1795778770812.5,
+        "intervalMs": 166.599853515625,
+        "drawMs": 6.300048828125,
+        "sequence": 369,
+        "trigger": "raf",
+        "from": 1795778770645.9001,
+        "excessOverTargetMs": 149.93318684895834,
+        "previousDrawMs": 4,
+        "afterPreviousDrawUntilCurrentStartMs": 162.599853515625
+      },
+      {
+        "at": 1795778760812.5,
+        "intervalMs": 133.39990234375,
+        "drawMs": 2.800048828125,
+        "sequence": 289,
+        "trigger": "raf",
+        "from": 1795778760679.1,
+        "excessOverTargetMs": 116.73323567708333,
+        "previousDrawMs": 2.60009765625,
+        "afterPreviousDrawUntilCurrentStartMs": 130.7998046875
+      }
+    ],
+    "attribution": "Unattributed: intervals are Host draw-start spacing, drawMs is instrumented host wall time; neither is GPU execution or scanout.",
+    "coverage": "Contiguous recorded history only; this does not establish full-session or physical-presentation coverage."
+  }
+}

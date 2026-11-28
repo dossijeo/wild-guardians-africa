@@ -1,11 +1,20 @@
 const agricultural=kind=>kind==='growth'||kind==='multiply';
 const measured=value=>Number.isFinite(value)&&value>=0?value:null;
 
+// Command results contain confirmed events even when the effect has already
+// ended and no spell remains in the newest projected state.
+export function confirmedManualMagicApplication(events,commandId){
+ if(!Array.isArray(events)||typeof commandId!=='string'||!commandId)throw TypeError('Invalid confirmed magic application');
+ const event=events.find(item=>item?.type==='SpellActivated'&&item.commandId===commandId&&agricultural(item.kind));if(!event)return null;
+ if(typeof event.spellId!=='string'||!event.spellId||!Number.isSafeInteger(event.simulationDay)||event.simulationDay<1||typeof event.targetPlantId!=='string'||!event.targetPlantId||measured(event.duration)===null||typeof event.benefited!=='boolean')throw TypeError('Invalid confirmed magic activation');
+ return {day:event.simulationDay,spell:{id:event.spellId,kind:event.kind,targetPlantId:event.targetPlantId,remaining:event.duration},benefited:event.benefited};
+}
+
 // Read-only UI telemetry. Contact duration is measured input, not thinking time
 // or a claim of total human engagement. Selection timeout never earns credit.
 export class ManualMagicActivity {
  constructor(){this.reset();}
- reset(){this.days=new Map();this.active=new Map();this.day=null;}
+ reset(){this.days=new Map();this.active=new Map();this.ended=new Map();this.completed=new Set();this.day=null;}
  row(day){
   if(!this.days.has(day))this.days.set(day,{day,selections:0,selectionContactSeconds:0,unknownSelectionContacts:0,
    applications:0,applicationContactSeconds:0,unknownApplicationContacts:0,applicationCpuSeconds:0,
@@ -19,7 +28,7 @@ export class ManualMagicActivity {
   if(contact===null)row.unknownSelectionContacts++;else row.selectionContactSeconds+=contact;
  }
  applied(state,spell,{gestureSeconds=null,applicationCpuSeconds=0,benefited=false}={}){
-  if(!agricultural(spell?.kind)||this.active.has(spell.id))return false;
+  if(!agricultural(spell?.kind)||this.active.has(spell.id)||this.completed.has(spell.id))return false;
   this.update(state);
   const row=this.row(state.day),contact=measured(gestureSeconds);row.applications++;
   if(contact===null)row.unknownApplicationContacts++;else row.applicationContactSeconds+=contact;
@@ -28,20 +37,37 @@ export class ManualMagicActivity {
   if(spell.kind==='multiply'){
    if(benefited)this.credit(row,entry);else row.redundantMultiplyApplications++;
   }
-  this.active.set(spell.id,entry);return true;
+  this.active.set(spell.id,entry);const ended=this.ended.get(spell.id);if(ended){this.ended.delete(spell.id);this.finishConfirmed(entry,ended);}return true;
  }
  credit(row,entry){
   if(entry.credited)return;entry.credited=true;
   row.meaningfulApplicationContactSeconds+=entry.contact;
   row.ids?.add(entry.spell.targetPlantId);row.benefitedPlantCount=row.ids?.size??row.benefitedPlantCount;
  }
+ // Confirmed terminal facts survive coalesced publications and spell removal.
+ // A fact may arrive before the command's application callback; retain it by
+ // spell identity until that callback registers the manual application.
+ consumeConfirmedEvents(events){
+  if(!Array.isArray(events))throw TypeError('Invalid confirmed magic events');
+  for(const event of events){if(event?.type!=='AgriculturalSpellEnded'||typeof event.spellId!=='string'||!agricultural(event.kind)||this.completed.has(event.spellId))continue;
+   const entry=this.active.get(event.spellId);if(entry)this.finishConfirmed(entry,event);else if(!this.ended.has(event.spellId))this.ended.set(event.spellId,{...event});
+  }
+ }
+ finishConfirmed(entry,event){
+  if(entry.spell.kind!==event.kind||entry.spell.targetPlantId!==event.targetPlantId)return;
+  const row=this.row(entry.day),remaining=measured(event.remainingSeconds)??entry.remaining,extra=measured(event.growthSecondsAdded)??entry.extra;
+  row.simulatedEffectSeconds+=Math.max(0,entry.remaining-remaining);entry.remaining=remaining;
+  row.extraGrowthSeconds+=Math.max(0,extra-entry.extra);entry.extra=extra;if(extra>0)this.credit(row,entry);
+  if(entry.spell.kind==='growth'&&!entry.credited)row.nonproductiveGrowthApplications++;this.active.delete(entry.spell.id);this.completed.add(entry.spell.id);
+ }
  update(state){
   for(const [id,entry] of this.active){
+   const current=state.spells?.find(spell=>spell.id===id);if(current)entry.spell=current;
    const row=this.row(entry.day),remaining=entry.spell.remaining>1e-9?entry.spell.remaining:0,extra=entry.spell.growthSecondsAdded??0;
    row.simulatedEffectSeconds+=Math.max(0,entry.remaining-remaining);entry.remaining=remaining;
    row.extraGrowthSeconds+=Math.max(0,extra-entry.extra);entry.extra=extra;
    if(extra>0)this.credit(row,entry);
-   if(remaining===0){if(entry.spell.kind==='growth'&&!entry.credited)row.nonproductiveGrowthApplications++;this.active.delete(id);}
+   if(remaining===0){if(entry.spell.kind==='growth'&&!entry.credited)row.nonproductiveGrowthApplications++;this.active.delete(id);this.completed.add(id);}
   }
   // Finished days retain aggregates, not every benefited plant identity.
   if(this.day!==null&&this.day!==state.day){

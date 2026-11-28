@@ -1,0 +1,280 @@
+{
+  "scenario": "Sabana 714, recuperación con dos ciclos Idle21 adquiridos en el mismo corte",
+  "baseRevision": "86da4906b1fbd0affd4947b3d33caf8aa26c1cff",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 83.93999999761581
+    }
+  },
+  "artifacts": {
+    "native-savanna-two-workers-before-home-20261127.json": "dd6006d1012e91791bec19ecfd7c386d0aa384d84e24c05d57969bef7352f757",
+    "two-acquired-idle21-terminal-recovery-before-20261127.log": "fb1264d7280f2018db0b793c638370edd7dd829c7dc3b12a2de0cf1dadd1195d",
+    "native-savanna-two-idle21-recovery-20261127-extended.json": "f985d88ee44948024cc5430449dd1ac782b419c28893b9fa36abae3ae07540e6",
+    "native-savanna-two-idle21-recovery-final-20261127-extended.json": "854c2614131c2d70cbd6da443dfbedc9ae49e3c6599651847e6fa8db6fdb7610",
+    "native-savanna-two-idle21-recovery-verified-20261127-extended.json": "ad6d5130d98233971a7500ee2c1018ec6390d79f4486a36aba9d103842fc7217"
+  },
+  "original": {
+    "frame": 89,
+    "ticket": 8,
+    "elapsed": 248.2500000000264,
+    "clocks": [
+      {
+        "semantic": "relative",
+        "relativeTime": 0,
+        "executionEpoch": 248.2500000000264,
+        "actorId": 6,
+        "bodyId": 1,
+        "sourceCycleSequence": 0,
+        "referenceTicket": 5,
+        "acquisition": 6
+      },
+      {
+        "semantic": "idle-offset",
+        "relativeTime": 0,
+        "executionEpoch": 248.2500000000264,
+        "actorId": 6,
+        "bodyId": 1,
+        "sourceCycleSequence": 0,
+        "referenceTicket": 5,
+        "acquisition": 6,
+        "phaseDelay": 0,
+        "phaseTime": 248.2500000000264,
+        "phaseOffset": 0,
+        "period": 3.799999952316284
+      },
+      {
+        "semantic": "idle-offset",
+        "relativeTime": 0,
+        "executionEpoch": 248.2500000000264,
+        "actorId": 6,
+        "bodyId": 1,
+        "sourceCycleSequence": 0,
+        "referenceTicket": 5,
+        "acquisition": 6,
+        "phaseDelay": 0,
+        "phaseTime": 248.2500000000264,
+        "phaseOffset": 0,
+        "period": 4.0416669845581055
+      },
+      {
+        "semantic": "relative",
+        "relativeTime": 0,
+        "executionEpoch": 248.2500000000264,
+        "actorId": 8,
+        "bodyId": 2,
+        "sourceCycleSequence": 0,
+        "referenceTicket": 7,
+        "acquisition": 8
+      },
+      {
+        "semantic": "idle-offset",
+        "relativeTime": 0,
+        "executionEpoch": 248.2500000000264,
+        "actorId": 8,
+        "bodyId": 2,
+        "sourceCycleSequence": 0,
+        "referenceTicket": 7,
+        "acquisition": 8,
+        "phaseDelay": 0,
+        "phaseTime": 248.2500000000264,
+        "phaseOffset": 0,
+        "period": 3.799999952316284
+      },
+      {
+        "semantic": "idle-offset",
+        "relativeTime": 0,
+        "executionEpoch": 248.2500000000264,
+        "actorId": 8,
+        "bodyId": 2,
+        "sourceCycleSequence": 0,
+        "referenceTicket": 7,
+        "acquisition": 8,
+        "phaseDelay": 0,
+        "phaseTime": 248.2500000000264,
+        "phaseOffset": 0,
+        "period": 4.0416669845581055
+      }
+    ]
+  },
+  "retirement": {
+    "holdId": 21,
+    "publicationFloor": 145,
+    "heldPublication": 145,
+    "closedDrawLastClock": 249.5000000000267,
+    "heldClock": 249.5000000000267,
+    "callbacksSettled": true,
+    "drawClosed": true,
+    "drawDrained": true
+  },
+  "replacement": {
+    "frame": 1,
+    "ticket": 8,
+    "elapsed": 249.5000000000267,
+    "clocks": [
+      {
+        "semantic": "relative",
+        "relativeTime": 1.25,
+        "executionEpoch": 248.2500000000264,
+        "actorId": 6,
+        "bodyId": 1,
+        "sourceCycleSequence": 0,
+        "referenceTicket": 6,
+        "acquisition": 6
+      },
+      {
+        "semantic": "idle-offset",
+        "relativeTime": 1.25,
+        "executionEpoch": 248.2500000000264,
+        "actorId": 6,
+        "bodyId": 1,
+        "sourceCycleSequence": 0,
+        "referenceTicket": 6,
+        "acquisition": 6,
+        "phaseDelay": 0,
+        "phaseTime": 249.5000000000267,
+        "phaseOffset": 0,
+        "period": 3.799999952316284
+      },
+      {
+        "semantic": "idle-offset",
+        "relativeTime": 1.25,
+        "executionEpoch": 248.2500000000264,
+        "actorId": 6,
+        "bodyId": 1,
+        "sourceCycleSequence": 0,
+        "referenceTicket": 6,
+        "acquisition": 6,
+        "phaseDelay": 0,
+        "phaseTime": 249.5000000000267,
+        "phaseOffset": 0,
+        "period": 4.0416669845581055
+      },
+      {
+        "semantic": "relative",
+        "relativeTime": 1.25,
+        "executionEpoch": 248.2500000000264,
+        "actorId": 8,
+        "bodyId": 2,
+        "sourceCycleSequence": 0,
+        "referenceTicket": 8,
+        "acquisition": 8
+      },
+      {
+        "semantic": "idle-offset",
+        "relativeTime": 1.25,
+        "executionEpoch": 248.2500000000264,
+        "actorId": 8,
+        "bodyId": 2,
+        "sourceCycleSequence": 0,
+        "referenceTicket": 8,
+        "acquisition": 8,
+        "phaseDelay": 0,
+        "phaseTime": 249.5000000000267,
+        "phaseOffset": 0,
+        "period": 3.799999952316284
+      },
+      {
+        "semantic": "idle-offset",
+        "relativeTime": 1.25,
+        "executionEpoch": 248.2500000000264,
+        "actorId": 8,
+        "bodyId": 2,
+        "sourceCycleSequence": 0,
+        "referenceTicket": 8,
+        "acquisition": 8,
+        "phaseDelay": 0,
+        "phaseTime": 249.5000000000267,
+        "phaseOffset": 0,
+        "period": 4.0416669845581055
+      }
+    ]
+  },
+  "picking": [
+    {
+      "actor": "worker-6",
+      "pose": {
+        "x": 86.2247543334961,
+        "z": -4.770469665527344
+      },
+      "trials": [
+        {
+          "height": 0.7,
+          "result": "worker-6"
+        }
+      ],
+      "frameBefore": 2,
+      "frameAfter": 2,
+      "elapsed": 249.5000000000267
+    },
+    {
+      "actor": "worker-8",
+      "pose": {
+        "x": 87.99832916259766,
+        "z": -7.253439426422119
+      },
+      "trials": [
+        {
+          "height": 0.7,
+          "result": "worker-8"
+        }
+      ],
+      "frameBefore": 2,
+      "frameAfter": 3,
+      "elapsed": 249.5000000000267
+    }
+  ],
+  "resumed": {
+    "elapsed": 249.70000000002673,
+    "workers": [
+      {
+        "id": "worker-6",
+        "status": "idle",
+        "nativeRouteAdmission": "native-idle",
+        "x": 86.2247543334961,
+        "z": -4.770469665527344,
+        "idleState": {
+          "anchorId": "farm-plant-3",
+          "mode": "watch",
+          "elapsed": 2.250000190738831,
+          "remaining": 1.7916667938192745,
+          "rng": 505232464,
+          "approachRetry": 0
+        }
+      },
+      {
+        "id": "worker-8",
+        "status": "idle",
+        "nativeRouteAdmission": "native-idle",
+        "x": 87.99832916259766,
+        "z": -7.253439426422119,
+        "idleState": {
+          "anchorId": "farm-plant-3",
+          "mode": "rest",
+          "elapsed": 7.450000000001694,
+          "remaining": 0.14999990463087443,
+          "rng": 687307170,
+          "approachRetry": 0
+        }
+      }
+    ],
+    "balance": "480",
+    "drained": true,
+    "pageErrors": 0
+  },
+  "scope": {
+    "raid": false,
+    "gates": 0,
+    "deviceLoss": "explicit",
+    "inheritedPhases": 0
+  }
+}

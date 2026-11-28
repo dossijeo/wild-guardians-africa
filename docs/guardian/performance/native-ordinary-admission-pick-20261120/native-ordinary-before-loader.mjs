@@ -1,0 +1,1 @@
+import fs from 'node:fs';const host=new URL('../src/rendering/remote-webgpu-host.js',import.meta.url).href;export async function load(url,context,next){if(url===host)return{format:'module',source:fs.readFileSync(new URL('./native-ordinary-before-host.mjs',import.meta.url),'utf8'),shortCircuit:true};return next(url,context);}

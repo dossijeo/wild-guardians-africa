@@ -1,0 +1,287 @@
+{
+  "base": "90b4af729e8ecf6e9bf73700f12f52f47dacb77c",
+  "contracts": {
+    "source": "Actual arrived Walk22 whose crop is no longer a live target",
+    "restart": "Original Game Idle birth with the new selected anchor, same native body/pose and finite approach retry when outside"
+  },
+  "inputs": {
+    "src/world/wild-engine/spatial-savanna.wasm": "334df6100d956723954e1462083a395069f50c5408ea3623d01b0ed21fc12efb",
+    "public/wild-engine/spatial-threaded.wasm": "f536ef0f8593e2f73215d9f16d4394a67068a44032cedba7da7724ca7b1289bb",
+    "public/wild-engine/spatial-threaded.mjs": "ebf4ef4c65ca947a5db322863d0151961b48064a4d8e5e4d935396cec380c655",
+    ".cache/idle-stroll-reanchor/combined-build/standalone/spatial-savanna.wasm": "40d830a50a7d6cdd119f8fb4430b924ccb2284854647fe5d8933cda23656d433"
+  },
+  "validation": {
+    "targeted": 6,
+    "selected": 247,
+    "failures": 0,
+    "skipped": 0,
+    "viteBuildSeconds": 58.5,
+    "baselineFailures": {
+      "count": 2,
+      "observable": "unsupported after the acquired Walk22 finishes with a retired crop",
+      "description": "Prior JS producers and consumers with inert candidate extension in WASM"
+    },
+    "logs": {
+      "focal.tap": "09415196b3cabbc7ba0553c36db4a9ee30882df24222b2df26adfd49e702b829",
+      "impact.tap": "46cddc18b980f86c95aeb8940ccb65bbb11b59888463a54850557603d0beac62",
+      "vite.log": "3fb52debcf6bf519f92d552f1868a46d064729f276a6aa73450168e964e99307",
+      "baseline.tap": "172818d3bbeba998b0679c220ee738b76f5bfde598439a8f54313e31d78a6074"
+    }
+  },
+  "sameShiftPrototype": {
+    "fixedDetour": {
+      "x": -13.509800910949707,
+      "z": 5.987866401672363
+    },
+    "scope": "Actual Game, WASM and Host with deterministic GPU queue, private binary with fixed lateral endpoint",
+    "samples": 570,
+    "reanchor": {
+      "elapsed": 26.700000000000024,
+      "opening": 1,
+      "workers": [
+        {
+          "id": "worker-900011",
+          "status": "carrying",
+          "admission": "native-delivery",
+          "x": -11.339218977035982,
+          "z": 5.141596062098425,
+          "idle": null,
+          "task": null,
+          "contractDay": 15
+        },
+        {
+          "id": "worker-900012",
+          "status": "idle",
+          "admission": "native-idle",
+          "x": -13.509800910949707,
+          "z": 5.987866401672363,
+          "idle": {
+            "anchorId": "farm-structure-2",
+            "mode": "rest",
+            "elapsed": 0,
+            "remaining": 7.599999904632568,
+            "rng": 1495946835,
+            "approachRetry": 0
+          },
+          "task": null,
+          "contractDay": 15
+        }
+      ]
+    },
+    "end": {
+      "elapsed": 67.00000000000266,
+      "opening": 1,
+      "workers": [
+        {
+          "id": "worker-900011",
+          "status": "idle",
+          "admission": "native-idle",
+          "x": -14.23367977142334,
+          "z": 4.891669750213623,
+          "idle": {
+            "anchorId": "farm-structure-2",
+            "mode": "rest",
+            "elapsed": 1.899999999999892,
+            "remaining": 13.299999809265245,
+            "rng": 3100410858,
+            "approachRetry": 0
+          },
+          "task": null,
+          "contractDay": 15
+        },
+        {
+          "id": "worker-900012",
+          "status": "idle",
+          "admission": "native-idle",
+          "x": -12.28612995147705,
+          "z": 4.23084831237793,
+          "idle": {
+            "anchorId": "farm-structure-2",
+            "mode": "watch",
+            "elapsed": 3.5000001907360314,
+            "remaining": 0.541666793822074,
+            "rng": 1627281348,
+            "approachRetry": 0
+          },
+          "task": null,
+          "contractDay": 15
+        }
+      ]
+    },
+    "events": [
+      {
+        "id": "event-29208",
+        "type": "HarvestRequested",
+        "targetId": "plant-1000001",
+        "count": 1,
+        "automatic": true,
+        "simulationTime": 18.999999999999915
+      },
+      {
+        "id": "event-29210",
+        "type": "CropPicked",
+        "workerId": "worker-900011",
+        "targetId": "plant-1000001",
+        "crateId": "crate-1000003",
+        "simulationTime": 26.000000000000014,
+        "presentation": {
+          "x": -10.6,
+          "z": 5.3
+        }
+      },
+      {
+        "id": "event-29211",
+        "type": "CrateDelivered",
+        "workerId": "worker-900011",
+        "targetId": "crate-1000003",
+        "species": "mijo",
+        "multiplyIncome": {
+          "n": "0",
+          "d": "1"
+        },
+        "simulationTime": 29.500000000000064
+      }
+    ],
+    "committed": [
+      {
+        "kind": "farm-arrival",
+        "committed": true,
+        "aborted": false,
+        "actor": 900011,
+        "body": 1,
+        "gates": [
+          1000000
+        ],
+        "ticket": 1
+      },
+      {
+        "kind": "idle-stroll",
+        "committed": true,
+        "aborted": false,
+        "actor": 900011,
+        "body": 1,
+        "gates": [],
+        "ticket": 3
+      },
+      {
+        "kind": "farm-arrival",
+        "committed": true,
+        "aborted": false,
+        "actor": 900012,
+        "body": 2,
+        "gates": [
+          1000000
+        ],
+        "ticket": 5
+      },
+      {
+        "kind": "idle-stroll-stop",
+        "committed": true,
+        "aborted": false,
+        "ticket": 7
+      },
+      {
+        "kind": "task-start",
+        "committed": true,
+        "aborted": false,
+        "actor": 900011,
+        "body": 1,
+        "gates": [],
+        "ticket": 9
+      },
+      {
+        "kind": "task-action",
+        "committed": true,
+        "aborted": false,
+        "ticket": 11
+      },
+      {
+        "kind": "idle-stroll",
+        "committed": true,
+        "aborted": false,
+        "actor": 900012,
+        "body": 2,
+        "gates": [],
+        "ticket": 13
+      },
+      {
+        "kind": "task-consequence",
+        "committed": true,
+        "aborted": false,
+        "actor": 900011,
+        "body": 1,
+        "gates": [],
+        "ticket": 15
+      },
+      {
+        "kind": "idle-cycle",
+        "committed": true,
+        "aborted": false,
+        "ticket": 17
+      },
+      {
+        "kind": "idle-stroll",
+        "committed": true,
+        "aborted": false,
+        "actor": 900012,
+        "body": 2,
+        "gates": [],
+        "ticket": 19
+      },
+      {
+        "kind": "task-settlement",
+        "committed": true,
+        "aborted": false,
+        "ticket": 21
+      },
+      {
+        "kind": "idle-cycle",
+        "committed": true,
+        "aborted": false,
+        "ticket": 23
+      },
+      {
+        "kind": "idle-cycle",
+        "committed": true,
+        "aborted": false,
+        "ticket": 25
+      },
+      {
+        "kind": "idle-cycle",
+        "committed": true,
+        "aborted": false,
+        "ticket": 27
+      },
+      {
+        "kind": "idle-stroll",
+        "committed": true,
+        "aborted": false,
+        "actor": 900012,
+        "body": 2,
+        "gates": [],
+        "ticket": 29
+      },
+      {
+        "kind": "idle-cycle",
+        "committed": true,
+        "aborted": false,
+        "ticket": 31
+      },
+      {
+        "kind": "idle-cycle",
+        "committed": true,
+        "aborted": false,
+        "ticket": 33
+      }
+    ],
+    "source": {
+      "path": ".cache/harvest-same-shift-8f17b3bd-pair-release-reanchor-combined-base.json",
+      "sha256": "06672a2d142e529d8e4a2458175690c4d7b1d27723e7e751353cd7b2771a204d"
+    }
+  },
+  "pending": [
+    "Native production selection of a safe lateral walk",
+    "NVIDIA replay and drain for this handoff",
+    "Retirement of a crop already anchoring stationary Idle21"
+  ]
+}

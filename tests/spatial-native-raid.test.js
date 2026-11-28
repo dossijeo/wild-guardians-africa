@@ -24,6 +24,14 @@ const module=new WebAssembly.Module(readFileSync(
 const pack=JSON.parse(readFileSync(new URL('../public/content/villages.json',
   import.meta.url),'utf8'))[0];
 
+function spawnTestNightRaid(state,group,nav){
+  const plan={at:state.time,group,done:false,introductory:false};
+  state.nightPlan=plan;
+  const spawned=spawnRaid(state,plan,nav);
+  plan.done=spawned===true;
+  return spawned;
+}
+
 test('a blocked attack site from the frozen Desert night 79 reselects an accessible wall',()=>{
   // This reduced fixture keeps confirmed terrain, structures and live crops,
   // but omits historical plants and the experimental balance bookkeeping.
@@ -212,8 +220,7 @@ test('a native Sabana incursion spawns physically and advances through Game.tick
     assert.equal(Game.plant(state,'raid-valuable-crop','platano',
       valuable.x,valuable.z,nav),true);
     state.day=6;state.time=310;
-    const plan={at:310,group:['warthog'],done:false,introductory:false};
-    assert.notEqual(spawnRaid(state,plan,nav),false,
+    assert.equal(spawnTestNightRaid(state,['warthog'],nav),true,
       'an animal needs a physically exterior resident entrance');
     assert.equal(state.raid?.animals.length,1);
     const control=deserialize(serialize(state)),controlLoaded=new Map();
@@ -414,8 +421,7 @@ test('an opt-in raider keeps its crop lease when a new wall only invalidates its
     assert(crop);
     assert.equal(Game.plant(state,'reroute-crop','mijo',crop.x,crop.z,nav),true);
     state.day=6;state.time=310;
-    assert.notEqual(spawnRaid(state,{at:310,group:['warthog'],
-      done:false,introductory:false},nav),false);
+    assert.equal(spawnTestNightRaid(state,['warthog'],nav),true);
     const planner=createEventDrivenTaskPlanner(session);
     planner.resetFromState(state);
     const stopWorld=planner.observeWorld(state),stopTasks=planner.observeTasks(state);
@@ -510,8 +516,7 @@ for(const count of [1,5])test(`${count} native raiders attack an accessible wall
     assert(walls.length>=12);
     nav.setRaidView({x:ring[0][0]-7,z:ring[0][1]+4},inside);
     state.day=6;state.time=310;
-    assert.notEqual(spawnRaid(state,{at:310,group:Array(count).fill('warthog'),done:false,
-      introductory:false},nav),false);
+    assert.equal(spawnTestNightRaid(state,Array(count).fill('warthog'),nav),true);
     assert.equal(state.raid.animals.length,count);
     let stopWorld,stopTasks,nativeCropStatus=[],routeRefreshDuringAttack=0;
     let nativeWallIds;
@@ -647,8 +652,7 @@ test('a confirmed enclosure breach reconsiders other wall attackers at an event 
     try{
       nav.setRaidView({x:ring[0][0]-7,z:ring[0][1]+4},inside);
       state.day=6;state.time=310;
-      assert.notEqual(spawnRaid(state,{at:310,group:['warthog','warthog'],
-        done:false,introductory:false},nav),false);
+      assert.equal(spawnTestNightRaid(state,['warthog','warthog'],nav),true);
       let attackers=[];
       for(let i=0;i<100;i++){
         Game.tick(state,.25,nav);
@@ -810,8 +814,7 @@ test('animal damage ruins a saved enclosure wall without changing the restored r
     nav.intentTaskPlanner=planner;
     nav.setRaidView({x:ring[0][0]-7,z:ring[0][1]+4},inside);
     state.day=6;state.time=310;
-    assert.notEqual(spawnRaid(state,{at:310,group:['warthog','warthog'],
-      done:false,introductory:false},nav),false);
+    assert.equal(spawnTestNightRaid(state,['warthog','warthog'],nav),true);
     for(let i=0;i<100;i++){
       Game.tick(state,.25,nav);
       if(state.raid?.animals.every(animal=>walls.some(wall=>

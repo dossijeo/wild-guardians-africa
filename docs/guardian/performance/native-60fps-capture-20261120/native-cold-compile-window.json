@@ -1,0 +1,2722 @@
+{
+  "scope": "Complete events in the observed GPU-main/Dawn-worker window; source identity and causal attribution still require code review",
+  "lo": 1795199887520,
+  "hi": 1795199887710,
+  "events": [
+    {
+      "args": {},
+      "cat": "disabled-by-default-gpu.dawn",
+      "dur": 5,
+      "name": "WebGPUDecoderImpl::PerformPollingWork",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 4,
+      "tid": 5220,
+      "ts": 616260997733,
+      "tts": 1016224,
+      "absoluteAt": 1795199887525.5818
+    },
+    {
+      "args": {
+        "src_file": "gpu/command_buffer/service/dawn_platform.cc",
+        "src_func": "PostWorkerTask",
+        "src_line": 107
+      },
+      "cat": "toplevel",
+      "dur": 162014,
+      "name": "ThreadPool_RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 161189,
+      "tid": 1192,
+      "ts": 616260997734,
+      "tts": 260340,
+      "absoluteAt": 1795199887525.5828
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 2,
+      "name": "CommandBuffer::FlushComplete",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1,
+      "tid": 5220,
+      "ts": 616260997748,
+      "tts": 1016235,
+      "absoluteAt": 1795199887525.597
+    },
+    {
+      "args": {
+        "Callback Location": "PostWorkerTask@gpu\\command_buffer\\service\\dawn_platform.cc:107",
+        "Event Name": "ThreadPool_RunTask"
+      },
+      "cat": "toplevel",
+      "dur": 161992,
+      "name": "Edge_RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 161184,
+      "tid": 1192,
+      "ts": 616260997755,
+      "tts": 260345,
+      "absoluteAt": 1795199887525.6038
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 1,
+      "name": "Scheduler::FinishTask",
+      "ph": "X",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260997765,
+      "absoluteAt": 1795199887525.6138
+    },
+    {
+      "args": {},
+      "cat": "toplevel",
+      "dur": 161961,
+      "name": "DawnPlatformImpl::RunWorkerTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 161165,
+      "tid": 1192,
+      "ts": 616260997769,
+      "tts": 260358,
+      "absoluteAt": 1795199887525.618
+    },
+    {
+      "args": {
+        "src_file": "ui/gl/dcomp_presenter.cc",
+        "src_func": "OnVSync",
+        "src_line": 191
+      },
+      "cat": "toplevel",
+      "dur": 15,
+      "name": "ThreadControllerImpl::RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 12,
+      "tid": 5220,
+      "ts": 616260997776,
+      "tts": 1016256,
+      "absoluteAt": 1795199887525.6248
+    },
+    {
+      "args": {
+        "Callback Location": "OnVSync@ui\\gl\\dcomp_presenter.cc:191",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      },
+      "cat": "toplevel",
+      "dur": 11,
+      "name": "Edge_RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 10,
+      "tid": 5220,
+      "ts": 616260997779,
+      "tts": 1016258,
+      "absoluteAt": 1795199887525.628
+    },
+    {
+      "args": {
+        "num_pending_frames": 1
+      },
+      "cat": "gpu",
+      "dur": 7,
+      "name": "DCompPresenter::CheckPendingFrames",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 6,
+      "tid": 5220,
+      "ts": 616260997782,
+      "tts": 1016261,
+      "absoluteAt": 1795199887525.6309
+    },
+    {
+      "args": {
+        "src_file": "gpu/command_buffer/service/scheduler.cc",
+        "src_func": "RunNextTask",
+        "src_line": 654
+      },
+      "cat": "toplevel",
+      "dur": 69,
+      "name": "ThreadControllerImpl::RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 52,
+      "tid": 5220,
+      "ts": 616260997793,
+      "tts": 1016270,
+      "absoluteAt": 1795199887525.6418
+    },
+    {
+      "args": {
+        "Callback Location": "RunNextTask@gpu\\command_buffer\\service\\scheduler.cc:654",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      },
+      "cat": "toplevel",
+      "dur": 66,
+      "name": "Edge_RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 51,
+      "tid": 5220,
+      "ts": 616260997795,
+      "tts": 1016271,
+      "absoluteAt": 1795199887525.6438
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 61,
+      "name": "Scheduler::RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 46,
+      "tid": 5220,
+      "ts": 616260997798,
+      "tts": 1016274,
+      "absoluteAt": 1795199887525.647
+    },
+    {
+      "args": {},
+      "cat": "gpu",
+      "dur": 55,
+      "name": "GpuChannel::ExecuteDeferredRequest",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 43,
+      "tid": 5220,
+      "ts": 616260997800,
+      "tts": 1016275,
+      "absoluteAt": 1795199887525.649
+    },
+    {
+      "args": {},
+      "cat": "gpu",
+      "dur": 48,
+      "name": "WebGPU",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 36,
+      "tid": 5220,
+      "ts": 616260997803,
+      "tts": 1016278,
+      "absoluteAt": 1795199887525.6519
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 46,
+      "name": "CommandBuffer::Flush",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 35,
+      "tid": 5220,
+      "ts": 616260997804,
+      "tts": 1016279,
+      "absoluteAt": 1795199887525.6528
+    },
+    {
+      "args": {
+        "put_offset": 5904
+      },
+      "cat": "gpu",
+      "dur": 44,
+      "name": "CommandBufferStub::OnAsyncFlush",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 34,
+      "tid": 5220,
+      "ts": 616260997805,
+      "tts": 1016280,
+      "absoluteAt": 1795199887525.6538
+    },
+    {
+      "args": {
+        "handler": "WebGPUDecoderImpl",
+        "put_offset": 5904
+      },
+      "cat": "gpu",
+      "dur": 37,
+      "name": "CommandBufferService:PutChanged",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 30,
+      "tid": 5220,
+      "ts": 616260997809,
+      "tts": 1016283,
+      "absoluteAt": 1795199887525.658
+    },
+    {
+      "args": {},
+      "cat": "disabled-by-default-gpu.dawn",
+      "dur": 33,
+      "name": "DawnCommands",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 27,
+      "tid": 5220,
+      "ts": 616260997811,
+      "tts": 1016285,
+      "absoluteAt": 1795199887525.66
+    },
+    {
+      "args": {
+        "bytes": 24
+      },
+      "cat": "disabled-by-default-gpu.dawn",
+      "dur": 30,
+      "name": "WebGPUDecoderImpl::HandleDawnCommands",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 26,
+      "tid": 5220,
+      "ts": 616260997813,
+      "tts": 1016286,
+      "absoluteAt": 1795199887525.6619
+    },
+    {
+      "args": {
+        "bytes": 56
+      },
+      "cat": "disabled-by-default-gpu.dawn",
+      "dur": 15,
+      "name": "DawnServiceSerializer::Flush",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 13,
+      "tid": 5220,
+      "ts": 616260997820,
+      "tts": 1016293,
+      "absoluteAt": 1795199887525.669
+    },
+    {
+      "args": {},
+      "cat": "disabled-by-default-gpu.dawn",
+      "dur": 1,
+      "name": "DawnReturnCommands",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1,
+      "tid": 5220,
+      "ts": 616260997825,
+      "tts": 1016297,
+      "absoluteAt": 1795199887525.6738
+    },
+    {
+      "args": {},
+      "cat": "disabled-by-default-gpu.dawn",
+      "dur": 2,
+      "name": "WebGPUDecoderImpl::PerformPollingWork",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 2,
+      "tid": 5220,
+      "ts": 616260997840,
+      "tts": 1016310,
+      "absoluteAt": 1795199887525.689
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 1,
+      "name": "CommandBuffer::FlushComplete",
+      "ph": "X",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260997847,
+      "absoluteAt": 1795199887525.6958
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 1,
+      "name": "Scheduler::FinishTask",
+      "ph": "X",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260997857,
+      "absoluteAt": 1795199887525.7058
+    },
+    {
+      "args": {
+        "src_file": "gpu/command_buffer/service/scheduler.cc",
+        "src_func": "RunNextTask",
+        "src_line": 654
+      },
+      "cat": "toplevel",
+      "dur": 605,
+      "name": "ThreadControllerImpl::RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 586,
+      "tid": 5220,
+      "ts": 616260997865,
+      "tts": 1016325,
+      "absoluteAt": 1795199887525.7139
+    },
+    {
+      "args": {
+        "Callback Location": "RunNextTask@gpu\\command_buffer\\service\\scheduler.cc:654",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      },
+      "cat": "toplevel",
+      "dur": 603,
+      "name": "Edge_RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 585,
+      "tid": 5220,
+      "ts": 616260997866,
+      "tts": 1016326,
+      "absoluteAt": 1795199887525.7148
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 596,
+      "name": "Scheduler::RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 580,
+      "tid": 5220,
+      "ts": 616260997870,
+      "tts": 1016329,
+      "absoluteAt": 1795199887525.719
+    },
+    {
+      "args": {},
+      "cat": "gpu",
+      "dur": 590,
+      "name": "GpuChannel::ExecuteDeferredRequest",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 576,
+      "tid": 5220,
+      "ts": 616260997871,
+      "tts": 1016330,
+      "absoluteAt": 1795199887525.72
+    },
+    {
+      "args": {},
+      "cat": "gpu",
+      "dur": 583,
+      "name": "WebGPU",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 570,
+      "tid": 5220,
+      "ts": 616260997873,
+      "tts": 1016331,
+      "absoluteAt": 1795199887525.722
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 581,
+      "name": "CommandBuffer::Flush",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 569,
+      "tid": 5220,
+      "ts": 616260997874,
+      "tts": 1016332,
+      "absoluteAt": 1795199887525.723
+    },
+    {
+      "args": {
+        "put_offset": 5934
+      },
+      "cat": "gpu",
+      "dur": 579,
+      "name": "CommandBufferStub::OnAsyncFlush",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 569,
+      "tid": 5220,
+      "ts": 616260997875,
+      "tts": 1016332,
+      "absoluteAt": 1795199887525.7239
+    },
+    {
+      "args": {
+        "handler": "WebGPUDecoderImpl",
+        "put_offset": 5934
+      },
+      "cat": "gpu",
+      "dur": 564,
+      "name": "CommandBufferService:PutChanged",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 565,
+      "tid": 5220,
+      "ts": 616260997877,
+      "tts": 1016333,
+      "absoluteAt": 1795199887525.7258
+    },
+    {
+      "args": {},
+      "cat": "disabled-by-default-gpu.dawn",
+      "dur": 28,
+      "name": "DawnCommands",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 24,
+      "tid": 5220,
+      "ts": 616260997878,
+      "tts": 1016334,
+      "absoluteAt": 1795199887525.7268
+    },
+    {
+      "args": {
+        "bytes": 248
+      },
+      "cat": "disabled-by-default-gpu.dawn",
+      "dur": 25,
+      "name": "WebGPUDecoderImpl::HandleDawnCommands",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 23,
+      "tid": 5220,
+      "ts": 616260997880,
+      "tts": 1016335,
+      "absoluteAt": 1795199887525.7288
+    },
+    {
+      "args": {},
+      "cat": "disabled-by-default-gpu.dawn",
+      "dur": 2,
+      "name": "WebGPUDecoderImpl::PerformPollingWork",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1,
+      "tid": 5220,
+      "ts": 616260997902,
+      "tts": 1016357,
+      "absoluteAt": 1795199887525.751
+    },
+    {
+      "args": {},
+      "cat": "disabled-by-default-gpu.dawn",
+      "dur": 423,
+      "name": "DawnCommands",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 418,
+      "tid": 5220,
+      "ts": 616260998015,
+      "tts": 1016468,
+      "absoluteAt": 1795199887525.8638
+    },
+    {
+      "args": {
+        "bytes": 352
+      },
+      "cat": "disabled-by-default-gpu.dawn",
+      "dur": 420,
+      "name": "WebGPUDecoderImpl::HandleDawnCommands",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 417,
+      "tid": 5220,
+      "ts": 616260998017,
+      "tts": 1016469,
+      "absoluteAt": 1795199887525.866
+    },
+    {
+      "args": {},
+      "cat": "disabled-by-default-gpu.dawn",
+      "dur": 6,
+      "name": "WebGPUDecoderImpl::PerformPollingWork",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 4,
+      "tid": 5220,
+      "ts": 616260998430,
+      "tts": 1016882,
+      "absoluteAt": 1795199887526.2788
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 2,
+      "name": "CommandBuffer::FlushComplete",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1,
+      "tid": 5220,
+      "ts": 616260998452,
+      "tts": 1016900,
+      "absoluteAt": 1795199887526.3008
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 1,
+      "name": "Scheduler::FinishTask",
+      "ph": "X",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260998465,
+      "absoluteAt": 1795199887526.314
+    },
+    {
+      "args": {
+        "src_file": "gpu/command_buffer/service/scheduler.cc",
+        "src_func": "RunNextTask",
+        "src_line": 654
+      },
+      "cat": "toplevel",
+      "dur": 61,
+      "name": "ThreadControllerImpl::RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 48,
+      "tid": 5220,
+      "ts": 616260998473,
+      "tts": 1016914,
+      "absoluteAt": 1795199887526.3218
+    },
+    {
+      "args": {
+        "Callback Location": "RunNextTask@gpu\\command_buffer\\service\\scheduler.cc:654",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      },
+      "cat": "toplevel",
+      "dur": 58,
+      "name": "Edge_RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 46,
+      "tid": 5220,
+      "ts": 616260998475,
+      "tts": 1016916,
+      "absoluteAt": 1795199887526.324
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 53,
+      "name": "Scheduler::RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 43,
+      "tid": 5220,
+      "ts": 616260998478,
+      "tts": 1016918,
+      "absoluteAt": 1795199887526.327
+    },
+    {
+      "args": {},
+      "cat": "gpu",
+      "dur": 47,
+      "name": "GpuChannel::ExecuteDeferredRequest",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 39,
+      "tid": 5220,
+      "ts": 616260998480,
+      "tts": 1016919,
+      "absoluteAt": 1795199887526.3289
+    },
+    {
+      "args": {},
+      "cat": "gpu",
+      "dur": 41,
+      "name": "WebGPU",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 34,
+      "tid": 5220,
+      "ts": 616260998482,
+      "tts": 1016921,
+      "absoluteAt": 1795199887526.3308
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 39,
+      "name": "CommandBuffer::Flush",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 33,
+      "tid": 5220,
+      "ts": 616260998483,
+      "tts": 1016922,
+      "absoluteAt": 1795199887526.3318
+    },
+    {
+      "args": {
+        "put_offset": 5942
+      },
+      "cat": "gpu",
+      "dur": 38,
+      "name": "CommandBufferStub::OnAsyncFlush",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 33,
+      "tid": 5220,
+      "ts": 616260998484,
+      "tts": 1016922,
+      "absoluteAt": 1795199887526.3328
+    },
+    {
+      "args": {
+        "handler": "WebGPUDecoderImpl",
+        "put_offset": 5942
+      },
+      "cat": "gpu",
+      "dur": 33,
+      "name": "CommandBufferService:PutChanged",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 30,
+      "tid": 5220,
+      "ts": 616260998486,
+      "tts": 1016923,
+      "absoluteAt": 1795199887526.335
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 6,
+      "name": "SyncToken::Release",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 4,
+      "tid": 5220,
+      "ts": 616260998507,
+      "tts": 1016944,
+      "absoluteAt": 1795199887526.356
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 2,
+      "name": "Scheduler::SequenceUnblocked",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1,
+      "tid": 5220,
+      "ts": 616260998510,
+      "tts": 1016947,
+      "absoluteAt": 1795199887526.359
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 1,
+      "name": "CommandBuffer::FlushComplete",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1,
+      "tid": 5220,
+      "ts": 616260998520,
+      "tts": 1016954,
+      "absoluteAt": 1795199887526.369
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 1,
+      "name": "Scheduler::FinishTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1,
+      "tid": 5220,
+      "ts": 616260998529,
+      "tts": 1016960,
+      "absoluteAt": 1795199887526.378
+    },
+    {
+      "args": {
+        "src_file": "gpu/command_buffer/service/scheduler.cc",
+        "src_func": "RunNextTask",
+        "src_line": 654
+      },
+      "cat": "toplevel",
+      "dur": 179242,
+      "name": "ThreadControllerImpl::RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 2584,
+      "tid": 5220,
+      "ts": 616260998536,
+      "tts": 1016964,
+      "absoluteAt": 1795199887526.3848
+    },
+    {
+      "args": {
+        "Callback Location": "RunNextTask@gpu\\command_buffer\\service\\scheduler.cc:654",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      },
+      "cat": "toplevel",
+      "dur": 179239,
+      "name": "Edge_RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 2583,
+      "tid": 5220,
+      "ts": 616260998538,
+      "tts": 1016965,
+      "absoluteAt": 1795199887526.387
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 179233,
+      "name": "Scheduler::RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 2577,
+      "tid": 5220,
+      "ts": 616260998541,
+      "tts": 1016968,
+      "absoluteAt": 1795199887526.39
+    },
+    {
+      "args": {},
+      "cat": "viz",
+      "dur": 212,
+      "name": "SkiaOutputSurfaceImplOnGpu::FinishPaintRenderPass",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 210,
+      "tid": 5220,
+      "ts": 616260998551,
+      "tts": 1016978,
+      "absoluteAt": 1795199887526.4
+    },
+    {
+      "args": {},
+      "cat": "viz",
+      "dur": 102,
+      "name": "SkiaOutputSurfaceImplOnGpu::BeginAccessImages",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 100,
+      "tid": 5220,
+      "ts": 616260998578,
+      "tts": 1017005,
+      "absoluteAt": 1795199887526.4268
+    },
+    {
+      "args": {},
+      "cat": "gpu",
+      "dur": 79,
+      "name": "D3DImageBacking::ProduceGLTexturePassthrough",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 80,
+      "tid": 5220,
+      "ts": 616260998581,
+      "tts": 1017007,
+      "absoluteAt": 1795199887526.43
+    },
+    {
+      "args": {},
+      "cat": "gpu",
+      "dur": 2,
+      "name": "D3DImageBacking::BeginAccessD3D11::DXGISharedHandle",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1,
+      "tid": 5220,
+      "ts": 616260998676,
+      "tts": 1017102,
+      "absoluteAt": 1795199887526.525
+    },
+    {
+      "args": {},
+      "cat": "viz",
+      "dur": 178998,
+      "name": "SkiaOutputSurfaceImplOnGpu::SwapBuffers",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 2348,
+      "tid": 5220,
+      "ts": 616260998767,
+      "tts": 1017191,
+      "absoluteAt": 1795199887526.616
+    },
+    {
+      "args": {},
+      "cat": "viz",
+      "dur": 178760,
+      "name": "SkiaOutputSurfaceImplOnGpu::EndAccessImages",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 2141,
+      "tid": 5220,
+      "ts": 616260998771,
+      "tts": 1017194,
+      "absoluteAt": 1795199887526.6199
+    },
+    {
+      "args": {
+        "chrome_graphics_pipeline": {
+          "display_trace_id": 4941741860241077000,
+          "step": "STEP_BUFFER_SWAP_POST_SUBMIT"
+        },
+        "current_task": {
+          "event_offset_from_task_start_time_us": 179032,
+          "task_start_time_us": 616260998536
+        }
+      },
+      "cat": "viz,benchmark,graphics.pipeline",
+      "dur": 174,
+      "name": "Graphics.Pipeline",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 169,
+      "tid": 5220,
+      "ts": 616261177565,
+      "tts": 1019344,
+      "absoluteAt": 1795199887705.4138
+    },
+    {
+      "args": {
+        "num_overlays": 1
+      },
+      "cat": "viz",
+      "dur": 128,
+      "name": "SkiaOutputDevice->ScheduleOverlays()",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 126,
+      "tid": 5220,
+      "ts": 616261177572,
+      "tts": 1019351,
+      "absoluteAt": 1795199887705.421
+    },
+    {
+      "args": {
+        "dirty_rect": "12,88 640x360",
+        "has_alpha": false
+      },
+      "cat": "gpu",
+      "dur": 109,
+      "name": "DXGISwapChainImageBacking::Present",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 110,
+      "tid": 5220,
+      "ts": 616261177583,
+      "tts": 1019361,
+      "absoluteAt": 1795199887705.432
+    },
+    {
+      "args": {},
+      "cat": "gpu",
+      "dur": 35,
+      "name": "DCompPresenter::Present",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 32,
+      "tid": 5220,
+      "ts": 616261177703,
+      "tts": 1019480,
+      "absoluteAt": 1795199887705.5518
+    },
+    {
+      "args": {
+        "num_overlays": 1
+      },
+      "cat": "gpu",
+      "dur": 17,
+      "name": "DCLayerTree::CommitAndClearPendingOverlays",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 16,
+      "tid": 5220,
+      "ts": 616261177707,
+      "tts": 1019484,
+      "absoluteAt": 1795199887705.556
+    },
+    {
+      "args": {
+        "chrome_graphics_pipeline": {
+          "display_trace_id": 4941741860241077000,
+          "step": "STEP_FINISH_BUFFER_SWAP"
+        },
+        "current_task": {
+          "event_offset_from_task_start_time_us": 179195,
+          "task_start_time_us": 616260998536
+        }
+      },
+      "cat": "viz,benchmark,graphics.pipeline",
+      "dur": 7,
+      "name": "Graphics.Pipeline",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 6,
+      "tid": 5220,
+      "ts": 616261177729,
+      "tts": 1019505,
+      "absoluteAt": 1795199887705.578
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 3,
+      "name": "Scheduler::FinishTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 2,
+      "tid": 5220,
+      "ts": 616261177770,
+      "tts": 1019543,
+      "absoluteAt": 1795199887705.619
+    },
+    {
+      "args": {
+        "src_file": "gpu/command_buffer/service/dawn_service_serializer.cc",
+        "src_func": "Flush",
+        "src_line": 215
+      },
+      "cat": "toplevel",
+      "dur": 26,
+      "name": "ThreadControllerImpl::RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 23,
+      "tid": 5220,
+      "ts": 616261177785,
+      "tts": 1019554,
+      "absoluteAt": 1795199887705.6338
+    },
+    {
+      "args": {
+        "Callback Location": "Flush@gpu\\command_buffer\\service\\dawn_service_serializer.cc:215",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      },
+      "cat": "toplevel",
+      "dur": 22,
+      "name": "Edge_RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 19,
+      "tid": 5220,
+      "ts": 616261177789,
+      "tts": 1019558,
+      "absoluteAt": 1795199887705.638
+    },
+    {
+      "args": {
+        "bytes": 56
+      },
+      "cat": "disabled-by-default-gpu.dawn",
+      "dur": 16,
+      "name": "DawnServiceSerializer::Flush",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 15,
+      "tid": 5220,
+      "ts": 616261177793,
+      "tts": 1019561,
+      "absoluteAt": 1795199887705.6418
+    },
+    {
+      "args": {},
+      "cat": "disabled-by-default-gpu.dawn",
+      "dur": 3,
+      "name": "DawnReturnCommands",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 2,
+      "tid": 5220,
+      "ts": 616261177799,
+      "tts": 1019567,
+      "absoluteAt": 1795199887705.648
+    },
+    {
+      "args": {
+        "src_file": "gpu/command_buffer/service/scheduler.cc",
+        "src_func": "RunNextTask",
+        "src_line": 654
+      },
+      "cat": "toplevel",
+      "dur": 76,
+      "name": "ThreadControllerImpl::RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 70,
+      "tid": 5220,
+      "ts": 616261177814,
+      "tts": 1019579,
+      "absoluteAt": 1795199887705.6628
+    },
+    {
+      "args": {
+        "Callback Location": "RunNextTask@gpu\\command_buffer\\service\\scheduler.cc:654",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      },
+      "cat": "toplevel",
+      "dur": 72,
+      "name": "Edge_RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 68,
+      "tid": 5220,
+      "ts": 616261177817,
+      "tts": 1019581,
+      "absoluteAt": 1795199887705.6658
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 66,
+      "name": "Scheduler::RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 63,
+      "tid": 5220,
+      "ts": 616261177821,
+      "tts": 1019584,
+      "absoluteAt": 1795199887705.67
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 4,
+      "name": "SyncToken::Release",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 3,
+      "tid": 5220,
+      "ts": 616261177879,
+      "tts": 1019643,
+      "absoluteAt": 1795199887705.7278
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 1,
+      "name": "Scheduler::FinishTask",
+      "ph": "X",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261177885,
+      "absoluteAt": 1795199887705.734
+    },
+    {
+      "args": {
+        "chrome_task_annotator": {
+          "delay_policy": "PRECISE",
+          "task_delay_us": 1998
+        },
+        "src_file": "gpu/ipc/service/command_buffer_stub.cc",
+        "src_func": "ScheduleDelayedWork",
+        "src_line": 255
+      },
+      "cat": "toplevel",
+      "dur": 83,
+      "name": "ThreadControllerImpl::RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 77,
+      "tid": 5220,
+      "ts": 616261177893,
+      "tts": 1019652,
+      "absoluteAt": 1795199887705.742
+    },
+    {
+      "args": {
+        "Callback Location": "ScheduleDelayedWork@gpu\\ipc\\service\\command_buffer_stub.cc:255",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      },
+      "cat": "toplevel",
+      "dur": 79,
+      "name": "Edge_RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 74,
+      "tid": 5220,
+      "ts": 616261177896,
+      "tts": 1019655,
+      "absoluteAt": 1795199887705.7449
+    },
+    {
+      "args": {},
+      "cat": "gpu",
+      "dur": 75,
+      "name": "CommandBufferStub::PerformWork",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 71,
+      "tid": 5220,
+      "ts": 616261177899,
+      "tts": 1019657,
+      "absoluteAt": 1795199887705.7478
+    },
+    {
+      "args": {},
+      "cat": "disabled-by-default-gpu.dawn",
+      "dur": 68,
+      "name": "WebGPUDecoderImpl::PerformPollingWork",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 65,
+      "tid": 5220,
+      "ts": 616261177903,
+      "tts": 1019661,
+      "absoluteAt": 1795199887705.752
+    },
+    {
+      "args": {
+        "bytes": 56
+      },
+      "cat": "disabled-by-default-gpu.dawn",
+      "dur": 12,
+      "name": "DawnServiceSerializer::Flush",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 10,
+      "tid": 5220,
+      "ts": 616261177919,
+      "tts": 1019676,
+      "absoluteAt": 1795199887705.7678
+    },
+    {
+      "args": {},
+      "cat": "disabled-by-default-gpu.dawn",
+      "dur": 1,
+      "name": "DawnReturnCommands",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1,
+      "tid": 5220,
+      "ts": 616261177923,
+      "tts": 1019679,
+      "absoluteAt": 1795199887705.772
+    },
+    {
+      "args": {
+        "src_file": "gpu/command_buffer/service/scheduler.cc",
+        "src_func": "RunNextTask",
+        "src_line": 654
+      },
+      "cat": "toplevel",
+      "dur": 59,
+      "name": "ThreadControllerImpl::RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 54,
+      "tid": 5220,
+      "ts": 616261177979,
+      "tts": 1019732,
+      "absoluteAt": 1795199887705.828
+    },
+    {
+      "args": {
+        "Callback Location": "RunNextTask@gpu\\command_buffer\\service\\scheduler.cc:654",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      },
+      "cat": "toplevel",
+      "dur": 56,
+      "name": "Edge_RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 52,
+      "tid": 5220,
+      "ts": 616261177981,
+      "tts": 1019734,
+      "absoluteAt": 1795199887705.8298
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 51,
+      "name": "Scheduler::RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 47,
+      "tid": 5220,
+      "ts": 616261177984,
+      "tts": 1019737,
+      "absoluteAt": 1795199887705.8328
+    },
+    {
+      "args": {
+        "chrome_mojo_event_info": {
+          "data_num_bytes": 96,
+          "ipc_hash": 2851237806,
+          "mojo_interface_tag": "gpu.mojom.CommandBuffer",
+          "payload_size": 40
+        }
+      },
+      "cat": "toplevel,mojom",
+      "dur": 36,
+      "name": "Receive mojo message",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 34,
+      "tid": 5220,
+      "ts": 616261177991,
+      "tts": 1019743,
+      "absoluteAt": 1795199887705.8398
+    },
+    {
+      "args": {},
+      "cat": "gpu",
+      "dur": 19,
+      "name": "CommandBufferStub::OnRegisterTransferBuffer",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 19,
+      "tid": 5220,
+      "ts": 616261178006,
+      "tts": 1019757,
+      "absoluteAt": 1795199887705.855
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 1,
+      "name": "Scheduler::FinishTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1,
+      "tid": 5220,
+      "ts": 616261178033,
+      "tts": 1019783,
+      "absoluteAt": 1795199887705.8818
+    },
+    {
+      "args": {
+        "src_file": "gpu/command_buffer/service/scheduler.cc",
+        "src_func": "RunNextTask",
+        "src_line": 654
+      },
+      "cat": "toplevel",
+      "dur": 49,
+      "name": "ThreadControllerImpl::RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 42,
+      "tid": 5220,
+      "ts": 616261178041,
+      "tts": 1019788,
+      "absoluteAt": 1795199887705.89
+    },
+    {
+      "args": {
+        "Callback Location": "RunNextTask@gpu\\command_buffer\\service\\scheduler.cc:654",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      },
+      "cat": "toplevel",
+      "dur": 46,
+      "name": "Edge_RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 41,
+      "tid": 5220,
+      "ts": 616261178043,
+      "tts": 1019789,
+      "absoluteAt": 1795199887705.8918
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 42,
+      "name": "Scheduler::RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 38,
+      "tid": 5220,
+      "ts": 616261178045,
+      "tts": 1019791,
+      "absoluteAt": 1795199887705.8938
+    },
+    {
+      "args": {
+        "chrome_mojo_event_info": {
+          "data_num_bytes": 96,
+          "ipc_hash": 2851237806,
+          "mojo_interface_tag": "gpu.mojom.CommandBuffer",
+          "payload_size": 40
+        }
+      },
+      "cat": "toplevel,mojom",
+      "dur": 31,
+      "name": "Receive mojo message",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 29,
+      "tid": 5220,
+      "ts": 616261178048,
+      "tts": 1019793,
+      "absoluteAt": 1795199887705.897
+    },
+    {
+      "args": {},
+      "cat": "gpu",
+      "dur": 12,
+      "name": "CommandBufferStub::OnRegisterTransferBuffer",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 11,
+      "tid": 5220,
+      "ts": 616261178066,
+      "tts": 1019811,
+      "absoluteAt": 1795199887705.9148
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 1,
+      "name": "Scheduler::FinishTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1,
+      "tid": 5220,
+      "ts": 616261178085,
+      "tts": 1019828,
+      "absoluteAt": 1795199887705.9338
+    },
+    {
+      "args": {
+        "src_file": "gpu/command_buffer/service/scheduler.cc",
+        "src_func": "RunNextTask",
+        "src_line": 654
+      },
+      "cat": "toplevel",
+      "dur": 35,
+      "name": "ThreadControllerImpl::RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 28,
+      "tid": 5220,
+      "ts": 616261178092,
+      "tts": 1019832,
+      "absoluteAt": 1795199887705.941
+    },
+    {
+      "args": {
+        "Callback Location": "RunNextTask@gpu\\command_buffer\\service\\scheduler.cc:654",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      },
+      "cat": "toplevel",
+      "dur": 32,
+      "name": "Edge_RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 27,
+      "tid": 5220,
+      "ts": 616261178094,
+      "tts": 1019833,
+      "absoluteAt": 1795199887705.9429
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 29,
+      "name": "Scheduler::RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 24,
+      "tid": 5220,
+      "ts": 616261178096,
+      "tts": 1019835,
+      "absoluteAt": 1795199887705.9448
+    },
+    {
+      "args": {
+        "chrome_mojo_event_info": {
+          "data_num_bytes": 96,
+          "ipc_hash": 2851237806,
+          "mojo_interface_tag": "gpu.mojom.CommandBuffer",
+          "payload_size": 40
+        }
+      },
+      "cat": "toplevel,mojom",
+      "dur": 19,
+      "name": "Receive mojo message",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 17,
+      "tid": 5220,
+      "ts": 616261178099,
+      "tts": 1019837,
+      "absoluteAt": 1795199887705.948
+    },
+    {
+      "args": {},
+      "cat": "gpu",
+      "dur": 10,
+      "name": "CommandBufferStub::OnRegisterTransferBuffer",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 10,
+      "tid": 5220,
+      "ts": 616261178106,
+      "tts": 1019844,
+      "absoluteAt": 1795199887705.9548
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 1,
+      "name": "Scheduler::FinishTask",
+      "ph": "X",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261178123,
+      "absoluteAt": 1795199887705.972
+    },
+    {
+      "args": {
+        "src_file": "gpu/command_buffer/service/scheduler.cc",
+        "src_func": "RunNextTask",
+        "src_line": 654
+      },
+      "cat": "toplevel",
+      "dur": 507,
+      "name": "ThreadControllerImpl::RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 495,
+      "tid": 5220,
+      "ts": 616261178130,
+      "tts": 1019862,
+      "absoluteAt": 1795199887705.9788
+    },
+    {
+      "args": {
+        "Callback Location": "RunNextTask@gpu\\command_buffer\\service\\scheduler.cc:654",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      },
+      "cat": "toplevel",
+      "dur": 505,
+      "name": "Edge_RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 494,
+      "tid": 5220,
+      "ts": 616261178131,
+      "tts": 1019863,
+      "absoluteAt": 1795199887705.98
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 500,
+      "name": "Scheduler::RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 490,
+      "tid": 5220,
+      "ts": 616261178134,
+      "tts": 1019865,
+      "absoluteAt": 1795199887705.983
+    },
+    {
+      "args": {},
+      "cat": "gpu",
+      "dur": 486,
+      "name": "GpuChannel::ExecuteDeferredRequest",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 482,
+      "tid": 5220,
+      "ts": 616261178135,
+      "tts": 1019866,
+      "absoluteAt": 1795199887705.984
+    },
+    {
+      "args": {
+        "height": 512,
+        "width": 512
+      },
+      "cat": "gpu",
+      "dur": 481,
+      "name": "SharedImageStub::OnCreateSharedImage",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 479,
+      "tid": 5220,
+      "ts": 616261178138,
+      "tts": 1019868,
+      "absoluteAt": 1795199887705.9868
+    },
+    {
+      "args": {},
+      "cat": "gpu",
+      "dur": 6,
+      "name": "QueryDeviceObjectFromANGLE",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 5,
+      "tid": 5220,
+      "ts": 616261178598,
+      "tts": 1020327,
+      "absoluteAt": 1795199887706.4468
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 6,
+      "name": "SyncToken::Release",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 4,
+      "tid": 5220,
+      "ts": 616261178624,
+      "tts": 1020350,
+      "absoluteAt": 1795199887706.473
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 2,
+      "name": "Scheduler::SequenceUnblocked",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1,
+      "tid": 5220,
+      "ts": 616261178627,
+      "tts": 1020352,
+      "absoluteAt": 1795199887706.4758
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 1,
+      "name": "Scheduler::FinishTask",
+      "ph": "X",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261178632,
+      "absoluteAt": 1795199887706.481
+    },
+    {
+      "args": {
+        "src_file": "gpu/command_buffer/service/scheduler.cc",
+        "src_func": "RunNextTask",
+        "src_line": 654
+      },
+      "cat": "toplevel",
+      "dur": 1687,
+      "name": "ThreadControllerImpl::RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1674,
+      "tid": 5220,
+      "ts": 616261178640,
+      "tts": 1020359,
+      "absoluteAt": 1795199887706.4888
+    },
+    {
+      "args": {
+        "Callback Location": "RunNextTask@gpu\\command_buffer\\service\\scheduler.cc:654",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      },
+      "cat": "toplevel",
+      "dur": 1685,
+      "name": "Edge_RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1673,
+      "tid": 5220,
+      "ts": 616261178641,
+      "tts": 1020360,
+      "absoluteAt": 1795199887706.49
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 1678,
+      "name": "Scheduler::RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1667,
+      "tid": 5220,
+      "ts": 616261178644,
+      "tts": 1020363,
+      "absoluteAt": 1795199887706.493
+    },
+    {
+      "args": {},
+      "cat": "gpu",
+      "dur": 1671,
+      "name": "GpuChannel::ExecuteDeferredRequest",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1662,
+      "tid": 5220,
+      "ts": 616261178646,
+      "tts": 1020364,
+      "absoluteAt": 1795199887706.4949
+    },
+    {
+      "args": {},
+      "cat": "gpu",
+      "dur": 1664,
+      "name": "RendererBlinkWorker",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1656,
+      "tid": 5220,
+      "ts": 616261178650,
+      "tts": 1020368,
+      "absoluteAt": 1795199887706.4988
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 1663,
+      "name": "CommandBuffer::Flush",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1655,
+      "tid": 5220,
+      "ts": 616261178651,
+      "tts": 1020369,
+      "absoluteAt": 1795199887706.4998
+    },
+    {
+      "args": {
+        "put_offset": 91
+      },
+      "cat": "gpu",
+      "dur": 1660,
+      "name": "CommandBufferStub::OnAsyncFlush",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1653,
+      "tid": 5220,
+      "ts": 616261178653,
+      "tts": 1020371,
+      "absoluteAt": 1795199887706.502
+    },
+    {
+      "args": {
+        "handler": ".RendererBlinkWorker-0x26d4017f0100",
+        "put_offset": 91
+      },
+      "cat": "gpu",
+      "dur": 1646,
+      "name": "CommandBufferService:PutChanged",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1642,
+      "tid": 5220,
+      "ts": 616261178658,
+      "tts": 1020375,
+      "absoluteAt": 1795199887706.5068
+    },
+    {
+      "args": {},
+      "cat": "gpu",
+      "dur": 1634,
+      "name": "RasterDecoderImpl::DoWritePixelsINTERNAL",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1633,
+      "tid": 5220,
+      "ts": 616261178662,
+      "tts": 1020378,
+      "absoluteAt": 1795199887706.511
+    },
+    {
+      "args": {},
+      "cat": "gpu",
+      "dur": 77,
+      "name": "D3DImageBacking::ProduceGLTexturePassthrough",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 77,
+      "tid": 5220,
+      "ts": 616261178665,
+      "tts": 1020381,
+      "absoluteAt": 1795199887706.514
+    },
+    {
+      "args": {},
+      "cat": "gpu",
+      "dur": 3,
+      "name": "D3DImageBacking::BeginAccessD3D11::DXGISharedHandle",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 2,
+      "tid": 5220,
+      "ts": 616261178764,
+      "tts": 1020480,
+      "absoluteAt": 1795199887706.6128
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 4,
+      "name": "CommandBuffer::FlushComplete",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 4,
+      "tid": 5220,
+      "ts": 616261180308,
+      "tts": 1022020,
+      "absoluteAt": 1795199887708.157
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 1,
+      "name": "Scheduler::FinishTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1,
+      "tid": 5220,
+      "ts": 616261180320,
+      "tts": 1022029,
+      "absoluteAt": 1795199887708.169
+    },
+    {
+      "args": {
+        "src_file": "gpu/command_buffer/service/scheduler.cc",
+        "src_func": "RunNextTask",
+        "src_line": 654
+      },
+      "cat": "toplevel",
+      "dur": 4591,
+      "name": "ThreadControllerImpl::RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1930,
+      "tid": 5220,
+      "ts": 616261180331,
+      "tts": 1022037,
+      "absoluteAt": 1795199887708.18
+    },
+    {
+      "args": {
+        "Callback Location": "RunNextTask@gpu\\command_buffer\\service\\scheduler.cc:654",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      },
+      "cat": "toplevel",
+      "dur": 4588,
+      "name": "Edge_RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1928,
+      "tid": 5220,
+      "ts": 616261180333,
+      "tts": 1022039,
+      "absoluteAt": 1795199887708.182
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 4580,
+      "name": "Scheduler::RunTask",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1921,
+      "tid": 5220,
+      "ts": 616261180338,
+      "tts": 1022043,
+      "absoluteAt": 1795199887708.1868
+    },
+    {
+      "args": {},
+      "cat": "gpu",
+      "dur": 4572,
+      "name": "GpuChannel::ExecuteDeferredRequest",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1915,
+      "tid": 5220,
+      "ts": 616261180339,
+      "tts": 1022044,
+      "absoluteAt": 1795199887708.188
+    },
+    {
+      "args": {},
+      "cat": "gpu",
+      "dur": 4560,
+      "name": "WebGPU",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1904,
+      "tid": 5220,
+      "ts": 616261180343,
+      "tts": 1022047,
+      "absoluteAt": 1795199887708.192
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "dur": 4557,
+      "name": "CommandBuffer::Flush",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1903,
+      "tid": 5220,
+      "ts": 616261180345,
+      "tts": 1022048,
+      "absoluteAt": 1795199887708.1938
+    },
+    {
+      "args": {
+        "put_offset": 5978
+      },
+      "cat": "gpu",
+      "dur": 4555,
+      "name": "CommandBufferStub::OnAsyncFlush",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1902,
+      "tid": 5220,
+      "ts": 616261180346,
+      "tts": 1022049,
+      "absoluteAt": 1795199887708.1948
+    },
+    {
+      "args": {
+        "handler": "WebGPUDecoderImpl",
+        "put_offset": 5978
+      },
+      "cat": "gpu",
+      "dur": 4546,
+      "name": "CommandBufferService:PutChanged",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 1895,
+      "tid": 5220,
+      "ts": 616261180349,
+      "tts": 1022052,
+      "absoluteAt": 1795199887708.198
+    },
+    {
+      "args": {},
+      "cat": "disabled-by-default-gpu.dawn",
+      "dur": 2989,
+      "name": "DawnCommands",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 869,
+      "tid": 5220,
+      "ts": 616261180359,
+      "tts": 1022061,
+      "absoluteAt": 1795199887708.2078
+    },
+    {
+      "args": {
+        "bytes": 88
+      },
+      "cat": "disabled-by-default-gpu.dawn",
+      "dur": 2986,
+      "name": "WebGPUDecoderImpl::HandleDawnCommands",
+      "ph": "X",
+      "pid": 3536,
+      "tdur": 867,
+      "tid": 5220,
+      "ts": 616261180362,
+      "tts": 1022063,
+      "absoluteAt": 1795199887708.211
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8053,
+      "name": "CommandBuffer::Flush",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260997748,
+      "absoluteAt": 1795199887525.597
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8054,
+      "name": "Scheduler::RunTask",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260997765,
+      "absoluteAt": 1795199887525.6138
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8055,
+      "name": "Scheduler::ScheduleTask",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260997798,
+      "absoluteAt": 1795199887525.647
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8056,
+      "name": "GpuChannel::Flush",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260997804,
+      "absoluteAt": 1795199887525.6528
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "disabled-by-default-gpu.dawn",
+      "id": 8057,
+      "name": "DawnCommands",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260997811,
+      "absoluteAt": 1795199887525.66
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "id": 8058,
+      "name": "CommandBuffer::Flush",
+      "ph": "s",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260997804,
+      "absoluteAt": 1795199887525.6528
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8058,
+      "name": "CommandBuffer::Flush",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260997847,
+      "absoluteAt": 1795199887525.6958
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "id": 8059,
+      "name": "Scheduler::RunTask",
+      "ph": "s",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260997798,
+      "absoluteAt": 1795199887525.647
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8059,
+      "name": "Scheduler::RunTask",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260997857,
+      "absoluteAt": 1795199887525.7058
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8060,
+      "name": "Scheduler::ScheduleTask",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260997870,
+      "absoluteAt": 1795199887525.719
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8061,
+      "name": "GpuChannel::Flush",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260997874,
+      "absoluteAt": 1795199887525.723
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "disabled-by-default-gpu.dawn",
+      "id": 8062,
+      "name": "DawnCommands",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260997878,
+      "absoluteAt": 1795199887525.7268
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "disabled-by-default-gpu.dawn",
+      "id": 8063,
+      "name": "DawnCommands",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260998015,
+      "absoluteAt": 1795199887525.8638
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "id": 8064,
+      "name": "CommandBuffer::Flush",
+      "ph": "s",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260997874,
+      "absoluteAt": 1795199887525.723
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8064,
+      "name": "CommandBuffer::Flush",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260998452,
+      "absoluteAt": 1795199887526.3008
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "id": 8065,
+      "name": "Scheduler::RunTask",
+      "ph": "s",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260997870,
+      "absoluteAt": 1795199887525.719
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8065,
+      "name": "Scheduler::RunTask",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260998465,
+      "absoluteAt": 1795199887526.314
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8066,
+      "name": "Scheduler::ScheduleTask",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260998478,
+      "absoluteAt": 1795199887526.327
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8067,
+      "name": "GpuChannel::Flush",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260998483,
+      "absoluteAt": 1795199887526.3318
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8068,
+      "name": "SyncToken::Wait",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260998507,
+      "absoluteAt": 1795199887526.356
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8069,
+      "name": "Scheduler::ScheduleTask",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260998510,
+      "absoluteAt": 1795199887526.359
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "id": 8070,
+      "name": "CommandBuffer::Flush",
+      "ph": "s",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260998483,
+      "absoluteAt": 1795199887526.3318
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8070,
+      "name": "CommandBuffer::Flush",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260998520,
+      "absoluteAt": 1795199887526.369
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "id": 8071,
+      "name": "Scheduler::RunTask",
+      "ph": "s",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260998478,
+      "absoluteAt": 1795199887526.327
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8071,
+      "name": "Scheduler::RunTask",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260998529,
+      "absoluteAt": 1795199887526.378
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "id": 8072,
+      "name": "Scheduler::SequenceUnblocked",
+      "ph": "s",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260998510,
+      "absoluteAt": 1795199887526.359
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8072,
+      "name": "Scheduler::SequenceUnblocked",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260998541,
+      "absoluteAt": 1795199887526.39
+    },
+    {
+      "args": {},
+      "cat": "disabled-by-default-gpu.dawn",
+      "id": 8074,
+      "name": "DawnReturnCommands",
+      "ph": "s",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260997825,
+      "absoluteAt": 1795199887525.6738
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "viz,benchmark,graphics.pipeline",
+      "id": 8172,
+      "name": "Graphics.Pipeline",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261177565,
+      "absoluteAt": 1795199887705.4138
+    },
+    {
+      "args": {},
+      "cat": "viz,benchmark,graphics.pipeline",
+      "id": 8173,
+      "name": "Graphics.Pipeline",
+      "ph": "s",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261177565,
+      "absoluteAt": 1795199887705.4138
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "viz,benchmark,graphics.pipeline",
+      "id": 8173,
+      "name": "Graphics.Pipeline",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261177729,
+      "absoluteAt": 1795199887705.578
+    },
+    {
+      "args": {},
+      "cat": "viz,benchmark,graphics.pipeline",
+      "id": 8174,
+      "name": "Graphics.Pipeline",
+      "ph": "s",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261177729,
+      "absoluteAt": 1795199887705.578
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "id": 8175,
+      "name": "Scheduler::RunTask",
+      "ph": "s",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260998541,
+      "absoluteAt": 1795199887526.39
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8175,
+      "name": "Scheduler::RunTask",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261177770,
+      "absoluteAt": 1795199887705.619
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8176,
+      "name": "Scheduler::ScheduleTask",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261177821,
+      "absoluteAt": 1795199887705.67
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8179,
+      "name": "SyncToken::Wait",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261177879,
+      "absoluteAt": 1795199887705.7278
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "id": 8182,
+      "name": "Scheduler::RunTask",
+      "ph": "s",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261177821,
+      "absoluteAt": 1795199887705.67
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8182,
+      "name": "Scheduler::RunTask",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261177885,
+      "absoluteAt": 1795199887705.734
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8189,
+      "name": "Scheduler::ScheduleTask",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261177984,
+      "absoluteAt": 1795199887705.8328
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "id": 8190,
+      "name": "Scheduler::RunTask",
+      "ph": "s",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261177984,
+      "absoluteAt": 1795199887705.8328
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8190,
+      "name": "Scheduler::RunTask",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261178033,
+      "absoluteAt": 1795199887705.8818
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8191,
+      "name": "Scheduler::ScheduleTask",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261178045,
+      "absoluteAt": 1795199887705.8938
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "id": 8192,
+      "name": "Scheduler::RunTask",
+      "ph": "s",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261178045,
+      "absoluteAt": 1795199887705.8938
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8192,
+      "name": "Scheduler::RunTask",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261178085,
+      "absoluteAt": 1795199887705.9338
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8193,
+      "name": "Scheduler::ScheduleTask",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261178096,
+      "absoluteAt": 1795199887705.9448
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "id": 8194,
+      "name": "Scheduler::RunTask",
+      "ph": "s",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261178096,
+      "absoluteAt": 1795199887705.9448
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8194,
+      "name": "Scheduler::RunTask",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261178123,
+      "absoluteAt": 1795199887705.972
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8195,
+      "name": "Scheduler::ScheduleTask",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261178134,
+      "absoluteAt": 1795199887705.983
+    },
+    {
+      "args": {},
+      "cat": "disabled-by-default-gpu.dawn",
+      "id": 8201,
+      "name": "DawnReturnCommands",
+      "ph": "s",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261177799,
+      "absoluteAt": 1795199887705.648
+    },
+    {
+      "args": {},
+      "cat": "disabled-by-default-gpu.dawn",
+      "id": 8202,
+      "name": "DawnReturnCommands",
+      "ph": "s",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261177923,
+      "absoluteAt": 1795199887705.772
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8204,
+      "name": "SyncToken::Wait",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261178624,
+      "absoluteAt": 1795199887706.473
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8205,
+      "name": "Scheduler::ScheduleTask",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261178627,
+      "absoluteAt": 1795199887706.4758
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "id": 8206,
+      "name": "Scheduler::RunTask",
+      "ph": "s",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261178134,
+      "absoluteAt": 1795199887705.983
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8206,
+      "name": "Scheduler::RunTask",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261178632,
+      "absoluteAt": 1795199887706.481
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "id": 8207,
+      "name": "Scheduler::SequenceUnblocked",
+      "ph": "s",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261178627,
+      "absoluteAt": 1795199887706.4758
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8207,
+      "name": "Scheduler::SequenceUnblocked",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261178644,
+      "absoluteAt": 1795199887706.493
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8208,
+      "name": "GpuChannel::Flush",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261178651,
+      "absoluteAt": 1795199887706.4998
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "id": 8209,
+      "name": "CommandBuffer::Flush",
+      "ph": "s",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261178651,
+      "absoluteAt": 1795199887706.4998
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8209,
+      "name": "CommandBuffer::Flush",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261180308,
+      "absoluteAt": 1795199887708.157
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "id": 8210,
+      "name": "Scheduler::RunTask",
+      "ph": "s",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261178644,
+      "absoluteAt": 1795199887706.493
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8210,
+      "name": "Scheduler::RunTask",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261180320,
+      "absoluteAt": 1795199887708.169
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8211,
+      "name": "Scheduler::ScheduleTask",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261180338,
+      "absoluteAt": 1795199887708.1868
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "gpu,toplevel.flow",
+      "id": 8212,
+      "name": "GpuChannel::Flush",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261180345,
+      "absoluteAt": 1795199887708.1938
+    },
+    {
+      "args": {},
+      "bp": "e",
+      "cat": "disabled-by-default-gpu.dawn",
+      "id": 8213,
+      "name": "DawnCommands",
+      "ph": "f",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261180359,
+      "absoluteAt": 1795199887708.2078
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "id": 8215,
+      "name": "CommandBuffer::Flush",
+      "ph": "s",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261180345,
+      "absoluteAt": 1795199887708.1938
+    },
+    {
+      "args": {},
+      "cat": "gpu,toplevel.flow",
+      "id": 8216,
+      "name": "Scheduler::RunTask",
+      "ph": "s",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261180338,
+      "absoluteAt": 1795199887708.1868
+    },
+    {
+      "args": {
+        "value": 1
+      },
+      "cat": "gpu",
+      "id2": {
+        "local": "0x6f6c000d7b10"
+      },
+      "name": "CommandBufferService::Paused",
+      "ph": "C",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616260998516,
+      "tts": 1016950,
+      "absoluteAt": 1795199887526.365
+    },
+    {
+      "args": {
+        "value": 0
+      },
+      "cat": "gpu",
+      "id2": {
+        "local": "0x6f6c000d7b10"
+      },
+      "name": "CommandBufferService::Paused",
+      "ph": "C",
+      "pid": 3536,
+      "tid": 5220,
+      "ts": 616261180352,
+      "tts": 1022054,
+      "absoluteAt": 1795199887708.201
+    }
+  ]
+}

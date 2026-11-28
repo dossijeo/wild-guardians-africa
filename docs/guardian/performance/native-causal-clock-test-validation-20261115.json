@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "date": "2026-11-15",
+  "baseCommit": "6b4c0e52e798c0408d357d63cdffa59573aa4849",
+  "scope": "Test API correction only: native causal policy invalidates a causal staged gate ticket at the same effective time and intent sequence. Production/kernel unchanged.",
+  "before": {
+    "path": ".cache/native-causal-clock-current-diagnosis.log",
+    "sha256": "19568064408b14a998bd55224337a7cde3176568748df001dfb3bb324cd3929f",
+    "tests": 4,
+    "pass": 3,
+    "fail": 1,
+    "skipped": 0,
+    "todo": 0,
+    "failures": [
+      "not ok 4 - a clock policy boundary invalidates an older staged gate proposal even at the same logical time and intent sequence"
+    ]
+  },
+  "after": {
+    "path": ".cache/native-causal-clock-api-regression.log",
+    "sha256": "45d2d7a92e9f73e2a2441391912d41bd24d87ce0e735b74ceaf1e5d8992af73c",
+    "tests": 38,
+    "pass": 38,
+    "fail": 0,
+    "skipped": 0,
+    "todo": 0,
+    "failures": []
+  },
+  "command": ".cache/tooling/node20.exe --test --test-concurrency=4 tests/spatial-native-causal-clock.test.js tests/native-gate-causal-transaction.test.js tests/native-barrier-quiescence.test.js tests/native-admission-vertical.test.js",
+  "runtime": ".cache/tooling/node20.exe",
+  "testHash": "d6cf8beb457eca557f29747fcc83d8066eec305856b20176ea7602a42a30d03f",
+  "unchangedProductionHashes": {
+    "src/world/wild-engine/spatial-gate-api.inc": "6e5b312ff5f4af1c843cfbed90791a926034768d39d9fe14e15cc9d1aa96296b",
+    "src/world/wild-engine/spatial-intent-state.cpp": "745d0cd2cb8e0c9e69b7aefdeff030064488dda54b1837ff2a6651e6ced64235",
+    "src/world/wild-engine/spatial-savanna.wasm": "3bc1765ff4d5de53516273afd38a8b1618874f5a94dbcc8ae7f609c90f022b31",
+    "public/wild-engine/spatial-threaded.wasm": "4149db50ed0aebdd45274c495993a83ef5b6dfc4fc488f9760190a141aeb74ca",
+    "src/world/wild-engine/spatial-intent-bridge.js": "2ff124a751f387cc50b822d9cef01d0567a96106c73f86bb7a1853a26ab60c20"
+  },
+  "decision": "Keep old API rejection -7; stage causal family 12, retain clock sequence and verify pause invalidates old commit with -2. No expectation lowered or production guard removed.",
+  "limits": "No hardware or full integrated acceptance claimed. No product build/GPU repetition for test/docs-only change; restoration evidence of the same production revision remains valid. The other five historical broad failures remain open."
+}

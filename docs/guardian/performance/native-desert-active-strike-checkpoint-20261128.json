@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "product": "539eca973f288fb19d5a05d2da8050000b6703c0",
+  "fixture": "Desierto 983",
+  "snapshotSHA256": "89cda76820f56059230ee99779b14895c150c568871f7534787e3798c3b784d9",
+  "receiptSHA256": "3ffd7a1e7a390625cd8874c0da04a4bde9d60a59db3b4c0d23b41bc87f1de74e",
+  "native": {
+    "standaloneSHA256": "7c88c162fe748976833c566b247aa5ce3c6366f6a547e6884d062b038268e64c",
+    "pthreadSHA256": "4e705c296893c4393d7457e8a553c0852f02434c76cdc7095d3231eed0b5ac54",
+    "importsAndExportsUnchanged": true
+  },
+  "qualification": "Public save from Game and WASM with a deterministic Draw. Reload uses the save's authority options in Edge with real NVIDIA Draw. The harness waits for startup admission to settle and retains Home18 and Strike27 READY separately.",
+  "reload": {
+    "adapter": {"vendor": "nvidia", "architecture": "turing"},
+    "at": 17.9199999999999,
+    "firstDraw": 99,
+    "gateId": 1000000,
+    "home": {"bodyId": 1, "ticket": 2, "relativeTime": 0},
+    "strike": {
+      "bodyId": 2,
+      "ticket": 4,
+      "attackId": "attack-29209",
+      "clip": 0,
+      "remaining": 1.421666705161332,
+      "duration": 1.541666705161333,
+      "relativeTime": 0,
+      "clipAge": 0.11999999731779099
+    },
+    "pick": {"entityId": "animal-1000003", "matchingClockSamples": 5},
+    "impact": {"at": 19.359999999999868, "count": 1, "beforeHp": 140, "afterHp": 120},
+    "cancelledArrivalRequest": 3,
+    "homeArrival": {"ticket": 7, "at": 19.859999999999857},
+    "ruin": {"ticket": 10, "at": 22.5599999999998},
+    "drainedAt": 22.799999999999795,
+    "applicationErrors": []
+  }
+}

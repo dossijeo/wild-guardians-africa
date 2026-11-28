@@ -158,7 +158,7 @@
         "bakedLod": 0,
         "framingLod": 0,
         "sourceVertices": 4311,
-        "sourceTriangles": 3290,
+        "sourceTriangles": 3232,
         "lighting": "Native AfricanToon and source material, baked day",
         "bakedPhase": "day",
         "nightAmount": 0,
@@ -172,13 +172,14 @@
         "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
         "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
         "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied",
-        "day": "./assets/far-vegetation/savanna-1-day.webp",
-        "night": "./assets/far-vegetation/savanna-1-night.webp",
+        "day": "./assets/far-vegetation/cleaned-20261101/savanna-1-day.webp",
+        "night": "./assets/far-vegetation/cleaned-20261101/savanna-1-night.webp",
         "runtimeSha256": {
-          "day": "f22e40dd4f1cc3290124ede57e3b77d5ab79381253839a01be0e81cfce8522bc",
-          "night": "96abb47211cdab6d3fd75040f3f8b5b57881291e13913d1038c9fc3daddfa456"
+          "day": "a2465c6b8898634a4da3cfebfaeadfb0155cd39615bfa84a7fe61865aa75911a",
+          "night": "203ad4c522426040866e5f604edfac6864fef95a6f499e8ce1e2d2d1ed9973fe"
         },
-        "imagegen": true
+        "imagegen": false,
+        "cleanupProvenance": "docs/lighting/tree-near-retexture/impostors/installed.json"
       },
       {
         "experimental": false,
@@ -496,7 +497,7 @@
         "bakedLod": 0,
         "framingLod": 0,
         "sourceVertices": 1723,
-        "sourceTriangles": 1254,
+        "sourceTriangles": 1162,
         "lighting": "Native AfricanToon and source material, baked day",
         "bakedPhase": "day",
         "nightAmount": 0,
@@ -510,13 +511,14 @@
         "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
         "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
         "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied",
-        "day": "./assets/far-vegetation/grand_river-1-day.webp",
-        "night": "./assets/far-vegetation/grand_river-1-night.webp",
+        "day": "./assets/far-vegetation/cleaned-20261101/grand_river-1-day.webp",
+        "night": "./assets/far-vegetation/cleaned-20261101/grand_river-1-night.webp",
         "runtimeSha256": {
-          "day": "ef144cc875bbd69fcf30304a9ae204f2afc67dad80cc0a553ae9ea139f3c17ae",
-          "night": "8cbe94e0702bcab502ed492d869b44fc06a0e0e2e28cf799686fc72b7c03a39a"
+          "day": "9040d2bad591b356080c405953a1d9709a33fb82f915e37a9856be1dcfc6952e",
+          "night": "2d9a4b99a65c269b859e1dbadbb90552cb8f0caed5a4e6322637b7def591cfe0"
         },
-        "imagegen": true
+        "imagegen": false,
+        "cleanupProvenance": "docs/lighting/tree-near-retexture/impostors/installed.json"
       },
       {
         "experimental": false,
@@ -664,7 +666,7 @@
         "bakedLod": 0,
         "framingLod": 0,
         "sourceVertices": 1261,
-        "sourceTriangles": 989,
+        "sourceTriangles": 965,
         "lighting": "Native AfricanToon and source material, baked day",
         "bakedPhase": "day",
         "nightAmount": 0,
@@ -678,13 +680,14 @@
         "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
         "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
         "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied",
-        "day": "./assets/far-vegetation/grand_river-3-day.webp",
-        "night": "./assets/far-vegetation/grand_river-3-night.webp",
+        "day": "./assets/far-vegetation/cleaned-20261101/grand_river-3-day.webp",
+        "night": "./assets/far-vegetation/cleaned-20261101/grand_river-3-night.webp",
         "runtimeSha256": {
-          "day": "a020320b81fdf522f95c7b8541b8d80c2668f2c2c108619477b85490c6d302f2",
-          "night": "58bb63da11dbb2dd117dec7e1236679504e614dce0a2523995d0ea4c9db5c45c"
+          "day": "271d8728f44805f518150d86130e4131a8bc4d79ca5904cf872c624d0994b06b",
+          "night": "566578b502c84f57b9dd5a20228c02a5d69cd73b291373af82de65cd5f645bd3"
         },
-        "imagegen": true
+        "imagegen": false,
+        "cleanupProvenance": "docs/lighting/tree-near-retexture/impostors/installed.json"
       }
     ],
     "mangrove": [
@@ -1870,7 +1873,7 @@
       }
     ]
   },
-  "totalTextureBytes": 47410534,
+  "totalTextureBytes": 44284450,
   "nativeSunDirection": true,
   "artRevision": "imagegen-20261026"
 }

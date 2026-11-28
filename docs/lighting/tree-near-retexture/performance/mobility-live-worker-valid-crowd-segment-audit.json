@@ -1,0 +1,70 @@
+{
+  "animals": 20,
+  "moved": 6,
+  "initializationMs": 856.4050000011921,
+  "workerTickMs": 1039.2299999892712,
+  "responseMs": 1056.9749999940395,
+  "applyDelayMs": 1.3900000005960464,
+  "frames": {
+    "count": 119,
+    "p95": 33.38999999999942,
+    "p99": 33.4149999999936,
+    "max": 33.42000000000553
+  },
+  "overlapFrames": {
+    "count": 32,
+    "p95": 33.37000000000262,
+    "p99": 33.37999999999738,
+    "max": 33.4149999999936
+  },
+  "renderMs": {
+    "count": 120,
+    "p95": 37.25,
+    "p99": 43.980000004172325,
+    "max": 47.11499999463558
+  },
+  "maxPositionError": 0,
+  "baselineCount": 20,
+  "segments": [
+    {
+      "id": "qa-beast-2",
+      "distance": 0.07499999999999973,
+      "terrainClear": true,
+      "staticBodiesClear": true
+    },
+    {
+      "id": "qa-beast-6",
+      "distance": 0.07499999999999796,
+      "terrainClear": true,
+      "staticBodiesClear": true
+    },
+    {
+      "id": "qa-beast-9",
+      "distance": 0.0750000000000038,
+      "terrainClear": true,
+      "staticBodiesClear": true
+    },
+    {
+      "id": "qa-beast-14",
+      "distance": 0.028679141852125348,
+      "terrainClear": true,
+      "staticBodiesClear": true
+    },
+    {
+      "id": "qa-beast-15",
+      "distance": 0.0749999999999986,
+      "terrainClear": true,
+      "staticBodiesClear": true
+    },
+    {
+      "id": "qa-beast-17",
+      "distance": 0.07499999999999905,
+      "terrainClear": true,
+      "staticBodiesClear": true
+    }
+  ],
+  "overlappingPairs": 0,
+  "newSweptConflicts": 0,
+  "sceneErrors": [],
+  "scope": "Single frozen mangrove QA scene with 20 animals manually placed in native-standable non-overlapping positions; Worker restores adapted copy and executes one tick; after response the test copies only x/z back for rendering. After measurement, straight segments are checked against the original scene navigation and initial body positions, plus a simultaneous linear disc approximation between animals. This is not an authoritative gameplay bridge, trajectory, collision, pose, input or visual-equivalence proof. Initialization and segment audits outside measurement; no GPU timer."
+}

@@ -1,0 +1,53 @@
+{
+  "baseline": "fd009e075317a673f613c687b8e86ff5e2e02f6e",
+  "scope": "DEV AttackCrops, one stationary saved strike against a live crop in Sabana",
+  "inputSha256": "a79d272daea007df1dcc9b903d6c4af2a474e56b037b9c08adf93ab6b22f0442",
+  "standaloneSha256": "d1b6fb31712d5837ff5ade6c0593f71b535cfc3a293febc7165ece5e2da43bcc",
+  "pthreadSha256": "821f886ca07d7b7586d3e5d32583cde751c1cddcdcaa9324e310c1365515c448",
+  "pthreadModuleSha256": "8791da8028c36a3a09c4ee79dca54aec176d5e1a0e2c06be07a791f859b67353",
+  "restoredAction": {
+    "actor": "animal-396",
+    "target": "plant-373",
+    "attackId": "attack-661",
+    "clip": "Weapon_Combo_2",
+    "checkpointElapsed": 392.0499999999916,
+    "clipAgeAtCheckpoint": 0.6499999999994088,
+    "remaining": 3.891666824371214,
+    "position": [90.31144714355469, 9.17122745513916],
+    "heading": -2.9573478356832616,
+    "motionPhase": 20.84452945958807,
+    "previousRouteAuthorityRestored": false
+  },
+  "cpu": {
+    "baselineNativePreparation": "inactive",
+    "regression": {"passed": 287, "failed": 0, "skipped": 0},
+    "webGpuWorkerBuildSeconds": 46.33,
+    "arrivalUnderHeldReady": "stationary",
+    "originalRigGeometries": 4,
+    "sameBodyForFollowingRoute": true,
+    "uninterruptedHitTime": 395.94999999998805,
+    "restoredHitTimeWithoutExtraStepsWhileHeld": 395.94999999998805
+  },
+  "physical": {
+    "browser": "Edge 158.0.4370.33",
+    "adapter": {"vendor": "nvidia", "architecture": "turing"},
+    "requestToReadyMs": 3629.400146484375,
+    "intentionalReadyHoldMs": 300,
+    "readyToFirstDrawMs": 392,
+    "firstDraw": {"sequence": 51, "ticket": 2, "type": 27, "relativeAge": 0, "replay": false},
+    "laterRelativeAge": 0.14999999105930328,
+    "committedEnd": 395.9416668243628,
+    "hitCount": 1,
+    "hitTime": 395.94999999998805,
+    "hitsRemaining": 1,
+    "firstObservedDrawWithoutStrike": {"sequence": 91, "elapsed": 395.999999999988, "bindings": 0},
+    "ledgerUnchanged": true,
+    "drained": true,
+    "receiptSha256": "94f9fd83084ebe37c6c29ea0792cd2ce70212cb0718de92b1617a0030ee5e556",
+    "trace": {
+      "sha256": "7421f972ff5ed979cc6a6ffa857ead32bef0df7c5a0dd31fb376eb9c2205dc60",
+      "bytes": 20058885,
+      "dataLossOccurred": false
+    }
+  }
+}

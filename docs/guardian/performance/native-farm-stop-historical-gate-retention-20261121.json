@@ -1,0 +1,559 @@
+{
+  "base": "16e374e0b465b207fbe4b0ddd34ab6587967953a",
+  "candidateSha256": "29b09b14f8d05e2eb967d8a6f1de382c54eec0462ec79b25d5403528e7a07ba0",
+  "ordinaryInput": "Restored Farm and healthy zarzas gate, two workers, Game matures mijo 4.9 simulated seconds after the paused initial Farm acquisition. An audit worker withholds the actual READY transport reply for at least 600 ms.",
+  "hardware": {
+    "rawReceiptSha256": "c60ddaf4f9989aad9801329cbba6880d13b1462e0431ae59bf8a014612b35600",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 127.89999997615814
+      }
+    },
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja",
+    "displayHz": 30,
+    "farm": {
+      "actor": 900011,
+      "body": 1,
+      "time": 10,
+      "ticket": 2,
+      "gateIds": [
+        1000000
+      ]
+    },
+    "prepared": {
+      "ticket": 3,
+      "time": 14.899999999999896,
+      "heldMs": 624.2999999523163,
+      "drawsDuringHold": 19,
+      "firstStopDraftDrawnDuringHold": false,
+      "elapsedBeforeRelease": 16.149999999999874
+    },
+    "stop": {
+      "ticket": 4,
+      "time": 16.149999999999874,
+      "routes": [
+        {
+          "nativeRoute": {
+            "actorId": 900011,
+            "assignmentSequence": 5,
+            "routeHandle": {
+              "authorityEpoch": "49b7ee6c-08dd-472b-b0e6-86b5405a953b/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 2
+            }
+          },
+          "bodyId": 1,
+          "state": 4,
+          "resumeGeneration": 3
+        }
+      ],
+      "stoppedPosition": [
+        -13.967712327583982,
+        5.806753519950039
+      ],
+      "motorEffectRows": 0,
+      "firstStopDraw": {
+        "at": 1795269188809.1,
+        "sequence": 69,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "49b7ee6c-08dd-472b-b0e6-86b5405a953b/1",
+          "nativeSession": 1,
+          "ticket": 4,
+          "effectiveTime": 16.149999999999874
+        },
+        "intervalMs": 66.60009765625,
+        "drawMs": 5.39990234375,
+        "replay": false,
+        "clockElapsed": 16.199999999999875,
+        "safeUntil": 16.199999999999875,
+        "cameraVersion": null
+      }
+    },
+    "gate": {
+      "id": 1000000,
+      "z": 8.2,
+      "initial": {
+        "root": 519,
+        "visible": true,
+        "meshes": [
+          {
+            "id": 521,
+            "geometry": 248,
+            "material": [
+              412
+            ],
+            "visible": true,
+            "effectiveVisible": true
+          }
+        ]
+      },
+      "committed": {
+        "root": 519,
+        "visible": true,
+        "meshes": [
+          {
+            "id": 521,
+            "geometry": 248,
+            "material": [
+              412
+            ],
+            "visible": true,
+            "effectiveVisible": true
+          }
+        ]
+      },
+      "heldMotor": {
+        "entityId": "structure-1000000",
+        "mesh": 521,
+        "geometry": 248,
+        "positionVersion": 1,
+        "normalVersion": 1,
+        "positionHash": 603722329,
+        "opening": 1,
+        "nativeGate": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "49b7ee6c-08dd-472b-b0e6-86b5405a953b/1",
+            "nativeSession": 1,
+            "ticket": 1,
+            "effectiveTime": 10
+          }
+        }
+      },
+      "committedMotor": {
+        "entityId": "structure-1000000",
+        "mesh": 521,
+        "geometry": 248,
+        "positionVersion": 1,
+        "normalVersion": 1,
+        "positionHash": 603722329,
+        "opening": 1,
+        "nativeGate": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "49b7ee6c-08dd-472b-b0e6-86b5405a953b/1",
+            "nativeSession": 1,
+            "ticket": 1,
+            "effectiveTime": 10
+          }
+        }
+      }
+    },
+    "workers": {
+      "before": [
+        {
+          "root": 729,
+          "meshes": 32
+        },
+        {
+          "root": 798,
+          "meshes": 32
+        }
+      ],
+      "after": [
+        {
+          "root": 729,
+          "meshes": 32
+        },
+        {
+          "root": 798,
+          "meshes": 32
+        }
+      ]
+    },
+    "bufferReuse": {
+      "initialOwnerCount": 894,
+      "finalOwnerCount": 973,
+      "commonOwnerCount": 894,
+      "replacedOwnerCount": 0,
+      "reusedReferenceCount": 798,
+      "reusedGateBuffers": [
+        {
+          "reference": "Buffer:2342",
+          "mesh": 521,
+          "name": "",
+          "geometry": 248,
+          "attribute": "position",
+          "bytes": 208980,
+          "version": 1,
+          "hash": null
+        },
+        {
+          "reference": "Buffer:2341",
+          "mesh": 521,
+          "name": "",
+          "geometry": 248,
+          "attribute": "normal",
+          "bytes": 208980,
+          "version": 1,
+          "hash": null
+        },
+        {
+          "reference": "Buffer:2340",
+          "mesh": 521,
+          "name": "",
+          "geometry": 248,
+          "attribute": "uv",
+          "bytes": 139320,
+          "version": 0,
+          "hash": null
+        },
+        {
+          "reference": "Buffer:2339",
+          "mesh": 521,
+          "name": "",
+          "geometry": 248,
+          "attribute": "color",
+          "bytes": 208980,
+          "version": 0,
+          "hash": null
+        },
+        {
+          "reference": "Buffer:3403",
+          "mesh": 521,
+          "name": "",
+          "geometry": 248,
+          "attribute": "wgGatePosition",
+          "bytes": 208980,
+          "version": 1,
+          "hash": null
+        },
+        {
+          "reference": "Buffer:3402",
+          "mesh": 521,
+          "name": "",
+          "geometry": 248,
+          "attribute": "wgGateNormal",
+          "bytes": 208980,
+          "version": 1,
+          "hash": null
+        },
+        {
+          "reference": "Buffer:3401",
+          "mesh": 521,
+          "name": "",
+          "geometry": 248,
+          "attribute": "wgGateLeaf",
+          "bytes": 69660,
+          "version": 0,
+          "hash": null
+        }
+      ]
+    },
+    "presentation": {
+      "sampledDraws": 240,
+      "peaks": [
+        {
+          "at": 1795269188809.1,
+          "sequence": 69,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "49b7ee6c-08dd-472b-b0e6-86b5405a953b/1",
+            "nativeSession": 1,
+            "ticket": 4,
+            "effectiveTime": 16.149999999999874
+          },
+          "intervalMs": 66.60009765625,
+          "drawMs": 5.39990234375,
+          "replay": false,
+          "clockElapsed": 16.199999999999875,
+          "safeUntil": 16.199999999999875,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795269181778.1,
+          "sequence": 27,
+          "trigger": "raf",
+          "nativeWorldBoundary": null,
+          "intervalMs": 35.800048828125,
+          "drawMs": 1.39990234375,
+          "replay": true,
+          "clockElapsed": 10,
+          "safeUntil": 10,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795269184711.4,
+          "sequence": 40,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "49b7ee6c-08dd-472b-b0e6-86b5405a953b/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10
+          },
+          "intervalMs": 35.699951171875,
+          "drawMs": 1.5,
+          "replay": true,
+          "clockElapsed": 12.099999999999955,
+          "safeUntil": 12.099999999999955,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795269188044.5,
+          "sequence": 68,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "49b7ee6c-08dd-472b-b0e6-86b5405a953b/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10
+          },
+          "intervalMs": 35.300048828125,
+          "drawMs": 2.39990234375,
+          "replay": true,
+          "clockElapsed": 15.449999999999884,
+          "safeUntil": 15.449999999999884,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795269186544.1,
+          "sequence": 57,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "49b7ee6c-08dd-472b-b0e6-86b5405a953b/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10
+          },
+          "intervalMs": 34.900146484375,
+          "drawMs": 1.89990234375,
+          "replay": true,
+          "clockElapsed": 13.949999999999916,
+          "safeUntil": 13.949999999999916,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795269186844.1,
+          "sequence": 60,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "49b7ee6c-08dd-472b-b0e6-86b5405a953b/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10
+          },
+          "intervalMs": 34.900146484375,
+          "drawMs": 1.599853515625,
+          "replay": true,
+          "clockElapsed": 14.24999999999991,
+          "safeUntil": 14.24999999999991,
+          "cameraVersion": null
+        }
+      ],
+      "opportunitiesAtStop": [
+        {
+          "at": 1795269188709.1,
+          "intervalMs": 33.300048828125,
+          "outcome": "submitted",
+          "holdId": null,
+          "sequence": 68
+        },
+        {
+          "at": 1795269188742.5,
+          "intervalMs": 33.39990234375,
+          "outcome": "submitted",
+          "holdId": null,
+          "sequence": 68
+        },
+        {
+          "at": 1795269188775.7,
+          "intervalMs": 33.199951171875,
+          "outcome": "stale-binding",
+          "holdId": null,
+          "sequence": 68
+        },
+        {
+          "at": 1795269188809.1,
+          "intervalMs": 33.400146484375,
+          "outcome": "submitted",
+          "holdId": null,
+          "sequence": 69
+        },
+        {
+          "at": 1795269188842.4,
+          "intervalMs": 33.2998046875,
+          "outcome": "submitted",
+          "holdId": null,
+          "sequence": 69
+        }
+      ],
+      "scope": "Consumer sampled draw starts at 30 Hz. C4 remains open."
+    },
+    "drained": {
+      "disposed": true
+    },
+    "errors": [],
+    "gpuErrors": 0
+  },
+  "repeatWithSelectionWitness": {
+    "source": "71c7f81f661c9cd01f47fb039af9b79697166275",
+    "probeSha256": "61f31ec539764ebea693d09e92cc8e22a99db49b0701903fd2e1a2a1bb2017e5",
+    "displayHz": 30,
+    "cases": [
+      {
+        "captureSha256": "d4702a72fc4b5cd88a5235ff62798e6fde2bd5b67dbcc0307343cfb75a42a2b7",
+        "holdRequestedMs": 600,
+        "holdObservedMs": 634.6000000238419,
+        "drawsDuringHold": 19,
+        "opportunities": 240,
+        "notSubmitted": 0,
+        "firstStopDraw": {
+          "at": 1795271354483.8,
+          "sequence": 65,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "c8b2a809-b5f6-460b-b209-9d15de2f614c/1",
+            "nativeSession": 1,
+            "ticket": 4,
+            "effectiveTime": 16.149999999999874
+          },
+          "intervalMs": 33.39990234375,
+          "drawMs": 7.5,
+          "replay": false,
+          "clockElapsed": 16.149999999999874,
+          "safeUntil": 16.149999999999874,
+          "cameraVersion": null
+        },
+        "maxInterval": {
+          "at": 1795271350989.7002,
+          "sequence": 41,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "c8b2a809-b5f6-460b-b209-9d15de2f614c/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10
+          },
+          "intervalMs": 39.300048828125,
+          "drawMs": 2.39990234375,
+          "replay": true,
+          "clockElapsed": 12.649999999999944,
+          "safeUntil": 12.649999999999944,
+          "cameraVersion": null
+        },
+        "drained": true,
+        "gpuErrors": 0
+      },
+      {
+        "captureSha256": "5de2b759db175dbedef7f8f1aace0b4c004ed15c35ea672fd031ca4a84203f2c",
+        "holdRequestedMs": 611,
+        "holdObservedMs": 638.2000000476837,
+        "drawsDuringHold": 20,
+        "opportunities": 240,
+        "notSubmitted": 0,
+        "firstStopDraw": {
+          "at": 1795271457650.8,
+          "sequence": 65,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "fb548d62-c181-49c5-acbd-4b41fd762013/1",
+            "nativeSession": 1,
+            "ticket": 4,
+            "effectiveTime": 16.099999999999874
+          },
+          "intervalMs": 33.300048828125,
+          "drawMs": 9.39990234375,
+          "replay": false,
+          "clockElapsed": 16.149999999999874,
+          "safeUntil": 16.149999999999874,
+          "cameraVersion": null
+        },
+        "maxInterval": {
+          "at": 1795271453820.6,
+          "sequence": 39,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "fb548d62-c181-49c5-acbd-4b41fd762013/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10
+          },
+          "intervalMs": 36.300048828125,
+          "drawMs": 1.2998046875,
+          "replay": true,
+          "clockElapsed": 12.299999999999951,
+          "safeUntil": 12.299999999999951,
+          "cameraVersion": null
+        },
+        "drained": true,
+        "gpuErrors": 0
+      },
+      {
+        "captureSha256": "dbac8d5c1895e5d0a83069992f2ef1f685d41d14c2d59ffc5b48d34d7cab3895",
+        "holdRequestedMs": 622,
+        "holdObservedMs": 640.9000000953674,
+        "drawsDuringHold": 20,
+        "opportunities": 240,
+        "notSubmitted": 0,
+        "firstStopDraw": {
+          "at": 1795271487950.8,
+          "sequence": 69,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "cf3a5ade-1431-4d8d-a104-821d5f941553/1",
+            "nativeSession": 1,
+            "ticket": 4,
+            "effectiveTime": 16.299999999999876
+          },
+          "intervalMs": 33.10009765625,
+          "drawMs": 8.699951171875,
+          "replay": false,
+          "clockElapsed": 16.319999999999876,
+          "safeUntil": 16.319999999999876,
+          "cameraVersion": null
+        },
+        "maxInterval": {
+          "at": 1795271486553,
+          "sequence": 67,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "cf3a5ade-1431-4d8d-a104-821d5f941553/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10
+          },
+          "intervalMs": 35.599853515625,
+          "drawMs": 3.900146484375,
+          "replay": false,
+          "clockElapsed": 14.899999999999896,
+          "safeUntil": 14.899999999999896,
+          "cameraVersion": null
+        },
+        "drained": true,
+        "gpuErrors": 0
+      }
+    ],
+    "originalStaleBindingRemainsOpen": true
+  }
+}

@@ -1,0 +1,198 @@
+{
+  "source": "C:\\Users\\PC\\.codex\\worktrees\\guardian-animation\\wild-guardians-africa\\public\\assets\\e77e4a48a6d072d58420575e0e58b3545e8f4eb5d8ea54f4a7f38819e93f1cff.glb",
+  "sha256": "e77e4a48a6d072d58420575e0e58b3545e8f4eb5d8ea54f4a7f38819e93f1cff",
+  "inspection": {
+    "input": "public/assets/e77e4a48a6d072d58420575e0e58b3545e8f4eb5d8ea54f4a7f38819e93f1cff.glb",
+    "expression": "",
+    "amount": 1,
+    "meshes": [
+      {
+        "mesh": "Mesh_0",
+        "vertices": 41638,
+        "headVertices": 1056
+      },
+      {
+        "mesh": "RearCloth",
+        "vertices": 828,
+        "headVertices": 0
+      },
+      {
+        "mesh": "Icosphere",
+        "vertices": 42,
+        "headVertices": 0
+      }
+    ],
+    "center": [
+      0.0,
+      -0.6800000071525574,
+      2.319999933242798
+    ],
+    "extent": 0.65,
+    "directions": {
+      "front": [
+        0,
+        -1,
+        0.05
+      ],
+      "quarter": [
+        1,
+        -1,
+        0.08
+      ],
+      "side": [
+        1,
+        0,
+        0.05
+      ],
+      "other-side": [
+        -1,
+        0,
+        0.05
+      ],
+      "lower-front": [
+        0,
+        -1,
+        -0.5
+      ],
+      "lower-quarter": [
+        1,
+        -1,
+        -0.5
+      ],
+      "lower-side": [
+        1,
+        0,
+        -0.5
+      ]
+    },
+    "clay": true
+  },
+  "landmarks": [
+    {
+      "view": "lower-front",
+      "name": "subnasal-center",
+      "pixel": [
+        384,
+        365
+      ],
+      "hit": true,
+      "object": "Mesh_0",
+      "face": 4516,
+      "position": [
+        0.0004231771163176745,
+        -0.7642931938171387,
+        2.295358896255493
+      ],
+      "normal": [
+        -0.22889643907546997,
+        -0.5782678723335266,
+        -0.7830790281295776
+      ]
+    },
+    {
+      "view": "lower-front",
+      "name": "subnasal-left",
+      "pixel": [
+        287,
+        353
+      ],
+      "hit": true,
+      "object": "Mesh_0",
+      "face": 8616,
+      "position": [
+        -0.08167317509651184,
+        -0.7159879207611084,
+        2.3308663368225098
+      ],
+      "normal": [
+        -0.8469070792198181,
+        -0.17875470221042633,
+        -0.5007945895195007
+      ]
+    },
+    {
+      "view": "lower-front",
+      "name": "subnasal-right",
+      "pixel": [
+        483,
+        353
+      ],
+      "hit": true,
+      "object": "Mesh_0",
+      "face": 12703,
+      "position": [
+        0.08421223610639572,
+        -0.7495930194854736,
+        2.3140640258789062
+      ],
+      "normal": [
+        0.6025502681732178,
+        -0.7236292362213135,
+        -0.33659160137176514
+      ]
+    },
+    {
+      "view": "lower-front",
+      "name": "chin-center",
+      "pixel": [
+        384,
+        554
+      ],
+      "hit": true,
+      "object": "Mesh_0",
+      "face": 8844,
+      "position": [
+        0.0004231771163176745,
+        -0.31372714042663574,
+        2.3418002128601074
+      ],
+      "normal": [
+        -0.4100262224674225,
+        -0.5115864276885986,
+        -0.7550880312919617
+      ]
+    },
+    {
+      "view": "lower-quarter",
+      "name": "subnasal-side-candidate",
+      "pixel": [
+        427,
+        352
+      ],
+      "hit": true,
+      "object": "Mesh_0",
+      "face": 6649,
+      "position": [
+        0.09769117832183838,
+        -0.7256250381469727,
+        2.312448263168335
+      ],
+      "normal": [
+        0.6585825085639954,
+        -0.33661624789237976,
+        -0.6730220913887024
+      ]
+    },
+    {
+      "view": "side",
+      "name": "commissure-candidate-upper",
+      "pixel": [
+        523,
+        392
+      ],
+      "hit": true,
+      "object": "Mesh_0",
+      "face": 7683,
+      "position": [
+        0.14479589462280273,
+        -0.5619334578514099,
+        2.3200366497039795
+      ],
+      "normal": [
+        0.9333990812301636,
+        -0.28486865758895874,
+        -0.21821098029613495
+      ]
+    }
+  ]
+}

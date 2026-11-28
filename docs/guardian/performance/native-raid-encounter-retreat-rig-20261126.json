@@ -1,0 +1,176 @@
+{
+  "baseline": "a46efe63f535a471fdbb87fa0f01252ef149ed25",
+  "scope": "Rig glTF original de facóquero, materiales baked, Host y picking con cola GPU determinista. El arnés registra el reloj del rig y sube su tabla real en un paquete de prueba.",
+  "runs": {
+    "real": {
+      "prepared": {
+        "cutoff": 12.599999999999945,
+        "actor": 1000000,
+        "body": 2,
+        "approach": 8,
+        "oldLease": {
+          "start": 10.95999999999998,
+          "end": 13.478509836547673
+        },
+        "parts": 4,
+        "cancelRestored": true
+      },
+      "held": {
+        "cutoff": 12.599999999999945,
+        "at": 12.619999999999944,
+        "ticket": 10,
+        "hold": 6,
+        "packet": 6,
+        "old": 5
+      },
+      "atCut": {
+        "packet": 6,
+        "clock": 12.619999999999944,
+        "ticket": 11,
+        "age": 0,
+        "pose": [
+          -16.722110748291016,
+          2,
+          -1.5707963705062866,
+          1.659999966621399
+        ],
+        "lease": {
+          "start": 12.619999999999944,
+          "end": 14.33050764733543
+        },
+        "table": {
+          "width": 45,
+          "height": 1,
+          "bytes": 720,
+          "sha256": "b69862c0ed6cc9734fc2f7b37c548915bc3754efb7fa2e55a1920bae18ebe79e"
+        }
+      },
+      "moving": {
+        "clock": 12.679999999999943,
+        "age": 0.05999999865889549,
+        "ticket": 11,
+        "pose": [
+          -16.950108297915346,
+          2,
+          -1.5707963705062866,
+          1.7199994762173008
+        ],
+        "running": 1,
+        "speed": 3.799999952316284
+      },
+      "tail": null,
+      "raidEndedAt": 14.339999999999907
+    },
+    "real-two-step": {
+      "prepared": {
+        "cutoff": 12.599999999999945,
+        "actor": 1000000,
+        "body": 2,
+        "approach": 8,
+        "oldLease": {
+          "start": 10.95999999999998,
+          "end": 13.478509836547673
+        },
+        "parts": 4,
+        "cancelRestored": true
+      },
+      "held": {
+        "cutoff": 12.599999999999945,
+        "at": 12.619999999999944,
+        "ticket": 10,
+        "hold": 6,
+        "packet": 6,
+        "old": 5
+      },
+      "atCut": {
+        "packet": 6,
+        "clock": 12.619999999999944,
+        "ticket": 11,
+        "age": 0,
+        "pose": [
+          -16.722110748291016,
+          2,
+          -1.5707963705062866,
+          1.659999966621399
+        ],
+        "lease": {
+          "start": 12.619999999999944,
+          "end": 14.33050764733543
+        },
+        "table": {
+          "width": 45,
+          "height": 1,
+          "bytes": 720,
+          "sha256": "b69862c0ed6cc9734fc2f7b37c548915bc3754efb7fa2e55a1920bae18ebe79e"
+        }
+      },
+      "moving": {
+        "clock": 12.679999999999943,
+        "age": 0.05999999865889549,
+        "ticket": 11,
+        "pose": [
+          -16.950108297915346,
+          2,
+          -1.5707963705062866,
+          1.7199994762173008
+        ],
+        "running": 1,
+        "speed": 3.799999952316284
+      },
+      "tail": {
+        "stepsExecuted": 2,
+        "at": 12.639999999999944,
+        "pose": [
+          -16.798109984199314,
+          2,
+          -1.5707963267948966,
+          1.6799999999999642
+        ],
+        "worker": {
+          "x": -14.520928903743672,
+          "z": 2.5523155738541687,
+          "fall": 3.061666507720947,
+          "exit": null,
+          "recovery": null,
+          "status": "incapacitated",
+          "incapacitated": true,
+          "hits": 2
+        },
+        "events": [
+          "event-29211"
+        ]
+      },
+      "raidEndedAt": 14.339999999999907
+    }
+  },
+  "baselineRejection": {
+    "elapsed": 12.599999999999945,
+    "diagnostic": "Animal crop source or original clip bank unavailable"
+  },
+  "regression": {
+    "tests": 96,
+    "pass": 96,
+    "fail": 0,
+    "skipped": 0
+  },
+  "engineSha256": "6cd961fa4530e0228b68ac478a6c60ddfc5673db324ada1f3a0c63fee8b802c8",
+  "localEvidenceSha256": {
+    "encounter-retreat-rig-loader.mjs": "cfa68426b763c3b4f5834a351290721ec8e88b429d7e96c2193fccc23f2a827c",
+    "encounter-retreat-go-loader.mjs": "5407783c36d9c8e5009a23a431f10dc5cfcb67d1c301678266122f090090aaf5",
+    "verify-encounter-retreat-rig.mjs": "7ae0f9f98f4c80ad7ab5fe7d49455ee46d900565312f6efb0ec746652ae810e3",
+    "center-encounter-retreat-rig-regression.tap": "155af37aaccc55b3fb2e4b2e545d8eb755950c6a1bc66a3f68625066ce6f90dd",
+    "center-encounter-retreat-rig-real.log": "9edd41f2d31144d762b1cd4d47f9a975062339075cbb8027f37298274c857960",
+    "center-encounter-retreat-rig-real-two-step.log": "5445d20da717783025e0bd7887d3833a0e5ea8eedf912b3249ff1cf3a50452f6",
+    "center-encounter-retreat-rig-base.log": "20778e2667ea5ab160f99bbd63e1144c08b3554c814120da9190f75cf30ed994"
+  },
+  "branchSourcesSha256": {
+    "src/rendering/webgpu-animal-roster.js": "4f10eacfea34073f59b825ba1f48bad3939650c2260b5f828d88900e31464805",
+    "src/rendering/remote-clock-bindings.js": "cd2ed94f0ad66467e14051a59f7ea6c0e1bc298b151b02e1dfbde65f347b075a",
+    "src/rendering/native-gpu-motion.js": "908927493cad5a7ded12bbc76bbe4f5ec8ce0004870c301742a191dfca6ea3f8",
+    "tests/helpers/native-animal-crop-rig.js": "309f8e8b26b4a71e4afca407d89280a0f2b1cc208e61ad0ca6133178737bc601"
+  },
+  "pending": [
+    "Cablear el participante en Surface y preparar el rig del trabajador en el mismo paquete.",
+    "Integrar el flujo de autoridad y comprobar píxeles, picking y drenaje en GPU física."
+  ]
+}

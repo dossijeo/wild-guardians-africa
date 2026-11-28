@@ -1,0 +1,281 @@
+{
+  "base": "2fc0ca86fc870b82e0ca5e33249caedc9332a84a",
+  "scope": "Host same-call comparison reuse across existing motion families; selected original remote/route-control tests and product build. Physical A/B evidence is separate.",
+  "selection": [
+    "tests/native-control-lifecycle-evidence.test.js",
+    "tests/native-farm-arrival-control.test.js",
+    "tests/native-farm-arrival-route-control.test.js",
+    "tests/native-farm-arrival-route-remote.test.js",
+    "tests/native-farm-arrival-stop-clock.test.js",
+    "tests/native-farm-arrival-stop-control.test.js",
+    "tests/native-farm-arrival-stop-remote.test.js",
+    "tests/native-farm-arrived-home-control.test.js",
+    "tests/native-farm-arrived-idle-cycle-control.test.js",
+    "tests/native-farm-arrived-task-control.test.js",
+    "tests/native-farm-arrived-task-late-control.test.js",
+    "tests/native-farm-held-continuation-control.test.js",
+    "tests/native-farm-idle-approach-control.test.js",
+    "tests/native-farm-moving-home-control.test.js",
+    "tests/native-farm-moving-task-control.test.js",
+    "tests/native-farm-pending-home-control.test.js",
+    "tests/native-home-arrival-control.test.js",
+    "tests/native-home-arrival-remote.test.js",
+    "tests/native-home-route-control.test.js",
+    "tests/native-home-route-remote.test.js",
+    "tests/native-idle-approach-restoration-control.test.js",
+    "tests/native-idle-completed-home-control.test.js",
+    "tests/native-idle-completed-home-remote.test.js",
+    "tests/native-idle-cycle-control.test.js",
+    "tests/native-idle-cycle-remote.test.js",
+    "tests/native-idle-failed-cycle-control.test.js",
+    "tests/native-idle-selected-approach-control.test.js",
+    "tests/native-idle-stroll-control.test.js",
+    "tests/native-idle-stroll-remote.test.js",
+    "tests/native-idle-stroll-restoration-control.test.js",
+    "tests/native-idle-stroll-stop-control.test.js",
+    "tests/native-idle-stroll-stop-remote.test.js",
+    "tests/native-initial-idle-body-control.test.js",
+    "tests/native-initial-idle-body-remote.test.js",
+    "tests/native-initial-idle-control.test.js",
+    "tests/native-initial-idle-outside-control.test.js",
+    "tests/native-intent-control-authority.test.js",
+    "tests/native-intent-control-cohort.test.js",
+    "tests/native-intent-control-publication.test.js",
+    "tests/native-resource-preparation-channel.test.js",
+    "tests/native-resume-control.test.js",
+    "tests/native-route-control.test.js",
+    "tests/native-settled-idle-control.test.js",
+    "tests/native-suspended-body-control.test.js",
+    "tests/native-task-consequence-control.test.js",
+    "tests/native-task-route-stop-control.test.js",
+    "tests/native-task-route-stop-remote.test.js",
+    "tests/native-task-settlement-control.test.js",
+    "tests/native-task-settlement-remote.test.js",
+    "tests/remote-webgpu-resource-timing.test.js",
+    "tests/remote-webgpu.test.js"
+  ],
+  "tests": {
+    "exitCode": 0,
+    "tests": 738,
+    "pass": 738,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "build": {
+    "exitCode": 0,
+    "vitePhaseText": [
+      "1m 6s"
+    ]
+  },
+  "inputCounts": {
+    "frozenInputs": 9059,
+    "nativeBuiltInputs": 64,
+    "preservedFiles": 16,
+    "externalCommittedInputs": 38
+  },
+  "changed": {
+    "frozenInputs": [],
+    "nativeBuiltInputs": [],
+    "preservedFiles": [],
+    "externalCommittedInputs": []
+  },
+  "traceRuns": {
+    "baseline": {
+      "rawHostSha256": "6f12de9820bd8a3f872d4f74445bf8510229f12fe67a14c2d5bd537291ff7795",
+      "trace": {
+        "dataLossOccurred": false,
+        "collectionComplete": true,
+        "sha256": "046bd536177f8a133da90701fb2df422aeb5583eda53a89ad181c73152e2aad3",
+        "exportedBytes": 82766607,
+        "peakBufferUsage": 0.38887110352516174,
+        "browserVersion": "157.0.4341.60"
+      },
+      "coverage": {
+        "tracedLifetime": true,
+        "from": 1795208148497.875,
+        "to": 1795208231644.935,
+        "terminal": "retired-drained",
+        "terminalOpportunities": 4961,
+        "terminalSubmittedDraws": 4921,
+        "note": "Complete lifetime requires observation-start, contiguous callback/submitted-draw ordinals and matching terminal counters, plus verified observer provenance and CDP dataLossOccurred:false. Snapshot arrays alone are not terminal evidence."
+      }
+    },
+    "candidate": {
+      "rawHostSha256": "2f3089d45ab9fbaa9232816ddac18ac7f14d635293ccc6fc44ceeb8cff52d8b1",
+      "trace": {
+        "dataLossOccurred": false,
+        "collectionComplete": true,
+        "sha256": "feede81097e8bf17654ff647cfe88bb7d0f1ec127c999fe17a59e9b57c1960d7",
+        "exportedBytes": 82524631,
+        "peakBufferUsage": 0.38693416118621826,
+        "browserVersion": "157.0.4341.60"
+      },
+      "coverage": {
+        "tracedLifetime": true,
+        "from": 1795208404007.25,
+        "to": 1795208487704.445,
+        "terminal": "retired-drained",
+        "terminalOpportunities": 4987,
+        "terminalSubmittedDraws": 4944,
+        "note": "Complete lifetime requires observation-start, contiguous callback/submitted-draw ordinals and matching terminal counters, plus verified observer provenance and CDP dataLossOccurred:false. Snapshot arrays alone are not terminal evidence."
+      }
+    }
+  },
+  "operationComparisons": {
+    "baseline": [
+      72,
+      72,
+      24
+    ],
+    "candidate": [
+      3,
+      3,
+      1
+    ],
+    "testedMotion": "Farm duplicate 24 uniforms"
+  },
+  "sources": [
+    "https://github.com/mrdoob/three.js/blob/r180/src/renderers/common/nodes/Nodes.js#L88-L151"
+  ],
+  "artifacts": {
+    "comparison.json.gz": {
+      "payloadBytes": 73415,
+      "payloadSha256": "2504b9cfcdd3c60e3f4f361d8b477dcc222dd8615f28c56b5c4fed67dd1107a6",
+      "gzipBytes": 8393,
+      "gzipSha256": "f2b9b907dbc35ab2ae58c4f254a8216321654f470251bdc07ed2c539aaa689fc"
+    },
+    "run.py.gz": {
+      "payloadBytes": 3186,
+      "payloadSha256": "5659111597875efe634e49ee763e1915f46c7f7a154fe50191ae8bc66491ae89",
+      "gzipBytes": 1424,
+      "gzipSha256": "a1bbacefed5cb221bcc9277f3121d68dfe7ac2f9ea7072da7c1a28de044a4398"
+    },
+    "compare.py.gz": {
+      "payloadBytes": 4047,
+      "payloadSha256": "777559b23bf39afce1b363a5e32b90039f752aa41f5e8ee722f156423341fe18",
+      "gzipBytes": 1735,
+      "gzipSha256": "fdc6c3559a6951a7bb4b690304cac3b626c049ae555382edcf41e9a62eacaf55"
+    },
+    "cpu-reproduce.py.gz": {
+      "payloadBytes": 3510,
+      "payloadSha256": "5a3a527bd2f4d50fc6fc1c9d602b1a8b8e6832ba78e95143e3c47cc6faf9595a",
+      "gzipBytes": 1710,
+      "gzipSha256": "752cbe1c0650489c5cffa7fbdb7c9e2ff62c2ea5eb15c9e0b0a4b86e0efc2949"
+    },
+    "cpu-validation.json.gz": {
+      "payloadBytes": 1185515,
+      "payloadSha256": "ea9b1aac1d709e798056ee099eb23e1ca3233e2f1998196b2335fc6f54c3daab",
+      "gzipBytes": 446503,
+      "gzipSha256": "ac635b7b60faa039d6a781852b5798e40c5142c0852aa894749b71d4e5adc37d"
+    },
+    "cpu-tests.log.gz": {
+      "payloadBytes": 201718,
+      "payloadSha256": "7fad4e827fb77ef0ebe4e2d5acd3c812c460a68ddcef473fd80c42aca76fb01e",
+      "gzipBytes": 27752,
+      "gzipSha256": "771d330e7b56d2b10197385a924d6ac0f9d217cdc909304a174c53eb26912000"
+    },
+    "product-build.log.gz": {
+      "payloadBytes": 3937,
+      "payloadSha256": "60a5a5fbcc5bebd70d1a4331a4bf5808033876fb968b416dc4a9edd9768c356a",
+      "gzipBytes": 1566,
+      "gzipSha256": "b8b93b9322752f54ed9fa3e37c31908302b6f30b9497396815e611c2cdcc7a6c"
+    },
+    "baseline-ops.log.gz": {
+      "payloadBytes": 2294,
+      "payloadSha256": "bd16d26cbbf863c112c821015f497b02aca55a7c9c158b77f3f6728424413943",
+      "gzipBytes": 976,
+      "gzipSha256": "362e24b3925a8b22d75d751adc9e989a520ec2e6b09a33e995cd23a1df00d7c1"
+    },
+    "candidate-ops.log.gz": {
+      "payloadBytes": 1667,
+      "payloadSha256": "da3a5c36881ea11d82b99cccab3551948e8cd9cf9c22ffe2c25c4602c3834a03",
+      "gzipBytes": 713,
+      "gzipSha256": "84c91f84ad7d36338870dda225cc27d2fba62266dff1addcaa29ad705bc99e84"
+    },
+    "candidate.patch.gz": {
+      "payloadBytes": 15020,
+      "payloadSha256": "0b9a595c322efbe65407b312ee6106e37552dfb81b7670101b6cc88ba7596c51",
+      "gzipBytes": 1928,
+      "gzipSha256": "c6fbd02c73e95efd818f8cfe12d372c589413104b3f3e3542ed455c55770e983"
+    },
+    "test.mjs.gz": {
+      "payloadBytes": 3033,
+      "payloadSha256": "b8214e206e59f78f3c4ad46621f2e4b87159e991501e5a955c4a3f5c310e26d6",
+      "gzipBytes": 1185,
+      "gzipSha256": "5d127f47b20ecd69a9f343eeef2a2d69d391261bce7cc020f1875596a7cbd8d1"
+    },
+    "loader.mjs.gz": {
+      "payloadBytes": 389,
+      "payloadSha256": "64a1323aa21b84eeb1648dde5e9d8aa4dce35ef7130c936a49587233539ffbd3",
+      "gzipBytes": 274,
+      "gzipSha256": "1bdf9e9fdef648e1b13d60a22d461fc48e7e4e915046a055548d966ce4f73e4f"
+    },
+    "counter.mjs.gz": {
+      "payloadBytes": 3837,
+      "payloadSha256": "e774c92ca8fe44f04a92de1f0c1443be0c3a1978ddf8e06f8f52a4855f2fb54a",
+      "gzipBytes": 1333,
+      "gzipSha256": "a3104291fd3e3d69b08d31ef4391abdf22cc36a9441a1d9f45830e07b8037ff3"
+    },
+    "baseline1-frozen.json.gz": {
+      "payloadBytes": 1143775,
+      "payloadSha256": "3101b15cd6c88e54364e81284718bdfd50abaff6f7224895ea2ee632c58e26d6",
+      "gzipBytes": 439828,
+      "gzipSha256": "66ea6a0b4232ae9754211815c5aceb5a49557a974c48ad05206671eeea99aaac"
+    },
+    "baseline1.trace-complete.json.gz": {
+      "payloadBytes": 921,
+      "payloadSha256": "b95f3960b253884976ae5e039f4f6f6305e80110507428843ed84473f25780b9",
+      "gzipBytes": 510,
+      "gzipSha256": "2fa425b0305d3545a8e485115dde3f085808aaaa593b905060ad6bce6abe25ba"
+    },
+    "baseline1-report.json.gz": {
+      "payloadBytes": 5762565,
+      "payloadSha256": "4c3aa7f78e5714ee9aeb13eeee4571259b196a49de59bcda5301b537f81ff9f6",
+      "gzipBytes": 290409,
+      "gzipSha256": "000b509cbc22fd03da63bdd543effd83ce423ba574d11ed576346168cf39091d"
+    },
+    "baseline1-ordinary-report.json.gz": {
+      "payloadBytes": 89202,
+      "payloadSha256": "10e0f80b5b6a35bf9a41f4e9e91176a184915ad5601fe342e209b15e83f00af2",
+      "gzipBytes": 7875,
+      "gzipSha256": "f6b7f1e1a1e1ed5455c72398d4f3ff407f5e63e695bb3fea5198beda20c96d64"
+    },
+    "baseline1.log.gz": {
+      "payloadBytes": 1058,
+      "payloadSha256": "9e3aebe86412823daec4ad1e5f9a20245cda34d8cea02eb822c43fcee1fcce38",
+      "gzipBytes": 554,
+      "gzipSha256": "1217a3fb5192b5d1261d219b6ddcee4aeae34e42ef57d611cff625672726fbe5"
+    },
+    "candidate1-frozen.json.gz": {
+      "payloadBytes": 1143775,
+      "payloadSha256": "5b4c56ee96b027c55c34dacd783f22467f8e0ed4f00ff92bf86b6611ff93dfcd",
+      "gzipBytes": 439837,
+      "gzipSha256": "11f3e069f21cff959c116fbdc43b40a115d9ece4156c9d3422e71f3b77b7a59e"
+    },
+    "candidate1.trace-complete.json.gz": {
+      "payloadBytes": 922,
+      "payloadSha256": "14f35b77cbf46b57b6df52bf33f706833d97ccdc3b29fcf9a822012ce31ea7b9",
+      "gzipBytes": 513,
+      "gzipSha256": "6940dc608b7c93c7e68b72be56f388c816439f6a764b6c6187f6ebc93c3699b8"
+    },
+    "candidate1-report.json.gz": {
+      "payloadBytes": 5736345,
+      "payloadSha256": "fb5dd312208ad4c5b1ba410ae9554eb2cade3b532e0fecd0997da22dfca2302a",
+      "gzipBytes": 291538,
+      "gzipSha256": "ffa6530a1e851b1a72c3e1a9b9c862c2ead388a9e4e270a14318c8ad0791f4ad"
+    },
+    "candidate1-ordinary-report.json.gz": {
+      "payloadBytes": 58727,
+      "payloadSha256": "dea2d4d14b75e9d1115dbcfaaa9923c57c7e7c53b1de455af9556f998ffbca78",
+      "gzipBytes": 5571,
+      "gzipSha256": "38982c526535a4c101ddd7dff0f41c5ec985590ebb55b12fab72bc9dae2c9bed"
+    },
+    "candidate1.log.gz": {
+      "payloadBytes": 1052,
+      "payloadSha256": "7e9da0d4e6975d8a1735b7380fe692edf815e60217502a2d42cfec232befdc81",
+      "gzipBytes": 551,
+      "gzipSha256": "12632585241c675ac92171a38497735930d352a4018c89b3669b971f32afd47d"
+    }
+  }
+}

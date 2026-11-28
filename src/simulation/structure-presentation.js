@@ -1,5 +1,6 @@
 // BAST ordinary damage: 480 ms cubic ease; collapse: 1.4 s smoothstep.
 // Persist origins in the domain so renderer creation/cadence cannot change them.
+export const WALL_REPAIR_DURATION=.48;
 const clamp=x=>Math.max(0,Math.min(1,x));
 export function wallVisualAt(entity,elapsed){
  const ratio=clamp(entity.hp/entity.maxHp),p=entity.wallPresentation;
@@ -9,7 +10,7 @@ export function wallVisualAt(entity,elapsed){
   return (p?.collapseFrom??ratio)*(1-t*t*(3-2*t));
  }
  if(!p||p.to!==ratio)return ratio;
- const t=clamp((elapsed-p.at)/.48);
+ const t=clamp((elapsed-p.at)/WALL_REPAIR_DURATION);
  return p.from+(p.to-p.from)*(1-(1-t)**3);
 }
 export function recordWallPresentation(entity,from,elapsed){

@@ -1,0 +1,126 @@
+{
+  "date": "2026-11-15",
+  "branch": "codex/guardian-3d-animation",
+  "sourceBaseCommit": "4f53f9b2b",
+  "fixtureCommit": "4cb6f5083",
+  "scope": "Native/source Home route from genuine settled returning body. Actual graphical Home consumer and prepared retirement remain pending. No A6/A/B/C closure.",
+  "research": {
+    "source": "https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp#L749",
+    "read": [
+      "dtCrowd::requestMoveTarget",
+      "dtCrowd::updateMoveRequest including result/corridor consistency before adoption"
+    ],
+    "decision": "Reuse existing native proposal/draft, whole-route planner, temporal reservations, gate proof and body; validate exact current source before adoption. Full destination required by the migration contract. No additional queue or dependency."
+  },
+  "nativeBuild": {
+    "standalone": "pass",
+    "pthread": "pass",
+    "proposalKind": 18,
+    "exports": [
+      "nav_home_route_proposal_version",
+      "nav_home_route_proposal_stage",
+      "nav_home_route_proposal_snapshot",
+      "nav_home_route_proposal_header_ptr",
+      "nav_home_route_proposal_points",
+      "nav_home_route_proposal_points_ptr",
+      "nav_home_route_proposal_rows",
+      "nav_home_route_proposal_rows_ptr",
+      "nav_home_route_proposal_gates",
+      "nav_home_route_proposal_gate",
+      "nav_home_route_proposal_cancel",
+      "nav_home_route_proposal_revalidate",
+      "nav_home_route_proposal_time_translation_ptr",
+      "nav_home_route_proposal_commit_bound",
+      "nav_home_route_binding_snapshot",
+      "nav_home_route_binding_ptr",
+      "nav_home_route_binding_actors",
+      "nav_home_route_binding_gates",
+      "nav_home_route_source_snapshot",
+      "nav_intent_home_execution",
+      "nav_intent_home_execution_ptr"
+    ],
+    "headerWidth": 24,
+    "bindingWidth": 52,
+    "executionWidth": 30
+  },
+  "regression": {
+    "passed": 603,
+    "failed": 0,
+    "skipped": 0,
+    "files": 54,
+    "durationMs": 95072.3214,
+    "fileList": ".cache/native-home-route-regression-files.json"
+  },
+  "finalDirected": {
+    "passed": 17,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 11479.9457,
+    "includedInRegression": true
+  },
+  "productBuild": {
+    "status": "pass",
+    "seconds": 45.18,
+    "warnings": "Existing Vite chunk-size and Emscripten pthread memory-growth warnings."
+  },
+  "previousTaskNotificationControl": {
+    "commit": "4f53f9b2b",
+    "loader": ".cache/native-home-route-parent-tasks-loader.mjs",
+    "scope": "Prior tasks module only at original URL, current other modules and native artifacts; no whole-parent performance claim and no product file overwritten.",
+    "failed": 2,
+    "skipped": 7,
+    "reason": "Task-free Home marker deleted by the planning notification, causing committed-control-failed."
+  },
+  "workforceFixtures": {
+    "initialExpandedRegression": {
+      "passed": 601,
+      "failed": 2,
+      "total": 603
+    },
+    "previousGameControl": {
+      "commit": "4f53f9b2b",
+      "loader": ".cache/native-home-route-parent-workforce-loader.mjs",
+      "failed": 2,
+      "skipped": 11,
+      "reason": "Original fixtures attempted a different village culture, rejected by the existing Game rule."
+    },
+    "fix": "Only two foundVillage fixture arguments changed to s.culture. Product culture rule unchanged.",
+    "correctedFixturesWithPreviousGame": {
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 1029.1044
+    }
+  },
+  "hardware": {
+    "newHomeGpuRun": false,
+    "reason": "New Home graphical consumer/capability is not implemented. Host rejects nativeHomes baseline/release; source requires exact consumer version/template before production commit.",
+    "sourceTests": "Actual native source and Game with explicit prepared-packet/GPU-drain doubles only.",
+    "previousHardwareScope": "4f53f9b2b validates only the held body after expired delivery, not the moving Home path."
+  },
+  "preservedOriginalFiles": {
+    "verified": 16,
+    "mismatches": 0,
+    "manifest": ".cache/native-action-restore-preserved-hashes.json",
+    "exception": "Previously intentionally committed confirmed-presentation-stream.js is unchanged here."
+  },
+  "logs": {
+    ".cache/native-home-route-build.log": "27cecda27550edeff96c0ef8270032648bb27591620c1777d93357652ba62a3b",
+    ".cache/native-home-route-final-directed.log": "d2556d0990b849fbc5ed6b87d0eeaa2de4e8edecc0befcbade86b4e91055308e",
+    ".cache/native-home-route-final-regression.log": "b883c7a4a976d02bb154e2e343ec74bc0eed10c48d2c83a4f65b82e4a0c6f147",
+    ".cache/native-home-route-product-build.log": "cb7598b6c9e131c660c176fbb20be36491394346ce1e3dd5c9a44739e17e0e54",
+    ".cache/native-home-route-parent-tasks-control.log": "6758df2cddd1d3e792a2b44637af8931cab188607b9e1a3fc0e8e774d94e9b4c",
+    ".cache/native-home-route-parent-workforce-control.log": "629d9ae83f99b0b16b2b7a504b25305ba189a25afad9afd6671098c0f37f45ab",
+    ".cache/native-home-route-parent-workforce-fixed-fixtures.log": "cc3367889f896b13c5461f6d7c340569653ef211e58b93de2f7f487c79af7c42"
+  },
+  "remaining": [
+    "Actual Home consumer, native direct association, clocks/input and real GPU drain on retained original actor",
+    "Prepared arrival/retirement",
+    "Fresh Home restoration admission",
+    "Contract change on existing Idle",
+    "Initial Idle and other completion/cancellation classes",
+    "Gated presentation / all-class native Game integration",
+    "Ordinary producer",
+    "3123-resource recovery reuse and integrated A6/A/B/C"
+  ]
+}

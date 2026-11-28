@@ -1,0 +1,154 @@
+{
+  "date": "2026-11-15",
+  "branch": "codex/guardian-3d-animation",
+  "sourceBaseCommit": "214f2a758",
+  "scope": "Reversible absence participant on the existing resident worker roster, original resources, actual native endpoint/removal test setup. Surface/transport/direct admission and actual GPU absence remain pending. Native HomeArrival capability is not advertised; guards remain. No A6/A/B/C closure.",
+  "research": [
+    {
+      "source": "https://github.com/mrdoob/three.js/blob/r180/src/renderers/common/Renderer.js#L2645",
+      "read": [
+        "Renderer._projectObject visibility return before render-list construction"
+      ],
+      "decision": "Record absence by temporarily hiding the existing root, restore it synchronously after capture before awaiting retained-packet ACK, hide permanently only after exact native retirement commit."
+    },
+    {
+      "source": "https://github.com/mrdoob/three.js/blob/r180/src/core/Object3D.js#L772",
+      "read": [
+        "Object3D.remove parent/children/events handling without shared resource disposal"
+      ],
+      "decision": "Separate scene participation from resource lifetime. Keep the old Home owner until actual absent-frame presentation; release through existing deferred ownership exactly once even if roster removal wins the race."
+    }
+  ],
+  "implementation": {
+    "owner": "Existing worker roster entry and nativePending slot.",
+    "captureOrder": [
+      "activate",
+      "synchronous recording",
+      "afterCapture before awaiting packet ACK",
+      "READY retains presented visibility and picking",
+      "finalize after exact native retirement fact",
+      "retire after absent-frame presentation"
+    ],
+    "replacementMotionResources": 0,
+    "actorReacquisitionsDuringPreparation": 0,
+    "newControllerQueueOrDependency": false,
+    "partialIntegration": "New afterCapture participant hook is not wired to Surface yet; actual source publication and host continue rejecting HomeArrival class."
+  },
+  "regression": {
+    "passed": 650,
+    "failed": 0,
+    "skipped": 0,
+    "files": 61,
+    "durationMs": 115443.647,
+    "fileList": [
+      "tests/native-task-settlement-proposal.test.js",
+      "tests/native-task-settlement-game.test.js",
+      "tests/settlement-notification.test.js",
+      "tests/native-task-consequence-proposal.test.js",
+      "tests/native-task-consequence-game.test.js",
+      "tests/native-task-consequence-admission.test.js",
+      "tests/native-task-consequence-control.test.js",
+      "tests/native-task-consequence-graphics.test.js",
+      "tests/native-task-consequence-crops.test.js",
+      "tests/delivery-consequence-data.test.js",
+      "tests/harvest-consequence.test.js",
+      "tests/agricultural-power.test.js",
+      "tests/closest-center-delivery.test.js",
+      "tests/native-task-action-binding.test.js",
+      "tests/native-task-action-game-execution.test.js",
+      "tests/native-task-action-restoration.test.js",
+      "tests/native-task-action-proposal.test.js",
+      "tests/native-task-action-clock.test.js",
+      "tests/native-task-start-proposal.test.js",
+      "tests/native-task-start-binding.test.js",
+      "tests/native-task-start-graphics.test.js",
+      "tests/native-resource-preparation-channel.test.js",
+      "tests/native-admission-vertical.test.js",
+      "tests/spatial-native-causal-clock.test.js",
+      "tests/spatial-native-route-execution.test.js",
+      "tests/spatial-native-route-reservations.test.js",
+      "tests/spatial-native-gate-transactions.test.js",
+      "tests/spatial-native-gate-resume.test.js",
+      "tests/spatial-native-gate-crossings.test.js",
+      "tests/spatial-native-gate-waits.test.js",
+      "tests/native-gate-causal-transaction.test.js",
+      "tests/native-gate-gpu-binding.test.js",
+      "tests/remote-webgpu.test.js",
+      "tests/native-route-pick-frame.test.js",
+      "tests/native-resume-control.test.js",
+      "tests/native-resume-graphics.test.js",
+      "tests/native-resume-time-translation.test.js",
+      "tests/money-rational-add.test.js",
+      "tests/money-decimal.test.js",
+      "tests/acceptance-economic-boundaries.test.js",
+      "tests/repair-settlement-evidence.test.js",
+      "tests/native-task-settlement-clock.test.js",
+      "tests/native-task-settlement-control.test.js",
+      "tests/native-task-settlement-gpu-motion.test.js",
+      "tests/native-task-settlement-graphics.test.js",
+      "tests/native-task-settlement-remote.test.js",
+      "tests/native-task-settlement-publication.test.js",
+      "tests/spatial-native-worker-home.test.js",
+      "tests/native-home-route-proposal.test.js",
+      "tests/native-home-route-game.test.js",
+      "tests/acceptance-workforce.test.js",
+      "tests/prepared-save-load.test.js",
+      "tests/save-game.test.js",
+      "tests/crop-task-queue.test.js",
+      "tests/native-home-route-graphics.test.js",
+      "tests/native-home-route-control.test.js",
+      "tests/native-home-route-remote.test.js",
+      "tests/native-home-route-clock.test.js",
+      "tests/native-home-arrival-proposal.test.js",
+      "tests/native-home-arrival-game.test.js",
+      "tests/native-home-arrival-graphics.test.js"
+    ],
+    "log": ".cache/native-home-absence-roster-regression.log"
+  },
+  "directed": {
+    "passed": 15,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 14272.8446,
+    "files": [
+      "tests/native-home-arrival-graphics.test.js",
+      "tests/native-home-route-graphics.test.js"
+    ],
+    "includedInRegression": true,
+    "log": ".cache/native-home-arrival-graphics-refined.log"
+  },
+  "newTests": 8,
+  "checks": [
+    "Exact original actor/root/geometries/indices/materials during preparation and rollback; no new registry owners.",
+    "Exact origin, late native commit retaining original prepared reference, late refreshed template.",
+    "Cancellation before/after capture restores prior actor and keeps native body/current Home.",
+    "Removal before commit or before presentation releases old owner once, with zero retained registry owners after cleanup.",
+    "Reject foreign Home source, altered endpoint semantics or village before hiding.",
+    "Actual ordinary CPU picking hits the presented endpoint before and while READY; committed absence and later retirement have no selectable ghost."
+  ],
+  "limits": {
+    "native": "Actual canonical CPP/WASM endpoint and removal; direct ABI commit is explicit trusted test setup. No native source/artifact changes since214f2a758.",
+    "renderer": "Original authored actor and actual Three classes/picker, with renderer/admission doubles.",
+    "gpu": "No new hardware run or retained-packet/drain acceptance for absence. Previous moving Home hardware evidence remains scoped to movement.",
+    "input": "Synchronous afterCapture restores presented graph in this participant; actual submitted-frame timing still requires Surface/direct/hardware integration."
+  },
+  "pending": [
+    "Wire same resource client/receiver/connection/world client and Surface, including synchronous afterCapture before awaiting ACK.",
+    "Correlate absence to actual direct native Home revocation and exact prepared template; actual submitted queue drain ACK before native commit.",
+    "Only after real consumer integration remove guards and advertise nativeHomeArrivalVersion1.",
+    "Hardware proof of absent original actor, retained independent actors/world batches, picking and zero creations after READY.",
+    "Fresh moving/inactive Home admission; Idle and remaining intention classes; gated consumers, ordinary producer, healthy-device3123 recovery; A6/A/B/C before D."
+  ],
+  "closuresChanged": false,
+  "productBuild": {
+    "status": "pass",
+    "seconds": 42.31,
+    "warnings": "Existing chunk-size and pthread memory-growth warnings.",
+    "log": ".cache/native-home-absence-roster-product-build.log"
+  },
+  "protectedOriginalFiles": {
+    "checked": 16,
+    "exact": true,
+    "exception": "confirmed-presentation-stream.js intentionally committed in an earlier increment and unchanged here."
+  }
+}

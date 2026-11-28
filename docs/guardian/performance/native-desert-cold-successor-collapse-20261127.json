@@ -1,0 +1,539 @@
+{
+  "base": "b5e041cd65868bfb52c861eeff315fb65949af25",
+  "source": {
+    "path": "D:/wild-guardians-qa/cold-collapse-approach-public-20261127.save.json",
+    "sha256": "1ef476a31b9fd34152ce36e918f92d621e2a0bc0e7818da939ce6483ae0f6156",
+    "elapsed": 47.800000000002,
+    "expectedRuin": {
+      "id": "event-29218",
+      "type": "StructureRuined",
+      "targetId": "structure-1000002",
+      "structureKind": "center",
+      "presentation": {
+        "x": -18,
+        "z": -12
+      },
+      "simulationTime": 47.960000000002026
+    },
+    "collapsing": {
+      "id": "structure-1000002",
+      "created": 1,
+      "kind": "center",
+      "material": "zarzas",
+      "gate": false,
+      "x": -18,
+      "z": -12,
+      "yaw": 0,
+      "culture": "mapungubwe",
+      "maxHp": 600,
+      "hp": 120,
+      "status": "collapsing",
+      "villageId": "village-1",
+      "cost": 800,
+      "collapseRemaining": 0.15999999999999762
+    },
+    "gates": [
+      {
+        "id": "structure-1000000",
+        "opening": 1
+      },
+      {
+        "id": "structure-1000001",
+        "opening": 1
+      }
+    ],
+    "earlierHits": [
+      {
+        "attackId": "attack-29209",
+        "simulationTime": 38.32000000000052,
+        "targetId": "structure-1000002"
+      },
+      {
+        "attackId": "attack-29212",
+        "simulationTime": 40.04000000000079,
+        "targetId": "structure-1000002"
+      },
+      {
+        "attackId": "attack-29215",
+        "simulationTime": 44.760000000001526,
+        "targetId": "structure-1000002"
+      }
+    ]
+  },
+  "validation": {
+    "authorityNegative": {
+      "path": ".cache/cold-collapse-approach-base.tap",
+      "sha256": "4870dd9ceaaab3a83ccd7a69a7bc7c5b46e9f6d005058ab7e379dcfe4ff780b0"
+    },
+    "fenceOnlyNegative": {
+      "path": ".cache/cold-collapse-approach-first.tap",
+      "sha256": "95980e2462f4ef334ce870c5e95a48c2ab9c7f895d57e1c27d3b88dc9584d820"
+    },
+    "visualNegative": {
+      "path": ".cache/cold-collapse-effect-base.tap",
+      "sha256": "65447bad1144cd03b7ed65cc887340505350f70c0652558853c21734f86bd3df"
+    },
+    "regression": {
+      "path": ".cache/cold-collapse-approach-final.tap",
+      "sha256": "06238e62dcb638c99264cbdd3a382f3c5df9ea6022ef72cdd99aa5161c0d6141"
+    },
+    "passed": 37
+  },
+  "hardware": {
+    "preimage": {
+      "path": "D:/wild-guardians-qa/cold-collapse-approach-nvidia-20261127.failure.json",
+      "sha256": "d01bd60eca6406759d6957a737bcbe1cf72a38208d239edd5d67ed2ce62580b6"
+    },
+    "candidate": {
+      "path": "D:/wild-guardians-qa/cold-collapse-approach-rebuilt-nvidia-20261127.json",
+      "sha256": "fb0941524ee63fadc29f9fbaa5533b41084d9945e3e74e689e3ea30dc13841ba"
+    },
+    "held": {
+      "ready": {
+        "version": 1,
+        "kind": 26,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "9f9175e1-179e-432a-bf65-ecdd9f2fe945/1",
+          "nativeSession": 1,
+          "ticket": 1,
+          "effectiveTime": 47.800000000002
+        },
+        "sourceControlSequence": 3,
+        "endTime": 63.52277166717941,
+        "purpose": "center",
+        "actorId": 1000003,
+        "bodyId": 1,
+        "targetId": 2,
+        "centerId": 2,
+        "requestSequence": 3,
+        "slot": 0,
+        "generation": 3,
+        "radius": 1.1,
+        "x": -21.941347846712976,
+        "z": -16,
+        "phase": 19.56730847723345,
+        "yaw": -1.5707963267948966,
+        "targetX": -18.954998779296876,
+        "targetZ": 3.2,
+        "centerX": -18.954998779296876,
+        "centerZ": 3.2
+      },
+      "elapsed": 47.800000000002,
+      "countdown": 0.15999999999999762,
+      "wallMs": 351
+    },
+    "first": {
+      "at": 1795782756656.7,
+      "sequence": 15,
+      "ticket": 2,
+      "key": "|center:47.800000000002:0",
+      "home": null,
+      "animal": {
+        "nativeAnimalCrop": {
+          "version": 1,
+          "kind": 26,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "9f9175e1-179e-432a-bf65-ecdd9f2fe945/1",
+            "nativeSession": 1,
+            "ticket": 1,
+            "effectiveTime": 47.800000000002
+          },
+          "sourceControlSequence": 3,
+          "endTime": 63.52277166717941,
+          "purpose": "center",
+          "actorId": 1000003,
+          "bodyId": 1,
+          "targetId": 2,
+          "centerId": 2,
+          "requestSequence": 3,
+          "slot": 0,
+          "generation": 3,
+          "radius": 1.1,
+          "x": -21.941347846712976,
+          "z": -16,
+          "phase": 19.56730847723345,
+          "yaw": -1.5707963267948966,
+          "targetX": -18.954998779296876,
+          "targetZ": 3.2,
+          "centerX": -18.954998779296876,
+          "centerZ": 3.2
+        },
+        "relativeTime": 0,
+        "semantic": "relative",
+        "epoch": 47.800000000002,
+        "executionEpoch": 47.800000000002,
+        "elapsed": 47.800000000002
+      },
+      "gate": null
+    },
+    "ruin": {
+      "proof": {
+        "prepared": {
+          "boundary": {
+            "version": 1,
+            "authorityEpoch": "9f9175e1-179e-432a-bf65-ecdd9f2fe945/1",
+            "nativeSession": 1,
+            "ticket": 3,
+            "effectiveTime": 47.950000000002014
+          },
+          "previous": {
+            "version": 1,
+            "authorityEpoch": "9f9175e1-179e-432a-bf65-ecdd9f2fe945/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 47.800000000002
+          },
+          "approach": {
+            "version": 1,
+            "reference": {
+              "version": 1,
+              "kind": 26,
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "9f9175e1-179e-432a-bf65-ecdd9f2fe945/1",
+                "nativeSession": 1,
+                "ticket": 2,
+                "effectiveTime": 47.800000000002
+              },
+              "sourceControlSequence": 3,
+              "endTime": 63.52277166717941,
+              "purpose": "center",
+              "actorId": 1000003,
+              "bodyId": 1,
+              "targetId": 2,
+              "centerId": 2,
+              "requestSequence": 3,
+              "slot": 0,
+              "generation": 3,
+              "radius": 1.1,
+              "x": -21.941347846712976,
+              "z": -16,
+              "phase": 19.56730847723345,
+              "yaw": -1.5707963267948966,
+              "targetX": -18.954998779296876,
+              "targetZ": 3.2,
+              "centerX": -18.954998779296876,
+              "centerZ": 3.2
+            },
+            "preparedReference": {
+              "version": 1,
+              "kind": 26,
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "9f9175e1-179e-432a-bf65-ecdd9f2fe945/1",
+                "nativeSession": 1,
+                "ticket": 1,
+                "effectiveTime": 47.800000000002
+              },
+              "sourceControlSequence": 3,
+              "endTime": 63.52277166717941,
+              "purpose": "center",
+              "actorId": 1000003,
+              "bodyId": 1,
+              "targetId": 2,
+              "centerId": 2,
+              "requestSequence": 3,
+              "slot": 0,
+              "generation": 3,
+              "radius": 1.1,
+              "x": -21.941347846712976,
+              "z": -16,
+              "phase": 19.56730847723345,
+              "yaw": -1.5707963267948966,
+              "targetX": -18.954998779296876,
+              "targetZ": 3.2,
+              "centerX": -18.954998779296876,
+              "centerZ": 3.2
+            },
+            "assignmentSequence": 4
+          },
+          "initialClock": 11,
+          "intent": 4,
+          "center": "structure-1000002",
+          "polygon": 10,
+          "end": 47.97000000000202,
+          "revisions": [
+            3,
+            136,
+            26
+          ],
+          "footprint": [
+            -22.154998779296875,
+            -13.795604705810547,
+            -22.129131317138672,
+            -13.940673828125,
+            -22.121013641357422,
+            -13.96654224395752,
+            -22.10376739501953,
+            -13.979223251342773,
+            -21.898845672607422,
+            -14.009149551391602,
+            -19.281017303466797,
+            -14.039076805114746,
+            -16.74890899658203,
+            -14.039076805114746,
+            -14.101153373718262,
+            -14.009149551391602,
+            -13.892173767089844,
+            -13.98378849029541,
+            -13.874927520751953,
+            -13.96654224395752,
+            -13.866304397583008,
+            -13.940673828125,
+            -13.845001220703125,
+            -13.804227828979492,
+            -13.845001220703125,
+            -13.61198616027832,
+            -13.862247467041016,
+            -10.533082008361816,
+            -13.874927520751953,
+            -10.375332832336426,
+            -13.892173767089844,
+            -10.328160285949707,
+            -14.94265365600586,
+            -10.003530502319336,
+            -15.049172401428223,
+            -9.978169441223145,
+            -15.164314270019531,
+            -9.960923194885254,
+            -20.83112144470215,
+            -9.960923194885254,
+            -20.94626235961914,
+            -9.978169441223145,
+            -21.05328941345215,
+            -10.003530502319336,
+            -22.125072479248047,
+            -10.345405578613281,
+            -22.150941848754883,
+            -10.524459838867188
+          ]
+        },
+        "acquired": {
+          "version": 1,
+          "authorityEpoch": "9f9175e1-179e-432a-bf65-ecdd9f2fe945/1",
+          "nativeSession": 1,
+          "ticket": 3,
+          "effectiveTime": 47.97000000000202
+        },
+        "center": "structure-1000002",
+        "polygon": 10,
+        "status": "ruined",
+        "revisions": [
+          3,
+          137,
+          26
+        ]
+      },
+      "submitted": {
+        "kind": "ruin-submitted",
+        "sequence": 18,
+        "capture": {
+          "id": "structure-1000002",
+          "p": 47.950000000002014,
+          "end": 47.97000000000202,
+          "meshes": [
+            {
+              "mesh": 640,
+              "geometry": 302,
+              "material": 194,
+              "visible": false,
+              "instances": null
+            },
+            {
+              "mesh": 641,
+              "geometry": 303,
+              "material": 193,
+              "visible": true,
+              "instances": null
+            },
+            {
+              "mesh": 643,
+              "geometry": 304,
+              "material": 195,
+              "visible": true,
+              "instances": 270
+            },
+            {
+              "mesh": 644,
+              "geometry": 305,
+              "material": 196,
+              "visible": true,
+              "instances": 66
+            }
+          ],
+          "effects": {
+            "smoke": 66,
+            "debris": 270,
+            "emitted": 95
+          }
+        },
+        "route": {
+          "sequence": 18,
+          "clockElapsed": 47.97000000000202,
+          "presentationElapsed": 47.96999740600586,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "9f9175e1-179e-432a-bf65-ecdd9f2fe945/1",
+            "nativeSession": 1,
+            "ticket": 3,
+            "effectiveTime": 47.97000000000202
+          },
+          "bindings": [
+            {
+              "nativeAnimalCrop": {
+                "version": 1,
+                "kind": 26,
+                "worldBoundary": {
+                  "version": 1,
+                  "authorityEpoch": "9f9175e1-179e-432a-bf65-ecdd9f2fe945/1",
+                  "nativeSession": 1,
+                  "ticket": 1,
+                  "effectiveTime": 47.800000000002
+                },
+                "sourceControlSequence": 3,
+                "endTime": 63.52277166717941,
+                "purpose": "center",
+                "actorId": 1000003,
+                "bodyId": 1,
+                "targetId": 2,
+                "centerId": 2,
+                "requestSequence": 3,
+                "slot": 0,
+                "generation": 3,
+                "radius": 1.1,
+                "x": -21.941347846712976,
+                "z": -16,
+                "phase": 19.56730847723345,
+                "yaw": -1.5707963267948966,
+                "targetX": -18.954998779296876,
+                "targetZ": 3.2,
+                "centerX": -18.954998779296876,
+                "centerZ": 3.2
+              },
+              "relativeTime": 0.16999998688697815,
+              "semantic": "relative",
+              "epoch": 47.800000000002,
+              "executionEpoch": 47.800000000002,
+              "elapsed": 47.96999998688898
+            }
+          ]
+        }
+      },
+      "event": {
+        "id": "event-29218",
+        "type": "StructureRuined",
+        "targetId": "structure-1000002",
+        "structureKind": "center",
+        "presentation": {
+          "x": -18,
+          "z": -12
+        },
+        "simulationTime": 47.97000000000202
+      },
+      "gateAtRuin": [
+        {
+          "id": "structure-1000000",
+          "opening": 1
+        },
+        {
+          "id": "structure-1000001",
+          "opening": 1
+        }
+      ],
+      "deadline": 47.960000000002,
+      "baselineCapture": {
+        "id": "structure-1000002",
+        "p": 47.950000000002014,
+        "end": 47.97000000000202,
+        "meshes": [
+          {
+            "mesh": 640,
+            "geometry": 302,
+            "material": 194,
+            "visible": false,
+            "instances": null
+          },
+          {
+            "mesh": 641,
+            "geometry": 303,
+            "material": 193,
+            "visible": true,
+            "instances": null
+          },
+          {
+            "mesh": 643,
+            "geometry": 304,
+            "material": 195,
+            "visible": true,
+            "instances": 175
+          },
+          {
+            "mesh": 644,
+            "geometry": 305,
+            "material": 196,
+            "visible": true,
+            "instances": 0
+          }
+        ],
+        "effects": {
+          "smoke": 0,
+          "debris": 175,
+          "emitted": 0
+        }
+      }
+    },
+    "returnGateIds": [
+      1000000,
+      1000001
+    ],
+    "end": {
+      "elapsed": 90.75000000000186,
+      "worker": "worker-900011",
+      "person": "person-5",
+      "center": "structure-2",
+      "admission": "native-idle",
+      "balance": {
+        "n": "163",
+        "d": "1"
+      },
+      "ledgerEntryCount": 2637
+    },
+    "hits": [
+      {
+        "attackId": "attack-29209",
+        "targetId": "structure-1000002",
+        "simulationTime": 38.32000000000052
+      },
+      {
+        "attackId": "attack-29212",
+        "targetId": "structure-1000002",
+        "simulationTime": 40.04000000000079
+      },
+      {
+        "attackId": "attack-29215",
+        "targetId": "structure-1000002",
+        "simulationTime": 44.760000000001526
+      },
+      {
+        "attackId": "attack-29219",
+        "targetId": "structure-2",
+        "simulationTime": 68.32000000000313
+      }
+    ],
+    "centers": [
+      {
+        "id": "structure-2",
+        "hp": 580
+      },
+      {
+        "id": "structure-1000002",
+        "hp": 0
+      }
+    ],
+    "drain": {
+      "disposed": true
+    }
+  }
+}

@@ -1,0 +1,223 @@
+[
+  {
+    "ok": true,
+    "backend": "WebGPU",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "checkpointWorld": {
+      "version": 1,
+      "authorityEpoch": "18cdcf3d-783c-46df-835f-c23b9c1dbb5e/1",
+      "nativeSession": 1,
+      "ticket": 1,
+      "effectiveTime": 10
+    },
+    "replayWorld": {
+      "version": 1,
+      "authorityEpoch": "18cdcf3d-783c-46df-835f-c23b9c1dbb5e/1",
+      "nativeSession": 1,
+      "ticket": 2,
+      "effectiveTime": 10
+    },
+    "preparedWorld": {
+      "version": 1,
+      "authorityEpoch": "18cdcf3d-783c-46df-835f-c23b9c1dbb5e/1",
+      "nativeSession": 1,
+      "ticket": 2,
+      "effectiveTime": 10
+    },
+    "requiredWorld": {
+      "version": 1,
+      "authorityEpoch": "18cdcf3d-783c-46df-835f-c23b9c1dbb5e/1",
+      "nativeSession": 1,
+      "ticket": 2,
+      "effectiveTime": 10
+    },
+    "sequence": 2,
+    "resident": 9,
+    "workers": {
+      "closed": false,
+      "count": 1,
+      "ready": 1,
+      "pending": 0,
+      "assets": {
+        "closed": false,
+        "idle": {
+          "idle": 0,
+          "estimatedBytes": 0,
+          "maxBytes": 100663296
+        },
+        "textureFailure": null,
+        "profiles": [
+          {
+            "profile": "olderFemale",
+            "ready": true,
+            "textured": false,
+            "refs": 1,
+            "pending": 0
+          }
+        ]
+      }
+    },
+    "workerPosition": [
+      20.05,
+      9.723760986328125,
+      24
+    ],
+    "workerVisible": true,
+    "terrainHeight": 9.698760986328125,
+    "workerBounds": {
+      "min": [
+        19.53483027612416,
+        9.742298892299806,
+        23.40248964298928
+      ],
+      "max": [
+        20.699430174215966,
+        11.45107541018177,
+        24.309334038322056
+      ],
+      "hits": [
+        {
+          "name": "Mesh0001",
+          "distance": 8.257222381651383,
+          "point": [
+            20.110875679956994,
+            11.444730371564452,
+            23.878653614941797
+          ]
+        },
+        {
+          "name": "Mesh0001",
+          "distance": 8.981299173277138,
+          "point": [
+            20.116213875417156,
+            10.720933466348539,
+            23.859243724675665
+          ]
+        },
+        {
+          "name": "",
+          "distance": 10.003866919129184,
+          "point": [
+            20.123752670420323,
+            9.698760986328125,
+            23.83183236725305
+          ]
+        }
+      ],
+      "ndc": [
+        0.01780126465147768,
+        0.03790550398227047,
+        0.9892139302081303
+      ]
+    },
+    "workerMeshes": 27,
+    "renderInfo": {
+      "calls": 5,
+      "frameCalls": 0,
+      "drawCalls": 0,
+      "triangles": 0,
+      "points": 0,
+      "lines": 0,
+      "timestamp": 0
+    },
+    "camera": {
+      "position": [
+        20.05,
+        19.698760986328125,
+        24.1
+      ],
+      "rotation": [
+        -0.7031676808188944,
+        0,
+        0,
+        0.7110240591230211
+      ]
+    },
+    "nativePose": {
+      "x": 20.05,
+      "z": 24,
+      "distance": 0,
+      "phase": 0,
+      "yaw": -6.357828781962848e-8,
+      "firstRemainingPoint": 0,
+      "arrived": false,
+      "at": 10,
+      "duration": 11.111111111111132,
+      "runPhase": 0,
+      "walkPhase": 0,
+      "carryPhase": 0,
+      "runDistance": 0,
+      "walkDistance": 0,
+      "runRemaining": 0,
+      "running": false,
+      "currentSpeed": 1.08
+    },
+    "draw": {
+      "frames": 6,
+      "packets": 3,
+      "gpuErrors": 0
+    },
+    "handoff": {
+      "current": {
+        "session": "ground-native",
+        "authorityEpoch": "18cdcf3d-783c-46df-835f-c23b9c1dbb5e/1",
+        "baselineSequence": 2,
+        "sentSequence": 2,
+        "sentTime": 10,
+        "appliedSequence": 2,
+        "pendingGpuFences": 0,
+        "closed": false,
+        "fault": null,
+        "clockSequence": 1,
+        "appliedClockSequence": 1,
+        "pendingClockReceipts": 0,
+        "pendingMutationHold": null,
+        "retiring": false,
+        "drained": false,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "18cdcf3d-783c-46df-835f-c23b9c1dbb5e/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 10
+        }
+      },
+      "pending": null,
+      "cohort": {
+        "session": "ground-native",
+        "authorityEpoch": "18cdcf3d-783c-46df-835f-c23b9c1dbb5e/1",
+        "baselineSequence": 2,
+        "sentSequence": 2,
+        "sentTime": 10,
+        "appliedSequence": 2,
+        "pendingGpuFences": 0,
+        "closed": false,
+        "fault": null,
+        "clockSequence": 1,
+        "appliedClockSequence": 1,
+        "pendingClockReceipts": 0,
+        "pendingMutationHold": null,
+        "retiring": false,
+        "drained": false,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "18cdcf3d-783c-46df-835f-c23b9c1dbb5e/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 10
+        },
+        "coherent": true,
+        "consumers": 1,
+        "attaching": false
+      }
+    },
+    "errors": [],
+    "scope": "Real native commits, canonical checkpoints, prepared terrain/biome replay and product surface with one real stationary worker mesh through the production draw Worker. Time stays at 10; no native GPU locomotion or 500 ms stall acceptance.",
+    "daylight": true
+  }
+]

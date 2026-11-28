@@ -1,0 +1,114 @@
+{
+  "ready": true,
+  "campaign": false,
+  "paused": true,
+  "workers": [
+    {
+      "id": "qa-worker-0",
+      "profile": "youngMale",
+      "x": 86.29294479022579,
+      "z": -4,
+      "status": "fleeing",
+      "hits": 1,
+      "fallRemaining": 0,
+      "exit": 0
+    }
+  ],
+  "faceCandidate": false,
+  "faceCandidateSpecies": null,
+  "expressions": [
+    {
+      "id": "qa-beast-1",
+      "weights": [
+        0,
+        0,
+        0.04787713094734132
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-worker-0",
+      "weights": [
+        0,
+        0,
+        0.3618340182302386
+      ],
+      "bindings": 11
+    }
+  ],
+  "entityCounts": {
+    "workers": 1,
+    "structures": 1,
+    "crops": 12,
+    "animals": 1
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 0,
+  "maxVisibleGuardians": 0,
+  "elapsed": 3009.07941499999,
+  "simulate": true,
+  "clockMode": "Game.tick",
+  "shields": [],
+  "active": 0,
+  "origins": [],
+  "retainedAttacks": [],
+  "retainedDraws": 0,
+  "attackVisual": [],
+  "reused": 0,
+  "animalState": "attacking",
+  "animalPosition": [
+    83.039474902702,
+    -9.341857338904216
+  ],
+  "draws": 61,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "npc_hit",
+      "at": 3001.8794149999967,
+      "emitter": "qa-worker-0",
+      "played": false
+    },
+    {
+      "id": "beast_hit_character",
+      "at": 3001.8794149999967,
+      "emitter": "qa-beast-1",
+      "phase": "walking",
+      "played": false
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0.004999995231628418,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 0,
+    "maxStepMs": 0.125,
+    "solverMs": 0,
+    "solverSteps": 0,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": null,
+    "recoveryFollowMs": 0,
+    "bakedActive": 0,
+    "kinematic": 0
+  },
+  "physicsWorlds": 0,
+  "physicalBodies": 0,
+  "allDown": [
+    {
+      "id": "qa-beast-1",
+      "x": 83.039474902702,
+      "z": -9.341857338904216
+    }
+  ],
+  "errors": [],
+  "report": null,
+  "commandCosts": []
+}

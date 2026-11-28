@@ -12,7 +12,8 @@ export function villageCost(ordinal) {
   return expansionVillagePriceForRuntime(ordinal,B.postgame.additional_village_cost.variant);
 }
 export const operational = c => c.kind==='center' && c.status==='intact';
-export const spellUnlocked=(state,kind)=>kind==='shield'?state.day>=1&&state.time>=300||state.day>1:['growth','multiply'].includes(kind)&&state.day>=1;
+export const isIntactRepairTarget = target => target?.status === 'intact' && (target.kind === 'center' || target.kind === 'wall' && target.hp > 0);
+export const spellUnlocked=(state,kind)=>['shield','attack'].includes(kind)?state.day>=1&&state.time>=300||state.day>1:['growth','multiply'].includes(kind)&&state.day>=1;
 export function permission(state,action) {
   if(state.result || state.pauses.some(reason=>reason!=='tutorial-action')) return false;
   const hasCenter=state.structures.some(operational);
@@ -20,6 +21,7 @@ export function permission(state,action) {
   if(action==='camera')return true;
   if(!hasCenter) return action==='center' && peaceful;
   if(action==='shield'||action==='awakening')return true;
+  if(action==='attack')return !!state.raid;
   if(!peaceful)return false;
   if(action==='village')return state.postgame;
   return true;
@@ -49,12 +51,13 @@ export function dawnMinimum(state) {
 }
 export function structureHealth(kind,material,gate=false) { return kind==='center'?600:gate?wallSpec(material).gate_hp:wallSpec(material).hp; }
 export function collapseThreshold(s) { return s.kind==='center'?s.maxHp*.21:s.maxHp*.2; }
+export const CENTER_COLLAPSE_SECONDS=3.2;
 export function hitStructure(s,damage,elapsed,state=null) {
   if(s.status!=='intact')return false;
   const visual=s.kind==='wall'&&Number.isFinite(elapsed)?wallVisualAt(s,elapsed):null;
   s.hp=Math.max(0,s.hp-damage*(1-wallDamageReduction(s,state)));
   if(s.hp<=collapseThreshold(s)+1e-9) {
-    s.status='collapsing'; s.collapseRemaining=s.kind==='center'?3.2:1.4;
+    s.status='collapsing'; s.collapseRemaining=s.kind==='center'?CENTER_COLLAPSE_SECONDS:1.4;
   }
   if(visual!==null)recordWallPresentation(s,visual,elapsed);
   return true;

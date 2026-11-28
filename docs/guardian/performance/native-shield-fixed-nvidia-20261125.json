@@ -1,0 +1,825 @@
+{
+  "schema": 1,
+  "commit": "9a8fe20044fa9a5cef37a9758f239a99aa49207a",
+  "scenario": "prepared Shield over acquired Farm23 with hosted clock suspended at the cast boundary",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 113
+    }
+  },
+  "resolution": [
+    640,
+    480
+  ],
+  "displayHz": 30,
+  "trace": {
+    "receiptSha256": "8a9a64b5442614d3cbe550b5314cca9b38351c1bd5aae82ea894a445275e05b4",
+    "traceSha256": "63d4e9e604f4a269258e46dc6974ec83433eed2e534ed8d6f7f40fa9c9a8a84c",
+    "collectionComplete": true,
+    "dataLossOccurred": false
+  },
+  "cast": {
+    "sequence": 3,
+    "ticket": 3,
+    "elapsed": 10,
+    "spell": "spell-1000000",
+    "polygonId": 10,
+    "farmBodyId": 1,
+    "readyMs": 496.2001953125,
+    "readyHoldConfiguredMs": 300,
+    "spellActivated": 1,
+    "firstDraw": {
+      "sequence": 25,
+      "ticket": 3,
+      "intervalMs": 33.199951171875,
+      "drawMs": 2.800048828125,
+      "replay": false,
+      "clockElapsed": 10
+    },
+    "checkpoint": {
+      "sequence": 4,
+      "elapsed": 10
+    }
+  },
+  "effect": {
+    "age": 1.1500000000000017,
+    "vertices": 5568,
+    "initialGeometry": [
+      {
+        "reference": "Buffer:2850",
+        "mesh": 636,
+        "name": "",
+        "geometry": 266,
+        "attribute": "vfxKind",
+        "bytes": 360448,
+        "version": 1,
+        "hash": null
+      }
+    ],
+    "matureGeometry": [
+      {
+        "reference": "Buffer:2850",
+        "mesh": 636,
+        "name": "",
+        "geometry": 266,
+        "attribute": "vfxKind",
+        "bytes": 360448,
+        "version": 8,
+        "hash": null
+      }
+    ]
+  },
+  "cadence": {
+    "targetMs": 16.666666666666668,
+    "intervals": 308,
+    "aboveTarget": 308,
+    "max": {
+      "sequence": 6,
+      "ticket": null,
+      "intervalMs": 36.699951171875,
+      "drawMs": 0.300048828125,
+      "replay": true,
+      "clockElapsed": 10
+    },
+    "maxWithShield": {
+      "sequence": 30,
+      "ticket": 3,
+      "intervalMs": 35.300048828125,
+      "drawMs": 1.800048828125,
+      "replay": true,
+      "clockElapsed": 10.299999999999994
+    }
+  },
+  "drained": true,
+  "errors": [],
+  "scope": {
+    "fixedClockCast": true,
+    "liveMenu": false,
+    "coordinatedExpiry": false,
+    "hardwareGpuDuration": false,
+    "c4Passed": false
+  },
+  "coldRestore": {
+    "baseCommit": "8fff4044457cbcdf1184eac8eb1e267e918f31b3",
+    "saveSha256": "0bf0efd24920c37f882119092101215a759a4f10b72c5405ce171aa5e146246d",
+    "receiptSha256": "f31241c34506c54b8ca1cd043882b469a5d3fea4c97af933da56b3b430a37dc8",
+    "traceSha256": "ee10b509d727f920a49b395e44da662d8cb61b1a197bf7fad2ac7457b61d2cf7",
+    "collectionComplete": true,
+    "dataLossOccurred": false,
+    "checkpointVersion": 3,
+    "elapsed": 101.19999999999784,
+    "spellId": "spell-1000001",
+    "polygonId": 11,
+    "spellAge": 1.1999999999999815,
+    "matchingSpatialStateAndLedger": true,
+    "extraActivations": 0,
+    "confirmedPublication": 1,
+    "nextCheckpoint": 2,
+    "residentDomeVertexCount": 5568,
+    "drained": true,
+    "drawControl": {
+      "receiptSha256": "21533cbea121667fa78d31add003c0c7029cfe3e551c665eaa7e22b53562baeb",
+      "traceSha256": "496ae741738b3a57afbf74d395db6930abe079113bb1d0a44078925eb9e64bb0",
+      "collectionComplete": true,
+      "dataLossOccurred": false,
+      "retainedSequence": 14,
+      "retainedTicket": 2,
+      "residentDomeVertexBuffer": "Buffer:2637",
+      "distinctVertexBuffersUsedByDraws": 344,
+      "awaitedAfterCameraChangeMs": 10000,
+      "domeBufferSubmitted": false,
+      "independentOfNativeIdleControl": {
+        "receiptSha256": "678d85078ed3af3198c7ed67a68c920581408268b7f9a9356c6f26fee831505d",
+        "traceSha256": "95659d95651d126db1c938c94edc98fc56cf79fe1da90611ec9902b07559dc23",
+        "confirmedPublication": 1,
+        "retainedSequence": 326,
+        "surfaceReady": true,
+        "compilationsPending": 0,
+        "domeMeshVisible": false,
+        "domeBufferSubmitted": false
+      }
+    },
+    "correctedDraw": {
+      "receiptSha256": "f702fed8725cb6bc37718a6ce929213837a5b58d065a396857beda07bbcc1bed",
+      "traceSha256": "d1f3357a65373a0a8a509f56fba2f635944a270218e1b2831474134c5b8bc0f2",
+      "collectionComplete": true,
+      "dataLossOccurred": false,
+      "confirmedPublication": 1,
+      "domeDrawSequence": 33,
+      "idleDrawSequence": 35,
+      "idleTicket": 2,
+      "sharedDomeBuffer": "Buffer:2663",
+      "bufferVersion": 1,
+      "vertexCount": 5568,
+      "domeBufferSubmitted": true,
+      "pausedPublicationAfterIdle": false,
+      "stopReason": "Native publication boundary did not arrive"
+    },
+    "pausedRestoreThroughDrain": {
+      "baseCommit": "f09c3b09e608132d978bca86eb4ba8b2cd385498",
+      "receiptSha256": "d5a5e44626405ca68ccadee332eaff8da453479e1899611afc14af3f2a50b543",
+      "traceSha256": "be6d5fc4bc1fb778c2c022a6f44664e26f801fecb3f4d8780d007f8cc58c2cba",
+      "collectionComplete": true,
+      "dataLossOccurred": false,
+      "firstConfirmedDraw": 11,
+      "domeAdmittedDraw": 29,
+      "idleDraw": 31,
+      "idleTicket": 2,
+      "heldNativeProductionAfterIdleSubmit": true,
+      "idleConfirmedPublication": 2,
+      "nextCheckpoint": 3,
+      "domeDrawAfterIdleProjection": 33,
+      "sharedDomeBuffer": "Buffer:2774",
+      "bufferVersion": 1,
+      "vertexCount": 5568,
+      "elapsed": 101.19999999999784,
+      "polygonId": 11,
+      "maxIntervalMs": 38.300048828125,
+      "maxIntervalSequence": 10,
+      "displayHz": 30,
+      "drained": true,
+      "errors": []
+    }
+  },
+  "domeReuse": {
+    "baseCommit": "9b6c5e1845084fb7b877ce7e7ee5e2045288860b",
+    "receiptSha256": "66fa2c2525555a2458c81169eb983b407776a9cc61e262cf7e47c4b44e3f81cf",
+    "traceSha256": "b43d162a865be5153b220c1926e1b97449b87db47a0d5c617a6ebddd4037c389",
+    "collectionComplete": true,
+    "dataLossOccurred": false,
+    "cameraDelta": {
+      "x": 2,
+      "z": -1
+    },
+    "ages": [
+      1.1000000000000019,
+      2.449999999999997
+    ],
+    "geometry": [
+      {
+        "reference": "Buffer:2858",
+        "mesh": 636,
+        "name": "",
+        "geometry": 266,
+        "attribute": "vfxKind",
+        "bytes": 360448,
+        "version": 7,
+        "hash": null
+      },
+      {
+        "reference": "Buffer:2858",
+        "mesh": 636,
+        "name": "",
+        "geometry": 266,
+        "attribute": "vfxKind",
+        "bytes": 360448,
+        "version": 7,
+        "hash": null
+      }
+    ],
+    "intervals": 339,
+    "maxIntervalMs": 37.2998046875,
+    "maxWithShieldIntervalMs": 35.099853515625,
+    "drained": true,
+    "errors": []
+  },
+  "civilExpiry": {
+    "baseCommit": "bcdbc82950cc280d648a124edaf076c8314632e4",
+    "qualification": "DEV clientOptions.qualifyShieldExpiry, one civil worker in native-idle, no raid or beast physics at expiry",
+    "deterministic": {
+      "sha256": "88cbe13b3a43057cb7fc496200203ab9279a94091300a80aae52ba60daa75233",
+      "before": 29.97399999999979,
+      "expiry": 30.000000000000128,
+      "steps": 2,
+      "elapsed": 30.01399999999979,
+      "remainder": 0.013999999999661839,
+      "polygonId": 10,
+      "shieldOwners": []
+    },
+    "physical": {
+      "sha256": "f3259c2529d44c2d9e6774f013ef5333bca81b009dfe33b5ec72b95cd96c9732",
+      "lastVisibleDuringReady": 29.95000000000007,
+      "worker": "native-idle",
+      "spell": "spell-1000000",
+      "polygonId": 10,
+      "ready": {
+        "version": 1,
+        "authorityEpoch": "3094ddaa-ae75-4914-96f5-44a155452b19/1",
+        "nativeSession": 1,
+        "ticket": 6,
+        "effectiveTime": 30.00000000000007
+      },
+      "firstDraw": {
+        "at": 1795633670398.5,
+        "sequence": 260,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "3094ddaa-ae75-4914-96f5-44a155452b19/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 30.00000000000007
+        },
+        "intervalMs": 33.300048828125,
+        "drawMs": 3.5,
+        "replay": false,
+        "clockElapsed": 30.05000000000007,
+        "safeUntil": 30.05000000000007,
+        "cameraVersion": null
+      },
+      "postCheckpoint": {
+        "sequence": 420,
+        "elapsed": 30.60000000000008
+      },
+      "postFrame": {
+        "sequence": 420,
+        "terrainGeneration": 12,
+        "selectableGeneration": 1064,
+        "cameraVersion": 0
+      },
+      "drained": true,
+      "cadence": {
+        "displayHz": 30,
+        "targetMs": 16.666666666666668,
+        "retainedDrawSamples": 902,
+        "peak": {
+          "at": 1795633649002.5,
+          "sequence": 17,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "3094ddaa-ae75-4914-96f5-44a155452b19/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10
+          },
+          "intervalMs": 37.400146484375,
+          "drawMs": 1.5,
+          "replay": true,
+          "clockElapsed": 10,
+          "safeUntil": 10,
+          "cameraVersion": null
+        },
+        "traceDataLoss": false
+      }
+    }
+  },
+  "runningCastNegative": {
+    "baseCommit": "87dee38ca11a6b45a98a8e4f04834acf222907b2",
+    "rawReceipt": {
+      "path": ".cache/shield-kind4-clock-cut/running-fifo-nvidia.failure.json",
+      "sha256": "8580681341efe1f9fecdf952578564ee88ffad977579bdd3014eda6cb9ac45cc"
+    },
+    "trace": {
+      "path": ".cache/shield-kind4-clock-cut/running-fifo-nvidia.trace.json.gz",
+      "sha256": "2625344f51dbc1675badd28b179776cb40c868e828c757ddf0ebfb53e1ee7ce1",
+      "dataLossOccurred": false
+    },
+    "runtime": "hosted worker, native cast preparation enabled by harness allowlist",
+    "clockArmedBeforeCommand": true,
+    "requestId": 2,
+    "preparedTicket": 3,
+    "preparedElapsed": 10.149999999999997,
+    "readyMs": 506.199951171875,
+    "readyHoldConfiguredMs": 300,
+    "heldSurface": {
+      "sequence": 5,
+      "elapsed": 10.149999999999997,
+      "receivedSequence": 22,
+      "receivedElapsed": 10.999999999999979
+    },
+    "lastGameElapsed": 36.10000000000045,
+    "observedGo": false,
+    "spells": 0,
+    "gpuErrors": 0,
+    "commandResultRecorded": false,
+    "stoppedAt": "timeout waiting for Shield GO"
+  },
+  "runningCastQualified": {
+    "baseCommit": "8327d18a53da41398579f7a6021c4b98d16b0ef2",
+    "qualification": "qualifyRunningShield in DEV, one civil native Farm or Idle, no raid or beast physics",
+    "tests": {
+      "sourceComparison": {
+        "passed": 112,
+        "artifact": {
+          "path": ".cache/shield-running-cast/final.tap",
+          "sha256": "e57d20e0c2bbd6364828bb85cac6565be1dfc2818ddc8f2d8c971a67e3009823"
+        }
+      },
+      "branch": {
+        "passed": 98,
+        "artifact": {
+          "path": ".cache/shield-running-cast/branch-impact.tap",
+          "sha256": "45e9f9deac66e32d237305cb87a3f234b581dc4a9e02fefa73173916931a4313"
+        }
+      },
+      "buildSeconds": 51.36
+    },
+    "preparationPatch": {
+      "path": ".cache/shield-running-cast/running-shield.patch",
+      "sha256": "af736373f894af59840331569bd98ee01c77a9b0bb12fb3330a00b0aa46a9458"
+    },
+    "physical": {
+      "raw": {
+        "path": ".cache/shield-running-cast/split-running-verified-nvidia.json",
+        "sha256": "cf750b650367e8aa28281a09a2157cacd30c1e6b9e9e0566e27417b9dc65eea9"
+      },
+      "trace": {
+        "path": ".cache/shield-running-cast/split-running-verified-nvidia.trace.json.gz",
+        "sha256": "0298ae332c7508991471a227e8b3c66489977d4948244af203339e8a346d04c1",
+        "dataLossOccurred": false
+      },
+      "displayHz": 30,
+      "requestId": 2,
+      "gestureElapsed": 10.149999999999997,
+      "privateGeometry": {
+        "durationMs": 1082.599853515625,
+        "configuredHoldMs": 300,
+        "readyElapsed": 11.249999999999973,
+        "releaseElapsed": 11.549999999999967,
+        "ticket": null
+      },
+      "fifo": {
+        "expectedSequence": 34,
+        "commandSequence": 35,
+        "elapsed": 11.599999999999966,
+        "ticket": 3,
+        "captureToReadyMs": 80,
+        "captureToGoMs": 104.60009765625,
+        "captureToDrawMs": 119.900146484375,
+        "success": true
+      },
+      "firstDraw": {
+        "sequence": 37,
+        "intervalMs": 34.099853515625,
+        "drawMs": 3.5
+      },
+      "shield": {
+        "spellId": "spell-1000000",
+        "polygonId": 10
+      },
+      "farmBody": 1,
+      "checkpoint": {
+        "sequence": 41,
+        "elapsed": 11.84999999999996
+      },
+      "matureVertices": 5568,
+      "spellActivated": 1,
+      "unchangedLedger": true,
+      "samples": 337,
+      "maxIntervalMs": 38.2001953125,
+      "drained": true
+    },
+    "instrumentationCorrection": {
+      "raw": {
+        "path": ".cache/shield-running-cast/split-running-nvidia.failure.json",
+        "sha256": "95ae8f3713c8973fd5932fb1531c1448e56ca7214595a0bdfc86c6d6e4393d6c"
+      },
+      "reason": "GO probe omitted the request id",
+      "activationObserved": true,
+      "physicalCompletionRequiredSecondRun": true
+    }
+  },
+  "runningCastWithEmptyPhysics": {
+    "commit": "ddcfe91651438156c8f8e66be4c8fdbf18488ce0",
+    "backend": "real Rapier driver, Game and WASM with deterministic WebGPU Host",
+    "fixture": {
+      "path": ".cache/shield-running-cast/empty-physics-control.test.mjs",
+      "sha256": "38283aaa2a6ad765d1a7279f818e150f8b9e9cf89621b93b4a406475ac941d48"
+    },
+    "result": {
+      "path": ".cache/shield-running-cast/empty-physics-control.tap",
+      "sha256": "bc1b5e2f354426a164936f53c6a5171002499662417c1e75252cc23417999662"
+    },
+    "qualificationRequested": true,
+    "raidPresent": false,
+    "preparedGeometry": false,
+    "preparedTicket": 3,
+    "elapsedBefore": 10.279999999999994,
+    "elapsedAfter": 10.379999999999992,
+    "rejection": "stale",
+    "committed": false,
+    "spells": 0,
+    "errors": 0
+  },
+  "runningAndExpiringWithEmptyPhysics": {
+    "baseCommit": "73cc90276d57916d1391de03a3ade47c11b3ee60",
+    "qualifications": [
+      "qualifyRunningShield",
+      "qualifyShieldExpiry"
+    ],
+    "driver": {
+      "dynamicPhysics": true,
+      "registeredActors": 0
+    },
+    "tests": {
+      "branch": {
+        "passed": 33,
+        "artifact": {
+          "path": ".cache/shield-empty-driver/branch-impact.tap",
+          "sha256": "240eed99dd433f6ee210fab5dc709ad965936c57669ab8dc7e132d1898a87460"
+        }
+      },
+      "buildSeconds": 49.76
+    },
+    "physical": {
+      "raw": {
+        "path": ".cache/shield-empty-driver/dynamic-physics-nvidia.json",
+        "sha256": "b67fb570f9303e8b66b3435ad9cc1f22ea263b96bfa17d37e57b9fc197bf3def"
+      },
+      "trace": {
+        "path": ".cache/shield-empty-driver/dynamic-physics-nvidia.trace.json.gz",
+        "sha256": "eb3a9bcbe6d6d706987df6f7e1e55ca71587f3f7e598209f507230237daa31b8",
+        "dataLossOccurred": false
+      },
+      "displayHz": 30,
+      "cast": {
+        "elapsedWhileGeometryHeld": [
+          11.149999999999975,
+          11.449999999999969
+        ],
+        "plannedHoldMs": 300,
+        "ticket": 3,
+        "elapsed": 11.499999999999968,
+        "captureToGoMs": 194.7998046875,
+        "firstDraw": 35,
+        "firstIntervalMs": 33.300048828125,
+        "farmBodyId": 1,
+        "checkpoint": {
+          "sequence": 39,
+          "elapsed": 11.749999999999963
+        }
+      },
+      "shield": {
+        "spellId": "spell-1000000",
+        "polygonId": 10
+      },
+      "expiry": {
+        "heldElapsed": 31.45000000000009,
+        "plannedHoldMs": 300,
+        "workerState": "native-idle",
+        "elapsed": 31.500000000000092,
+        "ticket": 6,
+        "firstDraw": 283,
+        "firstIntervalMs": 33.39990234375,
+        "checkpoint": {
+          "sequence": 449,
+          "elapsed": 32.050000000000104
+        }
+      },
+      "spellActivated": 1,
+      "unchangedLedger": true,
+      "drained": true,
+      "samples": 899,
+      "maxIntervalMs": 38.89990234375
+    }
+  },
+  "qualifiedHostedPickedShield": {
+    "baseCommit": "54eef5a082db87a6ecebcffe502d81d31e082e25",
+    "scope": "DEV qualification only, actual host module without a command override, empty dynamic physics driver",
+    "tests": {
+      "branch": {
+        "passed": 48,
+        "artifact": {
+          "path": ".cache/shield-empty-driver/hosted-gesture-branch.tap",
+          "sha256": "4564da114d3693ae0bd09aaa07db11c3cd39d2e652b2c9a69e2b02ca987d5158"
+        }
+      },
+      "buildSeconds": 50.74
+    },
+    "physical": {
+      "raw": {
+        "path": ".cache/shield-empty-driver/hosted-confirmed-pick-nvidia.json",
+        "sha256": "76b3301823c5c44c0dab81093d5b0edda5bfc0cf7adf87d373906a39ff2101a5"
+      },
+      "trace": {
+        "path": ".cache/shield-empty-driver/hosted-confirmed-pick-nvidia.trace.json.gz",
+        "sha256": "f414f3ae49e10028fb53086b76049ef8c0bae22fd1461fba138f11abeba8b873",
+        "dataLossOccurred": false
+      },
+      "displayHz": 30,
+      "pick": {
+        "entityId": null,
+        "hitPoint": {
+          "x": -13.243911396373443,
+          "y": 17.507015228271484,
+          "z": 11.375572135231572
+        },
+        "point": {
+          "x": -13.243911396373443,
+          "z": 11.375572135231572
+        },
+        "sequence": 5
+      },
+      "command": {
+        "kind": "castShield",
+        "id": "shield-across-native-farm",
+        "x": -13.243911396373443,
+        "z": 11.375572135231572,
+        "selection": {
+          "origin": {
+            "x": -12.549049814455323,
+            "y": 19.207015228271484,
+            "z": 14.293990779287672
+          },
+          "contact": {
+            "x": -13.243911396373443,
+            "y": 17.507015228271484,
+            "z": 11.375572135231572
+          }
+        }
+      },
+      "elapsedWhileGeometryHeld": [
+        11.749999999999963,
+        12.049999999999956
+      ],
+      "configuredHoldMs": 300,
+      "firstDraw": 34,
+      "elapsed": 12.149999999999954,
+      "ticket": 3,
+      "captureToGoMs": 164.199951171875,
+      "resultSequence": 46,
+      "firstIntervalMs": 33.39990234375,
+      "farmBodyId": 1,
+      "checkpoint": {
+        "sequence": 54,
+        "elapsed": 12.499999999999947
+      },
+      "shield": {
+        "spellId": "spell-1000000",
+        "polygonId": 10
+      },
+      "spellActivated": 1,
+      "unchangedLedger": true,
+      "drained": true,
+      "maxIntervalMs": 36.800048828125,
+      "samples": 339
+    }
+  },
+  "movingFarmExpiry": {
+    "testedBase": "efff36867f2c60db6610dec64a1c2a2d651073ab",
+    "receipt": {
+      "path": ".cache/shield-farm-expiry/moving-farm-expiry-nvidia.json",
+      "sha256": "89f2341359ca282fb561be90862bb977f8dbeb3415f12ced17536a5aac536c9e"
+    },
+    "trace": {
+      "path": ".cache/shield-farm-expiry/moving-farm-expiry-nvidia.trace.json.gz",
+      "sha256": "d8c98250d9954884604f9e96e7ff3505821a2374cc307381a8af253f6ff58215",
+      "dataLossOccurred": false
+    },
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 129.70000000298023
+      }
+    },
+    "fixture": {
+      "restoredRemainingSeconds": 0.526,
+      "physics": "empty registry",
+      "developmentQualification": "qualifyShieldExpiry"
+    },
+    "held": {
+      "configuredMs": 300,
+      "publicationElapsed": 10.49999999999999,
+      "drawCursorElapsed": 10.52599999999999
+    },
+    "acquired": {
+      "boundary": {
+        "version": 1,
+        "authorityEpoch": "745a1a77-96bc-4307-bdba-ff69b80a7958/1",
+        "nativeSession": 1,
+        "ticket": 3,
+        "effectiveTime": 10.52599999999999
+      },
+      "shield": {
+        "spellId": "spell-1000000",
+        "polygonId": 10
+      },
+      "draw": {
+        "at": 1795639034709.2,
+        "sequence": 28,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "745a1a77-96bc-4307-bdba-ff69b80a7958/1",
+          "nativeSession": 1,
+          "ticket": 3,
+          "effectiveTime": 10.52599999999999
+        },
+        "intervalMs": 33.300048828125,
+        "drawMs": 3,
+        "replay": false,
+        "clockElapsed": 10.599999999999987,
+        "safeUntil": 10.599999999999987,
+        "cameraVersion": null
+      }
+    },
+    "farm": {
+      "bodyId": 1,
+      "handle": {
+        "authorityEpoch": "745a1a77-96bc-4307-bdba-ff69b80a7958/1",
+        "session": 1,
+        "slot": 0,
+        "generation": 2
+      },
+      "executionEpoch": 10,
+      "relativeTimes": [
+        0,
+        0.5259999632835388,
+        0.699999988079071,
+        1.649999976158142
+      ],
+      "heldZ": 11.260000000000012,
+      "finalZ": 10.018000000000038,
+      "finalAdmission": "native-farm-arrival"
+    },
+    "checkpoint": {
+      "sequence": 43,
+      "elapsed": 11.649999999999965
+    },
+    "drained": true,
+    "cadence": {
+      "displayHz": 30,
+      "samples": 325,
+      "maxIntervalMs": 36.7001953125
+    },
+    "cpu": {
+      "baseline": {
+        "path": ".cache/shield-farm-expiry/before.tap",
+        "sha256": "4726c05db82acb8e938d82d01cf2ac6d010b8b473a44bb50cf635ab679b4f485"
+      },
+      "impact": {
+        "path": ".cache/shield-farm-expiry/impact.tap",
+        "sha256": "1f5e9558f172e33ba0eeaa050dd3eb8b8970c64f15472c596abeb23ac94500f8"
+      },
+      "passed": 28
+    }
+  },
+  "movingStrollExpiry": {
+    "testedBase": "19ef5228acd7d1966ccee52bb52e3378e4f6344c",
+    "receipt": {
+      "path": ".cache/shield-stroll-expiry/stroll-expiry-nvidia.json",
+      "sha256": "c20bb606c3395de881a81f89ee59085b718a02e46d5c17e9e66a77e313acf004"
+    },
+    "trace": {
+      "path": ".cache/shield-stroll-expiry/stroll-expiry-nvidia.trace.json.gz",
+      "sha256": "7e8ca24c9ebd734b6e76f5b36aaa23da13965b8bb0707aa16276f151dd53c156",
+      "dataLossOccurred": false
+    },
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 119.09999999403954
+      }
+    },
+    "fixture": {
+      "restoredRemainingSeconds": 0.526,
+      "physics": "empty registry",
+      "developmentQualification": "qualifyShieldExpiry"
+    },
+    "held": {
+      "configuredMs": 300,
+      "publicationElapsed": 10.769999999999987,
+      "drawCursorElapsed": 10.795999999999987
+    },
+    "acquired": {
+      "boundary": {
+        "version": 1,
+        "authorityEpoch": "dcd269aa-1610-47bf-99e4-6252785f8d7f/1",
+        "nativeSession": 1,
+        "ticket": 3,
+        "effectiveTime": 10.795999999999987
+      },
+      "shield": {
+        "spellId": "stroll-expiry",
+        "polygonId": 10
+      },
+      "draw": {
+        "at": 1795639891396.7,
+        "sequence": 26,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "dcd269aa-1610-47bf-99e4-6252785f8d7f/1",
+          "nativeSession": 1,
+          "ticket": 3,
+          "effectiveTime": 10.795999999999987
+        },
+        "intervalMs": 33.199951171875,
+        "drawMs": 3.60009765625,
+        "replay": false,
+        "clockElapsed": 10.869999999999985,
+        "safeUntil": 10.869999999999985,
+        "cameraVersion": null
+      }
+    },
+    "stroll": {
+      "bodyId": 1,
+      "handle": {
+        "authorityEpoch": "dcd269aa-1610-47bf-99e4-6252785f8d7f/1",
+        "session": 1,
+        "slot": 0,
+        "generation": 2
+      },
+      "executionEpoch": 10.269999999999998,
+      "relativeTimes": [
+        0,
+        0.5259999632835388,
+        0.699999988079071,
+        1.2999999523162842
+      ],
+      "heldZ": 0.5163572875253675,
+      "finalZ": 1.380357287525349,
+      "finalAdmission": "native-idle-stroll"
+    },
+    "checkpoint": {
+      "sequence": 35,
+      "elapsed": 11.56999999999997
+    },
+    "drained": true,
+    "cadence": {
+      "displayHz": 30,
+      "samples": 317,
+      "maxIntervalMs": 39.199951171875
+    },
+    "cpu": {
+      "baseline": {
+        "path": ".cache/shield-stroll-expiry/guard-before.tap",
+        "sha256": "c4f9566d168135be36c7c4ed49361e9274499a60f01b43439a443fab8bbc856c"
+      },
+      "impact": {
+        "path": ".cache/shield-stroll-expiry/impact.tap",
+        "sha256": "8e23982ee1fc376fa2cfce4455c959d327fc85ad9991a7d8aa0e207b63527e53"
+      },
+      "passed": 53
+    }
+  }
+}

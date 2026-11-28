@@ -1,0 +1,90 @@
+{
+  "runs": [
+    {
+      "mode": "main",
+      "responseMs": 105.6550000011921,
+      "firstTickMs": 105.19999999552965,
+      "frames": {
+        "count": 99,
+        "p95": 33.455000000001746,
+        "p99": 66.68000000000029,
+        "max": 99.93000000000029
+      },
+      "renderMs": {
+        "count": 100,
+        "p95": 37.34499999880791,
+        "p99": 47.09000000357628,
+        "max": 47.53999999910593
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "mangroveNetwork": true,
+      "animals": 20,
+      "sceneErrors": []
+    },
+    {
+      "mode": "worker",
+      "responseMs": 124.11499999463558,
+      "firstTickMs": 111.98000000417233,
+      "frames": {
+        "count": 99,
+        "p95": 33.3949999999968,
+        "p99": 33.419999999998254,
+        "max": 33.43999999999505
+      },
+      "renderMs": {
+        "count": 100,
+        "p95": 27.5,
+        "p99": 30.484999999403954,
+        "max": 30.90999999642372
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "mangroveNetwork": true,
+      "animals": 20,
+      "sceneErrors": []
+    },
+    {
+      "mode": "worker",
+      "responseMs": 130.34000000357628,
+      "firstTickMs": 129.1550000011921,
+      "frames": {
+        "count": 99,
+        "p95": 33.41000000000349,
+        "p99": 33.455000000001746,
+        "max": 33.5
+      },
+      "renderMs": {
+        "count": 100,
+        "p95": 27.839999996125698,
+        "p99": 36.82000000029802,
+        "max": 39.07999999821186
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "mangroveNetwork": true,
+      "animals": 20,
+      "sceneErrors": []
+    },
+    {
+      "mode": "main",
+      "responseMs": 111.35000000149012,
+      "firstTickMs": 110.84000000357628,
+      "frames": {
+        "count": 99,
+        "p95": 33.404999999998836,
+        "p99": 33.450000000004366,
+        "max": 133.36499999999796
+      },
+      "renderMs": {
+        "count": 100,
+        "p95": 29.53499999642372,
+        "p99": 33.67500000447035,
+        "max": 35.935000002384186
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "mangroveNetwork": true,
+      "animals": 20,
+      "sceneErrors": []
+    }
+  ],
+  "selectedProjectionEqual": true,
+  "scope": "Edge headless; frozen real WorldScene in mangrove islands with 20 test animals and independent restored mangrove raid converted to islands with nine synthetic chunks simulation. 1 simulation steps per request. Not an integrated Worker-owned game: displayed world does not consume the simulation projection. No input, audio or gameplay parity, GPU timer or physics manager in the separate simulation."
+}

@@ -1,0 +1,395 @@
+{
+  "sourceBase": "e1eb667d81732980ed3d562c7c35024bfab3f840",
+  "environment": {
+    "browser": "Edge Chromium",
+    "adapter": "NVIDIA Turing",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja",
+    "warmVisualBootstrap": false
+  },
+  "runs": [
+    {
+      "profile": "youngMale",
+      "stage": "baseline",
+      "publicationFloor": 2,
+      "visualAtEntry": 0,
+      "visualAtUnblock": 9,
+      "surfaceEntryMs": 8.5,
+      "surfaceUnblockedMs": 9056.2,
+      "authorityFaultMs": 10002.5,
+      "fault": "Error: Native resource preparation timed out",
+      "terrainTickets": [
+        {
+          "batch": 1,
+          "key": "-1,-1",
+          "side": "terrain",
+          "waitForAdmissionMs": 1394.7,
+          "totalTicketMs": 1636.8
+        },
+        {
+          "batch": 2,
+          "key": "2,0",
+          "side": "terrain",
+          "waitForAdmissionMs": 3515.8,
+          "totalTicketMs": 3517.8
+        },
+        {
+          "batch": 2,
+          "key": "2,0",
+          "side": "biome",
+          "waitForAdmissionMs": 0.2,
+          "totalTicketMs": 3.1
+        }
+      ]
+    },
+    {
+      "profile": "youngMale",
+      "stage": "priority",
+      "publicationFloor": 2,
+      "visualAtEntry": 0,
+      "visualAtUnblock": 9,
+      "surfaceEntryMs": 1672.1,
+      "surfaceUnblockedMs": 4658.8,
+      "authorityFaultMs": 4713.9,
+      "fault": "Error: Native initial Idle body resource unavailable",
+      "terrainTickets": [
+        {
+          "batch": 1,
+          "key": "-1,-1",
+          "side": "terrain",
+          "waitForAdmissionMs": 1989.9,
+          "totalTicketMs": 2400.4
+        },
+        {
+          "batch": 2,
+          "key": "2,0",
+          "side": "terrain",
+          "waitForAdmissionMs": 762.4,
+          "totalTicketMs": 766.8
+        },
+        {
+          "batch": 2,
+          "key": "2,0",
+          "side": "biome",
+          "waitForAdmissionMs": 0.3,
+          "totalTicketMs": 3.4
+        }
+      ]
+    },
+    {
+      "profile": "olderFemale",
+      "stage": "priority",
+      "publicationFloor": 2,
+      "visualAtEntry": 0,
+      "visualAtUnblock": 9,
+      "surfaceEntryMs": 3.4,
+      "surfaceUnblockedMs": 2515.3,
+      "authorityFaultMs": 3396.5,
+      "fault": "Error: Native initial Idle body resource unavailable",
+      "terrainTickets": [
+        {
+          "batch": 1,
+          "key": "-1,-1",
+          "side": "terrain",
+          "waitForAdmissionMs": 396.9,
+          "totalTicketMs": 673.3
+        },
+        {
+          "batch": 2,
+          "key": "2,0",
+          "side": "terrain",
+          "waitForAdmissionMs": 422.6,
+          "totalTicketMs": 426.4
+        },
+        {
+          "batch": 2,
+          "key": "2,0",
+          "side": "biome",
+          "waitForAdmissionMs": 0.5,
+          "totalTicketMs": 6.2
+        }
+      ]
+    },
+    {
+      "profile": "olderMale",
+      "stage": "priority",
+      "publicationFloor": 2,
+      "visualAtEntry": 0,
+      "visualAtUnblock": 9,
+      "surfaceEntryMs": 2.4,
+      "surfaceUnblockedMs": 2848.7,
+      "authorityFaultMs": 3764,
+      "fault": "Error: Native initial Idle body resource unavailable",
+      "terrainTickets": [
+        {
+          "batch": 1,
+          "key": "-1,-1",
+          "side": "terrain",
+          "waitForAdmissionMs": 386.3,
+          "totalTicketMs": 718.2
+        },
+        {
+          "batch": 2,
+          "key": "2,0",
+          "side": "terrain",
+          "waitForAdmissionMs": 449.4,
+          "totalTicketMs": 452.5
+        },
+        {
+          "batch": 2,
+          "key": "2,0",
+          "side": "biome",
+          "waitForAdmissionMs": 0.5,
+          "totalTicketMs": 5.8
+        }
+      ]
+    },
+    {
+      "profile": "youngFemale",
+      "stage": "priority",
+      "publicationFloor": 2,
+      "visualAtEntry": 0,
+      "visualAtUnblock": 9,
+      "surfaceEntryMs": 6.9,
+      "surfaceUnblockedMs": 5402.3,
+      "authorityFaultMs": 5465.7,
+      "fault": "Error: Native initial Idle body resource unavailable",
+      "terrainTickets": [
+        {
+          "batch": 1,
+          "key": "-1,-1",
+          "side": "terrain",
+          "waitForAdmissionMs": 2061.4,
+          "totalTicketMs": 2595.4
+        },
+        {
+          "batch": 2,
+          "key": "2,0",
+          "side": "terrain",
+          "waitForAdmissionMs": 765.8,
+          "totalTicketMs": 770.6
+        },
+        {
+          "batch": 2,
+          "key": "2,0",
+          "side": "biome",
+          "waitForAdmissionMs": 0.5,
+          "totalTicketMs": 3.9
+        }
+      ]
+    },
+    {
+      "profile": "youngMale",
+      "stage": "priority-walk-dependency",
+      "publicationFloor": 2,
+      "visualAtEntry": 0,
+      "visualAtUnblock": 9,
+      "surfaceEntryMs": 31.7,
+      "surfaceUnblockedMs": 3224.2,
+      "authorityFaultMs": 3282.5,
+      "fault": "Error: Native initial Idle body resource unavailable",
+      "terrainTickets": [],
+      "walkDependencies": [
+        {
+          "ms": 3227.3,
+          "stage": "enter",
+          "pending": false,
+          "loading": true,
+          "resource": false,
+          "resourcePromise": true,
+          "requestPromise": false,
+          "walkInstalled": false,
+          "idlePending": true,
+          "alertPending": false,
+          "idleRequest": true,
+          "walkCurrent": false,
+          "idleCurrent": false,
+          "error": false,
+          "lastStatus": "idle",
+          "motionPreparation": false,
+          "history": false,
+          "entity": "idle",
+          "profile": "youngMale"
+        },
+        {
+          "ms": 3227.4,
+          "stage": "actor-ready",
+          "pending": false,
+          "loading": true,
+          "resource": false,
+          "resourcePromise": true,
+          "requestPromise": false,
+          "walkInstalled": false,
+          "idlePending": true,
+          "alertPending": false,
+          "idleRequest": true,
+          "walkCurrent": false,
+          "idleCurrent": false,
+          "error": false,
+          "lastStatus": "idle",
+          "motionPreparation": false,
+          "history": false,
+          "entity": "idle",
+          "profile": "youngMale"
+        },
+        {
+          "ms": 3269.7,
+          "stage": "resource-ready",
+          "pending": false,
+          "loading": false,
+          "resource": true,
+          "resourcePromise": true,
+          "requestPromise": false,
+          "walkInstalled": false,
+          "idlePending": true,
+          "alertPending": false,
+          "idleRequest": true,
+          "walkCurrent": false,
+          "idleCurrent": false,
+          "error": false,
+          "lastStatus": "idle",
+          "motionPreparation": false,
+          "history": false,
+          "entity": "idle",
+          "profile": "youngMale"
+        },
+        {
+          "ms": 3269.8,
+          "stage": "request-ready",
+          "pending": false,
+          "loading": false,
+          "resource": true,
+          "resourcePromise": true,
+          "requestPromise": false,
+          "walkInstalled": false,
+          "idlePending": true,
+          "alertPending": false,
+          "idleRequest": true,
+          "walkCurrent": false,
+          "idleCurrent": false,
+          "error": false,
+          "lastStatus": "idle",
+          "motionPreparation": false,
+          "history": false,
+          "entity": "idle",
+          "profile": "youngMale"
+        }
+      ]
+    }
+  ],
+  "integratedColdBoot": [
+    {
+      "profile": "youngMale",
+      "visualSequence": 9,
+      "visualPublicationMs": 3287.6,
+      "pipelineStartMs": 6361.8,
+      "readyMs": 7374.6,
+      "acquiredTicket": 2,
+      "bodyId": 1,
+      "gpuErrors": 0,
+      "drained": true
+    },
+    {
+      "profile": "olderFemale",
+      "visualSequence": 9,
+      "visualPublicationMs": 2853.8,
+      "pipelineStartMs": 6768,
+      "readyMs": 7634.5,
+      "acquiredTicket": 2,
+      "bodyId": 1,
+      "gpuErrors": 0,
+      "drained": true
+    },
+    {
+      "profile": "olderMale",
+      "visualSequence": 9,
+      "visualPublicationMs": 5427.7,
+      "pipelineStartMs": 8580,
+      "readyMs": 9426.3,
+      "acquiredTicket": 2,
+      "bodyId": 1,
+      "gpuErrors": 0,
+      "drained": true
+    },
+    {
+      "profile": "youngFemale",
+      "visualSequence": 9,
+      "visualPublicationMs": 2802.8,
+      "pipelineStartMs": 6281.8,
+      "readyMs": 7235.3,
+      "acquiredTicket": 2,
+      "bodyId": 1,
+      "gpuErrors": 0,
+      "drained": true
+    }
+  ],
+  "coldAgriculture": [
+    {
+      "action": "initial",
+      "profile": "youngMale",
+      "acquisitions": [
+        {
+          "type": "nativeInitialIdleBodyBinding",
+          "ticket": 2,
+          "bodyId": 1
+        },
+        {
+          "type": "nativeTaskStartBinding",
+          "ticket": 6,
+          "bodyId": 1
+        },
+        {
+          "type": "nativeTaskActionBinding",
+          "ticket": 8,
+          "bodyId": 1
+        },
+        {
+          "type": "nativeInitialIdleBodyBinding",
+          "ticket": 10,
+          "bodyId": 1
+        }
+      ],
+      "waterSatisfied": 1,
+      "bodyId": 1,
+      "actorRoot": 708,
+      "retainedGeometryOwners": 36,
+      "gpuErrors": 0,
+      "drained": true
+    },
+    {
+      "action": "water",
+      "profile": "youngMale",
+      "acquisitions": [
+        {
+          "type": "nativeInitialIdleBodyBinding",
+          "ticket": 2,
+          "bodyId": 1
+        },
+        {
+          "type": "nativeTaskStartBinding",
+          "ticket": 6,
+          "bodyId": 1
+        },
+        {
+          "type": "nativeTaskActionBinding",
+          "ticket": 8,
+          "bodyId": 1
+        },
+        {
+          "type": "nativeInitialIdleBodyBinding",
+          "ticket": 10,
+          "bodyId": 1
+        }
+      ],
+      "waterSatisfied": 1,
+      "bodyId": 1,
+      "actorRoot": 676,
+      "retainedGeometryOwners": 36,
+      "gpuErrors": 0,
+      "drained": true
+    }
+  ]
+}

@@ -1,0 +1,126 @@
+TAP version 13
+# (node:3676) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:3676) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: olderMale ordinary paid birth shares the existing registry and producer without resetting its moving peer
+ok 1 - olderMale ordinary paid birth shares the existing registry and producer without resetting its moving peer
+  ---
+  duration_ms: 3836.1478
+  ...
+# Subtest: olderFemale ordinary paid birth shares the existing registry and producer without resetting its moving peer
+ok 2 - olderFemale ordinary paid birth shares the existing registry and producer without resetting its moving peer
+  ---
+  duration_ms: 3412.0739
+  ...
+# Subtest: youngMale ordinary paid birth shares the existing registry and producer without resetting its moving peer
+ok 3 - youngMale ordinary paid birth shares the existing registry and producer without resetting its moving peer
+  ---
+  duration_ms: 3278.2435
+  ...
+# Subtest: youngFemale ordinary paid birth shares the existing registry and producer without resetting its moving peer
+ok 4 - youngFemale ordinary paid birth shares the existing registry and producer without resetting its moving peer
+  ---
+  duration_ms: 3270.0177
+  ...
+# Subtest: daily hiring admits its new contract after the retained previous-day Home peer retires
+ok 5 - daily hiring admits its new contract after the retained previous-day Home peer retires
+  ---
+  duration_ms: 1568.6174
+  ...
+# Subtest: waiting for newborn graphics preserves its pose and the existing peer can advance its admitted corridor
+ok 6 - waiting for newborn graphics preserves its pose and the existing peer can advance its admitted corridor
+  ---
+  duration_ms: 3258.8203
+  ...
+# Subtest: closing during newborn preparation cannot publish a late Farm acquisition
+ok 7 - closing during newborn preparation cannot publish a late Farm acquisition
+  ---
+  duration_ms: 3197.1403
+  ...
+# Subtest: a bodyless birth at an occupied entry holds its own pose while its peer advances, then binds exactly once
+ok 8 - a bodyless birth at an occupied entry holds its own pose while its peer advances, then binds exactly once
+  ---
+  duration_ms: 3267.1282
+  ...
+# Subtest: an unbound newborn can expire to semantic Home while the younger peer keeps moving, without acquiring Farm23
+ok 9 - an unbound newborn can expire to semantic Home while the younger peer keeps moving, without acquiring Farm23
+  ---
+  duration_ms: 942.2573
+  ...
+# Subtest: two hires at one entry do not block the existing peer while the second waits for physical admission
+ok 10 - two hires at one entry do not block the existing peer while the second waits for physical admission
+  ---
+  duration_ms: 1001.6867
+  ...
+# Subtest: a real task can claim a bodyless newborn and first binding feeds TaskStart directly without a phantom Farm route
+ok 11 - a real task can claim a bodyless newborn and first binding feeds TaskStart directly without a phantom Farm route
+  ---
+  duration_ms: 929.0056
+  ...
+# Subtest: standalone first admission outside all current discs still respects a genuine peer future reservation
+ok 12 - standalone first admission outside all current discs still respects a genuine peer future reservation
+  ---
+  duration_ms: 340.7122
+  ...
+# Subtest: pthread first admission outside all current discs still respects a genuine peer future reservation
+ok 13 - pthread first admission outside all current discs still respects a genuine peer future reservation
+  ---
+  duration_ms: 532.3762
+  ...
+# Subtest: native first admission rejects overlap without consuming an ID or changing any body, and cannot rewrite an admitted body
+ok 14 - native first admission rejects overlap without consuming an ID or changing any body, and cannot rewrite an admitted body
+  ---
+  duration_ms: 341.0925
+  ...
+# Subtest: body registry first-admission wrapper retains the next ID after rejection and never upserts an existing key
+ok 15 - body registry first-admission wrapper retains the next ID after rejection and never upserts an existing key
+  ---
+  duration_ms: 0.495
+  ...
+# Subtest: standalone bodyless Farm-origin Home is a strict semantic type and cannot pass the executable request boundary
+ok 16 - standalone bodyless Farm-origin Home is a strict semantic type and cannot pass the executable request boundary
+  ---
+  duration_ms: 347.8989
+  ...
+# Subtest: pthread bodyless Farm-origin Home is a strict semantic type and cannot pass the executable request boundary
+ok 17 - pthread bodyless Farm-origin Home is a strict semantic type and cannot pass the executable request boundary
+  ---
+  duration_ms: 428.7451
+  ...
+# (node:23284) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:23284) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: a real task supersedes prepared newborn Farm late-before-task without moving or rebinding its body
+ok 18 - a real task supersedes prepared newborn Farm late-before-task without moving or rebinding its body
+  ---
+  duration_ms: 3546.8684
+  ...
+# Subtest: a real task supersedes prepared newborn Farm late-after-task without moving or rebinding its body
+ok 19 - a real task supersedes prepared newborn Farm late-after-task without moving or rebinding its body
+  ---
+  duration_ms: 3437.2325
+  ...
+# Subtest: actual newborn READY expiry late-before-home cannot acquire the cancelled Farm or consume Home's response
+ok 20 - actual newborn READY expiry late-before-home cannot acquire the cancelled Farm or consume Home's response
+  ---
+  duration_ms: 2549.3324
+  ...
+# Subtest: actual newborn READY expiry late-after-home cannot acquire the cancelled Farm or consume Home's response
+ok 21 - actual newborn READY expiry late-after-home cannot acquire the cancelled Farm or consume Home's response
+  ---
+  duration_ms: 2535.2511
+  ...
+# Subtest: closing the authority after genuine newborn READY aborts its packet and cannot acquire its late reply
+ok 22 - closing the authority after genuine newborn READY aborts its packet and cannot acquire its late reply
+  ---
+  duration_ms: 887.1681
+  ...
+1..22
+# tests 22
+# suites 0
+# pass 22
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 43944.3769

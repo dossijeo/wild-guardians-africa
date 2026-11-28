@@ -1,7 +1,7 @@
 // Renderer-facing copies of the C++ chunk buffers. This module deliberately
 // has no Three.js or terrain-generator dependency so it can run in a worker.
-export function spatialProps(wasm){
-  const count=wasm.spatial_prop_count(),view=new DataView(wasm.memory.buffer,wasm.spatial_props_ptr(),count*40);
+export function spatialProps(wasm,count=wasm.spatial_prop_count(),pointer=wasm.spatial_props_ptr()){
+  const view=new DataView(wasm.memory.buffer,pointer,count*40);
   return Array.from({length:count},(_,i)=>{
     const at=i*40;
     return {x:view.getFloat32(at,true),z:view.getFloat32(at+4,true),y:view.getFloat32(at+8,true),
@@ -10,9 +10,9 @@ export function spatialProps(wasm){
   });
 }
 
-export function spatialInstances(wasm,cx,cz){
+export function spatialInstances(wasm,cx,cz,props=spatialProps(wasm)){
   const lists=Array.from({length:20},()=>[]);
-  for(const prop of spatialProps(wasm)){
+  for(const prop of props){
     const {slot,scale,group,gx,gz,...position}=prop;
     lists[slot].push({id:`spatial:${group}:${gx}:${gz}`,slot,...position,
       scale,sx:scale,sy:scale,sz:scale,tint:1,priority:0});

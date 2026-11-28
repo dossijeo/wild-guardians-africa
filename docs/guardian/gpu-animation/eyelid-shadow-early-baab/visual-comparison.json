@@ -1,0 +1,85 @@
+{
+  "scope": "Synchronous captures after each benchmark block, original/repeat/eyelid-shadow omission from the same current scene. Repeated originals must match before the skipped comparison can be interpreted. Negative control inverts the red channel. Not a perceptual or temporal gameplay validation.",
+  "rows": [
+    {
+      "index": 0,
+      "width": 1280,
+      "height": 720,
+      "repeat": {
+        "changed": 1,
+        "max": 1,
+        "mean": 3.616898148148148e-7
+      },
+      "skipped": {
+        "changed": 23,
+        "max": 1,
+        "mean": 0.000010127314814814815
+      },
+      "negative": {
+        "changed": 921600,
+        "max": 247,
+        "mean": 34.48525462962963
+      }
+    },
+    {
+      "index": 1,
+      "width": 1280,
+      "height": 720,
+      "repeat": {
+        "changed": 17,
+        "max": 1,
+        "mean": 0.000007595486111111111
+      },
+      "skipped": {
+        "changed": 23,
+        "max": 11,
+        "mean": 0.000030743634259259256
+      },
+      "negative": {
+        "changed": 921600,
+        "max": 247,
+        "mean": 35.43845920138889
+      }
+    },
+    {
+      "index": 2,
+      "width": 1280,
+      "height": 720,
+      "repeat": {
+        "changed": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "skipped": {
+        "changed": 1,
+        "max": 4,
+        "mean": 0.0000025318287037037036
+      },
+      "negative": {
+        "changed": 921600,
+        "max": 235,
+        "mean": 35.19488353587963
+      }
+    },
+    {
+      "index": 3,
+      "width": 1280,
+      "height": 720,
+      "repeat": {
+        "changed": 8,
+        "max": 1,
+        "mean": 0.000004340277777777778
+      },
+      "skipped": {
+        "changed": 6,
+        "max": 22,
+        "mean": 0.00007161458333333333
+      },
+      "negative": {
+        "changed": 921600,
+        "max": 245,
+        "mean": 35.17890263310185
+      }
+    }
+  ]
+}

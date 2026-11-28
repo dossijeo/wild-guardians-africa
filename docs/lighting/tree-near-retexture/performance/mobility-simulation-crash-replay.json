@@ -1,0 +1,44 @@
+{
+  "scope": "Three Edge headless trials; two independent control Workers, converted mangrove islands and nine synthetic chunks. After a confirmed checkpoint, terminate a Worker after started but before result acknowledgment; rebuild from checkpoint in a new session and replay damage-center plus 80 ticks. Original in-flight execution is intentionally unobserved and no effects are externally committed. No physics manager, render, actual durable log, external side effects, message loss recovery, input or campaign.",
+  "runs": [
+    {
+      "checkpointBytes": 958982,
+      "failedCommand": "damageAdvance",
+      "resultAcknowledgedBeforeFailure": false,
+      "replayedSteps": 80,
+      "checkpointEqual": true,
+      "finalEqual": true,
+      "newRuinedEvents": 1,
+      "staleSessionRejected": true,
+      "initializationMs": 685.484999999404,
+      "recoveryToReadyMs": 883.0099999904633,
+      "recoveryToReplayMs": 1054.8199999928474
+    },
+    {
+      "checkpointBytes": 958982,
+      "failedCommand": "damageAdvance",
+      "resultAcknowledgedBeforeFailure": false,
+      "replayedSteps": 80,
+      "checkpointEqual": true,
+      "finalEqual": true,
+      "newRuinedEvents": 1,
+      "staleSessionRejected": true,
+      "initializationMs": 690.0550000071526,
+      "recoveryToReadyMs": 876.4899999946356,
+      "recoveryToReplayMs": 1054.4599999934435
+    },
+    {
+      "checkpointBytes": 958982,
+      "failedCommand": "damageAdvance",
+      "resultAcknowledgedBeforeFailure": false,
+      "replayedSteps": 80,
+      "checkpointEqual": true,
+      "finalEqual": true,
+      "newRuinedEvents": 1,
+      "staleSessionRejected": true,
+      "initializationMs": 691.4050000011921,
+      "recoveryToReadyMs": 895.3850000053644,
+      "recoveryToReplayMs": 1066.7600000053644
+    }
+  ]
+}

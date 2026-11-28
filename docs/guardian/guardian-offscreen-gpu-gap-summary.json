@@ -1,0 +1,106 @@
+{
+  "scope": "Chromium trace correlation only. RAF timestamp and execution time of its mark can differ; overlap does not establish causality or measure GPU completion. The capture adds overhead.",
+  "gaps": [
+    {
+      "intervalMs": 66.64999999999782,
+      "markTimeMs": 31979.06499999762,
+      "overlaps": [
+        {
+          "name": "GLES2Implementation::GetProgramiv",
+          "process": "Renderer",
+          "thread": "DedicatedWorker thread",
+          "durationMs": 104.202,
+          "overlapMs": 56.32
+        },
+        {
+          "name": "WebGL",
+          "process": "GPU Process",
+          "thread": "CrGpuMain",
+          "durationMs": 103.738,
+          "overlapMs": 56.189
+        }
+      ]
+    },
+    {
+      "intervalMs": 166.67499999999927,
+      "markTimeMs": 32180.40500000119,
+      "overlaps": [
+        {
+          "name": "GLES2Implementation::GetProgramiv",
+          "process": "Renderer",
+          "thread": "DedicatedWorker thread",
+          "durationMs": 186.289,
+          "overlapMs": 164.964
+        },
+        {
+          "name": "WebGL",
+          "process": "GPU Process",
+          "thread": "CrGpuMain",
+          "durationMs": 96.639,
+          "overlapMs": 96.639
+        },
+        {
+          "name": "WebGL",
+          "process": "GPU Process",
+          "thread": "CrGpuMain",
+          "durationMs": 89.275,
+          "overlapMs": 68.101
+        }
+      ]
+    },
+    {
+      "intervalMs": 166.70500000000175,
+      "markTimeMs": 32383.31499999762,
+      "overlaps": [
+        {
+          "name": "GLES2Implementation::GetProgramiv",
+          "process": "Renderer",
+          "thread": "DedicatedWorker thread",
+          "durationMs": 191.299,
+          "overlapMs": 165.366
+        },
+        {
+          "name": "WebGL",
+          "process": "GPU Process",
+          "thread": "CrGpuMain",
+          "durationMs": 94.1,
+          "overlapMs": 94.1
+        },
+        {
+          "name": "WebGL",
+          "process": "GPU Process",
+          "thread": "CrGpuMain",
+          "durationMs": 95.131,
+          "overlapMs": 71.058
+        }
+      ]
+    },
+    {
+      "intervalMs": 166.71000000000276,
+      "markTimeMs": 32575.51499998569,
+      "overlaps": [
+        {
+          "name": "GLES2Implementation::GetProgramiv",
+          "process": "Renderer",
+          "thread": "DedicatedWorker thread",
+          "durationMs": 185.42,
+          "overlapMs": 165.62
+        },
+        {
+          "name": "WebGL",
+          "process": "GPU Process",
+          "thread": "CrGpuMain",
+          "durationMs": 93.465,
+          "overlapMs": 93.465
+        },
+        {
+          "name": "WebGL",
+          "process": "GPU Process",
+          "thread": "CrGpuMain",
+          "durationMs": 91.517,
+          "overlapMs": 71.932
+        }
+      ]
+    }
+  ]
+}

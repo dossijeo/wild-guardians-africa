@@ -1,0 +1,136 @@
+{
+  "base": "e1e7f819cec91e27abf31221298a79e8fc72e7e3",
+  "input": {
+    "path": ".cache/flee-return/mixed-two-center-physical-input.json",
+    "sha256": "d9cdd4ea976f04dd72b6049118b8a8a98b200b40b6ff34980272e34ee8cc189f",
+    "snapshotSHA256": "5a5000554ffa26e186f24e1f58568a13fbc31e0ff4ddd342a08921e743190fc9"
+  },
+  "validation": {
+    "baseline": {
+      "path": ".cache/two-centers-checkpoint-base.tap",
+      "sha256": "3e369bcad2457cf524b023f962104ed28a57fb8f486e04a5d4fd541de7cdb622"
+    },
+    "final": {
+      "path": ".cache/two-centers-checkpoint-final.tap",
+      "sha256": "bc663bb0d1c4fce282b9c5c78f169465c174bd17d3efb035c768bda3292394db",
+      "passed": 5,
+      "failed": 0,
+      "skipped": 9
+    }
+  },
+  "hardware": {
+    "raw": {
+      "path": "D:/wild-guardians-qa/mixed-two-centers-checkpoint-nvidia-20261127.json",
+      "sha256": "750e42107bcad62f2a19c3babca0402a290758ad2a5744c7436ffcb35236b556"
+    },
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 110.09999999403954
+      }
+    },
+    "epochs": [
+      "26f5cf1c-bf1e-4924-b52e-e6113d433440/1",
+      "08ed47df-24a4-4937-bbd0-ac0c439fe784/1",
+      "0cde9cc5-9783-40bd-87b6-6cb700cba85f/1"
+    ],
+    "flight": {
+      "disk": {
+        "path": "D:/wild-guardians-qa/mixed-two-centers-checkpoint-nvidia-20261127.save.json",
+        "sha256": "f45bf4a74b368331b62ed60763133c061de4400362e51a1fdd0a8ea9ad8e5f58"
+      },
+      "at": 18.249999999999904,
+      "civilCenter": "structure-2",
+      "target": "structure-1000000",
+      "original": {
+        "sequence": 35,
+        "homeAge": 2.75,
+        "animalAge": 0.14999999105930328
+      },
+      "firstCold": {
+        "sequence": 17,
+        "homeAge": 0,
+        "animalAge": 0
+      },
+      "firstMoving": {
+        "sequence": 21,
+        "homeAge": 0.25,
+        "animalAge": 0.25
+      },
+      "tickets": [
+        2,
+        4
+      ],
+      "arrivalTicket": 6
+    },
+    "refuge": {
+      "disk": {
+        "path": "D:/wild-guardians-qa/mixed-two-centers-checkpoint-nvidia-20261127.refuge.save.json",
+        "sha256": "c80055f9847287e7326fee90f7553256fe22e92dda4e32c7b62ee3b793a9714a"
+      },
+      "at": 22.09999999999996,
+      "civilCenter": "structure-2",
+      "target": "structure-1000000",
+      "firstCold": {
+        "sequence": 15,
+        "homeAge": null,
+        "animalAge": 0
+      },
+      "firstFarmSequence": 307,
+      "atIdle": 65.75000000000273,
+      "worker": "worker-900011",
+      "hits": [
+        {
+          "attackId": "attack-29209",
+          "targetId": "structure-1000000",
+          "simulationTime": 40.850000000000854
+        },
+        {
+          "attackId": "attack-29212",
+          "targetId": "structure-1000000",
+          "simulationTime": 43.900000000001114
+        },
+        {
+          "attackId": "attack-29215",
+          "targetId": "structure-1000000",
+          "simulationTime": 49.900000000001626
+        },
+        {
+          "attackId": "attack-29218",
+          "targetId": "structure-1000000",
+          "simulationTime": 54.97000000000206
+        }
+      ],
+      "centers": [
+        {
+          "id": "structure-2",
+          "hp": 600
+        },
+        {
+          "id": "structure-1000000",
+          "hp": 520
+        }
+      ]
+    },
+    "drains": [
+      {
+        "disposed": true
+      },
+      {
+        "disposed": true
+      },
+      {
+        "disposed": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,323 @@
+{
+  "scope": "Normal game, real WebGPU device destruction and automatic replacement. Functional validation, not a performance benchmark.",
+  "passed": true,
+  "started": "2026-11-07T23:54:37.045Z",
+  "finished": "2026-11-07T23:59:14.008Z",
+  "url": "http://127.0.0.1:5202/?qa-worker-game&qa-worker-raid&qa-webgpu-world&qa-webgpu-recovery&qa-webgpu-all-actors&qa-seed=712&wildEngineThreads=0",
+  "gpu": [
+    {
+      "vendorId": 4318,
+      "deviceId": 8580,
+      "subSysId": 291977282,
+      "revision": 161,
+      "vendorString": "",
+      "deviceString": "NVIDIA GeForce GTX 1660",
+      "driverVendor": "NVIDIA",
+      "driverVersion": "32.0.15.8129"
+    },
+    {
+      "vendorId": 5140,
+      "deviceId": 140,
+      "subSysId": 0,
+      "revision": 0,
+      "vendorString": "",
+      "deviceString": "Microsoft Basic Render Driver",
+      "driverVendor": "",
+      "driverVersion": "10.0.19041.5794"
+    }
+  ],
+  "stages": {
+    "before": {
+      "backend": "WebGPU",
+      "device": {
+        "adapter": {
+          "vendor": "nvidia",
+          "architecture": "turing",
+          "device": "",
+          "description": "",
+          "isFallbackAdapter": false
+        },
+        "maxVertexBuffers": 8
+      },
+      "generation": "bf36b073-d7cf-467b-8f0a-c8eec918e719",
+      "state": {
+        "closed": false,
+        "sequence": 91,
+        "lastElapsed": 5.649744999995207,
+        "fault": false,
+        "historicalEventMetrics": {
+          "starts": 0,
+          "boundaries": 0,
+          "events": 0,
+          "completed": 0
+        },
+        "historicalEventRejection": {
+          "sequence": 2,
+          "start": 4.449744999995232,
+          "end": 4.54974499999523,
+          "stage": "preflight",
+          "reason": "world-change",
+          "actorId": null
+        },
+        "timing": {
+          "samples": 0,
+          "decode": null,
+          "reconcile": null,
+          "hooks": null,
+          "total": null
+        }
+      },
+      "autoRecovery": {
+        "closed": false,
+        "blocked": false,
+        "recovering": false,
+        "stage": "idle",
+        "current": true
+      },
+      "authoritySequence": 193,
+      "visualDispatchBlocked": false,
+      "clockCaptureSuspended": false,
+      "baseSequence": 66,
+      "journal": {
+        "base": 66,
+        "candidate": 131,
+        "through": 193,
+        "entries": 127,
+        "bytes": 48126550,
+        "entryBytes": 42712532,
+        "overheadBytes": 5414018,
+        "capacity": 256,
+        "highWatermark": 128,
+        "maxBytes": 268435456,
+        "highWatermarkBytes": 201326592,
+        "pendingTerrain": false,
+        "saturated": false,
+        "encoderFault": false,
+        "checkpointDeferred": false,
+        "checkpointRetry": false,
+        "closed": false
+      },
+      "uiErrors": []
+    },
+    "atLoss": {
+      "backend": "WebGPU",
+      "device": {
+        "adapter": {
+          "vendor": "nvidia",
+          "architecture": "turing",
+          "device": "",
+          "description": "",
+          "isFallbackAdapter": false
+        },
+        "maxVertexBuffers": 8
+      },
+      "generation": "bf36b073-d7cf-467b-8f0a-c8eec918e719",
+      "state": {
+        "closed": false,
+        "sequence": 92,
+        "lastElapsed": 5.749744999995205,
+        "fault": false,
+        "historicalEventMetrics": {
+          "starts": 0,
+          "boundaries": 0,
+          "events": 0,
+          "completed": 0
+        },
+        "historicalEventRejection": {
+          "sequence": 2,
+          "start": 4.449744999995232,
+          "end": 4.54974499999523,
+          "stage": "preflight",
+          "reason": "world-change",
+          "actorId": null
+        },
+        "timing": {
+          "samples": 0,
+          "decode": null,
+          "reconcile": null,
+          "hooks": null,
+          "total": null
+        }
+      },
+      "autoRecovery": {
+        "closed": false,
+        "blocked": false,
+        "recovering": false,
+        "stage": "idle",
+        "current": true
+      },
+      "authoritySequence": 193,
+      "visualDispatchBlocked": false,
+      "clockCaptureSuspended": false,
+      "baseSequence": 66,
+      "journal": {
+        "base": 66,
+        "candidate": 131,
+        "through": 193,
+        "entries": 127,
+        "bytes": 48126550,
+        "entryBytes": 42712532,
+        "overheadBytes": 5414018,
+        "capacity": 256,
+        "highWatermark": 128,
+        "maxBytes": 268435456,
+        "highWatermarkBytes": 201326592,
+        "pendingTerrain": false,
+        "saturated": false,
+        "encoderFault": false,
+        "checkpointDeferred": false,
+        "checkpointRetry": false,
+        "closed": false
+      },
+      "uiErrors": []
+    },
+    "after": {
+      "backend": "WebGPU",
+      "device": {
+        "adapter": {
+          "vendor": "nvidia",
+          "architecture": "turing",
+          "device": "",
+          "description": "",
+          "isFallbackAdapter": false
+        },
+        "maxVertexBuffers": 8
+      },
+      "generation": "7f02a633-a237-4dcc-af2a-de79359e17e7",
+      "state": {
+        "closed": false,
+        "sequence": 193,
+        "lastElapsed": 13.89974499999503,
+        "fault": false,
+        "historicalEventMetrics": {
+          "starts": 0,
+          "boundaries": 0,
+          "events": 0,
+          "completed": 0
+        },
+        "historicalEventRejection": null,
+        "timing": {
+          "samples": 0,
+          "decode": null,
+          "reconcile": null,
+          "hooks": null,
+          "total": null
+        }
+      },
+      "autoRecovery": {
+        "closed": false,
+        "blocked": false,
+        "recovering": true,
+        "stage": "recover",
+        "current": true
+      },
+      "authoritySequence": 193,
+      "visualDispatchBlocked": true,
+      "clockCaptureSuspended": true,
+      "baseSequence": 66,
+      "journal": {
+        "base": 66,
+        "candidate": null,
+        "through": 193,
+        "entries": 127,
+        "bytes": 48759360,
+        "entryBytes": 42712532,
+        "overheadBytes": 6046828,
+        "capacity": 256,
+        "highWatermark": 128,
+        "maxBytes": 268435456,
+        "highWatermarkBytes": 201326592,
+        "pendingTerrain": false,
+        "saturated": false,
+        "encoderFault": false,
+        "checkpointDeferred": false,
+        "checkpointRetry": false,
+        "closed": false
+      },
+      "uiErrors": []
+    },
+    "resumed": {
+      "backend": "WebGPU",
+      "device": {
+        "adapter": {
+          "vendor": "nvidia",
+          "architecture": "turing",
+          "device": "",
+          "description": "",
+          "isFallbackAdapter": false
+        },
+        "maxVertexBuffers": 8
+      },
+      "generation": "7f02a633-a237-4dcc-af2a-de79359e17e7",
+      "state": {
+        "closed": false,
+        "sequence": 412,
+        "lastElapsed": 35.399744999995505,
+        "fault": false,
+        "historicalEventMetrics": {
+          "starts": 0,
+          "boundaries": 0,
+          "events": 0,
+          "completed": 0
+        },
+        "historicalEventRejection": {
+          "sequence": 411,
+          "start": 35.24974499999549,
+          "end": 35.2997449999955,
+          "stage": "preflight",
+          "reason": "event-boundaries-unavailable",
+          "actorId": null
+        },
+        "timing": {
+          "samples": 0,
+          "decode": null,
+          "reconcile": null,
+          "hooks": null,
+          "total": null
+        }
+      },
+      "autoRecovery": {
+        "closed": false,
+        "blocked": false,
+        "recovering": false,
+        "stage": "idle",
+        "current": true
+      },
+      "authoritySequence": 503,
+      "visualDispatchBlocked": false,
+      "clockCaptureSuspended": false,
+      "baseSequence": 389,
+      "journal": {
+        "base": 389,
+        "candidate": 454,
+        "through": 501,
+        "entries": 112,
+        "bytes": 58876784,
+        "entryBytes": 52705988,
+        "overheadBytes": 6170796,
+        "capacity": 256,
+        "highWatermark": 128,
+        "maxBytes": 268435456,
+        "highWatermarkBytes": 201326592,
+        "pendingTerrain": false,
+        "saturated": false,
+        "encoderFault": false,
+        "checkpointDeferred": false,
+        "checkpointRetry": false,
+        "closed": false
+      },
+      "uiErrors": []
+    }
+  },
+  "errors": [],
+  "console": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "THREE.WebGPURenderer: WebGPU Device Lost:\n\nMessage: Device was destroyed.\nReason: destroyed"
+  ],
+  "limits": [
+    "Functional device-loss test, not a performance comparison or visual-parity certificate.",
+    "Two HTTP 404 console messages were observed without URL attribution in this runner.",
+    "Old material/lighting differences remain visible; content and full campaign validation belong to B/C."
+  ]
+}

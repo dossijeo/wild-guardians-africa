@@ -1,0 +1,124 @@
+{
+  "sourceBase": "5b574dcefc2278ce00ed8563bea40db9b2563c0a",
+  "sourcePatchSha256": "f855a7dfad89aacafaa1fa746a5ca4f416ce9afc660b2cedc915cc1bca857977",
+  "build": {
+    "emscripten": "3.1.64",
+    "standalone": "2fadf25af9837fa18b26a8c93d29ba22d20f03284fbeb680a1b93741446450e1",
+    "pthread": "0c82a78ddfa60afd66184c22cb9719f087ee7787a64ccda0030f39d120843e71",
+    "pthreadFactory": "b0e3e536fb6d4419d1852a2e8d334b4347a51538c4dccb376c5cb33d9535c544",
+    "pthreadSidecar": "7e6dad4bca61807357acfcb3789c781deaca3e20214ccd76dd82ddcb0be0a153",
+    "abi": {
+      "added": [
+        "nav_gate_mechanism_install_owned"
+      ],
+      "standalone": [
+        765,
+        766
+      ],
+      "pthreadPublic": [
+        771,
+        772
+      ],
+      "pthreadExports": [
+        786,
+        787
+      ],
+      "standaloneImportsUnchanged": true,
+      "pthreadImportKindsUnchanged": true,
+      "pthreadSidecarIdentical": true
+    }
+  },
+  "validation": {
+    "candidateStandalone": {
+      "runner": "Sol",
+      "passed": 15,
+      "failed": 0,
+      "log": ".cache/native-farm-gate-f855-root-verified.log",
+      "sha256": "97b4300646f97c76388bf41446cf74d09ce832187101a6657a567b25ea25df32"
+    },
+    "candidatePthreadAtomicRemoval": {
+      "runner": "Astra",
+      "passed": 1,
+      "skipped": 12,
+      "failed": 0,
+      "scope": "atomic removal only; validates optional pthread test path",
+      "log": ".cache/native-farm-gate-f855-pthread-directed.log",
+      "sha256": "4b303fe6ff26b2cde3f872d23fd481e171d98491b9047de661a0ab7718ec06aa"
+    },
+    "checkoutStandalone": {
+      "passed": 76,
+      "failed": 0,
+      "logSha256": "07a3f8ff77d8f00fc076c3138e91197e4852e21e0d6cac0d9b6fc6d85aeba7f9"
+    },
+    "checkoutPthread": {
+      "passed": 13,
+      "failed": 0,
+      "logSha256": "9c541409ca4c379e9815903a5d7f478eb5bc1cb1972ea558e9f00095e7e104a1"
+    },
+    "viteProductionBuild": "passed"
+  },
+  "physical": {
+    "receiptSha256": "420241f9611c6cf0d48010a2f69a83153c45d8c6fb082f3e5cb390d9aa9ef85f",
+    "browser": "Edge",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 116.5
+      }
+    },
+    "displayHz": 30,
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja",
+    "scope": "one existing intact gate off the Farm corridor",
+    "ticket": 2,
+    "bodyId": 1,
+    "actorId": 900011,
+    "actorRoot": 624,
+    "retainedActorGeometryOwners": 32,
+    "gateId": "structure-1000000",
+    "gateRoot": 479,
+    "retainedGateGeometryOwners": 1,
+    "gateVisible": true,
+    "from": [
+      -17.8,
+      0.2
+    ],
+    "to": [
+      -17.91455129855222,
+      0.08544870144778152
+    ],
+    "elapsed": 10.149999999999997,
+    "deltaMeters": 0.16199999999999662,
+    "gpuErrors": 0,
+    "drained": true,
+    "host": {
+      "nativeDrawSamples": 15,
+      "maxNativeDrawIntervalMs": 33.5,
+      "resourcesBefore": 2394,
+      "resourcesAfter": 2394
+    }
+  },
+  "earlierCandidate": {
+    "receiptSha256": "122a759dead0ff50eb9053ba197270ca1d785aa30125da986acfce04f7cdffad",
+    "confirmedSequence": 192,
+    "confirmedElapsed": 10,
+    "acquiredFarmTicket": 2,
+    "firstAdvanceError": "Native game execution still requires projection for this intention class"
+  },
+  "parentNegative": {
+    "path": ".cache/native-farm-gate-parent-negative.log",
+    "sha256": "e5d719ee6d01fb8aa7616cb34951eb8e7025657502da718527d45ba2897c32f9"
+  }
+}

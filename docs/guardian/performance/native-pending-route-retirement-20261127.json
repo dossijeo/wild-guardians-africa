@@ -1,0 +1,34 @@
+{
+  "candidatePatch": "f9609774dc4f0f73ab6cf7fefe89cc94e4998a10dba99e4439733ad6d9f4bcf3",
+  "integrationBase": "27c805745ba24e6a9b7058037cfb8c22a30b9dbe",
+  "integratedSource": {
+    "src/rendering/remote-webgpu-host.js": "58082ed1b9da6a860b6cf0dde0033c9150a11591dadc55641b7c5e5aa6e554c4",
+    "tests/native-ordinary-animal-crop-host.test.js": "c3fd10d64a02e0352b3973f956338979897998f1512d085c1e72afa495d25ae9"
+  },
+  "deterministic": {
+    "tests": 220,
+    "pass": 220,
+    "fail": 0,
+    "skipped": 0,
+    "negative": "The former Host waits for the next RAF and fails the pending Strike27 assertion.",
+    "positive": "The direct revocation rejects the pending packet before RAF and leaves the GPU submission count unchanged.",
+    "uploadsRetained": true
+  },
+  "priorTwoCenters": {
+    "packet": 381,
+    "firstDrawIntervalMs": 133.400146484375,
+    "largestReplayIntervalMs": 622.60009765625,
+    "largestReplayStartsAfterFirstDrawMs": 2144.099853515625,
+    "replayClock": 59.80000000000247,
+    "attribution": "Unresolved, trace unavailable."
+  },
+  "physicalScope": "Prior hardware evidence classifies two existing intervals. The integrated change has a deterministic causal test. Hardware timing of the replacement after revocation remains pending.",
+  "evidence": {
+    "retirement.patch": "f9609774dc4f0f73ab6cf7fefe89cc94e4998a10dba99e4439733ad6d9f4bcf3",
+    "retirement.manifest.json": "17132f7eae3658a1757a0ef04a9ed7683c385eb646e17a5759fed32681b82501",
+    "retirement-suite.tap": "58b66f9ff844d2670e9c2bff45129eb4b0cee4e78643eecf9358caa46926fc59",
+    "native-pending-retirement-negative-20261127.tap": "be8db5dfbcbded427fe076212a67c88c8047577919e6d5f9aa2558e4365d0f71",
+    "native-pending-retirement-integration-20261127.tap": "54f95b71fc32f47b8186c45d9a6377443831ffa8f3fb08ecf3994e327d96c1ec",
+    "mixed-two-centers-nvidia-20261127.json": "55f4225432dd36969cd272731414e56d05ddd3c30f1d4942abf3660415f48482"
+  }
+}

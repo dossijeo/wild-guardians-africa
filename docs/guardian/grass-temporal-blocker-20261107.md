@@ -1,0 +1,44 @@
+# Hierba WebGPU: límites temporales y de recuperación
+
+## Estado actual: integración cerrada
+
+El perfil temporal de producto activa la hierba de sabana y Gran Río y los helechos de manglares. Se han resuelto las carreras de terreno/ocupación, recuperación, llegada tardía de texturas y contaminación del pase de sombra. El detalle vigente, las pruebas de GPU real, los runners y los límites de esta entrega están en [el cierre de suelos y cobertura](ground-cover-integration-closure-20261107.md).
+
+No quedan gates de laboratorio que el agente de contenidos deba retirar. Esto no cierra el conjunto de B2 ni la evaluación global de rendimiento y paridad de C.
+
+## Historial del bloqueo — superado
+
+Los apartados siguientes se conservan como historial; sus referencias a la hierba desactivada describen el estado anterior.
+
+La ruta de hierba de sabana y gran río solo se crea con `!temporal`, en desarrollo y con activación explícita. Esta restricción es necesaria: el propietario actual no participa en las transacciones temporales ni en la restauración de checkpoints. Esta nota identifica el trabajo pendiente; no habilita la hierba ni acredita una prueba integrada.
+
+## Carrera al restaurar
+
+`restoreTimelineCheckpoint()` en `temporal-surface-recovery.js` ejecuta `prepared.commit()` antes de esperar `onCheckpoint()`, que restaura las demás partes del estado de presentación. El commit de terreno y bioma llama sincrónicamente a sus notificaciones de publicación. Si se quitara el gate, `residency.onPublished` llamaría a `grassOwner.syncChunk()` y el propietario generaría candidatos con el índice de obstáculos que tenía antes de la restauración. La admisión se despacha en una microtarea y puede terminar mientras `onCheckpoint()` sigue pendiente: mostraría una combinación de terreno nuevo y ocupaciones antiguas. El checkpoint prepara terreno y bioma, no hierba, y no existe una garantía de transacción atómica para esta última.
+
+En los límites normales del flujo temporal, el estado se confirma antes de `terrain.confirm()`, pero el índice del propietario solo se actualiza después, en `onConfirmed`. El callback de terreno puede generar candidatos con el índice anterior. La cancelación posterior normalmente ocurre antes de la microtarea, pero esa secuencia no protege una restauración asíncrona ni constituye por sí sola un contrato para todas las rutas. Los cambios de poblados, cultivos, agua y ocupaciones deben invalidar tanto los candidatos pendientes como la cobertura visible pertinente.
+
+## Evolución conservadora
+
+1. Mantener el gate mientras no se implementen y prueben las garantías siguientes. Antes de restaurar o reproducir, suspender el propietario, ocultar la cobertura afectada y cancelar admisiones; las respuestas tardías no deben publicar en el nuevo propietario.
+2. Mientras dure la reproducción del diario no generar cobertura a partir de callbacks parciales. Al terminar `finishTimelineRecovery()`, reconstruir primero el índice de ocupaciones desde el estado confirmado recuperado y después enumerar el terreno visible con `residency.forEachVisibleGround`, usando sus revisiones y epoch confirmados. Si la recuperación falla o se cancela, mantener la hierba retirada y liberar candidatos y leases.
+3. Para límites ordinarios, agrupar las invalidaciones de terreno y ocupaciones y generar únicamente después de confirmar la frontera. Cada candidato debe capturar un token de ocupación y el `epoch`/revisión del terreno; antes de publicar debe comparar con `residency.revisionAt()` y rechazar resultados obsoletos. Una ausencia de correspondencia conserva la cobertura retirada, sin modificar simulación. También deben invalidarse los chunks vecinos cuyos bordes de agua dependan del cambiado.
+4. Para animación, determinar explícitamente qué reloj de simulación confirmado o histórico gobierna el viento durante pausas y reproducción de intervalos; no adelantar el tiempo ni usar reloj real. Si la cobertura debe estar presente atómicamente al presentar la frontera, incorporar un participante a `prepareWebGpuTemporalTerrain` y al coordinador, incluyendo abort, rollback y recuperación, en lugar de asumir que una admisión posterior cumple ese requisito.
+
+## Comprobaciones necesarias
+
+- Retrasar `onCheckpoint` después del commit; comprobar que no aparecen candidatos preparados con el estado anterior y que `finishTimelineRecovery` usa solo el estado y terreno restaurados.
+- Retener la admisión mientras se aplican dos revisiones de terreno, un cambio de epoch y cambios de cultivos/edificios; verificar que ningún resultado antiguo reaparece y que agua y vecinos se reconstruyen de forma coherente.
+- Forzar rechazo, cancelación, fallo de replay y cierre durante preparación; verificar liberación de recursos y ausencia de cobertura parcialmente recuperada.
+- Verificar ausencia de avance de viento durante pausa y orden del tiempo de simulación con velocidad y reproducción histórica.
+- Ampliar los controles existentes de `webgpu-temporal-terrain`, `webgpu-terrain-residency`, `terrain-history-receiver`, `temporal-surface-recovery` y `confirmed-presentation-stream`. Una prueba con dobles comprueba el contrato; sigue haciendo falta una partida WebGPU real para acreditar aspecto y continuidad.
+
+Avance: la admisión de terreno publica la identidad lógica original y el orden gráfico único, y el preparador temporal puede registrar esa identidad por payload antes de la admisión. Esta notificación es una reserva, no una confirmación: puede ir seguida de cancelación o rollback. Las pruebas cubren payload reutilizado con órdenes diferentes y fallo/cancelación. Falta asociar esos datos en la superficie y resolver la expulsión y callbacks tardíos de bioma; el gate temporal continúa cerrado.
+
+Se ha preparado un coordinador acotado con tokens de frontera y pruebas de checkpoint, replay, ocupaciones y respuestas tardías. Aún no está conectado a la superficie: falta asociar esos tokens a identidad y generación en todos los callbacks, incluidas expulsiones y publicaciones tardías del bioma. Los tests no autorizan quitar el gate ni acreditan dibujo GPU.
+
+Actualización: la superficie dispone de wiring condicional para asociar el orden exacto de publicación, descartar reservas fallidas, coordinar callbacks de bioma y mantener la suspensión durante fases de mutación y recuperación. Ese wiring permanece inalcanzable con el gate actual; no constituye una integración activa ni una prueba visual. Una expulsión de residencia sin frontera causal deja la cobertura suspendida y comunica error: aún falta un contrato explícito que identifique una expulsión visual local y demuestre que no coincide con una transacción. Las pruebas de coordinador y flujo verifican las fases, pero falta una prueba integral del wiring y validación WebGPU real antes de retirar `!temporal`.
+
+Actualización posterior: la expulsión visual local dispone de una guarda síncrona que exige tanto una identidad temporal asentada como prueba del bioma de que esa misma identidad puede readmitirse. El presupuesto de evidencia del bioma está desactivado por defecto, por lo que la expulsión se rechaza cuando no existe dicha prueba. La recuperación sin republicación conserva únicamente identidades asentadas que siguen coincidiendo con el terreno visible; las identidades ambiguas se descartan. El gate temporal sigue cerrado: la readmisión y el renderizado WebGPU del flujo completo aún requieren validación integrada.
+
+La prueba de ingeniería integrada ya cubre secuencia inicial cero, expulsión, recuperación, rechazo de geometría o instancias distintas y rollback antes de readmitir terreno y bioma conjuntamente. La admisión GPU está simulada y la readmisión se solicita directamente al adaptador: no demuestra que el canal real del juego produzca esa solicitud ni que se renderice correctamente. La evidencia del terreno expulsado está limitada a 64 chunks y 16 MiB; la evidencia opcional del bioma tiene un presupuesto configurable, desactivado por defecto. Durante un batch pueden coexistir versiones anteriores para rollback y una serialización temporal. Se mantiene `!temporal` hasta comprobar el flujo real, la continuidad visual y la gestión de recursos en WebGPU.

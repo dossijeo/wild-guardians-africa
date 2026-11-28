@@ -1,0 +1,180 @@
+{
+  "worldAuthority": "spatial-wasm",
+  "maxVisibleGuardians": 1,
+  "report": {
+    "reuseRecoveryPose": true,
+    "scope": "Full sequential Attack cycles: sampling starts before the first command, includes all launches and recovery. Continuous Game.tick and native WorldScene when lightingReview=1. Diagnostic, not a paired before/after benchmark.",
+    "retreatTrial": false,
+    "initialResilience": 56,
+    "finalActors": [
+      {
+        "id": "qa-beast-0",
+        "status": "walking",
+        "health": 28,
+        "x": 84,
+        "z": -8.00372246621465,
+        "down": false
+      }
+    ],
+    "requestedImpacts": 1,
+    "issuedImpacts": 1,
+    "attackSchedule": [
+      {
+        "index": 0,
+        "targetId": "qa-beast-0",
+        "time": 0
+      }
+    ],
+    "audioContext": "running",
+    "audioTrace": [
+      {
+        "id": "spirit_appear",
+        "at": 3023.0811800000297,
+        "emitter": "guardian-world",
+        "played": true,
+        "time": 0.0500000000001819
+      },
+      {
+        "id": "spirit_power_activate",
+        "at": 3023.19772500003,
+        "emitter": "guardian-world",
+        "played": true,
+        "time": 0.16654500000049666
+      },
+      {
+        "id": "hyena_hurt",
+        "at": 3023.2977250000304,
+        "emitter": "qa-beast-0",
+        "phase": "falling",
+        "played": true,
+        "time": 0.26654500000086045
+      },
+      {
+        "id": "beast_take_damage",
+        "at": 3023.2977250000304,
+        "emitter": "impact:qa-beast-0",
+        "played": true,
+        "time": 0.26654500000086045
+      },
+      {
+        "id": "spirit_disappear",
+        "at": 3024.5472800000343,
+        "emitter": "guardian-world",
+        "played": true,
+        "time": 1.5161000000048261
+      },
+      {
+        "id": "hyena_neutral",
+        "at": 3034.9933800000667,
+        "emitter": "qa-beast-0",
+        "phase": "walking",
+        "played": true,
+        "time": 11.962200000037228
+      }
+    ],
+    "headOn": false,
+    "wallTrial": false,
+    "actorSpecies": [
+      "hyena"
+    ],
+    "rejectedPhysics": 0,
+    "completedSimulation": true,
+    "species": "hyena",
+    "direction": "auto",
+    "wallMs": 16829.955000042915,
+    "simulationSeconds": 12.062200000037592,
+    "frames": 244,
+    "hiddenFrames": 0,
+    "metrics": {
+      "dt": {
+        "mean": 69.03430327868854,
+        "p95": 83.21500000000378,
+        "p99": 99.89999999999418,
+        "max": 698.4649999999965
+      },
+      "renderMs": {
+        "mean": 19.693032784540144,
+        "p95": 23.894999980926514,
+        "p99": 67.42499995231628,
+        "max": 699.9950000047684
+      },
+      "physicsTotal": {
+        "mean": 2.266946718829577,
+        "p95": 4.980000019073486,
+        "p99": 17.144999980926514,
+        "max": 28.764999985694885
+      },
+      "solverMs": {
+        "mean": 0.8493032831637586,
+        "p95": 2.915000081062317,
+        "p99": 3.890000104904175,
+        "max": 5.590000033378601
+      },
+      "solverSteps": {
+        "mean": 1.8729508196721312,
+        "p95": 3,
+        "p99": 3,
+        "max": 3
+      },
+      "creationMs": {
+        "mean": 0.08889344236889823,
+        "p95": 0,
+        "p99": 0,
+        "max": 21.68999993801117
+      },
+      "bindingMs": {
+        "mean": 0.05858606539788793,
+        "p95": 0.24000000953674316,
+        "p99": 0.36500000953674316,
+        "max": 0.8949999809265137
+      },
+      "recoverySetupMs": {
+        "mean": 0.06219262324395727,
+        "p95": 0,
+        "p99": 0,
+        "max": 15.175000071525574
+      },
+      "recoveryFollowMs": {
+        "mean": 1.0959016368037364,
+        "p95": 3.3899998664855957,
+        "p99": 5.870000004768372,
+        "max": 16.039999961853027
+      },
+      "recoveryMs": {
+        "mean": 0.017438524082058766,
+        "p95": 0.05500006675720215,
+        "p99": 0.16499996185302734,
+        "max": 0.5149999856948853
+      },
+      "animationMs": {
+        "mean": 0.1047131145586733,
+        "p95": 0.5249999761581421,
+        "p99": 0.9100000858306885,
+        "max": 4.235000133514404
+      },
+      "vfxMs": {
+        "mean": 0.2504303289241478,
+        "p95": 1.659999966621399,
+        "p99": 2.819999933242798,
+        "max": 4.055000066757202
+      },
+      "draws": {
+        "mean": 69.79098360655738,
+        "p95": 74,
+        "p99": 77,
+        "max": 77
+      }
+    },
+    "peakActive": 1,
+    "peakBaked": 0,
+    "finalDownCount": 0,
+    "finalDown": null,
+    "memory": {
+      "geometries": 261,
+      "textures": 131
+    },
+    "heap": 497945174,
+    "errors": [],
+    "recoveryTraceSamples": 142
+  }
+}

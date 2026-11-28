@@ -1,0 +1,918 @@
+{
+  "seed": 714,
+  "biome": "sabana",
+  "culture": "mapungubwe",
+  "profile": "explicit native civil authority in menu qualification",
+  "clock": "live Hosted",
+  "negative": {
+    "source": "hire-timeout-surface.json",
+    "sha256": "4bfcf8045b728bba2563de51f625c6704b83e2723192932892d5e6cbd3795004",
+    "trace": [
+      {
+        "kind": "prepareNativeFarmArrivalResources",
+        "ms": -46.114990234375,
+        "id": 1,
+        "sequence": 373,
+        "boundary": {
+          "version": 1,
+          "authorityEpoch": "4aac138c-d414-43ad-a4cb-8e678948e6e8/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 15.549999999999748
+        }
+      },
+      {
+        "kind": "prepareNativeFarmArrivalResources",
+        "ms": -45.514892578125,
+        "id": 1,
+        "sequence": 373
+      },
+      {
+        "kind": "surface-wait",
+        "ms": -42.02001953125,
+        "sequence": 373,
+        "surfaceConfirmed": 262,
+        "received": 294,
+        "terrainComplete": 373,
+        "roster": 0,
+        "openedInterval": {
+          "token": 81,
+          "sequence": 263,
+          "start": 10.899999999999848,
+          "end": 10.999999999999845,
+          "sealed": false,
+          "held": false
+        }
+      },
+      {
+        "kind": "surface-wait-aborted",
+        "ms": -6.48486328125,
+        "sequence": 373,
+        "surfaceConfirmed": 262,
+        "received": 294,
+        "terrainComplete": 373,
+        "roster": 0,
+        "openedInterval": {
+          "token": 81,
+          "sequence": 263,
+          "start": 10.899999999999848,
+          "end": 10.999999999999845,
+          "sealed": false,
+          "held": false
+        }
+      },
+      {
+        "kind": "prepareNativeFarmArrivalResources",
+        "ms": -6.079833984375,
+        "id": 1,
+        "message": "Native publication wait cancelled"
+      },
+      {
+        "kind": "prepareNativeTaskStartResources",
+        "ms": 0,
+        "id": 2,
+        "sequence": 374,
+        "boundary": {
+          "version": 1,
+          "authorityEpoch": "4aac138c-d414-43ad-a4cb-8e678948e6e8/1",
+          "nativeSession": 1,
+          "ticket": 3,
+          "effectiveTime": 15.599999999999747
+        }
+      },
+      {
+        "kind": "prepareNativeTaskStartResources",
+        "ms": 0.3251953125,
+        "id": 2,
+        "sequence": 374
+      },
+      {
+        "kind": "surface-wait",
+        "ms": 1.72998046875,
+        "sequence": 374,
+        "surfaceConfirmed": 262,
+        "received": 294,
+        "terrainComplete": 374,
+        "roster": 0,
+        "openedInterval": {
+          "token": 81,
+          "sequence": 263,
+          "start": 10.899999999999848,
+          "end": 10.999999999999845,
+          "sealed": false,
+          "held": false
+        }
+      },
+      {
+        "kind": "authority-async-failure",
+        "ms": 10006.460205078125,
+        "message": "Native resource preparation timed out"
+      },
+      {
+        "kind": "authority-client-first-error",
+        "ms": 10007.085205078125,
+        "message": "Native resource preparation timed out"
+      },
+      {
+        "kind": "surface-wait-aborted",
+        "ms": 10026.380126953125,
+        "sequence": 374,
+        "surfaceConfirmed": 361,
+        "received": 386,
+        "terrainComplete": 453,
+        "roster": 0,
+        "openedInterval": null
+      },
+      {
+        "kind": "prepareNativeTaskStartResources",
+        "ms": 10026.530029296875,
+        "id": 2,
+        "message": "Native publication wait cancelled"
+      }
+    ],
+    "runtimeFault": "Error: Worker command not admitted: failed\n    at pump (http://127.0.0.1:5298/src/simulation/worker-game-runtime.js:27:77)\n    at Object.resumeDispatch (http://127.0.0.1:5298/src/simulation/worker-game-runtime.js:73:966)\n    at resumeHostedDispatch (http://127.0.0.1:5298/src/simulation/worker-runtime-host.js?worker_file&type=module:31:314)\n    at port.onmessage (http://127.0.0.1:5298/src/simulation/visual-publication-stream.js:35:2882)"
+  },
+  "passed": [
+    {
+      "source": "native-extended.json",
+      "sha256": "0ea14133c8266c940c05abcc56bbab2178dede5c507eb27c887d3dd2194f1399",
+      "center": {
+        "entity": {
+          "id": "structure-2",
+          "created": 3,
+          "kind": "center",
+          "material": "zarzas",
+          "gate": false,
+          "x": 83.00000011278749,
+          "z": 2.0645394727125677e-7,
+          "yaw": 0,
+          "culture": "mapungubwe",
+          "maxHp": 600,
+          "hp": 600,
+          "status": "intact",
+          "villageId": "village-1",
+          "cost": 800,
+          "collapseRemaining": 0
+        },
+        "draw": {
+          "sequence": 41,
+          "clockElapsed": 1.1500000000000008,
+          "presentationElapsed": 1.149999976158142,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "f331a60e-256b-41f1-ac3c-090249e735a7/1",
+            "nativeSession": 1,
+            "ticket": 1,
+            "effectiveTime": 1.1500000000000008
+          },
+          "bindings": []
+        },
+        "adapter": {
+          "vendor": "nvidia",
+          "architecture": "turing",
+          "device": "",
+          "description": "",
+          "imageCopyPreparation": {
+            "version": 1,
+            "formats": [
+              "rgba8unorm",
+              "rgba8unorm-srgb"
+            ],
+            "completed": true,
+            "milliseconds": 75.92499999701977
+          }
+        }
+      },
+      "task": {
+        "sequence": 150,
+        "clockElapsed": 19.649999999999793,
+        "presentationElapsed": 19.649999618530273,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f331a60e-256b-41f1-ac3c-090249e735a7/1",
+          "nativeSession": 1,
+          "ticket": 4,
+          "effectiveTime": 19.44999999999979
+        },
+        "bindings": [
+          {
+            "nativeStart": {
+              "kind": "native-task-start-reference",
+              "version": 1,
+              "actorId": 6,
+              "bodyId": 1,
+              "taskId": 7,
+              "targetId": 3,
+              "requestSequence": 3,
+              "requestedAt": 15.91999999999974,
+              "sourceControlSequence": 3,
+              "endTime": 55.29330238171059,
+              "sourceRequestHandle": {
+                "kind": "native-task-route-request-handle",
+                "authorityEpoch": "f331a60e-256b-41f1-ac3c-090249e735a7/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 1
+              },
+              "expectedRouteHandle": {
+                "authorityEpoch": "f331a60e-256b-41f1-ac3c-090249e735a7/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 3
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "f331a60e-256b-41f1-ac3c-090249e735a7/1",
+                "nativeSession": 1,
+                "ticket": 3,
+                "effectiveTime": 15.94999999999974
+              }
+            },
+            "semantic": "relative",
+            "epoch": 15.94999999999974,
+            "executionEpoch": 19.44999999999979,
+            "elapsed": 16.14999998807881
+          }
+        ]
+      },
+      "action": {
+        "sequence": 286,
+        "clockElapsed": 61.30000000000246,
+        "presentationElapsed": 61.29999923706055,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f331a60e-256b-41f1-ac3c-090249e735a7/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 61.100000000002446
+        },
+        "bindings": [
+          {
+            "nativeAction": {
+              "kind": "native-task-action-reference",
+              "version": 1,
+              "request": {
+                "kind": "native-task-action-resource-request",
+                "version": 1,
+                "nativeRoute": {
+                  "actorId": 6,
+                  "assignmentSequence": 4,
+                  "routeHandle": {
+                    "authorityEpoch": "f331a60e-256b-41f1-ac3c-090249e735a7/1",
+                    "session": 1,
+                    "slot": 0,
+                    "generation": 3
+                  }
+                },
+                "taskId": 7,
+                "targetId": 3,
+                "bodyId": 1,
+                "requestedAt": 58.80000000000225,
+                "actionKind": "initial",
+                "duration": 4.8,
+                "heading": 1.039073715746757,
+                "executedThrough": 58.80000000000225,
+                "authorizedAutonomy": false
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "f331a60e-256b-41f1-ac3c-090249e735a7/1",
+                "nativeSession": 1,
+                "ticket": 5,
+                "effectiveTime": 58.80000000000225
+              },
+              "sourceControlSequence": 4,
+              "origin": {
+                "x": 86.1122055053711,
+                "z": -7.522232532501221
+              },
+              "radius": 0.28,
+              "profile": 1,
+              "motionFlags": 0,
+              "startTime": 58.80000000000225,
+              "endTime": 63.60000000000225,
+              "runPhase": 0,
+              "walkPhase": 59.014953572566284,
+              "carryPhase": 0,
+              "runRemaining": 105.80409353316266
+            },
+            "relativeTime": 0.19999998807907104,
+            "semantic": "relative",
+            "epoch": 58.80000000000225,
+            "executionEpoch": 61.100000000002446,
+            "elapsed": 58.99999998808132
+          }
+        ]
+      },
+      "worker": {
+        "id": "worker-6",
+        "status": "idle",
+        "nativeRouteAdmission": "native-idle",
+        "x": 86.1122055053711,
+        "z": -7.522232532501221
+      },
+      "events": [
+        {
+          "id": "event-4",
+          "type": "PlacementCommitted",
+          "commandId": "4b1b32b4-d2a8-40f7-a0d4-531a54e84684",
+          "kind": "center",
+          "targetId": "structure-2",
+          "presentation": {
+            "x": 83.00000011278749,
+            "z": 2.0645394727125677e-7
+          },
+          "simulationTime": 1.1500000000000008
+        },
+        {
+          "id": "event-9",
+          "type": "HiringConfirmed",
+          "count": 1,
+          "cost": 40,
+          "simulationTime": 15.899999999999741
+        },
+        {
+          "id": "event-11",
+          "type": "WaterSatisfied",
+          "workerId": "worker-6",
+          "targetId": "plant-3",
+          "simulationTime": 67.85000000000248
+        }
+      ],
+      "balance": {
+        "n": "510",
+        "d": "1"
+      },
+      "console": [
+        {
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+          "url": "http://127.0.0.1:5298/favicon.ico"
+        },
+        {
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+          "url": "http://127.0.0.1:5298/favicon.ico"
+        }
+      ],
+      "trace": [
+        {
+          "kind": "prepareNativeFarmArrivalResources",
+          "ms": -48.89501953125,
+          "id": 1,
+          "sequence": 376,
+          "boundary": {
+            "version": 1,
+            "authorityEpoch": "f331a60e-256b-41f1-ac3c-090249e735a7/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 15.899999999999741
+          }
+        },
+        {
+          "kind": "prepareNativeFarmArrivalResources",
+          "ms": -48.31005859375,
+          "id": 1,
+          "sequence": 376
+        },
+        {
+          "kind": "surface-wait",
+          "ms": -44.925048828125,
+          "sequence": 263,
+          "surfaceConfirmed": 262,
+          "received": 294,
+          "terrainComplete": 376,
+          "roster": 0,
+          "openedInterval": {
+            "token": 76,
+            "sequence": 263,
+            "start": 10.949999999999847,
+            "end": 11.049999999999844,
+            "sealed": false,
+            "held": false
+          }
+        },
+        {
+          "kind": "surface-wait-aborted",
+          "ms": -6.4150390625,
+          "sequence": 263,
+          "surfaceConfirmed": 262,
+          "received": 294,
+          "terrainComplete": 376,
+          "roster": 0,
+          "openedInterval": {
+            "token": 76,
+            "sequence": 263,
+            "start": 10.949999999999847,
+            "end": 11.049999999999844,
+            "sealed": false,
+            "held": false
+          }
+        },
+        {
+          "kind": "prepareNativeFarmArrivalResources",
+          "ms": -6,
+          "id": 1,
+          "message": "Native publication wait cancelled"
+        },
+        {
+          "kind": "prepareNativeTaskStartResources",
+          "ms": 0,
+          "id": 2,
+          "sequence": 377,
+          "boundary": {
+            "version": 1,
+            "authorityEpoch": "f331a60e-256b-41f1-ac3c-090249e735a7/1",
+            "nativeSession": 1,
+            "ticket": 3,
+            "effectiveTime": 15.94999999999974
+          }
+        },
+        {
+          "kind": "prepareNativeTaskStartResources",
+          "ms": 0.324951171875,
+          "id": 2,
+          "sequence": 377
+        },
+        {
+          "kind": "surface-wait",
+          "ms": 2.10498046875,
+          "sequence": 263,
+          "surfaceConfirmed": 262,
+          "received": 294,
+          "terrainComplete": 377,
+          "roster": 0,
+          "openedInterval": {
+            "token": 76,
+            "sequence": 263,
+            "start": 10.949999999999847,
+            "end": 11.049999999999844,
+            "sealed": false,
+            "held": false
+          }
+        },
+        {
+          "kind": "surface-wait-settled",
+          "ms": 6.4248046875,
+          "sequence": 263,
+          "surfaceConfirmed": 263,
+          "received": 294,
+          "terrainComplete": 378,
+          "roster": 0,
+          "openedInterval": null
+        },
+        {
+          "kind": "surface-wait",
+          "ms": 130.044921875,
+          "sequence": 377,
+          "surfaceConfirmed": 270,
+          "received": 294,
+          "terrainComplete": 378,
+          "roster": 0,
+          "openedInterval": null
+        },
+        {
+          "kind": "surface-wait-settled",
+          "ms": 3200.594970703125,
+          "sequence": 377,
+          "surfaceConfirmed": 377,
+          "received": 406,
+          "terrainComplete": 447,
+          "roster": 1,
+          "openedInterval": null
+        },
+        {
+          "kind": "surface-wait",
+          "ms": 3265.809814453125,
+          "sequence": 377,
+          "surfaceConfirmed": 382,
+          "received": 406,
+          "terrainComplete": 447,
+          "roster": 1,
+          "openedInterval": null
+        },
+        {
+          "kind": "surface-wait",
+          "ms": 3268.21484375,
+          "sequence": 377,
+          "surfaceConfirmed": 382,
+          "received": 406,
+          "terrainComplete": 447,
+          "roster": 1,
+          "openedInterval": null
+        },
+        {
+          "kind": "prepareNativeTaskStartResources",
+          "ms": 7428.014892578125,
+          "id": 2
+        },
+        {
+          "kind": "surface-wait",
+          "ms": 7502.804931640625,
+          "sequence": 383,
+          "surfaceConfirmed": 382,
+          "received": 414,
+          "terrainComplete": 453,
+          "roster": 1,
+          "openedInterval": null
+        },
+        {
+          "kind": "surface-wait-settled",
+          "ms": 7869.77001953125,
+          "sequence": 383,
+          "surfaceConfirmed": 455,
+          "received": 464,
+          "terrainComplete": 458,
+          "roster": 1,
+          "openedInterval": null
+        }
+      ]
+    },
+    {
+      "source": "native-hud-extended.json",
+      "sha256": "e658765ca3e6479948425fc8578b88731b98e9d42f8470d3c95e98515ca49b6d",
+      "hudOnly": true,
+      "center": {
+        "entity": {
+          "id": "structure-2",
+          "kind": "center",
+          "material": "zarzas",
+          "status": "intact",
+          "x": 83.00000011278749,
+          "z": 2.0645394727125677e-7,
+          "hp": 600,
+          "maxHp": 600,
+          "gate": false,
+          "cost": 800
+        },
+        "draw": {
+          "sequence": 51,
+          "clockElapsed": 1.300000000000001,
+          "presentationElapsed": 1.2999999523162842,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "6622fc50-fb0b-445d-bb4d-5edcba7fb77b/1",
+            "nativeSession": 1,
+            "ticket": 1,
+            "effectiveTime": 1.300000000000001
+          },
+          "bindings": []
+        },
+        "adapter": {
+          "vendor": "nvidia",
+          "architecture": "turing",
+          "device": "",
+          "description": "",
+          "imageCopyPreparation": {
+            "version": 1,
+            "formats": [
+              "rgba8unorm",
+              "rgba8unorm-srgb"
+            ],
+            "completed": true,
+            "milliseconds": 91.26999999582767
+          }
+        }
+      },
+      "task": {
+        "sequence": 165,
+        "clockElapsed": 19.039999999999782,
+        "presentationElapsed": 19.03999900817871,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "6622fc50-fb0b-445d-bb4d-5edcba7fb77b/1",
+          "nativeSession": 1,
+          "ticket": 4,
+          "effectiveTime": 18.999999999999783
+        },
+        "bindings": [
+          {
+            "nativeStart": {
+              "kind": "native-task-start-reference",
+              "version": 1,
+              "actorId": 6,
+              "bodyId": 1,
+              "taskId": 7,
+              "targetId": 3,
+              "requestSequence": 3,
+              "requestedAt": 15.619999999999747,
+              "sourceControlSequence": 3,
+              "endTime": 54.99330238171059,
+              "sourceRequestHandle": {
+                "kind": "native-task-route-request-handle",
+                "authorityEpoch": "6622fc50-fb0b-445d-bb4d-5edcba7fb77b/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 1
+              },
+              "expectedRouteHandle": {
+                "authorityEpoch": "6622fc50-fb0b-445d-bb4d-5edcba7fb77b/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 3
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "6622fc50-fb0b-445d-bb4d-5edcba7fb77b/1",
+                "nativeSession": 1,
+                "ticket": 3,
+                "effectiveTime": 15.649999999999746
+              }
+            },
+            "semantic": "relative",
+            "epoch": 15.649999999999746,
+            "executionEpoch": 18.999999999999783,
+            "elapsed": 15.689999999105677
+          }
+        ]
+      },
+      "action": {
+        "sequence": 302,
+        "clockElapsed": 60.45000000000239,
+        "presentationElapsed": 60.44999694824219,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "6622fc50-fb0b-445d-bb4d-5edcba7fb77b/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 60.45000000000239
+        },
+        "bindings": [
+          {
+            "nativeAction": {
+              "kind": "native-task-action-reference",
+              "version": 1,
+              "request": {
+                "kind": "native-task-action-resource-request",
+                "version": 1,
+                "nativeRoute": {
+                  "actorId": 6,
+                  "assignmentSequence": 4,
+                  "routeHandle": {
+                    "authorityEpoch": "6622fc50-fb0b-445d-bb4d-5edcba7fb77b/1",
+                    "session": 1,
+                    "slot": 0,
+                    "generation": 3
+                  }
+                },
+                "taskId": 7,
+                "targetId": 3,
+                "bodyId": 1,
+                "requestedAt": 58.35000000000221,
+                "actionKind": "initial",
+                "duration": 4.8,
+                "heading": 1.039073715746757,
+                "executedThrough": 58.400000000002215,
+                "authorizedAutonomy": false
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "6622fc50-fb0b-445d-bb4d-5edcba7fb77b/1",
+                "nativeSession": 1,
+                "ticket": 5,
+                "effectiveTime": 58.400000000002215
+              },
+              "sourceControlSequence": 4,
+              "origin": {
+                "x": 86.1122055053711,
+                "z": -7.522232532501221
+              },
+              "radius": 0.28,
+              "profile": 1,
+              "motionFlags": 0,
+              "startTime": 58.400000000002215,
+              "endTime": 63.20000000000221,
+              "runPhase": 0,
+              "walkPhase": 59.014953572566284,
+              "carryPhase": 0,
+              "runRemaining": 105.80409353316266
+            },
+            "relativeTime": 0,
+            "semantic": "relative",
+            "epoch": 58.400000000002215,
+            "executionEpoch": 60.45000000000239,
+            "elapsed": 58.400000000002215
+          }
+        ]
+      },
+      "worker": {
+        "id": "worker-6",
+        "status": "idle",
+        "x": 86.1122055053711,
+        "z": -7.522232532501221
+      },
+      "events": [
+        {
+          "id": "event-4",
+          "type": "PlacementCommitted",
+          "commandId": "6acd94aa-facb-4fdd-8b0e-fcaeadaca7de",
+          "kind": "center",
+          "targetId": "structure-2",
+          "presentation": {
+            "x": 83.00000011278749,
+            "z": 2.0645394727125677e-7
+          },
+          "simulationTime": 1.300000000000001
+        },
+        {
+          "id": "event-9",
+          "type": "HiringConfirmed",
+          "count": 1,
+          "cost": 40,
+          "simulationTime": 15.599999999999747
+        },
+        {
+          "id": "event-11",
+          "type": "WaterSatisfied",
+          "workerId": "worker-6",
+          "targetId": "plant-3",
+          "simulationTime": 67.00000000000253
+        }
+      ],
+      "balance": {
+        "n": "510",
+        "d": "1"
+      },
+      "console": [
+        {
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+          "url": "http://127.0.0.1:5298/favicon.ico"
+        },
+        {
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+          "url": "http://127.0.0.1:5298/favicon.ico"
+        }
+      ],
+      "trace": [
+        {
+          "kind": "prepareNativeFarmArrivalResources",
+          "ms": -42.31005859375,
+          "id": 1,
+          "sequence": 381,
+          "boundary": {
+            "version": 1,
+            "authorityEpoch": "6622fc50-fb0b-445d-bb4d-5edcba7fb77b/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 15.599999999999747
+          }
+        },
+        {
+          "kind": "prepareNativeFarmArrivalResources",
+          "ms": -41.719970703125,
+          "id": 1,
+          "sequence": 381
+        },
+        {
+          "kind": "surface-wait",
+          "ms": -39.059814453125,
+          "sequence": 263,
+          "surfaceConfirmed": 262,
+          "received": 294,
+          "terrainComplete": 381,
+          "roster": 0,
+          "openedInterval": {
+            "token": 81,
+            "sequence": 263,
+            "start": 10.949999999999847,
+            "end": 11.049999999999844,
+            "sealed": false,
+            "held": false
+          }
+        },
+        {
+          "kind": "surface-wait-aborted",
+          "ms": -6.369873046875,
+          "sequence": 263,
+          "surfaceConfirmed": 262,
+          "received": 294,
+          "terrainComplete": 381,
+          "roster": 0,
+          "openedInterval": {
+            "token": 81,
+            "sequence": 263,
+            "start": 10.949999999999847,
+            "end": 11.049999999999844,
+            "sealed": false,
+            "held": false
+          }
+        },
+        {
+          "kind": "prepareNativeFarmArrivalResources",
+          "ms": -6.094970703125,
+          "id": 1,
+          "message": "Native publication wait cancelled"
+        },
+        {
+          "kind": "prepareNativeTaskStartResources",
+          "ms": 0,
+          "id": 2,
+          "sequence": 382,
+          "boundary": {
+            "version": 1,
+            "authorityEpoch": "6622fc50-fb0b-445d-bb4d-5edcba7fb77b/1",
+            "nativeSession": 1,
+            "ticket": 3,
+            "effectiveTime": 15.649999999999746
+          }
+        },
+        {
+          "kind": "prepareNativeTaskStartResources",
+          "ms": 0.72509765625,
+          "id": 2,
+          "sequence": 382
+        },
+        {
+          "kind": "surface-wait",
+          "ms": 1.925048828125,
+          "sequence": 263,
+          "surfaceConfirmed": 262,
+          "received": 294,
+          "terrainComplete": 382,
+          "roster": 0,
+          "openedInterval": {
+            "token": 81,
+            "sequence": 263,
+            "start": 10.949999999999847,
+            "end": 11.049999999999844,
+            "sealed": false,
+            "held": false
+          }
+        },
+        {
+          "kind": "surface-wait-settled",
+          "ms": 13.4150390625,
+          "sequence": 263,
+          "surfaceConfirmed": 263,
+          "received": 294,
+          "terrainComplete": 385,
+          "roster": 0,
+          "openedInterval": null
+        },
+        {
+          "kind": "surface-wait",
+          "ms": 120.420166015625,
+          "sequence": 382,
+          "surfaceConfirmed": 270,
+          "received": 294,
+          "terrainComplete": 385,
+          "roster": 0,
+          "openedInterval": null
+        },
+        {
+          "kind": "surface-wait-settled",
+          "ms": 3214.190185546875,
+          "sequence": 382,
+          "surfaceConfirmed": 382,
+          "received": 406,
+          "terrainComplete": 449,
+          "roster": 1,
+          "openedInterval": null
+        },
+        {
+          "kind": "surface-wait",
+          "ms": 3279.505126953125,
+          "sequence": 382,
+          "surfaceConfirmed": 382,
+          "received": 406,
+          "terrainComplete": 449,
+          "roster": 1,
+          "openedInterval": null
+        },
+        {
+          "kind": "surface-wait",
+          "ms": 3281.16015625,
+          "sequence": 382,
+          "surfaceConfirmed": 382,
+          "received": 406,
+          "terrainComplete": 449,
+          "roster": 1,
+          "openedInterval": null
+        },
+        {
+          "kind": "prepareNativeTaskStartResources",
+          "ms": 7473.510009765625,
+          "id": 2
+        },
+        {
+          "kind": "surface-wait",
+          "ms": 7546.31005859375,
+          "sequence": 383,
+          "surfaceConfirmed": 382,
+          "received": 414,
+          "terrainComplete": 453,
+          "roster": 1,
+          "openedInterval": null
+        },
+        {
+          "kind": "surface-wait-settled",
+          "ms": 7652.705078125,
+          "sequence": 383,
+          "surfaceConfirmed": 454,
+          "received": 455,
+          "terrainComplete": 456,
+          "roster": 1,
+          "openedInterval": null
+        }
+      ]
+    }
+  ]
+}

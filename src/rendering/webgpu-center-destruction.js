@@ -1,0 +1,103 @@
+import {authoredDeformationRecipe} from './webgpu-material-graph-catalog.js';
+import {cloneWebGpuNodeMaterial} from './webgpu-clone-node-material.js';
+import * as THREE from 'three';
+import {attribute,clamp,cos,cross,dot,float,length,max,min,normalize,positionLocal,select,sin,smoothstep,texture3D,uniform,varying,vec3,vec4} from 'three/tsl';
+import {createNativeDestruction,COLLAPSE_THRESHOLD,COLLAPSE_SECONDS} from './destruction-native.js';
+import {prepareBuildingDataAsync} from './prepare-building-data.js';
+import {centerGeometrySphere} from './center-geometry-sphere.js';
+import {createWebGpuDestructionEffects} from './webgpu-destruction-effects.js';
+
+export function confirmedCenterDamage(entity){return entity.status==='ruined'?1:entity.status==='collapsing'?COLLAPSE_THRESHOLD+(1-COLLAPSE_THRESHOLD)*Math.max(0,Math.min(1,1-entity.collapseRemaining/COLLAPSE_SECONDS)):Math.max(0,Math.min(1,1-entity.hp/entity.maxHp));}
+
+function centerMesh(gltf){
+ const meshes=[];gltf.scene.traverse(o=>{if(o.isMesh)meshes.push(o);});if(meshes.length!==1)throw Error('Expected one center mesh');
+ return meshes[0];
+}
+function copyCenterInput(src){
+ const pos=src.getAttribute('position'),normal=src.getAttribute('normal'),uv=src.getAttribute('uv');if(!pos||!normal||!uv||!src.index)throw Error('Invalid center geometry');
+ const positions=new Float32Array(pos.count*3),normals=new Float32Array(pos.count*3),uvs=new Float32Array(pos.count*2),bounds={min:[Infinity,Infinity,Infinity],max:[-Infinity,-Infinity,-Infinity]};for(let i=0;i<pos.count;i++){for(let j=0;j<3;j++){const v=pos.getComponent(i,j);positions[i*3+j]=v;normals[i*3+j]=normal.getComponent(i,j);bounds.min[j]=Math.min(bounds.min[j],v);bounds.max[j]=Math.max(bounds.max[j],v);}uvs[i*2]=uv.getX(i);uvs[i*2+1]=uv.getY(i);}
+ const center=[(bounds.min[0]+bounds.max[0])/2,bounds.min[1],(bounds.min[2]+bounds.max[2])/2];for(let i=0;i<positions.length;i++)positions[i]-=center[i%3];for(let j=0;j<3;j++){bounds.min[j]-=center[j];bounds.max[j]-=center[j];}
+ const indices=new src.index.array.constructor(src.index.array);
+ return {positions,normals,uv:uvs,indices,bounds};
+}
+
+// Only copies go to the worker. Progressive texturing can still change the
+// intact mesh's material before the confirmed hit creates its instance.
+export async function prepareWebGpuCenterDestructionData(gltf,building,options){
+ const source=centerMesh(gltf),geometry=source.geometry;
+ const attributes=()=>[geometry.index,geometry.attributes.position,geometry.attributes.normal,geometry.attributes.uv];
+ const inputs=attributes(),version=attribute=>attribute?.data?.version??attribute?.version;
+ const versions=inputs.map(version);
+ const matches=(mesh,descriptor)=>mesh===source&&descriptor===building&&mesh.geometry===geometry&&
+  attributes().every((attribute,i)=>attribute===inputs[i]&&version(attribute)===versions[i]);
+ const data=await prepareBuildingDataAsync(building,copyCenterInput(geometry),{...options,centerBounds:true});
+ return {data,matches};
+}
+
+function expandCenterColor(original,indices){
+ const values=new Float32Array(indices.length*4);
+ // Progressive centers use contiguous normalized RGBA8. Keep the Float32
+ // shader input and read the current colors, including after a material swap.
+ const rgba=original.array;
+ if(original.isBufferAttribute&&original.normalized&&original.itemSize===4&&rgba instanceof Uint8Array){
+  for(let i=0;i<indices.length;i++){
+   const src=indices[i]*4,dst=i*4;
+   if(src>=rgba.length){values.fill(1,dst,dst+4);continue;}
+   values[dst]=rgba[src]/255;
+   values[dst+1]=rgba[src+1]/255;
+   values[dst+2]=rgba[src+2]/255;
+   values[dst+3]=rgba[src+3]/255;
+  }
+ }else{
+  for(let i=0;i<indices.length;i++){
+   const index=indices[i];
+   for(let j=0;j<4;j++)values[i*4+j]=index<original.count&&j<original.itemSize?original.getComponent(index,j):1;
+  }
+ }
+ return new THREE.BufferAttribute(values,4);
+}
+
+function centerBoundingSphere(geometry,buffer,prepared){
+ const sphere=Array.isArray(prepared)&&prepared.length===4&&prepared.every(Number.isFinite)&&prepared[3]>=0?
+  prepared:centerGeometrySphere(buffer.array,buffer.stride);
+ if(!sphere){geometry.computeBoundingSphere();return;}
+ const [x,y,z,radius]=sphere;
+ geometry.boundingSphere=new THREE.Sphere(new THREE.Vector3(x,y,z),radius);
+}
+
+export function createWebGpuCenterDestructionTemplate({gltf,building,renderer,softDepth=null,prepared=null}={}){
+ if(!gltf?.scene||!building||!renderer?.library)throw TypeError('Invalid center destruction input');
+ const source=centerMesh(gltf),src=source.geometry;
+ const preparedData=prepared?.matches(source,building)?prepared.data:null;
+ const kernel=preparedData?createNativeDestruction(building,null,preparedData):createNativeDestruction(building,copyCenterInput(src));
+ const geometry=new THREE.BufferGeometry(),buffer=new THREE.InterleavedBuffer(kernel.vertices,12);
+ for(const [name,size,offset] of [['position',3,0],['normal',3,3],['uv',2,6],['wgAnchor',3,8],['wgSeed',1,11]])geometry.setAttribute(name,new THREE.InterleavedBufferAttribute(buffer,size,offset));
+ for(const name of ['color','wgOriginalColor']){
+  const original=src.getAttribute(name);
+  if(original)geometry.setAttribute(name,expandCenterColor(original,kernel.indices));
+ }
+ centerBoundingSphere(geometry,buffer,preparedData?.centerBounds?.body);const noise=new THREE.Data3DTexture(kernel.noiseBytes,32,32,32);noise.format=THREE.RedFormat;noise.type=THREE.UnsignedByteType;noise.minFilter=noise.magFilter=THREE.LinearFilter;noise.wrapS=noise.wrapT=noise.wrapR=THREE.RepeatWrapping;noise.unpackAlignment=1;noise.needsUpdate=true;
+ const ashGeometry=new THREE.BufferGeometry(),ashBuffer=new THREE.InterleavedBuffer(kernel.ash,12);ashGeometry.setAttribute('position',new THREE.InterleavedBufferAttribute(ashBuffer,3,0));ashGeometry.setAttribute('normal',new THREE.InterleavedBufferAttribute(ashBuffer,3,3));centerBoundingSphere(ashGeometry,ashBuffer,preparedData?.centerBounds?.ash);const ashMaterial=new THREE.MeshStandardMaterial({color:0x443b32,roughness:1,side:THREE.DoubleSide});
+ let disposed=false;const instances=new Set();
+ function instantiate(initialDamage=null){if(disposed)throw Error('Center destruction template disposed');const recipe=authoredDeformationRecipe('center-destruction',source.material),material=recipe.structural.nodeMaterial?cloneWebGpuNodeMaterial(source.material):renderer.library.fromMaterial(source.material);if(!material)throw Error('Unsupported center material');const damage=uniform(0),holes=Array.from({length:8},()=>uniform(new THREE.Vector4())),seed=attribute('wgSeed','float'),anchor=attribute('wgAnchor','vec3'),orig=varying(attribute('position','vec3'));
+  const c=smoothstep(.79,1,damage),start=float(1).sub(clamp(anchor.y.div(8),0,1)).mul(.20).add(seed.mul(.12)),t=clamp(c.sub(start).div(float(1).sub(start)),0,1),axis=normalize(vec3(sin(seed.mul(47.8)),.12,cos(seed.mul(32.9)))),angle=t.mul(t).mul(seed.sub(.5)).mul(2.8),q=positionLocal.sub(anchor),cs=cos(angle),sn=sin(angle),rot=q.mul(cs).add(cross(axis,q).mul(sn)).add(axis.mul(dot(axis,q)).mul(float(1).sub(cs))).add(anchor),tt=t.mul(t);
+  material.positionNode=vec3(rot.x.add(sin(seed.mul(59)).mul(tt).mul(.72)),max(rot.y.sub(anchor.y.mul(tt).mul(1.22)),float(.035).add(sin(seed.mul(27)).abs().mul(.045).mul(t))),rot.z.add(cos(seed.mul(73)).mul(tt).mul(.72)));
+  let field=float(100);for(const hole of holes)field=min(field,select(hole.w.greaterThan(.005),length(orig.sub(hole.xyz)).sub(hole.w),float(100)));field=field.add(texture3D(noise,orig.mul(.141)).r.sub(.5).mul(.4)).add(texture3D(noise,orig.mul(.427).add(vec3(.21))).r.sub(.5).mul(.12));material.maskNode=damage.lessThan(.9998).and(damage.lessThanEqual(float(.972).add(seed.mul(.027)))).and(field.greaterThanEqual(0));material.needsUpdate=true;
+  const body=new THREE.Mesh(geometry,material),ash=new THREE.Mesh(ashGeometry,ashMaterial),group=new THREE.Group();body.frustumCulled=false;ash.visible=false;group.add(body,ash);const effects=createWebGpuDestructionEffects({root:group,kernel,building,noise,softDepth});let last=-1;
+  function checkedDamage(entity){const value=confirmedCenterDamage(entity);if(!Number.isFinite(value))throw Error('Invalid confirmed center damage');return value;}
+  function advanceEffects(entity,elapsed,ruinAt){
+   effects.update(checkedDamage(entity),elapsed,initialDamage,entity.status==='collapsing'?entity.collapseRemaining:null,
+    entity.status==='ruined'&&Number.isFinite(ruinAt)?ruinAt:null);
+   initialDamage=null;
+  }
+  function present(entity){
+   const value=checkedDamage(entity);
+   if(value===last)return;
+   last=value;kernel.setDamage(value);damage.value=value;
+   for(let i=0;i<8;i++)holes[i].value.fromArray(kernel.holes,i*4);
+   body.visible=value<.9998;ash.visible=value>.23;
+  }
+  const item={group,advanceEffects,present,exportRecoveryState:effects.exportRecoveryState,restoreRecoveryState:(state,entity,elapsed)=>effects.restoreRecoveryState(state,elapsed,checkedDamage(entity)),captureRuin:(publishedAt,elapsed,record)=>effects.captureRuin(publishedAt,elapsed,record),get needsSoftDepth(){return effects.needsSoftDepth;},setSoftDepthEnabled(value){effects.setSoftDepthEnabled(value);},update(entity,elapsed=0,ruinAt=null){advanceEffects(entity,elapsed,ruinAt);present(entity);},prepare(camera){effects.prepare(camera);},status(){return effects.status();},dispose(){if(!instances.delete(item))return;effects.dispose();material.dispose();group.clear();}};instances.add(item);return item;
+ }
+ return {instantiate,dispose(){if(disposed)return;disposed=true;for(const item of [...instances])item.dispose();geometry.dispose();noise.dispose();ashGeometry.dispose();ashMaterial.dispose();}};
+}

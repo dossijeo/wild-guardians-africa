@@ -1,0 +1,26 @@
+{
+  "revision": "60b285a350c0e8112e4c232a441814975e48ffec",
+  "artifact": "native-savanna-lion-dawn4-transport.json",
+  "sha256": "eb3ecd1b45c1445b174f48721932a871a5b4004846a23abc9771c505e743afd6",
+  "scenario": {"biome": "sabana", "seed": 714, "day": 4, "clock": "Hosted ordinario"},
+  "request": {"id": 5, "ticket": 9, "effectiveTime": 2137.8987094517647, "minSequence": 6804},
+  "surface": {"appliedAtOpen": 6706, "receivedAtOpen": 6730, "sourceAppliedMs": 5859.574951171875},
+  "packets": {"first": 1347, "last": 1359, "acknowledged": 13, "rejected": 0},
+  "cumulativeMs": {
+    "timeline": 488.27499997615814,
+    "previewWithinTimeline": 62.11499996483326,
+    "render": 970.265000000596,
+    "synchronousEndFrame": 111.59521484375,
+    "endFrameReturnThroughSendStart": 1585.184814453125,
+    "sendStartThroughPostInvocation": 0.085205078125,
+    "postInvocationThroughWorkerReceipt": 299.258544921875,
+    "receiptThroughAdmission": 1296.4501953125,
+    "resourceWaitWithinAdmission": 0.079833984375,
+    "admissionThroughDrawStart": 138.280517578125,
+    "firstDraw": 124.404541015625,
+    "drawEndThroughAckReceipt": 577.1865234375
+  },
+  "roster": {"startedMs": 5934.304931640625, "completedMs": 8662.9951171875},
+  "pipelineStartedMs": 8663.53515625,
+  "result": "Native resource preparation timed out"
+}

@@ -1,0 +1,569 @@
+{
+  "base": "533583f0105b11e82b9659db5c51d500d7d1c669",
+  "input": {
+    "path": ".cache/native-flee-sabana-civil-physical-input.json",
+    "sha256": "2146d51f5421648489b403e4e52823a091abb77fdbbb4e67c6eb79dc62e6648d",
+    "snapshotSHA256": "00bfc00f1c75014eefa64f3a03946411d8e572e1fc294180ed2d3d39c35ce906"
+  },
+  "sources": {
+    "patch": {
+      "path": ".cache/flee-return/civil-return.patch",
+      "sha256": "65f8b35a9c37a1496fbe8197844c368958013633ed997497ac0cf1323ee51c35"
+    },
+    "manifest": {
+      "path": ".cache/flee-return/manifest.json",
+      "sha256": "5e87bf3f7e8056de4dd0f68b2d2b5a65ba63a5d61156aaddf9ad8ae690f8b51a"
+    },
+    "nativeInputs": {
+      "path": ".cache/flee-return/native-freeze.json",
+      "sha256": "88e384017bbcf7ac54ab78a0008ab5d57a90285310c9c7abc0b2b3d422242aae"
+    },
+    "standalone": {
+      "path": "src/world/wild-engine/spatial-savanna.wasm",
+      "sha256": "801ee674fa99aaa0329b04f52fc0507c98c15c2c470d643b651c3a89ce926046"
+    },
+    "standaloneAbi": {
+      "path": ".cache/flee-return/standalone-abi.json",
+      "sha256": "25be0cb924e1f490d1403be9cf83eaf8822d0eb1fcbf24dcc168c8add7dd3edc"
+    },
+    "pthread": {
+      "path": "public/wild-engine/spatial-threaded.wasm",
+      "sha256": "39ca84143b5a331b2cda984c962a829aa71c4d8f2c7670263695c2dd638d6e90"
+    },
+    "pthreadAbi": {
+      "path": ".cache/flee-return/pthread-abi.json",
+      "sha256": "2d0e9e251d11d826dc7322868a5e88528aaf3d9e26c25162a444f960dfed189a"
+    },
+    "pthreadSmoke": {
+      "path": ".cache/flee-return/pthread-smoke.json",
+      "sha256": "596973bcc2c9f9a0648276fb113786b8db8003efd6d6ae91d738a9e5449de6b6"
+    },
+    "pthreadGlue": {
+      "path": "public/wild-engine/spatial-threaded.mjs",
+      "sha256": "441cb9535b57c6af01cf34d1198802fbe86209a3f9f00aa388c593b66d7055f9"
+    },
+    "pthreadGlueCommittedLF": "29357c25aa692aa9a035f43bc63539767fb96f3ddca1f06e60b8b8aaf43574be"
+  },
+  "validation": {
+    "tests": {
+      "path": ".cache/flee-return/root-civil-regression.tap",
+      "sha256": "66e3eeb257e5f8f03d1de027bf99e1d2f02c464eae7fad8ae6229e0c84bf2692",
+      "passed": 87,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build": {
+      "path": ".cache/flee-return/root-civil-build.log",
+      "sha256": "b3ec6b3b71444d5988f7d8580c8a5b0f9ab62dbfbaeef8bd47a400f8e3a282d8",
+      "vitePassed": true,
+      "packageCheckPassed": false,
+      "packageCheckFailure": "Missing JSON resource content/source/character-lod/buffalo-decoded.glb"
+    }
+  },
+  "rejectedCaptures": [
+    {
+      "receipt": {
+        "path": ".cache/native-flee-sabana-civil-return-nvidia-20261125.failure.json",
+        "sha256": "514db12d62eaf4df4b08a6c82d8266f5c0550d856028e531ca4ed9550bc6cc81"
+      },
+      "trace": {
+        "path": ".cache/native-flee-sabana-civil-return-nvidia-20261125.trace.json.gz",
+        "sha256": "d0633968b47188efd9969c13ea7572a1011ea10931408a1a6262126ebc6c38af"
+      },
+      "outcome": "resource-warning-payload-discarded-by-harness"
+    },
+    {
+      "receipt": {
+        "path": ".cache/native-flee-sabana-civil-reported-nvidia-20261125.json",
+        "sha256": "f2123fac10c3dbcec3eb062eb68f9b3ec42a841aaf3e89c88416bb8deae99ccc"
+      },
+      "trace": {
+        "path": ".cache/native-flee-sabana-civil-reported-nvidia-20261125.trace.json.gz",
+        "sha256": "eea821c4d825e8006aa45aebcf6d0b861046403b4b4e7de32b2eb604a738d848"
+      },
+      "outcome": "civil-idle-observed-with-resource-warning",
+      "errors": [
+        {
+          "at": 1795613558193.7,
+          "resource": "agriculture-vfx",
+          "message": "Cannot order uncommitted published resource mutations"
+        }
+      ]
+    }
+  ],
+  "diagnostic": {
+    "scenario": {
+      "pendingFarm": false,
+      "expectAnimal": true,
+      "currentFrameBeforeAttach": true,
+      "expectCivilReturn": true,
+      "collectResourceErrors": true,
+      "qualification": {
+        "qualifyFarmFlee": true,
+        "qualifyAnimalCrop": true
+      },
+      "handoffOnly": false
+    },
+    "traceComplete": {
+      "dataLossOccurred": false,
+      "traceFormat": "json",
+      "streamCompression": "gzip",
+      "browserVersion": "158.0.4370.33",
+      "options": {
+        "traceConfig": {
+          "recordMode": "recordUntilFull",
+          "traceBufferSizeInKb": 524288,
+          "includedCategories": [
+            "toplevel",
+            "blink",
+            "blink.user_timing",
+            "devtools.timeline",
+            "v8.execute",
+            "gpu",
+            "viz",
+            "cc",
+            "disabled-by-default-gpu.dawn",
+            "gpu.dawn",
+            "gpu.dawn.validation",
+            "gpu.dawn.recording"
+          ]
+        },
+        "transferMode": "ReturnAsStream",
+        "streamFormat": "json",
+        "streamCompression": "gzip",
+        "bufferUsageReportingInterval": 1000
+      },
+      "peakBufferUsage": 0.3991810083389282,
+      "usageReports": 125,
+      "collectionComplete": true,
+      "tracePath": ".cache/native-flee-sabana-civil-reported-nvidia-20261125.trace.json.gz",
+      "exportedBytes": 72833773,
+      "sha256": "eea821c4d825e8006aa45aebcf6d0b861046403b4b4e7de32b2eb604a738d848"
+    },
+    "initialFrame": {
+      "sequence": 3,
+      "terrainGeneration": 25,
+      "selectableGeneration": 186,
+      "cameraVersion": 0
+    },
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 106.90000000223517
+      }
+    },
+    "hits": [
+      {
+        "id": "event-51",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-48",
+        "targetId": "plant-5",
+        "species": "warthog",
+        "presentation": {
+          "version": 1,
+          "elapsed": 657.7999999999374,
+          "animal": {
+            "x": 88.70540618896484,
+            "z": -5.325719833374023,
+            "heading": 2.9674229229780287
+          },
+          "target": {
+            "x": 89,
+            "z": -7
+          },
+          "shield": null
+        },
+        "simulationTime": 657.7999999999374
+      },
+      {
+        "id": "event-55",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-52",
+        "targetId": "plant-7",
+        "species": "warthog",
+        "presentation": {
+          "version": 1,
+          "elapsed": 662.0999999999335,
+          "animal": {
+            "x": 89.626708984375,
+            "z": -5.997962474822998,
+            "heading": 2.201153197944249
+          },
+          "target": {
+            "x": 91,
+            "z": -7
+          },
+          "shield": null
+        },
+        "simulationTime": 662.0999999999335
+      }
+    ],
+    "raidEnded": {
+      "id": "event-57",
+      "type": "RaidEnded",
+      "simulationTime": 672.8399999999237
+    },
+    "absence": {
+      "sequence": 494,
+      "at": 1795613573363.1,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "aa289ec3-9a69-454d-9cf0-7dd9e7ae0f14/1",
+        "nativeSession": 1,
+        "ticket": 19,
+        "effectiveTime": 663.0499999999327
+      },
+      "clockElapsed": 672.8499999999237,
+      "previous": {
+        "actorId": 22,
+        "bodyId": 2,
+        "executionEpoch": 663.0499999999327,
+        "sequence": 493,
+        "at": 1795613573196.5
+      }
+    },
+    "returnReady": {
+      "kind": "production-ready",
+      "key": "preparedFarmArrivalTemplate",
+      "reference": {
+        "kind": "native-farm-arrival-route-reference",
+        "version": 1,
+        "actorId": 21,
+        "bodyId": 3,
+        "sourceRequest": {
+          "kind": "native-farm-arrival-request-reference",
+          "version": 2,
+          "refugeSequence": 9,
+          "authorityEpoch": "aa289ec3-9a69-454d-9cf0-7dd9e7ae0f14/1",
+          "nativeSession": 1,
+          "actorId": 21,
+          "bodyId": 3,
+          "bodyFlags": 1,
+          "requestSequence": 20,
+          "requestedAt": 672.8499999999237,
+          "centerId": 2,
+          "profile": 1,
+          "workerProfile": "olderFemale",
+          "pose": {
+            "x": 60,
+            "z": 0,
+            "yaw": 3.141592653589793,
+            "radius": 0.28,
+            "runPhase": 2.9533333333359533,
+            "walkPhase": 9.59999999999127,
+            "carryPhase": 0,
+            "runRemaining": 105.80409353316266
+          },
+          "goal": {
+            "x": 87.95499877929687,
+            "z": 0,
+            "centerX": 83,
+            "centerZ": 0,
+            "arrivalRadius": 2
+          }
+        },
+        "destination": {
+          "x": 88,
+          "z": 1.9994935989379883
+        },
+        "motionFlags": 0,
+        "distance": 34.00050640106201,
+        "expectedRouteHandle": {
+          "authorityEpoch": "aa289ec3-9a69-454d-9cf0-7dd9e7ae0f14/1",
+          "session": 1,
+          "slot": 0,
+          "generation": 14
+        },
+        "sourceControlSequence": 20,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "aa289ec3-9a69-454d-9cf0-7dd9e7ae0f14/1",
+          "nativeSession": 1,
+          "ticket": 20,
+          "effectiveTime": 672.8499999999237
+        },
+        "endTime": 704.3319503712775
+      },
+      "requestId": 11,
+      "at": 1795613576135.9001
+    },
+    "returnDraw": {
+      "at": 1795613576196.5,
+      "sequence": 495,
+      "trigger": "raf",
+      "nativeWorldBoundary": {
+        "version": 1,
+        "authorityEpoch": "aa289ec3-9a69-454d-9cf0-7dd9e7ae0f14/1",
+        "nativeSession": 1,
+        "ticket": 21,
+        "effectiveTime": 675.799999999921
+      },
+      "intervalMs": 33.5,
+      "drawMs": 6.60009765625,
+      "replay": false,
+      "clockElapsed": 675.799999999921,
+      "safeUntil": 675.799999999921,
+      "cameraVersion": null
+    },
+    "returnAcquired": {
+      "kind": "native-farm-arrival-route-reference",
+      "version": 1,
+      "actorId": 21,
+      "bodyId": 3,
+      "sourceRequest": {
+        "kind": "native-farm-arrival-request-reference",
+        "version": 2,
+        "refugeSequence": 9,
+        "authorityEpoch": "aa289ec3-9a69-454d-9cf0-7dd9e7ae0f14/1",
+        "nativeSession": 1,
+        "actorId": 21,
+        "bodyId": 3,
+        "bodyFlags": 1,
+        "requestSequence": 20,
+        "requestedAt": 672.8499999999237,
+        "centerId": 2,
+        "profile": 1,
+        "workerProfile": "olderFemale",
+        "pose": {
+          "x": 60,
+          "z": 0,
+          "yaw": 3.141592653589793,
+          "radius": 0.28,
+          "runPhase": 2.9533333333359533,
+          "walkPhase": 9.59999999999127,
+          "carryPhase": 0,
+          "runRemaining": 105.80409353316266
+        },
+        "goal": {
+          "x": 87.95499877929687,
+          "z": 0,
+          "centerX": 83,
+          "centerZ": 0,
+          "arrivalRadius": 2
+        }
+      },
+      "destination": {
+        "x": 88,
+        "z": 1.9994935989379883
+      },
+      "motionFlags": 0,
+      "distance": 34.00050640106201,
+      "expectedRouteHandle": {
+        "authorityEpoch": "aa289ec3-9a69-454d-9cf0-7dd9e7ae0f14/1",
+        "session": 1,
+        "slot": 0,
+        "generation": 14
+      },
+      "sourceControlSequence": 20,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "aa289ec3-9a69-454d-9cf0-7dd9e7ae0f14/1",
+        "nativeSession": 1,
+        "ticket": 21,
+        "effectiveTime": 675.799999999921
+      },
+      "endTime": 707.2819503712748
+    },
+    "refugeSequence": 9,
+    "arrival": {
+      "elapsed": 708.849999999891,
+      "id": "worker-21",
+      "personId": "person-9",
+      "contractDay": 2,
+      "centerId": "structure-2",
+      "x": 88,
+      "z": 1.9994935989379883,
+      "nativeRouteAdmission": "native-idle",
+      "balance": {
+        "n": "190",
+        "d": "1"
+      },
+      "hits": 0
+    },
+    "reusedUntilHome": {
+      "compared": 2974,
+      "sameReference": 2974,
+      "sameVersion": 2973
+    },
+    "drained": {
+      "disposed": true
+    },
+    "cadence": {
+      "refreshHz": 30,
+      "targetMs": 16.666666666666668,
+      "samples": 3508,
+      "overTarget": 3507,
+      "slowest": [
+        {
+          "at": 1795613558963,
+          "sequence": 406,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "aa289ec3-9a69-454d-9cf0-7dd9e7ae0f14/1",
+            "nativeSession": 1,
+            "ticket": 13,
+            "effectiveTime": 656.2499999999388
+          },
+          "intervalMs": 833.300048828125,
+          "drawMs": 6.60009765625,
+          "replay": false,
+          "clockElapsed": 657.7999999999374,
+          "safeUntil": 657.7999999999374,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795613562929.7,
+          "sequence": 427,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "aa289ec3-9a69-454d-9cf0-7dd9e7ae0f14/1",
+            "nativeSession": 1,
+            "ticket": 17,
+            "effectiveTime": 660.5499999999349
+          },
+          "intervalMs": 466.699951171875,
+          "drawMs": 6.2001953125,
+          "replay": false,
+          "clockElapsed": 662.1999999999334,
+          "safeUntil": 662.1999999999334,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795613573363.1,
+          "sequence": 494,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "aa289ec3-9a69-454d-9cf0-7dd9e7ae0f14/1",
+            "nativeSession": 1,
+            "ticket": 19,
+            "effectiveTime": 663.0499999999327
+          },
+          "intervalMs": 166.60009765625,
+          "drawMs": 7.599853515625,
+          "replay": false,
+          "clockElapsed": 672.8499999999237,
+          "safeUntil": 672.8499999999237,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795613506842.5,
+          "sequence": 83,
+          "trigger": "mutation-release",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "aa289ec3-9a69-454d-9cf0-7dd9e7ae0f14/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 606.3999999999842
+          },
+          "intervalMs": 45.599853515625,
+          "drawMs": 13.900146484375,
+          "replay": false,
+          "clockElapsed": 606.3999999999842,
+          "safeUntil": 606.3999999999842,
+          "cameraVersion": null
+        }
+      ],
+      "cuts": {
+        "path": ".cache/native-flee-sabana-civil-reported-nvidia-20261125.cuts.json",
+        "sha256": "3046355d68e0d9a23783ede94d23072e75acf457383ab74f028e022b3c850816"
+      },
+      "handoffTransport": [
+        {
+          "sequence": 406,
+          "intervalMs": 833.300048828125,
+          "transport": {
+            "endFrameCalledAt": 352.5,
+            "endFrameReturnedAt": 355.7,
+            "sendStartedAt": 370.7,
+            "postedAt": 370.7,
+            "workerReceivedAt": 383.9,
+            "admissionStartedAt": 410.2,
+            "resourcesWaitStartedAt": 451.4,
+            "resourcesReadyAt": 798,
+            "admittedAt": 811.8,
+            "firstDrawStartedAt": 833.3,
+            "firstDrawCompletedAt": 839.9
+          }
+        },
+        {
+          "sequence": 427,
+          "intervalMs": 466.699951171875,
+          "transport": {
+            "endFrameCalledAt": 371.9,
+            "endFrameReturnedAt": 374.8,
+            "sendStartedAt": 386.6,
+            "postedAt": 386.6,
+            "workerReceivedAt": 397.2,
+            "admissionStartedAt": 416.9,
+            "resourcesWaitStartedAt": 432.6,
+            "resourcesReadyAt": 432.6,
+            "admittedAt": 440.8,
+            "firstDrawStartedAt": 466.7,
+            "firstDrawCompletedAt": 472.9
+          }
+        },
+        {
+          "sequence": 494,
+          "intervalMs": 166.60009765625,
+          "transport": {
+            "endFrameCalledAt": 79.3,
+            "endFrameReturnedAt": 84.7,
+            "sendStartedAt": 86.9,
+            "postedAt": 86.9,
+            "workerReceivedAt": 101.6,
+            "admissionStartedAt": 110.7,
+            "resourcesWaitStartedAt": 128.4,
+            "resourcesReadyAt": 128.4,
+            "admittedAt": 140.4,
+            "firstDrawStartedAt": 166.6,
+            "firstDrawCompletedAt": 174.2
+          }
+        }
+      ]
+    },
+    "transport": {
+      "artifact": {
+        "path": ".cache/native-flee-sabana-civil-reported-nvidia-20261125.packet-clones.json",
+        "sha256": "14bfebb6bf977e2ad575b0cff5fa77eba87366e2369550e5b5c5f331aa4a8ca0"
+      },
+      "matched": 723,
+      "ordinary": 711,
+      "medianMs": 6.941,
+      "p95Ms": 8.593,
+      "p99Ms": 12.465,
+      "max": {
+        "type": "frame",
+        "sequence": 179,
+        "transportSequence": 17480,
+        "ticket": 11,
+        "operations": 106,
+        "encoders": 3,
+        "encoderCommands": 3,
+        "passCommands": 5840,
+        "arrayBufferBytes": 484064,
+        "imageCount": 0,
+        "sent": 27031318575,
+        "received": 27031340332,
+        "cloneStart": 27031326195,
+        "cloneEnd": 27031340301,
+        "cloneWallMs": 14.106,
+        "cloneCpuMs": 13.509,
+        "startAfterSendMs": 7.62,
+        "receiveAfterCloneMs": 0.031
+      }
+    }
+  }
+}

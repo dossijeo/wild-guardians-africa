@@ -1,0 +1,605 @@
+{
+  "ready": true,
+  "modelAO": [],
+  "nativeAO": [
+    {
+      "slot": "tree_01",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "tree_02",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "tree_03",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "tree_04",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "shrub_01",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "shrub_02",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "shrub_03",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "plant_01",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "plant_02",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "plant_03",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "rock_01",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "rock_02",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "rock_03",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "debris_01",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "debris_02",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "debris_03",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "debris_04",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "special_01",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "special_02",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "special_03",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "worldAuthority": "spatial-wasm",
+  "mangroveNetwork": false,
+  "campaign": false,
+  "paused": true,
+  "lastPick": null,
+  "workerCandidate": null,
+  "workerGround": null,
+  "workers": [
+    {
+      "id": "worker-28",
+      "profile": "olderMale",
+      "x": 60,
+      "z": 0,
+      "status": "home",
+      "hits": 0
+    }
+  ],
+  "faceCandidate": false,
+  "faceCandidateSpecies": null,
+  "expressions": [
+    {
+      "id": "qa-beast-0",
+      "weights": [
+        0,
+        0,
+        1.8991774288720628e-119
+      ],
+      "bindings": 11
+    }
+  ],
+  "entityCounts": {
+    "workers": 1,
+    "structures": 1,
+    "crops": 12,
+    "animals": 1
+  },
+  "groundCoverHidden": true,
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 0,
+  "maxVisibleGuardians": 1,
+  "slopeSite": {
+    "x": 93.5,
+    "z": -14,
+    "gx": 0.1770944595336914,
+    "gz": 0.013126850128173828,
+    "grade": 0.17758029674436798,
+    "score": 0.007419703255632011
+  },
+  "guideTrial": false,
+  "guideOrigin": null,
+  "guidePosition": null,
+  "elapsed": 3045.4251800000347,
+  "simulate": true,
+  "clockMode": "Game.tick",
+  "shields": [],
+  "active": 0,
+  "origins": [],
+  "pendingSummons": 0,
+  "attackVisual": [],
+  "reused": 0,
+  "health": 56,
+  "animalState": "walking",
+  "animalPosition": [
+    89.81308875886987,
+    -16
+  ],
+  "draws": 68,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "spirit_appear",
+      "at": 3033.4107600000134,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3033.5273050000137,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "warthog_hurt",
+      "at": 3033.610550000014,
+      "emitter": "qa-beast-0",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3033.610550000014,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3034.892000000017,
+      "emitter": "guardian-world",
+      "played": false
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0.03500008583068848,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 13.65499997138977,
+    "maxStepMs": 20.420000076293945,
+    "solverMs": 0,
+    "solverSteps": 0,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": {
+      "species": "warthog",
+      "captureMs": 0.46999990940093994,
+      "colliderFitMs": 5.315000057220459,
+      "environmentMs": 4.074999928474426,
+      "bodiesMs": 3.6050000190734863
+    },
+    "recoveryFollowMs": 0,
+    "bakedActive": 0,
+    "kinematic": 0,
+    "rollFailures": 0,
+    "lastRoll": {
+      "seconds": 1.35,
+      "contactDelay": 0,
+      "error": 0.3303443511851801,
+      "speed": 0.6073086684485453,
+      "timedOut": false
+    },
+    "recoveryPoseMisses": 1,
+    "recoveryPoseHits": 81
+  },
+  "physicsWorlds": 0,
+  "physicalBodies": 0,
+  "allDown": [
+    {
+      "id": "qa-beast-0",
+      "x": 89.81308875886987,
+      "z": -16
+    }
+  ],
+  "errors": [],
+  "report": {
+    "reuseRecoveryPose": true,
+    "scope": "Full sequential Attack cycles: sampling starts before the first command, includes all launches and recovery. Continuous Game.tick and native WorldScene when lightingReview=1. Diagnostic, not a paired before/after benchmark.",
+    "retreatTrial": false,
+    "initialResilience": 84,
+    "finalActors": [
+      {
+        "id": "qa-beast-0",
+        "status": "walking",
+        "health": 56,
+        "x": 89.81308875886987,
+        "z": -16,
+        "down": false
+      }
+    ],
+    "requestedImpacts": 1,
+    "issuedImpacts": 1,
+    "attackSchedule": [
+      {
+        "index": 0,
+        "targetId": "qa-beast-0",
+        "time": 0
+      }
+    ],
+    "audioContext": null,
+    "audioTrace": [
+      {
+        "id": "spirit_appear",
+        "at": 3033.4107600000134,
+        "emitter": "guardian-world",
+        "played": false,
+        "time": 0.0500000000001819
+      },
+      {
+        "id": "spirit_power_activate",
+        "at": 3033.5273050000137,
+        "emitter": "guardian-world",
+        "played": false,
+        "time": 0.16654500000049666
+      },
+      {
+        "id": "warthog_hurt",
+        "at": 3033.610550000014,
+        "emitter": "qa-beast-0",
+        "phase": "falling",
+        "played": false,
+        "time": 0.24979000000075757
+      },
+      {
+        "id": "beast_take_damage",
+        "at": 3033.610550000014,
+        "emitter": "impact:qa-beast-0",
+        "played": false,
+        "time": 0.24979000000075757
+      },
+      {
+        "id": "spirit_disappear",
+        "at": 3034.892000000017,
+        "emitter": "guardian-world",
+        "played": false,
+        "time": 1.5312400000038906
+      }
+    ],
+    "headOn": false,
+    "wallTrial": false,
+    "actorSpecies": [
+      "warthog"
+    ],
+    "rejectedPhysics": 0,
+    "completedSimulation": true,
+    "species": "warthog",
+    "direction": "side",
+    "wallMs": 13674.429999947548,
+    "simulationSeconds": 12.064420000021528,
+    "frames": 246,
+    "hiddenFrames": 0,
+    "metrics": {
+      "dt": {
+        "mean": 56.373861788617894,
+        "p95": 66.64500000000407,
+        "p99": 132.95500000000175,
+        "max": 232.75499999999738
+      },
+      "renderMs": {
+        "mean": 15.215630081610952,
+        "p95": 23.24500000476837,
+        "p99": 102.95999991893768,
+        "max": 116.11500000953674
+      },
+      "physicsTotal": {
+        "mean": 2.454268292198336,
+        "p95": 5.0299999713897705,
+        "p99": 12.045000076293945,
+        "max": 20.420000076293945
+      },
+      "solverMs": {
+        "mean": 0.9802438994733299,
+        "p95": 3.034999966621399,
+        "p99": 5.004999995231628,
+        "max": 6.120000004768372
+      },
+      "solverSteps": {
+        "mean": 1.967479674796748,
+        "p95": 3,
+        "p99": 3,
+        "max": 3
+      },
+      "creationMs": {
+        "mean": 0.05733739845151824,
+        "p95": 0,
+        "p99": 0,
+        "max": 14.105000019073486
+      },
+      "bindingMs": {
+        "mean": 0.08544715390941961,
+        "p95": 0.33500003814697266,
+        "p99": 0.43000006675720215,
+        "max": 0.4700000286102295
+      },
+      "recoverySetupMs": {
+        "mean": 0.03920731748022684,
+        "p95": 0,
+        "p99": 0,
+        "max": 9.645000100135803
+      },
+      "recoveryFollowMs": {
+        "mean": 1.1639634147892153,
+        "p95": 3.8750001192092896,
+        "p99": 4.480000019073486,
+        "max": 19.6599999666214
+      },
+      "recoveryMs": {
+        "mean": 0.015040652054112131,
+        "p95": 0.05500006675720215,
+        "p99": 0.12999999523162842,
+        "max": 0.21500003337860107
+      },
+      "animationMs": {
+        "mean": 0.08168699634753591,
+        "p95": 0.43500006198883057,
+        "p99": 0.7699999809265137,
+        "max": 1.2949999570846558
+      },
+      "vfxMs": {
+        "mean": 0.18900406506003403,
+        "p95": 1.2100000381469727,
+        "p99": 1.6549999713897705,
+        "max": 3.399999976158142
+      },
+      "draws": {
+        "mean": 69.15040650406505,
+        "p95": 76,
+        "p99": 78,
+        "max": 80
+      }
+    },
+    "peakActive": 1,
+    "peakBaked": 0,
+    "finalDownCount": 0,
+    "finalDown": null,
+    "memory": {
+      "geometries": 276,
+      "textures": 129
+    },
+    "heap": 477403690,
+    "errors": [],
+    "recoveryTraceSamples": 122
+  },
+  "commandCosts": [
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 93.3751325,
+        "z": -14
+      },
+      "origin": {
+        "x": 93.3751325,
+        "y": 9.070996189117432,
+        "z": -11
+      },
+      "planningCamera": {
+        "matrixWorld": [
+          0.7682212795973757,
+          -1.3877787807814457e-17,
+          -0.6401843996644799,
+          0,
+          -0.19675649572299292,
+          0.95159864995363,
+          -0.23610779486759145,
+          0,
+          0.6091986104420942,
+          0.30734347139060686,
+          0.731038332530513,
+          0,
+          98.5,
+          10.147236824035645,
+          -7.999999999999999,
+          1
+        ],
+        "projection": [
+          2.3445801582244217,
+          0,
+          0,
+          0,
+          0,
+          4.168142503510082,
+          0,
+          0,
+          0,
+          0,
+          -1.0004000800160033,
+          -1,
+          0,
+          0,
+          -0.20004000800160032,
+          0
+        ]
+      },
+      "camera": {
+        "position": [
+          98.5,
+          10.147236824035645,
+          -7.999999999999999
+        ],
+        "matrixWorld": [
+          0.7682212795973757,
+          -1.3877787807814457e-17,
+          -0.6401843996644799,
+          0,
+          -0.19675649572299292,
+          0.95159864995363,
+          -0.23610779486759145,
+          0,
+          0.6091986104420942,
+          0.30734347139060686,
+          0.731038332530513,
+          0,
+          98.5,
+          10.147236824035645,
+          -7.999999999999999,
+          1
+        ],
+        "projection": [
+          2.3445801582244217,
+          0,
+          0,
+          0,
+          0,
+          4.168142503510082,
+          0,
+          0,
+          0,
+          0,
+          -1.0004000800160033,
+          -1,
+          0,
+          0,
+          -0.20004000800160032,
+          0
+        ],
+        "near": 0.1,
+        "far": 500
+      },
+      "plan": 13.815000057220459,
+      "logic": 1.6299999952316284,
+      "render": 0.04499995708465576,
+      "total": 15.490000009536743
+    }
+  ]
+}

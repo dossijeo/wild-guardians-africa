@@ -1,0 +1,82 @@
+{
+  "scope": "Confirmed historical playback of one isolated Rapier ragdoll in the real WebGPU game. QA target ID through normal action path, not pixel picking or visual parity.",
+  "sourceSha256": "807162bf15853f04d2de878a42ac5da3db77eb201d3a5ed0d3bfec8806e887bd",
+  "fixture": "docs/qa/mangrove-magic-20261026/hydraulic-v2-raid/fixture.json",
+  "target": "animal-20",
+  "backend": "WebGPU",
+  "device": {
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "isFallbackAdapter": false
+    },
+    "maxVertexBuffers": 8
+  },
+  "physicalPassed": true,
+  "combinedTestPassed": false,
+  "combinedTestFailure": "Error: Expected completed historical event subboundaries; ordinary boundary fallback is insufficient\n    at run (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tools/experiments/audit_webgpu_historical_rapier.mjs:46:574)\n    at async file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tools/experiments/audit_webgpu_historical_rapier.mjs:49:2",
+  "audit": {
+    "actorId": "animal-20",
+    "historical": true,
+    "expectedBones": 78,
+    "visualBones": 78,
+    "maxError": 0
+  },
+  "counts": {
+    "starts": 2,
+    "samples": 5,
+    "finishes": 1,
+    "active": 1
+  },
+  "guardian": {
+    "closed": false,
+    "began": 1,
+    "confirmed": 1,
+    "rejected": 0,
+    "provisionalFrames": 2,
+    "lastCommand": "d5bd0bbb-abfb-46cd-a10e-0c738ea2d6ff",
+    "active": null,
+    "ritualPreview": false,
+    "ritualReady": false,
+    "cropBeams": 0,
+    "modelReady": true,
+    "effectsReady": true,
+    "beamVisible": false,
+    "coreVisible": false
+  },
+  "journal": {
+    "base": 854,
+    "candidate": null,
+    "through": 881,
+    "entries": 27,
+    "bytes": 12126136,
+    "entryBytes": 6170308,
+    "overheadBytes": 5955828,
+    "capacity": 256,
+    "highWatermark": 128,
+    "maxBytes": 268435456,
+    "highWatermarkBytes": 201326592,
+    "pendingTerrain": false,
+    "saturated": false,
+    "encoderFault": false,
+    "checkpointDeferred": false,
+    "checkpointRetry": false,
+    "closed": false
+  },
+  "attackDiagnostic": {
+    "kind": "castAttack",
+    "preparationMs": 434.54499995708466,
+    "executionMs": 10.490000009536743,
+    "transportPreparationMs": 0.3450000286102295
+  },
+  "eventMetrics": {
+    "starts": 0,
+    "boundaries": 0,
+    "events": 0,
+    "completed": 0
+  },
+  "screenshot": "historical-physical.png",
+  "fullEvidence": "historical-physical-full.json.gz"
+}

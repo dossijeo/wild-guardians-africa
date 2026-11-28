@@ -1,0 +1,36 @@
+{
+  "report": {
+    "scope": "Native WorldScene presentation stress: four immediate QA commands bypass cooldown, then result/clock rollback. Not production input cadence or renderer disposal.",
+    "before": {
+      "elapsed": 3193.928500000005,
+      "age": 0.11999999999989086,
+      "objects": {
+        "group": true,
+        "aura": true,
+        "beam": false,
+        "impact": false,
+        "core": true,
+        "vortex": true
+      },
+      "active": 1,
+      "pending": 3
+    },
+    "reason": "rollback",
+    "after": {
+      "elapsed": 3192.928500000005,
+      "age": null,
+      "objects": {
+        "group": false,
+        "aura": false,
+        "beam": false,
+        "impact": false,
+        "core": false,
+        "vortex": false
+      },
+      "active": 0,
+      "pending": 0
+    },
+    "cleared": true
+  },
+  "errors": []
+}

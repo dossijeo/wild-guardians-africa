@@ -1,0 +1,66 @@
+{
+  "firstVersion": 1,
+  "secondVersion": 2,
+  "heldMs": 204.10500000417233,
+  "initialElapsed": 3430.9999999975794,
+  "finalElapsed": 3434.9999999975757,
+  "busy": {
+    "kind": "busy",
+    "id": 2,
+    "version": 1,
+    "elapsed": 3430.9999999975794
+  },
+  "invalidAck": {
+    "kind": "ack-result",
+    "id": 3,
+    "accepted": false
+  },
+  "stillBusy": {
+    "kind": "busy",
+    "id": 4,
+    "version": 1,
+    "elapsed": 3430.9999999975794
+  },
+  "duplicate": {
+    "accepted": false,
+    "reason": "stale"
+  },
+  "gap": {
+    "accepted": false,
+    "reason": "gap"
+  },
+  "wrongSession": {
+    "accepted": false,
+    "reason": "session"
+  },
+  "ack": {
+    "kind": "ack-result",
+    "id": 5,
+    "accepted": true
+  },
+  "acceptedSecond": {
+    "accepted": true,
+    "version": 2
+  },
+  "staleAck": {
+    "kind": "ack-result",
+    "id": 7,
+    "accepted": false
+  },
+  "secondBusy": {
+    "kind": "busy",
+    "id": 8,
+    "version": 2,
+    "elapsed": 3434.9999999975757
+  },
+  "finalAck": {
+    "kind": "ack-result",
+    "id": 9,
+    "accepted": true
+  },
+  "events": [
+    "StructureRuined"
+  ],
+  "centerStatus": "ruined",
+  "scope": "Isolated pull protocol: one outstanding complete projection. Refused work is not queued or retried. No production authority, rendering or safe-horizon proof."
+}

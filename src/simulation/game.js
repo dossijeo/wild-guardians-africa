@@ -1,7 +1,22 @@
-import {commitAgriculturalPower,growthPowerStep,settleMultiplyPower} from './agricultural-power.js';
+import {nativeCropCohortCurrent} from './raids.js';
+import {advanceWorkerRecovery,prepareWorkerRecovery,applyWorkerRecovery,RECOVERY_EXIT_SECONDS,workerRecoveryExitRemaining} from './worker-recovery.js';
+import {nativeHomeWorkerStatus} from '../world/native-home-request-reference.js';
+import {nativeEntityNumericId} from '../world/native-entity-id.js';
+import {copyNativeTaskConsequenceAttestation} from '../world/native-task-consequence.js';
+import {copyNativeFarmArrivalRouteAttestation,copyNativeFarmArrivalHeldExecution} from '../world/native-farm-arrival-route.js';
+import {nativeFarmArrivalState,nativeFarmArrivalHeldState,nativeFarmArrivalBoundState} from '../world/native-farm-arrival-state.js';
+import {copyNativeHomeRouteAttestation,nativeHomeRouteSource} from '../world/native-home-route.js';
+import {copyNativeTaskSettlementAttestation} from '../world/native-task-settlement.js';
+import {notifySettlement} from './settlement-observers.js';
+import {dispatchLocalGameEvent} from './game-event-observers.js';
+export {observeGameEvents,observePresentationGameEvents,notifyConfirmedPresentationEvent} from './game-event-observers.js';
+import {firstCenterWithinVillage} from '../tutorial/center-placement.js';
+import {GUARDIAN_ATTACK_TIMING} from './guardian-timing.js';
+import {attackTarget,attackTargetAvailable,attackGestureActive,applyGuardianAttack} from './guardian-combat.js';
+import {commitAgriculturalPower,growthPowerStep,settleMultiplyPower,previewMultiplyPowerSettlement} from './agricultural-power.js';
 import {awakeningState,recordAgriculturalCare,recordAwakeningEvent,evaluateAwakeningDay,startAwakeningDay} from './awakenings.js';
 import {AWAKENINGS} from './awakening-config.js';
-import {blessingTarget,previewBlessing,loseBlessing} from './blessings.js';
+import {blessingTarget,previewBlessing,loseBlessing,blessingPresentationSource} from './blessings.js';
 import {blessingInfluence,invalidateBlessingInfluence} from './blessing-influence.js';
 import {cropImpactDamage,CROP_HIT_POINTS} from './crop-impact-health.js';
 export {previewBlessing} from './blessings.js';
@@ -26,12 +41,12 @@ import {BALANCE as B} from './balance.js';
 import {wallVisualAt,recordWallPresentation} from './structure-presentation.js';
 import {rational,rationalNumber,add,multiply,negate,transact,compare,numberOf} from './money.js';
 import {PROFILES,allocateWorkers,hiringCost,distributeProfiles,contractExpired} from './workforce.js';
-import {spellUnlocked,permission,operational,cropSpec,wallSpec,structureHealth,dawnMinimum,nextRandom,randomInt,villageCost,hitStructure} from './rules.js';
+import {spellUnlocked,permission,operational,isIntactRepairTarget,cropSpec,wallSpec,structureHealth,dawnMinimum,nextRandom,randomInt,villageCost,hitStructure} from './rules.js';
 import {createPlant,advancePlant,waterPlant,isMature,contiguousGroup} from './crops.js';
 import {activeCrops,cropBecameInactive} from './active-crops.js';
 import {activeCrates,crateBecameInactive} from './active-crates.js';
 import {retireFarmHistory} from './retire-farm-history.js';
-import {harvestMicroLoss} from '../microevents/economy.js';
+import {harvestMicroLoss,previewHarvestMicroLoss} from '../microevents/economy.js';
 import {workerEntityLookup} from './worker-entity-lookup.js';
 import {enqueue,taskEnqueuer,reserveTasks,releaseTask,replaceTasks,
   notifyWorkerPlanningChange,notifyWorkerPlanningRoster,taskPlanningRevision} from './tasks.js';
@@ -40,12 +55,14 @@ import {wallStroke,wallLayout,wallStrokeLine,gateScale} from '../world/wall-layo
 import {selectEvent,applyEvent} from './events.js';
 import {villageLayout,findVillageEntry,nearestVillageRoute} from '../world/villages.js';
 import {LOCOMOTION as L} from './locomotion-calibration.js';
-import {dailyRunMetres,urgentWork,moveWorker,movePath,movePathWithGates} from './locomotion.js';
+import {dailyRunMetres,urgentWork,moveWorker,movePath,movePathWithGates,pathMotionClock} from './locomotion.js';
 import {workerSlopeRecoveryPath} from '../world/worker-slope-recovery.js';
 import {animalWallOverlapRecovery,workerWallOverlapRecoveryPath} from '../world/worker-wall-overlap-recovery.js';
 import {createUrgencyPass} from './work-urgency.js';
 import {repairRoute,wateringRoute,canWaterFrom} from '../world/work-points.js';
-import {updateIdle,cancelIdle} from './idle.js';
+import {updateIdle,cancelIdle,createIdleState,farmIdleAnchor} from './idle.js';
+import {copyNativeInitialIdleState} from '../world/native-initial-idle-request-reference.js';
+import {nativeInitialIdleActionSource} from '../world/native-initial-idle-body.js';
 import {advanceGateLeaves,waitForGate} from './gates.js';
 
 // A failed plan is a waiting state, not a request to repeat the same search
@@ -62,7 +79,6 @@ const routeEpoch=(nav,actor,destination,worker)=>{
 };
 const taskPlanWaits=new WeakMap();
 const preparedWallQuotes=new WeakMap();
-const eventObservers=new WeakMap();
 
 export const BIOMES=['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'];
 export const CULTURES=['mapungubwe','saheliana','suajili','musgum','etiope'];
@@ -71,23 +87,19 @@ export function newGame({biome='sabana',culture='mapungubwe',seed=Date.now(),slo
   return {saveVersion:1,terrainVersion:'4.1.10.3',slotId,seed:String(seed),rng:(Number(seed)>>>0)||918271,biome,culture,day:1,time:0,elapsed:0,completedNights:0,cinematicSeenAct:0,postgame:false,result:null,
     initialPreparation:true,ledger:{balance:rational(B.initial_money),entries:{}},nextId:2,sequence:1,structures:[],plants:[],workers:[],people:[],crates:[],spells:[],tasks:[],villages:[{id:'village-1',culture,x:0,z:0,buildings:[]}],suppressed:[],
     pauses:[],hiringPaidDay:null,hiringSelection:{olderMale:0,olderFemale:0,youngMale:0,youngFemale:0},raid:null,nightPlan:null,dayPlan:null,eventPlan:null,
-    cooldowns:{shield:0,growth:0,multiply:0},tutorial:{step:'intro',seen:[]},messages:[],commandIds:[],events:[]};
+    cooldowns:{shield:0,growth:0,multiply:0,attack:0},tutorial:{step:'intro',seen:[]},messages:[],commandIds:[],events:[]};
 }
 export const pause=(s,reason)=>{if(!s.pauses.includes(reason))s.pauses.push(reason);};
 export const resume=(s,reason)=>{s.pauses=s.pauses.filter(r=>r!==reason);};
-export function observeGameEvents(s,callback){
-  if(typeof callback!=='function')throw TypeError('Expected a game event observer');
-  let listeners=eventObservers.get(s);
-  if(!listeners){listeners=new Set();eventObservers.set(s,listeners);}
-  listeners.add(callback);
-  return ()=>listeners.delete(callback);
-}
 export function emit(s,type,detail={}) {
   const wallLoss=type==='StructureRuined'?loseBlessing(s,s.structures.find(p=>p.id===detail.targetId)??{}):null;
-  const event={id:`event-${s.sequence++}`,type,...detail};
+  // Occupancy consumers need the committed crop location even if a later state has removed it.
+  const crop=['CropPlaced','CropPicked','CropDestroyed'].includes(type)?s.plants.find(p=>p.id===(detail.targetId??detail.cropId)):null;
+  const presentation=crop&&Number.isFinite(crop.x)&&Number.isFinite(crop.z)?{...detail.presentation,x:crop.x,z:crop.z}:detail.presentation;
+  const event={id:`event-${s.sequence++}`,type,...detail,...(Number.isFinite(s.elapsed)?{simulationTime:s.elapsed}:{}),...(presentation?{presentation}:{})};
   if(s.awakenings?.enabled!==false)recordAwakeningEvent(s,event);
   s.events.push(event);if(s.events.length>200)s.events.shift();
-  for(const callback of eventObservers.get(s)??[])callback(event);
+  dispatchLocalGameEvent(s,event);
   if(wallLoss){
     emit(s,'BlessingDestroyed',wallLoss);
     notice(s,'Una muralla mágica ha caído. Su protección se ha perdido.',wallLoss.targetId,{category:'awakening-lost',location:wallLoss.presentation});
@@ -137,6 +149,7 @@ export function previewCenter(s,{x,z,yaw=0},nav) {
       cultures.set(culture,{candidate,footprint,check});
     }
     const {candidate,footprint,check}=cultures.get(culture);
+    if(!firstCenterWithinVillage(s,candidate)){failure='Construye el primer centro cerca del poblado';continue;}
     if(!check.valid){failure??=check.reason;continue;}buildable=true;
     const departure=centerServicePoint(candidate,s,.8),entry=village.entry??village;
     const inspect=routes=>{
@@ -169,16 +182,16 @@ export function previewCenter(s,{x,z,yaw=0},nav) {
   candidates.sort((a,b)=>a.routeLength-b.routeLength||a.villageId.localeCompare(b.villageId));
   return candidates[0]??{valid:false,cost:B.work_center.cost,reason:buildable?'El centro no tiene un camino válido al poblado':failure??'El centro no tiene un camino válido al poblado'};
 }
-export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,x,z,yaw=0},nav) {
-  if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
-  if(kind==='wall'&&!permission(s,'wall'))throw new Error('Esta acción no está disponible ahora');
+export class StructurePlacementError extends Error {}
+export function prepareStructurePlacement(s,{kind='center',material='zarzas',gate=false,x,z,yaw=0},nav) {
+  if(kind==='wall'&&!permission(s,'wall'))throw new StructurePlacementError('Esta acción no está disponible ahora');
   const draft=kind==='center'?previewCenter(s,{x,z,yaw},nav):null;
   const village=draft?s.villages.find(v=>v.id===draft.villageId):nearest(s.villages,{x,z}),culture=draft?.culture??village?.culture??s.culture;
   if(draft?.valid){x=draft.x;z=draft.z;}
   const candidate={kind,x,z,yaw,culture};
   const check=draft??(nav.wallPlacement?.({...candidate,material,gate})??nav.placement(x,z,.8));
-  if(!check.valid){if(kind==='wall')return false;throw new Error(check.reason);}
-  if(kind!=='center'&&kind!=='wall')throw new Error('Construcción desconocida');
+  if(!check.valid){if(kind==='wall')return false;throw new StructurePlacementError(check.reason);}
+  if(kind!=='center'&&kind!=='wall')throw new StructurePlacementError('Construcción desconocida');
   const cost=kind==='center'?B.work_center.cost:wallSpec(material).cost;
   const maxHp=structureHealth(kind,material,gate),entity={id:`structure-${s.nextId}`,created:s.sequence,kind,material,gate,x,z,yaw,...(kind==='center'?{culture}:{}),maxHp,hp:maxHp,status:'intact',villageId:village?.id,cost,collapseRemaining:0};
   if(kind==='wall'&&!gate){
@@ -188,20 +201,31 @@ export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,
     for(const update of gatePlan)Object.assign(entity,update);
   }
   const suppression=entity.autoGate?nav.wallPlacement(entity).suppress??[]:check.suppress??[];
+  return {kind,x,z,entity,suppression,cost};
+}
+export function placeStructure(s,id,options,nav) {
+  if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
+  const plan=prepareStructurePlacement(s,options,nav);if(!plan)return false;
+  return commitStructurePlacement(s,id,plan,nav);
+}
+export function commitStructurePlacement(s,id,plan,nav) {
+  const {kind,x,z,entity,suppression,cost}=plan;
   return commit(s,id,kind==='center'?'center':'wall',()=>{
+    // The authority validates the placement before entering its commit boundary.
+    if(entity.id!==`structure-${s.nextId}`||entity.created!==s.sequence)throw new StructurePlacementError('La cotización de la construcción ha caducado');
     ensurePurchaseBudget(s,cost);transact(s.ledger,id,rational(-cost));
     const replaced=kind==='wall'?replaceCoincidentRuins(s,[entity]):[];
     s.nextId++;s.sequence++;s.structures.push(entity);
     s.suppressed.push(...suppression);nav.setState(s);
     for(const ruin of replaced)emit(s,'WallRemoved',{
-      targetId:ruin.id,refund:0,replacedBy:entity.id});
-    emit(s,'PlacementCommitted',{kind,targetId:s.structures.at(-1).id,presentation:{x,z}});
+      targetId:ruin.id,refund:0,replacedBy:entity.id,presentation:{x:ruin.x,z:ruin.z}});
+    emit(s,'PlacementCommitted',{commandId:id,kind,targetId:s.structures.at(-1).id,presentation:{x,z}});
     if(kind==='center'){recoverDisplacedWorkers(s);enqueueLooseCrates(s);}
     if(kind==='center'&&s.tutorial.step==='center')s.tutorial.step='plant';
   });
 }
 export function wallCapacity(s,material){return Math.max(0,Math.floor((numberOf(s.ledger.balance)-HIRING_RESERVE)/wallSpec(material).cost));}
-function coincidentRuins(s,pieces){
+export function coincidentRuins(s,pieces){
   return s.structures.filter(old=>old.kind==='wall'&&old.status==='ruined'&&
     pieces.some(piece=>Math.hypot(old.x-piece.x,old.z-piece.z)<.35&&
       Math.abs(Math.sin((old.yaw??0)-(piece.yaw??0)))<.18));
@@ -256,6 +280,7 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
   const wallSettings=Object.fromEntries(B.walls.map(w=>[w.id,w.hp]));
   let layout=wallLayout([...s.structures,...newPieces],wallSettings);
   const originals=new Map([...s.structures,...newPieces].map(p=>[p.created,p]));
+  const gateMounts=new Map();
   const suppressedForGates=new Set(nav.suppressed);
   for(const piece of newPieces)for(const id of nav.wallPlacement(piece).suppress??[])suppressedForGates.add(id);
   const overlayUnavailable=Symbol('local wall overlay unavailable');
@@ -264,6 +289,11 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
     const original=originals.get(p.id);if(!original)return false;
     const candidate={...original,gate:true},check=nav.wallPlacement(candidate);
     if(!check.valid||cropOverlap(candidate))return false;
+    if(nav.certifyWallGate){
+      const mount=nav.certifyWallGate(candidate,newPieces);
+      if(!mount)return false;
+      Object.assign(candidate,mount);gateMounts.set(p.id,mount);
+    }
     const points=gatePortalPoints(candidate);if(points.length!==2)return false;
     if(nav.wallWorkerReachability){
       const overlay=localOverlay??nav.wallLocalOverlay?.(newPieces,
@@ -355,7 +385,7 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
     }
   }else ensure((x,z)=>interior.walkable(x,z,.28,null,true));
   const converted=layout.pieces.filter(p=>newIds.has(p.id)&&p.autoGate&&!s.structures.some(e=>e.id===p.entityId&&e.autoGate));
-  const updates=converted.map(p=>({id:p.entityId,gate:true,autoGate:true,maxHp:p.maxHp,hp:p.hp})).filter(update=>{const piece=[...s.structures,...newPieces].find(p=>p.id===update.id),candidate={...piece,...update};return nav.wallPlacement(candidate).valid&&!cropOverlap(candidate);});
+  const updates=converted.map(p=>({id:p.entityId,gate:true,autoGate:true,maxHp:p.maxHp,hp:p.hp,...gateMounts.get(p.id)})).filter(update=>{const piece=[...s.structures,...newPieces].find(p=>p.id===update.id),candidate={...piece,...update};return nav.wallPlacement(candidate).valid&&!cropOverlap(candidate);});
   if(nav.wallWorkerReachability){
     // One shared native connectivity query per village and direction replaces
     // the old route-before/route-after loop over every worker and center.
@@ -556,8 +586,8 @@ export function buildWallChain(s,id,material,points,nav,options={}) {
     s.structures.push(...newPieces);s.nextId+=newPieces.length;s.sequence+=newPieces.length;s.suppressed.push(...plan.suppressed.filter(key=>!s.suppressed.includes(key)));nav.setState(s);
     for(const ruin of replaced)emit(s,'WallRemoved',{
       targetId:ruin.id,refund:0,replacedBy:newPieces.find(piece=>
-        Math.hypot(ruin.x-piece.x,ruin.z-piece.z)<.35)?.id});
-    emit(s,'WallChainBuilt',{material,count:newPieces.length,gates:plan.gates,targetId:newPieces[0].id,presentation:{x:newPieces[0].x,z:newPieces[0].z}});
+        Math.hypot(ruin.x-piece.x,ruin.z-piece.z)<.35)?.id,presentation:{x:ruin.x,z:ruin.z}});
+    emit(s,'WallChainBuilt',{commandId:id,material,count:newPieces.length,gates:plan.gates,targetId:newPieces[0].id,presentation:{x:newPieces[0].x,z:newPieces[0].z,points:newPieces.map(({x,z})=>({x,z})),targetIds:newPieces.map(piece=>piece.id)}});
   });
 }
 export function removeWall(s,id,targetId,nav) {
@@ -570,27 +600,37 @@ export function removeWall(s,id,targetId,nav) {
     const blessingLoss=loseBlessing(s,target,{removed:true});
     if(blessingLoss){emit(s,'BlessingRemoved',blessingLoss);notice(s,'Has retirado una muralla mágica. Su Despertar se ha perdido.',targetId,{category:'awakening-lost',location:blessingLoss.presentation});}
     // Removal opens the graph: never call ensureAutomaticGates here or on reload.
-    emit(s,'WallRemoved',{targetId,refund:numberOf(refund)});
+    emit(s,'WallRemoved',{targetId,refund:numberOf(refund),presentation:{x:target.x,z:target.z}});
   });
 }
-export function plant(s,id,species,x,z,nav) {
+export class PlantPlacementError extends Error {}
+export function validatePlant(s,x,z,nav) {
   const check=nav.placement(x,z,.4);
-  if(!check.valid)throw new Error(check.reason);
-  if(activeCrops(s.plants).some(p=>p.alive&&dist(p,{x,z})<1.1))throw new Error('Necesitas separar las plantas');
+  if(!check.valid)throw new PlantPlacementError(check.reason);
+  if(activeCrops(s.plants).some(p=>p.alive&&dist(p,{x,z})<1.1))throw new PlantPlacementError('Necesitas separar las plantas');
   const center=nearest(s.structures.filter(operational),{x,z});
+  return {check,center};
+}
+export function validatePlantPurchase(s,species){ensurePurchaseBudget(s,cropSpec(species).plant_cost);}
+export function plant(s,id,species,x,z,nav) {
+  const {check,center}=validatePlant(s,x,z,nav);
   return commit(s,id,'plant',()=>{
-    ensurePurchaseBudget(s,cropSpec(species).plant_cost);transact(s.ledger,id,rational(-cropSpec(species).plant_cost));
+    validatePlantPurchase(s,species);transact(s.ledger,id,rational(-cropSpec(species).plant_cost));
     const p=createPlant(`plant-${s.nextId++}`,species,x,z,center.id);
     if(spellAt(s,'multiply',p))p.multiplyHarvest=true;
     s.plants.push(p);enqueue(s,center.id,'initial',p.id);
     const removedProps=check.suppress??[];s.suppressed.push(...removedProps);
     if(nav.syncCropPlacement)nav.syncCropPlacement(s,removedProps);else nav.setState(s);
-    emit(s,'CropPlaced',{targetId:p.id});
+    emit(s,'CropPlaced',{commandId:id,targetId:p.id});
     if(s.tutorial.step==='plant')s.tutorial.step='hire';
   });
 }
-export function harvest(s,id,plantId) {
+export function validateHarvest(s,plantId) {
   const living=activeCrops(s.plants),p=living.find(p=>p.id===plantId&&isMature(p));if(!p)throw new Error('Este cultivo todavía no está maduro');
+  return {living,plant:p};
+}
+export function harvest(s,id,plantId) {
+  const {living,plant:p}=validateHarvest(s,plantId);
   return commit(s,id,'harvest',()=>{
     const group=contiguousGroup(living,p).filter(isMature);
     group.sort((a,b)=>{
@@ -621,12 +661,12 @@ export function bless(s,id,targetId){
       }
       replaceTasks(s,s.tasks.filter(t=>t.targetId!==targetId));
       for(const spell of s.spells.filter(a=>a.targetPlantId===targetId))emit(s,'AgriculturalSpellEnded',{
-        spellId:spell.id,kind:spell.kind,targetPlantId:targetId,growthSecondsAdded:spell.growthSecondsAdded??0});
+        spellId:spell.id,kind:spell.kind,targetPlantId:targetId,growthSecondsAdded:spell.growthSecondsAdded??0,remainingSeconds:Math.max(0,spell.remaining)});
       s.spells=s.spells.filter(a=>a.targetPlantId!==targetId);
     }
     a.total++;a.progress=0;invalidateBlessingInfluence(s);
-    emit(s,'BlessingApplied',{targetId,kind:target.species?'plant':target.kind,blessing,
-      presentation:{x:target.x,z:target.z,elapsed:s.elapsed}});
+    emit(s,'BlessingApplied',{commandId:id,targetId,kind:target.species?'plant':target.kind,blessing,
+      presentation:{x:target.x,z:target.z,elapsed:s.elapsed,source:blessingPresentationSource(target)}});
     notice(s,target.species?'La planta ha despertado: es una fuente permanente de fertilidad.':'La muralla ha despertado: protege esta sección y sus conexiones.',targetId,{category:'awakening-applied',location:target});
   });
 }
@@ -635,26 +675,36 @@ function addHiredWorker(s,profileId,centerId,usedPeople){
   let person=s.people.find(p=>p.profile===profileId&&!usedPeople.has(p.id));
   if(!person){person={id:`person-${s.nextId++}`,profile:profileId,recoveryUntil:0};s.people.push(person);}usedPeople.add(person.id);
   const entry=village.entry??village;
-  s.workers.push({id:`worker-${s.nextId++}`,personId:person.id,profile:profileId,contractDay:s.day,centerId:centerId??null,villageId:village.id,x:entry.x,z:entry.z,status:center?'arriving':'waiting',taskId:null,crateId:null,path:null,hits:0,incapacitated:false,recovering:s.day<=person.recoveryUntil,runRemaining:dailyRunMetres(),actionRemaining:0});
+  // Own the newborn's presentation defaults before its first planning notice.
+  // Restored and already admitted workers keep their own heading and phases.
+  s.workers.push({id:`worker-${s.nextId++}`,personId:person.id,profile:profileId,contractDay:s.day,centerId:centerId??null,villageId:village.id,x:entry.x,z:entry.z,heading:0,runPhase:0,walkPhase:0,carryPhase:0,status:center?'arriving':'waiting',taskId:null,crateId:null,path:null,hits:0,incapacitated:false,recovering:s.day<=person.recoveryUntil,runRemaining:dailyRunMetres(),actionRemaining:0});
   notifyWorkerPlanningChange(s,s.workers.at(-1));
 }
-export function hireAdditional(s,id,selection,centerId){
-  if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
+export function validateHireAdditional(s,id,selection,centerId){
+  if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return {skip:true};
   if(s.result||s.raid||s.hiringPaidDay!==s.day||s.time>=300||s.pauses.some(p=>!['menu','tutorial-action'].includes(p)))throw new Error('La contratación adicional no está disponible ahora');
   if(!s.structures.some(c=>c.id===centerId&&operational(c)))throw new Error('El centro de trabajo no está disponible');
   const cost=hiringCost(selection,{time:s.time}),total=Object.values(selection).reduce((n,c)=>n+c,0);
-  if(!total)return false;
+  if(!total)return {skip:true};
+  if(compare(s.ledger.balance,rational(cost))<0)throw new Error('Fondos insuficientes');
+  return {cost,total};
+}
+export function hireAdditional(s,id,selection,centerId){
+  const checked=validateHireAdditional(s,id,selection,centerId);if(checked.skip)return false;const {cost,total}=checked;
   transact(s.ledger,id,rational(-cost));
   const usedPeople=new Set(s.workers.map(w=>w.personId));
   for(const p of PROFILES)for(let i=0;i<(selection[p.id]??0);i++)addHiredWorker(s,p.id,centerId,usedPeople);
   for(const p of PROFILES)s.hiringSelection[p.id]=(s.hiringSelection[p.id]??0)+(selection[p.id]??0);
   s.commandIds.push(id);emit(s,'HiringConfirmed',{count:total,additional:true,centerId,cost});return true;
 }
-export function hire(s,id,selection) {
-  if(s.hiringPaidDay===s.day)return false;
-  if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
+export function validateHire(s,id,selection){
+  if(s.hiringPaidDay===s.day)return {skip:true};
+  if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return {skip:true};
   if(!s.pauses.includes('hiring'))throw new Error('La contratación no está abierta');
-  const cost=hiringCost(selection);transact(s.ledger,id,rational(-cost));
+  const cost=hiringCost(selection);if(compare(s.ledger.balance,rational(cost))<0)throw new Error('Fondos insuficientes');return {cost};
+}
+export function hire(s,id,selection) {
+  const checked=validateHire(s,id,selection);if(checked.skip)return false;const {cost}=checked;transact(s.ledger,id,rational(-cost));
   const living=activeCrops(s.plants);
   const centers=s.structures.filter(operational).map(c=>({...c,plants:living.filter(p=>p.alive&&!p.blessing&&p.centerId===c.id).length}));
   const total=Object.values(selection).reduce((a,b)=>a+b,0),quotas=allocateWorkers(centers,total),assigned=distributeProfiles(quotas,selection);
@@ -736,18 +786,22 @@ export function dropCarriedCrate(s,worker){
   const crate=activeCrates(s.crates).find(c=>c.id===worker.crateId);
   worker.crateId=null;
   if(!crate)return;
-  crate.carrierId=null;crate.x=worker.x;crate.z=worker.z;emit(s,'CrateDropped',{targetId:crate.id});
+  crate.carrierId=null;crate.x=worker.x;crate.z=worker.z;emit(s,'CrateDropped',{targetId:crate.id,presentation:{x:crate.x,z:crate.z}});
   if(!s.raid){const center=nearest(s.structures.filter(operational),crate);if(center)enqueue(s,center.id,'crate',crate.id);}
 }
-export function requestRepair(s,id,targetId) {
+export function validateRepair(s,targetId) {
   const target=s.structures.find(c=>c.id===targetId);if(!target||target.hp===target.maxHp)throw new Error('No necesita reparación');
   if(compare(s.ledger.balance,repairCost(target))<0)throw new Error('Fondos insuficientes');
   ensurePurchaseBudget(s,repairCost(target));
+  return target;
+}
+export function requestRepair(s,id,targetId) {
+  const target=validateRepair(s,targetId);
   return commit(s,id,'repair',()=>{
     const center=nearest(s.structures.filter(operational),target);enqueue(s,center.id,'repair',targetId);emit(s,'RepairRequested',{targetId});
   });
 }
-export const spellRadius=id=>({shield:1.95,growth:.65,multiply:.65})[id]; // Agricultural radius is visual only; gameplay uses the plant identity.
+export const spellRadius=id=>({shield:1.95,growth:.65,multiply:.65,attack:.8})[id]; // Agricultural radius is visual only; gameplay uses the plant identity.
 const agriculturalSpellIndex=new WeakMap();
 export function spellAt(s,id,p) {
   if(!s.spells.length)return undefined;
@@ -775,7 +829,7 @@ export function previewSpell(s,kind,x,z,nav,targetPlantId) {
   return draft;
 }
 function agriculturalTarget(s,kind,x,z,targetPlantId){
-  if(kind==='shield')return null;
+  if(kind==='shield'||kind==='attack')return null;
   const p=activeCrops(s.plants).find(p=>p.alive&&(targetPlantId!==undefined?p.id===targetPlantId:p.x===x&&p.z===z));
   if(!p||p.x!==x||p.z!==z)throw new Error('Selecciona una planta para aplicar esta magia');
   if(p.blessing)throw new Error('Esta planta ya es una fuente mágica permanente');
@@ -785,28 +839,35 @@ function agriculturalTarget(s,kind,x,z,targetPlantId){
 function validateSpell(s,kind,x,z,nav,targetPlantId) {
   const spec=B.spells.find(p=>p.id===kind);if(!spec)throw new Error('Magia desconocida');
   if(!spellUnlocked(s,kind))throw new Error('El Espíritu todavía no ha revelado esta magia');
-  if(kind==='shield'&&s.cooldowns[kind]>0)throw new Error('La magia está recargando');
+  if(kind==='shield'&&s.cooldowns.shield>0)throw new Error('La magia está recargando');
+  if(kind==='attack'&&attackGestureActive(s))throw new Error('El guardián está terminando el ataque');
   if(!Number.isFinite(x)||!Number.isFinite(z))throw new Error('Ubicación mágica inválida');
   const radius=spellRadius(kind);
+  if(kind==='attack'){const animal=attackTarget(s,targetPlantId)??(targetPlantId==null?s.raid?.animals.find(a=>attackTargetAvailable(s,a)&&Math.hypot(a.x-x,a.z-z)<=a.radius):null);if(!animal)throw new Error('Selecciona una bestia activa que esté de pie');if(!permission(s,kind))throw new Error('Esta acción no está disponible ahora');return {spec,plant:null,animal};}
   const target=agriculturalTarget(s,kind,x,z,targetPlantId);
   if(s.spells.some(a=>a.remaining>0&&(target?
     a.targetPlantId!==undefined?a.targetPlantId===target.id||dist(a,target)<1e-6:dist(a,target)<=a.radius:
     a.targetPlantId!==undefined?dist(a,{x,z})<=radius:dist(a,{x,z})<a.radius+radius)))throw new Error('Las áreas mágicas no pueden solaparse');
   if(kind==='shield'&&s.raid?.animals.some(a=>a.status!=='gone'&&dist(a,{x,z})<radius+a.radius))throw new Error('El Escudo solapa un animal');
   if(!permission(s,kind))throw new Error('Esta acción no está disponible ahora');
-  return spec;
+  return {spec};
 }
-export function cast(s,id,kind,x,z,nav,targetPlantId) {
+export function cast(s,id,kind,x,z,nav,selection) {
+  const {targetId:targetPlantId,origin:requestedOrigin=null,contact=null}=typeof selection==='object'&&selection!==null?selection:{targetId:selection};
+  let origin=requestedOrigin;
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
-  const spec=validateSpell(s,kind,x,z,nav,targetPlantId),radius=spellRadius(kind);
+  const {spec,animal}=validateSpell(s,kind,x,z,nav,targetPlantId),radius=spellRadius(kind);
   const target=agriculturalTarget(s,kind,x,z,targetPlantId);
+  if(typeof origin==='function'){try{origin=origin();}catch{origin=null;}}
+  for(const p of [origin,contact])if(p&&![p.x,p.y,p.z].every(Number.isFinite))throw new Error('Impacto mágico inválido');
   return commit(s,id,kind,()=>{
+    if(kind==='attack'){s.cooldowns.attack=0;s.guardianAttackStartedAt=s.elapsed;const impact=applyGuardianAttack(s,animal,{nav,origin,ground:nav.field?.surface?.(animal.x,animal.z)??0,contact:contact??{x:animal.x,y:(nav.field?.surface?.(animal.x,animal.z)??0)+animal.radius,z:animal.z}});emit(s,'SpellActivated',{commandId:id,kind,x:animal.x,z:animal.z,targetId:animal.id,presentation:{elapsed:s.elapsed,cueAt:s.elapsed+GUARDIAN_ATTACK_TIMING.release,origin:impact.origin,contact:impact.point}});return;}
     const area={id:`spell-${s.nextId++}`,kind,x,z,radius,remaining:spec.duration_seconds};
     if(target)area.targetPlantId=target.id;
     if(target){area.power=commitAgriculturalPower(s,target,kind,cropSpec(target.species).base_harvest_value);if(kind==='multiply'){target.multiplyHarvest=true;area.exposureApplied=true;}}
     s.spells.push(area);s.cooldowns[kind]=kind==='shield'?spec.cooldown_seconds:0;
     if(kind==='shield')nav.setState(s);
-    emit(s,'SpellActivated',{kind,x,z,targetPlantId:target?.id,benefited:area.power?.benefited??false,power:area.power??null,duration:spec.duration_seconds});
+    emit(s,'SpellActivated',{commandId:id,spellId:area.id,simulationDay:s.day,kind,x,z,targetPlantId:target?.id,benefited:area.power?.benefited??false,power:area.power??null,duration:spec.duration_seconds,targetId:target?.id??null,presentation:{elapsed:s.elapsed,origin,contact:contact??{x,y:nav.field?.surface?.(x,z)??0,z}}});
   });
 }
 function retainRouteAfterWallChange(w,destination,nav){
@@ -948,7 +1009,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     const {exit,wallIds}=w.wallEscape,remaining=dist(w,exit);
     if(remaining>1e-8){
       const metres=movePath(w,Math.min(speed*dt,remaining),
-        (a,b)=>nav.wallOverlapMotionClear(a,b,w.radius??.28,wallIds,false));
+        (a,b)=>nav.wallOverlapMotionClear(a,b,w.radius??.28,wallIds,false),pathMotionClock(w,s.elapsed-dt,s.elapsed,speed));
       w.motionPhase=(w.motionPhase??0)+metres/speed;
       if(metres>1e-8){w.heading=Math.atan2(w.x-previous.x,w.z-previous.z);
         w.dynamicStallSeconds=0;}
@@ -1000,15 +1061,19 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     }
   }
   const phased=(w.mobilePhaseRemaining??0)>0;
+  let motionMark=nav.tickProfile?performance.now():0;
   const dynamicClear=phased?
     (worker?(a,b)=>nav.workerMotionClear?.(a,b,w.radius??.28)??
       nav.segmentClear?.(a,b,w.radius??.28,ignore,true)??false:null):
     prepareActorMotion(s,w,nav,worker);
+  if(nav.tickProfile){nav.tickProfile.prepareMotion+=performance.now()-motionMark;motionMark=performance.now();}
   const routeClearance=worker?workerRiskClearance(w,nav,{radius:w.radius??.28,ignore},dynamicClear):animalRouteClearance(w,nav,{radius:w.radius??.28,ignore,escapeProps:expandRoute},dynamicClear);
   const clear=routeClearance?.clear??dynamicClear;
-  if(motion)moveWorker(w,dt,{...motion,gates:worker?s.structures:[],clear});else {
-    const metres=worker?movePathWithGates(w,speed*dt,s.structures,clear):movePath(w,speed*dt,clear);w.motionPhase=(w.motionPhase??0)+metres/speed;
+  const motionClock=pathMotionClock(w,s.elapsed-dt,s.elapsed,speed);
+  if(motion)moveWorker(w,dt,{...motion,gates:worker?s.structures:[],clear,clock:motionClock});else {
+    const metres=worker?movePathWithGates(w,speed*dt,s.structures,clear,motionClock):movePath(w,speed*dt,clear,motionClock);w.motionPhase=(w.motionPhase??0)+metres/speed;
   }
+  if(nav.tickProfile)nav.tickProfile.moveMotion+=performance.now()-motionMark;
   if(dist(previous,w)>1e-9)w.heading=Math.atan2(w.x-previous.x,w.z-previous.z);
   if(phased)w.mobilePhaseRemaining=Math.max(0,w.mobilePhaseRemaining-dt);
   if(dist(previous,w)>1e-8||!w.path?.length)w.dynamicStallSeconds=0;
@@ -1227,58 +1292,232 @@ export function planRepairAccess(s,target,nav){
   }
   return {status:'safe',updates:[...byId.values()]};
 }
+// Semantic consequence data only, never an action/effect permission. The same
+// rules serve ordinary completion and future native resource preparation.
+function freezeConsequenceData(value){if(value&&typeof value==='object'){for(const child of Object.values(value))freezeConsequenceData(child);Object.freeze(value);}return value;}
+export function prepareCrateDeliveryConsequence(s,w,crate,center){
+  if(!w||!crate||!center||w.status!=='carrying'||w.crateId!==crate.id||crate.delivered||crate.carrierId!==w.id||w.centerId!==center.id||center.kind!=='center'||!operational(center)||Object.hasOwn(s.ledger.entries,`deliver:${crate.id}`))return null;
+  const power=previewMultiplyPowerSettlement(s,crate),ended=contractExpired(w,s)||s.time>=profile(w).end,
+    tutorialComplete=['observe','harvest'].includes(s.tutorial.step),village=ended?s.villages.find(v=>v.id===w.villageId):null,home=village?.entry??village;
+  return freezeConsequenceData({kind:'crate-delivery-consequence-preview',version:1,authorizedConsequences:false,
+    workerId:w.id,crateId:crate.id,centerId:center.id,species:crate.species,sourcePlantId:crate.sourcePlantId,
+    center:{x:center.x,z:center.z,yaw:center.yaw,status:center.status},baseValue:rational(crate.value.n,crate.value.d),
+    multiplySettlement:power,income:add(crate.value,power.extraIncome),status:ended?'returning':'idle',...(home?{home:{villageId:nativeEntityNumericId(village.id),x:home.x,z:home.z}}:{}),
+    tutorial:{harvestCompleted:true,step:tutorialComplete?'done':s.tutorial.step,completedEvent:tutorialComplete&&!s.tutorial.basicSkipped}});
+}
+export function crateDeliveryConsequenceCurrent(s,w,crate,center,preview){
+  if(preview?.kind!=='crate-delivery-consequence-preview'||preview.version!==1||preview.authorizedConsequences!==false)return false;
+  const current=prepareCrateDeliveryConsequence(s,w,crate,center);return current!==null&&JSON.stringify(current)===JSON.stringify(preview);
+}
+// This projects the stationary owner already committed by Wild Engine. The
+// immutable preview and a caller's JSON cannot authorize a delivery themselves.
+export function projectNativeCrateDeliveryConsequence(s,w,preview,native){
+  const execution=native?.nativeSettledWorkerExecution?.(w.id),binding=execution&&copyNativeTaskSettlementAttestation(execution.binding),r=binding?.reference,
+    crate=s.crates.find(c=>c.id===w.crateId),center=s.structures.find(c=>c.id===w.centerId),id=nativeEntityNumericId;
+  if(!execution||!r||!crate||!center||!['idle','returning'].includes(preview?.status)||JSON.stringify(preview.home)!==JSON.stringify(r.home)||w.nativeRouteAdmission!=='native-delivery'||w.status!=='carrying'||w.taskId||
+    execution.executedThrough!==s.elapsed||r.worldBoundary.effectiveTime!==s.elapsed||r.actorId!==id(w.id)||r.crateId!==id(crate.id)||r.centerId!==id(center.id)||
+    execution.actorId!==r.actorId||execution.bodyId!==r.bodyId||execution.crateId!==r.crateId||execution.centerId!==r.centerId||execution.x!==w.x||execution.z!==w.z||
+    !crateDeliveryConsequenceCurrent(s,w,crate,center,preview))throw Error('Native delivery settlement is not the committed game boundary');
+  const extraIncome=settleMultiplyPower(s,crate);let notification=null;
+  // Capture this one notification at its existing owner; dispatch it only
+  // after the rest of the source result is coherent. This adds no event queue.
+  if(!transact(s.ledger,`deliver:${crate.id}`,add(crate.value,extraIncome),{notify:(ledger,transactionId,delta)=>{notification={ledger,transactionId,delta};}}))throw Error('Native delivery was already credited');
+  crate.multiplyIncome=extraIncome;crate.delivered=true;crate.carrierId=null;crateBecameInactive(s.crates);
+  Object.assign(w,{x:execution.x,z:execution.z,heading:execution.yaw,runPhase:execution.runPhase,walkPhase:execution.walkPhase,carryPhase:execution.carryPhase,runRemaining:execution.runRemaining,crateId:null,deliveryApproach:null,status:preview.status,path:null,running:false,gateWaiting:false});delete w.nativeDelivery;delete w.nativeRouteAdmission;
+  s.tutorial.harvestCompleted=true;s.tutorial.step=preview.tutorial.step;
+  if(notification)notifySettlement(notification.ledger,notification.transactionId,notification.delta);
+  notifyWorkerPlanningChange(s,w);emit(s,'CrateDelivered',{workerId:w.id,targetId:crate.id,species:crate.species,multiplyIncome:crate.multiplyIncome});
+  if(preview.tutorial.completedEvent)emit(s,'TutorialCompleted',{workerId:w.id,targetId:crate.id});
+  return crate;
+}
+// Read only the owning native Home execution. The route is task-free, and
+// reaching its end keeps the body/returning status until prepared retirement.
+export function projectNativeHomeRouteExecution(s,w,native){
+  const execution=native?.nativeHomeRouteExecution?.(w.id);
+  if(!execution){
+    if(!['pending-home-resources','pending-raid-flight-resources'].includes(w.nativeRouteAdmission))return null;
+    const request=native?.nativeHomeRequestReference?.(w.id)??native?.nativeHomeDeclarationReference?.(w.id),home=request?.home,village=home&&s.villages.find(v=>nativeEntityNumericId(v.id)===home.villageId),entry=village?.entry??village,p=request?.pose;
+    if(!request||!s.workers.includes(w)||w.nativeRouteAdmission!==(request.raidSpawnSequence?'pending-raid-flight-resources':'pending-home-resources')||
+      w.status!==nativeHomeWorkerStatus(request)||w.taskId||w.crateId||w.path!==null||
+      (request.recoveryHit?!w.incapacitated||w.hits!==2||w.recoveryExitRemaining!==(request.recoveryExit??RECOVERY_EXIT_SECONDS):w.incapacitated||w.recoveryExitRemaining)||
+      w.recovery||w.fallRemaining||w.raidReturn||w.running!==false||w.gateWaiting!==false||w.heading!==p.yaw||request.requestedAt>s.elapsed||nativeEntityNumericId(w.villageId)!==home.villageId||entry?.x!==home.x||entry?.z!==home.z||!['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>w[k]===p[k]))throw Error('Pending Home has no current native semantic body');
+    return Object.freeze({kind:'native-home-awaiting-resources',version:1,sourceRequest:request,authorizedAutonomy:false});
+  }
+  const binding=copyNativeHomeRouteAttestation(execution.binding),r=binding.reference,source=nativeHomeRouteSource(r),home=source.home,village=s.villages.find(v=>nativeEntityNumericId(v.id)===home.villageId),entry=village?.entry??village,crate=r.sourceSettlement&&s.crates.find(c=>nativeEntityNumericId(c.id)===source.crateId);
+  if(!s.workers.includes(w)||w.status!==nativeHomeWorkerStatus(source)||
+    (source.recoveryHit?!w.incapacitated||w.hits!==2:w.incapacitated||w.recoveryExitRemaining)||
+    w.recovery||w.fallRemaining||w.raidReturn||w.taskId||w.crateId||w.nativeRouteAdmission!==undefined&&!['native-home',source.raidSpawnSequence?'pending-raid-flight-resources':'pending-home-resources'].includes(w.nativeRouteAdmission)||execution.actorId!==nativeEntityNumericId(w.id)||execution.bodyId!==r.bodyId||execution.executedThrough!==s.elapsed||execution.villageId!==home.villageId||nativeEntityNumericId(w.villageId)!==home.villageId||entry?.x!==home.x||entry?.z!==home.z||r.sourceSettlement&&(!crate?.delivered||crate.carrierId))throw Error('Native Home projection is not the executed game boundary');
+  const changed=w.nativeRouteAdmission!=='native-home';Object.assign(w,{x:execution.x,z:execution.z,heading:execution.yaw,runPhase:execution.runPhase,walkPhase:execution.walkPhase,carryPhase:execution.carryPhase,runRemaining:execution.runRemaining,running:execution.running,gateWaiting:!execution.arrived&&execution.currentSpeed===0,path:null,nativeRouteAdmission:'native-home'});
+  if(source.recoveryHit)w.recoveryExitRemaining=workerRecoveryExitRemaining(s.elapsed-r.worldBoundary.effectiveTime,source.recoveryExit);
+  if(changed)notifyWorkerPlanningChange(s,w);return execution;
+}
+// Semantic mirror of the current native cache. It does not execute a route,
+// advance time, choose another path or turn physical arrival into Idle/Task.
+function projectNativeHeldFarmArrival(s,w,value){
+  const held=copyNativeFarmArrivalHeldExecution(value),r=held.sourceReference,q=r.sourceRequest,first=w.nativeRouteAdmission==='pending-farm-arrival-resources',already=w.nativeRouteAdmission==='native-farm-arrival-held';
+  if(!first&&!already&&w.nativeRouteAdmission!=='native-farm-arrival')throw Error('Native held farm arrival projection requires its semantic marker');
+  const semantic=first?nativeFarmArrivalState(s,w,{canonical:true}):already?nativeFarmArrivalHeldState(s,w):nativeFarmArrivalBoundState(s,w);
+  if(held.actorId!==nativeEntityNumericId(w.id)||held.bodyId!==r.bodyId||held.executedThrough!==s.elapsed||q.centerId!==semantic.centerId||q.workerProfile!==w.profile||q.requestedAt>s.elapsed||w.radius!==undefined&&w.radius!==held.pose.radius||Object.keys(semantic.goal).some(k=>semantic.goal[k]!==q.goal[k])||first&&Object.keys(semantic.pose).some(k=>semantic.pose[k]!==q.pose[k])||already&&Object.keys(semantic.pose).some(k=>semantic.pose[k]!==held.pose[k]))throw Error('Native held farm arrival projection is not the executed game boundary');
+  const p=held.pose;Object.assign(w,{x:p.x,z:p.z,heading:p.yaw,runPhase:p.runPhase,walkPhase:p.walkPhase,carryPhase:p.carryPhase,runRemaining:p.runRemaining,running:false,gateWaiting:false,path:null,destinationId:null,idleState:null,nativeRouteAdmission:'native-farm-arrival-held'});
+  if(!already)notifyWorkerPlanningChange(s,w);return held;
+}
+export function projectNativeFarmArrivalRouteExecution(s,w,native){
+  const execution=native?.nativeFarmArrivalRouteExecution?.(w.id);
+  if(!execution){
+    const held=native?.nativeFarmArrivalHeldExecution?.(w.id);if(held)return projectNativeHeldFarmArrival(s,w,held);
+    if(w.nativeRouteAdmission==='native-farm-arrival-held')throw Error('Held farm arrival has no current native physical source');
+    if(w.nativeRouteAdmission!=='pending-farm-arrival-resources')return null;
+    const source=native?.nativeFarmArrivalRequestReference?.(w.id)??native?.nativeFarmArrivalDeclarationReference?.(w.id),semantic=nativeFarmArrivalState(s,w,{canonical:true});
+    if(!source||source.refugeSequence!==w.nativeRefugeSequence||source.actorId!==nativeEntityNumericId(w.id)||source.centerId!==semantic.centerId||source.workerProfile!==w.profile||source.requestedAt>s.elapsed||Object.keys(semantic.pose).some(k=>source.pose[k]!==semantic.pose[k])||Object.keys(semantic.goal).some(k=>source.goal[k]!==semantic.goal[k]))throw Error('Pending farm arrival has no current native semantic source');
+    return Object.freeze({kind:'native-farm-arrival-awaiting-resources',version:1,...(source.kind==='native-farm-arrival-request-reference'?{sourceRequest:source}:{declaration:source}),authorizedAutonomy:false});
+  }
+  if(!['pending-farm-arrival-resources','native-farm-arrival','native-farm-arrival-held'].includes(w.nativeRouteAdmission))throw Error('Native farm arrival projection requires its semantic marker');
+  const binding=copyNativeFarmArrivalRouteAttestation(execution.binding),r=binding.reference,source=r.sourceRequest,first=w.nativeRouteAdmission==='pending-farm-arrival-resources',continuing=w.nativeRouteAdmission==='native-farm-arrival-held',semantic=first?nativeFarmArrivalState(s,w,{canonical:true}):continuing?nativeFarmArrivalHeldState(s,w):nativeFarmArrivalBoundState(s,w),h=execution.nativeRoute?.routeHandle;
+  if(source.version===2){
+    const completed=execution.arrived&&!first&&!continuing&&w.raidReturn===false&&w.nativeRefugeSequence===undefined;
+    if(!completed&&(w.raidReturn!==true||source.refugeSequence!==w.nativeRefugeSequence))throw Error('Civil Farm lost its Home retirement');
+  }else if(w.raidReturn||w.nativeRefugeSequence!==undefined)throw Error('Ordinary Farm cannot acquire a refuge return');
+  if(execution.actorId!==nativeEntityNumericId(w.id)||execution.actorId!==r.actorId||execution.bodyId!==r.bodyId||execution.centerId!==semantic.centerId||source.centerId!==semantic.centerId||source.workerProfile!==w.profile||source.requestedAt>s.elapsed||execution.executedThrough!==s.elapsed||!['x','z','yaw','runPhase','walkPhase','carryPhase','runRemaining','currentSpeed'].every(k=>Number.isFinite(execution[k]))||['runPhase','walkPhase','carryPhase','runRemaining','currentSpeed'].some(k=>execution[k]<0)||typeof execution.running!=='boolean'||typeof execution.arrived!=='boolean'||w.radius!==undefined&&w.radius!==source.pose.radius||Object.keys(semantic.goal).some(k=>source.goal[k]!==semantic.goal[k])||
+    first&&(r.sourceHeld!==undefined||Object.keys(semantic.pose).some(k=>source.pose[k]!==semantic.pose[k]))||continuing&&(!r.sourceHeld||Object.keys(semantic.pose).some(k=>r.sourceHeld.pose[k]!==semantic.pose[k]))||execution.nativeRoute?.actorId!==r.actorId||execution.nativeRoute.assignmentSequence!==binding.assignmentSequence||!h||['authorityEpoch','session','slot','generation'].some(k=>h[k]!==r.expectedRouteHandle[k])||execution.destination.x!==r.destination.x||execution.destination.z!==r.destination.z||execution.goal.x!==source.goal.x||execution.goal.z!==source.goal.z)throw Error('Native farm arrival projection is not the executed game boundary');
+  Object.assign(w,{x:execution.x,z:execution.z,heading:execution.yaw,runPhase:execution.runPhase,walkPhase:execution.walkPhase,carryPhase:execution.carryPhase,runRemaining:execution.runRemaining,running:execution.running,gateWaiting:!execution.arrived&&execution.currentSpeed===0,path:null,destinationId:null,idleState:null,nativeRouteAdmission:'native-farm-arrival'});
+  const returned=execution.arrived&&w.raidReturn===true&&w.nativeRefugeSequence!==undefined;
+  if(returned){w.raidReturn=false;delete w.nativeRefugeSequence;}
+  if(first||continuing||returned)notifyWorkerPlanningChange(s,w);return execution;
+}
+export function prepareHarvestConsequence(s,w,t,target){
+  if(!w||!t||!target||t.kind!=='harvest'||w.taskId!==t.id||t.workerId!==w.id||t.targetId!==target.id||w.crateId||!isMature(target)||!target.harvestRequested)return null;
+  let value=rational(cropSpec(target.species).base_harvest_value);
+  if(profile(w).male)value=multiply(value,6,5);
+  if(!target.multiplyPower&&(target.multiplyHarvest||spellAt(s,'multiply',target)))value=multiply(value,2);
+  if(target.harvestBonus)value=multiply(value,100+target.harvestBonus,100);
+  const influence=blessingInfluence(s,target),passive=influence.harvestPercent?
+    {blessingBonus:rational(Math.floor(cropSpec(target.species).base_harvest_value*influence.harvestPercent/100)),
+      blessingPercent:influence.harvestPercent,blessingSourceIds:[...influence.sourceIds]}:{};
+  if(passive.blessingBonus)value=add(value,passive.blessingBonus);
+  const microLoss=previewHarvestMicroLoss(s,target,value),crate={id:`crate-${s.nextId}`,sourcePlantId:target.id,species:target.species,x:w.x,z:w.z,value:microLoss.value,...passive,
+    multiplyPower:target.multiplyPower?structuredClone(target.multiplyPower):null,profile:w.profile,carrierId:w.id,delivered:false,centerId:w.centerId};
+  // Every nested object here is owned by this preview; never freeze live state.
+  return freezeConsequenceData({kind:'harvest-consequence-preview',version:1,workerId:w.id,taskId:t.id,targetId:target.id,nextId:s.nextId,
+    baseValue:value,microLoss,crate,authorizedConsequences:false});
+}
+export function harvestConsequenceCurrent(s,w,t,target,preview){
+  if(preview?.kind!=='harvest-consequence-preview'||preview.version!==1||preview.authorizedConsequences!==false)return false;
+  const current=prepareHarvestConsequence(s,w,t,target);
+  // Compare this small semantic result, not a game snapshot or a tick/pose
+  // sequence: unrelated actors must not force resource preparation to restart.
+  return current!==null&&JSON.stringify(current)===JSON.stringify(preview);
+}
+// Project a result already committed by the native owner. The getter is the
+// owning bridge, not a caller-provided JSON attestation or an effects grant.
+export function projectNativeHarvestConsequence(s,w,preview,native){
+  const execution=native?.nativeDeliveryExecution?.(w.id),binding=execution&&copyNativeTaskConsequenceAttestation(execution.binding),reference=binding?.reference,request=reference?.sourceAction.reference.request,
+    task=s.tasks.find(t=>t.id===w.taskId),target=s.plants.find(p=>p.id===task?.targetId),center=s.structures.find(c=>c.id===w.centerId),id=nativeEntityNumericId;
+  if(!execution||!reference||!task||!target||!center||!operational(center)||w.nativeRouteAdmission!=='native-action'||w.status!=='acting'||
+    execution.executedThrough!==s.elapsed||execution.actorId!==id(w.id)||execution.crateId!==preview?.nextId||execution.centerId!==id(center.id)||
+    execution.sourceTaskId!==id(task.id)||execution.sourceTargetId!==id(target.id)||reference.actorId!==id(w.id)||reference.crateId!==preview.nextId||reference.centerId!==id(center.id)||
+    request.taskId!==id(task.id)||request.targetId!==id(target.id)||execution.bodyId!==reference.bodyId||execution.nativeRoute.assignmentSequence!==binding.assignmentSequence||
+    s.elapsed!==reference.worldBoundary.effectiveTime||execution.x!==w.x||execution.z!==w.z||!harvestConsequenceCurrent(s,w,task,target,preview))throw Error('Native harvest consequence is not the committed game boundary');
+  let loss=null;const value=harvestMicroLoss(s,target,preview.baseValue,detail=>{loss=detail;}),crate={...preview.crate,value,multiplyPower:target.multiplyPower??null,...(preview.crate.blessingSourceIds?{blessingSourceIds:[...preview.crate.blessingSourceIds]}:{})};
+  // Publish a coherent source state before any listener can run or allocate IDs.
+  s.nextId++;target.alive=false;target.harvestRequested=false;target.multiplyHarvest=false;delete target.multiplyPower;cropBecameInactive(s.plants);s.crates.push(crate);
+  Object.assign(w,{x:execution.x,z:execution.z,heading:execution.yaw,runPhase:execution.runPhase,walkPhase:execution.walkPhase,carryPhase:execution.carryPhase,runRemaining:execution.runRemaining,taskId:null,taskApproach:null,crateId:crate.id,status:'carrying',path:[],running:execution.running,gateWaiting:!execution.arrived&&execution.currentSpeed===0,nativeRouteAdmission:'native-delivery',nativeDelivery:{version:1,crateId:crate.id,centerId:center.id},deliveryApproach:{...reference.destination,crateId:crate.id,centerId:center.id},actionRemaining:0});delete w.nativeTaskAction;
+  replaceTasks(s,s.tasks.filter(t=>t!==task));notifyWorkerPlanningChange(s,w);
+  if(loss)emit(s,'MicroeventHarvestLossApplied',loss);
+  emit(s,'CropPicked',{workerId:w.id,targetId:target.id,crateId:crate.id});
+  return crate;
+}
+export function prepareNativeStationaryTaskConsequence(s,w,source,nav,{ruinedWall=false}={}){
+  const action=source?.reference,request=action?.request,id=nativeEntityNumericId;
+  if(!w||!nav||!request||!['initial','water','repair'].includes(request.actionKind)||s.elapsed<action.endTime||
+    w.nativeRouteAdmission!=='native-action'||w.status!=='acting'||!w.taskId||w.crateId||w.incapacitated||w.recovery||w.raidReturn||
+    id(w.taskId)!==request.taskId||w.x!==action.origin.x||w.z!==action.origin.z||w.heading!==request.heading)return null;
+  const task=s.tasks.find(t=>t.id===w.taskId),repair=request.actionKind==='repair';
+  const target=(repair?s.structures:s.plants).find(item=>item.id===task?.targetId),center=s.structures.find(c=>c.id===w.centerId);
+  if(!task||task.workerId!==w.id||task.kind!==request.actionKind||!target||id(target.id)!==request.targetId||!center||!operational(center))return null;
+  if(repair?!(isIntactRepairTarget(target)||ruinedWall&&target.kind==='wall'&&!target.gate&&target.status==='ruined'&&target.hp===0):!target.alive||target.blessing)return null;
+  const idleState=copyNativeInitialIdleState({...createIdleState(w,idleFarmAnchor(s,w,center),s.seed),approachRetry:0});
+  if(repair)return {task,target,idleState,reachable:true,hp:target.hp,maxHp:target.maxHp,cost:target.cost};
+  return {task,target,idleState,reachable:canWaterFrom({x:w.x,z:w.z,radius:action.radius},target,nav),due:target.water.find(slot=>slot.status==='due')??null};
+}
+export function projectNativeStationaryTaskConsequence(s,w,nav,native){
+  const binding=native.nativeInitialIdleBodyBinding(w.id),reference=binding?.reference,source=nativeInitialIdleActionSource(reference);
+  const plan=source&&prepareNativeStationaryTaskConsequence(s,w,source,nav);
+  if(!plan||s.elapsed!==reference.worldBoundary.effectiveTime||nativeEntityNumericId(w.id)!==reference.actorId||
+    (plan.task.kind==='repair'&&(plan.target.kind==='wall')!==!!reference.wallRepairSource)||
+    JSON.stringify(plan.idleState)!==JSON.stringify(reference.sourceRequest.idleState))throw Error('Native stationary task consequence is not the committed game boundary');
+  const {task,target,reachable,idleState}=plan;
+  const repair=task.kind==='repair',watered=!repair&&reachable&&waterPlant(target);
+  if(!reachable)releaseTask(s,w);
+  Object.assign(w,{status:'idle',path:null,taskId:null,taskApproach:null,destinationId:null,idleState:{...idleState},nativeRouteAdmission:'native-idle',actionRemaining:0});
+  delete w.nativeTaskAction;
+  if(reachable)replaceTasks(s,s.tasks.filter(candidate=>candidate!==task));
+  notifyWorkerPlanningChange(s,w);
+  if(repair&&target.hp<target.maxHp)completeRepairTask(s,w,task,target,nav,true);
+  if(watered)emit(s,'WaterSatisfied',{workerId:w.id,targetId:target.id});
+}
+export function prepareNativeRuinedWallRepair(s,w,source,nav){
+ const plan=prepareNativeStationaryTaskConsequence(s,w,source,nav,{ruinedWall:true});
+ if(!plan||plan.task.kind!=='repair'||plan.target.kind!=='wall'||plan.target.gate||plan.target.status!=='ruined'||plan.target.hp!==0||plan.target.blessing)return null;
+ try{validateRepair(s,plan.target.id);const access=planRepairAccess(s,plan.target,nav);if(access.status!=='safe'||access.updates.length)return null;return {...plan,access};}catch(error){if(error.code==='hiring-reserve'||error.message==='Fondos insuficientes'||error.name==='SpatialChunkUnavailable')return null;throw error;}
+}
+export function projectNativeRuinedWallRepair(s,w,plan,nav){
+ if(!plan||!s.tasks.includes(plan.task)||!s.structures.includes(plan.target)||w.taskId!==plan.task.id||plan.target.status!=='ruined'||plan.target.hp!==0)throw Error('Native Repair lost its validated consequence');
+ completeRepairTask(s,w,plan.task,plan.target,nav,false,plan.access);
+ return plan.target.status==='intact'&&plan.target.hp===plan.target.maxHp&&Object.hasOwn(s.ledger.entries,`repair:${plan.task.id}`);
+}
+function completeRepairTask(s,w,t,target,nav,retainStructureGeometry=false,preparedAccess=null){
+  try {
+    const access=preparedAccess??planRepairAccess(s,target,nav);
+    if(access.status!=='safe')throw new Error(access.status==='unknown'?
+      'La reparación espera información del terreno para conservar el acceso.':
+      'La reparación cerraría el acceso de los trabajadores sin una puerta válida.');
+    ensurePurchaseBudget(s,repairCost(target));
+    const paymentId=`repair:${t.id}`,previousHp=target.hp,previousStatus=target.status;
+    if(transact(s.ledger,paymentId,negate(repairCost(target)))){
+      const visual=target.kind==='wall'?wallVisualAt(target,s.elapsed):null;
+      delete target.wallPresentation;target.hp=target.maxHp;target.status='intact';target.collapseRemaining=0;
+      for(const update of access.updates){
+        const piece=s.structures.find(item=>item.id===update.id);
+        if(piece)Object.assign(piece,update);
+      }
+      if(visual!==null)recordWallPresentation(target,visual,s.elapsed);
+      if(!retainStructureGeometry){
+        if(target.kind==='center'&&nav.syncCenterRepair)nav.syncCenterRepair(s,target,previousStatus);else nav.setState(s);
+      }
+      // Read the settled ledger debit: proportional repair prices may be
+      // fractional before transact rounds the actual payment to whole coins.
+      emit(s,'RepairApplied',{workerId:w.id,targetId:target.id,
+        repair:{taskId:t.id,paymentId,paidCoins:-numberOf(s.ledger.entries[paymentId]),previousHp,previousStatus,restoredHp:target.hp,maxHp:target.maxHp},
+        presentation:{elapsed:s.elapsed,x:w.x,z:w.z,yaw:w.heading??0,structure:{x:target.x,z:target.z}}});
+      if(target.kind==='center'){recoverDisplacedWorkers(s);enqueueLooseCrates(s);}
+    }
+  }
+  catch(error){
+    if(error.code==='hiring-reserve')
+      notice(s,'La reparación se canceló: fondos insuficientes al llegar.',target.id);
+    else if(error.message?.startsWith('La reparación'))notice(s,error.message,target.id);
+    else throw error;
+  }
+}
 function completeTask(s,w,t,target,nav) {
+  // Native arrival/action resources authorize their phase, not its effects.
+  // Consequences need their own prepared resource boundary before any writes.
+  if(w.nativeRouteAdmission!==undefined)throw Error('Native task consequences require prepared resources');
   if(t.kind==='initial'||t.kind==='water') {
     if(!canWaterFrom(w,target,nav)){releaseTask(s,w);w.status='idle';w.path=null;notifyWorkerPlanningChange(s,w);return;}
     if(target.alive&&!target.blessing){waterPlant(target);emit(s,'WaterSatisfied',{workerId:w.id,targetId:target.id});}
   } else if(t.kind==='harvest') {
-    if(isMature(target)&&target.harvestRequested) {
-      let value=rational(cropSpec(target.species).base_harvest_value);
-      if(profile(w).male)value=multiply(value,6,5);
-      if(!target.multiplyPower&&(target.multiplyHarvest||spellAt(s,'multiply',target)))value=multiply(value,2);
-      if(target.harvestBonus)value=multiply(value,100+target.harvestBonus,100);
-      const influence=blessingInfluence(s,target),passive=influence.harvestPercent?
-        {blessingBonus:rational(Math.floor(cropSpec(target.species).base_harvest_value*influence.harvestPercent/100)),
-          blessingPercent:influence.harvestPercent,blessingSourceIds:[...influence.sourceIds]}:{};
-      if(passive.blessingBonus)value=add(value,passive.blessingBonus);
-      if(s.microevents?.pendingLosses[target.id])value=harvestMicroLoss(s,target,value,detail=>emit(s,'MicroeventHarvestLossApplied',detail));
+    const consequence=prepareHarvestConsequence(s,w,t,target);
+    if(consequence) {
+      const value=harvestMicroLoss(s,target,consequence.baseValue,detail=>emit(s,'MicroeventHarvestLossApplied',detail));
       target.alive=false;target.harvestRequested=false;target.multiplyHarvest=false;
       cropBecameInactive(s.plants);
-      const crate={id:`crate-${s.nextId++}`,sourcePlantId:target.id,species:target.species,x:w.x,z:w.z,value,...passive,multiplyPower:target.multiplyPower??null,profile:w.profile,carrierId:w.id,delivered:false,centerId:w.centerId};delete target.multiplyPower;s.crates.push(crate);w.crateId=crate.id;w.status='carrying';w.path=null;emit(s,'CropPicked',{workerId:w.id,targetId:target.id,crateId:crate.id});
+      // Preserve the existing observable event order: a loss listener may have
+      // changed IDs or actor state. The ordinary path allocates only now.
+      const crate={...consequence.crate,id:`crate-${s.nextId++}`,sourcePlantId:target.id,species:target.species,x:w.x,z:w.z,value,profile:w.profile,carrierId:w.id,centerId:w.centerId,multiplyPower:target.multiplyPower??null,...(consequence.crate.blessingSourceIds?{blessingSourceIds:[...consequence.crate.blessingSourceIds]}:{})};delete target.multiplyPower;s.crates.push(crate);w.crateId=crate.id;w.status='carrying';w.path=null;emit(s,'CropPicked',{workerId:w.id,targetId:target.id,crateId:crate.id});
     }
   } else if(t.kind==='crate') {target.carrierId=w.id;w.crateId=target.id;target.centerId=w.centerId;w.status='carrying';w.path=null;}
-  else if(t.kind==='repair') {
-    try {
-      const access=planRepairAccess(s,target,nav);
-      if(access.status!=='safe')throw new Error(access.status==='unknown'?
-        'La reparación espera información del terreno para conservar el acceso.':
-        'La reparación cerraría el acceso de los trabajadores sin una puerta válida.');
-      ensurePurchaseBudget(s,repairCost(target));
-      const paymentId=`repair:${t.id}`,previousHp=target.hp,previousStatus=target.status;
-      if(transact(s.ledger,paymentId,negate(repairCost(target)))){
-        const visual=target.kind==='wall'?wallVisualAt(target,s.elapsed):null;
-        delete target.wallPresentation;target.hp=target.maxHp;target.status='intact';target.collapseRemaining=0;
-        for(const update of access.updates){
-          const piece=s.structures.find(item=>item.id===update.id);
-          if(piece)Object.assign(piece,update);
-        }
-        if(visual!==null)recordWallPresentation(target,visual,s.elapsed);
-        if(target.kind==='center'&&nav.syncCenterRepair)nav.syncCenterRepair(s,target,previousStatus);else nav.setState(s);
-        // Read the settled ledger debit: proportional repair prices may be
-        // fractional before transact rounds the actual payment to whole coins.
-        emit(s,'RepairApplied',{workerId:w.id,targetId:target.id,
-          repair:{taskId:t.id,paymentId,paidCoins:-numberOf(s.ledger.entries[paymentId]),previousHp,previousStatus,restoredHp:target.hp,maxHp:target.maxHp},
-          presentation:{elapsed:s.elapsed,x:w.x,z:w.z,yaw:w.heading??0}});
-        if(target.kind==='center'){recoverDisplacedWorkers(s);enqueueLooseCrates(s);}
-      }
-    }
-    catch(error){
-      if(error.code==='hiring-reserve')
-        notice(s,'La reparación se canceló: fondos insuficientes al llegar.',target.id);
-      else if(error.message?.startsWith('La reparación'))notice(s,error.message,target.id);
-      else throw error;
-    }
-  }
+  else if(t.kind==='repair')completeRepairTask(s,w,t,target,nav);
   nav.intentTaskPlanner?.finishAction(w.id);
   replaceTasks(s,s.tasks.filter(task=>task.id!==t.id));w.taskId=null;w.taskApproach=null;if(w.status!=='carrying')w.status='idle';w.path=null;
   notifyWorkerPlanningChange(s,w);
@@ -1294,8 +1533,7 @@ export function idleFarmAnchor(s,worker,center,livingCandidates=null){
     const distance=dist(plant,worker);
     if(distance<liveDistance||distance===liveDistance&&plant.id.localeCompare(live.id)<0){live=plant;liveDistance=distance;}
   }
-  if(live)return {...live,id:'farm-'+live.id,idleRadius:3};
-  return {...center,...centerServicePoint(center,s,.8),id:'farm-'+center.id,idleRadius:2};
+  return farmIdleAnchor(s,center,live);
 }
 function taskRouteWhenKnown(compute){
   try{return compute();}
@@ -1314,7 +1552,7 @@ function reserveAvailableTasks(s,nav){
     planner.reconcileWorkerRoutes(s,{navVersion:nav.version});
     const plan=planner.planIfNeeded(s.elapsed);
     if(plan!==null){
-      planner.commitTaskBatchToState(s,plan,{navVersion:nav.version});
+      planner.commitTaskBatchToState(s,plan,{navVersion:nav.version,...(planner.nativeGameExecutionState?.()===1||s.workers.some(w=>w.nativeRouteAdmission==='pending-farm-arrival-resources'||w.nativeRouteAdmission==='pending-idle-resources'||w.nativeRouteAdmission==='pending-stroll-resources')?{pendingResources:true}:{})});
       planner.reconcileWorkerRoutes(s,{navVersion:nav.version});
     }
     return;
@@ -1397,6 +1635,39 @@ function reconcileNativeIntents(s,nav){
     nav.intentTaskPlanner.reconcileWorkerRoutes(s,{navVersion:nav.version});
   }
 }
+function nativeCompletedFarmArrival(worker,planner){
+  if(worker.nativeRouteAdmission!=='native-farm-arrival')return null;
+  const execution=planner?.nativeFarmArrivalRouteExecution?.(worker.id);
+  return execution?.arrived===true&&execution.running===false&&execution.currentSpeed===0&&execution.executedThrough>=execution.binding.reference.endTime?execution:null;
+}
+function expireNativeWorkerContracts(s,nav){
+  const planner=nav.intentTaskPlanner;
+  for(const w of s.workers)if(contractExpired(w,s)||s.time>=profile(w).end){
+    if(w.status==='arriving'&&w.nativeRouteAdmission==='pending-farm-arrival-resources')planner.requestNativeFarmHome(s,w);
+    else if(w.status==='arriving'&&w.nativeRouteAdmission==='native-farm-arrival'&&!nativeCompletedFarmArrival(w,planner)){if(!planner.projectNativeFarmArrivalExecution(s,w))throw Error('Expired Farm has no current native body');if(planner.nativeWorkerTaskEligible?.(w.id))notifyWorkerPlanningChange(s,w);}
+    else if(w.status==='arriving'&&(w.nativeRouteAdmission==='native-farm-arrival-held'||nativeCompletedFarmArrival(w,planner)))planner.requestNativeFarmHome(s,w);
+    else if(w.status==='waiting-task'&&w.nativeRouteAdmission==='pending-resources')planner.requestNativePendingTaskHome?.(s,w);
+    else if(w.status==='idle'&&(w.nativeRouteAdmission==='pending-idle-resources'||w.nativeRouteAdmission==='pending-stroll-resources'||planner.nativeInitialIdleBodyState?.(w.id)||planner.nativeIdleCycleExecution?.(w.id)||planner.nativeIdleStrollHeldExecution?.(w.id)||planner.nativeIdleStrollExecution?.(w.id)?.arrived||planner.nativeSettledWorkerExecution?.(w.id)))planner.requestNativeIdleHome(s,w);
+  }
+}
+function nativeReturnBoundarySupported(state,w,planner){
+  const settled=planner.nativeSettledWorkerExecution?.(w.id);
+  return w.status==='home'&&planner.nativeWorkerHomeInactive?.(w.id)||
+    !!planner.nativeHomeRouteExecution?.(w.id)||
+    w.status==='waiting-task'&&w.nativeRouteAdmission==='pending-resources'&&!!planner.nativePendingTaskHomeSource?.(state,w)||
+    w.status==='walking'&&w.nativeRouteAdmission==='native-task'&&!!planner.nativeTaskReturnSource?.(w.id)||
+    w.status==='acting'&&w.nativeRouteAdmission==='native-action'&&!!planner.nativeTaskActionExecution?.(w.id)||
+    w.status==='carrying'&&w.nativeRouteAdmission==='native-delivery'&&!!planner.nativeDeliveryExecution?.(w.id)||
+    w.status==='arriving'&&!w.taskId&&w.nativeRouteAdmission==='pending-farm-arrival-resources'&&!!(planner.nativeFarmArrivalRequestReference?.(w.id)??planner.nativeFarmArrivalDeclarationReference?.(w.id))||
+    w.nativeRouteAdmission==='native-farm-arrival-held'&&w.status==='arriving'&&!w.taskId&&!!planner.nativeFarmArrivalHeldExecution?.(w.id)||
+    w.status==='arriving'&&!w.taskId&&w.nativeRouteAdmission==='native-farm-arrival'&&!!planner.nativeFarmArrivalRouteExecution?.(w.id)||
+    w.nativeRouteAdmission==='pending-home-resources'&&!!(planner.nativeHomeRequestReference?.(w.id)??planner.nativeHomeDeclarationReference?.(w.id))||
+    w.nativeRouteAdmission==='pending-idle-resources'&&w.status==='idle'&&!w.taskId&&!!planner.nativeInitialIdleRequestReference?.(w.id)||
+    w.nativeRouteAdmission==='pending-stroll-resources'&&w.status==='idle'&&!w.taskId&&!!planner.nativeIdleStrollRequestReference?.(w.id)||
+    w.nativeRouteAdmission==='native-idle-stroll'&&w.status==='idle'&&!w.taskId&&!!(planner.nativeIdleStrollHeldExecution?.(w.id)??(typeof planner.nativeIdleStrollStopRequest==='function'&&planner.nativeIdleStrollExecution?.(w.id)))||
+    w.nativeRouteAdmission==='native-idle'&&w.status==='idle'&&!w.taskId&&!!(planner.nativeInitialIdleBodyState?.(w.id)||planner.nativeIdleCycleExecution?.(w.id))||
+    !!settled&&(settled.binding.reference.home&&w.status==='returning'||w.status==='idle'&&!w.taskId&&!w.nativeRouteAdmission);
+}
 // A worker's clearance disc has entered the village doorway once its center
 // is within one body radius of the entry. Requiring the exact point can trap
 // the first person in a queue: the final centimeter would overlap the person
@@ -1407,7 +1678,10 @@ export function workerAtVillageEntry(worker,entry,nav){
   return nav.workerMotionClear?.(worker,entry,radius)??
     nav.segmentClear?.(worker,entry,radius,null,true)??false;
 }
+const taskActionDuration=(kind,speed)=>(kind==='initial'?7.2:kind==='water'?3.4:kind==='harvest'?3.6:kind==='repair'?3.8:1)/speed;
 function updateWorkers(s,dt,nav) {
+  nav.dynamicBodies?.sync(s);
+  const reserve=()=>{if(!nav.tickProfile)return reserveAvailableTasks(s,nav);const started=performance.now();try{return reserveAvailableTasks(s,nav);}finally{nav.tickProfile.reservations+=performance.now()-started;}};
   reconcileNativeIntents(s,nav);
   // Task removals/rebuilds replace the array; enqueues change its length.
   // Unchanged queues can reuse their index while reservation fields stay live.
@@ -1427,8 +1701,9 @@ function updateWorkers(s,dt,nav) {
   };
   const newArrivals=[];
   const nativeTasks=!!nav.intentTaskPlanner;
+  const nativeExecutionActive=nav.intentTaskPlanner?.nativeGameExecutionState?.()===1;
   if(!s.raid&&s.time<300)for(const w of s.workers){
-    if(w.status!=='arriving'||w.raidReturn||w.incapacitated||w.fallRemaining>0||contractExpired(w,s)||s.time>=profile(w).end)continue;
+    if(w.status!=='arriving'||w.raidReturn||w.incapacitated||w.fallRemaining>0||w.recovery||contractExpired(w,s)||s.time>=profile(w).end)continue;
     if(!s.structures.some(c=>c.id===w.centerId&&operational(c)))continue;
     if(!nativeTasks)w.status='idle';
     newArrivals.push(w);
@@ -1436,15 +1711,39 @@ function updateWorkers(s,dt,nav) {
   // New contracts reserve from their actual village position before any idle
   // motion. Returning raid survivors retain the existing arrival sequence.
   if(newArrivals.length){
-    reserveAvailableTasks(s,nav);
+    reserve();
     if(!nativeTasks)for(const w of newArrivals)if(!w.taskId)w.status='arriving';
   }
   // Small crews retain direct queries; amortize bookkeeping only in large farms.
   const urgency=s.workers.length>=64?createUrgencyPass(s):null;
   for(const w of s.workers) {
+    const workerProfile=nav.tickProfile,workerStatus=workerProfile?w.status:null,workerStart=workerProfile?performance.now():0;
     try {
-      if(w.fallRemaining>0&&!w.incapacitated){w.fallRemaining=Math.max(0,w.fallRemaining-dt);continue;}
+
+      const planner=nav.intentTaskPlanner;
+      const ownedRecovery=planner?.encounterRecoveryCurrent?.(s,w);
+      const preparedRecovery=ownedRecovery?prepareWorkerRecovery(w,dt,nav):null;
+      if(preparedRecovery?.destination)planner.finishEncounterRecovery(s,w,preparedRecovery);
+      const woundedHome=w.incapacitated&&['pending-home-resources','native-home'].includes(w.nativeRouteAdmission);
+      if(!woundedHome&&(ownedRecovery?applyWorkerRecovery(w,preparedRecovery):advanceWorkerRecovery(w,dt,nav))){
+        if(preparedRecovery?.destination)planner.requestEncounterHome?.(s,w);
+        if(!w.fallRemaining&&!w.recovery)notifyWorkerPlanningChange(s,w);
+        continue;
+      }
       const p=profile(w),center=s.structures.find(c=>c.id===w.centerId),village=s.villages.find(v=>v.id===w.villageId);
+      // Physical initialization may precede the first causal clock. A saved
+      // Home still waits for admission and must never enter the legacy mover.
+      if(w.nativeRouteAdmission==='pending-farm-arrival-resources'){const held=nav.intentTaskPlanner?.projectNativeFarmArrivalRequest(s,w)??nav.intentTaskPlanner?.projectNativeFarmArrivalDeclaration(s,w);if(!held)throw Error('Pending farm arrival has no current native source');continue;}
+      if(w.nativeRouteAdmission==='native-farm-arrival-held'){if(!nativeExecutionActive||!nav.intentTaskPlanner?.projectNativeFarmArrivalExecution(s,w))throw Error('Held farm arrival has no current native body');continue;}
+      if(w.nativeRouteAdmission==='native-farm-arrival'){if(!nativeExecutionActive||!nav.intentTaskPlanner.projectNativeFarmArrivalExecution(s,w))throw Error('Farm arrival requires its actual native body');continue;}
+      if(w.nativeRouteAdmission==='pending-stroll-resources'){const held=nativeExecutionActive?nav.intentTaskPlanner?.projectNativeIdleStrollRequest?.(s,w):nav.intentTaskPlanner?.projectNativeIdleStrollDeclaration?.(s,w);if(!held)throw Error('Pending restored stroll has no current native source');continue;}
+      if(w.nativeRouteAdmission==='native-idle-stroll'){if(!nativeExecutionActive||!nav.intentTaskPlanner?.projectNativeIdleStroll?.(s,w))throw Error('Native restored stroll has no current native body');continue;}
+      if(w.nativeRouteAdmission==='pending-idle-resources'){const held=nativeExecutionActive?nav.intentTaskPlanner?.projectNativeInitialIdleRequest(s,w):nav.intentTaskPlanner?.projectNativeInitialIdleDeclaration(s,w);if(!held)throw Error('Pending initial Idle has no current native source');continue;}
+      if(w.nativeRouteAdmission==='native-idle'){if(!nativeExecutionActive||!(nav.intentTaskPlanner?.projectNativeIdleCycle?.(s,w)||nav.intentTaskPlanner?.projectNativeInitialIdleBody(s,w)))throw Error('Native initial Idle has no current body owner');continue;}
+      if(nav.intentTaskPlanner?.projectRaidFlightStop?.(s,w))continue;
+      if(w.nativeRouteAdmission==='pending-home-resources'||w.nativeRouteAdmission==='pending-raid-flight-resources'&&nav.intentTaskPlanner?.nativeRaidFlightMember?.(s,s.raid?.animals[0])===w){if(nativeExecutionActive&&!nav.intentTaskPlanner?.projectNativeHomeExecution(s,w))throw Error('Pending Home has no current native source');continue;}
+      if(nativeExecutionActive&&w.nativeRouteAdmission==='native-home'){if(!nav.intentTaskPlanner?.projectNativeHomeExecution(s,w))throw Error('Native Home has no current execution projection');continue;}
+      if(nativeExecutionActive&&w.status==='returning'&&nav.intentTaskPlanner?.nativeSettledWorkerExecution?.(w.id)?.binding.reference.home){if(!nav.intentTaskPlanner.projectNativeSettledWorkerExecution(s,w))throw Error('Native pending Home has no current execution projection');continue;}
       if(['fleeing','returning','incapacitated'].includes(w.status)) {
         const home={...(village.entry??village),id:`home-${village.id}`};
         if(nav.intentTaskPlanner&&workerAtVillageEntry(w,home,nav)){
@@ -1476,17 +1775,31 @@ function updateWorkers(s,dt,nav) {
       if(w.status!=='idle')cancelIdle(w);
       if(!center||!operational(center)) {if(center&&!contractExpired(w,s)&&s.time<p.end)w.displacedDay??=s.day;cancelIdle(w);releaseTask(s,w);if(w.crateId)dropCarriedCrate(s,w);w.status='returning';w.path=null;notifyWorkerPlanningChange(s,w);continue;}
       const ended=contractExpired(w,s)||s.time>=p.end;
+      if(nativeExecutionActive&&nav.intentTaskPlanner?.nativeSettledWorkerExecution?.(w.id)){
+        if(ended)throw Error('Native idle contract transition requires prepared Home resources');if(!nav.intentTaskPlanner.projectNativeSettledWorkerExecution(s,w))throw Error('Native idle has no current execution projection');continue;
+      }
+      if(ended&&w.nativeRouteAdmission==='native-task'){
+        if(!nativeExecutionActive||!nav.intentTaskPlanner?.nativeTaskReturnSource?.(w.id))throw Error('Expired Task lost its executed source');
+        const execution=nav.intentTaskPlanner.projectNativeTaskExecution(s,w);
+        if(!execution)throw Error('Expired Task lost its executed projection');
+        if(execution.arrived)nav.intentTaskPlanner.requestNativeCompletedTaskHome(s,w);
+        continue;
+      }
       if(ended&&!['acting','carrying'].includes(w.status)) {cancelIdle(w);releaseTask(s,w);w.status='returning';w.path=null;notifyWorkerPlanningChange(s,w);continue;}
       if(w.status==='arriving') {
+        let arrivalMark=workerProfile?performance.now():0;
         const arrival={...center,...centerServicePoint(center,s,.8),id:`arrival-${center.id}`};
+        if(workerProfile){workerProfile.arrivalPoint+=performance.now()-arrivalMark;arrivalMark=performance.now();}
         const reached=walkTo(s,w,arrival,dt,nav,
           {motion:{urgent:!w.raidReturn&&(urgency?urgency.urgent(w):urgentWork(s,w))}});
+        if(workerProfile){workerProfile.arrivalWalk+=performance.now()-arrivalMark;arrivalMark=performance.now();}
         // Several paid workers share one authored center entrance. Reaching
         // its clear approach zone is sufficient; insisting on the occupied
         // exact point can strand later arrivals behind an idle coworker.
         const nearEntrance=w.path?.length>0&&w.destinationId===arrival.id&&
           w.pathVersion===nav.version&&dist(w,arrival)<=2&&
           (nav.segmentClear?.(w,arrival,w.radius??.28,null,true)??false);
+        if(workerProfile)workerProfile.arrivalEntrance+=performance.now()-arrivalMark;
         if(reached||nearEntrance){
           w.path=null;w.destinationId=null;w.status='idle';w.raidReturn=false;
           notifyWorkerPlanningChange(s,w);
@@ -1494,6 +1807,7 @@ function updateWorkers(s,dt,nav) {
         continue;
       }
       if(w.status==='carrying') {
+        if(w.nativeRouteAdmission==='native-delivery'){if(!nativeExecutionActive||!nav.intentTaskPlanner.projectNativeDeliveryExecution(s,w))throw Error('Native delivery has no current execution projection');continue;}
         const crate=findCrate(w.crateId);
         if(!crate){w.crateId=null;w.status='idle';notifyWorkerPlanningChange(s,w);continue;}
         if(w.deliveryApproach?.crateId!==crate.id||w.deliveryApproach?.centerId!==center.id||!Number.isFinite(w.deliveryApproach?.x)||!Number.isFinite(w.deliveryApproach?.z)){
@@ -1518,7 +1832,27 @@ function updateWorkers(s,dt,nav) {
       }
       const target=findPlant(t.targetId)??findCrate(t.targetId)??s.structures.find(e=>e.id===t.targetId);
       if(!target || ('alive' in target&&(!target.alive||target.blessing))) {replaceTasks(s,s.tasks.filter(q=>q.id!==t.id));w.taskId=null;w.status='idle';w.path=null;notifyWorkerPlanningChange(s,w);continue;}
+      if(nativeExecutionActive){
+        const action=nav.intentTaskPlanner.projectNativeTaskActionExecution(s,w);
+        if(action){
+          // Completion is a native fact, not an effects/resource grant. Keep
+          // the body and task while consequences await their admission.
+          continue;
+        }
+        if(w.status==='acting'||w.nativeRouteAdmission==='native-action')throw Error('Native task has no current action projection');
+      }
       if(w.status==='walking') {
+        const executed=nativeExecutionActive?nav.intentTaskPlanner.projectNativeTaskExecution(s,w):null;
+        if(executed){
+          if(executed.arrived){
+            const heading=t.kind==='initial'||t.kind==='water'?Math.atan2(target.x-w.x,target.z-w.z):w.heading;
+            if(!nav.intentTaskPlanner.requestNativeTaskActionResources(w.id,{kind:t.kind,duration:t.kind==='repair'?0:taskActionDuration(t.kind,p.speed),heading}))throw Error('Native task arrival could not request its action resources');
+          }
+          // An executed arrival still owns its body. Resource preparation must
+          // precede action admission and the existing task consequences.
+          continue;
+        }
+        if(nativeExecutionActive)throw Error('Native task has no current execution projection');
         let destination=target;
         if(t.kind==='repair'){
           if(w.taskApproach?.taskId!==t.id||w.path===null){
@@ -1553,7 +1887,7 @@ function updateWorkers(s,dt,nav) {
           motion:{urgent:(urgency?urgency.urgent(w):urgentWork(s,w))}})) {
           if(t.kind==='repair'){completeTask(s,w,t,target,nav);urgency?.invalidate();continue;}
           if(t.kind==='initial'||t.kind==='water')w.heading=Math.atan2(target.x-w.x,target.z-w.z);
-          w.status='acting';w.actionRemaining=(t.kind==='initial'?7.2:t.kind==='water'?3.4:t.kind==='harvest'?3.6:t.kind==='repair'?3.8:1)/p.speed;
+          w.status='acting';w.actionRemaining=taskActionDuration(t.kind,p.speed);
           nav.intentTaskPlanner?.markActionActive(w.id);
           notifyWorkerPlanningChange(s,w);
         }else if(w.path===null){
@@ -1567,9 +1901,9 @@ function updateWorkers(s,dt,nav) {
         if(t.kind==='repair'){completeTask(s,w,t,target,nav);urgency?.invalidate();continue;}
         w.actionRemaining-=dt;if(w.actionRemaining<=0)completeTask(s,w,t,target,nav);
       }
-    } finally {urgency?.changed(w);idleBodies?.update(w);}
+    } finally {urgency?.changed(w);idleBodies?.update(w);nav.dynamicBodies?.update(w,0);if(workerProfile)workerProfile.byStatus[workerStatus]=(workerProfile.byStatus[workerStatus]??0)+performance.now()-workerStart;}
   }
-  reserveAvailableTasks(s,nav);
+  reserve();
 }
 function closeNight(s) {
   if(s.awakenings?.enabled!==false)evaluateAwakeningDay(s,{emit:(type,detail)=>emit(s,type,detail),notice:(text,metadata)=>notice(s,text,null,metadata)});
@@ -1590,24 +1924,28 @@ function closeNight(s) {
   if(compare(s.ledger.balance,rational(dawnMinimum(s)))<0){s.result='defeat';notice(s,'El sol vuelve, pero el poblado no puede costear otra jornada.');emit(s,'GameOver');return;}
   if(s.completedNights>=100&&!s.postgame){s.result='victory';emit(s,'CampaignWon');return;}
   for(const plant of activeCrops(s.plants))if(plant.alive)plant.centerId=nearest(s.structures.filter(operational),plant)?.id??null;
-  s.hiringPaidDay=null;rebuildTasks(s);pause(s,'hiring');emit(s,'Dawn');
+  s.hiringPaidDay=null;rebuildTasks(s);pause(s,'hiring');emit(s,'Dawn',{completedNights:s.completedNights,result:s.result??null});
 }
 export function continuePostgame(s) {if(s.result!=='victory')return;s.result=null;s.postgame=true;s.nightPlan=null;s.dayPlan=null;pause(s,'hiring');emit(s,'PostgameStarted');}
 export function previewVillage(s,culture,x,z,payload,nav) {
   if(!CULTURES.includes(culture))throw new Error('Cultura desconocida');
+  if(culture!==s.culture)throw new Error('El nuevo poblado debe conservar la cultura de la partida');
   const resolved=resolveFluidPlacement(nav,(px,pz)=>villageLayout(payload,px,pz),x,z),buildings=resolved.shapes,checks=resolved.checks;
   x=resolved.x;z=resolved.z;
   const entry=checks.every(c=>c.valid)?findVillageEntry(nav,buildings,x,z):null;
   return {culture,x,z,buildings,entry,cost:villageCost(s.villages.length+1),valid:checks.every(c=>c.valid)&&!!entry,suppress:[...new Set(checks.flatMap(c=>c.suppress??[]))],reason:checks.find(c=>!c.valid)?.reason??(!entry?'El poblado no tiene una salida transitable':undefined)};
 }
-export function foundVillage(s,id,culture,x,z,payload,nav) {
+export function foundVillage(s,id,culture,x,z,payload,nav,{preparedCenters=null}={}) {
   return commit(s,id,'village',()=>{
     // Replayed commands must stop before validating their already occupied site.
     // New confirmations still revalidate the complete layout before charging.
     const preview=previewVillage(s,culture,x,z,payload,nav);if(!preview.valid)throw new Error(preview.reason);x=preview.x;z=preview.z;
+    const centers=s.structures.filter(operational);
+    if(preparedCenters!==null&&(!Array.isArray(preparedCenters)||preparedCenters.length!==centers.length||preparedCenters.some((p,i)=>!p||p.id!==centers[i].id||typeof p.villageId!=='string'&&p.villageId!==null||typeof p.culture!=='string'&&p.culture!==null)))throw Error('Invalid prepared village centers');
     ensurePurchaseBudget(s,preview.cost);transact(s.ledger,id,rational(-preview.cost));s.villages.push({id:`village-${s.nextId++}`,culture,x,z,buildings:preview.buildings,entry:preview.entry});s.suppressed.push(...preview.suppress);
     nav.setState(s);
-    for(const center of s.structures.filter(operational)) {
+    if(preparedCenters!==null){for(let i=0;i<centers.length;i++){const center=centers[i],prepared=preparedCenters[i];if(prepared.culture!==null)center.culture=prepared.culture;if(prepared.villageId!==null)center.villageId=prepared.villageId;}}
+    else for(const center of centers) {
       const departure=centerServicePoint(center,s);
       const nearestRoute=nearestVillageRoute(nav,departure,s.villages);
       if(nearestRoute){center.culture??=centerCulture(center,s);center.villageId=nearestRoute.v.id;}
@@ -1626,10 +1964,31 @@ function prepareClockEvents(s,nav){
   if(s.dayPlan&&!s.dayPlan.done&&s.time>=s.dayPlan.at){s.dayPlan.done=s.postgame||spawnRaid(s,s.dayPlan,nav,true)!==false;}
   if(s.nightPlan&&!s.nightPlan.done&&s.time>=s.nightPlan.at&&(!s.dayPlan||activeRaidEntryPlan(s)!==s.dayPlan)){s.nightPlan.done=!s.nightPlan.group?.length||spawnRaid(s,s.nightPlan,nav)!==false;}
 }
-export function tick(s,seconds,nav) {
+export function tick(s,seconds,nav,{clockRate=1,expiringShield=null,centerRuin=null}={}) {
   if(!Number.isFinite(seconds)||seconds<0)throw new Error('Paso temporal inválido');
+  if(!Number.isFinite(clockRate)||clockRate<=0||clockRate>1000000)throw TypeError('Invalid native game clock rate');
+  if(seconds>1e-9&&!s.pauses.length&&!s.result&&!nav.intentTaskPlanner&&s.workers.some(worker=>worker.nativeRouteAdmission!==undefined))throw Error('Native task state requires resource admission before legacy movement');
   let left=seconds;
   while(left>1e-9 && !s.pauses.length && !s.result) {
+    for(const worker of s.workers){
+      if(worker.nativeRouteAdmission==='pending-farm-arrival-resources'){if(!nav.intentTaskPlanner?.projectNativeFarmArrivalDeclaration?.(s,worker))throw Error('Pending farm arrival has no current native declaration');}
+      if(worker.nativeRouteAdmission==='pending-stroll-resources'&&!(nav.intentTaskPlanner?.projectNativeIdleStrollDeclaration?.(s,worker)||nav.intentTaskPlanner?.projectNativeIdleStroll?.(s,worker)))throw Error('Pending restored stroll has no current native declaration');
+      if(worker.nativeRouteAdmission==='pending-idle-resources'&&!nav.intentTaskPlanner?.projectNativeInitialIdleDeclaration(s,worker)&&!nav.intentTaskPlanner?.projectNativeInitialIdleBody?.(s,worker))throw Error('Pending initial Idle has no current native declaration');
+      if(worker.nativeRouteAdmission==='native-idle'&&!(nav.intentTaskPlanner?.projectNativeIdleCycle?.(s,worker)||nav.intentTaskPlanner?.projectNativeInitialIdleBody?.(s,worker)))throw Error('Native initial Idle has no current body owner');
+      if(worker.nativeRouteAdmission==='native-idle-stroll'&&!nav.intentTaskPlanner?.projectNativeIdleStroll?.(s,worker))throw Error('Native Idle stroll has no current body owner');
+      if(worker.nativeRouteAdmission==='native-farm-arrival'&&!nav.intentTaskPlanner?.projectNativeFarmArrivalExecution(s,worker))throw Error('Farm arrival has no current native body owner');
+      if(worker.nativeRouteAdmission==='native-farm-arrival-held'&&!nav.intentTaskPlanner?.projectNativeFarmArrivalExecution(s,worker))throw Error('Held farm arrival has no current native body owner');
+    }
+    let nativeExecution=nav.intentTaskPlanner?.nativeGameExecutionState?.()??0;
+    if(nativeExecution<0)throw Error('Native game execution still requires projection for this intention class');
+    if(nativeExecution!==0||s.workers.some(w=>w.nativeRouteAdmission==='pending-farm-arrival-resources'||w.nativeRouteAdmission==='pending-idle-resources'||w.nativeRouteAdmission==='pending-stroll-resources')){
+      // Commands received since the last step revoke/replace at the current
+      // boundary, before the old timetable can move a body for another step.
+      expireNativeWorkerContracts(s,nav);if(nativeExecution!==0){reconcileNativeIntents(s,nav);nav.intentTaskPlanner.flushTaskEvents();}
+      nativeExecution=nav.intentTaskPlanner.nativeGameExecutionState();
+    }
+    if(nativeExecution<0)throw Error('Native game execution still requires projection for this intention class');
+    if(nativeExecution===1&&(nav.dynamicBodies||s.raid&&!nativeCropCohortCurrent(s,nav.intentTaskPlanner)||s.workers.some(w=>!nav.intentTaskPlanner.encounterRecoveryCurrent?.(s,w)&&!nav.intentTaskPlanner.projectEncounterHome?.(s,w)&&!(w.status==='home'&&nav.intentTaskPlanner.nativeWorkerHomeInactive?.(w.id))&&(!(nav.intentTaskPlanner.projectRaidFlightStop?.(s,w))&&!((['native-home','pending-home-resources'].includes(w.nativeRouteAdmission)||w.nativeRouteAdmission==='pending-raid-flight-resources'&&nav.intentTaskPlanner.nativeRaidFlightMember?.(s,s.raid?.animals[0])===w)&&nav.intentTaskPlanner.projectNativeHomeExecution(s,w))&&!(w.nativeRouteAdmission==='native-delivery'&&nav.intentTaskPlanner.projectNativeDeliveryExecution(s,w))&&!(w.nativeRouteAdmission==='pending-farm-arrival-resources'&&(nav.intentTaskPlanner.projectNativeFarmArrivalRequest(s,w)||nav.intentTaskPlanner.projectNativeFarmArrivalDeclaration(s,w)))&&!(w.nativeRouteAdmission==='native-farm-arrival-held'&&nav.intentTaskPlanner.projectNativeFarmArrivalExecution(s,w))&&!(w.nativeRouteAdmission==='native-farm-arrival'&&nav.intentTaskPlanner.projectNativeFarmArrivalExecution(s,w))&&!(w.nativeRouteAdmission==='pending-idle-resources'&&nav.intentTaskPlanner.projectNativeInitialIdleRequest(s,w))&&!(w.nativeRouteAdmission==='pending-stroll-resources'&&nav.intentTaskPlanner.projectNativeIdleStrollRequest(s,w))&&!(w.nativeRouteAdmission==='native-idle-stroll'&&nav.intentTaskPlanner.projectNativeIdleStroll(s,w))&&!(nav.intentTaskPlanner.nativeIdleCycleExecution?.(w.id)&&nav.intentTaskPlanner.projectNativeIdleCycle(s,w))&&!(nav.intentTaskPlanner.nativeInitialIdleBodyState?.(w.id)&&nav.intentTaskPlanner.projectNativeInitialIdleBody(s,w))&&!(nav.intentTaskPlanner.nativeSettledWorkerExecution?.(w.id)&&nav.intentTaskPlanner.projectNativeSettledWorkerExecution(s,w))&&(!w.taskId||!['walking','waiting-task','acting'].includes(w.status)||w.status==='acting'&&(w.nativeRouteAdmission!=='native-action'||!nav.intentTaskPlanner.nativeTaskActionExecution(w.id))||w.crateId)||w.raidReturn&&!(w.nativeRefugeSequence&&['pending-farm-arrival-resources','native-farm-arrival'].includes(w.nativeRouteAdmission))||w.incapacitated||w.recovery||w.fallRemaining>0||contractExpired(w,s)&&!nav.intentTaskPlanner.nativeTaskReturnSource?.(w.id)&&!(w.nativeRouteAdmission==='native-farm-arrival'&&nav.intentTaskPlanner.nativeFarmArrivalRouteExecution?.(w.id))&&!(w.nativeRouteAdmission==='native-idle-stroll'&&typeof nav.intentTaskPlanner.nativeIdleStrollStopRequest==='function'&&nav.intentTaskPlanner.nativeIdleStrollExecution?.(w.id))&&!nav.intentTaskPlanner.nativeSettledWorkerExecution?.(w.id)?.binding.reference.home&&!nav.intentTaskPlanner.nativeHomeRouteExecution?.(w.id)&&!(w.nativeRouteAdmission==='pending-home-resources'&&(nav.intentTaskPlanner.nativeHomeRequestReference?.(w.id)||nav.intentTaskPlanner.nativeHomeDeclarationReference?.(w.id)))))||s.structures.some(structure=>structure.gate&&structure.status!=='ruined')&&!nav.projectNativeGateLeaves))throw Error('Native task game cohort contains an unsupported mover');
     prepareClockEvents(s,nav);
     // Version-1 saves can contain an active area without exposure bookkeeping.
     // Mark once on restoration; static plants need no per-frame exposure scan.
@@ -1639,16 +1998,25 @@ export function tick(s,seconds,nav) {
     const boundaries=clockEdges.filter(t=>t>s.time+1e-9).map(t=>t-s.time);
     const magicBoundaries=s.spells.filter(a=>a.remaining>1e-9).map(a=>a.remaining);
     const step=Math.min(left,.1,...boundaries,...magicBoundaries);left-=step;
+    const unroundedTime=Math.min(600,s.time+step),nextTime=clockEdges.find(boundary=>Math.abs(unroundedTime-boundary)<1e-9)??unroundedTime;
+    if(s.workers.some(w=>(nativeExecution===1||w.nativeRouteAdmission==='pending-farm-arrival-resources')&&nextTime>=profile(w).end&&!nativeReturnBoundarySupported(s,w,nav.intentTaskPlanner)))throw Error('Native task game cohort reached an unsupported return boundary');
+
+    if(nativeExecution===1){
+      nav.intentTaskPlanner.prepareHomeEncounterImpact?.(s,s.elapsed+step,nav);
+      nav.intentTaskPlanner.prepareCenterEncounterStep?.(s,s.elapsed+step);
+      nav.intentTaskPlanner.prepareEncounterExhaustion?.(s,s.elapsed+step,nav);
+      nav.intentTaskPlanner.advanceNativeGameExecution(s.elapsed+step,{rate:clockRate});
+    }
     s.elapsed+=step;
-    const nextTime=Math.min(600,s.time+step);
-    s.time=clockEdges.find(boundary=>Math.abs(nextTime-boundary)<1e-9)??nextTime;
+    s.time=nextTime;
+    if(nativeExecution===1||s.workers.some(w=>w.nativeRouteAdmission==='pending-farm-arrival-resources'||w.nativeRouteAdmission==='pending-idle-resources'||w.nativeRouteAdmission==='pending-stroll-resources'))expireNativeWorkerContracts(s,nav);
     for(const kind of Object.keys(s.cooldowns)) {
-      if(kind!=='shield'){s.cooldowns[kind]=0;continue;}
+      if(kind!=='shield'&&kind!=='attack'){s.cooldowns[kind]=0;continue;}
       const remaining=s.cooldowns[kind]-step;
       s.cooldowns[kind]=remaining>1e-9?remaining:0;
     }
     for(const structure of s.structures)if(structure.status==='collapsing') {
-      structure.collapseRemaining-=step;if(structure.collapseRemaining<=1e-9){structure.status='ruined';structure.hp=0;nav.setState(s);emit(s,'StructureRuined',{targetId:structure.id});}
+      structure.collapseRemaining-=step;if(structure.collapseRemaining<=1e-9){if(structure===centerRuin?.center)centerRuin.consume();structure.status='ruined';structure.hp=0;nav.setState(s);emit(s,'StructureRuined',{targetId:structure.id,structureKind:structure.kind,presentation:{x:structure.x,z:structure.z}});}
     }
     if(previousTime<300) {
       const growthStep=s.spells.some(spell=>spell.kind==='growth'&&spell.remaining>0)?growthPowerStep(s):null;
@@ -1666,28 +2034,87 @@ export function tick(s,seconds,nav) {
     }
     const shieldsBefore=s.spells.filter(a=>a.kind==='shield').length;
     for(const spell of s.spells)spell.remaining=Math.max(0,spell.remaining-step);
-    for(const a of s.spells)if(a.remaining<=1e-9&&a.targetPlantId!==undefined)emit(s,'AgriculturalSpellEnded',{spellId:a.id,kind:a.kind,targetPlantId:a.targetPlantId,growthSecondsAdded:a.growthSecondsAdded??0});
-    s.spells=s.spells.filter(a=>a.remaining>1e-9);
+    for(const a of s.spells)if(a.remaining<=1e-9&&a.targetPlantId!==undefined)emit(s,'AgriculturalSpellEnded',{spellId:a.id,kind:a.kind,targetPlantId:a.targetPlantId,growthSecondsAdded:a.growthSecondsAdded??0,remainingSeconds:0});
+    // The qualified civil advance retains this exact polygon owner until GO.
+    // Shield gameplay still observes its natural remaining time of zero.
+    if(expiringShield&&expiringShield.remaining<=1e-9)expiringShield.remaining=0;
+    s.spells=s.spells.filter(a=>a.remaining>1e-9||a===expiringShield);
     if(s.spells.filter(a=>a.kind==='shield').length!==shieldsBefore)nav.setState(s);
-    advanceGateLeaves(s,step);
+    if(nav.projectNativeGateLeaves)nav.projectNativeGateLeaves();else advanceGateLeaves(s,step);
     // A restored or event-invalidated animal route must be published before
     // the raid controller attempts physical movement in this interval.
+    const tickProfile=nav.tickProfile;let tickMark=tickProfile?performance.now():0;
     reconcileNativeIntents(s,nav);
-    updateRaid(s,step,nav);updateWorkers(s,step,nav);
+    if(tickProfile){tickProfile.intents+=performance.now()-tickMark;tickMark=performance.now();}
+    nav.beastPhysics?.step(s,step);
+    if(tickProfile){tickProfile.physics+=performance.now()-tickMark;tickMark=performance.now();}
+    updateRaid(s,step,nav);
+    nav.intentTaskPlanner?.verifyEncounterBoundary?.(s);
+    if(tickProfile){tickProfile.raid+=performance.now()-tickMark;tickMark=performance.now();}
+    updateWorkers(s,step,nav);
+    if(tickProfile)tickProfile.workers+=performance.now()-tickMark;
     // Arrival is an event at the end of this interval. Newly spawned animals
     // must not move for time that elapsed before they existed.
     prepareClockEvents(s,nav);
     if(s.time>=600 && !s.raid && !s.result && (!s.nightPlan?.group?.length||s.nightPlan.done))closeNight(s);
+    if(nativeExecution===1&&!['committed','unchanged'].includes(nav.intentTaskPlanner.commitNativeCausalClock({rate:clockRate,paused:!!s.pauses.length||!!s.result}).status))throw Error('Native task step could not commit its causal boundary');
   }
 }
-export function advanceReal(s,seconds,nav,{nightFastForward=true}={}) {
+export function advanceReal(s,seconds,nav,options={}) {
+  const {nightFastForward=true,onTick=null,onClockSegment=null,expireShield=null,prepareCenterRuin=null}=options;
+  if(onClockSegment!==null&&typeof onClockSegment!=='function')throw TypeError('Invalid simulation clock observer');
   let left=seconds;
   while(left>1e-9 && !s.pauses.length&&!s.result) {
+    const retirement=options.settleHomeBeforeCenterSuccessor?.();
+    if(retirement)return retirement.then(()=>advanceReal(s,left,nav,options));
       prepareClockEvents(s,nav);
     const speed=nightFastForward&&s.time>=300&&!s.raid?5:1;
     const untilBoundary=Math.min(...clockBoundaries(s).filter(t=>t>s.time+1e-9).map(t=>(t-s.time)/speed));
-    const real=Math.min(left,.02,untilBoundary);left-=real;
-    tick(s,real*speed,nav);
+    const remainingBeforeSubstep=left,real=Math.min(left,.02,untilBoundary);left-=real;
+    const start=onClockSegment?s.elapsed:0;
+    if(expireShield){
+      const span=real*speed;
+      const shield=s.spells.find(spell=>spell.kind==='shield'&&spell.remaining-span<=1e-9);
+      if(shield){
+        const prefix=Math.min(span,shield.remaining);
+        return expireShield(shield,()=>{
+          if(!(prefix>0)||clockBoundaries(s).some(edge=>edge>s.time&&edge<=s.time+prefix+1e-9))
+            throw Error('Native shield expiry coincides with another simulation boundary');
+          tick(s,prefix,nav,{clockRate:speed,expiringShield:shield});
+        }).then(()=>{
+          if(span>prefix)tick(s,span-prefix,nav,{clockRate:speed});
+          if(onClockSegment&&s.elapsed>start)onClockSegment({start,end:s.elapsed,realDuration:(s.elapsed-start)/speed,rate:speed});
+          if(onTick)onTick();
+          if(left>1e-9)return advanceReal(s,left,nav,options);
+        });
+      }
+    }
+
+    const encounterDraft=options.prepareEncounterDraft?.(real*speed);
+    if(encounterDraft)return encounterDraft.then(async preparation=>{
+      let retired;
+      try{
+        tick(s,real*speed,nav,{clockRate:speed});
+        retired=await preparation.finish();
+      }catch(error){preparation.abort();throw error;}
+      if(onClockSegment&&s.elapsed>start)onClockSegment({start,end:s.elapsed,realDuration:(s.elapsed-start)/speed,rate:speed});
+      if(onTick)onTick();
+      if(retired)return {remainingSeconds:left};
+      if(left>1e-9)return advanceReal(s,left,nav,options);
+    });
+    if(prepareCenterRuin){
+      const span=real*speed,center=s.structures.find(item=>item.kind==='center'&&item.status==='collapsing'&&item.collapseRemaining-span<=1e-9);
+      if(center)return prepareCenterRuin(center,span,consume=>tick(s,span,nav,{clockRate:speed,centerRuin:{center,consume}})).then(prelude=>{
+        if(prelude?.pendingRuinRecovery)return {...prelude,remainingSeconds:remainingBeforeSubstep};
+        if(prelude)return {centerMotionPublication:prelude,remainingSeconds:remainingBeforeSubstep};
+        if(onClockSegment&&s.elapsed>start)onClockSegment({start,end:s.elapsed,realDuration:(s.elapsed-start)/speed,rate:speed});
+        if(onTick)onTick();
+        if(left>1e-9)return advanceReal(s,left,nav,options);
+      });
+    }
+    tick(s,real*speed,nav,{clockRate:speed});
+    if(onClockSegment&&s.elapsed>start)onClockSegment({start,end:s.elapsed,realDuration:(s.elapsed-start)/speed,rate:speed});
+    if(onTick)onTick();
   }
 }
 export function clockLabel(s) {

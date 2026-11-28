@@ -1,0 +1,450 @@
+{
+  "revision": "a52bf0794bf0b573e8c989afc3ff0e431dfd6207",
+  "scenario": {
+    "biome": "sabana",
+    "seed": 714,
+    "browser": "Microsoft Edge, headless",
+    "clock": "Hosted ordinario",
+    "profile": "nativeWorkerLifecycle",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 79.12000000476837
+      }
+    },
+    "wallMillisecondsToClosingStage": 2079456
+  },
+  "evidence": {
+    "directory": "E:/wild-guardians-qa/native-menu-20261126",
+    "artifact": "native-menu-campaign-714-released-floor-source-turns-extended.json",
+    "sha256": "d5d77ff32d4e4d6479386db1b68aec477c515ce804aa43d78465d9ab3208a5d6",
+    "checkpoints": {
+      "native-menu-campaign-714-released-floor-source-turns-dawn-4.json": "97bce941e635c010ebc8f7770e63e51d0ba9c09c683b2714ec51fd50f13df1bd",
+      "native-menu-campaign-714-released-floor-source-turns-dawn-5.json": "a628bb0db3a27a1147ec99f465812a79e7a6add2d75d06ee12f843cd83c84143"
+    },
+    "reproductionDirectory": "E:/wild-guardians-qa/native-menu-20261126/source-turns-reproduction",
+    "scripts": {
+      ".cache/flee-mixed/qualify-native-menu-campaign-event-recovery.mjs": "092b24360c1be421b09c66ace81f166d122c67147e1326c36931d1d7820ece99",
+      ".cache/flee-mixed/mark-historical-event-watchdog.mjs": "2e768039d69c50cfce47807b5296b3f5bfae003275872666e99f038640638642",
+      ".cache/flee-mixed/mark-observed-actor-start.mjs": "b26e4d48c2b317a043c5c565e765922a61148367455bd2c297f4939b823857a3",
+      ".cache/flee-mixed/audit-savanna-menu-campaign.mjs": "c177650155208e5e36a73dcfbde1897c4f96c010d7887d1b9a8c2bdcfe54ab49"
+    },
+    "environment": {
+      "QA_FULL_SHIFT": "1",
+      "QA_MENU_PHASE_CUTS": "1",
+      "QA_MENU_RECOVERY_CUTS": "1",
+      "QA_MENU_REPLAY_LABEL": "source-turns"
+    },
+    "node": "v20.19.0",
+    "wasm": {
+      "src/world/wild-engine/core.wasm": "b0e2bb8f2bbce9252be7d7270e94ef56315adb8da07fbbe2eb05e47cb0945e78",
+      "src/world/wild-engine/lazy-sectors.wasm": "2d220c866e731b736801902cb9bdd30a7a2094f40131c7d62bc03d3fd6419be7",
+      "src/world/wild-engine/spatial-savanna.wasm": "6b073c9a4f614d594128a981b5d177e871d91281c95ab3f1a2c997549f0fe775"
+    },
+    "inheritedLocalRenderingSources": {
+      "src/rendering/character-preload.js": "b1637fb2ed5d0cf0aa12a1ab5eac5923319a0096413071d28376992314be2835",
+      "src/rendering/destruction-native.js": "363ffd6447b051739da75d65a6a2be1431094f0df588361158de83023ceab7b4",
+      "src/rendering/scene.js": "1cfefd4f86dee90af82300fe6762a29408d798dbb852605f5b30a45493c198da"
+    }
+  },
+  "auditPassed": true,
+  "firstDraw": 56,
+  "waves": [
+    {
+      "day": 1,
+      "actor": "animal-10",
+      "species": "warthog",
+      "spawnTime": 377.5351831009225,
+      "bodyId": 2,
+      "firstRouteFrame": 1263,
+      "firstRouteAge": 0,
+      "strikeFrames": [
+        1322,
+        1331
+      ],
+      "strikeAges": [
+        0,
+        0
+      ],
+      "structureHits": 2,
+      "retreatFrame": 1346,
+      "absenceFrame": 1398,
+      "absenceTime": 433.3781464806839,
+      "absenceAt": 1795753875047.045
+    },
+    {
+      "day": 2,
+      "actor": "animal-17",
+      "species": "hyena",
+      "spawnTime": 953.6367856970743,
+      "bodyId": 4,
+      "firstRouteFrame": 2684,
+      "firstRouteAge": 0,
+      "strikeFrames": [
+        2725,
+        2738,
+        2751
+      ],
+      "strikeAges": [
+        0,
+        0,
+        0
+      ],
+      "structureHits": 3,
+      "retreatFrame": 2754,
+      "absenceFrame": 2780,
+      "absenceTime": 1032.7494285575199,
+      "absenceAt": 1795754303616.89
+    },
+    {
+      "day": 3,
+      "actor": "animal-22",
+      "species": "buffalo",
+      "spawnTime": 1643.5015146978608,
+      "bodyId": 6,
+      "firstRouteFrame": 3839,
+      "firstRouteAge": 0,
+      "strikeFrames": [
+        3875,
+        3888,
+        3900,
+        3913
+      ],
+      "strikeAges": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "structureHits": 4,
+      "retreatFrame": 3918,
+      "absenceFrame": 3951,
+      "absenceTime": 1698.5212117580484,
+      "absenceAt": 1795754717751.47
+    },
+    {
+      "day": 4,
+      "actor": "animal-24",
+      "species": "lion",
+      "spawnTime": 2137.81088681497,
+      "bodyId": 8,
+      "firstRouteFrame": 5244,
+      "firstRouteAge": 0,
+      "strikeFrames": [
+        5285,
+        5298,
+        5311,
+        5324
+      ],
+      "strikeAges": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "structureHits": 4,
+      "retreatFrame": 5327,
+      "absenceFrame": 5344,
+      "absenceTime": 2252.868709452164,
+      "absenceAt": 1795755169088.9
+    },
+    {
+      "day": 5,
+      "actor": "animal-26",
+      "species": "rhino",
+      "spawnTime": 2744.161517687551,
+      "bodyId": 10,
+      "firstRouteFrame": 6631,
+      "firstRouteAge": 0,
+      "strikeFrames": [
+        6669
+      ],
+      "strikeAges": [
+        0
+      ],
+      "structureHits": 1,
+      "retreatFrame": 6672,
+      "absenceFrame": 6681,
+      "absenceTime": 2795.16921415031,
+      "absenceAt": 1795755562592.4849
+    }
+  ],
+  "damage": [
+    {
+      "event": "event-27",
+      "animal": "animal-10",
+      "attack": "attack-26",
+      "target": "structure-2",
+      "at": 410.3881464807039,
+      "hp": 580
+    },
+    {
+      "event": "event-30",
+      "animal": "animal-10",
+      "attack": "attack-29",
+      "target": "structure-2",
+      "at": 417.25814648069763,
+      "hp": 560
+    },
+    {
+      "event": "event-53",
+      "animal": "animal-17",
+      "attack": "attack-52",
+      "target": "structure-2",
+      "at": 989.3594285575592,
+      "hp": 535
+    },
+    {
+      "event": "event-56",
+      "animal": "animal-17",
+      "attack": "attack-55",
+      "target": "structure-2",
+      "at": 1002.4094285575474,
+      "hp": 510
+    },
+    {
+      "event": "event-59",
+      "animal": "animal-17",
+      "attack": "attack-58",
+      "target": "structure-2",
+      "at": 1015.4594285575355,
+      "hp": 485
+    },
+    {
+      "event": "event-83",
+      "animal": "animal-22",
+      "attack": "attack-82",
+      "target": "structure-2",
+      "at": 1670.6212117580737,
+      "hp": 450
+    },
+    {
+      "event": "event-86",
+      "animal": "animal-22",
+      "attack": "attack-85",
+      "target": "structure-2",
+      "at": 1676.4712117580684,
+      "hp": 415
+    },
+    {
+      "event": "event-89",
+      "animal": "animal-22",
+      "attack": "attack-88",
+      "target": "structure-2",
+      "at": 1682.0212117580634,
+      "hp": 380
+    },
+    {
+      "event": "event-92",
+      "animal": "animal-22",
+      "attack": "attack-91",
+      "target": "structure-2",
+      "at": 1686.3512117580594,
+      "hp": 345
+    },
+    {
+      "event": "event-105",
+      "animal": "animal-24",
+      "attack": "attack-104",
+      "target": "structure-2",
+      "at": 2176.748709451889,
+      "hp": 305
+    },
+    {
+      "event": "event-108",
+      "animal": "animal-24",
+      "attack": "attack-107",
+      "target": "structure-2",
+      "at": 2192.1487094519453,
+      "hp": 265
+    },
+    {
+      "event": "event-111",
+      "animal": "animal-24",
+      "attack": "attack-110",
+      "target": "structure-2",
+      "at": 2211.298709452015,
+      "hp": 225
+    },
+    {
+      "event": "event-114",
+      "animal": "animal-24",
+      "attack": "attack-113",
+      "target": "structure-2",
+      "at": 2230.4987094520848,
+      "hp": 185
+    },
+    {
+      "event": "event-126",
+      "animal": "animal-26",
+      "attack": "attack-125",
+      "target": "structure-2",
+      "at": 2781.5292141502605,
+      "hp": 125
+    }
+  ],
+  "hiringEventIds": [
+    "event-9",
+    "event-40",
+    "event-66",
+    "event-99",
+    "event-120"
+  ],
+  "hiringCosts": [
+    40,
+    40,
+    40,
+    40,
+    40
+  ],
+  "balances": [
+    {
+      "day": 2,
+      "worker": "worker-13",
+      "balance": {
+        "n": "470",
+        "d": "1"
+      }
+    },
+    {
+      "day": 3,
+      "worker": "worker-18",
+      "balance": {
+        "n": "430",
+        "d": "1"
+      }
+    },
+    {
+      "day": 4,
+      "worker": "worker-23",
+      "balance": {
+        "n": "711",
+        "d": "1"
+      }
+    },
+    {
+      "day": 5,
+      "worker": "worker-25",
+      "balance": {
+        "n": "671",
+        "d": "1"
+      }
+    }
+  ],
+  "delivery": {
+    "id": "event-75",
+    "type": "CrateDelivered",
+    "workerId": "worker-18",
+    "targetId": "crate-21",
+    "species": "platano",
+    "multiplyIncome": {
+      "n": "0",
+      "d": "1"
+    },
+    "simulationTime": 1363.7999999993303
+  },
+  "ledger": {
+    "n": "671",
+    "d": "1"
+  },
+  "ruin": {
+    "center": "structure-2",
+    "polygon": 9,
+    "effectiveTime": 2784.729214150272,
+    "ticket": 230,
+    "frame": 6676
+  },
+  "gameOver": {
+    "id": "event-133",
+    "type": "GameOver",
+    "simulationTime": 2795.16921415031
+  },
+  "terminalDrainReplies": [
+    1795755564624.005,
+    1795755564624.3699
+  ],
+  "firstDrainAfterFinalDrawMilliseconds": 2031.52001953125,
+  "lionAdmission": {
+    "route": {
+      "request": 100,
+      "ticket": 198,
+      "effectiveTime": 2137.8487094517477,
+      "minSequence": 32313,
+      "initialApplied": 32265,
+      "initialReceived": 32297,
+      "appliedAfterMs": 1297.420166015625,
+      "readyAfterMs": 7530.830078125,
+      "phases": {
+        "roster-start": 1433.4599609375,
+        "roster-end": 5909.820068359375,
+        "pipeline-start": 5910.55517578125,
+        "pipeline-end": 7258.56005859375,
+        "capture-start": 7272.93017578125,
+        "capture-end": 7530.755126953125
+      },
+      "acquired": {
+        "ticket": 199,
+        "afterMs": 7588.5849609375
+      },
+      "draw": {
+        "sequence": 5244,
+        "elapsed": 2149.748709451791,
+        "afterMs": 7602.7099609375,
+        "bodyId": 8,
+        "relativeTime": 0
+      }
+    },
+    "firstStrike": {
+      "request": 101,
+      "ticket": 200,
+      "effectiveTime": 2168.198709451858,
+      "minSequence": 32669,
+      "initialApplied": 32574,
+      "initialReceived": 32599,
+      "appliedAfterMs": 6891.64013671875,
+      "readyAfterMs": 9720.875244140625,
+      "phases": {
+        "roster-start": 7001.005126953125,
+        "roster-end": 7170.185302734375,
+        "pipeline-start": 7170.940185546875,
+        "pipeline-end": 9362.64013671875,
+        "capture-start": 9387.990234375,
+        "capture-end": 9720.810302734375
+      },
+      "acquired": {
+        "ticket": 201,
+        "afterMs": 9771.35009765625
+      },
+      "draw": {
+        "sequence": 5285,
+        "elapsed": 2175.1987094518836,
+        "afterMs": 9781.675048828125,
+        "bodyId": 8,
+        "relativeTime": 0
+      }
+    }
+  },
+  "diagnostics": {
+    "pageErrors": [],
+    "consoleErrors": [
+      {
+        "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "url": "http://127.0.0.1:5298/favicon.ico"
+      },
+      {
+        "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "url": "http://127.0.0.1:5298/favicon.ico"
+      }
+    ],
+    "httpErrors": []
+  }
+}

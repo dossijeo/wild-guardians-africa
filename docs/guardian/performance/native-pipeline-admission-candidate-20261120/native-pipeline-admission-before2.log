@@ -1,0 +1,78 @@
+TAP version 13
+# Subtest: pending native compilation backpressures the existing FIFO while resident draws and inspection continue
+not ok 1 - pending native compilation backpressures the existing FIFO while resident draws and inspection continue
+  ---
+  duration_ms: 26.3983
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-pipeline-admission.test.js:17:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    native promises must retain the existing admission credit until compilation completes
+    
+    2 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 2
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tests/remote-pipeline-admission.test.js:22:24)
+    async Test.run (node:internal/test_runner/test:797:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:526:7)
+  ...
+# Subtest: render and compute compilation share admission and retain the original layout dependency
+ok 2 - render and compute compilation share admission and retain the original layout dependency
+  ---
+  duration_ms: 4.0579
+  ...
+# Subtest: disposal rejects queued compilation and does not wait for or start the next native factory
+not ok 3 - disposal rejects queued compilation and does not wait for or start the next native factory
+  ---
+  duration_ms: 4.3162
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-pipeline-admission.test.js:41:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    2 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 2
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tests/remote-pipeline-admission.test.js:44:24)
+    async Test.run (node:internal/test_runner/test:797:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:526:7)
+  ...
+# Subtest: a rejected compilation fails admission without starting the queued pipeline
+not ok 4 - a rejected compilation fails admission without starting the queued pipeline
+  ---
+  duration_ms: 3.4537
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-pipeline-admission.test.js:50:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    2 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 2
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tests/remote-pipeline-admission.test.js:53:24)
+    async Test.run (node:internal/test_runner/test:797:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:526:7)
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 1
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 327.024

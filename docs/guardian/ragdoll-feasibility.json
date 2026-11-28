@@ -1,0 +1,67 @@
+{
+  "scope": "Node CPU feasibility only. Actual GLB rest poses, 14 capsule bodies/13 spherical joints per rig, flat ground, 360 steps at 60Hz, forced wakes every 45 steps. No angular limits, scene collision, skin mapping or recovery acceptance yet.",
+  "library": "@dimforge/rapier3d-compat 0.21.0",
+  "license": "Apache-2.0",
+  "initializationMs": 101.73169999999999,
+  "bundleBytes": 4340292,
+  "bundleGzipBytes": 1645573,
+  "rigs": {
+    "warthog": {
+      "feetY": 0.1668801401439989,
+      "headY": 2.428592104730256,
+      "nodes": 30
+    },
+    "hyena": {
+      "feetY": 0.2179844218948747,
+      "headY": 1.9685639997052085,
+      "nodes": 30
+    },
+    "buffalo": {
+      "feetY": 0.05786579589943974,
+      "headY": 2.2291816099836774,
+      "nodes": 30
+    },
+    "lion": {
+      "feetY": 0.1909289879107059,
+      "headY": 1.7890222670485252,
+      "nodes": 30
+    },
+    "rhino": {
+      "feetY": 0.30570099267968043,
+      "headY": 2.9116334914169033,
+      "nodes": 30
+    }
+  },
+  "runs": [
+    {
+      "ragdolls": 1,
+      "bodies": 14,
+      "joints": 13,
+      "creationMs": 5.8951000000000136,
+      "stepMeanMs": 0.766316111111111,
+      "stepP95Ms": 0.9511999999999716,
+      "stepMaxMs": 104.90129999999999,
+      "maxBodyCenterBelowGround": 0
+    },
+    {
+      "ragdolls": 3,
+      "bodies": 42,
+      "joints": 39,
+      "creationMs": 1.928700000000049,
+      "stepMeanMs": 0.5428555555555578,
+      "stepP95Ms": 0.8315000000000055,
+      "stepMaxMs": 3.0883999999999787,
+      "maxBodyCenterBelowGround": 0
+    },
+    {
+      "ragdolls": 6,
+      "bodies": 84,
+      "joints": 78,
+      "creationMs": 2.6077000000000226,
+      "stepMeanMs": 1.0218683333333334,
+      "stepP95Ms": 1.7117000000000644,
+      "stepMaxMs": 2.5912000000000717,
+      "maxBodyCenterBelowGround": 0
+    }
+  ]
+}

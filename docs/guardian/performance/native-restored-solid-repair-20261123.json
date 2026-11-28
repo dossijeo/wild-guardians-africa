@@ -1,0 +1,406 @@
+{
+  "date": "2026-11-23",
+  "runtime": "WorkerHostedRuntime and remote WebGPU Draw Worker",
+  "graphics": "NVIDIA GTX 1660 (Turing), Edge 158, 640×480, muy_baja",
+  "displayHz": 30,
+  "cases": [
+    {
+      "checkpointVersion": 1,
+      "checkpoint": {
+        "file": "native-ruined-solid-wall-disk-save-early-20261123.json",
+        "sha256": "099a5167ec0d79c710830cd18f5edd362d51d82f0df20739cfec7fad96eda63a"
+      },
+      "receipt": {
+        "file": "native-solid-repair-morph-v1-resume-physical-20261123.json",
+        "sha256": "cf6b425ea374571220b8451222db439fbbe472c99a7485e971f983c00b8f7596"
+      },
+      "spatialBarrierCount": 115,
+      "checkpointBalance": {
+        "n": "99990",
+        "d": "1"
+      },
+      "trace": {
+        "file": "native-solid-repair-morph-v1-resume-physical-20261123.trace.json.gz",
+        "sha256": "65412847691953176d8eda74e6c21df220f09c4269d5be3aa7526633f4506d11",
+        "dataLoss": false,
+        "browserVersion": "158.0.4370.33"
+      },
+      "restored": {
+        "savedAt": 30.850000000000083,
+        "timeline": {
+          "from": 0,
+          "to": 1,
+          "at": 30.75000000000008
+        },
+        "initialMeshes": 4,
+        "retainedAttributeChanges": 0,
+        "repairEvents": 1,
+        "actionBody": 1,
+        "idleBody": 1
+      },
+      "first": {
+        "simulationElapsed": 30.850000000000083,
+        "genericUniform": 30.849998474121094,
+        "root": 48,
+        "meshes": [
+          {
+            "id": 50,
+            "geometry": 43
+          },
+          {
+            "id": 51,
+            "geometry": 44
+          },
+          {
+            "id": 53,
+            "geometry": 45
+          },
+          {
+            "id": 54,
+            "geometry": 46
+          }
+        ],
+        "localAge": 0.09999999403953552,
+        "matchingSubmittedScalars": 8,
+        "witnessAge": 0.09999999403953552
+      },
+      "firstObservedComplete": {
+        "simulationElapsed": 31.25000000000009,
+        "genericUniform": 30.849998474121094,
+        "root": 48,
+        "meshes": [
+          {
+            "id": 50,
+            "geometry": 43
+          },
+          {
+            "id": 51,
+            "geometry": 44
+          },
+          {
+            "id": 53,
+            "geometry": 45
+          },
+          {
+            "id": 54,
+            "geometry": 46
+          }
+        ],
+        "localAge": 0.47999998927116394,
+        "matchingSubmittedScalars": 8,
+        "witnessAge": 0.47999998927116394
+      },
+      "healthyMesh": {
+        "simulationElapsed": 34.80000000000034,
+        "genericUniform": 30.849998474121094,
+        "root": 48,
+        "meshes": [
+          {
+            "id": 730,
+            "geometry": 355
+          }
+        ],
+        "localAge": 0.47999998927116394,
+        "matchingSubmittedScalars": 8,
+        "witnessAge": 0.47999998927116394
+      },
+      "savedPauseAge": 0.09999999403953552,
+      "pairCrossoverAge": 0.0990237475276321,
+      "advancingSequenceAges": [
+        0.14999999105930328,
+        0.19999998807907104,
+        0.19999998807907104,
+        0.25,
+        0.25,
+        0.29999998211860657,
+        0.29999998211860657,
+        0.3499999940395355,
+        0.3499999940395355,
+        0.44999998807907104,
+        0.44999998807907104,
+        0.47999998927116394
+      ],
+      "ready": {
+        "observedAt": 1795431289747.3,
+        "elapsedAtRelease": 34.300000000000296,
+        "curveDrawsAfterReady": 0
+      },
+      "graphics": {
+        "comparedOwners": 728,
+        "retainedBuffers": 728,
+        "replaced": [],
+        "retainedAttributeChanges": 0,
+        "oneRoot": true
+      },
+      "cadence": {
+        "count": 338,
+        "targetFrameMs": 16.666666666666668,
+        "aboveTarget": 337,
+        "measuredIntervals": 337,
+        "peaks": [
+          {
+            "at": 1795431282871.0999,
+            "sequence": 1,
+            "ticket": null,
+            "intervalMs": 37.800048828125,
+            "drawMs": 0.199951171875,
+            "trigger": "raf",
+            "replay": true
+          },
+          {
+            "at": 1795431287665.2998,
+            "sequence": 17,
+            "ticket": null,
+            "intervalMs": 37.39990234375,
+            "drawMs": 1.7001953125,
+            "trigger": "raf",
+            "replay": true
+          },
+          {
+            "at": 1795431285264.7998,
+            "sequence": 16,
+            "ticket": null,
+            "intervalMs": 36.7998046875,
+            "drawMs": 0.10009765625,
+            "trigger": "raf",
+            "replay": true
+          },
+          {
+            "at": 1795431282763.7998,
+            "sequence": 1,
+            "ticket": null,
+            "intervalMs": 36,
+            "drawMs": 0.2001953125,
+            "trigger": "raf",
+            "replay": true
+          },
+          {
+            "at": 1795431282799.4,
+            "sequence": 1,
+            "ticket": null,
+            "intervalMs": 35.60009765625,
+            "drawMs": 0.39990234375,
+            "trigger": "raf",
+            "replay": true
+          }
+        ],
+        "largestAdvancingCurveIntervalMs": 34.300048828125
+      },
+      "drained": true
+    },
+    {
+      "checkpointVersion": 2,
+      "checkpoint": {
+        "file": "native-solid-repair-v2-first-pair-save-20261123.json",
+        "sha256": "f5a2790bb4b5bb1b2f5d80c5d228d25df3bc99238cb31ab77b5023e578cc2dec"
+      },
+      "receipt": {
+        "file": "native-solid-repair-morph-v2-physical-20261123.json",
+        "sha256": "d108df625681e01bdce33515d0e743cc4b8b0962938e287d7fec81be47b3c85b"
+      },
+      "spatialBarrierCount": 115,
+      "checkpointBalance": {
+        "n": "99990",
+        "d": "1"
+      },
+      "trace": {
+        "file": "native-solid-repair-morph-v2-physical-20261123.trace.json.gz",
+        "sha256": "8e7fd32b03b0791ffe394a754f7d6bcae5206b28f061524e32c34e01b694ed2d",
+        "dataLoss": false,
+        "browserVersion": "158.0.4370.33"
+      },
+      "restored": {
+        "savedAt": 16.899999999999885,
+        "timeline": {
+          "from": 0,
+          "to": 1,
+          "at": 16.849999999999884
+        },
+        "initialMeshes": 4,
+        "retainedAttributeChanges": 0,
+        "repairEvents": 1,
+        "actionBody": 1,
+        "idleBody": 1
+      },
+      "first": {
+        "simulationElapsed": 16.899999999999885,
+        "genericUniform": 16.899999618530273,
+        "root": 218,
+        "meshes": [
+          {
+            "id": 220,
+            "geometry": 181
+          },
+          {
+            "id": 221,
+            "geometry": 182
+          },
+          {
+            "id": 223,
+            "geometry": 183
+          },
+          {
+            "id": 224,
+            "geometry": 184
+          }
+        ],
+        "localAge": 0.04999999701976776,
+        "matchingSubmittedScalars": 8,
+        "witnessAge": 0.04999999701976776
+      },
+      "firstObservedComplete": {
+        "simulationElapsed": 17.399999999999892,
+        "genericUniform": 16.899999618530273,
+        "root": 218,
+        "meshes": [
+          {
+            "id": 220,
+            "geometry": 181
+          },
+          {
+            "id": 221,
+            "geometry": 182
+          },
+          {
+            "id": 223,
+            "geometry": 183
+          },
+          {
+            "id": 224,
+            "geometry": 184
+          }
+        ],
+        "localAge": 0.47999998927116394,
+        "matchingSubmittedScalars": 8,
+        "witnessAge": 0.47999998927116394
+      },
+      "healthyMesh": {
+        "simulationElapsed": 19.199999999999918,
+        "genericUniform": 16.899999618530273,
+        "root": 218,
+        "meshes": [
+          {
+            "id": 789,
+            "geometry": 406
+          }
+        ],
+        "localAge": 0.47999998927116394,
+        "matchingSubmittedScalars": 8,
+        "witnessAge": 0.47999998927116394
+      },
+      "savedPauseAge": 0.04999999701976776,
+      "pairCrossoverAge": 0.0990237475276321,
+      "advancingSequenceAges": [
+        0.04999999701976776,
+        0.04999999701976776,
+        0.04999999701976776,
+        0.04999999701976776,
+        0.14999999105930328,
+        0.19999998807907104,
+        0.25,
+        0.25,
+        0.29999998211860657,
+        0.29999998211860657,
+        0.3499999940395355,
+        0.3499999940395355,
+        0.3999999761581421,
+        0.44999998807907104,
+        0.47999998927116394,
+        0.47999998927116394
+      ],
+      "ready": {
+        "observedAt": 1795431323270.3,
+        "elapsedAtRelease": 17.9499999999999,
+        "curveDrawsAfterReady": 0
+      },
+      "graphics": {
+        "comparedOwners": 1047,
+        "retainedBuffers": 1047,
+        "replaced": [],
+        "retainedAttributeChanges": 0,
+        "oneRoot": true
+      },
+      "cadence": {
+        "count": 342,
+        "targetFrameMs": 16.666666666666668,
+        "aboveTarget": 341,
+        "measuredIntervals": 341,
+        "peaks": [
+          {
+            "at": 1795431316666.2,
+            "sequence": 2,
+            "ticket": null,
+            "intervalMs": 36.89990234375,
+            "drawMs": 0.300048828125,
+            "trigger": "raf",
+            "replay": true
+          },
+          {
+            "at": 1795431319297.3,
+            "sequence": 17,
+            "ticket": null,
+            "intervalMs": 36.10009765625,
+            "drawMs": 0.300048828125,
+            "trigger": "raf",
+            "replay": true
+          },
+          {
+            "at": 1795431320430.5,
+            "sequence": 18,
+            "ticket": null,
+            "intervalMs": 36.099853515625,
+            "drawMs": 2.60009765625,
+            "trigger": "raf",
+            "replay": true
+          },
+          {
+            "at": 1795431316897.1,
+            "sequence": 4,
+            "ticket": null,
+            "intervalMs": 35.900146484375,
+            "drawMs": 0.39990234375,
+            "trigger": "raf",
+            "replay": false
+          },
+          {
+            "at": 1795431319830,
+            "sequence": 18,
+            "ticket": null,
+            "intervalMs": 35.199951171875,
+            "drawMs": 4.60009765625,
+            "trigger": "raf",
+            "replay": true
+          }
+        ],
+        "largestAdvancingCurveIntervalMs": 35.199951171875
+      },
+      "drained": true
+    }
+  ],
+  "firstAttempt": {
+    "receipt": {
+      "file": "native-solid-repair-morph-v1-physical-20261123.failure.json",
+      "sha256": "933be12cab18b354613fd352925e95087fab47e52c9236184d78100581c9a8d9"
+    },
+    "traceSha256": "f8b02d30db953bf01c7ce30cd00f9d67ae6548902bce2454e036f1cab2fdf25b",
+    "pausedElapsed": 30.850000000000083,
+    "firstLocalAge": 0.09999999403953552,
+    "observedReady": false,
+    "error": "Worker command not admitted: failed",
+    "initialFaultCaptured": false,
+    "topInterval": {
+      "at": 1795431133119,
+      "sequence": 11,
+      "ticket": null,
+      "intervalMs": 58.60009765625,
+      "drawMs": 0.5,
+      "trigger": "raf",
+      "replay": true
+    }
+  },
+  "scope": {
+    "c4Closed": false,
+    "physicalReadyArrivedAfterLocalCurve": true,
+    "workerHostDoubleCoversReadyBeforeLocalCurve": true
+  }
+}

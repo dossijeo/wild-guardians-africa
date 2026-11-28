@@ -1,0 +1,287 @@
+{
+  "ready": true,
+  "campaign": false,
+  "paused": false,
+  "lastPick": null,
+  "workerCandidate": null,
+  "workerGround": null,
+  "workers": [
+    {
+      "id": "worker-28",
+      "profile": "olderMale",
+      "x": 60,
+      "z": 0,
+      "status": "arriving",
+      "hits": 0
+    }
+  ],
+  "faceCandidate": false,
+  "faceCandidateSpecies": null,
+  "expressions": [
+    {
+      "id": "worker-28",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 10
+    }
+  ],
+  "entityCounts": {
+    "workers": 1,
+    "structures": 1,
+    "crops": 12,
+    "animals": 0
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 0,
+  "maxVisibleGuardians": 1,
+  "slopeSite": null,
+  "guideTrial": false,
+  "guideOrigin": null,
+  "guidePosition": null,
+  "elapsed": 3069.5707850000053,
+  "simulate": false,
+  "clockMode": "presentation-only",
+  "shields": [],
+  "active": 0,
+  "origins": [],
+  "retainedAttacks": [],
+  "retainedDraws": 0,
+  "attackVisual": [],
+  "reused": 1,
+  "draws": 53,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "spirit_appear",
+      "at": 3025.7845400000165,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3025.8344900000166,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3027.312760000016,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3028.773290000016,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3028.806375000016,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3030.3017350000173,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3031.7975600000163,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3031.830815000016,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3033.309185000016,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3034.7867450000167,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3034.8199950000167,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3036.3152800000184,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3037.7785850000187,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3037.8118300000187,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3038.1111550000187,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3038.144340000019,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3039.6232700000187,
+      "emitter": "guardian-world",
+      "played": true
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 0,
+    "maxStepMs": 0,
+    "solverMs": 0,
+    "solverSteps": 0,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": null
+  },
+  "physicsWorlds": 0,
+  "physicalBodies": 0,
+  "errors": [],
+  "report": null,
+  "commandCosts": [
+    {
+      "kind": "growth",
+      "targetId": "plant-3",
+      "position": {
+        "x": 87.5,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.32745657865175,
+        "y": 14.239304310822057,
+        "z": -3.3250578304483023
+      },
+      "plan": 5.329999923706055,
+      "logic": 1.034999966621399,
+      "render": 10.330000042915344,
+      "total": 16.699999928474426
+    },
+    {
+      "kind": "multiply",
+      "targetId": "plant-5",
+      "position": {
+        "x": 83,
+        "z": -10.5
+      },
+      "origin": {
+        "x": 83.91347568193187,
+        "y": 14.235480448781068,
+        "z": -7.85319774472684
+      },
+      "plan": 2.790000081062317,
+      "logic": 0.17499995231628418,
+      "render": 6.245000004768372,
+      "total": 9.210000038146973
+    },
+    {
+      "kind": "growth",
+      "targetId": "plant-7",
+      "position": {
+        "x": 84.5,
+        "z": -10.5
+      },
+      "origin": {
+        "x": 84.66386453988474,
+        "y": 14.235480448781068,
+        "z": -7.70479903896547
+      },
+      "plan": 1.4550000429153442,
+      "logic": 0.14499998092651367,
+      "render": 14.330000042915344,
+      "total": 15.93500006198883
+    },
+    {
+      "kind": "multiply",
+      "targetId": "plant-9",
+      "position": {
+        "x": 86,
+        "z": -10.5
+      },
+      "origin": {
+        "x": 87.3545465940936,
+        "y": 14.235480448781068,
+        "z": -12.950551677567606
+      },
+      "plan": 2.5749999284744263,
+      "logic": 0.12999999523162842,
+      "render": 18.460000038146973,
+      "total": 21.164999961853027
+    },
+    {
+      "kind": "growth",
+      "targetId": "plant-11",
+      "position": {
+        "x": 87.5,
+        "z": -10.5
+      },
+      "origin": {
+        "x": 87.65305913884653,
+        "y": 14.235480448781068,
+        "z": -7.704186540554689
+      },
+      "plan": 2.8949999809265137,
+      "logic": 0.19000005722045898,
+      "render": 13.329999923706055,
+      "total": 16.414999961853027
+    },
+    {
+      "kind": "multiply",
+      "targetId": "plant-13",
+      "position": {
+        "x": 89,
+        "z": -10.5
+      },
+      "origin": {
+        "x": 89.14461613162943,
+        "y": 14.260671128344757,
+        "z": -7.703737105622482
+      },
+      "plan": 3.8550000190734863,
+      "logic": 0.21999990940093994,
+      "render": 9.170000076293945,
+      "total": 13.245000004768372
+    }
+  ]
+}

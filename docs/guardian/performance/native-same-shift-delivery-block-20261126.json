@@ -1,0 +1,522 @@
+{
+  "baseline": "8f17b3bd583b9f8ca37501ea409dd7d1c1fa13d0",
+  "execution": "Game, canonical WASM and both authority ports with deterministic Host for native variants; ordinary JS movement for legacy variants",
+  "sampleCount": 570,
+  "sampleInterval": 0.1,
+  "nominalSubstep": 0.05,
+  "scene": {
+    "gate": "zarzas",
+    "gatePose": {
+      "x": -14,
+      "z": 8.2,
+      "yaw": 0
+    },
+    "crop": {
+      "species": "mijo",
+      "x": -10.6,
+      "z": 5.3
+    },
+    "farmArrival": {
+      "x": -14,
+      "z": 3.2
+    },
+    "villageEntry": {
+      "x": -14,
+      "z": 14.5
+    },
+    "initialWorkers": [
+      {
+        "x": -14,
+        "z": 11.8
+      },
+      {
+        "x": -14,
+        "z": 13.4
+      }
+    ],
+    "workerRadius": 0.28
+  },
+  "witnessFields": [
+    "reason",
+    "body",
+    "actor",
+    "conflictTime",
+    "slot",
+    "generation"
+  ],
+  "witnessReasons": {
+    "1": "stationary body",
+    "2": "reserved route"
+  },
+  "selectionControl": "The diagnostic loader skips selecting Harvest’s Carry consequence. It makes no alterations to either body or route.",
+  "nativeGate": {
+    "last": {
+      "elapsed": 67.00000000000266,
+      "opening": 1,
+      "workers": [
+        {
+          "id": "worker-900011",
+          "status": "acting",
+          "admission": "native-action",
+          "x": -10.600000381469727,
+          "z": 5.300000190734863
+        },
+        {
+          "id": "worker-900012",
+          "status": "arriving",
+          "admission": "native-farm-arrival",
+          "x": -13.97523021697998,
+          "z": 5.199846267700195
+        }
+      ]
+    },
+    "produced": [
+      {
+        "kind": "farm-arrival",
+        "committed": true,
+        "body": 1,
+        "ticket": 1
+      },
+      {
+        "kind": "idle-stroll",
+        "committed": true,
+        "body": 1,
+        "ticket": 3
+      },
+      {
+        "kind": "farm-arrival",
+        "committed": true,
+        "body": 2,
+        "ticket": 5
+      },
+      {
+        "kind": "idle-stroll-stop",
+        "committed": true,
+        "ticket": 7
+      },
+      {
+        "kind": "task-start",
+        "committed": true,
+        "body": 1,
+        "ticket": 9
+      },
+      {
+        "kind": "task-action",
+        "committed": true,
+        "ticket": 11
+      }
+    ],
+    "idle": [
+      {
+        "kind": 22,
+        "actor": 900012,
+        "status": 0,
+        "witness": [
+          1,
+          1,
+          0,
+          28.142752759747168,
+          0,
+          0
+        ],
+        "extra": {
+          "anchor": {
+            "kind": 1,
+            "id": 1000001,
+            "x": -10.6,
+            "z": 5.3,
+            "radius": 3
+          },
+          "sourceFarm": true
+        },
+        "calls": 208,
+        "lastAt": 69.54275275974983
+      }
+    ],
+    "carry": [
+      {
+        "kind": 16,
+        "actor": 900011,
+        "status": 0,
+        "witness": [
+          2,
+          2,
+          900012,
+          25.802959363965037,
+          0,
+          5
+        ],
+        "extra": {
+          "destination": {
+            "x": -14.233679632493326,
+            "z": 4.8916696066412415
+          }
+        },
+        "calls": 24,
+        "lastAt": 28.10295936396507
+      },
+      {
+        "kind": 16,
+        "actor": 900011,
+        "status": 0,
+        "witness": [
+          1,
+          2,
+          0,
+          28.302959363965073,
+          0,
+          0
+        ],
+        "extra": {
+          "destination": {
+            "x": -14.233679632493326,
+            "z": 4.8916696066412415
+          }
+        },
+        "calls": 208,
+        "lastAt": 69.70295936396772
+      }
+    ],
+    "events": [
+      {
+        "id": "event-29208",
+        "type": "HarvestRequested",
+        "targetId": "plant-1000001",
+        "count": 1,
+        "automatic": true,
+        "simulationTime": 18.999999999999915
+      }
+    ],
+    "carryDestinationDistance": 0.40220511533374986
+  },
+  "nativeGateWithoutCarryRequests": {
+    "last": {
+      "elapsed": 67.00000000000266,
+      "opening": 1,
+      "workers": [
+        {
+          "id": "worker-900011",
+          "status": "acting",
+          "admission": "native-action",
+          "x": -10.600000381469727,
+          "z": 5.300000190734863
+        },
+        {
+          "id": "worker-900012",
+          "status": "arriving",
+          "admission": "native-farm-arrival",
+          "x": -13.97523021697998,
+          "z": 5.199846267700195
+        }
+      ]
+    },
+    "produced": [
+      {
+        "kind": "farm-arrival",
+        "committed": true,
+        "body": 1,
+        "ticket": 1
+      },
+      {
+        "kind": "idle-stroll",
+        "committed": true,
+        "body": 1,
+        "ticket": 3
+      },
+      {
+        "kind": "farm-arrival",
+        "committed": true,
+        "body": 2,
+        "ticket": 5
+      },
+      {
+        "kind": "idle-stroll-stop",
+        "committed": true,
+        "ticket": 7
+      },
+      {
+        "kind": "task-start",
+        "committed": true,
+        "body": 1,
+        "ticket": 9
+      },
+      {
+        "kind": "task-action",
+        "committed": true,
+        "ticket": 11
+      }
+    ],
+    "idle": [
+      {
+        "kind": 22,
+        "actor": 900012,
+        "status": 0,
+        "witness": [
+          1,
+          1,
+          0,
+          28.142752759747168,
+          0,
+          0
+        ],
+        "extra": {
+          "anchor": {
+            "kind": 1,
+            "id": 1000001,
+            "x": -10.6,
+            "z": 5.3,
+            "radius": 3
+          },
+          "sourceFarm": true
+        },
+        "calls": 416,
+        "lastAt": 69.64275275974983
+      }
+    ],
+    "carry": [],
+    "events": [
+      {
+        "id": "event-29208",
+        "type": "HarvestRequested",
+        "targetId": "plant-1000001",
+        "count": 1,
+        "automatic": true,
+        "simulationTime": 18.999999999999915
+      }
+    ],
+    "carryDestinationDistance": null
+  },
+  "nativeOpen": {
+    "last": {
+      "elapsed": 67.00000000000266,
+      "opening": null,
+      "workers": [
+        {
+          "id": "worker-900011",
+          "status": "acting",
+          "admission": "native-action",
+          "x": -10.600000381469727,
+          "z": 5.300000190734863
+        },
+        {
+          "id": "worker-900012",
+          "status": "arriving",
+          "admission": "native-farm-arrival",
+          "x": -14,
+          "z": 5.199999809265137
+        }
+      ]
+    },
+    "produced": [
+      {
+        "kind": "farm-arrival",
+        "committed": true,
+        "body": 1,
+        "ticket": 1
+      },
+      {
+        "kind": "idle-stroll",
+        "committed": true,
+        "body": 1,
+        "ticket": 3
+      },
+      {
+        "kind": "farm-arrival",
+        "committed": true,
+        "body": 2,
+        "ticket": 5
+      },
+      {
+        "kind": "idle-stroll-stop",
+        "committed": true,
+        "ticket": 7
+      },
+      {
+        "kind": "task-start",
+        "committed": true,
+        "body": 1,
+        "ticket": 9
+      },
+      {
+        "kind": "task-action",
+        "committed": true,
+        "ticket": 11
+      }
+    ],
+    "idle": [
+      {
+        "kind": 22,
+        "actor": 900012,
+        "status": 0,
+        "witness": [
+          1,
+          1,
+          0,
+          27.565259939755144,
+          0,
+          0
+        ],
+        "extra": {
+          "anchor": {
+            "kind": 1,
+            "id": 1000001,
+            "x": -10.6,
+            "z": 5.3,
+            "radius": 3
+          },
+          "sourceFarm": true
+        },
+        "calls": 211,
+        "lastAt": 69.56525993975782
+      }
+    ],
+    "carry": [
+      {
+        "kind": 16,
+        "actor": 900011,
+        "status": 0,
+        "witness": [
+          2,
+          2,
+          900012,
+          25.22664063524875,
+          0,
+          5
+        ],
+        "extra": {
+          "destination": {
+            "x": -14.233679632493326,
+            "z": 4.8916696066412415
+          }
+        },
+        "calls": 24,
+        "lastAt": 27.526640635248782
+      },
+      {
+        "kind": 16,
+        "actor": 900011,
+        "status": 0,
+        "witness": [
+          1,
+          2,
+          0,
+          27.726640635248785,
+          0,
+          0
+        ],
+        "extra": {
+          "destination": {
+            "x": -14.233679632493326,
+            "z": 4.8916696066412415
+          }
+        },
+        "calls": 211,
+        "lastAt": 69.72664063525144
+      }
+    ],
+    "events": [
+      {
+        "id": "event-29208",
+        "type": "HarvestRequested",
+        "targetId": "plant-1000001",
+        "count": 1,
+        "automatic": true,
+        "simulationTime": 18.999999999999915
+      }
+    ],
+    "carryDestinationDistance": 0.38687683374984866
+  },
+  "legacyGate": {
+    "last": {
+      "elapsed": 67.00000000000266,
+      "opening": 0,
+      "workers": [
+        {
+          "id": "worker-900011",
+          "status": "carrying",
+          "x": -14,
+          "z": 4.622000190734642
+        },
+        {
+          "id": "worker-900012",
+          "status": "idle",
+          "x": -14,
+          "z": 5.190400000000692
+        }
+      ]
+    },
+    "produced": [],
+    "idle": [],
+    "carry": [],
+    "events": [
+      {
+        "id": "event-29208",
+        "type": "HarvestRequested",
+        "targetId": "plant-1000001",
+        "count": 1,
+        "automatic": true,
+        "simulationTime": 18.999999999999915
+      },
+      {
+        "id": "event-29210",
+        "type": "CropPicked",
+        "workerId": "worker-900011",
+        "targetId": "plant-1000001",
+        "crateId": "crate-1000003",
+        "simulationTime": 35.4900000000004,
+        "presentation": {
+          "x": -10.6,
+          "z": 5.3
+        }
+      }
+    ],
+    "carryDestinationDistance": null
+  },
+  "legacyOpen": {
+    "last": {
+      "elapsed": 67.00000000000266,
+      "opening": null,
+      "workers": [
+        {
+          "id": "worker-900011",
+          "status": "carrying",
+          "x": -14,
+          "z": 4.622000190734639
+        },
+        {
+          "id": "worker-900012",
+          "status": "idle",
+          "x": -14,
+          "z": 5.190400000000692
+        }
+      ]
+    },
+    "produced": [],
+    "idle": [],
+    "carry": [],
+    "events": [
+      {
+        "id": "event-29208",
+        "type": "HarvestRequested",
+        "targetId": "plant-1000001",
+        "count": 1,
+        "automatic": true,
+        "simulationTime": 18.999999999999915
+      },
+      {
+        "id": "event-29210",
+        "type": "CropPicked",
+        "workerId": "worker-900011",
+        "targetId": "plant-1000001",
+        "crateId": "crate-1000003",
+        "simulationTime": 34.870000000000346,
+        "presentation": {
+          "x": -10.6,
+          "z": 5.3
+        }
+      }
+    ],
+    "carryDestinationDistance": null
+  },
+  "limitations": "No GPU, and attempt counts are not timings. Reported conflictTime may be later than the current simulation time."
+}

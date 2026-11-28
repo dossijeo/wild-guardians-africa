@@ -1,0 +1,248 @@
+{
+  "version": 1,
+  "scope": {
+    "biome": "sabana",
+    "seed": 712,
+    "profile": "youngMale",
+    "worker": "worker-6",
+    "crop": "plant-3",
+    "explicitNativeWorkerLifecycle": true,
+    "gate": false,
+    "manualClock": true
+  },
+  "raw": {
+    "file": "E:/wild-guardians-qa/savanna-native-first-task-20261126/nvidia.json",
+    "sha256": "f23a686eb0c0040a161689ac5777c9379ce9ec3839ba28ba7d1a09da4dba218f"
+  },
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 99.40000000596046
+    }
+  },
+  "artifacts": [
+    {
+      "file": "src/world/wild-engine/spatial-savanna.wasm",
+      "sha256": "27a9310cf53029c30194d640005a9a56688e8b644f80661956cc0204a8c83a9b"
+    },
+    {
+      "file": "public/wild-engine/spatial-threaded.wasm",
+      "sha256": "9ef3a5d673c3a49dead8b82f55ff97a87cd9acd20629d782693a08e4b88dfb4f"
+    },
+    {
+      "file": "public/wild-engine/spatial-threaded.mjs",
+      "sha256": "7ff2cb7b9b24fe3ddc31ab60e522394d385ff48efe572431dc2721df8e77480f"
+    }
+  ],
+  "preimages": {
+    "coldBoot": {
+      "file": "E:/wild-guardians-qa/savanna-native-first-task-20261126/cold-before.tap",
+      "sha256": "b1baeb4a1ba2950c181868dd4b80840b0cdeeba86b6734e83ec80176333c9377"
+    },
+    "taskWithPreviousWasm": {
+      "file": "E:/wild-guardians-qa/savanna-native-first-task-20261126/task-base-wasm.tap",
+      "sha256": "79b17c258c2d4821b411a5762d923e8a6085b333e6f7ea59417be470f89d15d6"
+    }
+  },
+  "coldClock": {
+    "protocolVersion": 2,
+    "clockVersion": 1,
+    "authorityEpoch": "5fe9d460-5259-4b39-8ccc-92d383a94712/1",
+    "nativeSession": 1,
+    "clockSequence": 1,
+    "intentSequence": 0,
+    "committedThrough": 0,
+    "rate": 1,
+    "paused": false,
+    "reanchor": true,
+    "anchorLogicalTime": 0,
+    "anchorAbsoluteMs": 1795714375803.9
+  },
+  "farm": {
+    "prepared": {
+      "version": 1,
+      "authorityEpoch": "5fe9d460-5259-4b39-8ccc-92d383a94712/1",
+      "nativeSession": 1,
+      "ticket": 1,
+      "effectiveTime": 0
+    },
+    "requestId": 1,
+    "aborted": true,
+    "acquired": false,
+    "origin": [
+      60,
+      0
+    ]
+  },
+  "task": {
+    "acquired": {
+      "version": 1,
+      "authorityEpoch": "5fe9d460-5259-4b39-8ccc-92d383a94712/1",
+      "nativeSession": 1,
+      "ticket": 3,
+      "effectiveTime": 0.19999999999999998
+    },
+    "display": {
+      "sequence": 28,
+      "world": {
+        "version": 1,
+        "authorityEpoch": "5fe9d460-5259-4b39-8ccc-92d383a94712/1",
+        "nativeSession": 1,
+        "ticket": 3,
+        "effectiveTime": 0.19999999999999998
+      },
+      "clock": 0.6400000000000002,
+      "row": {
+        "nativeStart": {
+          "kind": "native-task-start-reference",
+          "version": 1,
+          "actorId": 6,
+          "bodyId": 1,
+          "taskId": 7,
+          "targetId": 3,
+          "requestSequence": 3,
+          "requestedAt": 0.02,
+          "sourceControlSequence": 3,
+          "endTime": 39.38330410099624,
+          "sourceRequestHandle": {
+            "kind": "native-task-route-request-handle",
+            "authorityEpoch": "5fe9d460-5259-4b39-8ccc-92d383a94712/1",
+            "session": 1,
+            "slot": 0,
+            "generation": 1
+          },
+          "expectedRouteHandle": {
+            "authorityEpoch": "5fe9d460-5259-4b39-8ccc-92d383a94712/1",
+            "session": 1,
+            "slot": 0,
+            "generation": 3
+          },
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "5fe9d460-5259-4b39-8ccc-92d383a94712/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 0.04
+          }
+        },
+        "semantic": "relative",
+        "epoch": 0.04,
+        "executionEpoch": 0.19999999999999998,
+        "elapsed": 0.4799999976158142
+      }
+    }
+  },
+  "watering": {
+    "acquired": {
+      "version": 1,
+      "authorityEpoch": "5fe9d460-5259-4b39-8ccc-92d383a94712/1",
+      "nativeSession": 1,
+      "ticket": 5,
+      "effectiveTime": 43.840000000001254
+    },
+    "end": 48.64000000000125,
+    "display": {
+      "sequence": 204,
+      "world": {
+        "version": 1,
+        "authorityEpoch": "5fe9d460-5259-4b39-8ccc-92d383a94712/1",
+        "nativeSession": 1,
+        "ticket": 5,
+        "effectiveTime": 43.840000000001254
+      },
+      "clock": 43.840000000001254,
+      "row": {
+        "nativeAction": {
+          "kind": "native-task-action-reference",
+          "version": 1,
+          "request": {
+            "kind": "native-task-action-resource-request",
+            "version": 1,
+            "nativeRoute": {
+              "actorId": 6,
+              "assignmentSequence": 4,
+              "routeHandle": {
+                "authorityEpoch": "5fe9d460-5259-4b39-8ccc-92d383a94712/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 3
+              }
+            },
+            "taskId": 7,
+            "targetId": 3,
+            "bodyId": 1,
+            "requestedAt": 39.560000000000585,
+            "actionKind": "initial",
+            "duration": 4.8,
+            "heading": 1.039073456627862,
+            "executedThrough": 39.560000000000585,
+            "authorizedAutonomy": false
+          },
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "5fe9d460-5259-4b39-8ccc-92d383a94712/1",
+            "nativeSession": 1,
+            "ticket": 4,
+            "effectiveTime": 39.560000000000585
+          },
+          "sourceControlSequence": 4,
+          "origin": {
+            "x": 86.1122055053711,
+            "z": -7.522230625152588
+          },
+          "radius": 0.28,
+          "profile": 1,
+          "motionFlags": 0,
+          "startTime": 39.560000000000585,
+          "endTime": 44.36000000000058,
+          "runPhase": 0,
+          "walkPhase": 59.01495615149437,
+          "carryPhase": 0,
+          "runRemaining": 105.80409353316266
+        },
+        "relativeTime": 0,
+        "semantic": "relative",
+        "epoch": 39.560000000000585,
+        "executionEpoch": 43.840000000001254,
+        "elapsed": 39.560000000000585
+      }
+    }
+  },
+  "idle": {
+    "acquired": {
+      "version": 1,
+      "authorityEpoch": "5fe9d460-5259-4b39-8ccc-92d383a94712/1",
+      "nativeSession": 1,
+      "ticket": 7,
+      "effectiveTime": 51.64000000000247
+    },
+    "bodyId": 1,
+    "preparedAt": 48.640000000002004
+  },
+  "events": [
+    {
+      "id": "event-6",
+      "type": "HiringConfirmed"
+    },
+    {
+      "id": "event-7",
+      "type": "WaterSatisfied",
+      "workerId": "worker-6",
+      "targetId": "plant-3"
+    }
+  ],
+  "final": {
+    "elapsed": 51.68000000000248,
+    "drained": true,
+    "errors": []
+  }
+}

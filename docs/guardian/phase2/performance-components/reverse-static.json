@@ -1,0 +1,1756 @@
+{
+  "ready": true,
+  "campaign": false,
+  "paused": false,
+  "lastPick": null,
+  "workerCandidate": null,
+  "workerGround": null,
+  "workers": [
+    {
+      "id": "worker-28",
+      "profile": "olderMale",
+      "x": 60,
+      "z": 0,
+      "status": "arriving",
+      "hits": 0
+    }
+  ],
+  "faceCandidate": false,
+  "faceCandidateSpecies": null,
+  "expressions": [
+    {
+      "id": "worker-28",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 10
+    },
+    {
+      "id": "qa-beast-0",
+      "weights": [
+        0,
+        0,
+        7.094900876453083e-107
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-1",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-2",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-3",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 10
+    },
+    {
+      "id": "qa-beast-4",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 10
+    },
+    {
+      "id": "qa-beast-5",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-6",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-7",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-8",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 10
+    },
+    {
+      "id": "qa-beast-9",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 10
+    },
+    {
+      "id": "qa-beast-10",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-11",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-12",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-13",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 10
+    },
+    {
+      "id": "qa-beast-14",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 10
+    },
+    {
+      "id": "qa-beast-15",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-16",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-17",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-18",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 10
+    },
+    {
+      "id": "qa-beast-19",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 10
+    }
+  ],
+  "entityCounts": {
+    "workers": 1,
+    "structures": 1,
+    "crops": 12,
+    "animals": 20
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 0,
+  "maxVisibleGuardians": 1,
+  "slopeSite": null,
+  "guideTrial": false,
+  "guideOrigin": null,
+  "guidePosition": null,
+  "elapsed": 3080.0198000000287,
+  "simulate": false,
+  "clockMode": "presentation-only",
+  "shields": [],
+  "active": 0,
+  "origins": [],
+  "retainedAttacks": [],
+  "retainedDraws": 0,
+  "attackVisual": [],
+  "reused": 32,
+  "health": 972,
+  "animalState": "walking",
+  "animalPosition": [
+    90,
+    -6
+  ],
+  "draws": 93,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "hyena_hurt",
+      "at": 3052.665600000022,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3052.665600000022,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3052.9814500000225,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3053.1478200000224,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3053.2308950000224,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3053.2308950000224,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3053.596715000022,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3053.7464600000217,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3053.879430000022,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3053.879430000022,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3054.112350000022,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3054.1955000000225,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3054.1955000000225,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3054.6942650000224,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3054.7774700000223,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3054.7774700000223,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3055.2927600000226,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3055.4091750000225,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3055.4091750000225,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3055.8914350000223,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3056.0078850000223,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3056.0078850000223,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3056.5232650000216,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3056.639560000022,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3056.639560000022,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3057.155085000022,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3057.2549000000217,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3057.2549000000217,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3057.7703150000216,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3057.8368400000213,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3057.8368400000213,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3058.3692100000217,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3058.4521850000215,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3058.4521850000215,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3058.9843150000215,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3059.0840900000217,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3059.0840900000217,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3059.2669650000216,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3059.366840000022,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3059.366840000022,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3059.8822350000223,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3059.9987200000223,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3059.9987200000223,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3060.514225000023,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3060.5972900000233,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3060.5972900000233,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3061.1294850000236,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3061.2458600000236,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3061.2458600000236,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3061.744615000024,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3061.861040000024,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3061.861040000024,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3062.3432550000234,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3062.459750000023,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3062.459750000023,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3062.9751350000233,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3063.0750150000235,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3063.0750150000235,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3063.5903750000234,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3063.706900000024,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3063.706900000024,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3064.205600000024,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3064.288855000024,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3064.288855000024,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3064.3554100000238,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3064.521605000024,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3064.621370000024,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3064.621370000024,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3064.9540800000245,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3065.120535000024,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3065.2201950000244,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3065.2201950000244,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3065.553020000025,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3065.702555000025,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3065.8023450000246,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3065.8023450000246,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3066.1349950000244,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3066.284665000025,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3066.417580000025,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3066.417580000025,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3066.7669300000257,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3066.949670000026,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3067.032760000026,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3067.032760000026,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3067.3487950000263,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3067.498435000027,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3067.5981300000267,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3067.5981300000267,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3067.9473150000267,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3068.130290000027,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3068.2134500000266,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3068.2134500000266,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3068.562880000027,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3068.745730000027,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3068.828765000027,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3068.828765000027,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3069.1614550000277,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3069.310975000027,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3069.427435000027,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3069.427435000027,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 0,
+    "maxStepMs": 0,
+    "solverMs": 0,
+    "solverSteps": 0,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": null
+  },
+  "physicsWorlds": 0,
+  "physicalBodies": 0,
+  "allDown": [
+    {
+      "id": "qa-beast-0",
+      "x": 90,
+      "z": -6
+    },
+    {
+      "id": "qa-beast-1",
+      "x": 92.3,
+      "z": -6
+    },
+    {
+      "id": "qa-beast-2",
+      "x": 94.1,
+      "z": -6
+    },
+    {
+      "id": "qa-beast-3",
+      "x": 95.9,
+      "z": -6
+    },
+    {
+      "id": "qa-beast-4",
+      "x": 97.7,
+      "z": -6
+    },
+    {
+      "id": "qa-beast-5",
+      "x": 90.5,
+      "z": -4.2
+    },
+    {
+      "id": "qa-beast-6",
+      "x": 92.3,
+      "z": -4.2
+    },
+    {
+      "id": "qa-beast-7",
+      "x": 94.1,
+      "z": -4.2
+    },
+    {
+      "id": "qa-beast-8",
+      "x": 95.9,
+      "z": -4.2
+    },
+    {
+      "id": "qa-beast-9",
+      "x": 97.7,
+      "z": -4.2
+    },
+    {
+      "id": "qa-beast-10",
+      "x": 90.5,
+      "z": -2.4
+    },
+    {
+      "id": "qa-beast-11",
+      "x": 92.3,
+      "z": -2.4
+    },
+    {
+      "id": "qa-beast-12",
+      "x": 94.1,
+      "z": -2.4
+    },
+    {
+      "id": "qa-beast-13",
+      "x": 95.9,
+      "z": -2.4
+    },
+    {
+      "id": "qa-beast-14",
+      "x": 97.7,
+      "z": -2.4
+    },
+    {
+      "id": "qa-beast-15",
+      "x": 90.5,
+      "z": -0.5999999999999996
+    },
+    {
+      "id": "qa-beast-16",
+      "x": 92.3,
+      "z": -0.5999999999999996
+    },
+    {
+      "id": "qa-beast-17",
+      "x": 94.1,
+      "z": -0.5999999999999996
+    },
+    {
+      "id": "qa-beast-18",
+      "x": 95.9,
+      "z": -0.5999999999999996
+    },
+    {
+      "id": "qa-beast-19",
+      "x": 97.7,
+      "z": -0.5999999999999996
+    }
+  ],
+  "errors": [],
+  "report": {
+    "scope": "8 balanced ABBA/BAAB blocks; 1.2s warmup + 4s sample each; identical Attack commands every 600ms; no forced render or GPU queries",
+    "visibility": "visible",
+    "blocks": [
+      {
+        "guardian": false,
+        "mode": false,
+        "frames": 116,
+        "averageFps": 28.826572135390442,
+        "frameP50": 33.26499999999942,
+        "frameP95": 49.91500000000087,
+        "frameP99": 49.98500000000058,
+        "renderP95": 35.94000005722046,
+        "animationP95": 0,
+        "vfxP95": 0.004999995231628418,
+        "drawP95": 93,
+        "hiddenFrames": 0,
+        "castFrames": 7,
+        "castCpuP95": 2.1549999713897705,
+        "afterCastFrameP95": 49.8949999999968,
+        "otherFrameP95": 49.91500000000087,
+        "stagesP95": [
+          0.3450000286102295,
+          22.00499999523163,
+          0.43999993801116943,
+          0.004999995231628418,
+          1.649999976158142,
+          0.25,
+          0.004999995231628418,
+          0.004999995231628418,
+          0.004999995231628418,
+          13.490000009536743
+        ]
+      },
+      {
+        "guardian": true,
+        "mode": true,
+        "frames": 97,
+        "averageFps": 24.10509822827529,
+        "frameP50": 33.40500000000611,
+        "frameP95": 66.50499999999738,
+        "frameP99": 82.98999999999796,
+        "renderP95": 23.830000042915344,
+        "animationP95": 0.23500001430511475,
+        "vfxP95": 0.4100000858306885,
+        "drawP95": 104,
+        "hiddenFrames": 0,
+        "castFrames": 7,
+        "castCpuP95": 1.7049999237060547,
+        "afterCastFrameP95": 50.099999999998545,
+        "otherFrameP95": 66.50499999999738,
+        "stagesP95": [
+          0.4099999666213989,
+          13.524999976158142,
+          0.25999999046325684,
+          0.004999995231628418,
+          0.8899999856948853,
+          0.4049999713897705,
+          0.004999995231628418,
+          0.004999995231628418,
+          0.004999995231628418,
+          9.18999993801117
+        ]
+      },
+      {
+        "guardian": true,
+        "mode": true,
+        "frames": 94,
+        "averageFps": 23.359347528692865,
+        "frameP50": 49.75,
+        "frameP95": 66.55500000000029,
+        "frameP99": 83.20999999999913,
+        "renderP95": 26.514999985694885,
+        "animationP95": 0.18500006198883057,
+        "vfxP95": 0.3500000238418579,
+        "drawP95": 104,
+        "hiddenFrames": 0,
+        "castFrames": 7,
+        "castCpuP95": 1.815000057220459,
+        "afterCastFrameP95": 49.95999999999913,
+        "otherFrameP95": 66.55500000000029,
+        "stagesP95": [
+          0.38999998569488525,
+          15.855000019073486,
+          0.2200000286102295,
+          0,
+          0.8350000381469727,
+          0.36500000953674316,
+          0.004999995231628418,
+          0.004999995231628418,
+          0.004999995231628418,
+          9.960000038146973
+        ]
+      },
+      {
+        "guardian": false,
+        "mode": false,
+        "frames": 116,
+        "averageFps": 28.826034879502206,
+        "frameP50": 33.275000000001455,
+        "frameP95": 49.854999999995925,
+        "frameP99": 50.044999999998254,
+        "renderP95": 35.980000019073486,
+        "animationP95": 0,
+        "vfxP95": 0.004999995231628418,
+        "drawP95": 93,
+        "hiddenFrames": 0,
+        "castFrames": 7,
+        "castCpuP95": 1.8650000095367432,
+        "afterCastFrameP95": 33.349999999998545,
+        "otherFrameP95": 49.854999999995925,
+        "stagesP95": [
+          0.36000001430511475,
+          20.37999999523163,
+          0.4299999475479126,
+          0.004999995231628418,
+          1.3200000524520874,
+          0.2549999952316284,
+          0.004999995231628418,
+          0.004999995231628418,
+          0.004999995231628418,
+          12.225000023841858
+        ]
+      },
+      {
+        "guardian": true,
+        "mode": true,
+        "frames": 96,
+        "averageFps": 23.95580154614733,
+        "frameP50": 49.70999999999913,
+        "frameP95": 66.48999999999796,
+        "frameP99": 83.12999999999738,
+        "renderP95": 25.380000114440918,
+        "animationP95": 0.16499996185302734,
+        "vfxP95": 0.3650001287460327,
+        "drawP95": 104,
+        "hiddenFrames": 0,
+        "castFrames": 7,
+        "castCpuP95": 1.4600000381469727,
+        "afterCastFrameP95": 49.88999999999942,
+        "otherFrameP95": 66.48999999999796,
+        "stagesP95": [
+          0.43999993801116943,
+          15.65499997138977,
+          0.25,
+          0.004999995231628418,
+          0.8949999809265137,
+          0.3400000333786011,
+          0.004999995231628418,
+          0.004999995231628418,
+          0.004999995231628418,
+          9.679999947547913
+        ]
+      },
+      {
+        "guardian": false,
+        "mode": false,
+        "frames": 112,
+        "averageFps": 27.947912078863006,
+        "frameP50": 33.270000000004075,
+        "frameP95": 49.88000000000466,
+        "frameP99": 50.09000000001106,
+        "renderP95": 35.58500003814697,
+        "animationP95": 0,
+        "vfxP95": 0.004999995231628418,
+        "drawP95": 93,
+        "hiddenFrames": 0,
+        "castFrames": 7,
+        "castCpuP95": 1.5500000715255737,
+        "afterCastFrameP95": 49.88500000000931,
+        "otherFrameP95": 49.875,
+        "stagesP95": [
+          0.34499990940093994,
+          21.865000009536743,
+          0.36000001430511475,
+          0.004999995231628418,
+          1.3899999856948853,
+          0.2549999952316284,
+          0.004999995231628418,
+          0.004999995231628418,
+          0.004999995231628418,
+          11.669999957084656
+        ]
+      },
+      {
+        "guardian": false,
+        "mode": false,
+        "frames": 118,
+        "averageFps": 29.20181298713511,
+        "frameP50": 33.270000000004075,
+        "frameP95": 49.919999999998254,
+        "frameP99": 49.98500000000058,
+        "renderP95": 35.02499997615814,
+        "animationP95": 0,
+        "vfxP95": 0.004999995231628418,
+        "drawP95": 93,
+        "hiddenFrames": 0,
+        "castFrames": 7,
+        "castCpuP95": 1.7450000047683716,
+        "afterCastFrameP95": 33.354999999995925,
+        "otherFrameP95": 49.919999999998254,
+        "stagesP95": [
+          0.2749999761581421,
+          20.27999997138977,
+          0.41499996185302734,
+          0.004999995231628418,
+          1.465000033378601,
+          0.30500006675720215,
+          0.004999995231628418,
+          0.004999995231628418,
+          0.004999995231628418,
+          12.329999923706055
+        ]
+      },
+      {
+        "guardian": true,
+        "mode": true,
+        "frames": 95,
+        "averageFps": 23.607704560760016,
+        "frameP50": 49.76000000000931,
+        "frameP95": 66.52499999999418,
+        "frameP99": 83.16500000000815,
+        "renderP95": 24.289999961853027,
+        "animationP95": 0.1650000810623169,
+        "vfxP95": 0.33500003814697266,
+        "drawP95": 104,
+        "hiddenFrames": 0,
+        "castFrames": 7,
+        "castCpuP95": 1.6400001049041748,
+        "afterCastFrameP95": 50,
+        "otherFrameP95": 66.52499999999418,
+        "stagesP95": [
+          0.4099999666213989,
+          13.565000057220459,
+          0.22999989986419678,
+          0.004999995231628418,
+          0.9000000953674316,
+          0.3349999189376831,
+          0.004999995231628418,
+          0.004999995231628418,
+          0.004999995231628418,
+          9.090000033378601
+        ]
+      }
+    ]
+  },
+  "commandCosts": [
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.3700000047683716,
+      "logic": 0.059999942779541016,
+      "render": 0.004999995231628418,
+      "total": 1.434999942779541
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 0.7350000143051147,
+      "logic": 0.04999995231628418,
+      "render": 0,
+      "total": 0.7899999618530273
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.0550000667572021,
+      "logic": 0.059999942779541016,
+      "render": 0,
+      "total": 1.1150000095367432
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 0.8600000143051147,
+      "logic": 0.0549999475479126,
+      "render": 0,
+      "total": 0.9149999618530273
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 0.809999942779541,
+      "logic": 0.05500006675720215,
+      "render": 0,
+      "total": 0.8650000095367432
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 0.9749999046325684,
+      "logic": 0.060000061988830566,
+      "render": 0,
+      "total": 1.034999966621399
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 0.9550000429153442,
+      "logic": 0.08500003814697266,
+      "render": 0,
+      "total": 1.040000081062317
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 0.9350000619888306,
+      "logic": 0.06499993801116943,
+      "render": 0,
+      "total": 1
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.4300000667572021,
+      "logic": 0.07999992370605469,
+      "render": 0,
+      "total": 1.5099999904632568
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.4499999284744263,
+      "logic": 0.08500003814697266,
+      "render": 0.004999995231628418,
+      "total": 1.5399999618530273
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.2549999952316284,
+      "logic": 0.09500002861022949,
+      "render": 0,
+      "total": 1.350000023841858
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 0.9550000429153442,
+      "logic": 0.06500005722045898,
+      "render": 0,
+      "total": 1.0200001001358032
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.4850000143051147,
+      "logic": 0.07499992847442627,
+      "render": 0,
+      "total": 1.5649999380111694
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.2599999904632568,
+      "logic": 0.059999942779541016,
+      "render": 0,
+      "total": 1.3249999284744263
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.649999976158142,
+      "logic": 0.08500003814697266,
+      "render": 0,
+      "total": 1.7350000143051147
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.1050000190734863,
+      "logic": 0.060000061988830566,
+      "render": 0.004999995231628418,
+      "total": 1.1700000762939453
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.5549999475479126,
+      "logic": 0.0700000524520874,
+      "render": 0.004999995231628418,
+      "total": 1.6299999952316284
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.1299999952316284,
+      "logic": 0.0700000524520874,
+      "render": 0,
+      "total": 1.2000000476837158
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.0149999856948853,
+      "logic": 0.06499993801116943,
+      "render": 0.004999995231628418,
+      "total": 1.084999918937683
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.059999942779541,
+      "logic": 0.060000061988830566,
+      "render": 0.004999995231628418,
+      "total": 1.125
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 0.9799998998641968,
+      "logic": 0.0700000524520874,
+      "render": 0,
+      "total": 1.0499999523162842
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 0.9499999284744263,
+      "logic": 0.0700000524520874,
+      "render": 0,
+      "total": 1.0199999809265137
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.6799999475479126,
+      "logic": 0.08500003814697266,
+      "render": 0.004999995231628418,
+      "total": 1.7699999809265137
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.159999966621399,
+      "logic": 0.04500007629394531,
+      "render": 0.004999995231628418,
+      "total": 1.2100000381469727
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.034999966621399,
+      "logic": 0.05500006675720215,
+      "render": 0.004999995231628418,
+      "total": 1.0950000286102295
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.274999976158142,
+      "logic": 0.1549999713897705,
+      "render": 0,
+      "total": 1.4299999475479126
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.5799999237060547,
+      "logic": 0.04500007629394531,
+      "render": 0.004999995231628418,
+      "total": 1.6299999952316284
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 0.7349998950958252,
+      "logic": 0.04500007629394531,
+      "render": 0,
+      "total": 0.7799999713897705
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.2850000858306885,
+      "logic": 0.1099998950958252,
+      "render": 0,
+      "total": 1.3949999809265137
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.0350000858306885,
+      "logic": 0.06999993324279785,
+      "render": 0,
+      "total": 1.1100000143051147
+    }
+  ]
+}

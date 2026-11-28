@@ -1,0 +1,118 @@
+{
+  counts: {
+    frames: 2469,
+    opportunities: 2491,
+    outcomes: { 'awaiting-prepared-frame': 15, submitted: 2469, hidden: 7 }
+  },
+  maxima: {
+    submittedDrawStartIntervalMs: 39.960205078125,
+    callbackIntervalMs: 39.965087890625,
+    drawMs: 8.5849609375
+  },
+  ordinary: 660,
+  incomplete: [],
+  stages: [
+    {
+      stage: 'start',
+      medianMs: 0.06005859375,
+      maxMs: 2.22509765625,
+      sequence: 1
+    },
+    {
+      stage: 'packet-bytes',
+      medianMs: 0.335205078125,
+      maxMs: 2.594970703125,
+      sequence: 38
+    },
+    {
+      stage: 'retained-preparations',
+      medianMs: 0.02490234375,
+      maxMs: 0.169921875,
+      sequence: 1
+    },
+    {
+      stage: 'draw-world-checks',
+      medianMs: 0.02490234375,
+      maxMs: 0.135009765625,
+      sequence: 602
+    },
+    {
+      stage: 'combined-bytes',
+      medianMs: 0.330078125,
+      maxMs: 0.85009765625,
+      sequence: 87
+    },
+    {
+      stage: 'validate-operations',
+      medianMs: 0.139892578125,
+      maxMs: 0.47998046875,
+      sequence: 30
+    },
+    {
+      stage: 'clock-contract',
+      medianMs: 0.02001953125,
+      maxMs: 0.284912109375,
+      sequence: 1
+    },
+    {
+      stage: 'references',
+      medianMs: 0.434814453125,
+      maxMs: 1.054931640625,
+      sequence: 207
+    },
+    {
+      stage: 'dependencies-wait',
+      medianMs: 0.02001953125,
+      maxMs: 0.215087890625,
+      sequence: 501
+    },
+    {
+      stage: 'dependencies-ready',
+      medianMs: 0.01513671875,
+      maxMs: 0.10498046875,
+      sequence: 444
+    },
+    {
+      stage: 'snapshot',
+      medianMs: 0.239990234375,
+      maxMs: 1.010009765625,
+      sequence: 271
+    },
+    {
+      stage: 'control-rendezvous',
+      medianMs: 0.074951171875,
+      maxMs: 0.294921875,
+      sequence: 30
+    },
+    {
+      stage: 'clock-admission',
+      medianMs: 0.295166015625,
+      maxMs: 2.375,
+      sequence: 207
+    },
+    {
+      stage: 'classify-ownership',
+      medianMs: 0.090087890625,
+      maxMs: 0.31494140625,
+      sequence: 30
+    },
+    {
+      stage: 'replay-analysis',
+      medianMs: 0.510009765625,
+      maxMs: 1.89501953125,
+      sequence: 207
+    },
+    {
+      stage: 'pipeline-identities',
+      medianMs: 0.054931640625,
+      maxMs: 0.3251953125,
+      sequence: 30
+    },
+    {
+      stage: 'pin-and-publish-pending',
+      medianMs: 0.054931640625,
+      maxMs: 0.210205078125,
+      sequence: 1
+    }
+  ]
+}

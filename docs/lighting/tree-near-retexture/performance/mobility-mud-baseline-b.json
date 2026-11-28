@@ -1,0 +1,429 @@
+{
+  "runs": [
+    {
+      "requested": "pthreads",
+      "backend": "pthreads",
+      "isolated": true,
+      "chunks": [
+        "0,-1",
+        "0,-2",
+        "0,0",
+        "0,1",
+        "0,2",
+        "1,-1",
+        "1,-2",
+        "1,0",
+        "1,1",
+        "1,2",
+        "2,-1",
+        "2,-2",
+        "2,0",
+        "2,1",
+        "2,2",
+        "3,-1",
+        "3,-2",
+        "3,0",
+        "3,1",
+        "3,2",
+        "4,-1",
+        "4,-2",
+        "4,0",
+        "4,1",
+        "4,2"
+      ],
+      "residency": {
+        "beforeIdle": {
+          "chunks": [
+            "0,-1",
+            "0,0",
+            "0,1",
+            "0,2",
+            "1,-1",
+            "1,0",
+            "1,1",
+            "1,2",
+            "2,-1",
+            "2,0",
+            "2,1",
+            "2,2",
+            "3,-1",
+            "3,0",
+            "3,1",
+            "3,2",
+            "4,-1",
+            "4,0",
+            "4,1",
+            "4,2"
+          ],
+          "desired": [
+            "0,-1",
+            "0,-2",
+            "0,0",
+            "0,1",
+            "0,2",
+            "1,-1",
+            "1,-2",
+            "1,0",
+            "1,1",
+            "1,2",
+            "2,-1",
+            "2,-2",
+            "2,0",
+            "2,1",
+            "2,2",
+            "3,-1",
+            "3,-2",
+            "3,0",
+            "3,1",
+            "3,2",
+            "4,-1",
+            "4,-2",
+            "4,0",
+            "4,1",
+            "4,2"
+          ],
+          "stream": {
+            "created": 25,
+            "discarded": 0,
+            "failed": 0,
+            "fallbacks": 0,
+            "worker": false,
+            "asyncPreparation": true,
+            "queued": 3,
+            "busy": true,
+            "preparing": 2,
+            "stale": 0,
+            "epoch": 0
+          }
+        },
+        "desired": [
+          "0,-1",
+          "0,-2",
+          "0,0",
+          "0,1",
+          "0,2",
+          "1,-1",
+          "1,-2",
+          "1,0",
+          "1,1",
+          "1,2",
+          "2,-1",
+          "2,-2",
+          "2,0",
+          "2,1",
+          "2,2",
+          "3,-1",
+          "3,-2",
+          "3,0",
+          "3,1",
+          "3,2",
+          "4,-1",
+          "4,-2",
+          "4,0",
+          "4,1",
+          "4,2"
+        ],
+        "stream": {
+          "created": 30,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "firstTick": 1075.4200000017881,
+      "regionCalls": 237,
+      "regionSlow": [
+        {
+          "radius": 0.9,
+          "worker": false,
+          "ms": 265.71000000834465
+        },
+        {
+          "radius": 0.85,
+          "worker": false,
+          "ms": 269.3550000041723
+        },
+        {
+          "radius": 0.97,
+          "worker": false,
+          "ms": 261.60999999940395
+        },
+        {
+          "radius": 1.55,
+          "worker": false,
+          "ms": 225.20499999821186
+        }
+      ],
+      "tick": {
+        "count": 120,
+        "p95": 12.060000002384186,
+        "p99": 13.660000011324883,
+        "max": 1075.4200000017881
+      },
+      "render": {
+        "count": 120,
+        "p95": 53.179999992251396,
+        "p99": 65.26500000059605,
+        "max": 234.57500000298023
+      },
+      "total": {
+        "count": 120,
+        "p95": 59.51000000536442,
+        "p99": 87.58999998867512,
+        "max": 1130.344999998808
+      },
+      "frames": {
+        "count": 119,
+        "p95": 59.87000000476837,
+        "p99": 87.92000000178814,
+        "max": 1130.780000001192
+      },
+      "gpu": {
+        "samples": 120,
+        "disjoint": 0,
+        "discarded": 0,
+        "elapsed": {
+          "count": 120,
+          "p95": 37.570304,
+          "p99": 45.539584,
+          "max": 203.280384
+        }
+      },
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "sceneErrors": [],
+      "mudTrace": [
+        {
+          "cx": 2,
+          "cz": 1,
+          "ms": 9.004999995231628,
+          "hash": 4073199430,
+          "vertices": 2478
+        },
+        {
+          "cx": 2,
+          "cz": 0,
+          "ms": 5.340000003576279,
+          "hash": 3050971055,
+          "vertices": 3096
+        },
+        {
+          "cx": 1,
+          "cz": 1,
+          "ms": 9.695000007748604,
+          "hash": 1195300121,
+          "vertices": 4980
+        },
+        {
+          "cx": 1,
+          "cz": 0,
+          "ms": 2.1800000071525574,
+          "hash": 3834780223,
+          "vertices": 2274
+        },
+        {
+          "cx": 3,
+          "cz": 1,
+          "ms": 4.375,
+          "hash": 3456857011,
+          "vertices": 5010
+        },
+        {
+          "cx": 3,
+          "cz": 0,
+          "ms": 5.280000001192093,
+          "hash": 3652602418,
+          "vertices": 4086
+        },
+        {
+          "cx": 2,
+          "cz": -1,
+          "ms": 2.9100000113248825,
+          "hash": 3284348343,
+          "vertices": 2076
+        },
+        {
+          "cx": 2,
+          "cz": 2,
+          "ms": 4.170000001788139,
+          "hash": 3340329921,
+          "vertices": 3588
+        },
+        {
+          "cx": 1,
+          "cz": -1,
+          "ms": 4.074999988079071,
+          "hash": 646762371,
+          "vertices": 3036
+        },
+        {
+          "cx": 1,
+          "cz": 2,
+          "ms": 3.6599999964237213,
+          "hash": 1917943983,
+          "vertices": 4284
+        },
+        {
+          "cx": 0,
+          "cz": 0,
+          "ms": 2.989999994635582,
+          "hash": 3464809127,
+          "vertices": 2922
+        },
+        {
+          "cx": 0,
+          "cz": 1,
+          "ms": 3.0150000005960464,
+          "hash": 1083540260,
+          "vertices": 1632
+        },
+        {
+          "cx": 3,
+          "cz": -1,
+          "ms": 6.240000009536743,
+          "hash": 3246220974,
+          "vertices": 1362
+        },
+        {
+          "cx": 3,
+          "cz": 2,
+          "ms": 2.7650000005960464,
+          "hash": 620126850,
+          "vertices": 1056
+        },
+        {
+          "cx": 0,
+          "cz": -1,
+          "ms": 3.5499999970197678,
+          "hash": 1347100648,
+          "vertices": 2382
+        },
+        {
+          "cx": 0,
+          "cz": 2,
+          "ms": 4.260000005364418,
+          "hash": 514421437,
+          "vertices": 3108
+        },
+        {
+          "cx": 4,
+          "cz": 0,
+          "ms": 5.99499998986721,
+          "hash": 134524810,
+          "vertices": 3750
+        },
+        {
+          "cx": 4,
+          "cz": 1,
+          "ms": 4.810000002384186,
+          "hash": 1480614954,
+          "vertices": 3240
+        },
+        {
+          "cx": 2,
+          "cz": 3,
+          "ms": 3.2450000047683716,
+          "hash": 1664024395,
+          "vertices": 3804
+        },
+        {
+          "cx": 4,
+          "cz": -1,
+          "ms": 2.030000001192093,
+          "hash": 3484037230,
+          "vertices": 2178
+        },
+        {
+          "cx": 1,
+          "cz": 3,
+          "ms": 5.530000001192093,
+          "hash": 1876759798,
+          "vertices": 3462
+        },
+        {
+          "cx": 4,
+          "cz": 2,
+          "ms": 1.6749999970197678,
+          "hash": 3442796770,
+          "vertices": 1866
+        },
+        {
+          "cx": 3,
+          "cz": 3,
+          "ms": 2.4149999916553497,
+          "hash": 3244278928,
+          "vertices": 2784
+        },
+        {
+          "cx": 0,
+          "cz": 3,
+          "ms": 4.094999998807907,
+          "hash": 3155120987,
+          "vertices": 2772
+        },
+        {
+          "cx": 4,
+          "cz": 3,
+          "ms": 0.6050000041723251,
+          "hash": 3581743516,
+          "vertices": 582
+        },
+        {
+          "cx": 2,
+          "cz": -2,
+          "ms": 4.364999994635582,
+          "hash": 1227222840,
+          "vertices": 3492
+        },
+        {
+          "cx": 1,
+          "cz": -2,
+          "ms": 5.21000000834465,
+          "hash": 41028905,
+          "vertices": 3642
+        },
+        {
+          "cx": 3,
+          "cz": -2,
+          "ms": 3.355000004172325,
+          "hash": 3487758132,
+          "vertices": 4236
+        },
+        {
+          "cx": 0,
+          "cz": -2,
+          "ms": 2.5,
+          "hash": 4284954984,
+          "vertices": 1662
+        },
+        {
+          "cx": 4,
+          "cz": -2,
+          "ms": 3.3700000047683716,
+          "hash": 396936275,
+          "vertices": 4230
+        }
+      ],
+      "groundTrace": null,
+      "hashes": {
+        "initial": "eda7456b3f81ce73b00c474af4217973c92a958cf51b904433364c564d9a9d0e",
+        "final": "ca2338389a4f4018a12ff34e569c0da8dbe92494bb504a1176f0a4b2e85bd62b",
+        "chunks": "4f2d501510695806c3a971f8c69016a1090545e5461f793386b9feadd1a129dd"
+      }
+    }
+  ],
+  "equality": {
+    "initial": true,
+    "final": true,
+    "chunks": true
+  },
+  "waitForIdle": true,
+  "idleLight": true,
+  "scope": "Four independent active QA scenes, mangrove island network, 20 synthetic actors, 120 advanceReal(.05) calls in standalone/pthreads/pthreads/standalone order; actual WorldScene and native session per run. Optional WAIT_IDLE=1 pumps the global scheduler while waiting for chunk stream idle; IDLE_LIGHT=1 suppresses drawing only during that wait. Measurement loop is manual and does not pump the global scheduler. First-use instrumentation on regionFor and GPU timers perturb timing. Fixed logical clock and slot ID; no real input, Rapier, complete native-state equivalence, campaign, integrated GPU, or Worker-owned simulation."
+}

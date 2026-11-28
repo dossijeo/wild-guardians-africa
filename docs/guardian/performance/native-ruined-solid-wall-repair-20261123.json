@@ -1,0 +1,555 @@
+{
+  "parent": "90a8e84ed5d30791b3d0c2794fb321d4bfe14d5e",
+  "patches": [
+    {
+      "name": "ruined-solid-wall-repair",
+      "sha256": "7b144bd022f4e19022a6c9ead26d2868fb2cf526905abfd2657ac5db6cafd9f1"
+    },
+    {
+      "name": "kind2-boundary",
+      "sha256": "1006eb2b72d75519bc9e181040f6783aba56d30f0614c7c840009d6ae6208e68"
+    },
+    {
+      "name": "repair-curve",
+      "sha256": "7427d7a4e63c72c6853ca3420a66c49a54df851b6db5c016e857e5bcf3638d76"
+    }
+  ],
+  "environment": {
+    "browser": "Microsoft Edge",
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "displayRefreshHz": 30,
+    "canvas": [
+      640,
+      480
+    ],
+    "quality": "muy_baja",
+    "topology": "WorkerHostedRuntime, native authority Worker, coordinated chunks, independent draw Worker"
+  },
+  "captureSha256": "a2d6fda00aa545a082d8c77f4f2fc7dde07fb56d042b3ba58d1370364ec16f58",
+  "authority": {
+    "target": {
+      "id": "structure-749",
+      "start": {
+        "hp": 0,
+        "maxHp": 100,
+        "status": "ruined"
+      },
+      "end": {
+        "hp": 100,
+        "maxHp": 100,
+        "status": "intact"
+      }
+    },
+    "bodyId": 1,
+    "actionTicket": 8,
+    "finalAdmission": "native-idle",
+    "idleDrawTicket": 13,
+    "balance": {
+      "n": "99990",
+      "d": "1"
+    },
+    "payment": {
+      "n": "-10",
+      "d": "1"
+    },
+    "event": {
+      "id": "event-29209",
+      "type": "RepairApplied",
+      "workerId": "worker-900011",
+      "targetId": "structure-749",
+      "repair": {
+        "taskId": "task-1000001",
+        "paymentId": "repair:task-1000001",
+        "paidCoins": 10,
+        "previousHp": 0,
+        "previousStatus": "ruined",
+        "restoredHp": 100,
+        "maxHp": 100
+      },
+      "presentation": {
+        "elapsed": 30.60000000000008,
+        "x": -5.800000190734863,
+        "z": 3.5999999046325684,
+        "yaw": 0.14090139653790174,
+        "structure": {
+          "x": -5.800000000000001,
+          "z": 4.2
+        }
+      },
+      "simulationTime": 30.60000000000008
+    },
+    "collision": {
+      "prepared": {
+        "version": 1,
+        "authorityEpoch": "50bea886-2898-4936-b680-9c73ffe89c56/1",
+        "nativeSession": 1,
+        "ticket": 10,
+        "effectiveTime": 29.050000000000058
+      },
+      "world": {
+        "version": 1,
+        "authorityEpoch": "50bea886-2898-4936-b680-9c73ffe89c56/1",
+        "nativeSession": 1,
+        "ticket": 11,
+        "effectiveTime": 30.60000000000008
+      },
+      "nativeIds": [
+        115
+      ],
+      "additions": [
+        {
+          "entityId": "structure-749",
+          "x": -5.800000190734863,
+          "z": 4.199999809265137,
+          "halfX": 1.0666667222976685,
+          "halfZ": 0.2199999988079071,
+          "yaw": 0,
+          "passMask": 0
+        }
+      ]
+    }
+  },
+  "readyHold": {
+    "milliseconds": 633.2998046875,
+    "draws": 19,
+    "start": 29.95000000000007,
+    "end": 30.55000000000008,
+    "factoriesUnchanged": true
+  },
+  "curve": {
+    "durationSeconds": 0.48,
+    "phaseBoundarySeconds": 0.0990237475276321,
+    "firstDraw": {
+      "at": 1795424961535.4001,
+      "sequence": 266,
+      "ticket": 11,
+      "intervalMs": 33.300048828125,
+      "drawMs": 3,
+      "trigger": "raf",
+      "replay": false,
+      "uniforms": {
+        "executionEpoch": 30.60000000000008,
+        "originTicket": 11,
+        "elapsed": 30.65000000000008,
+        "value": 0.04999999701976776,
+        "targets": [
+          [
+            "Buffer:3961",
+            0
+          ],
+          [
+            "Buffer:3979",
+            0
+          ],
+          [
+            "Buffer:3996",
+            0
+          ],
+          [
+            "Buffer:4013",
+            0
+          ],
+          [
+            "Buffer:4028",
+            0
+          ],
+          [
+            "Buffer:4040",
+            0
+          ],
+          [
+            "Buffer:4051",
+            0
+          ],
+          [
+            "Buffer:4062",
+            0
+          ]
+        ]
+      }
+    },
+    "uniqueAges": [
+      0.04999999701976776,
+      0.09999999403953552,
+      0.14999999105930328,
+      0.19999998807907104,
+      0.25,
+      0.29999998211860657,
+      0.3499999940395355,
+      0.3999999761581421,
+      0.41999998688697815,
+      0.47999998927116394
+    ],
+    "drawsWithRepairClock": 59,
+    "interiorDrawsByStage": [
+      1,
+      13
+    ],
+    "phasePeakInterval": {
+      "at": 1795424961569.6,
+      "sequence": 266,
+      "ticket": 11,
+      "intervalMs": 34.199951171875,
+      "drawMs": 3.5,
+      "trigger": "raf",
+      "replay": true,
+      "age": 0.09999999403953552
+    },
+    "clockedPeakInterval": {
+      "at": 1795424963436.7,
+      "sequence": 267,
+      "ticket": 13,
+      "intervalMs": 34.599853515625,
+      "drawMs": 1.400146484375,
+      "trigger": "raf",
+      "replay": true,
+      "age": 0.47999998927116394
+    },
+    "observations": [
+      {
+        "authorityTime": 30.70000000000008,
+        "globalDrawTime": 29.099998474121094,
+        "pickedAge": 0.04999999701976776,
+        "ticket": 11,
+        "geometries": [
+          356,
+          357,
+          358,
+          359
+        ]
+      },
+      {
+        "authorityTime": 30.800000000000082,
+        "globalDrawTime": 29.099998474121094,
+        "pickedAge": 0.14999999105930328,
+        "ticket": 11,
+        "geometries": [
+          356,
+          357,
+          358,
+          359
+        ]
+      },
+      {
+        "authorityTime": 31.000000000000085,
+        "globalDrawTime": 29.099998474121094,
+        "pickedAge": 0.3499999940395355,
+        "ticket": 11,
+        "geometries": [
+          356,
+          357,
+          358,
+          359
+        ]
+      },
+      {
+        "authorityTime": 31.100000000000087,
+        "globalDrawTime": 29.099998474121094,
+        "pickedAge": 0.41999998688697815,
+        "ticket": 11,
+        "geometries": [
+          356,
+          357,
+          358,
+          359
+        ]
+      },
+      {
+        "authorityTime": 31.200000000000088,
+        "globalDrawTime": 29.099998474121094,
+        "pickedAge": 0.47999998927116394,
+        "ticket": 11,
+        "geometries": [
+          356,
+          357,
+          358,
+          359
+        ]
+      },
+      {
+        "authorityTime": 32.050000000000104,
+        "globalDrawTime": 32,
+        "pickedAge": 0.47999998927116394,
+        "ticket": 13,
+        "geometries": [
+          356,
+          357,
+          358,
+          359,
+          365
+        ]
+      },
+      {
+        "authorityTime": 32.550000000000146,
+        "globalDrawTime": 32.54999923706055,
+        "pickedAge": 0.47999998927116394,
+        "ticket": 13,
+        "geometries": [
+          365
+        ]
+      }
+    ]
+  },
+  "graphics": {
+    "before": {
+      "root": 165,
+      "visible": true,
+      "meshes": [
+        {
+          "id": 167,
+          "geometry": 133,
+          "material": [
+            53
+          ],
+          "visible": true,
+          "effectiveVisible": true
+        }
+      ]
+    },
+    "after": {
+      "root": 165,
+      "visible": true,
+      "meshes": [
+        {
+          "id": 744,
+          "geometry": 365,
+          "material": [
+            343
+          ],
+          "visible": true,
+          "effectiveVisible": true
+        }
+      ]
+    },
+    "actorRoots": [
+      648
+    ],
+    "wallBuffers": {
+      "initial": [
+        "Buffer:844",
+        "Buffer:843",
+        "Buffer:842",
+        "Buffer:841"
+      ],
+      "final": [
+        "Buffer:4236",
+        "Buffer:4235",
+        "Buffer:4234",
+        "Buffer:4233"
+      ],
+      "retiredExclusive": [
+        "Buffer:844",
+        "Buffer:843",
+        "Buffer:842",
+        "Buffer:841"
+      ],
+      "destructionRequests": [
+        "Buffer:844",
+        "Buffer:843",
+        "Buffer:842",
+        "Buffer:841"
+      ]
+    },
+    "retainedOwnerKeys": 910,
+    "retainedReferences": 800,
+    "displaced": [],
+    "drawTickets": [
+      2,
+      4,
+      6,
+      8,
+      11,
+      13
+    ],
+    "initialMorph": [
+      {
+        "geometry": 356,
+        "attribute": "wgMorphPosition",
+        "reference": "Buffer:3951",
+        "version": 0
+      },
+      {
+        "geometry": 357,
+        "attribute": "wgMorphPosition",
+        "reference": "Buffer:3969",
+        "version": 0
+      },
+      {
+        "geometry": 358,
+        "attribute": "wgMorphPosition",
+        "reference": "Buffer:3986",
+        "version": 0
+      },
+      {
+        "geometry": 359,
+        "attribute": "wgMorphPosition",
+        "reference": "Buffer:4003",
+        "version": 0
+      }
+    ],
+    "comparedMorphAttributeVersionsUnchanged": true
+  },
+  "drained": true,
+  "errors": [],
+  "cadence": {
+    "targetMs": 16.666666666666668,
+    "c4Accepted": false,
+    "intervalCount": 966,
+    "peaks": [
+      {
+        "at": 1795424957047.5,
+        "sequence": 236,
+        "ticket": 4,
+        "intervalMs": 45.39990234375,
+        "drawMs": 4,
+        "trigger": "mutation-release",
+        "replay": false
+      },
+      {
+        "at": 1795424935138.6,
+        "sequence": 5,
+        "ticket": null,
+        "intervalMs": 36.699951171875,
+        "drawMs": 0.199951171875,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795424931638.2,
+        "sequence": 2,
+        "ticket": null,
+        "intervalMs": 36.2998046875,
+        "drawMs": 0.2001953125,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795424960438.3,
+        "sequence": 260,
+        "ticket": 8,
+        "intervalMs": 36.199951171875,
+        "drawMs": 2.5,
+        "trigger": "raf",
+        "replay": true
+      }
+    ]
+  },
+  "priorControls": {
+    "expiredWorldPacket": {
+      "captureSha256": "36a8621cad97ea33fd6ee05adc2f4383c172d6903baf07c80de0dcb4ff855b9f",
+      "prepared": {
+        "version": 1,
+        "authorityEpoch": "b7e3a4f7-03bd-403f-a1b6-a3048190d63d/1",
+        "nativeSession": 1,
+        "ticket": 10,
+        "effectiveTime": 29.050000000000058
+      },
+      "clock": {
+        "version": 1,
+        "sequence": 386,
+        "epoch": 10,
+        "elapsed": 29.050000000000058,
+        "anchorAbsoluteMs": 1795423444048.4,
+        "safeUntil": 29.10000000000006,
+        "paused": true,
+        "segments": []
+      },
+      "acquired": {
+        "version": 1,
+        "authorityEpoch": "b7e3a4f7-03bd-403f-a1b6-a3048190d63d/1",
+        "nativeSession": 1,
+        "ticket": 11,
+        "effectiveTime": 30.500000000000078
+      },
+      "repairBindings": 8
+    },
+    "frozenCurve": {
+      "captureSha256": "6b9e5bb7bf55c8337d4f4ebd78faae1db7b8d7081ea1074c093511f1a8e359e7",
+      "frozenObservations": 14,
+      "first": {
+        "ticket": 11,
+        "authorityTime": 30.70000000000008,
+        "globalDrawTime": 29.099998474121094,
+        "submittedAge": 0
+      },
+      "lastFrozen": {
+        "ticket": 11,
+        "authorityTime": 32.10000000000011,
+        "globalDrawTime": 29.099998474121094,
+        "submittedAge": 0
+      },
+      "firstAdvance": {
+        "ticket": 13,
+        "authorityTime": 32.25000000000012,
+        "globalDrawTime": 32.19999694824219,
+        "submittedAge": 1.5999999046325684
+      }
+    },
+    "activeFarm": {
+      "captureSha256": "736d99c43c8bc183d5e1268dafe1c58cb7c8b4d8932a041ace3d602cca4d6961",
+      "wall": {
+        "id": "structure-749",
+        "x": -14,
+        "z": 8.2,
+        "yaw": 0,
+        "hp": 0,
+        "status": "ruined",
+        "material": "zarzas"
+      },
+      "workers": [
+        {
+          "id": "worker-900011",
+          "x": -12.553333282470703,
+          "z": 8.199999809265137,
+          "status": "acting",
+          "admission": "native-action",
+          "taskId": "task-1000000"
+        },
+        {
+          "id": "worker-900012",
+          "x": -14,
+          "z": 10.806400000000021,
+          "status": "arriving",
+          "admission": "native-farm-arrival",
+          "taskId": null
+        }
+      ],
+      "elapsed": 10.91999999999998,
+      "balance": {
+        "n": "100000",
+        "d": "1"
+      },
+      "nativeStatus": "blocked",
+      "records": [
+        {
+          "kind": "initial-idle-body",
+          "committed": true
+        },
+        {
+          "kind": "farm-arrival",
+          "committed": true
+        },
+        {
+          "kind": "idle-cycle",
+          "committed": false
+        },
+        {
+          "kind": "task-start",
+          "committed": true
+        },
+        {
+          "kind": "task-action",
+          "committed": true
+        }
+      ]
+    }
+  },
+  "validation": {
+    "selectedFiles": 49,
+    "selectedTestsPassed": 688,
+    "selectedTestsFailed": 0,
+    "selectedTestsSkipped": 0,
+    "buildSeconds": 70
+  }
+}

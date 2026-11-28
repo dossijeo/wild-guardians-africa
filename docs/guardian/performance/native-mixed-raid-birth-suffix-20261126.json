@@ -1,0 +1,127 @@
+{
+  "scenario": "Desert birth inside Farm expanded bounds, with exact clearance while Stop24 is retained.",
+  "qualification": {
+    "qualifyAnimalCrop": true,
+    "qualifyFarmFlee": true,
+    "ordinary": false,
+    "stepBatch": 2,
+    "workers": 1,
+    "animals": 1,
+    "viewport": [
+      640,
+      480
+    ]
+  },
+  "hardware": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "edge": "158.0.4370.33"
+  },
+  "baseline": {
+    "commit": "d760d67328849e7fdb29c03ac9b969ae2ad8ef9b",
+    "originVerdict": 0,
+    "target": null,
+    "tapSha256": "cdf0ff2ebdfc8dd31b59ec45aa6eb8106677c074ff2b5301aca346a28fc55ed9"
+  },
+  "geometry": {
+    "target": "structure-2",
+    "reach": 2.2,
+    "complete": {
+      "distance": 2.261088330736626,
+      "at": 10,
+      "worker": [
+        -17.8,
+        0.2
+      ]
+    },
+    "remaining": {
+      "distance": 2.643625764778066,
+      "at": 10.799999999999983,
+      "worker": [
+        -17.418842712474635,
+        0
+      ]
+    },
+    "nodes": 18,
+    "finishedPrefixControl": {
+      "complete": {
+        "distance": 1.8158366631026714,
+        "at": 10,
+        "worker": [
+          -17.8,
+          0.2
+        ]
+      },
+      "remaining": {
+        "distance": 2.2282849492811523,
+        "at": 10.799999999999983,
+        "worker": [
+          -17.418842712474635,
+          0
+        ]
+      }
+    }
+  },
+  "legacyGame": {
+    "firstFrontalHit": {
+      "id": "event-29209",
+      "type": "WorkerHit",
+      "collision": false,
+      "pushed": 0,
+      "simulationTime": 11.699999999999964,
+      "presentation": {
+        "elapsed": 11.699999999999964,
+        "x": -16,
+        "z": 0.6931572875253216
+      }
+    }
+  },
+  "spawn": {
+    "id": "event-29208",
+    "at": 10.799999999999983,
+    "origin": {
+      "x": -19.01890775019956,
+      "z": 2.104411808379897
+    },
+    "gap": 2.643625764778066
+  },
+  "farm": {
+    "actor": 900011,
+    "body": 1,
+    "assignment": 3,
+    "ticket": 2
+  },
+  "stop": {
+    "preparedAt": 10.799999999999983,
+    "preparedTicket": 3,
+    "heldAt": 10.89999999999998,
+    "heldWorker": [
+      -17.31084271247464,
+      0
+    ],
+    "farmDraw": 29,
+    "farmAge": 0.8999999761581421,
+    "acquiredAt": 10.94999999999998,
+    "ticket": 5,
+    "draw": 34
+  },
+  "outcome": {
+    "scope": "Birth through the original body’s Stop24",
+    "workerHits": 0,
+    "ledgerPreserved": true,
+    "drawDrained": true,
+    "webGpuMessages": 0
+  },
+  "artifacts": {
+    "src/world/wild-engine/spatial-savanna.wasm": "bc6a78976e9ff3220dfce7b3faa31970016528f053384eeaba41b379486913ec",
+    "public/wild-engine/spatial-threaded.wasm": "78b71a1a1b362ad10496ab4a2e9686418891eaf7274b40d49c4d05a284938a62",
+    "public/wild-engine/spatial-threaded.mjs": "8479646f090904f8f4bb137b938335e82d2d279df471667335ccbc07d21bb26d"
+  },
+  "evidence": {
+    "receiptSha256": "2cb4f20687cae5591118345c476ce5830c7470544e15d7778aebf2fe45a68834",
+    "traceSha256": "6951fae998818c5382d44eb3be9da91e3e9f6553c9210424de842f9153349dc3",
+    "traceBytes": 17184909,
+    "collectionComplete": true,
+    "dataLossOccurred": false
+  }
+}

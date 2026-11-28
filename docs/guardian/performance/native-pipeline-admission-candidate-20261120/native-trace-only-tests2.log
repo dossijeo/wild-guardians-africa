@@ -1,0 +1,145 @@
+TAP version 13
+# Subtest: mutation observation requires every original host seam
+ok 1 - mutation observation requires every original host seam
+  ---
+  duration_ms: 86.7004
+  ...
+# Subtest: mutation observation requires every original publication seam
+ok 2 - mutation observation requires every original publication seam
+  ---
+  duration_ms: 1.1649
+  ...
+# Subtest: mutation observation requires every original admission seam
+ok 3 - mutation observation requires every original admission seam
+  ---
+  duration_ms: 1.0215
+  ...
+# Subtest: mutation observation requires every original bridge seam
+ok 4 - mutation observation requires every original bridge seam
+  ---
+  duration_ms: 17.4704
+  ...
+# Subtest: mutation and preparation annotations compose in the same Host response
+ok 5 - mutation and preparation annotations compose in the same Host response
+  ---
+  duration_ms: 106.6652
+  ...
+# Subtest: an interval below 50ms is still reported against the caller target, independently of a short draw
+ok 6 - an interval below 50ms is still reported against the caller target, independently of a short draw
+  ---
+  duration_ms: 8.1346
+  ...
+# Subtest: no supplied target means no invented acceptance threshold
+ok 7 - no supplied target means no invented acceptance threshold
+  ---
+  duration_ms: 0.8009
+  ...
+# Subtest: duplicate snapshots are not extra evidence and incomplete or misordered holds are not completed
+ok 8 - duplicate snapshots are not extra evidence and incomplete or misordered holds are not completed
+  ---
+  duration_ms: 2.9031
+  ...
+# Subtest: a truncated ring without whole-history instrumentation cannot substitute for the complete record
+ok 9 - a truncated ring without whole-history instrumentation cannot substitute for the complete record
+  ---
+  duration_ms: 1.3163
+  ...
+# Subtest: trace reconciles a post-inspect tail and only terminal observation can certify its recorded lifetime
+ok 10 - trace reconciles a post-inspect tail and only terminal observation can certify its recorded lifetime
+  ---
+  duration_ms: 3.2086
+  ...
+# Subtest: all ordered admission stages are required, including internal work between start and admitted
+ok 11 - all ordered admission stages are required, including internal work between start and admitted
+  ---
+  duration_ms: 3.9458
+  ...
+# Subtest: duplicated or reordered stages cannot masquerade as a complete admission
+ok 12 - duplicated or reordered stages cannot masquerade as a complete admission
+  ---
+  duration_ms: 0.4223
+  ...
+# Subtest: unknown stages and invalid or reversed timestamps are incomplete evidence
+ok 13 - unknown stages and invalid or reversed timestamps are incomplete evidence
+  ---
+  duration_ms: 0.4928
+  ...
+# Subtest: raw and compressed reports retain the same full history; an interrupted export is never loss-free evidence
+ok 14 - raw and compressed reports retain the same full history; an interrupted export is never loss-free evidence
+  ---
+  duration_ms: 519.3967
+  ...
+# Subtest: ordinary admission observations stay opt-in and compose with preparation, resource and mutation observations
+ok 15 - ordinary admission observations stay opt-in and compose with preparation, resource and mutation observations
+  ---
+  duration_ms: 131.7912
+  ...
+# Subtest: preparation annotations match the actual Host and reject changed seams
+ok 16 - preparation annotations match the actual Host and reject changed seams
+  ---
+  duration_ms: 7.8371
+  ...
+# Subtest: failed and incomplete runs keep their status and async waits
+ok 17 - failed and incomplete runs keep their status and async waits
+  ---
+  duration_ms: 1.5601
+  ...
+# Subtest: missing or contradictory marks cannot produce preparation claims
+ok 18 - missing or contradictory marks cannot produce preparation claims
+  ---
+  duration_ms: 0.5652
+  ...
+# Subtest: trace-only annotations retain every mark and original await/fence while eliminating growing ordinary/opportunity copies
+ok 19 - trace-only annotations retain every mark and original await/fence while eliminating growing ordinary/opportunity copies
+  ---
+  duration_ms: 323.1714
+  ...
+# Subtest: trace-only history cannot run without all full-history trace observers
+ok 20 - trace-only history cannot run without all full-history trace observers
+  ---
+  duration_ms: 2.1632
+  ...
+# Subtest: existing pipeline timing annotations compose without a second route or copying descriptors in phase-only mode
+ok 21 - existing pipeline timing annotations compose without a second route or copying descriptors in phase-only mode
+  ---
+  duration_ms: 17.6565
+  ...
+# Subtest: trace capacity is explicit and bounded without dropping categories or switching to a rolling recording
+ok 22 - trace capacity is explicit and bounded without dropping categories or switching to a rolling recording
+  ---
+  duration_ms: 5.5691
+  ...
+# Subtest: compressed binary chunks preserve the original trace with one export and a closed stream
+ok 23 - compressed binary chunks preserve the original trace with one export and a closed stream
+  ---
+  duration_ms: 87.9721
+  ...
+# Subtest: a lossy recording remains a failure while preserving its complete export and loss metadata
+ok 24 - a lossy recording remains a failure while preserving its complete export and loss metadata
+  ---
+  duration_ms: 21.3164
+  ...
+# Subtest: an interrupted export closes its stream and cannot look like complete evidence even with dataLossOccurred false
+ok 25 - an interrupted export closes its stream and cannot look like complete evidence even with dataLossOccurred false
+  ---
+  duration_ms: 60.2645
+  ...
+# Subtest: missing streams and existing evidence are rejected rather than replaced
+ok 26 - missing streams and existing evidence are rejected rather than replaced
+  ---
+  duration_ms: 95.6136
+  ...
+# Subtest: an existing legacy uncompressed trace cannot be shadowed by a new compressed recording
+ok 27 - an existing legacy uncompressed trace cannot be shadowed by a new compressed recording
+  ---
+  duration_ms: 4.0552
+  ...
+1..27
+# tests 27
+# suites 0
+# pass 27
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1113.7897

@@ -1,0 +1,56 @@
+{
+  "date": "2026-11-05",
+  "backend": "Two Edge browser simulation Workers, WebAssembly Wild Engine; no renderer",
+  "runs": [
+    {
+      "actors": 42,
+      "segments": 3652,
+      "invalidated": 3,
+      "measuredBatches": 16,
+      "baselineRoundTripPlusValidationMs": {
+        "mean": 21.923749996349216,
+        "p95": 33.12000000476837,
+        "p99": 33.12000000476837,
+        "max": 33.12000000476837
+      },
+      "observedRoundTripPlusValidationMs": {
+        "mean": 23.31406249664724,
+        "p95": 28.90499997138977,
+        "p99": 28.90499997138977,
+        "max": 28.90499997138977
+      },
+      "traceBytes": {
+        "mean": 36411.75,
+        "p95": 36984,
+        "p99": 36984,
+        "max": 36984
+      },
+      "scope": "Real isolated browser simulation Workers and Wild Engine, no rendering, GPU, or full-game frame measurement. Alternating sequential A/B order; both timings include snapshot parse and validation, observed also updates its feed. Historical X/Z is not an autonomous playback certificate."
+    },
+    {
+      "actors": 42,
+      "segments": 3652,
+      "invalidated": 3,
+      "measuredBatches": 16,
+      "baselineRoundTripPlusValidationMs": {
+        "mean": 22.38312499411404,
+        "p95": 28.5799999833107,
+        "p99": 28.5799999833107,
+        "max": 28.5799999833107
+      },
+      "observedRoundTripPlusValidationMs": {
+        "mean": 22.967812499031425,
+        "p95": 28.764999985694885,
+        "p99": 28.764999985694885,
+        "max": 28.764999985694885
+      },
+      "traceBytes": {
+        "mean": 36411.75,
+        "p95": 36984,
+        "p99": 36984,
+        "max": 36984
+      },
+      "scope": "Real isolated browser simulation Workers and Wild Engine, no rendering, GPU, or full-game frame measurement. Alternating sequential A/B order; both timings include snapshot parse and validation, observed also updates its feed. Historical X/Z is not an autonomous playback certificate."
+    }
+  ]
+}

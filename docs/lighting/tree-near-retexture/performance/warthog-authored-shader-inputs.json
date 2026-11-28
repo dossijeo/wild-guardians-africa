@@ -1,0 +1,127 @@
+{
+  "file": "public/assets/53c8f76ba3af3c972206a86e9fb4c9c25be3bb890077caa99c9c0b1bc3240b89.glb",
+  "scope": "Authored glTF inputs only; does not establish which runtime material owns a compiled program.",
+  "materials": [
+    {
+      "index": 0,
+      "name": "Material_0",
+      "doubleSided": true,
+      "normalMap": true,
+      "baseColorMap": true,
+      "extensions": [
+        "KHR_materials_specular"
+      ],
+      "baseColorFactor": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "roughness": 0.8500000238418579
+    },
+    {
+      "index": 1,
+      "name": "Mane repairs",
+      "doubleSided": true,
+      "normalMap": false,
+      "baseColorMap": false,
+      "extensions": [],
+      "baseColorFactor": [
+        0.052000001072883606,
+        0.03799999877810478,
+        0.03200000151991844,
+        1
+      ],
+      "roughness": 0.8799999952316284
+    },
+    {
+      "index": 2,
+      "name": "Warthog oral tissue",
+      "doubleSided": true,
+      "normalMap": false,
+      "baseColorMap": false,
+      "extensions": [],
+      "baseColorFactor": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "roughness": 0.7200000286102295
+    },
+    {
+      "index": 3,
+      "name": "Actor eyelid original fur",
+      "doubleSided": true,
+      "normalMap": false,
+      "baseColorMap": true,
+      "extensions": [
+        "KHR_materials_specular"
+      ],
+      "baseColorFactor": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "roughness": 0.949999988079071
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Mesh_0",
+      "primitives": [
+        {
+          "material": 0,
+          "attributes": [
+            "POSITION",
+            "NORMAL",
+            "TEXCOORD_0",
+            "JOINTS_0",
+            "WEIGHTS_0"
+          ]
+        },
+        {
+          "material": 1,
+          "attributes": [
+            "POSITION",
+            "NORMAL",
+            "TEXCOORD_0",
+            "JOINTS_0",
+            "WEIGHTS_0"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "WarthogOralAnatomy",
+      "primitives": [
+        {
+          "material": 2,
+          "attributes": [
+            "POSITION",
+            "NORMAL",
+            "COLOR_0",
+            "JOINTS_0",
+            "WEIGHTS_0"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Actor eyelid surfaces",
+      "primitives": [
+        {
+          "material": 3,
+          "attributes": [
+            "POSITION",
+            "NORMAL",
+            "TEXCOORD_0",
+            "JOINTS_0",
+            "WEIGHTS_0"
+          ]
+        }
+      ]
+    }
+  ]
+}

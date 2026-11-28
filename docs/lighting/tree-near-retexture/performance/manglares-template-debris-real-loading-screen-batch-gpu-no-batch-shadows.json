@@ -1,0 +1,3925 @@
+{
+  "capture": null,
+  "biome": "manglares",
+  "network": true,
+  "centers": 1,
+  "overlay": false,
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "frames": {
+    "count": 1985,
+    "p95": 34.78000000119209,
+    "p99": 103.78500001132488,
+    "max": 933.9099999964237
+  },
+  "loadingSummary": {
+    "closed": true,
+    "cancelled": false,
+    "raf": {
+      "count": 1903,
+      "p95": 33.42499999999927,
+      "p99": 33.51000000000204,
+      "max": 933.4749999999985
+    },
+    "topFrames": [
+      {
+        "at": 42073.055,
+        "interval": 933.4749999999985,
+        "overlaps": [
+          {
+            "label": "load-warm-gpu",
+            "start": 21051.514999985695,
+            "end": 42437.67999999225,
+            "duration": 21386.165000006557,
+            "failed": false,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+          },
+          {
+            "label": "warm-draw-batches",
+            "start": 40107.82499998808,
+            "end": 42231.164999991655,
+            "duration": 2123.3400000035763,
+            "failed": false,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+          },
+          {
+            "label": "loading-budget-frame-wait",
+            "start": 41466.18499998748,
+            "end": 42078.52999998629,
+            "duration": 612.3449999988079,
+            "budgetElapsed": 320.1199999898672,
+            "budgetCpu": 319.83500000834465,
+            "frameBudget": 16,
+            "failed": false,
+            "scope": "Awaited cooperative frame wall time; budgetCpu is accumulated synchronous invocation wall time in the delivered presentation epoch. Program/driver readiness waits are excluded."
+          },
+          {
+            "label": "loading-screen-upload-submit",
+            "start": 41148.64999999106,
+            "end": 41465.69999998808,
+            "duration": 317.04999999701977,
+            "failed": false,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "batchIndex": 96,
+            "programsBefore": 79,
+            "programsAfter": 79,
+            "addedPrograms": [],
+            "objects": [
+              {
+                "name": "",
+                "type": "Mesh",
+                "parent": "",
+                "entityId": null,
+                "vertices": 13224,
+                "instances": 0,
+                "material": "",
+                "textures": [
+                  {
+                    "slot": "map",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  },
+                  {
+                    "slot": "normalMap",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  },
+                  {
+                    "slot": "roughnessMap",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  },
+                  {
+                    "slot": "metalnessMap",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  }
+                ]
+              },
+              {
+                "name": "",
+                "type": "Mesh",
+                "parent": "",
+                "entityId": null,
+                "vertices": 7854,
+                "instances": 0,
+                "material": "",
+                "textures": [
+                  {
+                    "slot": "map",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  },
+                  {
+                    "slot": "normalMap",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  },
+                  {
+                    "slot": "roughnessMap",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  },
+                  {
+                    "slot": "metalnessMap",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  }
+                ]
+              },
+              {
+                "name": "",
+                "type": "Mesh",
+                "parent": "",
+                "entityId": null,
+                "vertices": 3346,
+                "instances": 0,
+                "material": "",
+                "textures": [
+                  {
+                    "slot": "map",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  },
+                  {
+                    "slot": "normalMap",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  },
+                  {
+                    "slot": "roughnessMap",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  },
+                  {
+                    "slot": "metalnessMap",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  }
+                ]
+              },
+              {
+                "name": "",
+                "type": "Mesh",
+                "parent": "",
+                "entityId": null,
+                "vertices": 9742,
+                "instances": 0,
+                "material": "",
+                "textures": [
+                  {
+                    "slot": "map",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  },
+                  {
+                    "slot": "normalMap",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  },
+                  {
+                    "slot": "roughnessMap",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  },
+                  {
+                    "slot": "metalnessMap",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  }
+                ]
+              },
+              {
+                "name": "",
+                "type": "Mesh",
+                "parent": "",
+                "entityId": null,
+                "vertices": 5627,
+                "instances": 0,
+                "material": "",
+                "textures": [
+                  {
+                    "slot": "map",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  },
+                  {
+                    "slot": "normalMap",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  },
+                  {
+                    "slot": "roughnessMap",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  },
+                  {
+                    "slot": "metalnessMap",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  }
+                ]
+              },
+              {
+                "name": "",
+                "type": "Mesh",
+                "parent": "",
+                "entityId": null,
+                "vertices": 2473,
+                "instances": 0,
+                "material": "",
+                "textures": [
+                  {
+                    "slot": "map",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  },
+                  {
+                    "slot": "normalMap",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  },
+                  {
+                    "slot": "roughnessMap",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  },
+                  {
+                    "slot": "metalnessMap",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  }
+                ]
+              },
+              {
+                "name": "",
+                "type": "Mesh",
+                "parent": "",
+                "entityId": null,
+                "vertices": 13275,
+                "instances": 0,
+                "material": "",
+                "textures": [
+                  {
+                    "slot": "map",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  },
+                  {
+                    "slot": "normalMap",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  },
+                  {
+                    "slot": "roughnessMap",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  },
+                  {
+                    "slot": "metalnessMap",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  }
+                ]
+              },
+              {
+                "name": "",
+                "type": "Mesh",
+                "parent": "",
+                "entityId": null,
+                "vertices": 7761,
+                "instances": 0,
+                "material": "",
+                "textures": [
+                  {
+                    "slot": "map",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  },
+                  {
+                    "slot": "normalMap",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  },
+                  {
+                    "slot": "roughnessMap",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  },
+                  {
+                    "slot": "metalnessMap",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "label": "loading-budget-frame-wait",
+            "start": 40952.875,
+            "end": 41146.05999998748,
+            "duration": 193.18499998748302,
+            "budgetElapsed": 203.06500001251698,
+            "budgetCpu": 201.48000006377697,
+            "frameBudget": 16,
+            "failed": false,
+            "scope": "Awaited cooperative frame wall time; budgetCpu is accumulated synchronous invocation wall time in the delivered presentation epoch. Program/driver readiness waits are excluded."
+          }
+        ]
+      },
+      {
+        "at": 41139.58,
+        "interval": 400.02999999999884,
+        "overlaps": [
+          {
+            "label": "load-warm-gpu",
+            "start": 21051.514999985695,
+            "end": 42437.67999999225,
+            "duration": 21386.165000006557,
+            "failed": false,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+          },
+          {
+            "label": "warm-draw-batches",
+            "start": 40107.82499998808,
+            "end": 42231.164999991655,
+            "duration": 2123.3400000035763,
+            "failed": false,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+          },
+          {
+            "label": "loading-budget-frame-wait",
+            "start": 40952.875,
+            "end": 41146.05999998748,
+            "duration": 193.18499998748302,
+            "budgetElapsed": 203.06500001251698,
+            "budgetCpu": 201.48000006377697,
+            "frameBudget": 16,
+            "failed": false,
+            "scope": "Awaited cooperative frame wall time; budgetCpu is accumulated synchronous invocation wall time in the delivered presentation epoch. Program/driver readiness waits are excluded."
+          },
+          {
+            "label": "loading-screen-upload-submit",
+            "start": 40761.889999985695,
+            "end": 40952.17499999702,
+            "duration": 190.28500001132488,
+            "failed": false,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "batchIndex": 94,
+            "programsBefore": 79,
+            "programsAfter": 79,
+            "addedPrograms": [],
+            "objects": [
+              {
+                "name": "",
+                "type": "Mesh",
+                "parent": "",
+                "entityId": null,
+                "vertices": 5096,
+                "instances": 0,
+                "material": "",
+                "textures": [
+                  {
+                    "slot": "map",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  },
+                  {
+                    "slot": "normalMap",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  },
+                  {
+                    "slot": "roughnessMap",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  },
+                  {
+                    "slot": "metalnessMap",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  }
+                ]
+              },
+              {
+                "name": "",
+                "type": "Mesh",
+                "parent": "",
+                "entityId": null,
+                "vertices": 5096,
+                "instances": 0,
+                "material": "",
+                "textures": [
+                  {
+                    "slot": "map",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  },
+                  {
+                    "slot": "normalMap",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  },
+                  {
+                    "slot": "roughnessMap",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  },
+                  {
+                    "slot": "metalnessMap",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  }
+                ]
+              },
+              {
+                "name": "",
+                "type": "Mesh",
+                "parent": "",
+                "entityId": null,
+                "vertices": 5096,
+                "instances": 0,
+                "material": "",
+                "textures": [
+                  {
+                    "slot": "map",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  },
+                  {
+                    "slot": "normalMap",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  },
+                  {
+                    "slot": "roughnessMap",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  },
+                  {
+                    "slot": "metalnessMap",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  }
+                ]
+              },
+              {
+                "name": "",
+                "type": "Mesh",
+                "parent": "",
+                "entityId": null,
+                "vertices": 6442,
+                "instances": 0,
+                "material": "",
+                "textures": [
+                  {
+                    "slot": "map",
+                    "name": "",
+                    "width": 2048,
+                    "height": 2048
+                  },
+                  {
+                    "slot": "normalMap",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  },
+                  {
+                    "slot": "roughnessMap",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  },
+                  {
+                    "slot": "metalnessMap",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  }
+                ]
+              },
+              {
+                "name": "",
+                "type": "Mesh",
+                "parent": "",
+                "entityId": null,
+                "vertices": 5428,
+                "instances": 0,
+                "material": "",
+                "textures": [
+                  {
+                    "slot": "map",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  },
+                  {
+                    "slot": "normalMap",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  },
+                  {
+                    "slot": "roughnessMap",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  },
+                  {
+                    "slot": "metalnessMap",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  }
+                ]
+              },
+              {
+                "name": "",
+                "type": "Mesh",
+                "parent": "",
+                "entityId": null,
+                "vertices": 5428,
+                "instances": 0,
+                "material": "",
+                "textures": [
+                  {
+                    "slot": "map",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  },
+                  {
+                    "slot": "normalMap",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  },
+                  {
+                    "slot": "roughnessMap",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  },
+                  {
+                    "slot": "metalnessMap",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  }
+                ]
+              },
+              {
+                "name": "",
+                "type": "Mesh",
+                "parent": "",
+                "entityId": null,
+                "vertices": 5428,
+                "instances": 0,
+                "material": "",
+                "textures": [
+                  {
+                    "slot": "map",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  },
+                  {
+                    "slot": "normalMap",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  },
+                  {
+                    "slot": "roughnessMap",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  },
+                  {
+                    "slot": "metalnessMap",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  }
+                ]
+              },
+              {
+                "name": "",
+                "type": "Mesh",
+                "parent": "",
+                "entityId": null,
+                "vertices": 2197,
+                "instances": 0,
+                "material": "",
+                "textures": [
+                  {
+                    "slot": "map",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  },
+                  {
+                    "slot": "normalMap",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  },
+                  {
+                    "slot": "roughnessMap",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  },
+                  {
+                    "slot": "metalnessMap",
+                    "name": "",
+                    "width": 1024,
+                    "height": 1024
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "label": "loading-budget-frame-wait",
+            "start": 40698.67499999702,
+            "end": 40749.80999998748,
+            "duration": 51.13499999046326,
+            "budgetElapsed": 24.094999998807907,
+            "budgetCpu": 23.844999998807907,
+            "frameBudget": 16,
+            "failed": false,
+            "scope": "Awaited cooperative frame wall time; budgetCpu is accumulated synchronous invocation wall time in the delivered presentation epoch. Program/driver readiness waits are excluded."
+          }
+        ]
+      },
+      {
+        "at": 40539.72,
+        "interval": 333.3550000000032,
+        "overlaps": [
+          {
+            "label": "load-warm-gpu",
+            "start": 21051.514999985695,
+            "end": 42437.67999999225,
+            "duration": 21386.165000006557,
+            "failed": false,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+          },
+          {
+            "label": "warm-draw-batches",
+            "start": 40107.82499998808,
+            "end": 42231.164999991655,
+            "duration": 2123.3400000035763,
+            "failed": false,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+          },
+          {
+            "label": "loading-budget-frame-wait",
+            "start": 40238.489999994636,
+            "end": 40559.96999999881,
+            "duration": 321.4800000041723,
+            "budgetElapsed": 17.609999999403954,
+            "budgetCpu": 16.100000023841858,
+            "frameBudget": 16,
+            "failed": false,
+            "scope": "Awaited cooperative frame wall time; budgetCpu is accumulated synchronous invocation wall time in the delivered presentation epoch. Program/driver readiness waits are excluded."
+          }
+        ]
+      },
+      {
+        "at": 7439.545,
+        "interval": 166.6800000000003,
+        "overlaps": [
+          {
+            "label": "load-animal-models",
+            "start": 6880.779999986291,
+            "end": 7942.704999998212,
+            "duration": 1061.925000011921,
+            "failed": false,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+          }
+        ]
+      },
+      {
+        "at": 42406.365,
+        "interval": 166.67499999999563,
+        "overlaps": [
+          {
+            "label": "load-warm-gpu",
+            "start": 21051.514999985695,
+            "end": 42437.67999999225,
+            "duration": 21386.165000006557,
+            "failed": false,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+          },
+          {
+            "label": "warm-final-fence",
+            "start": 42232.90499998629,
+            "end": 42435.94499999285,
+            "duration": 203.0400000065565,
+            "failed": false,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+          }
+        ]
+      },
+      {
+        "at": 4539.465,
+        "interval": 133.3699999999999,
+        "overlaps": []
+      },
+      {
+        "at": 9339.575,
+        "interval": 133.32999999999993,
+        "overlaps": []
+      },
+      {
+        "at": 7939.555,
+        "interval": 133.28000000000065,
+        "overlaps": [
+          {
+            "label": "load-animal-models",
+            "start": 6880.779999986291,
+            "end": 7942.704999998212,
+            "duration": 1061.925000011921,
+            "failed": false,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+          }
+        ]
+      }
+    ],
+    "presentationCpu": {
+      "count": 1903,
+      "p95": 1.7750000059604645,
+      "p99": 12.799999997019768,
+      "max": 22.844999998807907
+    },
+    "gpu": null
+  },
+  "screenGpu": {
+    "supported": true,
+    "reason": null,
+    "disjointEvents": 0,
+    "discarded": 0,
+    "overflowSkipped": 0,
+    "foreignQuerySkipped": 0,
+    "allocationFailures": 0,
+    "unresolvedAtDispose": 0,
+    "contextLost": false,
+    "pending": 0,
+    "samples": [
+      {
+        "frame": 0,
+        "ms": 273.67472
+      },
+      {
+        "frame": 1,
+        "ms": 0.698336
+      },
+      {
+        "frame": 2,
+        "ms": 0
+      },
+      {
+        "frame": 3,
+        "ms": 0
+      },
+      {
+        "frame": 4,
+        "ms": 0
+      },
+      {
+        "frame": 5,
+        "ms": 0
+      },
+      {
+        "frame": 6,
+        "ms": 0
+      },
+      {
+        "frame": 7,
+        "ms": 1.668256
+      },
+      {
+        "frame": 8,
+        "ms": 0.000032
+      },
+      {
+        "frame": 9,
+        "ms": 0
+      },
+      {
+        "frame": 10,
+        "ms": 0
+      },
+      {
+        "frame": 11,
+        "ms": 0.114688
+      },
+      {
+        "frame": 12,
+        "ms": 0
+      },
+      {
+        "frame": 13,
+        "ms": 0
+      },
+      {
+        "frame": 14,
+        "ms": 0
+      },
+      {
+        "frame": 15,
+        "ms": 0
+      },
+      {
+        "frame": 16,
+        "ms": 0
+      },
+      {
+        "frame": 17,
+        "ms": 3.50192
+      },
+      {
+        "frame": 18,
+        "ms": 0
+      },
+      {
+        "frame": 19,
+        "ms": 2.883488
+      },
+      {
+        "frame": 20,
+        "ms": 4.583072
+      },
+      {
+        "frame": 21,
+        "ms": 2.322816
+      },
+      {
+        "frame": 22,
+        "ms": 1.801472
+      },
+      {
+        "frame": 23,
+        "ms": 0.000032
+      },
+      {
+        "frame": 24,
+        "ms": 0
+      },
+      {
+        "frame": 25,
+        "ms": 0.000032
+      },
+      {
+        "frame": 26,
+        "ms": 0.000032
+      },
+      {
+        "frame": 27,
+        "ms": 0
+      },
+      {
+        "frame": 28,
+        "ms": 0.000032
+      },
+      {
+        "frame": 29,
+        "ms": 0
+      },
+      {
+        "frame": 30,
+        "ms": 0
+      },
+      {
+        "frame": 31,
+        "ms": 0
+      },
+      {
+        "frame": 32,
+        "ms": 0
+      },
+      {
+        "frame": 33,
+        "ms": 0.000032
+      },
+      {
+        "frame": 34,
+        "ms": 0.000032
+      },
+      {
+        "frame": 35,
+        "ms": 0
+      },
+      {
+        "frame": 36,
+        "ms": 1.733216
+      },
+      {
+        "frame": 37,
+        "ms": 5.291264
+      },
+      {
+        "frame": 38,
+        "ms": 5.351808
+      },
+      {
+        "frame": 39,
+        "ms": 3.873056
+      },
+      {
+        "frame": 40,
+        "ms": 0.045056
+      },
+      {
+        "frame": 41,
+        "ms": 0
+      },
+      {
+        "frame": 42,
+        "ms": 0.067488
+      },
+      {
+        "frame": 43,
+        "ms": 0
+      },
+      {
+        "frame": 44,
+        "ms": 0.000032
+      },
+      {
+        "frame": 45,
+        "ms": 0
+      },
+      {
+        "frame": 46,
+        "ms": 0
+      },
+      {
+        "frame": 47,
+        "ms": 0
+      },
+      {
+        "frame": 48,
+        "ms": 0
+      },
+      {
+        "frame": 49,
+        "ms": 3.691648
+      },
+      {
+        "frame": 50,
+        "ms": 2.990208
+      },
+      {
+        "frame": 51,
+        "ms": 2.792128
+      },
+      {
+        "frame": 52,
+        "ms": 0
+      },
+      {
+        "frame": 53,
+        "ms": 0.000032
+      },
+      {
+        "frame": 54,
+        "ms": 0.000032
+      },
+      {
+        "frame": 55,
+        "ms": 0
+      },
+      {
+        "frame": 56,
+        "ms": 0.000032
+      },
+      {
+        "frame": 57,
+        "ms": 0.000032
+      },
+      {
+        "frame": 58,
+        "ms": 0.002304
+      },
+      {
+        "frame": 59,
+        "ms": 0
+      },
+      {
+        "frame": 60,
+        "ms": 0
+      },
+      {
+        "frame": 61,
+        "ms": 0
+      },
+      {
+        "frame": 62,
+        "ms": 0
+      },
+      {
+        "frame": 63,
+        "ms": 0
+      },
+      {
+        "frame": 64,
+        "ms": 3.709088
+      },
+      {
+        "frame": 65,
+        "ms": 5.58016
+      },
+      {
+        "frame": 66,
+        "ms": 0.35696
+      },
+      {
+        "frame": 67,
+        "ms": 0
+      },
+      {
+        "frame": 68,
+        "ms": 0
+      },
+      {
+        "frame": 69,
+        "ms": 0
+      },
+      {
+        "frame": 70,
+        "ms": 0
+      },
+      {
+        "frame": 71,
+        "ms": 0
+      },
+      {
+        "frame": 72,
+        "ms": 0
+      },
+      {
+        "frame": 73,
+        "ms": 3.606304
+      },
+      {
+        "frame": 74,
+        "ms": 3.365472
+      },
+      {
+        "frame": 75,
+        "ms": 455.112928
+      },
+      {
+        "frame": 76,
+        "ms": 0.07664
+      },
+      {
+        "frame": 77,
+        "ms": 0
+      },
+      {
+        "frame": 78,
+        "ms": 0
+      },
+      {
+        "frame": 79,
+        "ms": 0
+      },
+      {
+        "frame": 80,
+        "ms": 0
+      },
+      {
+        "frame": 81,
+        "ms": 0
+      },
+      {
+        "frame": 82,
+        "ms": 0
+      },
+      {
+        "frame": 83,
+        "ms": 0
+      },
+      {
+        "frame": 84,
+        "ms": 0
+      },
+      {
+        "frame": 85,
+        "ms": 0
+      },
+      {
+        "frame": 86,
+        "ms": 0
+      },
+      {
+        "frame": 87,
+        "ms": 0
+      },
+      {
+        "frame": 88,
+        "ms": 0
+      },
+      {
+        "frame": 89,
+        "ms": 0
+      },
+      {
+        "frame": 90,
+        "ms": 0
+      },
+      {
+        "frame": 91,
+        "ms": 0
+      },
+      {
+        "frame": 92,
+        "ms": 0
+      },
+      {
+        "frame": 93,
+        "ms": 2.578368
+      },
+      {
+        "frame": 94,
+        "ms": 3.119072
+      },
+      {
+        "frame": 95,
+        "ms": 0
+      },
+      {
+        "frame": 96,
+        "ms": 4.958208
+      },
+      {
+        "frame": 97,
+        "ms": 0
+      },
+      {
+        "frame": 98,
+        "ms": 0.919552
+      },
+      {
+        "frame": 99,
+        "ms": 1.8432
+      },
+      {
+        "frame": 100,
+        "ms": 0.000032
+      },
+      {
+        "frame": 101,
+        "ms": 0
+      },
+      {
+        "frame": 102,
+        "ms": 0.000032
+      },
+      {
+        "frame": 103,
+        "ms": 0
+      },
+      {
+        "frame": 104,
+        "ms": 0
+      },
+      {
+        "frame": 105,
+        "ms": 0
+      },
+      {
+        "frame": 106,
+        "ms": 0.000032
+      },
+      {
+        "frame": 107,
+        "ms": 0
+      },
+      {
+        "frame": 108,
+        "ms": 0
+      },
+      {
+        "frame": 109,
+        "ms": 0
+      },
+      {
+        "frame": 110,
+        "ms": 0
+      },
+      {
+        "frame": 111,
+        "ms": 0
+      },
+      {
+        "frame": 112,
+        "ms": 0
+      },
+      {
+        "frame": 113,
+        "ms": 0
+      },
+      {
+        "frame": 114,
+        "ms": 0
+      },
+      {
+        "frame": 115,
+        "ms": 0
+      },
+      {
+        "frame": 116,
+        "ms": 0
+      },
+      {
+        "frame": 117,
+        "ms": 0
+      },
+      {
+        "frame": 118,
+        "ms": 0
+      },
+      {
+        "frame": 119,
+        "ms": 0
+      },
+      {
+        "frame": 120,
+        "ms": 2.929664
+      },
+      {
+        "frame": 121,
+        "ms": 0
+      },
+      {
+        "frame": 122,
+        "ms": 0
+      },
+      {
+        "frame": 123,
+        "ms": 0
+      },
+      {
+        "frame": 124,
+        "ms": 0
+      },
+      {
+        "frame": 125,
+        "ms": 0
+      },
+      {
+        "frame": 126,
+        "ms": 0
+      },
+      {
+        "frame": 127,
+        "ms": 0
+      },
+      {
+        "frame": 128,
+        "ms": 0
+      },
+      {
+        "frame": 129,
+        "ms": 0
+      },
+      {
+        "frame": 130,
+        "ms": 5.545664
+      },
+      {
+        "frame": 131,
+        "ms": 0
+      },
+      {
+        "frame": 132,
+        "ms": 0
+      },
+      {
+        "frame": 133,
+        "ms": 0
+      },
+      {
+        "frame": 134,
+        "ms": 0
+      },
+      {
+        "frame": 135,
+        "ms": 0
+      },
+      {
+        "frame": 136,
+        "ms": 0.000032
+      },
+      {
+        "frame": 137,
+        "ms": 0
+      },
+      {
+        "frame": 138,
+        "ms": 0
+      },
+      {
+        "frame": 139,
+        "ms": 0
+      },
+      {
+        "frame": 140,
+        "ms": 2.387616
+      },
+      {
+        "frame": 141,
+        "ms": 0
+      },
+      {
+        "frame": 142,
+        "ms": 0
+      },
+      {
+        "frame": 143,
+        "ms": 0
+      },
+      {
+        "frame": 144,
+        "ms": 2.592864
+      },
+      {
+        "frame": 145,
+        "ms": 0
+      },
+      {
+        "frame": 146,
+        "ms": 0
+      },
+      {
+        "frame": 147,
+        "ms": 0
+      },
+      {
+        "frame": 148,
+        "ms": 0
+      },
+      {
+        "frame": 149,
+        "ms": 0
+      },
+      {
+        "frame": 150,
+        "ms": 0.000032
+      },
+      {
+        "frame": 151,
+        "ms": 0
+      },
+      {
+        "frame": 152,
+        "ms": 0
+      },
+      {
+        "frame": 153,
+        "ms": 0
+      },
+      {
+        "frame": 154,
+        "ms": 0
+      },
+      {
+        "frame": 155,
+        "ms": 0
+      },
+      {
+        "frame": 156,
+        "ms": 0.000032
+      },
+      {
+        "frame": 157,
+        "ms": 0
+      },
+      {
+        "frame": 158,
+        "ms": 0
+      },
+      {
+        "frame": 159,
+        "ms": 0.000032
+      },
+      {
+        "frame": 160,
+        "ms": 0
+      },
+      {
+        "frame": 161,
+        "ms": 0
+      },
+      {
+        "frame": 162,
+        "ms": 0
+      },
+      {
+        "frame": 163,
+        "ms": 0.000032
+      },
+      {
+        "frame": 164,
+        "ms": 0.000032
+      },
+      {
+        "frame": 165,
+        "ms": 0
+      },
+      {
+        "frame": 166,
+        "ms": 0.000032
+      },
+      {
+        "frame": 167,
+        "ms": 0
+      },
+      {
+        "frame": 168,
+        "ms": 0
+      },
+      {
+        "frame": 169,
+        "ms": 0
+      },
+      {
+        "frame": 170,
+        "ms": 0
+      }
+    ]
+  },
+  "screenFence": null,
+  "screenGl": [
+    {
+      "name": "bufferData",
+      "start": 40651.664999991655,
+      "end": 40653.67999999225,
+      "args": [
+        34962,
+        null,
+        35044
+      ],
+      "sourceCount": 0,
+      "sourceTextures": [],
+      "sourceSlots": [],
+      "sources": [],
+      "buffers": {
+        "bytes": 237540,
+        "count": 1,
+        "attributes": [
+          "position"
+        ],
+        "samples": [
+          {
+            "index": 591,
+            "attribute": "position",
+            "bytes": 237540,
+            "vertices": 19795,
+            "instances": null,
+            "nativeLodBatch": false,
+            "nativeMergedAsset": false,
+            "name": "Mesh_0_1",
+            "geometry": "82c77980-c882-4072-b7dc-caaf6c47f937"
+          }
+        ]
+      }
+    },
+    {
+      "name": "bufferData",
+      "start": 40762.54499998689,
+      "end": 40856.30499999225,
+      "args": [
+        34962,
+        null,
+        35044
+      ],
+      "sourceCount": 0,
+      "sourceTextures": [],
+      "sourceSlots": [],
+      "sources": [],
+      "buffers": {
+        "bytes": 77304,
+        "count": 24,
+        "attributes": [
+          "position"
+        ],
+        "samples": [
+          {
+            "index": 18,
+            "attribute": "position",
+            "bytes": 77304,
+            "vertices": 6442,
+            "instances": 0,
+            "nativeLodBatch": true,
+            "nativeMergedAsset": false,
+            "name": "",
+            "geometry": "4805e79e-53a5-4a22-b994-651f8d118492"
+          },
+          {
+            "index": 98,
+            "attribute": "position",
+            "bytes": 77304,
+            "vertices": 6442,
+            "instances": 0,
+            "nativeLodBatch": true,
+            "nativeMergedAsset": false,
+            "name": "",
+            "geometry": "3e277b92-a9c4-4806-8416-c1c74696a10c"
+          },
+          {
+            "index": 148,
+            "attribute": "position",
+            "bytes": 77304,
+            "vertices": 6442,
+            "instances": 0,
+            "nativeLodBatch": true,
+            "nativeMergedAsset": false,
+            "name": "",
+            "geometry": "7b1f227f-b476-4947-8d62-328ae903b4f5"
+          },
+          {
+            "index": 188,
+            "attribute": "position",
+            "bytes": 77304,
+            "vertices": 6442,
+            "instances": 0,
+            "nativeLodBatch": true,
+            "nativeMergedAsset": false,
+            "name": "",
+            "geometry": "8ced4ee1-e837-4575-98eb-b7e9f53b4571"
+          }
+        ]
+      }
+    },
+    {
+      "name": "bufferData",
+      "start": 40856.84999999404,
+      "end": 40951.359999999404,
+      "args": [
+        34962,
+        null,
+        35044
+      ],
+      "sourceCount": 0,
+      "sourceTextures": [],
+      "sourceSlots": [],
+      "sources": [],
+      "buffers": {
+        "bytes": 65136,
+        "count": 24,
+        "attributes": [
+          "position"
+        ],
+        "samples": [
+          {
+            "index": 21,
+            "attribute": "position",
+            "bytes": 65136,
+            "vertices": 5428,
+            "instances": 0,
+            "nativeLodBatch": true,
+            "nativeMergedAsset": false,
+            "name": "",
+            "geometry": "6371fc1d-ba75-4c4a-8782-2be213dcb279"
+          },
+          {
+            "index": 101,
+            "attribute": "position",
+            "bytes": 65136,
+            "vertices": 5428,
+            "instances": 0,
+            "nativeLodBatch": true,
+            "nativeMergedAsset": false,
+            "name": "",
+            "geometry": "b633ecfe-9d6c-46dc-938d-9df9bd90896e"
+          },
+          {
+            "index": 151,
+            "attribute": "position",
+            "bytes": 65136,
+            "vertices": 5428,
+            "instances": 0,
+            "nativeLodBatch": true,
+            "nativeMergedAsset": false,
+            "name": "",
+            "geometry": "d40e5f05-4303-4464-a5db-f5363b00d933"
+          },
+          {
+            "index": 191,
+            "attribute": "position",
+            "bytes": 65136,
+            "vertices": 5428,
+            "instances": 0,
+            "nativeLodBatch": true,
+            "nativeMergedAsset": false,
+            "name": "",
+            "geometry": "9a7094e9-db3c-4532-8b8d-8aa3031fd2ca"
+          }
+        ]
+      }
+    },
+    {
+      "name": "bufferData",
+      "start": 41149.72499999404,
+      "end": 41223.51999999583,
+      "args": [
+        34962,
+        null,
+        35044
+      ],
+      "sourceCount": 0,
+      "sourceTextures": [],
+      "sourceSlots": [],
+      "sources": [],
+      "buffers": {
+        "bytes": 212400,
+        "count": 24,
+        "attributes": [
+          "tangent"
+        ],
+        "samples": [
+          {
+            "index": 37,
+            "attribute": "tangent",
+            "bytes": 212400,
+            "vertices": 13275,
+            "instances": 0,
+            "nativeLodBatch": true,
+            "nativeMergedAsset": false,
+            "name": "",
+            "geometry": "88e2f571-2b15-455e-a738-05aaf938c2e1"
+          },
+          {
+            "index": 117,
+            "attribute": "tangent",
+            "bytes": 212400,
+            "vertices": 13275,
+            "instances": 0,
+            "nativeLodBatch": true,
+            "nativeMergedAsset": false,
+            "name": "",
+            "geometry": "e6925978-76f6-4afd-995b-ac11cbce15f0"
+          },
+          {
+            "index": 163,
+            "attribute": "tangent",
+            "bytes": 212400,
+            "vertices": 13275,
+            "instances": 0,
+            "nativeLodBatch": true,
+            "nativeMergedAsset": false,
+            "name": "",
+            "geometry": "56a63e30-b1ef-45ce-bb1d-ec71e17d8ddc"
+          },
+          {
+            "index": 207,
+            "attribute": "tangent",
+            "bytes": 212400,
+            "vertices": 13275,
+            "instances": 0,
+            "nativeLodBatch": true,
+            "nativeMergedAsset": false,
+            "name": "",
+            "geometry": "faf491cf-4073-4677-936e-c025ab18204f"
+          }
+        ]
+      }
+    },
+    {
+      "name": "bufferData",
+      "start": 41223.664999991655,
+      "end": 41299.534999996424,
+      "args": [
+        34962,
+        null,
+        35044
+      ],
+      "sourceCount": 0,
+      "sourceTextures": [],
+      "sourceSlots": [],
+      "sources": [],
+      "buffers": {
+        "bytes": 93132,
+        "count": 24,
+        "attributes": [
+          "position"
+        ],
+        "samples": [
+          {
+            "index": 38,
+            "attribute": "position",
+            "bytes": 93132,
+            "vertices": 7761,
+            "instances": 0,
+            "nativeLodBatch": true,
+            "nativeMergedAsset": false,
+            "name": "",
+            "geometry": "ff9bee4c-eedf-45b8-8da5-596b4e8cc3da"
+          },
+          {
+            "index": 118,
+            "attribute": "position",
+            "bytes": 93132,
+            "vertices": 7761,
+            "instances": 0,
+            "nativeLodBatch": true,
+            "nativeMergedAsset": false,
+            "name": "",
+            "geometry": "40e8d39e-b992-4ff8-9f6f-c877be7eabe1"
+          },
+          {
+            "index": 164,
+            "attribute": "position",
+            "bytes": 93132,
+            "vertices": 7761,
+            "instances": 0,
+            "nativeLodBatch": true,
+            "nativeMergedAsset": false,
+            "name": "",
+            "geometry": "7fd13b41-626e-441a-8952-b818de7ed4ce"
+          },
+          {
+            "index": 208,
+            "attribute": "position",
+            "bytes": 93132,
+            "vertices": 7761,
+            "instances": 0,
+            "nativeLodBatch": true,
+            "nativeMergedAsset": false,
+            "name": "",
+            "geometry": "d0f10565-afe4-4baa-a586-8f3c170d85ba"
+          }
+        ]
+      }
+    },
+    {
+      "name": "bufferData",
+      "start": 41299.60499998927,
+      "end": 41301.17499999702,
+      "args": [
+        34962,
+        null,
+        35044
+      ],
+      "sourceCount": 0,
+      "sourceTextures": [],
+      "sourceSlots": [],
+      "sources": [],
+      "buffers": {
+        "bytes": 93132,
+        "count": 24,
+        "attributes": [
+          "normal"
+        ],
+        "samples": [
+          {
+            "index": 38,
+            "attribute": "normal",
+            "bytes": 93132,
+            "vertices": 7761,
+            "instances": 0,
+            "nativeLodBatch": true,
+            "nativeMergedAsset": false,
+            "name": "",
+            "geometry": "ff9bee4c-eedf-45b8-8da5-596b4e8cc3da"
+          },
+          {
+            "index": 118,
+            "attribute": "normal",
+            "bytes": 93132,
+            "vertices": 7761,
+            "instances": 0,
+            "nativeLodBatch": true,
+            "nativeMergedAsset": false,
+            "name": "",
+            "geometry": "40e8d39e-b992-4ff8-9f6f-c877be7eabe1"
+          },
+          {
+            "index": 164,
+            "attribute": "normal",
+            "bytes": 93132,
+            "vertices": 7761,
+            "instances": 0,
+            "nativeLodBatch": true,
+            "nativeMergedAsset": false,
+            "name": "",
+            "geometry": "7fd13b41-626e-441a-8952-b818de7ed4ce"
+          },
+          {
+            "index": 208,
+            "attribute": "normal",
+            "bytes": 93132,
+            "vertices": 7761,
+            "instances": 0,
+            "nativeLodBatch": true,
+            "nativeMergedAsset": false,
+            "name": "",
+            "geometry": "d0f10565-afe4-4baa-a586-8f3c170d85ba"
+          }
+        ]
+      }
+    },
+    {
+      "name": "bufferData",
+      "start": 41301.21999999881,
+      "end": 41464.89499999583,
+      "args": [
+        34962,
+        null,
+        35044
+      ],
+      "sourceCount": 0,
+      "sourceTextures": [],
+      "sourceSlots": [],
+      "sources": [],
+      "buffers": {
+        "bytes": 124176,
+        "count": 24,
+        "attributes": [
+          "tangent"
+        ],
+        "samples": [
+          {
+            "index": 38,
+            "attribute": "tangent",
+            "bytes": 124176,
+            "vertices": 7761,
+            "instances": 0,
+            "nativeLodBatch": true,
+            "nativeMergedAsset": false,
+            "name": "",
+            "geometry": "ff9bee4c-eedf-45b8-8da5-596b4e8cc3da"
+          },
+          {
+            "index": 118,
+            "attribute": "tangent",
+            "bytes": 124176,
+            "vertices": 7761,
+            "instances": 0,
+            "nativeLodBatch": true,
+            "nativeMergedAsset": false,
+            "name": "",
+            "geometry": "40e8d39e-b992-4ff8-9f6f-c877be7eabe1"
+          },
+          {
+            "index": 164,
+            "attribute": "tangent",
+            "bytes": 124176,
+            "vertices": 7761,
+            "instances": 0,
+            "nativeLodBatch": true,
+            "nativeMergedAsset": false,
+            "name": "",
+            "geometry": "7fd13b41-626e-441a-8952-b818de7ed4ce"
+          },
+          {
+            "index": 208,
+            "attribute": "tangent",
+            "bytes": 124176,
+            "vertices": 7761,
+            "instances": 0,
+            "nativeLodBatch": true,
+            "nativeMergedAsset": false,
+            "name": "",
+            "geometry": "d0f10565-afe4-4baa-a586-8f3c170d85ba"
+          }
+        ]
+      }
+    },
+    {
+      "name": "getProgramInfoLog",
+      "start": 42174.064999997616,
+      "end": 42184.63499999046,
+      "args": [
+        null
+      ],
+      "sourceCount": 0,
+      "sourceTextures": [],
+      "sourceSlots": [],
+      "sources": [],
+      "buffers": {
+        "bytes": null,
+        "count": 0,
+        "attributes": [],
+        "samples": []
+      }
+    },
+    {
+      "name": "getProgramInfoLog",
+      "start": 42186.44999998808,
+      "end": 42221.37999999523,
+      "args": [
+        null
+      ],
+      "sourceCount": 0,
+      "sourceTextures": [],
+      "sourceSlots": [],
+      "sources": [],
+      "buffers": {
+        "bytes": null,
+        "count": 0,
+        "attributes": [],
+        "samples": []
+      }
+    }
+  ],
+  "initTextures": [
+    {
+      "start": 34717.89999999106,
+      "end": 34737.75999999046,
+      "texture": "c79e1005-e3f4-43f7-9bce-a08d2fbaa007",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "start": 34774.064999997616,
+      "end": 34776.664999991655,
+      "texture": "3df70dfc-0aef-45d9-ac66-407c08af8216",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 34807.539999991655,
+      "end": 34810.04499998689,
+      "texture": "36920d83-34bd-40ab-86ce-b5448d4deaf5",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 34940.875,
+      "end": 34970.46999999881,
+      "texture": "bf9d17c1-cf7d-4b7c-a875-12dbac599236",
+      "width": 4096,
+      "height": 2048
+    },
+    {
+      "start": 35240.93499998748,
+      "end": 35243.664999991655,
+      "texture": "91518119-06b1-494d-8a0c-bc0a0194fd53",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 35274.339999988675,
+      "end": 35276.93499998748,
+      "texture": "97a22bef-f928-47d7-a318-7c1bb70d7dbf",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 35340.99499998987,
+      "end": 35343.55499999225,
+      "texture": "4e86d410-d9a1-4cb4-b553-4d8b622feac4",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 35374.33499999344,
+      "end": 35377.02999998629,
+      "texture": "193b456d-732a-43a3-ad4c-07ea51daf987",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 35441.05999998748,
+      "end": 35443.89999999106,
+      "texture": "3ee96ca4-b118-4117-85a9-0814ed5d78db",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 35574.289999991655,
+      "end": 35576.79999999702,
+      "texture": "a6248535-5244-4536-a439-c62ff301d0cf",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 35607.63499999046,
+      "end": 35610.164999991655,
+      "texture": "be13b402-4f34-429d-8224-f9f7572a0e82",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 35641.125,
+      "end": 35644.21999999881,
+      "texture": "fd547c29-fb79-4bc7-9e51-c51fb3e47959",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 35674.30499999225,
+      "end": 35677.14499999583,
+      "texture": "599f2659-1552-45a8-afd4-bddc105eaf26",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 35707.864999994636,
+      "end": 35727.39499999583,
+      "texture": "60294848-f2a2-419f-9e6f-5fe8e9c684bf",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "start": 35774.10499998927,
+      "end": 35776.84999999404,
+      "texture": "1c219e55-51a9-407d-a1e5-5299e1641940",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 35807.58499999344,
+      "end": 35810.164999991655,
+      "texture": "8852df1a-3de7-495f-8ee7-80819455fb80",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 35841.064999997616,
+      "end": 35854.534999996424,
+      "texture": "823df290-59bc-460d-a5b0-f8bc2eb2511b",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "start": 35874.29499998689,
+      "end": 35892.18499998748,
+      "texture": "6a8add91-f552-419a-9304-1b0e80fc09ec",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "start": 35941.409999996424,
+      "end": 35944.29499998689,
+      "texture": "ca03c582-b88f-404d-8ca5-ecf1e38f2388",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 35974.40499998629,
+      "end": 35987.21999999881,
+      "texture": "ae37c574-cfd3-4c5b-a865-264e6171e48a",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "start": 36007.74499998987,
+      "end": 36010.27999998629,
+      "texture": "955940b6-d5c2-4178-9102-ed0646c2913b",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 36940.90499998629,
+      "end": 36955.55499999225,
+      "texture": "36246c34-b3a3-4dbd-ab49-fc85c2c41df2",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "start": 36974.43499998748,
+      "end": 36989.02999998629,
+      "texture": "855f8b34-494b-4c76-b2e0-befadb815ce7",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 37007.64999999106,
+      "end": 37023.11999998987,
+      "texture": "58ded791-ceb1-4ce0-8111-41624678c35a",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 37040.875,
+      "end": 37047.06999999285,
+      "texture": "f0556cc9-780c-4a94-9473-d5e228c11213",
+      "width": 2048,
+      "height": 256
+    },
+    {
+      "start": 37074.30999998748,
+      "end": 37080.75999999046,
+      "texture": "f72892d1-9ee8-4f59-974f-2adc03ae63b3",
+      "width": 2048,
+      "height": 256
+    },
+    {
+      "start": 37107.55999998748,
+      "end": 37113.49499998987,
+      "texture": "1965cd67-696e-42b0-ba4b-fa9d67900e20",
+      "width": 2048,
+      "height": 256
+    },
+    {
+      "start": 37241.11999998987,
+      "end": 37259.609999999404,
+      "texture": "1b91f868-aeea-4d0a-ad43-600f4d63a8ac",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "start": 37307.784999996424,
+      "end": 37320.29499998689,
+      "texture": "db35bc70-f894-4355-8989-99929ec8cbc1",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "start": 37340.939999997616,
+      "end": 37343.609999999404,
+      "texture": "021f4f8b-f003-4566-8a97-e058299e46ea",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 37374.409999996424,
+      "end": 37387.22999998927,
+      "texture": "750f09ef-f57b-4e0e-881c-6b828db08fae",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "start": 37407.58499999344,
+      "end": 37425.72499999404,
+      "texture": "63b62064-6c34-4079-80bf-cfcf96c12220",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "start": 37474.234999999404,
+      "end": 37486.989999994636,
+      "texture": "077aac54-05d3-4fa7-8eae-bf5ee0e3a019",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "start": 37507.79999999702,
+      "end": 37521.16999998689,
+      "texture": "ea90eabe-f6d4-4039-8c79-f8ef183d963b",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "start": 37540.984999999404,
+      "end": 37553.82999999821,
+      "texture": "8071f967-0f2c-4934-929f-668b1888a63e",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "start": 37574.19499999285,
+      "end": 37576.87999999523,
+      "texture": "ccaa68c6-b038-4738-ada7-2ef917808d58",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 37607.564999997616,
+      "end": 37620.289999991655,
+      "texture": "9c9ddaf6-1c8e-4a2f-8218-6607b3986bca",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "start": 37641.014999985695,
+      "end": 37660.09999999404,
+      "texture": "007166ae-dc94-4eac-a233-d17e47e81d68",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "start": 37707.61999998987,
+      "end": 37710.18499998748,
+      "texture": "dbe6d74f-d21f-451d-8611-3a17d25cefc2",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 37741.02499999106,
+      "end": 37753.72499999404,
+      "texture": "ffc3f429-6edd-4c92-8211-8f68d314940f",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "start": 37774.24499998987,
+      "end": 37787.79499998689,
+      "texture": "c66e27a5-840c-42bc-a4ba-d62b486993c4",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "start": 37807.534999996424,
+      "end": 37810.06999999285,
+      "texture": "1363e0b1-a8c1-40b9-a0c4-24714015c7cb",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 37840.92999999225,
+      "end": 37843.70499999821,
+      "texture": "3b2ed31d-346f-4bc8-bf49-534896f3a49a",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 50241.70999999344,
+      "end": 50244.109999999404,
+      "texture": "3e636fa4-223c-41f0-bff4-fd6b010a5a11",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 50274.739999994636,
+      "end": 50277.30499999225,
+      "texture": "3f86b0ec-d266-4cdf-b071-64120302b0cc",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 55964.5,
+      "end": 55966.99499998987,
+      "texture": "65645cdf-2d46-4ee2-83b3-4df4cd5e82e2",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 55974.5,
+      "end": 55977.49499998987,
+      "texture": "1500be2b-7b90-41cc-b142-46ad1f3267a3",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 60364.99499998987,
+      "end": 60367.38499999046,
+      "texture": "4c288b1a-7b1e-47de-8860-bc29897e830d",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 60374.464999988675,
+      "end": 60377.22999998927,
+      "texture": "d7438fc0-6044-409d-af42-1bf1bc11f803",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 64693.89999999106,
+      "end": 64696.264999985695,
+      "texture": "d6c67216-29e0-4b8f-942b-e62fa3ccd3cb",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "start": 64707.94999998808,
+      "end": 64711.214999988675,
+      "texture": "34926e1a-f934-4cc0-89e1-4f8897a8563a",
+      "width": 1024,
+      "height": 1024
+    }
+  ],
+  "groundTrace": null,
+  "groundGl": null,
+  "groundCompile": null,
+  "loadingWindow": {
+    "start": 25830.344999998808,
+    "end": 26130.344999998808,
+    "rows": [
+      {
+        "start": 25806.57499998808,
+        "end": 25839.944999992847,
+        "interval": 33.37000000476837
+      },
+      {
+        "start": 25839.944999992847,
+        "end": 25873.244999989867,
+        "interval": 33.29999999701977
+      },
+      {
+        "start": 25873.244999989867,
+        "end": 25906.569999992847,
+        "interval": 33.32500000298023
+      },
+      {
+        "start": 25906.569999992847,
+        "end": 25946.939999997616,
+        "interval": 40.37000000476837
+      },
+      {
+        "start": 25946.939999997616,
+        "end": 25973.284999996424,
+        "interval": 26.344999998807907
+      },
+      {
+        "start": 25973.284999996424,
+        "end": 26006.57499998808,
+        "interval": 33.28999999165535
+      },
+      {
+        "start": 26006.57499998808,
+        "end": 26039.90499998629,
+        "interval": 33.32999999821186
+      },
+      {
+        "start": 26039.90499998629,
+        "end": 26073.319999992847,
+        "interval": 33.41500000655651
+      },
+      {
+        "start": 26073.319999992847,
+        "end": 26106.57499998808,
+        "interval": 33.25499999523163
+      },
+      {
+        "start": 26106.57499998808,
+        "end": 26139.92499999702,
+        "interval": 33.3500000089407
+      }
+    ],
+    "spans": [
+      {
+        "label": "loading-compile-submit",
+        "start": 25832.219999998808,
+        "end": 25832.494999989867,
+        "duration": 0.2749999910593033,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "presentation-progress-refresh",
+        "start": 25840.044999986887,
+        "end": 25840.12999999523,
+        "duration": 0.08500000834465027,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "diorama-sky-render",
+        "start": 25840.369999989867,
+        "end": 25840.544999986887,
+        "duration": 0.17499999701976776,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-mist-render",
+        "start": 25840.54999999702,
+        "end": 25840.609999999404,
+        "duration": 0.06000000238418579,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-scene-render",
+        "start": 25840.614999994636,
+        "end": 25841.04999999702,
+        "duration": 0.4350000023841858,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "presentation-diorama-render",
+        "start": 25840.134999990463,
+        "end": 25841.059999987483,
+        "duration": 0.9249999970197678,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-overlay-refresh",
+        "start": 25841.059999987483,
+        "end": 25841.144999995828,
+        "duration": 0.08500000834465027,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-progress-refresh",
+        "start": 25873.319999992847,
+        "end": 25873.39999999106,
+        "duration": 0.07999999821186066,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "diorama-sky-render",
+        "start": 25873.57499998808,
+        "end": 25873.694999992847,
+        "duration": 0.12000000476837158,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-mist-render",
+        "start": 25873.69999998808,
+        "end": 25873.77499999106,
+        "duration": 0.07500000298023224,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-scene-render",
+        "start": 25873.77499999106,
+        "end": 25874.164999991655,
+        "duration": 0.39000000059604645,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "presentation-diorama-render",
+        "start": 25873.39999999106,
+        "end": 25874.169999986887,
+        "duration": 0.7699999958276749,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-overlay-refresh",
+        "start": 25874.169999986887,
+        "end": 25874.244999989867,
+        "duration": 0.07500000298023224,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-progress-refresh",
+        "start": 25906.62999999523,
+        "end": 25906.714999988675,
+        "duration": 0.08499999344348907,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "diorama-sky-render",
+        "start": 25906.89999999106,
+        "end": 25906.994999989867,
+        "duration": 0.0949999988079071,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-mist-render",
+        "start": 25906.994999989867,
+        "end": 25907.079999998212,
+        "duration": 0.08500000834465027,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-scene-render",
+        "start": 25907.079999998212,
+        "end": 25907.54999999702,
+        "duration": 0.4699999988079071,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "presentation-diorama-render",
+        "start": 25906.714999988675,
+        "end": 25907.55499999225,
+        "duration": 0.8400000035762787,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-overlay-refresh",
+        "start": 25907.55499999225,
+        "end": 25907.669999986887,
+        "duration": 0.11499999463558197,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "loading-compile-readiness-wait",
+        "start": 25832.50499999523,
+        "end": 25933.25499999523,
+        "duration": 100.75,
+        "failed": false,
+        "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration."
+      },
+      {
+        "label": "warm-ground-program-experiment",
+        "start": 25831.459999993443,
+        "end": 25933.469999998808,
+        "duration": 102.01000000536442,
+        "failed": false,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+      },
+      {
+        "label": "warm-ground-cache-recipe",
+        "start": 25933.47499999404,
+        "end": 25940.44999998808,
+        "duration": 6.9749999940395355,
+        "failed": false,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+      },
+      {
+        "label": "loading-compile-submit",
+        "start": 25940.97999998927,
+        "end": 25946.625,
+        "duration": 5.645000010728836,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "presentation-progress-refresh",
+        "start": 25947,
+        "end": 25947.079999998212,
+        "duration": 0.07999999821186066,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "diorama-sky-render",
+        "start": 25947.25499999523,
+        "end": 25947.42499999702,
+        "duration": 0.17000000178813934,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-mist-render",
+        "start": 25947.42499999702,
+        "end": 25947.489999994636,
+        "duration": 0.06499999761581421,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-scene-render",
+        "start": 25947.489999994636,
+        "end": 25947.934999987483,
+        "duration": 0.4449999928474426,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "presentation-diorama-render",
+        "start": 25947.084999993443,
+        "end": 25947.939999997616,
+        "duration": 0.8550000041723251,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-overlay-refresh",
+        "start": 25947.939999997616,
+        "end": 25948.089999988675,
+        "duration": 0.14999999105930328,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-progress-refresh",
+        "start": 25973.364999994636,
+        "end": 25973.44999998808,
+        "duration": 0.08499999344348907,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "diorama-sky-render",
+        "start": 25973.65499998629,
+        "end": 25973.884999990463,
+        "duration": 0.23000000417232513,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-mist-render",
+        "start": 25973.884999990463,
+        "end": 25974.039999991655,
+        "duration": 0.1550000011920929,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-scene-render",
+        "start": 25974.039999991655,
+        "end": 25974.514999985695,
+        "duration": 0.4749999940395355,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "presentation-diorama-render",
+        "start": 25973.44999998808,
+        "end": 25974.519999995828,
+        "duration": 1.0700000077486038,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-overlay-refresh",
+        "start": 25974.52499999106,
+        "end": 25974.67999999225,
+        "duration": 0.1550000011920929,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-progress-refresh",
+        "start": 26006.644999995828,
+        "end": 26006.72499999404,
+        "duration": 0.07999999821186066,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "diorama-sky-render",
+        "start": 26006.92499999702,
+        "end": 26007.069999992847,
+        "duration": 0.14499999582767487,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-mist-render",
+        "start": 26007.07499998808,
+        "end": 26007.12999999523,
+        "duration": 0.05500000715255737,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-scene-render",
+        "start": 26007.12999999523,
+        "end": 26007.59999999404,
+        "duration": 0.4699999988079071,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "presentation-diorama-render",
+        "start": 26006.72499999404,
+        "end": 26007.60499998927,
+        "duration": 0.8799999952316284,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-overlay-refresh",
+        "start": 26007.60499998927,
+        "end": 26007.704999998212,
+        "duration": 0.10000000894069672,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-progress-refresh",
+        "start": 26039.969999998808,
+        "end": 26040.04999999702,
+        "duration": 0.07999999821186066,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "diorama-sky-render",
+        "start": 26040.214999988675,
+        "end": 26040.34999999404,
+        "duration": 0.13500000536441803,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-mist-render",
+        "start": 26040.34999999404,
+        "end": 26040.419999986887,
+        "duration": 0.06999999284744263,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-scene-render",
+        "start": 26040.419999986887,
+        "end": 26040.914999991655,
+        "duration": 0.4950000047683716,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "presentation-diorama-render",
+        "start": 26040.04999999702,
+        "end": 26040.919999986887,
+        "duration": 0.8699999898672104,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-overlay-refresh",
+        "start": 26040.92499999702,
+        "end": 26041.04999999702,
+        "duration": 0.125,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-progress-refresh",
+        "start": 26073.37999999523,
+        "end": 26073.484999999404,
+        "duration": 0.10500000417232513,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "diorama-sky-render",
+        "start": 26073.669999986887,
+        "end": 26073.87999999523,
+        "duration": 0.21000000834465027,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-mist-render",
+        "start": 26073.884999990463,
+        "end": 26073.97499999404,
+        "duration": 0.09000000357627869,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-scene-render",
+        "start": 26073.97999998927,
+        "end": 26074.47999998927,
+        "duration": 0.5,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "presentation-diorama-render",
+        "start": 26073.484999999404,
+        "end": 26074.484999999404,
+        "duration": 1,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-overlay-refresh",
+        "start": 26074.484999999404,
+        "end": 26074.564999997616,
+        "duration": 0.07999999821186066,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-progress-refresh",
+        "start": 26106.62999999523,
+        "end": 26106.719999998808,
+        "duration": 0.09000000357627869,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "diorama-sky-render",
+        "start": 26106.909999996424,
+        "end": 26107.064999997616,
+        "duration": 0.1550000011920929,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-mist-render",
+        "start": 26107.064999997616,
+        "end": 26107.119999989867,
+        "duration": 0.05499999225139618,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-scene-render",
+        "start": 26107.119999989867,
+        "end": 26107.5,
+        "duration": 0.3800000101327896,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "presentation-diorama-render",
+        "start": 26106.719999998808,
+        "end": 26107.509999990463,
+        "duration": 0.7899999916553497,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-overlay-refresh",
+        "start": 26107.509999990463,
+        "end": 26107.614999994636,
+        "duration": 0.10500000417232513,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-progress-refresh",
+        "start": 26139.984999999404,
+        "end": 26140.07499998808,
+        "duration": 0.08999998867511749,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "diorama-sky-render",
+        "start": 26140.25499999523,
+        "end": 26140.42499999702,
+        "duration": 0.17000000178813934,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-mist-render",
+        "start": 26140.42999999225,
+        "end": 26140.47999998927,
+        "duration": 0.04999999701976776,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-scene-render",
+        "start": 26140.484999999404,
+        "end": 26140.894999995828,
+        "duration": 0.4099999964237213,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "presentation-diorama-render",
+        "start": 26140.07499998808,
+        "end": 26140.89999999106,
+        "duration": 0.8250000029802322,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-overlay-refresh",
+        "start": 26140.89999999106,
+        "end": 26141.00499999523,
+        "duration": 0.10500000417232513,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-progress-refresh",
+        "start": 26173.439999997616,
+        "end": 26173.80499999225,
+        "duration": 0.36499999463558197,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "diorama-sky-render",
+        "start": 26174.414999991655,
+        "end": 26174.564999997616,
+        "duration": 0.15000000596046448,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-mist-render",
+        "start": 26174.564999997616,
+        "end": 26174.869999989867,
+        "duration": 0.3049999922513962,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-scene-render",
+        "start": 26174.869999989867,
+        "end": 26175.35499998927,
+        "duration": 0.48499999940395355,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "presentation-diorama-render",
+        "start": 26174.034999996424,
+        "end": 26175.35499998927,
+        "duration": 1.3199999928474426,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-overlay-refresh",
+        "start": 26175.359999999404,
+        "end": 26175.469999998808,
+        "duration": 0.10999999940395355,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-progress-refresh",
+        "start": 26206.72999998927,
+        "end": 26206.809999987483,
+        "duration": 0.07999999821186066,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "diorama-sky-render",
+        "start": 26207.039999991655,
+        "end": 26207.204999998212,
+        "duration": 0.16500000655651093,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-mist-render",
+        "start": 26207.204999998212,
+        "end": 26207.264999985695,
+        "duration": 0.0599999874830246,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-scene-render",
+        "start": 26207.264999985695,
+        "end": 26207.764999985695,
+        "duration": 0.5,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "presentation-diorama-render",
+        "start": 26206.814999997616,
+        "end": 26207.769999995828,
+        "duration": 0.9549999982118607,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-overlay-refresh",
+        "start": 26207.769999995828,
+        "end": 26208.134999990463,
+        "duration": 0.36499999463558197,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-progress-refresh",
+        "start": 26239.984999999404,
+        "end": 26240.069999992847,
+        "duration": 0.08499999344348907,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "diorama-sky-render",
+        "start": 26240.234999999404,
+        "end": 26240.34999999404,
+        "duration": 0.11499999463558197,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-mist-render",
+        "start": 26240.34999999404,
+        "end": 26240.414999991655,
+        "duration": 0.06499999761581421,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-scene-render",
+        "start": 26240.414999991655,
+        "end": 26240.875,
+        "duration": 0.46000000834465027,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "presentation-diorama-render",
+        "start": 26240.07499998808,
+        "end": 26240.87999999523,
+        "duration": 0.8050000071525574,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-overlay-refresh",
+        "start": 26240.87999999523,
+        "end": 26240.994999989867,
+        "duration": 0.11499999463558197,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-progress-refresh",
+        "start": 26273.239999994636,
+        "end": 26273.329999998212,
+        "duration": 0.09000000357627869,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "diorama-sky-render",
+        "start": 26273.489999994636,
+        "end": 26273.60499998927,
+        "duration": 0.11499999463558197,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-mist-render",
+        "start": 26273.609999999404,
+        "end": 26273.67499999702,
+        "duration": 0.06499999761581421,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-scene-render",
+        "start": 26273.67999999225,
+        "end": 26274.204999998212,
+        "duration": 0.5250000059604645,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "presentation-diorama-render",
+        "start": 26273.329999998212,
+        "end": 26274.209999993443,
+        "duration": 0.8799999952316284,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-overlay-refresh",
+        "start": 26274.214999988675,
+        "end": 26274.309999987483,
+        "duration": 0.0949999988079071,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-progress-refresh",
+        "start": 26306.514999985695,
+        "end": 26306.609999999404,
+        "duration": 0.0950000137090683,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "diorama-sky-render",
+        "start": 26306.809999987483,
+        "end": 26306.954999998212,
+        "duration": 0.14500001072883606,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-mist-render",
+        "start": 26306.954999998212,
+        "end": 26307.02499999106,
+        "duration": 0.06999999284744263,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "diorama-scene-render",
+        "start": 26307.02499999106,
+        "end": 26307.54999999702,
+        "duration": 0.5250000059604645,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "presentation-diorama-render",
+        "start": 26306.614999994636,
+        "end": 26307.55499999225,
+        "duration": 0.9399999976158142,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "presentation-overlay-refresh",
+        "start": 26307.559999987483,
+        "end": 26307.744999989867,
+        "duration": 0.1850000023841858,
+        "failed": false,
+        "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+      },
+      {
+        "label": "loading-compile-readiness-wait",
+        "start": 25946.689999997616,
+        "end": 26443.834999993443,
+        "duration": 497.1449999958277,
+        "failed": false,
+        "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration."
+      },
+      {
+        "label": "warm-compile-world",
+        "start": 25940.454999998212,
+        "end": 32278.409999996424,
+        "duration": 6337.954999998212,
+        "failed": false,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+      },
+      {
+        "label": "load-warm-gpu",
+        "start": 21051.514999985695,
+        "end": 42437.67999999225,
+        "duration": 21386.165000006557,
+        "failed": false,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+      }
+    ],
+    "gpu": null
+  },
+  "reuse": null,
+  "collapse": {
+    "rows": [
+      {
+        "frame": 0,
+        "renderMs": 225.84000000357628,
+        "debris": 39
+      },
+      {
+        "frame": 1,
+        "renderMs": 15.734999999403954,
+        "debris": 39
+      },
+      {
+        "frame": 2,
+        "renderMs": 15.540000006556511,
+        "debris": 39
+      },
+      {
+        "frame": 3,
+        "renderMs": 10.730000004172325,
+        "debris": 39
+      },
+      {
+        "frame": 4,
+        "renderMs": 9.784999996423721,
+        "debris": 39
+      },
+      {
+        "frame": 5,
+        "renderMs": 9.430000007152557,
+        "debris": 39
+      },
+      {
+        "frame": 6,
+        "renderMs": 11.084999993443489,
+        "debris": 39
+      },
+      {
+        "frame": 7,
+        "renderMs": 10.230000004172325,
+        "debris": 39
+      },
+      {
+        "frame": 8,
+        "renderMs": 10.325000002980232,
+        "debris": 39
+      },
+      {
+        "frame": 9,
+        "renderMs": 9.359999999403954,
+        "debris": 39
+      },
+      {
+        "frame": 10,
+        "renderMs": 9.20499999821186,
+        "debris": 39
+      },
+      {
+        "frame": 11,
+        "renderMs": 10.115000009536743,
+        "debris": 39
+      },
+      {
+        "frame": 12,
+        "renderMs": 9.540000006556511,
+        "debris": 39
+      },
+      {
+        "frame": 13,
+        "renderMs": 10,
+        "debris": 39
+      },
+      {
+        "frame": 14,
+        "renderMs": 9.769999995827675,
+        "debris": 39
+      },
+      {
+        "frame": 15,
+        "renderMs": 9.109999999403954,
+        "debris": 39
+      },
+      {
+        "frame": 16,
+        "renderMs": 10.325000002980232,
+        "debris": 39
+      },
+      {
+        "frame": 17,
+        "renderMs": 8.709999993443489,
+        "debris": 39
+      },
+      {
+        "frame": 18,
+        "renderMs": 8.340000003576279,
+        "debris": 39
+      },
+      {
+        "frame": 19,
+        "renderMs": 8.470000013709068,
+        "debris": 214
+      },
+      {
+        "frame": 20,
+        "renderMs": 8.924999997019768,
+        "debris": 214
+      },
+      {
+        "frame": 21,
+        "renderMs": 9.109999999403954,
+        "debris": 214
+      },
+      {
+        "frame": 22,
+        "renderMs": 8.805000007152557,
+        "debris": 214
+      },
+      {
+        "frame": 23,
+        "renderMs": 8.734999999403954,
+        "debris": 214
+      },
+      {
+        "frame": 24,
+        "renderMs": 8.590000003576279,
+        "debris": 214
+      },
+      {
+        "frame": 25,
+        "renderMs": 8.450000002980232,
+        "debris": 214
+      },
+      {
+        "frame": 26,
+        "renderMs": 8.344999998807907,
+        "debris": 214
+      },
+      {
+        "frame": 27,
+        "renderMs": 9.08500000834465,
+        "debris": 214
+      },
+      {
+        "frame": 28,
+        "renderMs": 8.515000000596046,
+        "debris": 214
+      },
+      {
+        "frame": 29,
+        "renderMs": 8.395000010728836,
+        "debris": 214
+      },
+      {
+        "frame": 30,
+        "renderMs": 8.554999992251396,
+        "debris": 214
+      },
+      {
+        "frame": 31,
+        "renderMs": 8.640000000596046,
+        "debris": 214
+      },
+      {
+        "frame": 32,
+        "renderMs": 8.235000014305115,
+        "debris": 214
+      },
+      {
+        "frame": 33,
+        "renderMs": 8.769999995827675,
+        "debris": 214
+      },
+      {
+        "frame": 34,
+        "renderMs": 8.554999992251396,
+        "debris": 214
+      },
+      {
+        "frame": 35,
+        "renderMs": 8.864999994635582,
+        "debris": 214
+      },
+      {
+        "frame": 36,
+        "renderMs": 9.935000002384186,
+        "debris": 214
+      },
+      {
+        "frame": 37,
+        "renderMs": 8.82999999821186,
+        "debris": 214
+      },
+      {
+        "frame": 38,
+        "renderMs": 10,
+        "debris": 214
+      },
+      {
+        "frame": 39,
+        "renderMs": 8.16499999165535,
+        "debris": 214
+      },
+      {
+        "frame": 40,
+        "renderMs": 8.805000007152557,
+        "debris": 214
+      },
+      {
+        "frame": 41,
+        "renderMs": 8.409999996423721,
+        "debris": 214
+      },
+      {
+        "frame": 42,
+        "renderMs": 8.570000007748604,
+        "debris": 214
+      },
+      {
+        "frame": 43,
+        "renderMs": 9.640000000596046,
+        "debris": 214
+      },
+      {
+        "frame": 44,
+        "renderMs": 8.685000002384186,
+        "debris": 214
+      },
+      {
+        "frame": 45,
+        "renderMs": 8.480000004172325,
+        "debris": 214
+      },
+      {
+        "frame": 46,
+        "renderMs": 11.00500001013279,
+        "debris": 214
+      },
+      {
+        "frame": 47,
+        "renderMs": 8.650000005960464,
+        "debris": 214
+      },
+      {
+        "frame": 48,
+        "renderMs": 8.495000004768372,
+        "debris": 214
+      },
+      {
+        "frame": 49,
+        "renderMs": 8.165000006556511,
+        "debris": 214
+      },
+      {
+        "frame": 50,
+        "renderMs": 8.549999997019768,
+        "debris": 214
+      },
+      {
+        "frame": 51,
+        "renderMs": 8.720000013709068,
+        "debris": 214
+      },
+      {
+        "frame": 52,
+        "renderMs": 9.060000002384186,
+        "debris": 214
+      },
+      {
+        "frame": 53,
+        "renderMs": 8.83500000834465,
+        "debris": 214
+      },
+      {
+        "frame": 54,
+        "renderMs": 8.96000000834465,
+        "debris": 214
+      },
+      {
+        "frame": 55,
+        "renderMs": 8.574999988079071,
+        "debris": 214
+      },
+      {
+        "frame": 56,
+        "renderMs": 10.904999986290932,
+        "debris": 214
+      },
+      {
+        "frame": 57,
+        "renderMs": 9.185000002384186,
+        "debris": 214
+      },
+      {
+        "frame": 58,
+        "renderMs": 12.379999995231628,
+        "debris": 214
+      },
+      {
+        "frame": 59,
+        "renderMs": 8.480000004172325,
+        "debris": 214
+      },
+      {
+        "frame": 60,
+        "renderMs": 8.385000005364418,
+        "debris": 214
+      },
+      {
+        "frame": 61,
+        "renderMs": 8.285000011324883,
+        "debris": 214
+      },
+      {
+        "frame": 62,
+        "renderMs": 8.17000000178814,
+        "debris": 214
+      },
+      {
+        "frame": 63,
+        "renderMs": 8.219999998807907,
+        "debris": 214
+      },
+      {
+        "frame": 64,
+        "renderMs": 8.385000005364418,
+        "debris": 214
+      },
+      {
+        "frame": 65,
+        "renderMs": 8.450000002980232,
+        "debris": 214
+      },
+      {
+        "frame": 66,
+        "renderMs": 8.520000010728836,
+        "debris": 214
+      },
+      {
+        "frame": 67,
+        "renderMs": 8.564999997615814,
+        "debris": 214
+      },
+      {
+        "frame": 68,
+        "renderMs": 8.450000002980232,
+        "debris": 214
+      },
+      {
+        "frame": 69,
+        "renderMs": 8.355000004172325,
+        "debris": 214
+      },
+      {
+        "frame": 70,
+        "renderMs": 8.5,
+        "debris": 214
+      },
+      {
+        "frame": 71,
+        "renderMs": 8.46000000834465,
+        "debris": 214
+      },
+      {
+        "frame": 72,
+        "renderMs": 8.609999999403954,
+        "debris": 214
+      },
+      {
+        "frame": 73,
+        "renderMs": 8.700000002980232,
+        "debris": 214
+      },
+      {
+        "frame": 74,
+        "renderMs": 8.495000004768372,
+        "debris": 214
+      },
+      {
+        "frame": 75,
+        "renderMs": 8.25,
+        "debris": 214
+      },
+      {
+        "frame": 76,
+        "renderMs": 8.509999990463257,
+        "debris": 214
+      },
+      {
+        "frame": 77,
+        "renderMs": 8.019999995827675,
+        "debris": 214
+      },
+      {
+        "frame": 78,
+        "renderMs": 8.254999995231628,
+        "debris": 214
+      },
+      {
+        "frame": 79,
+        "renderMs": 9.219999998807907,
+        "debris": 214
+      }
+    ],
+    "gpu": {
+      "supported": true,
+      "reason": null,
+      "disjointEvents": 0,
+      "discarded": 0,
+      "overflowSkipped": 0,
+      "foreignQuerySkipped": 0,
+      "allocationFailures": 0,
+      "unresolvedAtDispose": 0,
+      "contextLost": false,
+      "pending": 0,
+      "samples": [
+        {
+          "frame": 0,
+          "ms": 189.294368
+        },
+        {
+          "frame": 1,
+          "ms": 17.078048
+        },
+        {
+          "frame": 2,
+          "ms": 10.041856
+        },
+        {
+          "frame": 3,
+          "ms": 11.929568
+        },
+        {
+          "frame": 4,
+          "ms": 13.246304
+        },
+        {
+          "frame": 5,
+          "ms": 11.893952
+        },
+        {
+          "frame": 6,
+          "ms": 13.166816
+        },
+        {
+          "frame": 7,
+          "ms": 14.807008
+        },
+        {
+          "frame": 8,
+          "ms": 12.904128
+        },
+        {
+          "frame": 9,
+          "ms": 13.133376
+        },
+        {
+          "frame": 10,
+          "ms": 13.006272
+        },
+        {
+          "frame": 11,
+          "ms": 14.190624
+        },
+        {
+          "frame": 12,
+          "ms": 12.944864
+        },
+        {
+          "frame": 13,
+          "ms": 9.861056
+        },
+        {
+          "frame": 14,
+          "ms": 13.8304
+        },
+        {
+          "frame": 15,
+          "ms": 12.009344
+        },
+        {
+          "frame": 16,
+          "ms": 14.533376
+        },
+        {
+          "frame": 17,
+          "ms": 14.659552
+        },
+        {
+          "frame": 18,
+          "ms": 12.311072
+        },
+        {
+          "frame": 19,
+          "ms": 13.343712
+        },
+        {
+          "frame": 20,
+          "ms": 11.704416
+        },
+        {
+          "frame": 21,
+          "ms": 14.157504
+        },
+        {
+          "frame": 22,
+          "ms": 13.717312
+        },
+        {
+          "frame": 23,
+          "ms": 12.050976
+        },
+        {
+          "frame": 24,
+          "ms": 13.680896
+        },
+        {
+          "frame": 25,
+          "ms": 12.95696
+        },
+        {
+          "frame": 26,
+          "ms": 12.50528
+        },
+        {
+          "frame": 27,
+          "ms": 14.716384
+        },
+        {
+          "frame": 28,
+          "ms": 13.62272
+        },
+        {
+          "frame": 29,
+          "ms": 14.32448
+        },
+        {
+          "frame": 30,
+          "ms": 11.91408
+        },
+        {
+          "frame": 31,
+          "ms": 14.501504
+        },
+        {
+          "frame": 32,
+          "ms": 14.485504
+        },
+        {
+          "frame": 33,
+          "ms": 12.165344
+        },
+        {
+          "frame": 34,
+          "ms": 13.600736
+        },
+        {
+          "frame": 35,
+          "ms": 12.386752
+        },
+        {
+          "frame": 36,
+          "ms": 13.443104
+        },
+        {
+          "frame": 37,
+          "ms": 14.897152
+        },
+        {
+          "frame": 38,
+          "ms": 12.874272
+        },
+        {
+          "frame": 39,
+          "ms": 13.156352
+        },
+        {
+          "frame": 40,
+          "ms": 13.379616
+        },
+        {
+          "frame": 41,
+          "ms": 13.954272
+        },
+        {
+          "frame": 42,
+          "ms": 13.127648
+        },
+        {
+          "frame": 43,
+          "ms": 13.364
+        },
+        {
+          "frame": 44,
+          "ms": 13.713056
+        },
+        {
+          "frame": 45,
+          "ms": 11.898816
+        },
+        {
+          "frame": 46,
+          "ms": 13.602848
+        },
+        {
+          "frame": 47,
+          "ms": 13.1952
+        },
+        {
+          "frame": 48,
+          "ms": 13.16992
+        },
+        {
+          "frame": 49,
+          "ms": 14.147584
+        },
+        {
+          "frame": 50,
+          "ms": 12.744352
+        },
+        {
+          "frame": 51,
+          "ms": 12.74064
+        },
+        {
+          "frame": 52,
+          "ms": 14.53184
+        },
+        {
+          "frame": 53,
+          "ms": 12.913888
+        },
+        {
+          "frame": 54,
+          "ms": 13.538464
+        },
+        {
+          "frame": 55,
+          "ms": 13.275136
+        },
+        {
+          "frame": 56,
+          "ms": 13.93952
+        },
+        {
+          "frame": 57,
+          "ms": 14.445152
+        },
+        {
+          "frame": 58,
+          "ms": 13.964864
+        },
+        {
+          "frame": 59,
+          "ms": 12.92496
+        },
+        {
+          "frame": 60,
+          "ms": 12.671616
+        },
+        {
+          "frame": 61,
+          "ms": 12.241056
+        },
+        {
+          "frame": 62,
+          "ms": 14.739488
+        },
+        {
+          "frame": 63,
+          "ms": 12.506592
+        },
+        {
+          "frame": 64,
+          "ms": 14.534912
+        },
+        {
+          "frame": 65,
+          "ms": 12.384416
+        },
+        {
+          "frame": 66,
+          "ms": 12.536992
+        },
+        {
+          "frame": 67,
+          "ms": 14.995488
+        },
+        {
+          "frame": 68,
+          "ms": 12.897888
+        },
+        {
+          "frame": 69,
+          "ms": 12.874144
+        },
+        {
+          "frame": 70,
+          "ms": 13.368864
+        },
+        {
+          "frame": 71,
+          "ms": 13.891744
+        },
+        {
+          "frame": 72,
+          "ms": 14.538784
+        },
+        {
+          "frame": 73,
+          "ms": 13.516032
+        },
+        {
+          "frame": 74,
+          "ms": 13.576928
+        },
+        {
+          "frame": 75,
+          "ms": 11.45216
+        },
+        {
+          "frame": 76,
+          "ms": 13.848768
+        },
+        {
+          "frame": 77,
+          "ms": 14.89104
+        },
+        {
+          "frame": 78,
+          "ms": 12.193632
+        },
+        {
+          "frame": 79,
+          "ms": 14.40704
+        }
+      ]
+    },
+    "trace": [],
+    "status": "collapsing",
+    "damage": 0.9649999999999999,
+    "centerId": "structure-2"
+  },
+  "elapsedMs": 74114,
+  "scope": "Actual new-game load, legal Game.placeStructure, then direct diagnostic damage and manually advanced collapse visual clock in a frozen game. QA-only injected preparation when enabled. GPU timings are whole world-render calls; loading RAF samples include menu. Not a full simulation, rendered-frame presentation, production integration or visual-equivalence test."
+}

@@ -1,0 +1,169 @@
+{
+  "scenario": "Paid Sabana day two with Worker Hosted, Surface and physical remote Draw. Terminal device.destroy during concurrent acquired Flee Home18 and AttackCrops26.",
+  "qualification": {
+    "qualifyFarmFlee": true,
+    "qualifyAnimalCrop": true,
+    "ordinaryProfile": false
+  },
+  "hardware": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "edge": "158.0.4370.33",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja"
+  },
+  "recovered": {
+    "hold": 6,
+    "basePublication": 196,
+    "cutPublication": 232,
+    "activationPublication": 233,
+    "sources": [
+      {
+        "kind": 18,
+        "version": 1,
+        "authorityEpoch": "47b53ff7-8372-4051-956f-68fe08dbf301/1",
+        "nativeSession": 1,
+        "ticket": 9,
+        "effectiveTime": 610.99999999998,
+        "actor": 21,
+        "body": 1,
+        "assignment": 8,
+        "executedThrough": 611.4499999999796,
+        "x": 65.1559999999944,
+        "z": 1,
+        "yaw": -1.5707963267948966,
+        "phase": {
+          "run": 0.4499999999995907,
+          "walk": 10.04999999999086,
+          "carry": 0
+        }
+      },
+      {
+        "kind": 26,
+        "version": 1,
+        "authorityEpoch": "47b53ff7-8372-4051-956f-68fe08dbf301/1",
+        "nativeSession": 1,
+        "ticket": 7,
+        "effectiveTime": 608.799999999982,
+        "actor": 22,
+        "body": 2,
+        "assignment": 7,
+        "executedThrough": 611.4499999999796,
+        "x": 73.03000000000915,
+        "z": 27,
+        "yaw": -1.5707963267948966,
+        "phase": 2.64999999999759
+      }
+    ]
+  },
+  "originalFrame": {
+    "sequence": 91,
+    "elapsed": 611.2999999999797,
+    "worldTicket": 9,
+    "bindings": [
+      {
+        "kind": 26,
+        "actor": 22,
+        "body": 2,
+        "ticket": 6,
+        "age": 2.499999761581421
+      },
+      {
+        "kind": 18,
+        "actor": 21,
+        "body": 1,
+        "ticket": 8,
+        "age": 0.29999998211860657
+      }
+    ]
+  },
+  "firstReplacementFrame": {
+    "sequence": 1,
+    "elapsed": 611.4499999999796,
+    "worldTicket": 9,
+    "bindings": [
+      {
+        "kind": 18,
+        "actor": 21,
+        "body": 1,
+        "ticket": 9,
+        "age": 0.44999998807907104
+      },
+      {
+        "kind": 26,
+        "actor": 22,
+        "body": 2,
+        "ticket": 7,
+        "age": 2.6499998569488525
+      }
+    ]
+  },
+  "afterActivation": {
+    "sequence": 3,
+    "elapsed": 611.5999999999794,
+    "worldTicket": 9,
+    "bindings": [
+      {
+        "kind": 18,
+        "actor": 21,
+        "body": 1,
+        "ticket": 9,
+        "age": 0.5999999642372131
+      },
+      {
+        "kind": 26,
+        "actor": 22,
+        "body": 2,
+        "ticket": 7,
+        "age": 2.799999952316284
+      }
+    ]
+  },
+  "homeAbsenceFrame": {
+    "sequence": 20,
+    "elapsed": 614.4499999999769,
+    "worldTicket": 11,
+    "bindings": [
+      {
+        "kind": 26,
+        "actor": 22,
+        "body": 2,
+        "ticket": 7,
+        "age": 5.649999618530273
+      }
+    ]
+  },
+  "refuge": {
+    "kind": 19,
+    "ticket": 11,
+    "x": 60,
+    "z": 0
+  },
+  "checks": {
+    "originalDeviceLoss": 1,
+    "acquisitions": {
+      "home": 1,
+      "crop": 1
+    },
+    "confirmedAnimalHits": 0,
+    "ledgerUnchanged": true,
+    "replacementDrained": true,
+    "unexpectedErrors": []
+  },
+  "evidence": {
+    "trace": {
+      "bytes": 49322618,
+      "sha256": "66ccbe8bef43236b802d2e71d92e04b52abad0b19c83f39099d984a52c410c1d",
+      "dataLoss": false
+    },
+    "fullReceiptSha256": "193614d19c0b921c304c83388024bf9875e0a65a507e1b67589731ec41375e92"
+  },
+  "limits": [
+    "One worker and one warthog with resident routes.",
+    "This run ended after Home19 while the original crop approach was still active.",
+    "60 Hz cadence and recovery of other cohorts remain open."
+  ]
+}

@@ -3,7 +3,7 @@ import {gateFrameFootprints,gateSwingPolygon} from '../gate-passages.js';
 import {sweptFootprintDistance} from '../footprints.js';
 import {createSpatialPlacement} from './spatial-placement.js';
 import {BIOME_IDS} from '../biome-ids.js';
-import {centerFootprint} from '../centers.js';
+import {spatialStateObstacles} from './spatial-state-obstacles.js';
 import {validActiveBounds} from '../active-region.js';
 
 const animalProfiles=Object.entries(ANIMAL_SPATIAL_PROFILES);
@@ -310,12 +310,7 @@ export function createSpatialNavigationMovement(session,state){
       const version=session.topologySource.revision();
       if(obstacleList===null||obstacleVersion!==version||
         obstacleStructures!==state.structures||obstacleVillages!==state.villages){
-        obstacleList=[
-          ...state.structures.filter(item=>item.status!=='ruined').map(item=>
-            item.kind==='center'?centerFootprint(item,state):{...item,radius:.7}),
-          ...state.villages.flatMap(village=>(village.buildings??[])
-            .filter(item=>item.kind!=='Zona común').map(item=>({...item,radius:item.radius??2.8})))
-        ];
+        obstacleList=spatialStateObstacles(state);
         obstacleVersion=version;obstacleStructures=state.structures;
         obstacleVillages=state.villages;
       }

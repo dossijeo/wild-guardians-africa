@@ -1,0 +1,159 @@
+{
+  "chunks": 25,
+  "animals": 20,
+  "initMs": 856.25,
+  "publications": [
+    {
+      "sequence": 1,
+      "workMs": 1060.8849999904633,
+      "responseMs": 1072.1850000023842,
+      "applyDelayMs": 1.4200000017881393,
+      "applyAndDrawMs": 48.28499999642372,
+      "events": 12,
+      "moved": 11
+    },
+    {
+      "sequence": 2,
+      "workMs": 20.844999998807907,
+      "responseMs": 45.96000000834465,
+      "applyDelayMs": 0.5199999958276749,
+      "applyAndDrawMs": 35.375,
+      "events": 0,
+      "moved": 11
+    },
+    {
+      "sequence": 3,
+      "workMs": 8.590000003576279,
+      "responseMs": 39.269999995827675,
+      "applyDelayMs": 0.3150000125169754,
+      "applyAndDrawMs": 37.36499999463558,
+      "events": 0,
+      "moved": 13
+    },
+    {
+      "sequence": 4,
+      "workMs": 7.190000012516975,
+      "responseMs": 38.15999999642372,
+      "applyDelayMs": 0.36000001430511475,
+      "applyAndDrawMs": 37.84499999880791,
+      "events": 0,
+      "moved": 13
+    },
+    {
+      "sequence": 5,
+      "workMs": 9.33500000834465,
+      "responseMs": 38.51500000059605,
+      "applyDelayMs": 0.3349999934434891,
+      "applyAndDrawMs": 41.73999999463558,
+      "events": 0,
+      "moved": 13
+    },
+    {
+      "sequence": 6,
+      "workMs": 9.195000007748604,
+      "responseMs": 42.605000004172325,
+      "applyDelayMs": 0.32999999821186066,
+      "applyAndDrawMs": 35.80500000715256,
+      "events": 0,
+      "moved": 15
+    },
+    {
+      "sequence": 7,
+      "workMs": 5.25500001013279,
+      "responseMs": 35.644999995827675,
+      "applyDelayMs": 0.3100000023841858,
+      "applyAndDrawMs": 44.21000000834465,
+      "events": 0,
+      "moved": 15
+    },
+    {
+      "sequence": 8,
+      "workMs": 9.459999993443489,
+      "responseMs": 43.31999999284744,
+      "applyDelayMs": 0.2800000011920929,
+      "applyAndDrawMs": 40.355000004172325,
+      "events": 0,
+      "moved": 15
+    },
+    {
+      "sequence": 9,
+      "workMs": 5.814999997615814,
+      "responseMs": 39.20499999821186,
+      "applyDelayMs": 0.45500001311302185,
+      "applyAndDrawMs": 37.42499999701977,
+      "events": 0,
+      "moved": 15
+    },
+    {
+      "sequence": 10,
+      "workMs": 5.489999994635582,
+      "responseMs": 33.72000001370907,
+      "applyDelayMs": 0.2549999952316284,
+      "applyAndDrawMs": 34.0249999910593,
+      "events": 0,
+      "moved": 16
+    }
+  ],
+  "observerCount": 12,
+  "simObserverCount": 0,
+  "visibility": [
+    {
+      "visible": false,
+      "at": 50211.85499998927
+    },
+    {
+      "visible": true,
+      "at": 50260.189999997616
+    }
+  ],
+  "receiver": {
+    "version": 10,
+    "lastEvent": 12
+  },
+  "fence": {
+    "received": 10,
+    "nextEvent": 12,
+    "displayed": 10,
+    "minimum": 1,
+    "pending": 0,
+    "fault": false,
+    "hide": false,
+    "visible": true
+  },
+  "ack": {
+    "version": 10,
+    "acknowledged": 12,
+    "delivered": 12,
+    "pending": 0,
+    "pendingBytes": 2,
+    "maxPendingBytes": 65536
+  },
+  "frames": {
+    "count": 179,
+    "p95": 38.479999989271164,
+    "p99": 44.71999999880791,
+    "max": 48.939999997615814
+  },
+  "renderMs": {
+    "count": 180,
+    "p95": 38.20499999821186,
+    "p99": 44.14000000059605,
+    "max": 47.42000000178814
+  },
+  "gpu": {
+    "samples": 180,
+    "disjoint": 0,
+    "discarded": 0,
+    "elapsed": {
+      "count": 180,
+      "p95": 15.921152,
+      "p99": 24.792672,
+      "max": 31.690688
+    }
+  },
+  "snapshotEqual": true,
+  "eventEqual": true,
+  "sceneErrors": [],
+  "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "scope": "Ten sequential advanceReal(.05) requests in a Worker-owned cloned simulation with ordered deltas and acknowledged events; partial positions, heading, elapsed time, structures and events copied to an existing frozen mangrove-islands QA scene. All events treated structural and canvas hidden until next confirmed draw. One request in flight; no actual game inputs, simulation authority transfer, Rapier, complete visual state, interpolation, temporal safe horizon, rollback, lost messages, production integration or integrated GPU. Renderer and Worker use separate native worlds."
+}

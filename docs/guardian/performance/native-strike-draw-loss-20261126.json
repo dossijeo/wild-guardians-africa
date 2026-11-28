@@ -1,0 +1,150 @@
+{
+  "baseline": "628445720614c5a49976a4c08a4fd3761b7f130f",
+  "scope": "DEV, a single unprotected crop strike in Sabana with inactive civilian actors",
+  "fixture": "tests/fixtures/sabana712-d1-native-active-raid.json.gz",
+  "savedFixtureSha256": "a79d272daea007df1dcc9b903d6c4af2a474e56b037b9c08adf93ab6b22f0442",
+  "baselineProbeSha256": "d835d2f01f224d350a7cb4798c09ec1f810587a56ab8d2cc3d555dcce2be1816",
+  "baselineRejection": "Animal crop requires a fresh prepared graphical admission",
+  "verification": {
+    "passed": 322,
+    "failed": 0,
+    "skipped": 0,
+    "regressionTapSha256": "69e790fd814eb7c2e6d38d40badd2df330030c9e9b7e538b6429d4fdbf4c7479",
+    "preliminaryLiveFailureSha256": "d56d152cee935df0fbdb450cf426bf1b4896635a430d3b39b1be0c1aed6036fd",
+    "lateRevokedPacketNegativeTapSha256": "f01f861e4ad090c36f1c4ce13debcfe905123c9e371f3844992c9156474e4128",
+    "lateRevokedPacketNegative": "Omitting registration of the replacement clock lease reproduces the fatal stale-source error.",
+    "productBuild": {
+      "backend": "webgpu-worker",
+      "remoteDraw": true,
+      "seconds": 47.02,
+      "output": "D:/wild-guardians-qa/recovered-strike-20261126",
+      "logSha256": "3731de3a488866a5a701c419f7c4a4b04fd24077596fc7682fb165b5ca042211",
+      "initialOutputFailure": "ENOENT in asset packaging after an incomplete output copy on C:",
+      "initialOutputFailureLogSha256": "bf1dc60a727c3541fe3b4be02494dc0a72fc3774ec6e23f03b2425d6edc09f8a"
+    }
+  },
+  "physical": {
+    "live": {
+      "browser": "Edge 158.0.4370.33",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing"
+      },
+      "actor": "animal-396",
+      "bodyId": 1,
+      "assignmentSequence": 12,
+      "predecessorAssignment": 11,
+      "preparedTicket": 3,
+      "acquiredTicket": 4,
+      "clip": 3,
+      "clipDuration": 4.541666824370623,
+      "clipPrefix": 0,
+      "programEnd": 400.3416668243588,
+      "oldDraw": {
+        "sequence": 197,
+        "time": 396.39999999998764,
+        "age": 0.5999999642372131
+      },
+      "hold": {
+        "id": 5,
+        "replayBase": 391,
+        "publication": 432,
+        "time": 396.49999999998755,
+        "remaining": 3.8416668243712593
+      },
+      "first": {
+        "sequence": 1,
+        "time": 396.49999999998755,
+        "age": 0.699999988079071,
+        "clipAge": 0.699999988079071
+      },
+      "continued": {
+        "sequence": 5,
+        "time": 396.7999999999873,
+        "age": 0.9999999403953552
+      },
+      "hit": {
+        "id": "attack-661",
+        "target": "plant-373",
+        "time": 400.34999999998405,
+        "count": 1
+      },
+      "afterHit": {
+        "sequence": 42,
+        "time": 400.34999999998405,
+        "strikeBinding": false
+      },
+      "ledgerUnchanged": true,
+      "drained": true,
+      "expectedDestroyedPageErrors": 0,
+      "unexpectedErrors": 0,
+      "receiptSha256": "d963dfef0e66bb71140a4536f6ba065ef5885143be39db88622a8aba5aee76d5",
+      "trace": {
+        "sha256": "a00626343340d02832b99c65a8d4604c1a72e222b1b8367730cb2b13bb3c7f95",
+        "bytes": 41300191,
+        "dataLossOccurred": false
+      }
+    },
+    "saved": {
+      "browser": "Edge 158.0.4370.33",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing"
+      },
+      "actor": "animal-396",
+      "bodyId": 1,
+      "assignmentSequence": 11,
+      "predecessorAssignment": null,
+      "preparedTicket": 1,
+      "acquiredTicket": 2,
+      "clip": 3,
+      "clipDuration": 4.541666824370623,
+      "clipPrefix": 0.6499999761581421,
+      "programEnd": 399.3416668243597,
+      "oldDraw": {
+        "sequence": 44,
+        "time": 395.74999999998823,
+        "age": 0.29999998211860657
+      },
+      "hold": {
+        "id": 5,
+        "replayBase": 1,
+        "publication": 77,
+        "time": 395.7999999999882,
+        "remaining": 3.541666824371532
+      },
+      "first": {
+        "sequence": 1,
+        "time": 395.7999999999882,
+        "age": 0.3499999940395355,
+        "clipAge": 1
+      },
+      "continued": {
+        "sequence": 7,
+        "time": 396.0999999999879,
+        "age": 0.6499999761581421
+      },
+      "hit": {
+        "id": "attack-661",
+        "target": "plant-373",
+        "time": 399.34999999998496,
+        "count": 1
+      },
+      "afterHit": {
+        "sequence": 41,
+        "time": 399.34999999998496,
+        "strikeBinding": false
+      },
+      "ledgerUnchanged": true,
+      "drained": true,
+      "expectedDestroyedPageErrors": 1,
+      "unexpectedErrors": 0,
+      "receiptSha256": "0a665c5520f1497ad7967d17fe365059c2e54d70e6b85c6bdb55552bbd436da8",
+      "trace": {
+        "sha256": "73863de402b6fc482e529528308297fb3ff5e5ebe68e990522e96eb303fc0d17",
+        "bytes": 31435550,
+        "dataLossOccurred": false
+      }
+    }
+  }
+}

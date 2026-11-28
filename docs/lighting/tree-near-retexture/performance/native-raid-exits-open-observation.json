@@ -1,0 +1,164 @@
+{
+  "scope": "Normal spawnRaid formation from one saved savanna state, 5x5 native chunks, selected groups; no movement, timing or GPU.",
+  "wallsRemoved": true,
+  "rows": [
+    {
+      "group": [
+        "warthog",
+        "warthog"
+      ],
+      "spawned": true,
+      "entryFailure": null,
+      "animals": [
+        {
+          "id": "animal-368",
+          "species": "warthog",
+          "spawn": {
+            "x": 83,
+            "z": -115.65
+          },
+          "exit": {
+            "x": 83,
+            "z": -118.65
+          },
+          "radius": 1.1
+        },
+        {
+          "id": "animal-369",
+          "species": "warthog",
+          "spawn": {
+            "x": 89,
+            "z": -115.65
+          },
+          "exit": {
+            "x": 89,
+            "z": -118.65
+          },
+          "radius": 1.1
+        }
+      ]
+    },
+    {
+      "group": [
+        "lion",
+        "lion"
+      ],
+      "spawned": true,
+      "entryFailure": null,
+      "animals": [
+        {
+          "id": "animal-368",
+          "species": "lion",
+          "spawn": {
+            "x": 83,
+            "z": -115.9
+          },
+          "exit": {
+            "x": 83,
+            "z": -118.9
+          },
+          "radius": 0.85
+        },
+        {
+          "id": "animal-369",
+          "species": "lion",
+          "spawn": {
+            "x": 88,
+            "z": -115.9
+          },
+          "exit": {
+            "x": 88,
+            "z": -118.9
+          },
+          "radius": 0.85
+        }
+      ]
+    },
+    {
+      "group": [
+        "warthog",
+        "lion"
+      ],
+      "spawned": true,
+      "entryFailure": null,
+      "animals": [
+        {
+          "id": "animal-368",
+          "species": "warthog",
+          "spawn": {
+            "x": 83,
+            "z": -115.65
+          },
+          "exit": {
+            "x": 83,
+            "z": -118.65
+          },
+          "radius": 1.1
+        },
+        {
+          "id": "animal-369",
+          "species": "lion",
+          "spawn": {
+            "x": 88,
+            "z": -115.65
+          },
+          "exit": {
+            "x": 88,
+            "z": -118.65
+          },
+          "radius": 0.85
+        }
+      ]
+    },
+    {
+      "group": [
+        "warthog",
+        "warthog",
+        "warthog"
+      ],
+      "spawned": true,
+      "entryFailure": null,
+      "animals": [
+        {
+          "id": "animal-368",
+          "species": "warthog",
+          "spawn": {
+            "x": 83,
+            "z": -115.65
+          },
+          "exit": {
+            "x": 83,
+            "z": -118.65
+          },
+          "radius": 1.1
+        },
+        {
+          "id": "animal-369",
+          "species": "warthog",
+          "spawn": {
+            "x": 89,
+            "z": -115.65
+          },
+          "exit": {
+            "x": 89,
+            "z": -118.65
+          },
+          "radius": 1.1
+        },
+        {
+          "id": "animal-370",
+          "species": "warthog",
+          "spawn": {
+            "x": 93,
+            "z": -115.65
+          },
+          "exit": {
+            "x": 93,
+            "z": -118.65
+          },
+          "radius": 1.1
+        }
+      ]
+    }
+  ]
+}

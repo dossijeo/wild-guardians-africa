@@ -1,6 +1,9 @@
-import {DAYLIGHT_BIOMES,finalDaylightEnabled,patchDaylightGround} from './final-daylight.js';
+import {patchModelAmbientVisibility} from './model-ambient-visibility.js';
+import {patchNativeAmbientVisibility} from './native-ambient-visibility.js';
+import {cinematicLightingEnabled,patchCinematicLighting,patchBuildingShadow} from './cinematic-lighting.js';
 import {patchAwakeningRoots} from './awakening-roots.js';
 import {patchBlessingMaterial} from './blessing-material.js';
+import {DAYLIGHT_BIOMES,finalDaylightEnabled,patchDaylightGround} from './final-daylight.js';
 import {canyonWaterReflectionEnabled,patchCanyonWaterReflection} from './canyon-water-reflection.js';
 import {mangroveFernEnabled} from './mangrove-fern-option.js';
 import {patchFernGround} from './mangrove-fern-ground.js';
@@ -45,6 +48,8 @@ const diagnosticToon=diagnosticPigment(toonFunctions),diagnosticVolcanic=diagnos
 const warthogToon=diagnosticToon
  .replace('float specBand=smoothstep(.62,.88,spec)*(1.-rough*.40);','float specBand=smoothstep(.62,.88,spec)*(1.-rough*.40)*.12;')
  .replace('vec3 toon=albedo*base*(.76+.24*fill);','vec3 toon=albedo*(base+vec3(.060,.072,.090)*uNight)*(.76+.24*fill);');
+const matteWorkerToon=diagnosticToon.replace('float specBand=smoothstep(.62,.88,spec)*(1.-rough*.40);','float specBand=smoothstep(.62,.88,spec)*(1.-rough*.40)*.04;')
+ .replace('toon+=reflected*(.03+.05*(1.-rough)+wet*.18);','toon+=reflected*.006;');
 const beastToon=beastLightingFunctions(diagnosticToon),warthogBeastToon=beastLightingFunctions(warthogToon);
 // Experimental village-only relief: retain the authored palette and broad toon
 // bands while allowing the existing tangent-space atlas to affect fine light.
@@ -57,7 +62,7 @@ const normalDetailLightingFunctions=artLightingFunctions.replace(
 export class AfricanToon {
   constructor({visualSearch=globalThis.location?.search??''}={}){
     this.visualSearch=visualSearch;this.finalDaylight=finalDaylightEnabled(visualSearch);
-    this.beastUniforms={uBeastStyle:{value:new URLSearchParams(visualSearch).get('beastLighting')==='legacy'?0:1}};
+    this.beastUniforms={uBeastStyle:{value:({legacy:0,albedo:2,key:3,fill:4,sheen:5,soft:6})[new URLSearchParams(visualSearch).get('beastLighting')]??1}};
     this.environmentRecipe=environmentRecipe(visualSearch);
     this.canyonWarmFloor=canyonWarmFloorEnabled(visualSearch);
     this.globalVisualLighting=new URLSearchParams(visualSearch).get('visualLab')==='global-lighting';
@@ -77,12 +82,13 @@ export class AfricanToon {
     const {endpointFunctions,atmosphereCacheKey}=this.environmentRecipe;
     if(!(material?.isMeshStandardMaterial||material?.isMeshBasicMaterial&&material.userData.toonGround)||material.transparent||material.userData.paintUniforms||this.materials.has(material))return;
     this.materials.add(material);
-    const original=material.onBeforeCompile,baseCache=material.customProgramCacheKey.bind(material),beast=material.userData.beastSurface===true,warthog=material.userData.warthogSurface===true,cache=()=>baseCache()+(beast?'|beast-contrast-v1'+(warthog?'|legacy-warthog':''):warthog?'|warthog-matte-night-v1':'');
+    const original=material.onBeforeCompile,baseCache=material.customProgramCacheKey.bind(material),beast=material.userData.beastSurface===true,fur=material.userData.furLightingMask===true,warthog=material.userData.warthogSurface===true,matteWorker=material.userData.matteWorkerBody===true,cache=()=>baseCache()+(fur?'|fur-mask-v1':'')+(beast?'|beast-contrast-v2'+(warthog?'|legacy-warthog':''):warthog?'|warthog-matte-night-v1':matteWorker?'|worker-matte-v2':'');
     material.onBeforeCompile=(shader,renderer)=>{
       if(beast)Object.assign(shader.uniforms,this.beastUniforms);
       original.call(material,shader,renderer);Object.assign(shader.uniforms,this.uniforms,this.environmentUniforms);if(material.userData.biomeGround)Object.assign(shader.uniforms,material.userData.biomeGround);if(material.userData.artBounds){Object.assign(shader.uniforms,this.artUniforms);const b=material.userData.artBounds;shader.uniforms.uArtLocalMin={value:b.min};shader.uniforms.uArtLocalSize={value:b.size};shader.uniforms.uArtCrown={value:b.crown};shader.uniforms.uArtVolcanicGlow=material.userData.nativeVolcanicGlow??this.artUniforms.uArtVolcanicGlow;}if(material.userData.toonGround)Object.assign(shader.uniforms,this.contactUniforms);shader.uniforms.uSurfaceType={value:material.userData.toonGround?0:material.userData.artSurface??material.userData.nativeSurface?.type??1};
-      shader.vertexShader=(material.userData.artBounds?'uniform vec3 uArtLocalMin,uArtLocalSize;uniform float uArtCrown;varying vec3 vCanopyNormal;varying float vRelativeHeight;\n':'')+'varying vec3 vToonWorld;\n'+(material.isMeshBasicMaterial?'varying vec3 vToonLowNormal;\n':'')+shader.vertexShader;
+      shader.vertexShader=(fur?'attribute float _fur_light;varying float vFurLight;\n':'')+(material.userData.artBounds?'uniform vec3 uArtLocalMin,uArtLocalSize;uniform float uArtCrown;varying vec3 vCanopyNormal;varying float vRelativeHeight;\n':'')+'varying vec3 vToonWorld;\n'+(material.isMeshBasicMaterial?'varying vec3 vToonLowNormal;\n':'')+shader.vertexShader;
       shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',`#include <project_vertex>
+        ${fur?'vFurLight=_fur_light;':''}
         vec4 toonPosition=vec4(transformed,1.0);
         #ifdef USE_BATCHING
           toonPosition=batchingMatrix*toonPosition;
@@ -99,7 +105,7 @@ export class AfricanToon {
         #endif
         vCanopyNormal=normalize(inverseTransformDirection(normalMatrix*artEnvelope,viewMatrix));`:''}
         ${material.isMeshBasicMaterial?'vToonLowNormal=inverseTransformDirection(normalMatrix*normal,viewMatrix);':''}`);
-      shader.fragmentShader=(material.isMeshBasicMaterial?'varying vec3 vToonLowNormal;\n':'')+worldPatternFunctions+'varying vec3 vToonWorld;uniform float uNight,uNightLight,uExposure,uKind,uSurfaceType,uWet,uBiome,uGroundDetail,uFineNoise,uEnvEndpoints;uniform vec3 uLightDir;\n'+(beast?warthog?warthogBeastToon:beastToon:warthog?warthogToon:diagnosticToon)+'\n'+shader.fragmentShader;
+      shader.fragmentShader=(fur?'#define GUARDIAN_FUR_MASK\nvarying float vFurLight;\n':'')+(material.isMeshBasicMaterial?'varying vec3 vToonLowNormal;\n':'')+worldPatternFunctions+'varying vec3 vToonWorld;uniform float uNight,uNightLight,uExposure,uKind,uSurfaceType,uWet,uBiome,uGroundDetail,uFineNoise,uEnvEndpoints;uniform vec3 uLightDir;\n'+(beast?warthog?warthogBeastToon:beastToon:warthog?warthogToon:matteWorker?matteWorkerToon:diagnosticToon)+'\n'+shader.fragmentShader;
       shader.fragmentShader='uniform sampler2D uEnvDay,uEnvNight;uniform float uEnvYaw,uNativeEnvEnabled;\n'+shader.fragmentShader;
       // The source returns HDR radiance, which africanToon4 grades itself.
       shader.fragmentShader=shader.fragmentShader.replace('void main() {',endpointFunctions+'\n'+(material.userData.toonGround?'uniform sampler2D uContactMap;uniform vec4 uContactBounds;uniform float uContactOn;\n'+diagnosticGroundNoise(groundLightingFunctions.replace('materialNoise(worldP*.32),fine=materialNoise(worldP*2.6)','materialNoise(worldPatternPosition(worldP)*.32),fine=materialNoise(worldPatternPosition(worldP)*2.6)').replace('sin(worldP.z*.024)','sin(worldPatternPosition(worldP).z*.024)')):'')+'\n'+(material.userData.biomeGround?groundMaterialFunctions+(material.userData.biomeGround.uGroundLayered?.value?savannaLayerFunctions:''):'')+'\n'+(material.userData.artBounds?'uniform vec3 uArtSun,uArtShade,uArtFoliage;uniform vec4 uArtParams,uArtShape;uniform float uArtHighlight,uArtVolcanicGlow;varying vec3 vCanopyNormal;varying float vRelativeHeight;\n'+(material.userData.visualLabNormalDetail?normalDetailLightingFunctions:artLightingFunctions):'')+'\n'+(material.userData.nativeSurface?diagnosticVolcanic:'')+'\nvoid main() {');
@@ -149,6 +155,8 @@ export class AfricanToon {
         outgoingLight=toLinear4(${material.userData.nativeSurface?'africanToonEmission4':'africanToon4'}(outgoingLight,diffuseColor.rgb,toonN,toonV,uLightDir,toonReflection,roughnessFactor,toonVisibility,toonLeaf,${material.userData.toonGround?'uWet*(1.-toonLeaf*.35)':material.userData.nativeSurface?'nativeWet':'0.0'},metalnessFactor,max(dot(toonN,toonV),0.0),worldPatternPosition(vToonWorld)${material.userData.nativeSurface?',nativeEmission':''}))+totalEmissiveRadiance;
         ${material.userData.artBounds?`outgoingLight=toLinear4(artLighting416(sRGBTransferOETF(vec4(diffuseColor.rgb,1.)).rgb,artGeometric,toonN,toonV,toonLeaf,roughnessFactor,${material.userData.nativeSurface?'mix(.80,1.,smoothstep(0.,.22,nativeRelH))':'1.'},(1.-toonVisibility)/.93));`:''}
         #include <opaque_fragment>`);
+      if(material.userData.nativeAmbientVisibility)patchNativeAmbientVisibility(shader,material.userData.nativeAmbientVisibility);
+      if(material.userData.modelAmbientVisibility)patchModelAmbientVisibility(shader,material.userData.modelAmbientVisibility);
 
     };
     if(material.userData.toonGround&&material.userData.biomeGround&&material.userData.riverSoil){
@@ -201,10 +209,12 @@ export class AfricanToon {
     if(fernGround){const compile=material.onBeforeCompile;material.onBeforeCompile=(shader,renderer)=>{compile(shader,renderer);shader.fragmentShader=patchFernGround(shader.fragmentShader);};}
     const finalGround=this.finalDaylight&&material.userData.toonGround&&DAYLIGHT_BIOMES.has(material.userData.groundBiome);
     if(finalGround){const compile=material.onBeforeCompile;material.onBeforeCompile=(shader,renderer)=>{compile(shader,renderer);shader.fragmentShader=patchDaylightGround(shader.fragmentShader);};}
+    const cinematic=cinematicLightingEnabled(this.visualSearch);
+    if(cinematic){const compile=material.onBeforeCompile;material.onBeforeCompile=(shader,renderer)=>{compile(shader,renderer);shader.fragmentShader=patchCinematicLighting(shader.fragmentShader,{ground:!!material.userData.toonGround,nativeSurface:!!material.userData.nativeSurface});};}
     if(material.userData.toonGround&&material.userData.biomeGround?.uAwakeningMap){const compile=material.onBeforeCompile;material.onBeforeCompile=(shader,renderer)=>{compile(shader,renderer);patchAwakeningRoots(shader,material.userData.biomeGround);};}
     if(material.userData.blessingInstance||material.userData.blessingObject){const compile=material.onBeforeCompile;material.onBeforeCompile=(shader,renderer)=>{compile(shader,renderer);patchBlessingMaterial(shader,material,this.blessingClock);};}
     recordNativeDepthHook(material,original,'toon',...(material.userData.horizonBounds?['horizon']:[]));
-    material.customProgramCacheKey=()=>cache()+(material.userData.blessingInstance?'|blessed-instance-v1':material.userData.blessingObject?'|blessed-wall-v1':'')+(material.userData.biomeGround?.uAwakeningMap?'|awakening-roots-v1':'')+(finalGround?'|final-daylight-v1':'')+(fernGround?'|holly-fern-ground-v1':'')+atmosphereCacheKey+(material.userData.volcanicDeposits?'|volcanic-deposits-broad-v1':'')+(warmFloor?'|canyon-warm-floor-v1':'')+(this.desertMeso?'|desert-meso-filter-v1':'')+(this.desertResidualWear?'|desert-residual-wear-v1':'')+(this.volcanicNightSpectrum?'|volcanic-night-spectrum-v1':this.volcanicNightAmbient?'|volcanic-night-ambient-v1':'')+(material.userData.volcanicRock?'|volcanic-rock-layered-v1':'')+(material.userData.riverSoil?'|river-soil-v2':'')+(material.userData.riverUnderlay?'|river-underlay-persistent-v1':'')+(material.userData.mangroveSubstrate?'|mangrove-substrate-full-v1':'')+(material.userData.mangroveShore?'|mangrove-shore-v1':'')+(material.userData.mangroveMoss?'|mangrove-moss-two-scales-v1':'')+(material.userData.canyonSand?'|canyon-sand-v2:'+Boolean(material.userData.canyonSandFull):'')+(material.userData.canyonSandSoft?'|canyon-sand-soft-v1':'')+(material.userData.volcanicAsh?'|volcanic-ash-v1:'+material.userData.volcanicAsh:'')+(material.userData.desertSand?'|desert-sand-v1':'')+(material.userData.biomeGround?.uCliffRock?'|cliff-rock-v1':'')+(this.globalVisualLighting?'|global-visual-lighting|desert-soft-v1|'+(material.userData.groundBiome??'object'):'')+'|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|'+(material.userData.biomeGround?'biome-ground-4.1.10.3':material.userData.toonGround?'ground':'object')+'|'+(material.userData.biomeGround?.uGroundLayered?.value?'visual-layer':'base-ground')+'|'+(material.userData.artBounds?'illustrated-4.1.6':'toon-4.1.4')+'|'+(material.userData.visualLabNormalDetail?'visual-normal-detail':material.userData.visualLabNormal?'visual-normal':'authored-normal')+'|'+material.type+'|'+(material.userData.horizonBounds?'horizon-clip':'resident');
+    material.customProgramCacheKey=()=>cache()+(material.userData.modelAmbientVisibility?'|model-local-ao-v1':'')+(material.userData.nativeAmbientVisibility?'|native-local-ao-v1':'')+(cinematic?'|cinematic-light-v3':'')+(material.userData.blessingInstance?'|blessed-instance-v1':material.userData.blessingObject?'|blessed-wall-v1':'')+(material.userData.biomeGround?.uAwakeningMap?'|awakening-roots-v1':'')+(finalGround?'|final-daylight-v1':'')+(fernGround?'|holly-fern-ground-v1':'')+atmosphereCacheKey+(material.userData.volcanicDeposits?'|volcanic-deposits-broad-v1':'')+(warmFloor?'|canyon-warm-floor-v1':'')+(this.desertMeso?'|desert-meso-filter-v1':'')+(this.desertResidualWear?'|desert-residual-wear-v1':'')+(this.volcanicNightSpectrum?'|volcanic-night-spectrum-v1':this.volcanicNightAmbient?'|volcanic-night-ambient-v1':'')+(material.userData.volcanicRock?'|volcanic-rock-layered-v1':'')+(material.userData.riverSoil?'|river-soil-v2':'')+(material.userData.riverUnderlay?'|river-underlay-persistent-v1':'')+(material.userData.mangroveSubstrate?'|mangrove-substrate-full-v1':'')+(material.userData.mangroveShore?'|mangrove-shore-v1':'')+(material.userData.mangroveMoss?'|mangrove-moss-two-scales-v1':'')+(material.userData.canyonSand?'|canyon-sand-v2:'+Boolean(material.userData.canyonSandFull):'')+(material.userData.canyonSandSoft?'|canyon-sand-soft-v1':'')+(material.userData.volcanicAsh?'|volcanic-ash-v1:'+material.userData.volcanicAsh:'')+(material.userData.desertSand?'|desert-sand-v1':'')+(material.userData.biomeGround?.uCliffRock?'|cliff-rock-v1':'')+(this.globalVisualLighting?'|global-visual-lighting|desert-soft-v1|'+(material.userData.groundBiome??'object'):'')+'|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|'+(material.userData.biomeGround?'biome-ground-4.1.10.3':material.userData.toonGround?'ground':'object')+'|'+(material.userData.biomeGround?.uGroundLayered?.value?'visual-layer':'base-ground')+'|'+(material.userData.artBounds?'illustrated-4.1.6':'toon-4.1.4')+'|'+(material.userData.visualLabNormalDetail?'visual-normal-detail':material.userData.visualLabNormal?'visual-normal':'authored-normal')+'|'+material.type+'|'+(material.userData.horizonBounds?'horizon-clip':'resident');
     // The source function already applies its filmic curve. Three still performs
     // output color conversion and fog, without applying a second tone curve.
     material.toneMapped=false;material.needsUpdate=true;
@@ -215,6 +225,20 @@ export class AfricanToon {
 // DEST keeps its original damage field, textures, cut-outs, collapse and emission.
 export function toonDestruction(fragment,visualSearch=globalThis.location?.search??''){
   const {endpointFunctions}=environmentRecipe(visualSearch);
+  if(cinematicLightingEnabled(visualSearch)){
+    fragment=patchBuildingShadow(fragment).replace('vec3 ambient=mix(vec3(.28,.265,.20),vec3(.47,.56,.61),N.y*.5+.5);','vec3 ambient=mix(mix(uCinemaGround,vec3(.30,.39,.48),N.y*.5+.5),mix(vec3(.04,.065,.08),vec3(.12,.20,.26),N.y*.5+.5),uNight);')
+      .replace('vec3(1.90,1.59,1.11)*ndl*sh','mix(vec3(2.65,2.12,1.36),vec3(.36,.61,.92),uNight)*ndl*sh')
+      .replace('vec3(.14,.20,.27)*max','mix(vec3(.055,.08,.10),vec3(.025,.055,.08),uNight)*max')
+      // Candidate endpoints already include night attenuation; avoid applying
+      // the world light intensity a second time to this calibrated response.
+      .replace('ambient*=uWorldAmbient;','ambient*=mix(uWorldAmbient,1.,uNight);')
+      .replace('ndl*sh*uWorldSun','ndl*sh*mix(uWorldSun,1.,uNight)');
+    fragment=fragment.replace('vec3 color=base*(ambient+direct+rim)+spec+emit;',`
+ float localAO=1.;
+ if(uBuildingAOOn>.5&&uMode==0&&uInner<.5&&vUV.x>=0.&&vUV.y>=0.)localAO=mix(1.,texture(uBuildingAO,vUV).r,mix(.72,.52,uNight)*(1.-smoothstep(.02,.30,uDamage)));
+ vec3 color=base*((ambient+rim)*localAO+direct)+spec+emit;`);
+    return fragment.replace('out vec4 fragColor;','uniform float uNight,uBuildingAOOn;uniform vec3 uCinemaGround;uniform sampler2D uBuildingAO;\nout vec4 fragColor;');
+  }
   return fragment.replace('out vec4 fragColor;', worldPatternFunctions+'uniform mat4 uToonModel;uniform float uNight,uNightLight,uExposure,uKind,uSurfaceType,uFineNoise,uEnvEndpoints,uNativeEnvEnabled,uEnvYaw;uniform sampler2D uEnvDay,uEnvNight;\n#define uLightDir uSun\n'+diagnosticToon+'\n'+endpointFunctions+'\nout vec4 fragColor;')
     .replace('toSRGB(tonemap(color))','africanToon4(color,base,N,V,L,uNativeEnvEnabled>.5?environment4(normalize(mat3(uToonModel)*reflect(-V,N)),rough):vec3(0.),rough,sh,0.,0.,metal,max(dot(N,V),0.),worldPatternPosition((uToonModel*vec4(vWorld,1.)).xyz))+toSRGB(emit)');
 }

@@ -1,0 +1,257 @@
+{
+  "date": "2026-11-23",
+  "base": "2b53bf6adee68a01ec0d2636133291be1931c4a9",
+  "authorityPatchSha256": "ae54c93168615f078244ce39c1f6b4a94c31b7c6d484ed0bddce8f4f4e146ba0",
+  "profile": {
+    "backend": "webgpu-worker",
+    "remoteDraw": true,
+    "adapter": "NVIDIA Turing",
+    "displayHz": 30,
+    "browser": "Edge headless",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja"
+  },
+  "abi": {
+    "standaloneExports": 788,
+    "pthreadExports": 809,
+    "pthreadPublicFunctions": 794,
+    "versions": {
+      "stops": 1,
+      "retirement": 1,
+      "settlement": 2,
+      "home": 2,
+      "idle": 1
+    },
+    "importsAndExportsUnchanged": true,
+    "artifactHashes": {
+      "standalone/spatial-savanna.wasm": "7b5afe8b3375748faf242567398a13a0206b0f45a1bff4e25ea2ba9ec2c7cc30",
+      "pthread/spatial-threaded.mjs": "5123b32f8b74cb77d2dc5e3933615ee91e2b11df8dccc8f6d97a673816f0d2f5",
+      "pthread/spatial-threaded.wasm": "cf14572e90cd160be42a69d45e1ff40f745bbfa6738dcb31f150bf0f52a5dfb1"
+    }
+  },
+  "cases": [
+    {
+      "kind": "initial",
+      "elapsed": 19.449479101957092,
+      "restoredAction": {
+        "bodyId": 1,
+        "taskId": 920001,
+        "targetId": 900099,
+        "savedElapsed": 0.6000000000000085,
+        "abortedId": 1,
+        "acquired": false
+      },
+      "idle": {
+        "bodyId": 1,
+        "phase": 6,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "04292312-4606-48ac-b3eb-29fbcd202a2c/1",
+          "nativeSession": 1,
+          "ticket": 3,
+          "effectiveTime": 19.449479101957092
+        },
+        "proofSequence": 2,
+        "heldDraws": 8
+      },
+      "awakening": {
+        "chargesConsumed": 1,
+        "remainingProgress": 0,
+        "event": {
+          "id": "event-29207",
+          "type": "BlessingApplied",
+          "commandId": "qa-awakening-restored-initial",
+          "targetId": "plant-900099",
+          "kind": "plant",
+          "blessing": {
+            "version": 1,
+            "ordinal": 1,
+            "day": 15,
+            "at": 19.449479101957092
+          },
+          "presentation": {
+            "x": -5.800000000000001,
+            "z": 0.2,
+            "elapsed": 19.449479101957092,
+            "source": {
+              "id": "plant-900099",
+              "kind": "plant",
+              "x": -5.800000000000001,
+              "z": 0.2,
+              "species": "mijo",
+              "growth": 0
+            }
+          },
+          "simulationTime": 19.449479101957092
+        }
+      },
+      "retainedBuffers": 959,
+      "drained": true,
+      "cadence": {
+        "draws": 445,
+        "peaks": [
+          {
+            "at": 1795428149958.2,
+            "sequence": 23,
+            "ticket": null,
+            "intervalMs": 108.60009765625,
+            "drawMs": 2.699951171875,
+            "trigger": "raf",
+            "replay": true
+          },
+          {
+            "at": 1795428150290.4,
+            "sequence": 24,
+            "ticket": null,
+            "intervalMs": 40.599853515625,
+            "drawMs": 3.5,
+            "trigger": "raf",
+            "replay": true
+          },
+          {
+            "at": 1795428148555,
+            "sequence": 21,
+            "ticket": null,
+            "intervalMs": 40.10009765625,
+            "drawMs": 2.199951171875,
+            "trigger": "raf",
+            "replay": true
+          },
+          {
+            "at": 1795428142920,
+            "sequence": 8,
+            "ticket": null,
+            "intervalMs": 38.5,
+            "drawMs": 0.199951171875,
+            "trigger": "raf",
+            "replay": false
+          },
+          {
+            "at": 1795428150120.2,
+            "sequence": 24,
+            "ticket": null,
+            "intervalMs": 37.89990234375,
+            "drawMs": 5.300048828125,
+            "trigger": "raf",
+            "replay": true
+          }
+        ]
+      },
+      "sourceSha256": "a7c0deeab536dd4253944c3f34f1eea313f43bf54e414f2f3588d6f07418b40b",
+      "traceSha256": "1b94ff7abc3480ba5eeb2bf7ac8fa731719dcbafe2a613df980cbf93bb1ed7f0"
+    },
+    {
+      "kind": "water",
+      "elapsed": 19.449479101957092,
+      "restoredAction": {
+        "bodyId": 1,
+        "taskId": 920001,
+        "targetId": 900099,
+        "savedElapsed": 0.6000000000000085,
+        "abortedId": 1,
+        "acquired": false
+      },
+      "idle": {
+        "bodyId": 1,
+        "phase": 6,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "8b89ebb9-fa2a-4756-93c4-1d479ff8fedc/1",
+          "nativeSession": 1,
+          "ticket": 3,
+          "effectiveTime": 19.449479101957092
+        },
+        "proofSequence": 2,
+        "heldDraws": 7
+      },
+      "awakening": {
+        "chargesConsumed": 1,
+        "remainingProgress": 0,
+        "event": {
+          "id": "event-29207",
+          "type": "BlessingApplied",
+          "commandId": "qa-awakening-restored-water",
+          "targetId": "plant-900099",
+          "kind": "plant",
+          "blessing": {
+            "version": 1,
+            "ordinal": 1,
+            "day": 15,
+            "at": 19.449479101957092
+          },
+          "presentation": {
+            "x": -5.800000000000001,
+            "z": 0.2,
+            "elapsed": 19.449479101957092,
+            "source": {
+              "id": "plant-900099",
+              "kind": "plant",
+              "x": -5.800000000000001,
+              "z": 0.2,
+              "species": "mijo",
+              "growth": 70
+            }
+          },
+          "simulationTime": 19.449479101957092
+        }
+      },
+      "retainedBuffers": 1003,
+      "drained": true,
+      "cadence": {
+        "draws": 446,
+        "peaks": [
+          {
+            "at": 1795428114831.9,
+            "sequence": 30,
+            "ticket": null,
+            "intervalMs": 83.800048828125,
+            "drawMs": 2.60009765625,
+            "trigger": "raf",
+            "replay": true
+          },
+          {
+            "at": 1795428114741.7998,
+            "sequence": 30,
+            "ticket": null,
+            "intervalMs": 59.2998046875,
+            "drawMs": 2.300048828125,
+            "trigger": "raf",
+            "replay": true
+          },
+          {
+            "at": 1795428107660.0999,
+            "sequence": 2,
+            "ticket": null,
+            "intervalMs": 45.5,
+            "drawMs": 0.300048828125,
+            "trigger": "raf",
+            "replay": false
+          },
+          {
+            "at": 1795428115130.9,
+            "sequence": 30,
+            "ticket": null,
+            "intervalMs": 41.5,
+            "drawMs": 2.39990234375,
+            "trigger": "raf",
+            "replay": true
+          },
+          {
+            "at": 1795428107751.9,
+            "sequence": 2,
+            "ticket": null,
+            "intervalMs": 36.699951171875,
+            "drawMs": 0.300048828125,
+            "trigger": "raf",
+            "replay": true
+          }
+        ]
+      },
+      "sourceSha256": "9db26ca7a587507f4bd601440bea1ad54d3e3ff8fa1e50f5aba8d7bfb2960d4b",
+      "traceSha256": "878cb9bc8d34afd433b586e0077882c900b10a85e1787c3eab4bba31c24a033c"
+    }
+  ]
+}

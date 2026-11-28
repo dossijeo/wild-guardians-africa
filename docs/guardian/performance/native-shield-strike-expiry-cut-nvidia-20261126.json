@@ -1,0 +1,488 @@
+{
+  "qualification": "DEV",
+  "schedule": "QA external advances with the Hosted clock unarmed, then ordinary clock",
+  "environment": {
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 111.80000000074506
+      }
+    },
+    "browser": "158.0.4370.33"
+  },
+  "builds": {
+    "standalone": "914884594bb004f2bb28a5d380e36f1b4bdcdda18473c7529c972f2c7889b9a7",
+    "pthread": "c4e5c3ada79ef9f2db2763f8a3e76bee322f8aae8a02d3d92d5eeb249acf9797"
+  },
+  "strike": {
+    "attackId": 662,
+    "end": 394.99500000000694,
+    "firstDraw": {
+      "sequence": 58,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "7b4f4a9f-da01-4e36-af8d-9faeea29516c/1",
+        "nativeSession": 1,
+        "ticket": 7,
+        "effectiveTime": 390.4533331756363
+      },
+      "clockElapsed": 390.4533331756363,
+      "bindings": [
+        {
+          "relativeTime": 0,
+          "executionEpoch": 390.4533331756363,
+          "reference": {
+            "kind": 27,
+            "bodyId": 1,
+            "targetId": 373,
+            "generation": 8,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "7b4f4a9f-da01-4e36-af8d-9faeea29516c/1",
+              "nativeSession": 1,
+              "ticket": 6,
+              "effectiveTime": 389.77112494515796
+            }
+          }
+        }
+      ]
+    }
+  },
+  "beforeCut": 394.9900000000071,
+  "heldElapsed": 394.9900000000071,
+  "expiry": {
+    "proof": {
+      "version": 1,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "7b4f4a9f-da01-4e36-af8d-9faeea29516c/1",
+        "nativeSession": 1,
+        "ticket": 8,
+        "effectiveTime": 394.99999999998926
+      },
+      "actorId": 396,
+      "bodyId": 1,
+      "targetId": 373,
+      "attackId": 662,
+      "strikeTicket": 7,
+      "polygonId": 10,
+      "completionSequence": 16,
+      "x": 89.20535278320312,
+      "z": 10.54811954498291,
+      "phase": 19.19385470902147,
+      "yaw": 2.886568277546447
+    },
+    "ready": {
+      "version": 1,
+      "authorityEpoch": "7b4f4a9f-da01-4e36-af8d-9faeea29516c/1",
+      "nativeSession": 1,
+      "ticket": 8,
+      "effectiveTime": 394.99999999998926
+    },
+    "firstDraw": {
+      "sequence": 64,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "7b4f4a9f-da01-4e36-af8d-9faeea29516c/1",
+        "nativeSession": 1,
+        "ticket": 8,
+        "effectiveTime": 394.99999999998926
+      },
+      "clockElapsed": 394.99999999998926,
+      "bindings": []
+    },
+    "miss": {
+      "id": "event-663",
+      "type": "AnimalLogicalMiss",
+      "attackId": "attack-662",
+      "targetId": "plant-373",
+      "species": "warthog",
+      "reason": "shield-expired",
+      "simulationTime": 394.99999999998926
+    }
+  },
+  "direct": {
+    "reference": {
+      "version": 1,
+      "kind": 26,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "7b4f4a9f-da01-4e36-af8d-9faeea29516c/1",
+        "nativeSession": 1,
+        "ticket": 10,
+        "effectiveTime": 395.02000000000714
+      },
+      "sourceControlSequence": 17,
+      "endTime": 395.9866662738728,
+      "actorId": 396,
+      "bodyId": 1,
+      "targetId": 373,
+      "centerId": 2,
+      "requestSequence": 17,
+      "slot": 0,
+      "generation": 12,
+      "radius": 1.1,
+      "x": 89.20535278320312,
+      "z": 10.54811954498291,
+      "phase": 19.19385470902147,
+      "yaw": 2.886568277546447,
+      "targetX": 90,
+      "targetZ": 7.5,
+      "centerX": 83,
+      "centerZ": 0
+    },
+    "firstDraw": {
+      "sequence": 65,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "7b4f4a9f-da01-4e36-af8d-9faeea29516c/1",
+        "nativeSession": 1,
+        "ticket": 10,
+        "effectiveTime": 395.02000000000714
+      },
+      "clockElapsed": 395.02000000000714,
+      "bindings": [
+        {
+          "relativeTime": 0,
+          "executionEpoch": 395.02000000000714,
+          "reference": {
+            "kind": 26,
+            "bodyId": 1,
+            "targetId": 373,
+            "generation": 12,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "7b4f4a9f-da01-4e36-af8d-9faeea29516c/1",
+              "nativeSession": 1,
+              "ticket": 9,
+              "effectiveTime": 395.02000000000714
+            }
+          }
+        }
+      ]
+    },
+    "hit": {
+      "id": "event-667",
+      "type": "AnimalLogicalHit",
+      "attackId": "attack-664",
+      "targetId": "plant-373",
+      "species": "warthog",
+      "presentation": {
+        "version": 1,
+        "elapsed": 401.0200000000017,
+        "animal": {
+          "x": 89.5711441040039,
+          "z": 9.145017623901367,
+          "heading": 2.886569143624617
+        },
+        "target": {
+          "x": 90,
+          "z": 7.5
+        },
+        "shield": null
+      },
+      "simulationTime": 401.0200000000017
+    }
+  },
+  "retirement": {
+    "firstDraw": {
+      "sequence": 125,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "7b4f4a9f-da01-4e36-af8d-9faeea29516c/1",
+        "nativeSession": 1,
+        "ticket": 14,
+        "effectiveTime": 401.6700000000011
+      },
+      "clockElapsed": 401.6700000000011,
+      "bindings": [
+        {
+          "relativeTime": 0,
+          "executionEpoch": 401.6700000000011,
+          "reference": {
+            "kind": 26,
+            "bodyId": 1,
+            "targetId": null,
+            "generation": 16,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "7b4f4a9f-da01-4e36-af8d-9faeea29516c/1",
+              "nativeSession": 1,
+              "ticket": 13,
+              "effectiveTime": 401.07000000000164
+            }
+          }
+        }
+      ]
+    },
+    "ending": {
+      "id": "event-669",
+      "type": "RaidEnded",
+      "simulationTime": 409.7899999999937
+    },
+    "absence": {
+      "sequence": 207,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "7b4f4a9f-da01-4e36-af8d-9faeea29516c/1",
+        "nativeSession": 1,
+        "ticket": 14,
+        "effectiveTime": 401.6700000000011
+      },
+      "clockElapsed": 409.93999999999374,
+      "bindings": []
+    }
+  },
+  "checkpoint": {
+    "sequence": 389,
+    "elapsed": 410.43999999999386
+  },
+  "drained": {
+    "disposed": true
+  },
+  "timing": {
+    "displayHz": 30,
+    "budgetMs": 16.666666666666668,
+    "count": 1066,
+    "overBudget": 1066,
+    "p95": 34.900146484375,
+    "p99": 36.400146484375,
+    "max": {
+      "at": 1795657488927.6,
+      "sequence": 64,
+      "trigger": "raf",
+      "nativeWorldBoundary": {
+        "version": 1,
+        "authorityEpoch": "7b4f4a9f-da01-4e36-af8d-9faeea29516c/1",
+        "nativeSession": 1,
+        "ticket": 8,
+        "effectiveTime": 394.99999999998926
+      },
+      "intervalMs": 1033.5,
+      "drawMs": 3.199951171875,
+      "replay": false,
+      "clockElapsed": 394.99999999998926,
+      "safeUntil": 394.99999999998926,
+      "cameraVersion": null
+    },
+    "expiry": {
+      "at": 1795657488927.6,
+      "sequence": 64,
+      "trigger": "raf",
+      "nativeWorldBoundary": {
+        "version": 1,
+        "authorityEpoch": "7b4f4a9f-da01-4e36-af8d-9faeea29516c/1",
+        "nativeSession": 1,
+        "ticket": 8,
+        "effectiveTime": 394.99999999998926
+      },
+      "intervalMs": 1033.5,
+      "drawMs": 3.199951171875,
+      "replay": false,
+      "clockElapsed": 394.99999999998926,
+      "safeUntil": 394.99999999998926,
+      "cameraVersion": null
+    },
+    "direct": {
+      "at": 1795657489460.9001,
+      "sequence": 65,
+      "trigger": "raf",
+      "nativeWorldBoundary": {
+        "version": 1,
+        "authorityEpoch": "7b4f4a9f-da01-4e36-af8d-9faeea29516c/1",
+        "nativeSession": 1,
+        "ticket": 10,
+        "effectiveTime": 395.02000000000714
+      },
+      "intervalMs": 33.400146484375,
+      "drawMs": 2.199951171875,
+      "replay": false,
+      "clockElapsed": 395.02000000000714,
+      "safeUntil": 395.02000000000714,
+      "cameraVersion": null
+    },
+    "opportunities": [
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 33.300048828125
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 66.699951171875
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 100
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 133.39990234375
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 166.699951171875
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 200.39990234375
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 233.300048828125
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 266.60009765625
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 299.89990234375
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 333.300048828125
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 366.60009765625
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 399.800048828125
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 433.300048828125
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 466.60009765625
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 499.89990234375
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 533.10009765625
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 566.699951171875
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 603.199951171875
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 633.199951171875
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 666.699951171875
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 700
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 733.5
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 766.699951171875
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 800.10009765625
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 833.39990234375
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 866.800048828125
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 900
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 933.300048828125
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 966.699951171875
+      },
+      {
+        "sequence": 62,
+        "outcome": "stale-binding",
+        "ms": 1000
+      },
+      {
+        "sequence": 64,
+        "outcome": "submitted",
+        "ms": 1033.5
+      }
+    ],
+    "maximumCut": {
+      "requestMs": 10.4,
+      "receivedMs": 603.1,
+      "admittedMs": 629,
+      "readyMs": 644.8,
+      "goMs": 1003.8,
+      "drawMs": 1033.5,
+      "measuredResourceWaitMs": 0,
+      "staleOpportunities": 30,
+      "requestedQaReadyHoldMs": 300
+    }
+  },
+  "evidence": {
+    "path": ".cache/shield-protected-crop/strike-cut-packet-physical.json",
+    "sha256": "ca8f1630d8a57604ad95bb4625cebbb8627f5b6487c1a30afcb4401966407d59",
+    "traceSha256": "8e823e631b9df5e29dcef521be916c585a8cae8f0f12f39813693cfef4ec7122",
+    "traceLoss": false
+  }
+}

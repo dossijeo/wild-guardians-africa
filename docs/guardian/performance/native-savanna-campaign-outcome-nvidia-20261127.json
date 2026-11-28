@@ -1,0 +1,415 @@
+{
+  "revision": "978df1aa86e25d0fdf8f029855f1d55176f7f853",
+  "receipt": {
+    "name": "native-menu-campaign-714-released-floor-extended.json",
+    "sha256": "e9926e61252970f3e2c1fe406884598b0cafb15414820dcb839ea737709ad7c7"
+  },
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing"
+  },
+  "seed": 714,
+  "biome": "sabana",
+  "culture": "mapungubwe",
+  "profile": "explicit nativeWorkerLifecycle",
+  "clock": "ordinary Hosted",
+  "scenario": "one uninterrupted native menu campaign",
+  "outcome": {
+    "day": 5,
+    "elapsed": 2795.5692141503446,
+    "result": "defeat",
+    "ledger": {
+      "n": "671",
+      "d": "1"
+    }
+  },
+  "hires": [
+    {
+      "day": 2,
+      "worker": "worker-13",
+      "balance": {
+        "n": "470",
+        "d": "1"
+      }
+    },
+    {
+      "day": 3,
+      "worker": "worker-18",
+      "balance": {
+        "n": "430",
+        "d": "1"
+      }
+    },
+    {
+      "day": 4,
+      "worker": "worker-23",
+      "balance": {
+        "n": "711",
+        "d": "1"
+      }
+    },
+    {
+      "day": 5,
+      "worker": "worker-25",
+      "balance": {
+        "n": "671",
+        "d": "1"
+      }
+    }
+  ],
+  "dawns": [
+    {
+      "day": 4,
+      "file": "native-menu-campaign-714-released-floor-dawn-4.json",
+      "elapsed": 1799.9999999989568,
+      "nights": 3,
+      "balance": {
+        "n": "751",
+        "d": "1"
+      },
+      "hp": 345,
+      "nativeWorkerLifecycle": 1
+    },
+    {
+      "day": 5,
+      "file": "native-menu-campaign-714-released-floor-dawn-5.json",
+      "elapsed": 2399.9999999993884,
+      "nights": 4,
+      "balance": {
+        "n": "711",
+        "d": "1"
+      },
+      "hp": 185,
+      "nativeWorkerLifecycle": 1
+    }
+  ],
+  "spawns": [
+    {
+      "type": "RaidSpawned",
+      "id": "event-22",
+      "elapsed": 377.5351831009225,
+      "species": [
+        "warthog"
+      ]
+    },
+    {
+      "type": "RaidSpawned",
+      "id": "event-50",
+      "elapsed": 953.6367856970743,
+      "species": [
+        "hyena"
+      ]
+    },
+    {
+      "type": "RaidSpawned",
+      "id": "event-80",
+      "elapsed": 1643.501514697858,
+      "species": [
+        "buffalo"
+      ]
+    },
+    {
+      "type": "RaidSpawned",
+      "id": "event-102",
+      "elapsed": 2137.8108868150066,
+      "species": [
+        "lion"
+      ]
+    },
+    {
+      "type": "RaidSpawned",
+      "id": "event-123",
+      "elapsed": 2744.1615176875844,
+      "species": [
+        "rhino"
+      ]
+    }
+  ],
+  "hits": [
+    {
+      "type": "StructureHit",
+      "id": "event-27",
+      "elapsed": 409.7381464807045,
+      "hp": 580
+    },
+    {
+      "type": "StructureHit",
+      "id": "event-30",
+      "elapsed": 418.10814648069686,
+      "hp": 560
+    },
+    {
+      "type": "StructureHit",
+      "id": "event-53",
+      "elapsed": 988.8094285575597,
+      "hp": 535
+    },
+    {
+      "type": "StructureHit",
+      "id": "event-56",
+      "elapsed": 1001.0094285575486,
+      "hp": 510
+    },
+    {
+      "type": "StructureHit",
+      "id": "event-59",
+      "elapsed": 1013.3594285575374,
+      "hp": 485
+    },
+    {
+      "type": "StructureHit",
+      "id": "event-83",
+      "elapsed": 1681.671211758061,
+      "hp": 450
+    },
+    {
+      "type": "StructureHit",
+      "id": "event-86",
+      "elapsed": 1696.0712117580479,
+      "hp": 415
+    },
+    {
+      "type": "StructureHit",
+      "id": "event-89",
+      "elapsed": 1709.7212117580355,
+      "hp": 380
+    },
+    {
+      "type": "StructureHit",
+      "id": "event-92",
+      "elapsed": 1721.4012117580248,
+      "hp": 345
+    },
+    {
+      "type": "StructureHit",
+      "id": "event-105",
+      "elapsed": 2176.898709451926,
+      "hp": 305
+    },
+    {
+      "type": "StructureHit",
+      "id": "event-108",
+      "elapsed": 2192.3487094519824,
+      "hp": 265
+    },
+    {
+      "type": "StructureHit",
+      "id": "event-111",
+      "elapsed": 2210.448709452048,
+      "hp": 225
+    },
+    {
+      "type": "StructureHit",
+      "id": "event-114",
+      "elapsed": 2229.6987094521182,
+      "hp": 185
+    },
+    {
+      "type": "StructureHit",
+      "id": "event-126",
+      "elapsed": 2781.9792141502953,
+      "hp": 125
+    }
+  ],
+  "decisive": [
+    {
+      "type": "RaidEnded",
+      "id": "event-33",
+      "elapsed": 433.82814648068256
+    },
+    {
+      "type": "RaidEnded",
+      "id": "event-62",
+      "elapsed": 1029.8594285575225
+    },
+    {
+      "type": "CrateDelivered",
+      "id": "event-75",
+      "elapsed": 1351.7499999993383
+    },
+    {
+      "type": "RaidEnded",
+      "id": "event-95",
+      "elapsed": 1737.64121175801
+    },
+    {
+      "type": "RaidEnded",
+      "id": "event-117",
+      "elapsed": 2251.5387094521975
+    },
+    {
+      "type": "StructureRuined",
+      "id": "event-130",
+      "elapsed": 2785.179214150307
+    },
+    {
+      "type": "RaidEnded",
+      "id": "event-131",
+      "elapsed": 2795.5692141503446
+    },
+    {
+      "type": "GameOver",
+      "id": "event-133",
+      "elapsed": 2795.5692141503446
+    }
+  ],
+  "ruinDraws": [
+    {
+      "ticket": 230,
+      "elapsed": 2785.179214150307,
+      "frame": 6695,
+      "drawElapsed": 2785.179214150307
+    }
+  ],
+  "animalAbsences": [
+    {
+      "actor": 10,
+      "frame": 1344,
+      "ticket": 60,
+      "elapsed": 434.8781464806828,
+      "bindingCount": 0
+    },
+    {
+      "actor": 17,
+      "frame": 2722,
+      "ticket": 131,
+      "elapsed": 1032.8594285575198,
+      "bindingCount": 0
+    },
+    {
+      "actor": 22,
+      "frame": 4124,
+      "ticket": 189,
+      "elapsed": 1739.1912117580086,
+      "bindingCount": 0
+    },
+    {
+      "actor": 24,
+      "frame": 5408,
+      "ticket": 215,
+      "elapsed": 2252.3387094521977,
+      "bindingCount": 0
+    },
+    {
+      "actor": 26,
+      "frame": 6707,
+      "ticket": 230,
+      "elapsed": 2795.5692141503446,
+      "bindingCount": 0
+    }
+  ],
+  "lion": {
+    "id": 100,
+    "ticket": 198,
+    "sequence": 32839,
+    "requestTime": 2137.8987094517843,
+    "surface": [
+      {
+        "kind": "surface-wait",
+        "ms": 229.245,
+        "sequence": 32839,
+        "applied": 32782,
+        "received": 32806
+      },
+      {
+        "kind": "surface-wait-settled",
+        "ms": 3665.625,
+        "sequence": 32839,
+        "applied": 32839,
+        "received": 32866
+      },
+      {
+        "kind": "surface-wait",
+        "ms": 3756.275,
+        "sequence": 32839,
+        "applied": 32842,
+        "received": 32866
+      },
+      {
+        "kind": "surface-wait",
+        "ms": 3757.6,
+        "sequence": 32839,
+        "applied": 32842,
+        "received": 32866,
+        "phase": "preparing",
+        "ticket": 198
+      }
+    ],
+    "preparation": [
+      {
+        "kind": "receive",
+        "ms": 0.28
+      },
+      {
+        "kind": "ready",
+        "ms": 8876.6
+      }
+    ],
+    "phases": [
+      {
+        "stage": "roster-start",
+        "ms": 3758.68,
+        "sequence": 32842,
+        "time": 2137.8987094517843
+      },
+      {
+        "stage": "roster-end",
+        "ms": 6947.24,
+        "sequence": 32842,
+        "time": 2137.8987094517843
+      },
+      {
+        "stage": "pipeline-start",
+        "ms": 6947.725,
+        "sequence": 32842,
+        "time": 2137.8987094517843
+      },
+      {
+        "stage": "pipeline-end",
+        "ms": 8531.735,
+        "sequence": 32842,
+        "time": 2137.8987094517843
+      },
+      {
+        "stage": "capture-start",
+        "ms": 8544.765,
+        "sequence": 32842,
+        "time": 2137.8987094517843
+      },
+      {
+        "stage": "capture-end",
+        "ms": 8876.5,
+        "sequence": 32842,
+        "time": 2137.8987094517843
+      }
+    ],
+    "lastPhase": "capture-end",
+    "failureMs": null,
+    "commitMs": 8928.6,
+    "acquired": {
+      "body": 8,
+      "ticket": 199,
+      "elapsed": 2149.148709451825,
+      "frame": 5288,
+      "drawElapsed": 2149.148709451825
+    }
+  },
+  "acceptance": {
+    "harnessPassed": false,
+    "harnessError": "AssertionError [ERR_ASSERTION]: Missing retirement drawing for 26",
+    "terminalDrawObserved": true,
+    "drainObserved": false,
+    "drawErrors": [],
+    "pageErrors": [],
+    "consoleErrors": [
+      {
+        "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "url": "http://127.0.0.1:5298/favicon.ico"
+      },
+      {
+        "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "url": "http://127.0.0.1:5298/favicon.ico"
+      }
+    ]
+  }
+}

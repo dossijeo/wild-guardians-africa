@@ -1,0 +1,96 @@
+{
+  "date": "2026-11-16",
+  "branch": "codex/guardian-3d-animation",
+  "sourceBaseCommit": "4117b084f",
+  "scope": "Ungated live native Idle after an actual Carry settlement retargets to a fresh task-free Home request when its contract expires. The same physical body and resident actor are held until the existing Home route admission. Surface immediate-Home-during-Idle-adoption and actual hardware acceptance remain next; no whole migration closure.",
+  "research": [
+    {
+      "source": "https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp#L573-L624",
+      "alsoRead": "updateMoveRequest, lines638-777",
+      "decision": "Retarget the existing active body, separate semantic request from executable route. Reuse the existing ActiveIntent, request, proposal and retained resource/control protocol. No new engine, dependency, queue or controller; no partial-path or navmesh-snapping policy imported."
+    }
+  ],
+  "nativeBuild": {
+    "standalone": "passed",
+    "threaded": "passed",
+    "export": "nav_intent_idle_home_request",
+    "command": "$env:PYTHONUTF8='1'; .cache/emsdk/python/3.13.3_64bit/python.exe .cache/build-native-gate-presentation.py",
+    "log": ".cache/native-idle-home-build-20261116.log"
+  },
+  "regression": {
+    "files": 66,
+    "tests": 702,
+    "passed": 702,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 403349.7872,
+    "fileList": ".cache/native-idle-home-regression-files.json",
+    "log": ".cache/native-idle-home-regression-final.log",
+    "newCases": 12,
+    "coverage": [
+      "daily contract expiry with an advancing native task peer",
+      "natural exact profile end crossing on standalone and pthread",
+      "moving and resource-pending task expiry remain rejected before clock advance",
+      "real settlement then Home admission on the same resource/control ports with a simulated GPU queue",
+      "exact current source, idempotency, physical body fence and removal",
+      "direct Idle proof retained during Home request and revoked on route assignment; foreign body rejected",
+      "original authored actor/root/geometry/index preservation, exact and delayed route issue, reversible cancellation and removal"
+    ],
+    "limits": "Selected regression, not a claim of a green full repository. Existing unrelated failures are recorded in the preceding Home restoration increment."
+  },
+  "parentControl": {
+    "parent": "4117b084f",
+    "module": "src/simulation/game.js at its original URL; all other modules and WASM current",
+    "mode": "read-only experimental ESM loader, no worktree substitution",
+    "expectedExit": 1,
+    "failed": 1,
+    "skipped": 11,
+    "error": "Native task game cohort contains an unsupported mover",
+    "log": ".cache/native-idle-home-parent-game-control.log",
+    "meaning": "The previous Game rejects an expired native Idle. This is not a whole-parent performance comparison."
+  },
+  "productBuild": {
+    "status": "passed",
+    "durationSeconds": 44.35,
+    "command": ".cache/tooling/node20.exe node_modules/vite/bin/vite.js build",
+    "log": ".cache/native-idle-home-product-build.log",
+    "warnings": "Existing dynamic/static imports and large chunk warnings."
+  },
+  "preservation": {
+    "checkedAfterProductBuild": true,
+    "unchangedOriginalPaths": [
+      "docs/guardian/gpu-animation/eyelid-shadow-animal-buffalo-settled/openOriginal.png",
+      "docs/guardian/webgpu-stable-raid-qa.md",
+      "docs/lighting/tree-near-retexture/performance/mobility-guarded-world-stop.json",
+      "src/rendering/character-preload.js",
+      "src/rendering/destruction-effects-native.js",
+      "src/rendering/destruction-native.js",
+      "src/rendering/scene.js",
+      "src/simulation/worker-game-runtime.js",
+      "tests/browser/mobility-worker-latency.js",
+      "tests/character-preload.test.js",
+      "tests/historical-event-boundaries.test.js",
+      "tests/worker-game-runtime.test.js",
+      "tools/experiments/audit-character-primer-coverage.mjs",
+      "tools/experiments/audit_worker_attack_gl.mjs",
+      "tools/guardian/audit_pending_worker_game_wall.mjs",
+      "public/wild-engine/spatial-threaded.worker.mjs"
+    ],
+    "count": 16
+  },
+  "hardware": {
+    "tested": false,
+    "next": "Extend the existing Surface settlement adoption wait for a coherent immediate pending Home, then use the existing original-asset hardware lab with real submitted queue drain."
+  },
+  "open": [
+    "Surface immediate pending Home during Idle adoption and GPU consumer validation",
+    "initial Idle and fresh stationary bootstrap",
+    "moving/pending-task contract expiry, remaining cancellations/finals",
+    "gated classes",
+    "ordinary producer",
+    "live-world replacement",
+    "full healthy3123 incremental recovery",
+    "remaining A/B/C acceptance before D"
+  ],
+  "closureChanges": []
+}

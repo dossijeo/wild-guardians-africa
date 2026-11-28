@@ -1,0 +1,177 @@
+{
+  "initialCampaignFailure": {
+    "revision": "6e9fb40b8b752a5ad081c8277a1be2c9f9ddd0ad",
+    "rawSha256": "55e5d0c38170bf39591f1ce31a4a20faedf4f1bac2c740b594ce6a3078becda4",
+    "requestId": 3,
+    "ticket": 5,
+    "minSequence": 454,
+    "confirmed": 391,
+    "received": 423,
+    "authorityTime": 25.09999999999987,
+    "lastDrawAt": 16.099999999999742,
+    "causeOfWait": "not verified by this capture"
+  },
+  "ordinaryFirstHire": {
+    "rawSha256": "667200853063472f848573eed31603f560a285c490b33e44b7ff61bc3c5af483",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing"
+    },
+    "task": {
+      "ticket": 4,
+      "draw": 159,
+      "at": 20.0999999999998,
+      "body": 1
+    },
+    "action": {
+      "ticket": 6,
+      "draw": 295,
+      "at": 61.30000000000246
+    },
+    "water": [
+      {
+        "id": "event-11",
+        "type": "WaterSatisfied",
+        "workerId": "worker-6",
+        "targetId": "plant-3",
+        "simulationTime": 67.85000000000248
+      }
+    ],
+    "drained": true
+  },
+  "cancelledTask14": {
+    "rawSha256": "5383d36c8168ef0ca3ee57e11d8ef0dc67ad67faa778b1f936b9ccd752559c59",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing"
+    },
+    "task": {
+      "ticket": 5,
+      "draw": 153,
+      "at": 25.499999999999876,
+      "body": 1
+    },
+    "action": {
+      "ticket": 7,
+      "draw": 299,
+      "at": 66.45000000000256
+    },
+    "water": [
+      {
+        "id": "event-11",
+        "type": "WaterSatisfied",
+        "workerId": "worker-6",
+        "targetId": "plant-3",
+        "simulationTime": 72.8500000000022
+      }
+    ],
+    "drained": true,
+    "abort": {
+      "holdId": 2,
+      "ticket": 3,
+      "heldTime": 19.749999999999794,
+      "sourceTime": 15.899999999999741
+    },
+    "consumer": {
+      "holdId": 2,
+      "heldTime": 19.749999999999794,
+      "nativeMutationFloor": 19.749999999999794,
+      "lastPresented": 15.94999999999974,
+      "active": 140,
+      "pending": 141
+    },
+    "obsolete": [
+      {
+        "sequence": 142,
+        "proof": {
+          "epoch": 0,
+          "safeUntil": 16.299999999999745,
+          "mutationFloor": 19.749999999999794
+        },
+        "historical": false
+      },
+      {
+        "sequence": 143,
+        "proof": {
+          "epoch": 0,
+          "safeUntil": 16.499999999999748,
+          "mutationFloor": 19.749999999999794
+        },
+        "historical": false
+      },
+      {
+        "sequence": 144,
+        "proof": {
+          "epoch": 0,
+          "safeUntil": 16.499999999999748,
+          "mutationFloor": 19.749999999999794
+        },
+        "historical": false
+      },
+      {
+        "sequence": 145,
+        "proof": {
+          "epoch": 0,
+          "safeUntil": 17.099999999999756,
+          "mutationFloor": 19.749999999999794
+        },
+        "historical": false
+      },
+      {
+        "sequence": 146,
+        "proof": {
+          "epoch": 0,
+          "safeUntil": 17.649999999999764,
+          "mutationFloor": 19.749999999999794
+        },
+        "historical": false
+      },
+      {
+        "sequence": 147,
+        "proof": {
+          "epoch": 0,
+          "safeUntil": 17.94999999999977,
+          "mutationFloor": 19.749999999999794
+        },
+        "historical": false
+      },
+      {
+        "sequence": 148,
+        "proof": {
+          "epoch": 0,
+          "safeUntil": 18.399999999999775,
+          "mutationFloor": 19.749999999999794
+        },
+        "historical": false
+      },
+      {
+        "sequence": 149,
+        "proof": {
+          "epoch": 0,
+          "safeUntil": 18.69999999999978,
+          "mutationFloor": 19.749999999999794
+        },
+        "historical": false
+      },
+      {
+        "sequence": 150,
+        "proof": {
+          "epoch": 0,
+          "safeUntil": 19.049999999999784,
+          "mutationFloor": 19.749999999999794
+        },
+        "historical": false
+      },
+      {
+        "sequence": 151,
+        "proof": {
+          "epoch": 0,
+          "safeUntil": 19.39999999999979,
+          "mutationFloor": 19.749999999999794
+        },
+        "historical": false
+      }
+    ]
+  },
+  "scope": "Functional NVIDIA Turing qualification from the menu with the explicit native worker lifecycle. The QA overlay forces one otherwise-valid Task14 to cancel after quiescence. Full campaigns and frame pacing remain separate."
+}

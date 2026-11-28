@@ -1,0 +1,115 @@
+{
+  "base": "38e091c1455f0cf35addf7cc5d94c4b3515699c9",
+  "scope": "Task25 to Home18 graphical held source and exact adoption through either arrival order. Production build. No physical GPU.",
+  "selection": [
+    "tests/native-farm-arrival-held-projection.test.js",
+    "tests/native-farm-arrival-stop-graphics.test.js",
+    "tests/native-farm-arrived-home-control.test.js",
+    "tests/native-farm-arrived-home-graphics.test.js",
+    "tests/native-farm-arrived-home-source.test.js",
+    "tests/native-farm-held-continuation-control.test.js",
+    "tests/native-farm-held-continuation-graphics.test.js",
+    "tests/native-farm-held-continuation-ports.test.js",
+    "tests/native-farm-held-continuation-production.test.js",
+    "tests/native-farm-held-continuation.test.js",
+    "tests/native-farm-moving-home-control.test.js",
+    "tests/native-farm-moving-home-graphics.test.js",
+    "tests/native-farm-moving-home-source.test.js",
+    "tests/native-farm-pending-home-control.test.js",
+    "tests/native-farm-pending-home-graphics.test.js",
+    "tests/native-farm-pending-home-source.test.js",
+    "tests/native-home-arrival-control.test.js",
+    "tests/native-home-arrival-game.test.js",
+    "tests/native-home-arrival-graphics.test.js",
+    "tests/native-home-route-control.test.js",
+    "tests/native-home-route-game.test.js",
+    "tests/native-home-route-graphics.test.js",
+    "tests/native-idle-completed-home-control.test.js",
+    "tests/native-idle-completed-home-graphics.test.js",
+    "tests/native-idle-current-home-graphics.test.js",
+    "tests/native-idle-current-home-source.test.js",
+    "tests/native-idle-moving-home-graphics.test.js",
+    "tests/native-idle-moving-home-source.test.js",
+    "tests/native-idle-stroll-stop-graphics.test.js",
+    "tests/native-task-route-stop-admission.test.js",
+    "tests/native-task-route-stop-control.test.js",
+    "tests/native-task-route-stop-graphics.test.js",
+    "tests/native-task-route-stop-ports.test.js",
+    "tests/native-task-route-stop-remote.test.js",
+    "tests/native-task-route-stop-source.test.js",
+    "tests/native-worker-roster.test.js"
+  ],
+  "tests": {
+    "exitCode": 0,
+    "tests": 483,
+    "pass": 483,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "build": {
+    "exitCode": 0,
+    "vitePhaseText": [
+      "1m 11s"
+    ]
+  },
+  "inputCounts": {
+    "frozenInputs": 9059,
+    "nativeBuiltInputs": 64,
+    "preservedFiles": 16,
+    "externalCommittedInputs": 38
+  },
+  "changed": {
+    "frozenInputs": [],
+    "nativeBuiltInputs": [],
+    "preservedFiles": [],
+    "externalCommittedInputs": []
+  },
+  "nativeOutputs": {
+    "src/world/wild-engine/spatial-savanna.wasm": "2f3a850ea0e459cade584febb34d11cdb05622f5fa26b11edf4f112856cf5464",
+    "public/wild-engine/spatial-threaded.mjs": "3e49ae9e327afaf1c4b6ea289cff04747277e7f9ea0576487ae1369675a9771b",
+    "public/wild-engine/spatial-threaded.wasm": "28b190233a9e80246883c1d5e64d45854abbb7ee691f1617cd6e846d278b23d1"
+  },
+  "sources": [
+    "https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp#L607-L662",
+    "https://github.com/mrdoob/three.js/blob/r180/src/renderers/common/Bindings.js#L193-L255"
+  ],
+  "artifacts": {
+    "validate.py.gz": {
+      "payloadBytes": 3498,
+      "payloadSha256": "a2a961c1310d42bd731b8924442b3a8c6960fc8efac39031e42d2537e663a1cf",
+      "gzipBytes": 1685,
+      "gzipSha256": "8cbfe3a4530fc70aea915115fac11ac2f279b624290e4789a261bdf38414119b"
+    },
+    "validation.json.gz": {
+      "payloadBytes": 1183883,
+      "payloadSha256": "9521ce7710892ff7a303df1f05d5626d061ede93e0a9ba920d25bfe152835865",
+      "gzipBytes": 446300,
+      "gzipSha256": "7923186282b0c5fd2f891a2fdb5a8d23a3030603d0c22a6848b1aa5491be0a07"
+    },
+    "red.log.gz": {
+      "payloadBytes": 1756,
+      "payloadSha256": "63b8374c51283d1cad0c32f09d48b46a9f4f9bdf5ba58c539b668d6bce95b65f",
+      "gzipBytes": 722,
+      "gzipSha256": "6ba3f1a4ab9801eae43fe6519487b4a4be82dab3aaeab9817424dd9f8863bafa"
+    },
+    "directed.log.gz": {
+      "payloadBytes": 1169,
+      "payloadSha256": "1f459f1664cd9be3be76729babbfe886814c5f4f196f0ecbcba7c1cf169728ea",
+      "gzipBytes": 449,
+      "gzipSha256": "fed45674e0eb9206fe6bc6086863dcb322ce783e5f8e8e4d69d4a1206f739c26"
+    },
+    "tests.log.gz": {
+      "payloadBytes": 134999,
+      "payloadSha256": "82055d514bafdbd64b2c27bb1b62b9e693a477c55bfe5c30a3d56b4c49a7623f",
+      "gzipBytes": 15682,
+      "gzipSha256": "cd2a3fb2d74656fa541ba0f9251932e89e75bb9aafbeae725e3eebb4f0f6fc53"
+    },
+    "build.log.gz": {
+      "payloadBytes": 3938,
+      "payloadSha256": "0257064327c4406a0a2856f0e8ccf6d8c9ab1e21c60a9a74fda2cd4488eedfe0",
+      "gzipBytes": 1568,
+      "gzipSha256": "59742b01f60918d7b1dbda30b17cde7ab214d739600b7e53b5d786e33b5bf9bd"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "kind": "guardian-close-recording",
+  "spell": "shield",
+  "startAge": 0.3196199999997589,
+  "simulationSeconds": 2.1454900000003363,
+  "clockMode": "Game.tick",
+  "visible": 0,
+  "pending": 0,
+  "errors": [
+    "Error: Las áreas mágicas no pueden solaparse\n    at validateSpell (http://127.0.0.1:5194/src/simulation/game.js?t=1793288794835:800:93)\n    at Module.cast (http://127.0.0.1:5194/src/simulation/game.js?t=1793288794835:809:23)\n    at cast (http://127.0.0.1:5194/tests/browser/guardian-combat.js?t=1793307809863:266:998)\n    at $.onclick (http://127.0.0.1:5194/tests/browser/guardian-combat.js?t=1793307809863:299:85)"
+  ],
+  "includesTarget": false,
+  "recovery": null,
+  "scope": "Close inspection camera; target can leave frame. Not a full recovery or performance test."
+}

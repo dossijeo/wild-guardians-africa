@@ -1,0 +1,131 @@
+{
+  "scope": "Three separately loaded QA scenes; synchronous screenshots alter timing. Initial elapsed time and animation phases are not held identical. Pixel differences are compared against independent control variability and do not prove visual equivalence.",
+  "runs": [
+    {
+      "sequence": 5,
+      "reference": "visual-clock-corrected-control",
+      "candidate": "visual-clock-corrected-control-b",
+      "referenceSha256": "36d1d7c05a25c13300fdd0fdab07d23b02b26eb94a8ced37108b1e266920c0ab",
+      "candidateSha256": "55df3909c6c84bc65302fbc7dfe0ec2fca710afc166dee3cba4b4b2260521151",
+      "full": {
+        "pixels": 921600,
+        "changed": 61581,
+        "over8": 20906,
+        "max": 220,
+        "sum": 658856
+      },
+      "center": {
+        "pixels": 153000,
+        "changed": 1858,
+        "over8": 237,
+        "max": 109,
+        "sum": 8513
+      }
+    },
+    {
+      "sequence": 5,
+      "reference": "visual-clock-corrected-control",
+      "candidate": "visual-clock-corrected-warm",
+      "referenceSha256": "36d1d7c05a25c13300fdd0fdab07d23b02b26eb94a8ced37108b1e266920c0ab",
+      "candidateSha256": "6540c09fdc793396a8470242f62948ac60afa1647e7bad8d9d49d55988114e55",
+      "full": {
+        "pixels": 921600,
+        "changed": 61455,
+        "over8": 20683,
+        "max": 220,
+        "sum": 652001
+      },
+      "center": {
+        "pixels": 153000,
+        "changed": 1845,
+        "over8": 239,
+        "max": 108,
+        "sum": 8411
+      }
+    },
+    {
+      "sequence": 35,
+      "reference": "visual-clock-corrected-control",
+      "candidate": "visual-clock-corrected-control-b",
+      "referenceSha256": "0980b6a3c5e7f7311a875c63ab285cdc743842b028d1cda303c709bd07782a26",
+      "candidateSha256": "c5ded350b35f29f8b5c5b2433a0113038eb380f92acb949f2f11db579161e24b",
+      "full": {
+        "pixels": 921600,
+        "changed": 64799,
+        "over8": 21929,
+        "max": 210,
+        "sum": 671701
+      },
+      "center": {
+        "pixels": 153000,
+        "changed": 5442,
+        "over8": 1394,
+        "max": 102,
+        "sum": 39722
+      }
+    },
+    {
+      "sequence": 35,
+      "reference": "visual-clock-corrected-control",
+      "candidate": "visual-clock-corrected-warm",
+      "referenceSha256": "0980b6a3c5e7f7311a875c63ab285cdc743842b028d1cda303c709bd07782a26",
+      "candidateSha256": "9f1733b22100048b946c9e17eee2080a1ddef1d161159eb2bc116545c8709a14",
+      "full": {
+        "pixels": 921600,
+        "changed": 64825,
+        "over8": 21750,
+        "max": 210,
+        "sum": 666532
+      },
+      "center": {
+        "pixels": 153000,
+        "changed": 5436,
+        "over8": 1374,
+        "max": 102,
+        "sum": 39383
+      }
+    },
+    {
+      "sequence": 68,
+      "reference": "visual-clock-corrected-control",
+      "candidate": "visual-clock-corrected-control-b",
+      "referenceSha256": "6fc890c5b87c9324ae5dffcf803d329a8b5b30d6eb33a7c7564e98f000b4e6ee",
+      "candidateSha256": "4bb7cb8c9949ffc4e60075f991a7533c39b952a0db4bf78220d797b79a5f53cb",
+      "full": {
+        "pixels": 921600,
+        "changed": 58018,
+        "over8": 18671,
+        "max": 196,
+        "sum": 588353
+      },
+      "center": {
+        "pixels": 153000,
+        "changed": 7267,
+        "over8": 2572,
+        "max": 105,
+        "sum": 66827
+      }
+    },
+    {
+      "sequence": 68,
+      "reference": "visual-clock-corrected-control",
+      "candidate": "visual-clock-corrected-warm",
+      "referenceSha256": "6fc890c5b87c9324ae5dffcf803d329a8b5b30d6eb33a7c7564e98f000b4e6ee",
+      "candidateSha256": "d4f268a986ebd8eacb988a06537fca6663740db420577a4a9482ca487a11dbb7",
+      "full": {
+        "pixels": 921600,
+        "changed": 57802,
+        "over8": 18476,
+        "max": 196,
+        "sum": 582279
+      },
+      "center": {
+        "pixels": 153000,
+        "changed": 7254,
+        "over8": 2570,
+        "max": 105,
+        "sum": 66302
+      }
+    }
+  ]
+}

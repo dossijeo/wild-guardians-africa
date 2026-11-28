@@ -1,0 +1,192 @@
+{
+  "revision": "49c1d404af7354ae7ce78063ed1f123776fcf9d0",
+  "scope": "CPU authority and original WASM with accepted ordinary placements. Both centred routes fail before resource preparation.",
+  "controls": [
+    {
+      "anchor": {
+        "x": -11.8,
+        "z": 8.2,
+        "yaw": 0
+      },
+      "placed": true,
+      "actorStart": {
+        "x": -11.8,
+        "z": 11.799999999999999
+      },
+      "centerService": {
+        "x": -11.8,
+        "z": 3.2
+      },
+      "withGate": {
+        "crossings": [
+          -10
+        ],
+        "pathLength": 12,
+        "distance": 11.092867927623544,
+        "gateIds": [
+          1000000
+        ]
+      },
+      "withoutGate": {
+        "crossings": [
+          -12
+        ],
+        "pathLength": 8,
+        "distance": 7.092867927623545,
+        "gateIds": []
+      },
+      "nativeStage": {
+        "status": 1,
+        "pose": {
+          "x": -11.8,
+          "z": 11.799999999999999,
+          "yaw": 0.37,
+          "radius": 0.28,
+          "runPhase": 23.25,
+          "walkPhase": 7.125,
+          "carryPhase": 9.5,
+          "runRemaining": 40
+        },
+        "goal": {
+          "x": -11.8,
+          "z": 3.2,
+          "centerX": -16.754998779296876,
+          "centerZ": 3.2,
+          "arrivalRadius": 2
+        },
+        "delta": {
+          "spatial_execution_clearance_checks": 13,
+          "spatial_execution_slope_samples": 1085,
+          "nav_intent_route_reservation_checks": 1,
+          "nav_gate_sweep_evaluations": 45,
+          "nav_gate_static_pairs": 0,
+          "nav_gate_static_evaluations": 0
+        }
+      }
+    },
+    {
+      "anchor": {
+        "x": -14,
+        "z": 8.2,
+        "yaw": 0
+      },
+      "placed": true,
+      "actorStart": {
+        "x": -14,
+        "z": 11.799999999999999
+      },
+      "centerService": {
+        "x": -14,
+        "z": 3.2
+      },
+      "withGate": {
+        "authorityError": "Native authority production did not reach boundary: {\"phase\":\"idle\",\"fault\":null,\"active\":null,\"last\":{\"actorId\":\"worker-900011\",\"kind\":\"farm-arrival\",\"status\":\"unsupported\"},\"publicationSequence\":1}"
+      },
+      "withoutGate": {
+        "crossings": [
+          -14
+        ],
+        "pathLength": 2,
+        "distance": 6.600000190734862,
+        "gateIds": []
+      },
+      "nativeStage": {
+        "status": -2,
+        "pose": {
+          "x": -14,
+          "z": 11.799999999999999,
+          "yaw": 0.37,
+          "radius": 0.28,
+          "runPhase": 23.25,
+          "walkPhase": 7.125,
+          "carryPhase": 9.5,
+          "runRemaining": 40
+        },
+        "goal": {
+          "x": -14,
+          "z": 3.2,
+          "centerX": -18.954998779296876,
+          "centerZ": 3.2,
+          "arrivalRadius": 2
+        },
+        "delta": {
+          "spatial_execution_clearance_checks": 3,
+          "spatial_execution_slope_samples": 450,
+          "nav_intent_route_reservation_checks": 0,
+          "nav_gate_sweep_evaluations": 0,
+          "nav_gate_static_pairs": 0,
+          "nav_gate_static_evaluations": 0
+        }
+      }
+    },
+    {
+      "anchor": {
+        "x": -14,
+        "z": 9.2,
+        "yaw": 0
+      },
+      "placed": true,
+      "actorStart": {
+        "x": -14,
+        "z": 12.799999999999999
+      },
+      "centerService": {
+        "x": -14,
+        "z": 4.2
+      },
+      "withGate": {
+        "authorityError": "Native authority production did not reach boundary: {\"phase\":\"idle\",\"fault\":null,\"active\":null,\"last\":{\"actorId\":\"worker-900011\",\"kind\":\"farm-arrival\",\"status\":\"unsupported\"},\"publicationSequence\":1}"
+      },
+      "withoutGate": {
+        "crossings": [
+          -14
+        ],
+        "pathLength": 2,
+        "distance": 6.600000190734862,
+        "gateIds": []
+      },
+      "nativeStage": {
+        "status": -2,
+        "pose": {
+          "x": -14,
+          "z": 12.799999999999999,
+          "yaw": 0.37,
+          "radius": 0.28,
+          "runPhase": 23.25,
+          "walkPhase": 7.125,
+          "carryPhase": 9.5,
+          "runRemaining": 40
+        },
+        "goal": {
+          "x": -14,
+          "z": 4.2,
+          "centerX": -18.954998779296876,
+          "centerZ": 4.2,
+          "arrivalRadius": 2
+        },
+        "delta": {
+          "spatial_execution_clearance_checks": 3,
+          "spatial_execution_slope_samples": 480,
+          "nav_intent_route_reservation_checks": 0,
+          "nav_gate_sweep_evaluations": 0,
+          "nav_gate_static_pairs": 0,
+          "nav_gate_static_evaluations": 0
+        }
+      }
+    }
+  ],
+  "diagnosticSha256": [
+    {
+      "path": ".cache/native-farm-legal-aperture-candidates.json",
+      "sha256": "db10658ec1ae5f1ff89f50910e5f16b20ba3008d4e11f0ef17e3e1e6afbc80ac"
+    },
+    {
+      "path": ".cache/native-farm-legal-aperture-no-gate.json",
+      "sha256": "4e1a5bf21b77863f6897cae3f96836852aecd661ba5eb4fee0fd0fe81663c7e3"
+    },
+    {
+      "path": ".cache/native-farm-legal-aperture-witness.log",
+      "sha256": "a07b411e76bf9ebd576b4b73240ac042c9a4702e19d39aa04b930efd49ac3683"
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import {createSpatialChunkStream} from './spatial-chunk-stream.js';
 import {createSpatialWallMirror} from './spatial-wall-mirror.js';
 import {createSpatialCenterMirror} from './spatial-center-mirror.js';
 import {createSpatialShieldMirror} from './spatial-shield-mirror.js';
+import {validateSpatialState} from './spatial-state.js';
 import {createSpatialPropMirror} from './spatial-prop-mirror.js';
 import {queryResidentSpatialProps} from './spatial-prop-query.js';
 import {addSpatialVillageBuildings} from './spatial-village-bridge.js';
@@ -17,6 +18,7 @@ import {BIOME_IDS} from '../biome-ids.js';
 export function createSpatialGameSession(module,state,streamOptions){
   if(!Object.hasOwn(BIOME_IDS,state?.biome)||!Array.isArray(state.villages)||!state.villages.length)
     throw TypeError('Expected a supported game biome and a village');
+  if(streamOptions.nativeBootstrap!=null&&streamOptions.core)throw Error('Native bootstrap requires a new unpublished core');
   let core=streamOptions.core??createSpatialWorld(module);
   const confirmedCore=core,first=state.villages[0];
   const cx=Math.floor((first.x+24)/48),cz=Math.floor((first.z+24)/48);
@@ -95,10 +97,29 @@ export function createSpatialGameSession(module,state,streamOptions){
     if(stream)stream.invalidate([...changed]);
   }
   for(const village of state.villages)installVillage(village,state,village===first);
-  const walls=createSpatialWallMirror(core),centers=createSpatialCenterMirror(core),
-    shields=createSpatialShieldMirror(core),props=createSpatialPropMirror(core,state.suppressed);
-  walls.sync(state.structures);
+  const centers=createSpatialCenterMirror(core),shields=createSpatialShieldMirror(core),props=createSpatialPropMirror(core,state.suppressed);
   centers.sync(state);shields.sync(state.spells);
+  const walls=createSpatialWallMirror(core);
+  walls.sync(state.structures);
+  const bootstrap=streamOptions.nativeBootstrap;
+  if(bootstrap!=null){
+    if(![1,2,3].includes(bootstrap.version))throw TypeError('Invalid native world bootstrap');
+    const saved=validateSpatialState(bootstrap.spatialState),actual=core.snapshot(),serialized=JSON.stringify(saved),
+      matches=JSON.stringify(actual)===serialized;
+    if(bootstrap.version!==1||!matches){
+      const wallPlan=walls.prepareBootstrap(actual,bootstrap,state.structures),shieldPlan=shields.prepareBootstrap(actual,bootstrap);
+      const authorized={...actual,barriers:wallPlan.barriers,nextBarrierId:saved.nextBarrierId,
+        polygons:shieldPlan.polygons,nextPolygonId:saved.nextPolygonId};
+      if(JSON.stringify(authorized)!==serialized)throw Error('Native world bootstrap reconstruction mismatch');
+      // Cold bootstrap owns the only restore. No routes, bodies or graphics
+      // have been installed, and both mirrors adopt the IDs from this restore.
+      if(!matches){
+        const selected=core.currentChunk();core.restoreState(authorized,selected.cx,selected.cz,centers.workCenterOwners());
+        if(JSON.stringify(core.snapshot())!==serialized)throw Error('Native restored world state mismatch');
+      }
+      wallPlan.adopt();shieldPlan.adopt();
+    }
+  }
   const profiles=new Set();
   let workerPortalRevision=-1,workerPortalChunkRevision=-1,
     workerPortalTerrainRevision=-1,workerPortalCenterRevision=-1,
@@ -197,6 +218,29 @@ export function createSpatialGameSession(module,state,streamOptions){
       retainedProps.delete(key);
       streamOptions.onData(data);
     }});
+  let publishedNativeResources=null;
+  function prepareNativeCenterPlacementAdoption(entity,placement){
+    const center=centers.preparePlacementAdoption(entity,state,placement.polygonId);
+    const suppress=props.prepareSuppressionAdoption(placement.suppressed);
+    return ()=>{center();suppress(state.suppressed);};
+  }
+  function publishNativeWorldResources(boundary){
+    const resources=core.captureNativeWorldResources(boundary);
+    if(publishedNativeResources?.nativeSession===resources.nativeSession&&resources.ticket<=publishedNativeResources.ticket)
+      throw Error('Native world resource publication is stale');
+    // Physical publication has already happened. Reuse the same data owner and
+    // onData path as ordinary streaming; do not regenerate or mutate WASM here.
+    for(const payload of resources.chunks){
+      const key=`${payload.cx},${payload.cz}`;chunkRevisions.set(key,(chunkRevisions.get(key)??0)+1);
+      stream.onData({...payload});
+    }
+    for(const {cx,cz} of resources.removed){
+      const key=`${cx},${cz}`;streamOptions.loaded().delete(key);nativeProps.delete(key);retainedProps.delete(key);
+      chunkRevisions.set(key,(chunkRevisions.get(key)??0)+1);streamOptions.onRelease?.(cx,cz,{nativeWorldBoundary:boundary});
+    }
+    if(resources.kind===10)terrainRevision++;
+    publishedNativeResources={nativeSession:resources.nativeSession,ticket:resources.ticket};return resources;
+  }
   function syncState(next){
     if(next.seed!==state.seed||next.biome!==state.biome)
       throw TypeError('A spatial session cannot change seed or biome');
@@ -479,8 +523,9 @@ export function createSpatialGameSession(module,state,streamOptions){
   const queryPropsAt=(x,z,radius)=>queryResidentSpatialProps(
     streamOptions.loaded(),props.suppressed,x,z,radius,
     key=>chunkRevisions.get(key)??0,retainedProps);
-  return {get core(){return core;},field,stream,horizonSource,topologySource,routeStamp,
-    routeUnaffectedByWalls,suppressed:props.suppressed,syncState,
+  return {get core(){return core;},field,stream,horizonSource,topologySource,routeStamp,publishNativeWorldResources,
+    captureWallOwners:walls.captureOwners,wallBarrierIds:walls.barrierIds,routeUnaffectedByWalls,suppressed:props.suppressed,syncState,prepareNativeWallAdditionAdoption:walls.prepareNativeAdditionAdoption,prepareNativeWallRemovalAdoption:walls.prepareNativeRemovalAdoption,
+    centerPolygonId:centers.polygonId,prepareNativeCenterRuinAdoption:centers.prepareRuinAdoption,prepareNativeCenterPlacementAdoption,captureShieldOwners:shields.captureOwners,shieldPolygonId:shields.polygonId,prepareNativeShieldAdditionAdoption:shields.prepareNativeAdditionAdoption,prepareNativeShieldRemovalAdoption:shields.prepareNativeRemovalAdoption,
     routeActor,routeActorNative,routeActorNativeBatch,actorConnectivity,actorSectorRevision,actorRegions,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
     actorStepClearExceptWalls,
     queryPropsAt,withWallPreview,withWallStatePreview,gateOverlayClear,

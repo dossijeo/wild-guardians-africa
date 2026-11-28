@@ -1,0 +1,187 @@
+{
+  "results": [
+    {
+      "points": [
+        {
+          "x": 50,
+          "z": -10
+        },
+        {
+          "x": 70,
+          "z": -10
+        }
+      ],
+      "requestedAt": 1177.1000000014901,
+      "startedAt": 1177.885009765625,
+      "mutationCompletedAt": 1208.3949999958277,
+      "restoredVersion": 1,
+      "currentVersion": 3,
+      "restoredAcceptedAsCurrent": false,
+      "obsoleteWorkerAccepted": true,
+      "staleDecision": {
+        "accepted": false,
+        "reason": "stale"
+      },
+      "finalDecision": {
+        "accepted": true
+      },
+      "duplicateDecision": {
+        "accepted": false,
+        "reason": "request"
+      },
+      "applied": 1,
+      "workerRestoreMs": 507.71000000089407,
+      "untilCaughtUpMs": 516.9949999973178,
+      "premature": {
+        "kind": "result",
+        "id": 3,
+        "session": "restored",
+        "accepted": false,
+        "reason": "gap",
+        "version": 1
+      },
+      "added": {
+        "kind": "result",
+        "id": 5,
+        "accepted": true,
+        "version": 2,
+        "value": 96
+      },
+      "removed": {
+        "kind": "result",
+        "id": 6,
+        "accepted": true,
+        "version": 3,
+        "value": 95
+      },
+      "clear": [
+        true,
+        false
+      ],
+      "spatialSnapshotEqual": true,
+      "scope": "Private checkpoint and two manually sequenced native barrier changes during a synchronous Worker restore. One-shot consumer rejects stale responses. No live game events, bounded journal, rendering, actors or production authority."
+    },
+    {
+      "points": [
+        {
+          "x": 50,
+          "z": -10
+        },
+        {
+          "x": 70,
+          "z": -10
+        }
+      ],
+      "requestedAt": 790.4799999967217,
+      "startedAt": 791.23974609375,
+      "mutationCompletedAt": 813.25,
+      "restoredVersion": 1,
+      "currentVersion": 3,
+      "restoredAcceptedAsCurrent": false,
+      "obsoleteWorkerAccepted": true,
+      "staleDecision": {
+        "accepted": false,
+        "reason": "stale"
+      },
+      "finalDecision": {
+        "accepted": true
+      },
+      "duplicateDecision": {
+        "accepted": false,
+        "reason": "request"
+      },
+      "applied": 1,
+      "workerRestoreMs": 476.66999999433756,
+      "untilCaughtUpMs": 485.195000000298,
+      "premature": {
+        "kind": "result",
+        "id": 3,
+        "session": "restored",
+        "accepted": false,
+        "reason": "gap",
+        "version": 1
+      },
+      "added": {
+        "kind": "result",
+        "id": 5,
+        "accepted": true,
+        "version": 2,
+        "value": 96
+      },
+      "removed": {
+        "kind": "result",
+        "id": 6,
+        "accepted": true,
+        "version": 3,
+        "value": 95
+      },
+      "clear": [
+        true,
+        false
+      ],
+      "spatialSnapshotEqual": true,
+      "scope": "Private checkpoint and two manually sequenced native barrier changes during a synchronous Worker restore. One-shot consumer rejects stale responses. No live game events, bounded journal, rendering, actors or production authority."
+    },
+    {
+      "points": [
+        {
+          "x": 50,
+          "z": -10
+        },
+        {
+          "x": 70,
+          "z": -10
+        }
+      ],
+      "requestedAt": 775.1649999991059,
+      "startedAt": 775.96484375,
+      "mutationCompletedAt": 797.2100000008941,
+      "restoredVersion": 1,
+      "currentVersion": 3,
+      "restoredAcceptedAsCurrent": false,
+      "obsoleteWorkerAccepted": true,
+      "staleDecision": {
+        "accepted": false,
+        "reason": "stale"
+      },
+      "finalDecision": {
+        "accepted": true
+      },
+      "duplicateDecision": {
+        "accepted": false,
+        "reason": "request"
+      },
+      "applied": 1,
+      "workerRestoreMs": 476.2849999964237,
+      "untilCaughtUpMs": 484.54500000178814,
+      "premature": {
+        "kind": "result",
+        "id": 3,
+        "session": "restored",
+        "accepted": false,
+        "reason": "gap",
+        "version": 1
+      },
+      "added": {
+        "kind": "result",
+        "id": 5,
+        "accepted": true,
+        "version": 2,
+        "value": 96
+      },
+      "removed": {
+        "kind": "result",
+        "id": 6,
+        "accepted": true,
+        "version": 3,
+        "value": 95
+      },
+      "clear": [
+        true,
+        false
+      ],
+      "spatialSnapshotEqual": true,
+      "scope": "Private checkpoint and two manually sequenced native barrier changes during a synchronous Worker restore. One-shot consumer rejects stale responses. No live game events, bounded journal, rendering, actors or production authority."
+    }
+  ]
+}

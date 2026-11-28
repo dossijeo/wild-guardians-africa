@@ -1,0 +1,129 @@
+{
+  "scenario": "Sabana 714, contratación pagada, riego e Idle22 hacia Home, recorrido continuo acelerado con NVIDIA Turing",
+  "base": "22ec41bc7353af5089d8c735d33e8723db2f7e21",
+  "artifacts": {
+    "nvidia-continuous-diagnostic.json": "1fa7625da2e91083ed6c4222e65f3863ca58aab8757f14e0d09a968b8c80340f",
+    "nvidia-continuous-publications.json": "878bbb77538b94fdcf285cfa4ed7803a9608664cc8f107161c62dfeb81009f3b",
+    "nvidia-continuous-draw-gate.json": "e2c7abe78faa3dae247ab413739418d2abde49fde250dbc3489740f7fa328306",
+    "nvidia-continuous-real-clock.json": "435fef10fadff2dbbfacfeed9fd0c57dee7187bb71924d870f9aa89ea72c72ec",
+    "nvidia-home-retirement-clock-operands.json": "dec0be701892236f95cc70b89038e6af178ad4e118078e978e0df3bc11f5619a",
+    "nvidia-home-retirement-continuation.json": "535e80d297d226f63306e45b4e70894b0b05b3c8d500fd2c2cb974c7e35dfa62",
+    "nvidia-continuous-retirement-fixed.json": "c2bbbc4fb059a8da2e13504fd2bbd9922310ce9ea6e04afbaa260f68dfd22285"
+  },
+  "request": {
+    "kind": "prepareNativeIdleStrollResources",
+    "id": 8,
+    "ticket": 14,
+    "effectiveTime": 116.37999999999398,
+    "minSequence": 1946
+  },
+  "sampleColumns": ["wallMillisecondsAfterSurfaceEntry", "appliedSequence", "receivedSequence"],
+  "samples": [
+    [0, 1829, 1861],
+    [336.8, 1837, 1861],
+    [5079.8, 1877, 1909],
+    [7580.1, 1902, 1934],
+    [9001, 1918, 1950],
+    [10000.3, 1926, 1958]
+  ],
+  "drawGate": {
+    "presentedPackets": 13,
+    "deferredByDirectClock": 12,
+    "rejectedOpportunitiesPerDeferredPacket": 21,
+    "millisecondRangeAfterCausalDeadline": [8.8, 9],
+    "medianMilliseconds": {
+      "timeline": 9.7,
+      "render": 15.4,
+      "resourceWait": 0,
+      "admittedToFirstDraw": 717.9,
+      "draw": 3.2
+    },
+    "firstDeferredPacket": {
+      "frame": 269,
+      "publication": 1837,
+      "packetElapsed": 105.47999999999615,
+      "directElapsedAtFirstOpportunity": 104.78890014648438,
+      "directExecutedHorizon": 116.57999999999394,
+      "packetPreparedHistoricalInterval": null
+    }
+  },
+  "hostedMonotonicClock": {
+    "worker": "worker-6",
+    "bodyId": 1,
+    "idleStrollGoTickets": [11, 15, 21, 33, 37, 43],
+    "presentedIdleStrolls": [
+      {"ticket": 21, "frame": 1209},
+      {"ticket": 33, "frame": 1582},
+      {"ticket": 37, "frame": 1794},
+      {"ticket": 43, "frame": 2150}
+    ],
+    "homeGo": {"ticket": 55, "effectiveTime": 250.48000000000025},
+    "retirementGo": {"ticket": 57, "effectiveTime": 291.1199999999711},
+    "refuge": {"x": 60, "z": 0, "status": "home"},
+    "elapsedAtFailure": 291.239999999971,
+    "error": "Prepared clock coverage precedes the presented frame",
+    "retirementDrawVerified": false,
+    "drained": false
+  },
+  "restoredHomeClockCut": {
+    "initialElapsed": 250,
+    "retirementTicket": 4,
+    "retirementEffectiveTime": 290.65999999997155,
+    "retirementDrawFrame": 446,
+    "rejectedFrame": 447,
+    "sameWorld": true,
+    "preparedInterval": {"token": 1, "sequence": 1924, "start": 290.6799999999715, "end": 290.6999999999715},
+    "presentedElapsedAtRejection": 290.7399999999715,
+    "drawSideRejectionObserved": true,
+    "preparerRejectionObserved": false,
+    "drained": true
+  },
+  "restoredHomeContinuation": {
+    "retirementTicket": 4,
+    "activeFrame": 440,
+    "rejectedFrame": 441,
+    "packetWorldMatchesAppliedAndDirect": true,
+    "interval": {"token": 1, "sequence": 1925, "start": 290.7199999999715, "end": 290.7399999999715},
+    "presentedElapsedAtRejection": 290.7999999999714,
+    "resourcePreparationsRetained": true,
+    "appliedSequence": 1924,
+    "receivedSequence": 1930,
+    "recoveryTarget": null,
+    "elapsedAtFailure": 290.8399999999714
+  },
+  "correctedContinuousRun": {
+    "preimage": "af0f19671072159c6007c854f0418e48a2ac749e",
+    "clock": "Hosted monotonic",
+    "worker": "worker-6",
+    "bodyId": 1,
+    "hireCount": 1,
+    "wateringEvents": ["event-7", "event-9", "event-11"],
+    "firstTask": {"ticket": 3, "frame": 28},
+    "firstStroll": {"ticket": 11, "frame": 622},
+    "home": {"ticket": 55, "frame": 2371, "clockElapsed": 250.74000000000038},
+    "homeArrival": {"ticket": 57, "frame": 2773, "effectiveTime": 291.1599999999711},
+    "rejection": {
+      "frame": 2774,
+      "interval": {"token": 1, "sequence": 13749, "end": 291.19999999997106},
+      "presentedThrough": 291.259999999971,
+      "appliedSequence": 13748,
+      "retainedWorld": 57
+    },
+    "firstOrdinary": {"frame": 2775, "clockElapsed": 291.31999999997095},
+    "laterFrame": {"frame": 2797, "clockElapsed": 291.7799999999705},
+    "refuge": {"x": 60, "z": 0},
+    "expiredPackets": 1,
+    "continuedPackets": 1,
+    "elapsedAtDrain": 292.9999999999694,
+    "drained": true
+  },
+  "result": {
+    "elapsed": 123.07999999999265,
+    "firstError": "Native resource preparation timed out",
+    "firstWaitExitedNormally": false,
+    "abortedRequest": 8,
+    "historicalHoldInSamples": false,
+    "historicalPreparationInSamples": false,
+    "pageErrorCount": 0
+  }
+}

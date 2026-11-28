@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "parentRevision": "602230fe2",
+  "sourceSha256": "11d97dfbabeb37a9ae9435cc06b60d0c505e82ba74c25488bbbd49225364ef2d",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 112.60000000149012
+    }
+  },
+  "elapsed": 12.599999999999945,
+  "confirmedSequence": 138,
+  "recoveryBaseSequence": 131,
+  "journalThrough": 138,
+  "wire": [
+    {
+      "kind": "encounter-ready",
+      "id": 6,
+      "sequence": 74
+    },
+    {
+      "kind": "hidden-retreat",
+      "confirmedBefore": 12.599999999999945,
+      "pendingSequence": 74,
+      "activeSequence": 73,
+      "clock": 12.619999999999944
+    },
+    {
+      "kind": "encounter-terminal-wait",
+      "at": 12.619999999999944
+    },
+    {
+      "kind": "drained-old-draw",
+      "at": 12.619999999999944
+    }
+  ],
+  "recovery": {
+    "ok": false,
+    "message": "Error: AbortError: Native gate preparation cancelled\n    at worker.onmessage (http://127.0.0.1:5286/src/simulation/simulation-authority-client.js:120:4260)",
+    "ms": 5.399999998509884
+  },
+  "browserErrors": [
+    "THREE.WebGPURenderer: WebGPU Device Lost:\n\nMessage: Device was destroyed.\nReason: destroyed"
+  ],
+  "errors": [
+    "Error: Error: WebGPU device lost: Device was destroyed.\n    at http://127.0.0.1:5286/src/rendering/webgpu-world-surface.js:176:833\n    at worker.onmessage (http://127.0.0.1:5286/src/rendering/webgpu-world-client.js:31:760)",
+    "Error: Error: AbortError: Native gate preparation cancelled\n    at worker.onmessage (http://127.0.0.1:5286/src/simulation/simulation-authority-client.js:120:4260)\n    at worker.onmessage (http://127.0.0.1:5286/src/simulation/worker-hosted-runtime.js:35:34)"
+  ]
+}

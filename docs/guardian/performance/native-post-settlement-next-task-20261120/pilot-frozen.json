@@ -1,0 +1,23 @@
+{
+  "baseCommit": "087d5c546369907492fb360a62d669b65a0903a4",
+  "files": {
+    "tools/guardian/audit_native_farm_birth_world_owner.mjs": "1026080eabc40f27859eaa6bcde6ecd7568156887b03448abe7f3ef13c4fc3b8",
+    "tests/browser/native-farm-birth-world-owner.js": "0f4857dd65f2ae256ce41bdfb0937a27cd59e18b018a7aaa1927ff78d3b71106",
+    "tests/browser/native-farm-birth-task-scenario.js": "198685f7107aa0bf56f94ac04e219de9477240b30b98f84db498d81a15f05f15",
+    "tests/browser/fixtures/native-farm-birth-audit-worker.js": "54d8d5f4e1358a92967e48751be5ae417ab2d658f5b077c1608688a02397167b",
+    "tests/browser/native-post-settlement-task-scenario.js": "4779ec583ead09fb0e7ddc8cd54d3e78321aea009177d3189ac607413a1835f4"
+  },
+  "cases": [
+    {
+      "label": "olderMale",
+      "profile": "olderMale",
+      "output": ".cache/native-next-task-pilot-olderMale.json",
+      "log": ".cache/native-next-task-pilot-olderMale.log",
+      "startedAt": "2026-11-20T08:58:01.960Z",
+      "finishedAt": "2026-11-20T08:59:50.390Z",
+      "wallMs": 108428,
+      "exitCode": 1
+    }
+  ],
+  "scope": "QA-only same ordinary authority and actual first settlement followed by next crop maturity and second Task14. Initial semantic second crop matures70 seconds later; Game.advance and original producer/ports/bodies remain ordinary."
+}

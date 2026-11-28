@@ -1,0 +1,331 @@
+{
+  "version": 1,
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 73.79999999701977
+    }
+  },
+  "scope": "Calificación DEV. Desierto sin portón, un trabajador incapacitado y el READY de Home19 retenido en el preparador original.",
+  "raw": {
+    "file": "E:/wild-guardians-qa/pending-wounded-home19-20261126/nvidia-3.json",
+    "sha256": "17ba49eadeb247940e84dbb5ce27529c8af27ee615d09295dcc821f90423574f",
+    "preClientFix": {
+      "file": "E:/wild-guardians-qa/pending-wounded-home19-20261126/nvidia-2.json",
+      "sha256": "9670adaa88880bddd73282eeefc2a455faa5ac875bb3c4a211e356399a5a5a73",
+      "error": "Invalid replacement committed assignment"
+    }
+  },
+  "loss": {
+    "elapsed": 34.53999999999993,
+    "publication": 845,
+    "oldDraw": 398,
+    "pendingSteps": 0,
+    "held": {
+      "kind": "wounded-ready-held",
+      "id": 8,
+      "boundary": {
+        "version": 1,
+        "authorityEpoch": "2cc73a2a-3938-4e5f-9769-b7c56ab04be5/1",
+        "nativeSession": 1,
+        "ticket": 14,
+        "effectiveTime": 34.53999999999993
+      }
+    },
+    "source": {
+      "kind": "native-home-arrival-reference",
+      "version": 1,
+      "actorId": 900011,
+      "bodyId": 1,
+      "sourceHome": {
+        "kind": "native-home-route-attestation",
+        "version": 1,
+        "projectionVersion": 1,
+        "reference": {
+          "kind": "native-home-route-reference",
+          "version": 1,
+          "actorId": 900011,
+          "bodyId": 1,
+          "sourceRequest": {
+            "kind": "native-home-request-reference",
+            "version": 3,
+            "recoveryHit": 29210,
+            "authorityEpoch": "2cc73a2a-3938-4e5f-9769-b7c56ab04be5/1",
+            "nativeSession": 1,
+            "actorId": 900011,
+            "bodyId": 1,
+            "bodyFlags": 1,
+            "requestSequence": 14,
+            "requestedAt": 18.91999999999981,
+            "profile": 1,
+            "home": {
+              "villageId": 1,
+              "x": -5.800000000000001,
+              "z": 0.2
+            },
+            "pose": {
+              "x": -14.791069342739112,
+              "z": 2.2152638339379633,
+              "yaw": 0,
+              "radius": 0.28,
+              "runPhase": 24.509999999999973,
+              "walkPhase": 8.414999999999973,
+              "carryPhase": 9.5,
+              "runRemaining": 40
+            }
+          },
+          "expectedRouteHandle": {
+            "authorityEpoch": "2cc73a2a-3938-4e5f-9769-b7c56ab04be5/1",
+            "session": 1,
+            "slot": 0,
+            "generation": 10
+          },
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "2cc73a2a-3938-4e5f-9769-b7c56ab04be5/1",
+            "nativeSession": 1,
+            "ticket": 13,
+            "effectiveTime": 18.91999999999981
+          },
+          "sourceControlSequence": 14,
+          "endTime": 34.50918544303032
+        },
+        "preparedReference": {
+          "kind": "native-home-route-reference",
+          "version": 1,
+          "actorId": 900011,
+          "bodyId": 1,
+          "sourceRequest": {
+            "kind": "native-home-request-reference",
+            "version": 3,
+            "recoveryHit": 29210,
+            "authorityEpoch": "2cc73a2a-3938-4e5f-9769-b7c56ab04be5/1",
+            "nativeSession": 1,
+            "actorId": 900011,
+            "bodyId": 1,
+            "bodyFlags": 1,
+            "requestSequence": 14,
+            "requestedAt": 18.91999999999981,
+            "profile": 1,
+            "home": {
+              "villageId": 1,
+              "x": -5.800000000000001,
+              "z": 0.2
+            },
+            "pose": {
+              "x": -14.791069342739112,
+              "z": 2.2152638339379633,
+              "yaw": 0,
+              "radius": 0.28,
+              "runPhase": 24.509999999999973,
+              "walkPhase": 8.414999999999973,
+              "carryPhase": 9.5,
+              "runRemaining": 40
+            }
+          },
+          "expectedRouteHandle": {
+            "authorityEpoch": "2cc73a2a-3938-4e5f-9769-b7c56ab04be5/1",
+            "session": 1,
+            "slot": 0,
+            "generation": 10
+          },
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "2cc73a2a-3938-4e5f-9769-b7c56ab04be5/1",
+            "nativeSession": 1,
+            "ticket": 12,
+            "effectiveTime": 18.91999999999981
+          },
+          "sourceControlSequence": 14,
+          "endTime": 34.50918544303032
+        },
+        "assignmentSequence": 15,
+        "gateIds": []
+      },
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "2cc73a2a-3938-4e5f-9769-b7c56ab04be5/1",
+        "nativeSession": 1,
+        "ticket": 14,
+        "effectiveTime": 34.53999999999993
+      },
+      "sourceControlSequence": 15,
+      "pose": {
+        "x": -5.800000190734863,
+        "z": 0.20000000298023224,
+        "yaw": 0.7853976791094822,
+        "radius": 0.28,
+        "runPhase": 29.96621490506065,
+        "walkPhase": 8.414999999999973,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      },
+      "profile": 1,
+      "bodyFlags": 1
+    },
+    "worker": {
+      "id": "worker-900011",
+      "status": "incapacitated",
+      "nativeRouteAdmission": "native-home",
+      "incapacitated": true,
+      "hits": 2,
+      "x": -5.800000190734863,
+      "z": 0.20000000298023224,
+      "heading": 0.7853976791094822,
+      "runPhase": 29.96621490506065,
+      "walkPhase": 8.414999999999973,
+      "carryPhase": 9.5,
+      "runRemaining": 40
+    }
+  },
+  "replacement": {
+    "basePublication": 781,
+    "publication": 845,
+    "sequence": 1,
+    "clockElapsed": 34.53999999999993,
+    "motionStart": 18.91999999999981,
+    "motionEnd": 34.50918544303032,
+    "arrived": true,
+    "worldBoundary": {
+      "version": 1,
+      "authorityEpoch": "2cc73a2a-3938-4e5f-9769-b7c56ab04be5/1",
+      "nativeSession": 1,
+      "ticket": 13,
+      "effectiveTime": 18.91999999999981
+    },
+    "assignmentSequence": 15,
+    "bodyId": 1,
+    "relativeTime": 15.589214324951172,
+    "nativeHome": {
+      "kind": "native-home-route-reference",
+      "version": 1,
+      "actorId": 900011,
+      "bodyId": 1,
+      "sourceRequest": {
+        "kind": "native-home-request-reference",
+        "version": 3,
+        "recoveryHit": 29210,
+        "authorityEpoch": "2cc73a2a-3938-4e5f-9769-b7c56ab04be5/1",
+        "nativeSession": 1,
+        "actorId": 900011,
+        "bodyId": 1,
+        "bodyFlags": 1,
+        "requestSequence": 14,
+        "requestedAt": 18.91999999999981,
+        "profile": 1,
+        "home": {
+          "villageId": 1,
+          "x": -5.800000000000001,
+          "z": 0.2
+        },
+        "pose": {
+          "x": -14.791069342739112,
+          "z": 2.2152638339379633,
+          "yaw": 0,
+          "radius": 0.28,
+          "runPhase": 24.509999999999973,
+          "walkPhase": 8.414999999999973,
+          "carryPhase": 9.5,
+          "runRemaining": 40
+        }
+      },
+      "expectedRouteHandle": {
+        "authorityEpoch": "2cc73a2a-3938-4e5f-9769-b7c56ab04be5/1",
+        "session": 1,
+        "slot": 0,
+        "generation": 10
+      },
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "2cc73a2a-3938-4e5f-9769-b7c56ab04be5/1",
+        "nativeSession": 1,
+        "ticket": 13,
+        "effectiveTime": 18.91999999999981
+      },
+      "sourceControlSequence": 14,
+      "endTime": 34.50918544303032
+    },
+    "activationElapsed": 34.53999999999993,
+    "pendingSteps": 0
+  },
+  "arrival": {
+    "retryPrepared": {
+      "version": 1,
+      "authorityEpoch": "2cc73a2a-3938-4e5f-9769-b7c56ab04be5/1",
+      "nativeSession": 1,
+      "ticket": 15,
+      "effectiveTime": 34.53999999999993
+    },
+    "acquired": {
+      "version": 1,
+      "authorityEpoch": "2cc73a2a-3938-4e5f-9769-b7c56ab04be5/1",
+      "nativeSession": 1,
+      "ticket": 16,
+      "effectiveTime": 34.53999999999993
+    },
+    "retiredSequence": 16,
+    "absentFrame": {
+      "sequence": 3,
+      "boundary": {
+        "version": 1,
+        "authorityEpoch": "2cc73a2a-3938-4e5f-9769-b7c56ab04be5/1",
+        "nativeSession": 1,
+        "ticket": 16,
+        "effectiveTime": 34.53999999999993
+      }
+    },
+    "worker": {
+      "id": "worker-900011",
+      "status": "home",
+      "incapacitated": true,
+      "hits": 2,
+      "x": -5.800000000000001,
+      "z": 0.2,
+      "heading": 0.7853976791094822,
+      "runPhase": 29.96621490506065,
+      "walkPhase": 8.414999999999973,
+      "carryPhase": 9.5,
+      "runRemaining": 40
+    },
+    "finalElapsed": 34.579999999999934,
+    "drawDrained": true
+  },
+  "events": [
+    {
+      "id": "event-29209",
+      "type": "WorkerHit",
+      "targetId": "worker-900011",
+      "simulationTime": 12.179999999999954
+    },
+    {
+      "id": "event-29210",
+      "type": "WorkerIncapacitated",
+      "targetId": "worker-900011",
+      "simulationTime": 12.619999999999944
+    },
+    {
+      "id": "event-29211",
+      "type": "AnimalRetreating",
+      "targetId": "animal-1000000",
+      "simulationTime": 12.619999999999944
+    },
+    {
+      "id": "event-29212",
+      "type": "RaidEnded",
+      "simulationTime": 14.339999999999907
+    }
+  ],
+  "diagnostics": {
+    "expectedDeviceLoss": "THREE.WebGPURenderer: WebGPU Device Lost:\n\nMessage: Device was destroyed.\nReason: destroyed",
+    "runtimeErrors": []
+  }
+}

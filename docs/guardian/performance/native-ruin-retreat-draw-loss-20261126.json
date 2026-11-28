@@ -1,0 +1,138 @@
+{
+  "scenario": "Terminal Draw loss during an acquired Retreat after center ruin in the gated Desert raid.",
+  "qualification": {
+    "qualifyAnimalCrop": true,
+    "qualifyFarmFlee": true,
+    "ordinary": false,
+    "workers": 1,
+    "animals": 1
+  },
+  "hardware": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "edge": "158.0.4370.33",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja"
+  },
+  "ruin": {
+    "center": "structure-2",
+    "polygon": 9,
+    "ticket": 28,
+    "preparedAt": 63.10000000000275,
+    "acquiredAt": 63.120000000002754,
+    "revisionsBefore": [
+      3,
+      130,
+      26
+    ],
+    "revisionsAfter": [
+      3,
+      131,
+      26
+    ]
+  },
+  "source": {
+    "hold": 6,
+    "checkpoint": 1041,
+    "publication": 1072,
+    "resumedPublication": 1073,
+    "actor": 1000001,
+    "body": 2,
+    "assignment": 25,
+    "at": 63.45000000000278,
+    "pose": [
+      -17.91107438946582,
+      -11.618374104205184,
+      3.0736135784919756
+    ],
+    "phase": 25.29519651059967
+  },
+  "draws": {
+    "lastObservedOriginal": {
+      "sequence": 436,
+      "elapsed": 63.120000000002754,
+      "worldTicket": 28,
+      "routeTicket": 26,
+      "executionEpoch": 60.50000000000253,
+      "age": 2.619999885559082
+    },
+    "firstReplacement": {
+      "sequence": 1,
+      "elapsed": 63.45000000000278,
+      "worldTicket": 28,
+      "routeTicket": 27,
+      "executionEpoch": 60.50000000000253,
+      "age": 2.9499998092651367
+    },
+    "postRetreat": {
+      "sequence": 52,
+      "elapsed": 68.34000000000258,
+      "worldTicket": 28,
+      "routeTicket": null,
+      "executionEpoch": null,
+      "age": null
+    }
+  },
+  "events": [
+    {
+      "type": "StructureHit",
+      "simulationTime": 45.60000000000126,
+      "target": "structure-2",
+      "hp": 180
+    },
+    {
+      "type": "StructureHit",
+      "simulationTime": 48.350000000001494,
+      "target": "structure-2",
+      "hp": 160
+    },
+    {
+      "type": "StructureHit",
+      "simulationTime": 54.50000000000202,
+      "target": "structure-2",
+      "hp": 140
+    },
+    {
+      "type": "StructureHit",
+      "simulationTime": 59.92000000000248,
+      "target": "structure-2",
+      "hp": 120
+    },
+    {
+      "type": "StructureRuined",
+      "simulationTime": 63.120000000002754,
+      "target": "structure-2"
+    },
+    {
+      "type": "RaidEnded",
+      "simulationTime": 68.34000000000258
+    }
+  ],
+  "outcome": {
+    "centerStatus": "ruined",
+    "centerHp": 0,
+    "worker": "worker-900011",
+    "workerStatus": "home",
+    "replacementDrained": true,
+    "webGpuMessages": 0,
+    "deviceLossCallbacks": 1,
+    "uncaughtDeviceLossPageErrors": 0
+  },
+  "evidence": {
+    "baselineDeterministic": {
+      "commit": "657038b418ef4c2c07af157f6c03df8e20f1eecf",
+      "elapsed": 52.30000000000183,
+      "worldTicket": 28,
+      "routeTicket": 27,
+      "recoverySource": null,
+      "receiptSha256": "b23f18c89ef0a77f846614b8db76b1561cfdaec85f2d97aa3f72ebeb001fa791"
+    },
+    "receiptSha256": "f92d6fd63c4672b8f6e9d534d14fc776785ca28628c623931875747fe4caacd6",
+    "traceSha256": "f37ba11d3fdbf8dd5061d776347816ab7fcf2bd4ea17386828f4e67e6ebaada7",
+    "traceBytes": 52775495,
+    "dataLossOccurred": false
+  }
+}

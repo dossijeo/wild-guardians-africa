@@ -1,0 +1,137 @@
+{
+  "scope": "Edge normal window; GTX 1660; eight-animal saved raid; 20 s nominal windows; sparse asynchronous lag samples, not GPU timestamps",
+  "results": [
+    {
+      "id": "baseline",
+      "headless": false,
+      "gpu": {
+        "vendorId": 4318,
+        "deviceId": 8580,
+        "subSysId": 291977282,
+        "revision": 161,
+        "vendorString": "",
+        "deviceString": "NVIDIA GeForce GTX 1660",
+        "driverVendor": "NVIDIA",
+        "driverVersion": "32.0.15.8129"
+      },
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "isFallbackAdapter": false
+      },
+      "frames": {
+        "count": 617,
+        "mean": 33.54957050243113,
+        "p95": 33.375,
+        "p99": 33.395000000004075,
+        "max": 100.02999999999884
+      },
+      "lag": [
+        0.0500000000001819,
+        6.250000000022737,
+        7.550000000027467
+      ],
+      "pending": [
+        0,
+        32,
+        32
+      ],
+      "cost": {
+        "n": 197,
+        "pump95": 67.92999999970198,
+        "render95": 54.44999999552965,
+        "total95": 111.70499999821186
+      }
+    },
+    {
+      "id": "staged",
+      "headless": false,
+      "gpu": {
+        "vendorId": 4318,
+        "deviceId": 8580,
+        "subSysId": 291977282,
+        "revision": 161,
+        "vendorString": "",
+        "deviceString": "NVIDIA GeForce GTX 1660",
+        "driverVendor": "NVIDIA",
+        "driverVersion": "32.0.15.8129"
+      },
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "isFallbackAdapter": false
+      },
+      "frames": {
+        "count": 614,
+        "mean": 33.55067589576548,
+        "p95": 33.375,
+        "p99": 33.400000000001455,
+        "max": 100.03500000000349
+      },
+      "lag": [
+        0.0500000000001819,
+        4.850000000017644,
+        7.2000000000261934
+      ],
+      "pending": [
+        0,
+        32,
+        32
+      ],
+      "cost": {
+        "n": 215,
+        "pump95": 48.17000000178814,
+        "render95": 52.54499999433756,
+        "total95": 88.59000000357628
+      }
+    },
+    {
+      "id": "staged-repeat2",
+      "headless": false,
+      "gpu": {
+        "vendorId": 4318,
+        "deviceId": 8580,
+        "subSysId": 291977282,
+        "revision": 161,
+        "vendorString": "",
+        "deviceString": "NVIDIA GeForce GTX 1660",
+        "driverVendor": "NVIDIA",
+        "driverVersion": "32.0.15.8129"
+      },
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "isFallbackAdapter": false
+      },
+      "frames": {
+        "count": 616,
+        "mean": 33.60409902597402,
+        "p95": 33.375,
+        "p99": 33.400000000001455,
+        "max": 166.66999999999825
+      },
+      "lag": [
+        0,
+        5.650000000020555,
+        7.750000000028194
+      ],
+      "pending": [
+        0,
+        32,
+        31
+      ],
+      "cost": {
+        "n": 231,
+        "pump95": 47.42000000178814,
+        "render95": 54.350000001490116,
+        "total95": 88.9349999949336
+      }
+    }
+  ]
+}

@@ -1,0 +1,274 @@
+{
+  "results": [
+    {
+      "info": {
+        "kind": "ready",
+        "actor": {
+          "id": "animal-5062",
+          "species": "hyena"
+        },
+        "from": {
+          "x": 99.96735439214194,
+          "z": 23.545667891478097,
+          "status": "entering"
+        },
+        "to": {
+          "x": 99.56335847489316,
+          "z": 22.685849713694967
+        },
+        "future": {
+          "x": 98.75536664039561,
+          "z": 20.96621335812871
+        },
+        "forecast": [
+          {
+            "x": 99.56335847489316,
+            "z": 22.685849713694967
+          },
+          {
+            "x": 99.48255929144341,
+            "z": 22.51388607813834
+          },
+          {
+            "x": 99.40176010799365,
+            "z": 22.341922442581716
+          },
+          {
+            "x": 99.3209609245439,
+            "z": 22.16995880702509
+          },
+          {
+            "x": 99.24016174109414,
+            "z": 21.997995171468464
+          },
+          {
+            "x": 99.15936255764439,
+            "z": 21.826031535911838
+          },
+          {
+            "x": 99.07856337419463,
+            "z": 21.654067900355212
+          },
+          {
+            "x": 98.99776419074487,
+            "z": 21.482104264798586
+          },
+          {
+            "x": 98.91696500729512,
+            "z": 21.31014062924196
+          },
+          {
+            "x": 98.83616582384536,
+            "z": 21.138176993685335
+          },
+          {
+            "x": 98.75536664039561,
+            "z": 20.96621335812871
+          }
+        ],
+        "startTime": 3429.9999999975803,
+        "endTime": 3430.249999997581,
+        "biome": "sabana"
+      },
+      "hold": {
+        "accepted": true,
+        "at": 3430.249999997581,
+        "point": {
+          "x": 99.56335847489316,
+          "z": 22.685849713694967
+        }
+      },
+      "worker": {
+        "kind": "changed",
+        "token": "command-1",
+        "barrier": 1,
+        "stopSafe": true,
+        "futureBlocked": true,
+        "actorUnchanged": true,
+        "interruptedAt": 3,
+        "future": {
+          "x": 98.75536664039561,
+          "z": 20.96621335812871
+        },
+        "queries": 5616,
+        "elapsedMs": 305.9000000022352,
+        "event": {
+          "worldVersion": 2,
+          "at": 3430.249999997581,
+          "point": {
+            "x": 99.56335847489316,
+            "z": 22.685849713694967
+          },
+          "version": 2
+        }
+      },
+      "decision": {
+        "accepted": true
+      },
+      "frames": {
+        "count": 10,
+        "max": 33.38500000163913
+      },
+      "moving": {
+        "count": 3394,
+        "centerX": 313.0721862109605,
+        "centerY": 225.63435474366528,
+        "hash": 591880879
+      },
+      "before": {
+        "count": 6465,
+        "centerX": 316.799690641918,
+        "centerY": 200.95328692962104,
+        "hash": 1948396376
+      },
+      "held": {
+        "count": 6465,
+        "centerX": 316.799690641918,
+        "centerY": 200.95328692962104,
+        "hash": 1948396376
+      },
+      "after": {
+        "count": 6465,
+        "centerX": 316.799690641918,
+        "centerY": 200.95328692962104,
+        "hash": 1948396376
+      },
+      "scope": "Isolated reconstructed native simulation, real animal positions sampled five steps apart with a static-world direct sweep. A separately reconstructed copy forecasts ten positions and Worker adds a diagnostic barrier across this forecast, not a game command. Shader shows one static surrogate with relative displacement; no dynamic-body proof, Rapier, real input, live world or production integration."
+    },
+    {
+      "info": {
+        "kind": "ready",
+        "actor": {
+          "id": "animal-5062",
+          "species": "hyena"
+        },
+        "from": {
+          "x": 99.96735439214194,
+          "z": 23.545667891478097,
+          "status": "entering"
+        },
+        "to": {
+          "x": 99.56335847489316,
+          "z": 22.685849713694967
+        },
+        "future": {
+          "x": 98.75536664039561,
+          "z": 20.96621335812871
+        },
+        "forecast": [
+          {
+            "x": 99.56335847489316,
+            "z": 22.685849713694967
+          },
+          {
+            "x": 99.48255929144341,
+            "z": 22.51388607813834
+          },
+          {
+            "x": 99.40176010799365,
+            "z": 22.341922442581716
+          },
+          {
+            "x": 99.3209609245439,
+            "z": 22.16995880702509
+          },
+          {
+            "x": 99.24016174109414,
+            "z": 21.997995171468464
+          },
+          {
+            "x": 99.15936255764439,
+            "z": 21.826031535911838
+          },
+          {
+            "x": 99.07856337419463,
+            "z": 21.654067900355212
+          },
+          {
+            "x": 98.99776419074487,
+            "z": 21.482104264798586
+          },
+          {
+            "x": 98.91696500729512,
+            "z": 21.31014062924196
+          },
+          {
+            "x": 98.83616582384536,
+            "z": 21.138176993685335
+          },
+          {
+            "x": 98.75536664039561,
+            "z": 20.96621335812871
+          }
+        ],
+        "startTime": 3429.9999999975803,
+        "endTime": 3430.249999997581,
+        "biome": "sabana"
+      },
+      "hold": {
+        "accepted": true,
+        "at": 3430.249999997581,
+        "point": {
+          "x": 99.56335847489316,
+          "z": 22.685849713694967
+        }
+      },
+      "worker": {
+        "kind": "changed",
+        "token": "command-1",
+        "barrier": 1,
+        "stopSafe": true,
+        "futureBlocked": true,
+        "actorUnchanged": true,
+        "interruptedAt": 3,
+        "future": {
+          "x": 98.75536664039561,
+          "z": 20.96621335812871
+        },
+        "queries": 5609,
+        "elapsedMs": 305.33500000089407,
+        "event": {
+          "worldVersion": 2,
+          "at": 3430.249999997581,
+          "point": {
+            "x": 99.56335847489316,
+            "z": 22.685849713694967
+          },
+          "version": 2
+        }
+      },
+      "decision": {
+        "accepted": true
+      },
+      "frames": {
+        "count": 10,
+        "max": 33.42000000178814
+      },
+      "moving": {
+        "count": 3394,
+        "centerX": 313.0721862109605,
+        "centerY": 225.63435474366528,
+        "hash": 591880879
+      },
+      "before": {
+        "count": 6465,
+        "centerX": 316.799690641918,
+        "centerY": 200.95328692962104,
+        "hash": 1948396376
+      },
+      "held": {
+        "count": 6465,
+        "centerX": 316.799690641918,
+        "centerY": 200.95328692962104,
+        "hash": 1948396376
+      },
+      "after": {
+        "count": 6465,
+        "centerX": 316.799690641918,
+        "centerY": 200.95328692962104,
+        "hash": 1948396376
+      },
+      "scope": "Isolated reconstructed native simulation, real animal positions sampled five steps apart with a static-world direct sweep. A separately reconstructed copy forecasts ten positions and Worker adds a diagnostic barrier across this forecast, not a game command. Shader shows one static surrogate with relative displacement; no dynamic-body proof, Rapier, real input, live world or production integration."
+    }
+  ]
+}

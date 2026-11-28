@@ -1,0 +1,153 @@
+{
+  "trace": [
+    {
+      "frame": 46,
+      "at": 49394.64,
+      "drawMs": 241.68000000715256,
+      "afterApply": true,
+      "spans": [
+        {
+          "label": "world-frame-stage:1",
+          "duration": 11.319999992847443
+        },
+        {
+          "label": "renderer.render",
+          "duration": 195.74500000476837,
+          "programsBefore": 88,
+          "programsAfter": 89,
+          "caller": "Error\n    at object.<computed> [as render] (eval at evaluate (:311:30), <anonymous>:9:904)\n    at http://127.0.0.1:5175/src/rendering/scene.js:917:82\n    at withRenderOrigin (http://127.0.0.1:5175/src/rendering/render-origin.js:20:34)\n    at WorldScene.drawWorldFrame (http://127.0.0.1:5175/src/rendering/scene.js:915:28)\n    at object.<computed> [as drawWorldFrame] (eval at evaluate (:311:30), <anonymous>:9:660)\n    at draw (http://127.0.0.1:5175/src/rendering/scene.js:914:86)\n    at WorldScene.drawRenderFrame (http://127.0.0.1:5175/src/rendering/scene.js:914:293)\n    at http://127.0.0.1:5175/src/rendering/scene.js:912:268\n    at loadingSyncWitness (http://127.0.0.1:5175/src/rendering/loading-sync-witness.js:5:13)\n    at WorldScene.render (http://127.0.0.1:5175/src/rendering/scene.js:912:202)",
+          "newPrograms": [
+            {
+              "id": 92,
+              "usedTimes": 1,
+              "cacheKey": "39,40,onBeforeCompile() {\n  }"
+            }
+          ],
+          "materials": [
+            {
+              "object": "",
+              "type": "Mesh",
+              "material": "",
+              "materialType": "RawShaderMaterial"
+            }
+          ]
+        },
+        {
+          "label": "renderer.render",
+          "duration": 8.064999997615814,
+          "programsBefore": 89,
+          "programsAfter": 89,
+          "caller": null
+        },
+        {
+          "label": "renderer.render",
+          "duration": 21.549999997019768,
+          "programsBefore": 89,
+          "programsAfter": 90,
+          "caller": null
+        },
+        {
+          "label": "drawWorldFrame",
+          "duration": 228.18000000715256
+        },
+        {
+          "label": "world-frame-draw",
+          "duration": 228.1850000023842
+        }
+      ]
+    }
+  ],
+  "applicationAt": 49396.685000002384,
+  "network": true,
+  "chunks": 25,
+  "animals": 20,
+  "initMs": 852.1299999952316,
+  "tickMs": 1029.9399999976158,
+  "responseMs": 1195.9799999892712,
+  "applyDelayMs": 5.8900000005960464,
+  "applyMs": 1.875,
+  "projectionBytes": 7164,
+  "snapshotBytes": 54146,
+  "actorsApplied": 21,
+  "actorsChanged": 20,
+  "eventsReceived": 41,
+  "eventTypes": [
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "StructureRuined",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "CropHit",
+    "CropDestroyed",
+    "AnimalLogicalHit",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable"
+  ],
+  "localCenter": {
+    "status": "ruined",
+    "hp": 0,
+    "collapseRemaining": 0
+  },
+  "workerCenter": {
+    "status": "ruined",
+    "hp": 0,
+    "collapseRemaining": 3.1780134079895106e-15
+  },
+  "observerCount": 41,
+  "simulationObserverCount": 0,
+  "fenceState": {
+    "received": 1,
+    "nextEvent": 41,
+    "displayed": 1,
+    "minimum": 1,
+    "pending": 0,
+    "fault": false,
+    "hide": false
+  },
+  "frames": {
+    "count": 149,
+    "p95": 33.41500000000087,
+    "p99": 33.44499999999971,
+    "max": 233.37999999999738
+  },
+  "renderMs": {
+    "count": 150,
+    "p95": 32.90500000119209,
+    "p99": 37.064999997615814,
+    "max": 241.68000000715256
+  },
+  "fullSnapshotEqual": true,
+  "sceneErrors": [],
+  "scope": "One 70-step publication from a Worker-owned clone into a frozen mangrove-islands QA scene after a diagnostic center-damage action. Structure status and HP, actor x/z/heading and events are applied under a diagnostic fence; all events are classified as structural. Scene and simulation have separate native worlds. A snapshot is requested separately for validation. No full collapse transition, physics manager, input, reliable event delivery, collision validation, GPU timing, visual interpolation or production authority is demonstrated."
+}

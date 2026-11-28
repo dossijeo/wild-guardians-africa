@@ -1,0 +1,94 @@
+{
+  "scope": "Unchanged native-islet raid, normal simulation without Attack or pixel picking; real historical event admission and completion, not visual parity or a performance benchmark",
+  "completed": true,
+  "started": "2026-11-07T14:08:30.053Z",
+  "fixture": "docs/qa/mangrove-magic-20261026/hydraulic-v2-raid/fixture.json",
+  "backend": "WebGPU",
+  "device": {
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "isFallbackAdapter": false
+    },
+    "maxVertexBuffers": 8
+  },
+  "eventBaseline": {
+    "starts": 0,
+    "boundaries": 0,
+    "events": 0,
+    "completed": 0
+  },
+  "eventMetrics": {
+    "starts": 1,
+    "boundaries": 2,
+    "events": 4,
+    "completed": 1
+  },
+  "finalState": {
+    "closed": false,
+    "sequence": 1233,
+    "lastElapsed": 22.499999999999833,
+    "fault": false,
+    "historicalEventMetrics": {
+      "starts": 1,
+      "boundaries": 2,
+      "events": 4,
+      "completed": 1
+    },
+    "historicalEventRejection": {
+      "sequence": 1146,
+      "start": 14.349999999999774,
+      "end": 14.389999999999773,
+      "stage": "certificate",
+      "reason": "animal-participant",
+      "actorId": "animal-20"
+    },
+    "timing": {
+      "samples": 512,
+      "decode": {
+        "mean": 0.28153320285491645,
+        "p95": 0.5199999809265137,
+        "max": 1.2249999642372131
+      },
+      "reconcile": {
+        "mean": 0.3716894534882158,
+        "p95": 0.4950000047683716,
+        "max": 4.235000014305115
+      },
+      "hooks": {
+        "mean": 2.0758691406808794,
+        "p95": 6.8450000286102295,
+        "max": 13.410000026226044
+      },
+      "total": {
+        "mean": 2.7290917970240116,
+        "p95": 7.784999966621399,
+        "max": 14.305000007152557
+      }
+    }
+  },
+  "autoRecovery": {
+    "closed": false,
+    "recovering": false,
+    "stage": "idle",
+    "current": true
+  },
+  "errors": [],
+  "sourceReportSha256": "eadbfcfc73f1e4e9426fefa40c7dd023461052042ce883df45d99111cd8532c0",
+  "sourceFiles": {
+    "src/rendering/confirmed-gpu-motion.js": "42036260a475630db026d366064e23678b1703d7bb96ff243f8f79317c03e6f3",
+    "src/rendering/confirmed-historical-event-playback.js": "98ba781d19a7b9115bb6b56e6a8c37d43e395b4701d0de714c4e3d1b3a043d53",
+    "src/rendering/confirmed-historical-motion-group.js": "ff9af2b8b9215f3c7063c46ad834ad97868491749f9b49d5c4998fba80bbb5d0",
+    "src/rendering/webgpu-animal-roster.js": "da925401ad62b9e1dbe67168e9422ede0f9fef298b58869b73fc28c9bc065b5f",
+    "src/rendering/webgpu-worker-roster.js": "d918c6d6746df485944544ebff1655bf01ccaab7821cc0cba29d3dc545783d78"
+  },
+  "limitations": [
+    "Functional hardware test; not a performance benchmark or artistic parity validation.",
+    "Uses the unmodified native-islet raid without manually injected Attack.",
+    "Physical historical playback and device loss were verified in separate runs; their combined execution is not certified.",
+    "Unsupported intervals keep the ordinary confirmed boundary path."
+  ],
+  "fullReport": "historical-events-full.json.gz"
+}

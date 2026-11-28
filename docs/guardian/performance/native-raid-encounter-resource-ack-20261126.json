@@ -1,0 +1,135 @@
+{
+  "baseline": "530e59d0a7ce8889174df85a453939117975d53a",
+  "scope": "Control CPU privado con Game, WASM y los ports reales de preparación de recursos. El render registra un pase de prueba con los rigs originales en un Host remoto con cola determinista.",
+  "submitted": {
+    "draw": 6,
+    "native": {
+      "version": 1,
+      "sequence": 6,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "5965c20d-1f79-4f47-934a-1186a67fe66d/1",
+        "nativeSession": 1,
+        "ticket": 11,
+        "effectiveTime": 12.619999999999944
+      },
+      "elapsed": 12.619999999999944,
+      "assignment": 12
+    },
+    "age": 0,
+    "submittedFall": 0.46000000834465027
+  },
+  "heldResourceReply": {
+    "id": 6,
+    "result": {
+      "version": 1,
+      "sequence": 6,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "5965c20d-1f79-4f47-934a-1186a67fe66d/1",
+        "nativeSession": 1,
+        "ticket": 11,
+        "effectiveTime": 12.619999999999944
+      },
+      "elapsed": 12.619999999999944,
+      "assignment": 12
+    },
+    "firstActive": 5
+  },
+  "advance": {
+    "stepsExecuted": 2,
+    "at": 12.639999999999944,
+    "pose": [
+      -16.798109984199314,
+      2,
+      -1.5707963267948966,
+      1.6799999999999642
+    ],
+    "worker": {
+      "x": -14.520928903743672,
+      "z": 2.5523155738541687,
+      "fall": 3.061666507720947,
+      "exit": null,
+      "recovery": null,
+      "status": "incapacitated",
+      "incapacitated": true,
+      "hits": 2
+    },
+    "events": [
+      "event-29211"
+    ]
+  },
+  "negatives": {
+    "foreign": {
+      "error": "Invalid encounter submission receipt",
+      "committedThrough": 12.619999999999944,
+      "lastSubmittedFrame": 6,
+      "log": ".cache/flee-mixed/encounter-ack-foreign.log",
+      "sha256": "5ca62fc41218fb7386363f4eccf1d02ffc5ecd4e24c2f615699c63dbfd940959"
+    },
+    "wrong-ticket": {
+      "error": "Invalid encounter submission receipt",
+      "committedThrough": 12.619999999999944,
+      "lastSubmittedFrame": 6,
+      "log": ".cache/flee-mixed/encounter-ack-wrong-ticket.log",
+      "sha256": "74c1fa05007c0a9504b67ca81020753de3622f40c0b919c954f7c8045a46e8ce"
+    },
+    "wrong-time": {
+      "error": "Invalid encounter submission receipt",
+      "committedThrough": 12.619999999999944,
+      "lastSubmittedFrame": 6,
+      "log": ".cache/flee-mixed/encounter-ack-wrong-time.log",
+      "sha256": "363d223437bcf1f2e23405198851a20ba6c75f091210aa6cb9676c7332dadb50"
+    },
+    "wrong-assignment": {
+      "error": "Invalid encounter submission receipt",
+      "committedThrough": 12.619999999999944,
+      "lastSubmittedFrame": 6,
+      "log": ".cache/flee-mixed/encounter-ack-wrong-assignment.log",
+      "sha256": "bbe3a3c127a13288482b3bee6809d891006348b4a494e97087ca4724f3b6d80b"
+    },
+    "missing-witness": {
+      "error": "Encounter draw did not submit the acquired packet",
+      "committedThrough": 12.619999999999944,
+      "lastSubmittedFrame": 6,
+      "log": ".cache/flee-mixed/encounter-ack-missing-witness.log",
+      "sha256": "31689344359ffbc741076549232957052764a6f8a7f28b16199f03e442861484"
+    },
+    "failed-submit": {
+      "error": "Error: Test encounter queue submit failed\n    at queue.submit (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/.cache/flee-mixed/encounter-retreat-native.mjs:195:29)\n    at applyQueue (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/rendering/remote-webgpu-host.js:633:40)\n    at draw (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/rendering/remote-webgpu-host.js:868:12)\n    at Object.present (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/rendering/remote-webgpu-host.js:763:21)\n    at Object.present (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tests/helpers/native-production-authority.js:143:124)\n    at async file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/.cache/flee-mixed/encounter-retreat-native.mjs:196:9",
+      "committedThrough": 12.619999999999944,
+      "lastSubmittedFrame": 5,
+      "log": ".cache/flee-mixed/encounter-ack-failed-submit.log",
+      "sha256": "85c8a4c1a0730e93f426f5e1366560df16cbd066e0a3caa77995d51a08c2eb3b"
+    }
+  },
+  "result": {
+    "raidEndedAt": 14.339999999999907,
+    "getUpEndedAt": 18.91999999999981,
+    "centerHp": 600,
+    "errors": [],
+    "faults": []
+  },
+  "branchRegressions": {
+    "passed": 67,
+    "failed": 0,
+    "command": "node --test --test-concurrency=1 tests/native-resource-flush.test.js tests/native-resource-preparation-channel.test.js tests/native-route-control.test.js tests/native-intent-control-publication.test.js tests/native-production-quiescence.test.js"
+  },
+  "reproduction": [
+    "& .cache/flee-mixed/run-encounter-resource-ack.ps1",
+    "& .cache/flee-mixed/run-encounter-resource-ack.ps1 -Variant <variante> -Output encounter-ack-<variante>.log"
+  ],
+  "sha256": {
+    ".cache/flee-mixed/encounter-retreat-resource-port-loader.mjs": "d3cb30ef57b5f2374117c374e95953245d5586080d6ea389e7fa699c9f8df23b",
+    ".cache/flee-mixed/run-encounter-resource-ack.ps1": "abcfdff90aba5579983e5a3dca386e3c84c509e9517a017d1d3b648c3c2bf47e",
+    ".cache/flee-mixed/encounter-retreat-worker-loader.mjs": "49a2b8739d2ab9a2e8c1b44aa237e38c3e435b3379f39edfc869871553b6672c",
+    ".cache/flee-mixed/record-encounter-resource-ack.mjs": "ab4e6d22cd51a7348eceb5c64c727502f06565fd6f6a03a2117e7ff4fcf0416e",
+    ".cache/flee-mixed/encounter-retreat-resource-ack.log": "f55ce6d4587b83aa1c154f362edcb506b09cfc0376ce5f6f0327a5e08291c49e",
+    ".cache/flee-mixed/encounter-ack-impact.tap": "058fd02e0eb2e6e39e1d47c4afc5ffbd3b67b76eaecd6a669b0f8b1164dfd3ea"
+  },
+  "pending": [
+    "Cableado del participante en WorldSurface y captura del renderer completo",
+    "Integración del protocolo y del contrato nativo en producto",
+    "Pérdida terminal y visibilidad durante la espera, WebGPU física y modo ordinario"
+  ]
+}

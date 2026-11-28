@@ -1,0 +1,50 @@
+{
+  "date": "2026-11-09",
+  "audit": "/tests/browser/native-route-control-fence.html",
+  "adapter": {"architecture":"turing","description":"","device":"","vendor":"nvidia"},
+  "scope": "Real WASM AttackCrops events, preparation/draw Workers, GPU queue drain and uniform readback. Triangle only: no character animation, autonomous locomotion, physical mutation transaction or acceptance A-F.",
+  "runs": [
+    {
+      "backend": "webgpu",
+      "blockedMs": 500.06982421875,
+      "controlAppliedDuringBlock": true,
+      "drawFramesDuringBlock": 15,
+      "maxIntervalMs": 33.364990234375,
+      "gpuFence": {"accepted":true,"authorityEpoch":"9ad6e82a-9615-47b3-923f-03f50a2a1da2/1","effectiveTime":10.159045166015625,"fenceId":1,"fenceVersion":1,"receivedAt":1794226462288.425,"sequence":3,"type":"intent-control-fenced"},
+      "gpuFencedAt": 1794226462288.28,
+      "gpuRouteTimes": [10.15904426574707,10.504980087280273],
+      "nativeControl": {"accepted":3,"active":1,"admissions":2,"authorityEpoch":"9ad6e82a-9615-47b3-923f-03f50a2a1da2/1","closed":false,"effectiveTime":10.159045166015625,"oldEpoch":0,"revoked":1,"sequence":3},
+      "packets": 1,
+      "replayFrames": 15,
+      "revokedAt": 10.159045166015625
+    },
+    {
+      "backend": "webgpu",
+      "blockedMs": 500.074951171875,
+      "controlAppliedDuringBlock": true,
+      "drawFramesDuringBlock": 15,
+      "maxIntervalMs": 33.385009765625,
+      "gpuFence": {"accepted":true,"authorityEpoch":"c46b5b1f-db3a-40fc-9690-52c9bd9b0c9d/1","effectiveTime":10.160280029296876,"fenceId":1,"fenceVersion":1,"receivedAt":1794226463454.86,"sequence":3,"type":"intent-control-fenced"},
+      "gpuFencedAt": 1794226463454.7349,
+      "gpuRouteTimes": [10.160279273986816,10.508459091186523],
+      "nativeControl": {"accepted":3,"active":1,"admissions":2,"authorityEpoch":"c46b5b1f-db3a-40fc-9690-52c9bd9b0c9d/1","closed":false,"effectiveTime":10.160280029296876,"oldEpoch":0,"revoked":1,"sequence":3},
+      "packets": 1,
+      "replayFrames": 15,
+      "revokedAt": 10.160280029296876
+    },
+    {
+      "backend": "webgpu",
+      "blockedMs": 500.06005859375,
+      "controlAppliedDuringBlock": true,
+      "drawFramesDuringBlock": 15,
+      "maxIntervalMs": 33.3701171875,
+      "gpuFence": {"accepted":true,"authorityEpoch":"d38b275a-7728-4543-b8f6-2b85906db8b3/1","effectiveTime":10.18522509765625,"fenceId":1,"fenceVersion":1,"receivedAt":1794226464622.4202,"sequence":3,"type":"intent-control-fenced"},
+      "gpuFencedAt": 1794226464622.285,
+      "gpuRouteTimes": [10.185224533081055,10.533259391784668],
+      "nativeControl": {"accepted":3,"active":1,"admissions":2,"authorityEpoch":"d38b275a-7728-4543-b8f6-2b85906db8b3/1","closed":false,"effectiveTime":10.18522509765625,"oldEpoch":0,"revoked":1,"sequence":3},
+      "packets": 1,
+      "replayFrames": 15,
+      "revokedAt": 10.18522509765625
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "base": "e29ddeb3b6c36c2300ae1416b0ce23b0fed6c055",
+  "scope": "Desert, ordinary selected target restored before the first hit. The second center approach ends during the exact ruin substep. Device loss while the next Strike27 READY is retained. Normal Hosted clock before the third hit and after the final reacquisition.",
+  "raw": {
+    "file": "center-ruin-arrival-recovery-final-nvidia-20261127.json",
+    "sha256": "4dfb54ff1038daadb7a87e56bc70d368825d6ebfc0fff8fa2713ddde6f78227b"
+  },
+  "inputs": [
+    {
+      "path": ".cache/center-ruin-active-strike-input.json",
+      "sha256": "3c0c2c34cd9206a1dbed07db59369ab0264d68f16e0eb8301da02d2c1f7742fa"
+    },
+    {
+      "path": ".cache/center-ruin-arrival-recovery-physical.mjs",
+      "sha256": "6b5d02da76e134cd19e41451bb5e1fa532450fa921f7eebb3bf0067b01bb693c"
+    },
+    {
+      "path": ".cache/center-ruin-arrival-recovery-browser.mjs",
+      "sha256": "0ead3e64bdd8534762fa6ab4014b4dc1a5f0fd4e054c65428d5df383f6b2ae52"
+    },
+    {
+      "path": ".cache/center-ruin-arrival-worker.mjs",
+      "sha256": "d693f45e3c09c71ae043c33a3de8b9c8037f91a7df8aa6fe711ebfae42663a43"
+    },
+    {
+      "path": "src/world/wild-engine/spatial-savanna.wasm",
+      "sha256": "f891df7c17eda5fa9123208c3ef10a379f495c6f65540931be12865f756db139"
+    },
+    {
+      "path": "public/wild-engine/spatial-threaded.wasm",
+      "sha256": "637d2dbf967f7bd28ec25283ff1aefe9716a639206610bf69a44e912d94438c8"
+    }
+  ],
+  "snapshotSHA256": "01d2ce26dc45382edb923578fb9d4b66cf197431970ae21b0672d0d8f3bf5046",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing"
+  },
+  "original": {
+    "ruinTicket": 15,
+    "polygon": 10,
+    "submit": 289,
+    "heldAt": 37.12800000000027,
+    "approachTicket": 14,
+    "endpoint": 37.11600000000027,
+    "strikeReady": 16,
+    "strikeCommitted": false,
+    "deviceLoss": "Error: Error: WebGPU device lost: Device was destroyed."
+  },
+  "replacement": {
+    "checkpoint": 521,
+    "sequence": 529,
+    "activationSequence": 529,
+    "firstFrame": 1,
+    "elapsed": 37.12800000000027,
+    "age": 2.1964406967163086,
+    "actorId": 1000001,
+    "bodyId": 1,
+    "x": -19.34705352783203,
+    "z": -17.71636199951172,
+    "phase": 12.10641186649201,
+    "yaw": -2.6904487332264315,
+    "particles": {
+      "body": false,
+      "ash": true,
+      "smoke": {
+        "count": 84,
+        "hash": 1639018739
+      },
+      "debris": {
+        "count": 270,
+        "hash": 4169105141
+      },
+      "emitted": 105
+    },
+    "picking": {
+      "entityId": "animal-1000001",
+      "age": 2.1964406967163086,
+      "times": 6
+    }
+  },
+  "strike": {
+    "requestSequence": 15,
+    "ready": 17,
+    "ticket": 18,
+    "id": "attack-29219",
+    "hitAt": 41.79800000000067,
+    "count": 1,
+    "hp": 580
+  },
+  "retreat": {
+    "absenceFrame": 104,
+    "elapsed": 47.628000000001165,
+    "drained": true
+  },
+  "earlierRuns": [
+    {
+      "file": "center-ruin-arrival-recovery-nvidia-20261127.failure.json",
+      "reason": "Product client rejected the arrived descriptor before replacement attachment.",
+      "sha256": "4eb788bc4d8d31122e308c80db83dad4e68d62cfa22b92531f9eecb5fb0a9fb6"
+    },
+    {
+      "file": "center-ruin-arrival-recovery-client-nvidia-20261127.failure.json",
+      "reason": "Replacement submitted at the exact terminal age. The original audit camera placed the actor outside the viewport.",
+      "sha256": "09c4235ca72ecb86a65582efbab7f4e2b3b8ccb2312d9f11de1d22a3bc2352d5"
+    }
+  ],
+  "errors": []
+}

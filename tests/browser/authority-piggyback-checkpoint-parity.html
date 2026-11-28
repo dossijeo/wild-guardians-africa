@@ -1,0 +1,17 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),game=fixture.diagnosticWorld().game,animal=game.raid.animals.find(a=>a.species==='hyena'&&!['gone','retreating'].includes(a.status));if(!animal)throw Error('No active hyena');const source=serialize(game),target={id:animal.id,x:animal.x,z:animal.z};fixture.dispose();
+ const a=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,dynamicPhysics:true,compactPhysicsPoses:true,session:'piggyback-checkpoint'}),b=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,dynamicPhysics:true,compactPhysicsPoses:true,session:'no-checkpoint'}),send=async(client,command)=>{const result=client.submit(command);if(!result.accepted)throw Error(result.reason);return result.result;};
+ function active(p){return (p.physicsPoses??(p.physicsPose?[p.physicsPose]:[])).filter(p=>p.active)} function equal(x,y,where){if(x.snapshot!==y.snapshot||JSON.stringify(x.events)!==JSON.stringify(y.events)||JSON.stringify(active(x))!==JSON.stringify(active(y)))throw Error('Snapshot/active physics/events diverged: '+where);}
+ try{await Promise.all([a.ready,b.ready]);const hit={kind:'castAttack',id:'checkpoint-parity-hit',targetId:target.id,x:target.x,z:target.z};let [left,right]=await Promise.all([send(a,hit),send(b,hit)]);if(!left.value||!right.value)throw Error('Attack rejected');equal(left,right,'attack');
+ for(let i=0;i<150;i++){[left,right]=await Promise.all([send(a,{kind:'advance',seconds:.05,nightFastForward:true}),send(b,{kind:'advance',seconds:.05,nightFastForward:true})]);equal(left,right,'before '+i);if(left.physicsPose?.active)break;}if(!left.physicsPose?.active)throw Error('No active Rapier pose');
+ let activeSteps=0,checkpoints=0;for(let i=0;i<120;i++){const command={kind:'advance',seconds:.05,nightFastForward:true},checkpoint=i%4===0;[left,right]=await Promise.all([send(a,checkpoint?{...command,visualTerrain:true}:command),send(b,command)]);equal(left,right,'after '+i);if(active(left).length)activeSteps++;if(checkpoint){if(!left.terrainCheckpoint||left.terrainCheckpoint.sequence!==left.sequence)throw Error('Missing checkpoint');checkpoints++;}}
+ if(!activeSteps)throw Error('No active pose compared after checkpoint');
+ return {target:target.id,compared:120,checkpoints,activeSteps,scope:'Two simulation Workers with identical Rapier impact; checkpoints are attached to already ordered advance commands. Compares confirmed states, events and active physics poses; inactive checkpoint-only poses are excluded.'};
+ }finally{a.dispose();b.dispose();}
+};window.ready=true;
+</script>

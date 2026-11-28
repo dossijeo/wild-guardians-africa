@@ -1,0 +1,13 @@
+{
+  "command": [
+    "node20",
+    "tools/guardian/migration-support/cli.mjs",
+    "a5",
+    "--run",
+    "--scenario",
+    "steady"
+  ],
+  "status": 2,
+  "stdout": "Evidence: C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\.cache\\migration-support\\2026-11-19T18-14-23.849Z-a5-1644\n{\n  \"report\": \"C:\\\\Users\\\\Gabriel\\\\source\\\\repos\\\\wild-guardians-africa\\\\.cache\\\\migration-support\\\\2026-11-19T18-14-23.849Z-a5-1644\\\\report.json\",\n  \"stable\": true,\n  \"results\": [\n    {\n      \"status\": \"passed\",\n      \"counts\": {\n        \"tests\": 187,\n        \"pass\": 187,\n        \"fail\": 0,\n        \"cancelled\": 0,\n        \"skipped\": 0,\n        \"todo\": 0\n      },\n      \"log\": \".cache/migration-support/2026-11-19T18-14-23.849Z-a5-1644/components.log\"\n    }\n  ],\n  \"missingGpu\": true,\n  \"gateClosed\": false\n}\n",
+  "stderr": ""
+}

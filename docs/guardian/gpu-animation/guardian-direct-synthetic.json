@@ -1,0 +1,70 @@
+{
+  "seed": 1729,
+  "scope": "Synthetic deterministic CPU microbenchmark; no Wild Engine, scene rendering, gameplay, real hardware GPU, graphical equivalence or allocation measurements. Candidate scans world arrays itself and falls back to original; different placements are intentional. Timing includes all synchronous operations in each placement, not construction of the real occluder index.",
+  "runs": [
+    {
+      "mode": "original",
+      "scenes": 400,
+      "direct": 0,
+      "changed": 0,
+      "finiteErrors": 0,
+      "rays": 22295,
+      "occupancy": 3175,
+      "placements": 9424,
+      "ms": {
+        "mean": 0.06057799999999944,
+        "p95": 0.1664000000000101,
+        "p99": 0.3351000000000113,
+        "max": 0.42910000000000537
+      }
+    },
+    {
+      "mode": "direct",
+      "scenes": 400,
+      "direct": 102,
+      "changed": 45,
+      "finiteErrors": 0,
+      "rays": 20776,
+      "occupancy": 2959,
+      "placements": 9506,
+      "ms": {
+        "mean": 0.11866249999999852,
+        "p95": 0.4218999999999937,
+        "p99": 0.5645999999999844,
+        "max": 3.253099999999961
+      }
+    },
+    {
+      "mode": "direct",
+      "scenes": 400,
+      "direct": 102,
+      "changed": 45,
+      "finiteErrors": 0,
+      "rays": 20776,
+      "occupancy": 2959,
+      "placements": 9506,
+      "ms": {
+        "mean": 0.05415075000000002,
+        "p95": 0.15050000000002228,
+        "p99": 0.20420000000001437,
+        "max": 0.2814000000000192
+      }
+    },
+    {
+      "mode": "original",
+      "scenes": 400,
+      "direct": 0,
+      "changed": 0,
+      "finiteErrors": 0,
+      "rays": 22295,
+      "occupancy": 3175,
+      "placements": 9424,
+      "ms": {
+        "mean": 0.05560425000000024,
+        "p95": 0.15059999999999718,
+        "p99": 0.2036000000000513,
+        "max": 0.3482000000000198
+      }
+    }
+  ]
+}

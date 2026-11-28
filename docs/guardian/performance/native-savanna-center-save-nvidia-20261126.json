@@ -1,0 +1,122 @@
+{
+  "scenario": "Recarga de aproximación y Strike27 de Sabana 714 con los civiles refugiados",
+  "sourceRevision": "66e215a758b65faac3dbe761ef924b2521631aa2",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing"
+  },
+  "cases": [
+    {
+      "name": "moving-approach",
+      "artifacts": {
+        "savanna-center-moving-approach-checkpoint.json": "030ba15ffb261e2bc167f3416aa3afa17a465220520a1d58a0d57d0997e38d02",
+        "savanna-center-moving-approach-nvidia.json": "232cc389bc4f9c0fba755e3f3579f11ea676cf558fec2a26ca98507209a49049"
+      },
+      "actor": "animal-23",
+      "bodyId": 1,
+      "quota": 5,
+      "firstDraw": {
+        "kind": 26,
+        "time": 2745.750000000065,
+        "frame": 44,
+        "preparedTicket": 1,
+        "acquiredTicket": 2,
+        "relativeAge": 0,
+        "adoptedSequence": 4,
+        "x": 72,
+        "z": 33.52343907171894,
+        "yaw": 3.141592653589793,
+        "phase": 1.3000000000047294
+      },
+      "hit": {
+        "id": "event-103",
+        "attackId": "attack-101",
+        "elapsed": 2770.500000000155,
+        "centerHp": 125
+      },
+      "ruin": {
+        "ticket": 7,
+        "polygon": 9,
+        "elapsed": 2773.7000000001667
+      },
+      "retreatTicket": 6,
+      "terminal": {
+        "events": [
+          {
+            "type": "RaidEnded",
+            "id": "event-107",
+            "elapsed": 2783.8500000002036
+          },
+          {
+            "type": "GameOver",
+            "id": "event-109",
+            "elapsed": 2783.8500000002036
+          }
+        ],
+        "frame": 395,
+        "elapsed": 2783.8500000002036,
+        "bindings": 0,
+        "balance": 671,
+        "drained": true,
+        "traceDataLoss": false
+      }
+    },
+    {
+      "name": "acquired-strike",
+      "artifacts": {
+        "savanna-center-acquired-strike-checkpoint.json": "9ee08948c10924d3eb7bbf9fc218ec13d1a8f1c293c145abaea31c2447d22183",
+        "savanna-center-acquired-strike-nvidia.json": "def9df0924554c1faeaaa61c40e1f472d13693dc3e5c6121e4f88bb33321482b"
+      },
+      "actor": "animal-23",
+      "bodyId": 1,
+      "quota": 5,
+      "firstDraw": {
+        "kind": 27,
+        "time": 2769.05000000015,
+        "frame": 61,
+        "preparedTicket": 1,
+        "acquiredTicket": 2,
+        "relativeAge": 0,
+        "adoptedSequence": 4,
+        "x": 82.16815185546875,
+        "z": 4.047098159790039,
+        "yaw": 2.9388740909628397,
+        "phase": 23.297122620259874,
+        "clipAge": 0.699999988079071,
+        "savedRemaining": 0.8416667051587865
+      },
+      "hit": {
+        "id": "event-103",
+        "attackId": "attack-101",
+        "elapsed": 2769.900000000153,
+        "centerHp": 125
+      },
+      "ruin": {
+        "ticket": 5,
+        "polygon": 9,
+        "elapsed": 2773.1000000001645
+      },
+      "retreatTicket": 4,
+      "terminal": {
+        "events": [
+          {
+            "type": "RaidEnded",
+            "id": "event-107",
+            "elapsed": 2784.450000000206
+          },
+          {
+            "type": "GameOver",
+            "id": "event-109",
+            "elapsed": 2784.450000000206
+          }
+        ],
+        "frame": 190,
+        "elapsed": 2784.450000000206,
+        "bindings": 0,
+        "balance": 671,
+        "drained": true,
+        "traceDataLoss": false
+      }
+    }
+  ]
+}

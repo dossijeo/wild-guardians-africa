@@ -1,0 +1,15 @@
+# Fuente nativa para detener una Task en marcha
+
+La familia 25 prepara una parada sobre una Task que está ejecutándose. Comprueba el mismo propietario nativo que la lectura de ejecución y exige que coincidan actor, sesión, slot, generación, asignación y cuerpo. La preparación conserva la ruta, la reserva y la pose. Al confirmar la parada, el cierre existente retiene el cuerpo en su pose ejecutada, revoca la generación anterior y deja que un trabajador independiente siga avanzando.
+
+La parada comparte con Stroll12 y Farm24 el cálculo de cuerpos y puertas afectados, el ticket y la revalidación. Si la ruta avanza mientras se preparan sus recursos, se vuelve a calcular la pose en la frontera actual y se admite el ticket anterior sólo si conserva los mismos propietarios. Si la Task llega al destino o si la reconciliación cambia los hechos que justificaban la parada, la propuesta queda obsoleta. El codec mantiene la identidad de cada familia.
+
+La decisión sigue el patrón de `resetMoveTarget` y `requestMoveTarget` de DetourCrowd 1.6.0, que retiran o sustituyen el destino sobre el mismo agente. En Wild Guardians, el propietario nativo ya retiene el cuerpo mediante una parada preparada. Se amplía esa vía y se conserva la política laboral de Game. [Código de DetourCrowd](https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp#L607-L662).
+
+Las 18 pruebas de fuente cubren ambos módulos nativos, el rechazo de identidades obsoletas y de rutas Farm o Stroll, los efectos de preparar y cancelar, la revalidación durante el movimiento, la llegada durante la espera, el rechazo de un ticket incorrecto y la confirmación única. Antes de implementar la familia 25, los diez casos iniciales fallaban porque el módulo rechazaba ese tipo de propuesta. Los fixtures confirman por el ABI de pruebas. El recorrido con recibos reales de GPU sigue pendiente.
+
+Se recompilaron los módulos standalone y pthread. Los nombres y tipos anteriores del standalone y las funciones públicas anteriores de la fábrica pthread se verificaron junto a dos entradas nuevas, `nav_task_route_stop_proposal_version` y `nav_task_route_stop_proposal_translation_ptr`. La primera comprobación privada de ABI falló por una ruta relativa incorrecta. La verificación corregida pasó sobre los mismos binarios antes de instalarlos.
+
+Quedan por conectar la parada al canal de recursos y control, la representación retenida, la liberación de la tarea y la solicitud de Home sobre el mismo cuerpo. Game sigue rechazando el cruce de turno de una Task en marcha hasta contar con ese recorrido. Los criterios e-R3, f-R4 y C4 permanecen abiertos.
+
+La regresión seleccionada pasó 5.177 de 5.178 pruebas en 394 archivos y la compilación de producto terminó correctamente. Una prueba de comparación de binarios candidatos mantuvo su omisión histórica. Se verificaron 9.054 entradas congeladas, incluidos los módulos instalados. El manifiesto contiene los comandos, los hashes y el alcance de la selección, que excluye el trabajo de instrumentación concurrente. [Evidencia de validación](performance/native-task-route-stop-source-20261120/manifest.json).

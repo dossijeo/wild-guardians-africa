@@ -1,0 +1,531 @@
+{
+  "base": "3c97b03baec45df71926c70dc677aea4cd62a6df",
+  "baseline": {
+    "log": "gated-task25-before-20261127.log",
+    "sha256": "e9a819156504a32a6b2286a55fd93d2e62b1c642c943ad7710c1b34592ad34c5",
+    "cuts": [
+      {
+        "leadToShiftEnd": 0.55,
+        "at": 10.749999999999892,
+        "opening": 1,
+        "lastTaskTicket": 4,
+        "stopTicket": 7,
+        "effectiveTime": 10.699999999999891,
+        "bodyId": 1,
+        "stopGates": [
+          1000000,
+          1,
+          1
+        ],
+        "pendingHomeTicket": 8,
+        "submitted": [
+          "native-task-route-stopped-body"
+        ]
+      },
+      {
+        "leadToShiftEnd": 2,
+        "at": 12.249999999999572,
+        "opening": 1,
+        "lastTaskTicket": 4,
+        "stopTicket": 7,
+        "effectiveTime": 12.14999999999957,
+        "bodyId": 1,
+        "stopGates": [],
+        "pendingHomeTicket": 8,
+        "submitted": [
+          "native-task-route-stopped-body"
+        ]
+      }
+    ],
+    "loss": [
+      {
+        "time": 0.55,
+        "hold": {
+          "error": "Error: Native intent production failed: Native resource preparer closed"
+        },
+        "route": null,
+        "faults": [
+          "Error: Native resource preparer closed"
+        ]
+      },
+      {
+        "time": 2,
+        "hold": {
+          "error": "Error: Native intent production failed: Native resource preparer closed"
+        },
+        "route": null,
+        "faults": [
+          "Error: Native resource preparer closed"
+        ]
+      }
+    ]
+  },
+  "candidate": {
+    "log": "gated-task25-recover-source-20261127.log",
+    "sha256": "1c58e6762f988787b7866d1591fc1e6532e9ee78ce2fa4d0451f077ac1bec41e",
+    "cuts": [
+      {
+        "leadToShiftEnd": 0.4,
+        "at": 10.599999999999918,
+        "opening": 0.7499999999998597,
+        "lastTaskTicket": 4,
+        "stopTicket": 7,
+        "effectiveTime": 10.549999999999917,
+        "bodyId": 1,
+        "stopGates": [
+          1000000,
+          1,
+          0.7499999999998597
+        ],
+        "pendingHomeTicket": 8,
+        "submitted": [
+          "native-task-route-stopped-body",
+          "native-task-route-stopped-gate"
+        ]
+      },
+      {
+        "leadToShiftEnd": 2,
+        "at": 12.249999999999572,
+        "opening": 1,
+        "lastTaskTicket": 4,
+        "stopTicket": 7,
+        "effectiveTime": 12.14999999999957,
+        "bodyId": 1,
+        "stopGates": [],
+        "pendingHomeTicket": 8,
+        "submitted": [
+          "native-task-route-stopped-body"
+        ]
+      }
+    ],
+    "loss": [
+      {
+        "time": 0.4,
+        "hold": {
+          "value": {}
+        },
+        "route": {
+          "kind": 25,
+          "actorId": 900011
+        },
+        "faults": []
+      },
+      {
+        "time": 2,
+        "hold": {
+          "value": {}
+        },
+        "route": {
+          "kind": 25,
+          "actorId": 900011
+        },
+        "faults": []
+      }
+    ]
+  },
+  "missingMotorControl": {
+    "tap": "gated-task25-missing-motor-20261127.tap",
+    "sha256": "8f7fcb3f73e35f108d5b3d08544453f2d33fa57ed9db46053559e25358f5595f"
+  },
+  "regressions": {
+    "tap": "gated-task25-impact-20261127.tap",
+    "sha256": "cede911bee15fb3d41ee5af6eed28ebc498239b750d95bf60aef3321ae034754",
+    "passed": 83,
+    "failed": 0,
+    "skipped": 0
+  },
+  "terrainSupport": {
+    "before": {
+      "tap": "task25-gated/terrain-axis-before.tap",
+      "sha256": "554644444a2611bcebd48b75a2ef9da3532efc21e412ef4bc9e00adb9ed83dc7"
+    },
+    "after": {
+      "tap": "task25-gated/terrain-axis-after.tap",
+      "sha256": "fe62b0371923392deba3bd46cfc773804bdae32a9bc94e6ba462aca7f86d37a7",
+      "passed": 13
+    },
+    "native": {
+      "file": "task25-gated/terrain-on-native-after.log",
+      "sha256": "32e6b96988e1050dbb0e45c8714c4169d7cc4bf707da148bc98f0a8f4fe308af",
+      "cases": [
+        {
+          "leadToShiftEnd": 0.4,
+          "valid": true,
+          "segments": 2
+        },
+        {
+          "leadToShiftEnd": 2,
+          "valid": true,
+          "segments": 4
+        }
+      ]
+    }
+  },
+  "pickRayCalibration": {
+    "log": "task25-gated/nvidia-opening-ray-owner.log",
+    "sha256": "089e62e6428c872a5e4141a273a5c2cf13e5245e39532da50e10b92e8fcde10e",
+    "rays": 18,
+    "ready": 18,
+    "fixtureHeight": 15.578267097473145,
+    "visibleHeight": 16.928699493408203,
+    "delta": 1.3504323959350586,
+    "firstView": {
+      "root": [
+        -14,
+        16.9536994934082,
+        5.7
+      ],
+      "ray": [
+        [
+          -8,
+          24.581107139587402,
+          15.7
+        ],
+        [
+          -0.4191224240607056,
+          -0.5799844075065398,
+          -0.6985373867580504
+        ]
+      ],
+      "groundHit": [
+        -13.529968738911553,
+        16.928699493408203,
+        6.483385259354465
+      ]
+    },
+    "secondViewFrontEntity": "structure-2"
+  },
+  "pickAfterCalibration": {
+    "source": "task25-gated/nvidia-opening-visible-foot-qualified.failure.json",
+    "sha256": "f75a56862b2224d8ded37c2f66f4456365add69afd1872eac25f8a7c23e2cef7",
+    "pickLog": "task25-gated/nvidia-opening-visible-foot-qualified.log",
+    "pickLogSha256": "e4d9e7c6f912a1eab306f0c24ca927a99b9cb5709d1dd27907dbbbceb94064d9",
+    "visibleHeight": 16.928699493408203,
+    "entityId": "worker-900011",
+    "hitPoint": [
+      -13.932200759895961,
+      17.707260819292305,
+      5.812998544927116
+    ],
+    "draw": {
+      "adapter": "nvidia",
+      "original": 55,
+      "replacement": 1,
+      "holdId": 64,
+      "clock": 10.799999999999889,
+      "ticket": 7,
+      "opening": 0.6666666865348816,
+      "body": {
+        "age": 0.3999999761581421,
+        "x": -14,
+        "z": 5.699999809265137,
+        "yaw": 0.03211292251944542,
+        "phase": 0,
+        "runPhase": 23.25,
+        "walkPhase": 7.125,
+        "carryPhase": 9.5,
+        "arrived": 0
+      },
+      "visibleHeight": 16.928699493408203
+    },
+    "home18": 10,
+    "home19": 12,
+    "bodyId": 1,
+    "lastPublication": {
+      "sequence": 107,
+      "status": "returning"
+    }
+  },
+  "hardware": {
+    "file": "nvidia-opening-home19-projected.json",
+    "sha256": "4aa9135af7ca3bc76c75dc2ce1fc78200c05f5f0159ce7939fa47895e0246c2f",
+    "adapter": "nvidia",
+    "architecture": "turing",
+    "before": {
+      "before": {
+        "time": 250,
+        "elapsed": 10.399999999999897,
+        "x": -14,
+        "z": 5.7,
+        "admission": "native-task",
+        "status": "walking",
+        "sequence": 54
+      },
+      "after": {
+        "time": 250.05,
+        "elapsed": 10.449999999999896,
+        "x": -14,
+        "z": 5.7,
+        "admission": "native-task",
+        "status": "walking",
+        "sequence": 55
+      },
+      "openingBefore": 0.5833333333331641,
+      "openingAfter": 0.6666666666664955,
+      "reference": {
+        "kind": "native-task-route-stop-reference",
+        "version": 1,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ea31ff6c-61c3-411a-861b-89bc63d27ff7/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 10.399999999999897
+        },
+        "sourceRoute": {
+          "actorId": 900011,
+          "assignmentSequence": 5,
+          "routeHandle": {
+            "authorityEpoch": "ea31ff6c-61c3-411a-861b-89bc63d27ff7/1",
+            "session": 1,
+            "slot": 0,
+            "generation": 3
+          }
+        },
+        "routes": [
+          {
+            "nativeRoute": {
+              "actorId": 900011,
+              "assignmentSequence": 5,
+              "routeHandle": {
+                "authorityEpoch": "ea31ff6c-61c3-411a-861b-89bc63d27ff7/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 3
+              }
+            },
+            "bodyId": 1,
+            "state": 4,
+            "resumeGeneration": 4
+          }
+        ],
+        "gates": [
+          {
+            "gateId": 1000000,
+            "mechanism": 1
+          }
+        ]
+      }
+    },
+    "stopAt": 10.449999999999896,
+    "originalDraw": 53,
+    "firstReplacement": {
+      "frame": 1,
+      "hold": 64,
+      "clock": 10.799999999999889,
+      "opening": 0.6666666865348816,
+      "visibleHeight": 16.928699493408203
+    },
+    "pick": [
+      {
+        "view": 0,
+        "dx": 0,
+        "dz": 0,
+        "h": 0.7,
+        "id": "worker-900011",
+        "incomplete": false,
+        "hitPoint": {
+          "x": -13.932200759895961,
+          "y": 17.707260819292305,
+          "z": 5.812998544927116
+        }
+      }
+    ],
+    "home": {
+      "ticket": 10,
+      "previousReadyTicket": 8,
+      "body": 1,
+      "arrived": 13.09999999999984,
+      "retirementTicket": 12
+    },
+    "retirementProjectionSequence": 109,
+    "lastDraw": 23,
+    "firstAbsenceDraw": 22,
+    "drained": true,
+    "unexpectedErrors": []
+  },
+  "twoGates": {
+    "cpu": {
+      "log": "accepted-two-gates.log",
+      "sha256": "47ba91a635559c807930c663094a68cf06b096bf0f72321a48a371d15f5803d6",
+      "testLog": "task25-two-gate-focus.tap",
+      "testLogSha256": "d5b7923e9452c685e4f09e91a7b599ad0ebcf81d88ab6e71cc4b9affe6f48088",
+      "passed": 12,
+      "cuts": [
+        {
+          "leadToShiftEnd": 0.4,
+          "at": 10.599999999999918,
+          "opening": 0.7499999999998597,
+          "stopTicket": 7,
+          "stoppedAt": 10.549999999999917,
+          "stoppedMotors": [
+            1000000,
+            1,
+            0.7499999999998597,
+            1000001,
+            2,
+            0
+          ],
+          "pendingHomeTicket": 8,
+          "references": [
+            "native-task-route-stopped-body",
+            "native-task-route-stopped-gate",
+            "native-task-route-stopped-gate"
+          ]
+        },
+        {
+          "leadToShiftEnd": 2,
+          "at": 12.249999999999572,
+          "opening": 1,
+          "stopTicket": 7,
+          "stoppedAt": 12.14999999999957,
+          "stoppedMotors": [
+            1000001,
+            2,
+            0
+          ],
+          "pendingHomeTicket": 8,
+          "references": [
+            1000000,
+            "native-task-route-stopped-body",
+            "native-task-route-stopped-gate"
+          ]
+        }
+      ],
+      "omittedMotorControls": [
+        "first replacement submission",
+        "latest fence before activation"
+      ]
+    },
+    "hardware": {
+      "openingAndFuture": {
+        "file": "nvidia-task25-opening-future.json",
+        "sha256": "bc02e1e4e2b40dea47d287855270c4e97fb16fff1693ce9b4a0535cdcf568542",
+        "architecture": "turing",
+        "adapter": "nvidia",
+        "original": 53,
+        "replacement": 1,
+        "holdId": 63,
+        "clock": 10.74999999999989,
+        "ticket": 7,
+        "motors": [
+          {
+            "gateId": 1000000,
+            "mechanism": 1,
+            "opening": 0.6666666865348816
+          },
+          {
+            "gateId": 1000001,
+            "mechanism": 2,
+            "opening": 0
+          }
+        ],
+        "settled": [],
+        "body": {
+          "age": 0.3999999761581421,
+          "x": -14,
+          "z": 5.699999809265137,
+          "yaw": 0.03211292251944542,
+          "phase": 0,
+          "runPhase": 23.25,
+          "walkPhase": 7.125,
+          "carryPhase": 9.5,
+          "arrived": 0
+        },
+        "visibleHeight": 16.928699493408203,
+        "pick": {
+          "view": 0,
+          "dx": 0,
+          "dz": 0,
+          "h": 0.7,
+          "id": "worker-900011",
+          "incomplete": false,
+          "hitPoint": {
+            "x": -13.932200556777847,
+            "y": 17.707261054652296,
+            "z": 5.812998883457315
+          }
+        },
+        "home": {
+          "previousReadyTicket": 8,
+          "ticket": 10,
+          "bodyId": 1,
+          "retirementTicket": 12,
+          "retiredAt": 12.899999999999844,
+          "snapshot": 106,
+          "firstAbsenceDraw": 23
+        },
+        "drained": true,
+        "unexpectedErrors": []
+      },
+      "settledAndFuture": {
+        "file": "nvidia-task25-settled-future-qualified.json",
+        "sha256": "43643460f370c9512bac6654fe6346af253c89b3812dfc4ecb104461b34387c6",
+        "architecture": "turing",
+        "adapter": "nvidia",
+        "original": 63,
+        "replacement": 1,
+        "holdId": 93,
+        "clock": 12.499999999999483,
+        "ticket": 7,
+        "motors": [
+          {
+            "gateId": 1000001,
+            "mechanism": 2,
+            "opening": 0
+          }
+        ],
+        "settled": [
+          {
+            "gateId": 1000000,
+            "mechanism": 1,
+            "opening": 1
+          }
+        ],
+        "body": {
+          "age": 1.9999998807907104,
+          "x": -13.95145320892334,
+          "z": 7.2112202644348145,
+          "yaw": 0.03211292251944542,
+          "phase": 1.399999976158142,
+          "runPhase": 23.25,
+          "walkPhase": 9.225000381469727,
+          "carryPhase": 9.5,
+          "arrived": 0
+        },
+        "settledLeaf": {
+          "entityId": "structure-1000000",
+          "opening": 1,
+          "native": false,
+          "visible": true,
+          "moved": true
+        },
+        "visibleHeight": 16.928699493408203,
+        "pick": {
+          "view": 0,
+          "dx": 0,
+          "dz": 0,
+          "h": 1,
+          "id": "worker-900011",
+          "incomplete": false,
+          "hitPoint": {
+            "x": -13.890054158772102,
+            "y": 17.997330044024224,
+            "z": 7.298796020205815
+          }
+        },
+        "home": {
+          "previousReadyTicket": 8,
+          "ticket": 10,
+          "bodyId": 1,
+          "retirementTicket": 12,
+          "retiredAt": 16.549999999999418,
+          "snapshot": 174,
+          "firstAbsenceDraw": 34
+        },
+        "drained": true,
+        "unexpectedErrors": []
+      }
+    }
+  }
+}

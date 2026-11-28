@@ -1,5 +1,6 @@
-import {centerCulture} from '../centers.js';
+import {centerCulture,centerFootprint} from '../centers.js';
 import {addSpatialCenter,removeSpatialCenter} from './spatial-center-bridge.js';
+import {captureSpatialPolygons} from './spatial-state.js';
 
 // A work center changes navigation only when its footprint appears, moves or
 // disappears. Damage and repair on an intact center keep its polygon resident.
@@ -40,5 +41,34 @@ export function createSpatialCenterMirror(core){
     }
     installed.clear();
   }
-  return {sync,clear,revision:()=>revision,polygonId:id=>installed.get(id)?.polygonId??null};
+  function prepareRuinAdoption(center,state,id){
+    const source=installed.get(center.id);
+    const current=()=>!!source&&installed.get(center.id)===source&&source.polygonId===id&&
+      state.structures.includes(center)&&center.status==='collapsing'&&source.signature===signature(center,state);
+    if(!current())throw Error('Center ruin lost its installed footprint');
+    return {valid:current,adopt(){
+      if(!current())throw Error('Center ruin adoption changed');
+      installed.delete(center.id);
+      revision++;
+    }};
+  }
+  function preparePlacementAdoption(center,state,polygonId){
+    const stamp=signature(center,state),points=centerFootprint(center,state).footprint;
+    const [polygon]=captureSpatialPolygons(core.wasm,polygonId,{includeWorkCenter:true});
+    if(installed.has(center.id)||polygon?.workCenter!==Number(center.id.slice(10))||polygon.passMask!==0||
+       points.length!==polygon.points.length||points.some(({x,z},i)=>Math.fround(x)!==polygon.points[i].x||Math.fround(z)!==polygon.points[i].z))
+      throw Error('Placed center lost its native footprint');
+    return ()=>{
+      if(installed.has(center.id)||!state.structures.includes(center)||signature(center,state)!==stamp)
+        throw Error('Placed center adoption changed');
+      installed.set(center.id,{signature:stamp,polygonId});revision++;
+    };
+  }
+  function workCenterOwners(){
+    return new Map([...installed].flatMap(([id,{polygonId}])=>{
+      const owner=Number(/^structure-([1-9][0-9]*)$/.exec(id)?.[1]??0);
+      return owner?[[polygonId,owner]]:[];
+    }));
+  }
+  return {sync,clear,prepareRuinAdoption,preparePlacementAdoption,workCenterOwners,revision:()=>revision,polygonId:id=>installed.get(id)?.polygonId??null};
 }

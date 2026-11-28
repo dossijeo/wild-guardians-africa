@@ -1,0 +1,101 @@
+{
+  "revision": "86a5646456fea7798a216007dd25cdb52cb0b196",
+  "artifact": "native-savanna-lion-first-strike-dawn-cut.json",
+  "sha256": "b1a1690ef2c424678db4f6db73c48caebb1404b43d535a493e9be0f750f71357",
+  "input": {
+    "artifact": "native-menu-campaign-714-released-floor-event-recovery-dawn-4.json",
+    "sha256": "f709274acf6e9bf4c21cb5818bdd91a282cb04ad4902041110aab574c7c53595"
+  },
+  "scenario": {
+    "biome": "sabana",
+    "seed": 714,
+    "profile": "nativeWorkerLifecycle",
+    "fromFourthDawn": true,
+    "backlogInjection": false
+  },
+  "request": {
+    "id": 5,
+    "ticket": 9,
+    "effectiveTime": 2137.898709451765,
+    "minSequence": 6888
+  },
+  "initialSurface": {
+    "at": 152.795166015625,
+    "applied": 6771,
+    "received": 6795
+  },
+  "sourceAppliedMs": 5762.340087890625,
+  "beforeRoster": {
+    "timeline": {
+      "count": 16,
+      "sumMs": 559.4399999827147,
+      "maxMs": 51.32999999821186
+    },
+    "previewInsideTimeline": {
+      "count": 126,
+      "sumMs": 63.11000019311905,
+      "maxMs": 6.9749999940395355
+    },
+    "render": {
+      "count": 16,
+      "sumMs": 1088.570000037551,
+      "maxMs": 82.66500000655651
+    },
+    "frameEndAwait": {
+      "count": 15,
+      "sumMs": 3918.140000015497,
+      "maxMs": 416.2699999958277
+    },
+    "afterEndFrameReturnToSend": {
+      "count": 15,
+      "sumMs": 1299.05517578125,
+      "maxMs": 236.635009765625
+    },
+    "receiptToAdmission": {
+      "count": 15,
+      "sumMs": 1347.89013671875,
+      "maxMs": 105.570068359375
+    },
+    "waitForResourcesInsideAdmission": {
+      "count": 15,
+      "sumMs": 0.0947265625,
+      "maxMs": 0.010009765625
+    },
+    "drawCompletedToAck": {
+      "count": 15,
+      "sumMs": 492.43212890625,
+      "maxMs": 117.030029296875
+    },
+    "batches": {
+      "count": 5648,
+      "operations": 19940,
+      "precedingFrame": 1377,
+      "lastFrame": 1393
+    }
+  },
+  "lastPreparationPhases": [
+    {
+      "stage": "roster-start",
+      "ms": 5855.380126953125,
+      "sequence": 6890
+    },
+    {
+      "stage": "roster-end",
+      "ms": 8556.52001953125,
+      "sequence": 6890
+    },
+    {
+      "stage": "pipeline-start",
+      "ms": 8557.175048828125,
+      "sequence": 6890
+    }
+  ],
+  "timeoutMs": 10004.250244140625,
+  "result": {
+    "message": "Native resource preparation timed out",
+    "drawn": false,
+    "drained": false
+  },
+  "pageErrors": [],
+  "unattributedConsole404s": 2
+}

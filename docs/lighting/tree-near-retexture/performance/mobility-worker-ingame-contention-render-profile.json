@@ -1,0 +1,345 @@
+{
+  "scope": "Manual diagnostic ticks and real WorldScene rendering, with synthetic independent navigation load. Not an integrated worker simulation or a gameplay equivalence proof.",
+  "results": [
+    {
+      "mode": "idle",
+      "authority": "spatial-wasm",
+      "mangroveNetwork": true,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "animalCount": 20,
+      "simulationTime": 3008.116515000029,
+      "frames": {
+        "count": 149,
+        "p95": 66.79000000000087,
+        "p99": 233.3199999999997,
+        "max": 966.5900000000038
+      },
+      "overlapFrames": {
+        "count": 0,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "simulationMs": {
+        "count": 149,
+        "p95": 5.9849999994039536,
+        "p99": 9.405000001192093,
+        "max": 11.574999995529652
+      },
+      "renderMs": {
+        "count": 149,
+        "p95": 53.99500000476837,
+        "p99": 75.27499999850988,
+        "max": 224.96000000089407
+      },
+      "longFrames": [
+        {
+          "index": 1,
+          "start": 47481.515,
+          "end": 48448.105,
+          "dt": 966.5900000000038,
+          "previous": {
+            "simulationMs": 920.6149999946356,
+            "renderMs": 49.57999999821186,
+            "tickProfile": {
+              "intents": 0.02499999850988388,
+              "physics": 0.7249999940395355,
+              "raid": 916.9050000011921,
+              "workers": 1.1699999943375587,
+              "reservations": 0.1850000023841858,
+              "arrivalPoint": 0,
+              "arrivalWalk": 0,
+              "arrivalEntrance": 0,
+              "prepareMotion": 7.3000000193715096,
+              "moveMotion": 0.9449999928474426,
+              "byStatus": {
+                "arriving": 0.27000000327825546
+              }
+            },
+            "renderStages": [
+              0.29500000178813934,
+              10.46000000089407,
+              0.2849999964237213,
+              1.1450000032782555,
+              1.0349999964237213,
+              3.910000003874302,
+              0,
+              0.004999995231628418,
+              0,
+              32.20000000298023
+            ],
+            "drawStages": {
+              "destruction": 0.02499999850988388,
+              "shadow": 17.54499999433756,
+              "rendererAux": 4.7349999994039536,
+              "sky": 0.125,
+              "depth": 4.800000004470348,
+              "rendererWorld": 26.179999999701977
+            },
+            "addedPrograms": [],
+            "programOwners": [],
+            "resourceCounts": {
+              "geometries": 353,
+              "textures": 280
+            },
+            "triangles": 517187,
+            "draws": 108
+          },
+          "hidden": false,
+          "simulationMs": 11.574999995529652,
+          "renderMs": 42.560000002384186
+        },
+        {
+          "index": 92,
+          "start": 52681.615,
+          "end": 52914.935,
+          "dt": 233.3199999999997,
+          "previous": {
+            "simulationMs": 3,
+            "renderMs": 224.96000000089407,
+            "tickProfile": {
+              "intents": 0.005000002682209015,
+              "physics": 0.005000002682209015,
+              "raid": 2.9299999997019768,
+              "workers": 0.01000000536441803,
+              "reservations": 0,
+              "arrivalPoint": 0,
+              "arrivalWalk": 0,
+              "arrivalEntrance": 0,
+              "prepareMotion": 2.060000017285347,
+              "moveMotion": 0.27000000327825546,
+              "byStatus": {
+                "home": 0
+              }
+            },
+            "renderStages": [
+              0.23999999463558197,
+              11.050000004470348,
+              0.26999999582767487,
+              0.5900000035762787,
+              0.7249999940395355,
+              1.6400000005960464,
+              0,
+              0,
+              0,
+              210.38499999791384
+            ],
+            "drawStages": {
+              "shadow": 16.714999996125698,
+              "rendererAux": 21.809999994933605,
+              "destruction": 0.16499999910593033,
+              "sky": 0.06000000238418579,
+              "depth": 0.6049999967217445,
+              "rendererWorld": 186.01500000059605
+            },
+            "addedPrograms": [
+              "40,41,onBeforeCompile() {\n  }",
+              "42,43,onBeforeCompile() {\n  }"
+            ],
+            "programOwners": [
+              {
+                "object": "",
+                "parent": "",
+                "material": "",
+                "type": "RawShaderMaterial",
+                "uniforms": [
+                  "uFineNoise",
+                  "uWorldOrigin",
+                  "uVP",
+                  "uLightVP",
+                  "uDamage",
+                  "uInner",
+                  "uMode",
+                  "uHoles",
+                  "uNoise",
+                  "uEye",
+                  "uSun",
+                  "uAlbedo",
+                  "uNormalMap",
+                  "uMR",
+                  "uShadow",
+                  "uIntactDepth",
+                  "uOpeningMask",
+                  "uResolution",
+                  "uAshAge",
+                  "uRepair",
+                  "uTime",
+                  "uShadowSize",
+                  "uShadows",
+                  "uEmbers",
+                  "uQuality",
+                  "uCinemaGround",
+                  "uBuildingAO",
+                  "uBuildingAOOn",
+                  "uWorldFogColor",
+                  "uWorldFogRange",
+                  "uWorldScale",
+                  "uWorldSun",
+                  "uWorldAmbient",
+                  "uToonModel",
+                  "uNight",
+                  "uNightLight",
+                  "uExposure",
+                  "uKind",
+                  "uSurfaceType",
+                  "uEnvEndpoints",
+                  "uNativeEnvEnabled",
+                  "uEnvDay",
+                  "uEnvNight",
+                  "uEnvYaw"
+                ],
+                "vertexStart": "precision highp float;precision highp int;layout(location=0)in vec3 aPos;layout(location=1)in vec3 aNormal;layout(location=2)in vec3 aOffset;layout(location=3)in vec3 aRotation;layout(location=4)in vec3 aScale;layout(location=5)in vec3 aColor;\nout vec3 vDebrisPosition,vDebrisNormal,vDebrisBase;unifo",
+                "geometry": "InstancedBufferGeometry",
+                "keys": [
+                  "40,41,onBeforeCompile() {\n  }"
+                ]
+              }
+            ],
+            "resourceCounts": {
+              "geometries": 464,
+              "textures": 277
+            },
+            "triangles": 4,
+            "draws": 1
+          },
+          "hidden": false,
+          "simulationMs": 3.839999996125698,
+          "renderMs": 47.59000000357628
+        }
+      ],
+      "firstTickNavCalls": {},
+      "regionSamples": [],
+      "hiddenFrames": 0,
+      "gpu": {
+        "reason": null,
+        "samples": 150,
+        "p95": 31.654912,
+        "p99": 40.373184
+      },
+      "jobs": [],
+      "actors": [
+        {
+          "id": "qa-beast-0",
+          "x": 95.46054529837984,
+          "z": -4.533146747871586,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-1",
+          "x": 96,
+          "z": -7.8994654528100865,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-2",
+          "x": 100.42552966286385,
+          "z": -7.524202703340917,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-3",
+          "x": 103.09619942294205,
+          "z": -8.600278867737632,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-4",
+          "x": 114.03934606486646,
+          "z": -2.9542976565553474,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-5",
+          "x": 96.77812491699993,
+          "z": -0.08658154213391533,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-6",
+          "x": 98.76229389873652,
+          "z": -5.401510589019259,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-7",
+          "x": 101.24836165611585,
+          "z": -5,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-8",
+          "x": 103.40500396004542,
+          "z": -1.8517160099427243,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-9",
+          "x": 110.48684045702248,
+          "z": -2.4882527221321453,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-10",
+          "x": 100.06451851478313,
+          "z": 1.1606328446630787,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-11",
+          "x": 101.88962954339624,
+          "z": 3,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-12",
+          "x": 100.20962544388225,
+          "z": -0.8700777321274276,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-13",
+          "x": 108.66044007163286,
+          "z": 4.51127560294667,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-14",
+          "x": 105.1287811510268,
+          "z": 0,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-15",
+          "x": 100,
+          "z": 3,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-16",
+          "x": 98.39347138220431,
+          "z": 5.9543060127883765,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-17",
+          "x": 101.39956042799218,
+          "z": 6,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-18",
+          "x": 105.22522030410695,
+          "z": 3,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-19",
+          "x": 113.73500785396493,
+          "z": 0.17899985406877328,
+          "status": "waiting"
+        }
+      ],
+      "fixtureErrors": []
+    }
+  ]
+}

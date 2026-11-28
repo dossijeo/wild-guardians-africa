@@ -1,0 +1,40 @@
+{
+  "at": "2026-11-20T18:15:49.545232+00:00",
+  "head": "7f350bb375c34f0ef2b9063e3d03e5fb43830fdc",
+  "scope": "Independent receipt/log and current production SHA review; no new test/build/GPU run. Canonical document publication still deferred until peer handoff.",
+  "validationReceiptSha256": "1666c35debeaf856e1c85d677a2c2a238ac1257c05db495f74a7f843ac31f5fb",
+  "testFileCount": 98,
+  "checks": {
+    "testsLog": {
+      "sha256": "591f1215bee6066f75282fa763986c3fc756f744dca6f2ce629bd10c07af8b47",
+      "exitCode": 0,
+      "tests": 1310,
+      "pass": 1310
+    },
+    "buildLog": {
+      "sha256": "4066483ae2d523edd4a2bcb185656a9640e4e0f1fb0fd371eee8736dbc3eeeeb",
+      "exitCode": 0,
+      "tests": null,
+      "pass": null
+    },
+    "preservedFiles": {
+      "count": 16,
+      "changed": []
+    },
+    "externalCommittedInputs": {
+      "count": 38,
+      "changed": []
+    },
+    "nativeBuiltInputs": {
+      "count": 64,
+      "changed": []
+    }
+  },
+  "production": {
+    "src/rendering/remote-webgpu-host.js": "0d9bfbdce8903bdab0019aa4eb8eb18abd1b491e484ef5d3d84b1f7b8bb39cf8",
+    "src/rendering/native-route-pick-frame.js": "c8c40aa439d8f25abce3201d2ae44db40382e50fef577cd322001a39d3515296",
+    "src/rendering/webgpu-world-surface.js": "b2f078f4527916fd9b25975d10042113feac415e9afd5417bf0e82909d48854a",
+    "src/rendering/webgpu-world-worker.js": "2f773348a111c1766e78f000b794418baffe968eb745fbfe434b3851eb58bb10",
+    "src/simulation/game.js": "61238df5e87f25ebd36c831877842d8de49cbd7da6fb7090a9dbd3caf874b86d"
+  }
+}

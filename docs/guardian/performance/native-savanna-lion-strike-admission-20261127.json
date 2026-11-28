@@ -1,0 +1,70 @@
+{
+  "baseRevision": "4b840439f4305baef46678fa5363ff234ce9a2c0",
+  "artifact": "native-savanna-lion-first-strike-draw-cut.json",
+  "sha256": "31415ea7aa64fa695eb8057dc2a6132e6a9176b18ded2a00788eb4be5cecad1f",
+  "input": {
+    "artifact": "sabana-second-night-fourth-cut-diagnosis-save.json",
+    "sha256": "4a64bb230a2ddc6a3a187207247cf8f18b44b7a00ea17d76ddd44a6b18f8aa66",
+    "elapsed": 2137.4999999988336
+  },
+  "scenario": {
+    "biome": "sabana",
+    "nativeWorkerLifecycle": true,
+    "checkpointBeforeSpawn": true
+  },
+  "request": {
+    "id": 3,
+    "ticket": 4,
+    "effectiveTime": 2165.348709451824,
+    "minSequence": 567
+  },
+  "surface": {
+    "firstApplied": 563,
+    "firstReceived": 566,
+    "appliedAfterMs": 69.820068359375
+  },
+  "preparerStagesMs": {
+    "center-start": 136.06005859375,
+    "center-end": 136.224853515625,
+    "roster-start": 137.929931640625,
+    "roster-end": 234.574951171875,
+    "pipeline-start": 235.224853515625,
+    "pipeline-end": 2183.784912109375,
+    "previous-frame-settled": 2184.47998046875,
+    "capture-start": 2217.89501953125,
+    "packet-capture-posted": 2274.639892578125,
+    "capture-end": 2393.599853515625
+  },
+  "drawStagesMs": {
+    "received": 2294.655029296875,
+    "resources-wait": 2337.9599609375,
+    "resources-ready": 2338.244873046875,
+    "initialize-start": 2347.35498046875,
+    "initialize-end": 2367.570068359375,
+    "first-use-start": 2368.695068359375,
+    "first-use-submitted": 2375.080078125,
+    "first-use-finished": 2392.7900390625,
+    "ready": 2392.869873046875
+  },
+  "operations": 48,
+  "readyAfterMs": 2393.679931640625,
+  "acquired": {
+    "ticket": 5,
+    "afterMs": 2444.85009765625
+  },
+  "firstDraw": {
+    "sequence": 135,
+    "elapsed": 2167.798709451833,
+    "relativeTime": 0,
+    "afterMs": 2461.340087890625
+  },
+  "hit": {
+    "id": "attack-86",
+    "event": "event-88",
+    "target": "structure-2",
+    "elapsed": 2169.3487094518387
+  },
+  "drainAcknowledgements": 2,
+  "pageErrors": [],
+  "unattributedConsole404s": 2
+}

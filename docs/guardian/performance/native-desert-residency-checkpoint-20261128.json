@@ -1,0 +1,191 @@
+{
+  "baseline": "0e15c19a02406ba121b892f72af7e74b7ad82f6c",
+  "originalCampaignCut": {
+    "file": "native-desert-menu-712-enclosed-campaign-adoption-and-hiring-20261128-extended.json",
+    "sha256": "4c391f71caf7a566b0157205bb24cb3204658ee017ec741d515f30679298071a",
+    "lastConfirmed": 45434,
+    "failedSequence": 45435,
+    "elapsed": 2737.2857055866784,
+    "error": "Native world changed outside its committed resource boundary",
+    "commandAndRevisionsRecorded": false
+  },
+  "deterministicControl": {
+    "scope": "Fresh Desert 712 bootstrap, paid center and enclosure, production authority and terrain ports, WASM and production Draw Host with a deterministic GPU queue.",
+    "addedRegion": [5, 1],
+    "baselineResult": "The ordered addChunk with visualRecoveryOnly failed with the original exception after a valid checkpoint at sequence 105.",
+    "checkpointSequences": [105, 106],
+    "tickets": [4, 5],
+    "residentRegionCounts": [25, 26],
+    "elapsed": 4.799999999999977,
+    "newDrawMatchesCheckpointBoundary": true,
+    "regressionPass": 125,
+    "regressionFail": 0,
+    "regressionSkipped": 0,
+    "evidence": {
+      "native-chunk-authority-red.tap": "f861df1c5b66b0e6004e12ed8a88120926728c3912a05eb86c1b320cb1079d9a",
+      "enclosure-residency-checkpoint-typed.log": "5e8e55c8189894d44e34042d0f66125185197afd4bc39d5de979c3a705560a1c",
+      "native-chunk-authority-final.tap": "acc62799102be52e47bb9243436cf17951c2a3ccc9b4defba81ed6dc91eeb54f"
+    }
+  },
+  "nvidia": {
+    "scope": "Edge and NVIDIA Turing on the paid enclosure from the real menu. The harness adds one demand at the authority ingress and requests a visual checkpoint on the resulting ordinary addChunk command when the journal has credit.",
+    "adapter": { "vendor": "nvidia", "architecture": "turing" },
+    "enclosureTicket": 4,
+    "addedRegion": [5, 1],
+    "kind": 6,
+    "acquiredTicket": 5,
+    "checkpointSequence": 142,
+    "confirmedRecoveryBase": 142,
+    "drawSequence": 61,
+    "boundaryAndDrawElapsed": 4.1499999999999915,
+    "residentRegionCount": 26,
+    "regionInManifest": true,
+    "runtimeAndDrawErrors": [],
+    "closeAudit": "The trace has one authority retirement preparation response and two unattributed dispose replies. The harness expected one reply and marked the run failed after the checkpoint and first submit assertions passed.",
+    "consoleDiagnostics": [ "favicon.ico returned HTTP 404 twice" ],
+    "evidence": {
+      "native-desert-menu-712-enclosed-campaign-residency-checkpoint-confirmed-20261128-extended.json": "24836d1886a0b485d1192a815b06ce6aa3273095eaa7b11a1e54c43813480133",
+      "native-desert-menu-712-enclosed-campaign-residency-checkpoint-20261128-extended.json": "7d2865359ecb75d95954c2d20e34f66c82b86208bd748850429b91b76f8a641b"
+    }
+  },
+  "continuousNvidia": {
+    "revision": "c97e21400dbc03af4b8392c25f099d9ef1627265",
+    "scope": "Desert 712 from the menu and the paid enclosure, with one authority epoch through the observed fifth-night cut on NVIDIA Turing.",
+    "completedNights": [
+      { "day": 1, "species": "warthog", "raidEndedAt": 429.7818161888272, "centerHp": 560, "absenceDraw": 2571 },
+      { "day": 2, "species": "hyena", "raidEndedAt": 1069.486561966843, "centerHp": 485, "absenceDraw": 5263 },
+      { "day": 3, "species": "buffalo", "raidEndedAt": 1696.3283308335094, "centerHp": 345, "absenceDraw": 7705 },
+      { "day": 4, "species": "lion", "raidEndedAt": 2186.9824758151217, "centerHp": 185, "absenceDraw": 10151 }
+    ],
+    "fifthNight": {
+      "elapsed": 2735.985705586674,
+      "actor": "animal-61",
+      "body": 10,
+      "preparedTicket": 126,
+      "acquiredTicket": 127,
+      "firstDraw": 12566,
+      "firstRouteAge": 0,
+      "drawInstance": "b78aef52-424a-4f9c-95e3-2d3a2133b78c",
+      "surfaceAppliedSequence": 45515,
+      "surfaceWaitingForSequence": 45516,
+      "openProposalPhase": "adopting",
+      "command": "addChunk",
+      "region": [0, -2],
+      "commandSequence": 45516,
+      "requestsVisualCheckpoint": false,
+      "error": "Native terrain addition control-failed: Native terrain commands require projected route assignments before recording moving actors"
+    },
+    "evidence": {
+      "native-desert-menu-712-enclosed-campaign-continuous-residency-20261128-extended.json": "b15b82d75fe6f6266d8b9d2484035102c00c2f906087628a45d45257578e29e8"
+    }
+  },
+  "routeAdoptionControl": {
+    "scope": "The authentic fifth-night save, WASM, original rhino rig, authority, native resource and terrain channels, and the production Draw Host with a deterministic queue.",
+    "orders": [ "Terrain demand enters while Route26 READY is held", "Terrain demand enters after the first Route26 draw and before publishing its Game projection, with a visual recovery checkpoint requested" ],
+    "baseline": [ "Terrain finished while the first READY was still held", "Graphical preparation rejected terrain because the acquired route had not been published", "The runtime forwarded the private deferral to the scene instead of processing the retry" ],
+    "confirmed": "The first result publishes the acquired route and leaves the terrain unchanged. The runtime retains the demand and retries in order. The second result acquires one kind6 for (0, -2), with the same route reference, body and age at the same simulation time. The next advance moves the same actor.",
+    "testCommand": "node --test tests/native-terrain-route-adoption.test.js tests/worker-game-runtime.test.js tests/terrain-native-proposal.test.js tests/native-center-placement-authority.test.js",
+    "tests": { "baselineTargetedFail": 3, "pass": 53, "fail": 0, "skipped": 0 },
+    "evidence": {
+      "rhino-route-adoption-baseline.tap": "7a5b3645570ded3057cfe1293eb5e31a520591450e4e68cf6226b0221c6414dc",
+      "rhino-route-adoption-regression.tap": "fe63620f62c35a261319a8f4b4dd46a0787200b8c63bec04df8295f986185f26",
+      "rhino-residency-during-adoption.json": "9012470c8ed7f340e6697974cbd8546442d09e7986b8462a985fbec1f8ce4b7e"
+    }
+  },
+  "routeAdoptionNvidia": {
+    "scope": "Edge, NVIDIA Turing and the saved fifth night of the paid enclosure. The harness queues the region while Route26 READY is held and uses the ordinary runtime, terrain receiver, Surface and Draw.",
+    "region": [0, -2],
+    "deferredSequence": 44,
+    "addedSequence": 45,
+    "authorityTime": 2735.9857055868206,
+    "routeTicket": 2,
+    "terrainTicket": 3,
+    "body": 1,
+    "routeDrawSequence": 60,
+    "terrainDrawSequence": 62,
+    "routeAgeAtFirstDraw": 0,
+    "routeAgeOnTerrainDraw": 0.14999999105930328,
+    "terrainDrawClock": 2736.135705586821,
+    "scopeLimit": "The harness initially stopped on an age equality assertion. The two frames kept the same route reference and execution epoch. Presentation progressed by 0.15 s after the authority committed the terrain at the original time. This receipt ends before damage or drain.",
+    "evidence": {
+      "night-five-rhino-route-adoption-runtime-nvidia.failure.json": "089592f784e5b8ac9e09ec1aab4d6e40b30af9d7a1003d11c4f429bb7d5e7774"
+    }
+  },
+  "savedNightCompletionNvidia": {
+    "revision": "e7b400032",
+    "scope": "Same fifth-night save and demand injected during Route26 READY. The frame assertion requires the same route and execution epoch with elapsed age derived from the presented clock.",
+    "authoritySequences": [44, 45],
+    "authorityTime": 2735.9857055868206,
+    "routeTicket": 2,
+    "terrainTicket": 3,
+    "routeDraw": 60,
+    "terrainDraw": 63,
+    "terrainDrawAge": 0.09999999403953552,
+    "bodyAcrossApproachStrikeRetreat": 1,
+    "motionTickets": [2, 5, 7],
+    "centerHitAt": 2782.5057055869897,
+    "centerHpAfterHit": 125,
+    "retreatHitsRemaining": 4,
+    "ruinAt": 2785.7057055870014,
+    "ruinTicket": 8,
+    "ruinDraw": 196,
+    "absenceDraw": 236,
+    "result": "defeat",
+    "gameOverEvents": 1,
+    "drained": true,
+    "errors": [],
+    "evidence": {
+      "night-five-rhino-route-adoption-retained-nvidia.json": "937bac08d5d67cee7020b6a7f2d9771ba3db28ea41e5393e3e1f71833ad6bdd4"
+    }
+  },
+  "continuousCompletionNvidia": {
+    "revision": "50aa8160347b11e985d79c9ac7f5b367763d6b71",
+    "scope": "New Desert 712 from the menu, with the development nativeWorkerLifecycle profile explicitly selected by the harness, paid center and enclosure, one authority epoch and the original NVIDIA Turing Draw from placement through drain. The residency request came from the ordinary runtime.",
+    "drawInstance": "20ec349b-6240-4d1d-9dc1-cb8630ee0931",
+    "completedNights": [
+      { "day": 1, "species": "warthog", "raidEndedAt": 428.28181618882854, "centerHp": 560, "absenceDraw": 2555 },
+      { "day": 2, "species": "hyena", "raidEndedAt": 1069.2865619668432, "centerHp": 485, "absenceDraw": 5167 },
+      { "day": 3, "species": "buffalo", "raidEndedAt": 1694.6583308335107, "centerHp": 345, "absenceDraw": 7809 },
+      { "day": 4, "species": "lion", "raidEndedAt": 2186.662475815118, "centerHp": 185, "absenceDraw": 10237 },
+      { "day": 5, "species": "rhino", "raidEndedAt": 2774.8257055868107, "centerHp": 0, "absenceDraw": 12712 }
+    ],
+    "fifthNightResidency": {
+      "region": [0, -2],
+      "deferredSequence": 45828,
+      "addedSequence": 45829,
+      "kind": 6,
+      "nativeEffectiveTime": 2735.9857055866696,
+      "actor": "animal-61",
+      "body": 10,
+      "approachTicket": 129,
+      "approachDraw": 12559,
+      "approachFirstAge": 0,
+      "residencyTicket": 130,
+      "residencyDraw": 12561,
+      "approachAgeOnResidencyDraw": 0.04999999701976776,
+      "rhinoStrikeTicket": 132,
+      "rhinoRetreatTicket": 134,
+      "ruinAt": 2769.2557055867906,
+      "ruinTicket": 135,
+      "ruinDraw": 12696
+    },
+    "result": "defeat",
+    "gameOverEvents": 1,
+    "centerRuinedEvents": 1,
+    "uniqueLogicalHits": 14,
+    "intactPaidDefenses": 13,
+    "liveCrops": ["plant-3", "plant-5"],
+    "workerAtHome": "worker-57",
+    "originalPhysicalDrains": 1,
+    "originalFinalDrainedDraw": 12722,
+    "runtimeFault": null,
+    "recoveryFault": null,
+    "diagnostics": [ "Three publication-wait cancellations, two stale resumed-worker replies and one pipeline-admission cancellation recovered during the run", "Two favicon console 404s" ],
+    "evidence": {
+      "native-desert-menu-712-enclosed-campaign-continuous-route-adoption-20261128-extended.json": "16ae10af57f62e3010ebdd1aba32038d74b00be8ed3773a37dce518515a39af2",
+      "continuous-route-adoption-nvidia.log": "8f49b8d7d3d0821ad945958c12216c97f4a2eea1e2b34d7ebb0ddfc9f0dadb50",
+      "qualify-desert-route-adoption-campaign.mjs": "55500a4475fe07c829e8c9c6345083b904bcab9faf18a708958bb0eb063e0753"
+    }
+  },
+  "pending": [ "Identify the dispose reply owners in the earlier standalone close audit", "Qualify the ordinary profile and the longer integrated campaign" ]
+}

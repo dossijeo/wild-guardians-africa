@@ -1,0 +1,65 @@
+{
+  "scope": "Actual new-game loading on WebGL. QA delays readiness after real submission to deterministically interrupt cancel and context-loss runs, and injects an invalid shader for failure. No recovery into gameplay or visual parity.",
+  "results": [
+    {
+      "mode": "cancel",
+      "before": {
+        "validated": 0,
+        "targetDisposed": false,
+        "contextLost": false,
+        "targetRestored": true,
+        "overlay": true
+      },
+      "after": {
+        "validated": 0,
+        "targetDisposed": true,
+        "finished": true,
+        "cacheDisposed": true,
+        "contextLost": true,
+        "overlay": false,
+        "failure": null
+      },
+      "errors": []
+    },
+    {
+      "mode": "context-loss",
+      "before": {
+        "validated": 0,
+        "targetDisposed": false,
+        "contextLost": false,
+        "targetRestored": true,
+        "overlay": true
+      },
+      "after": {
+        "validated": 0,
+        "targetDisposed": true,
+        "finished": true,
+        "cacheDisposed": true,
+        "contextLost": true,
+        "overlay": false,
+        "failure": "No se ha podido preparar tu mundo.Se ha perdido el contexto gráfico durante la carga.Cerrar"
+      },
+      "errors": []
+    },
+    {
+      "mode": "shader-failure",
+      "before": {
+        "validated": 1,
+        "targetDisposed": true,
+        "contextLost": true,
+        "targetRestored": true,
+        "overlay": false
+      },
+      "after": {
+        "validated": 1,
+        "targetDisposed": true,
+        "finished": true,
+        "cacheDisposed": true,
+        "contextLost": true,
+        "overlay": false,
+        "failure": "No se ha podido preparar tu mundo.No se pudo dibujar el mundo. Vuelve al menú para reintentarlo.Cerrar"
+      },
+      "errors": []
+    }
+  ]
+}

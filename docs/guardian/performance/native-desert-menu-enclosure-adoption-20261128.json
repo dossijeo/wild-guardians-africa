@@ -1,0 +1,130 @@
+{
+  "schema": 1,
+  "productCommit": "608f7f8e1",
+  "testFixtureCommit": "b0d6bd367",
+  "baselineCommit": "06b9d5b16",
+  "hardware": "NVIDIA WebGPU in Edge",
+  "baselineOrdering": {
+    "path": ".cache/desert-menu-712/native-desert-menu-712-enclosed-campaign-adoption-trace-20261128-extended.json",
+    "sha256": "1acad0f4eaf7fc6454dbb2be503f7ee038ea256f90cd7f1651342cb2b4ec757b",
+    "confirmedWhenPresented": 91,
+    "receivedWhenPresented": 123,
+    "firstParkAfterRelease": {"appliedThrough": 99, "receivedThrough": 123, "remaining": 24, "requiredTicket": 4, "appliedTicket": 1},
+    "eventualAdoption": {"publication": 131, "ticket": 4, "direct": true},
+    "tutorialState": {"step": "hire", "tool": "plant", "pausedForHiring": false}
+  },
+  "candidateSetup": {
+    "path": ".cache/desert-menu-712/native-desert-menu-712-enclosed-campaign-adoption-and-hiring-20261128-setup.json",
+    "sha256": "54353c9ae29cd9b09a67d79e04a1a2848000e4d9e9a57944e29991057b8341ec",
+    "center": [83, 0],
+    "enclosurePublication": 149,
+    "submitSequence": 67,
+    "ticket": 4,
+    "elapsed": 4.799999999999978
+  },
+  "firstShiftProgress": {
+    "path": ".cache/desert-menu-712/enclosure-first-paid-water-20261128.log",
+    "sha256": "ffa20470ebffa43fdb4268bf5d9bb74c82b3b3647708e2c5c727cbfbc686bd86",
+    "hiring": "Escape dismissed the actual placement tool. The game opened hiring and accepted one paid contract through its HUD.",
+    "firstWater": "The harness enters the continuous campaign only after observing submitted Task14 and Action15 on the same body, a WaterSatisfied event and exactly one HiringConfirmed.",
+    "observedElapsed": 150.30000000000413,
+    "scope": "Intermediate capture. Home, raids and final drain are not covered by this receipt."
+  },
+  "firstNight": {
+    "path": ".cache/desert-menu-712/enclosure-first-night-live-20261128.json",
+    "sha256": "35f53ae8feafe039c96ae140cea4fb5994482e2647322871463f2606513c0a1f",
+    "paidHiringElapsed": 5.949999999999953,
+    "firstWater": {"target": "plant-3", "elapsed": 66.20000000000258},
+    "spawn": {"actor": "animal-25", "species": "warthog", "elapsed": 370.50227023610705},
+    "strikeTarget": "structure-2",
+    "strikeIds": ["attack-37", "attack-40"],
+    "centerHpAfterEachStrike": [580, 560],
+    "cropDestroyedEvents": 0,
+    "end": {"event": "event-44", "elapsed": 429.4018161888275},
+    "absence": {"draw": 2518, "clock": 430.0518161888277, "gateId": 7},
+    "authorityEpochMatchesEnclosure": true
+  },
+  "secondDawn": {
+    "path": ".cache/desert-menu-712/enclosure-first-dawn-live-20261128.log",
+    "sha256": "44932c49d78c13bef3a6f4ef1c1f92f651aba09bd8d9e6c434fb1628529591ee",
+    "paidHiringElapsed": 599.9999999999613,
+    "observedWalkingElapsed": 630.2499999999338
+  },
+  "secondNight": {
+    "path": ".cache/desert-menu-712/enclosure-second-night-live-20261128.json",
+    "sha256": "a98880106538528788d81faedae377ce99b54e80a155fe674dc58b274949ba8d",
+    "paidHiringsThroughNight": 2,
+    "secondWater": {"target": "plant-3", "elapsed": 655.349999999911},
+    "spawn": {"actor": "animal-34", "species": "hyena", "elapsed": 1022.6082024586916},
+    "strikeTarget": "structure-2",
+    "strikeIds": ["attack-65", "attack-68", "attack-71"],
+    "centerHpAfterEachStrike": [535, 510, 485],
+    "cropDestroyedEvents": 0,
+    "endElapsed": 1069.9365619668426,
+    "absence": {"draw": 5167, "clock": 1070.8697126016082, "gateId": 7},
+    "authorityEpochMatchesEnclosure": true
+  },
+  "thirdNight": {
+    "path": ".cache/desert-menu-712/enclosure-third-night-live-20261128.json",
+    "sha256": "02093509cc8b2b812ae27ccab7c10e75b316fb25207290e9f093ff88745420e6",
+    "paidHiringsThroughNight": 3,
+    "thirdWater": {"target": "plant-3", "elapsed": 1255.1999999994562},
+    "spawn": {"actor": "animal-43", "species": "buffalo", "elapsed": 1644.4979135421777},
+    "strikeTarget": "structure-2",
+    "strikeIds": ["attack-94", "attack-97", "attack-100", "attack-103"],
+    "centerHpAfterEachStrike": [450, 415, 380, 345],
+    "cropDestroyedEvents": 0,
+    "endElapsed": 1696.2883308335101,
+    "absence": {"draw": 7733, "clock": 1697.8383308335087, "gateId": 7},
+    "authorityEpochMatchesEnclosure": true
+  },
+  "fourthNight": {
+    "path": ".cache/desert-menu-712/enclosure-fourth-night-live-20261128.json",
+    "sha256": "9f32974c38d1df2567f2865b31d2bf144a09e8756e920dd68caa363ca6a362cd",
+    "spawn": {"actor": "animal-52", "species": "lion", "elapsed": 2132.678094768935},
+    "strikeTarget": "structure-2",
+    "strikeIds": ["attack-126", "attack-129", "attack-132", "attack-135"],
+    "centerHpAfterEachStrike": [305, 265, 225, 185],
+    "endElapsed": 2186.8824758151213,
+    "absence": {"draw": 9969, "clock": 2187.921626205746, "gateId": 7},
+    "authorityEpochMatchesEnclosure": true
+  },
+  "continuousHardwareStop": {
+    "path": ".cache/desert-menu-712/native-desert-menu-712-enclosed-campaign-adoption-and-hiring-20261128-extended.json",
+    "sha256": "4c391f71caf7a566b0157205bb24cb3204658ee017ec741d515f30679298071a",
+    "successfulNights": 4,
+    "activity": "Rhino entering. Original center intact and worker sheltered.",
+    "lastConfirmedElapsed": 2737.2857055866784,
+    "checkpointCommandSequence": 45435,
+    "lastDrawnGateTicket": 124,
+    "pendingRouteTicket": 125,
+    "error": "Native world changed outside its committed resource boundary"
+  },
+  "freshCpuComparison": {
+    "path": ".cache/desert-menu-712/enclosure-first-three-night-parity-20261128.json",
+    "sha256": "0d7a0dccb00f89f27dc865893d0cb51461d07f12696e36da0fd1cd7aa489e347",
+    "inputPath": ".cache/desert-menu-712/enclosure-fresh-authority-cpu-through-fourth-20261128.json",
+    "inputSha256": "03eb01655737ea1aa66e34245cb620752ac5a3c9c3293d93ae787d52c89c9058",
+    "initialRegions": 25,
+    "initialBounds": [-24, -72, 216, 168],
+    "matchedNativeDecisionsThroughNight": 3,
+    "scope": "Fresh production bootstrap, real terrain and authority ports, deterministic draw queue. The comparison checks raid composition and quota, damage, targets and crop consequences. End times differ across the two admission schedules.",
+    "fifthNightNegative": {
+      "path": ".cache/desert-menu-712/enclosure-fresh-authority-live-crops-ruin-red.json",
+      "sha256": "aead465f9e97ccaaba0f26bf8583557623358cc733779b7d6564b1ce24ff0b6c",
+      "lastElapsed": 2782.6357055869903,
+      "animal": "rhino",
+      "centerHp": 125,
+      "error": "Native center ruin requires a certified animal route substep"
+    }
+  },
+  "tests": {
+    "twoDirectedFailuresOnBaseSha256": "f55ed18bfb4e3f39dbb0bc97f976bdeeac90a6e78fb23cd47c8f6ca56c83187b",
+    "broaderRunWithOldFixturesSha256": "76456a5a9d6bd487a0a122e372d211ec2eb20c2f95754ae160582a7752d06627",
+    "sameTwoFixtureFailuresOnBaseSha256": "8ef42e26e30e1671d7f7a41083689b4eb09cb037947d4baf78de9d0b954c3d20",
+    "regressionSha256": "bbe53328a820dc13ca5aaafc26c18b976810374cdea94e0ed856e7bede128601",
+    "passed": 75,
+    "failed": 0,
+    "skipped": 0
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "base": "00f6d8c5181dce35a2c277423fe790f9e11be4fa",
+  "manifest": {
+    "path": ".cache/vfx-private-upload/manifest.json",
+    "sha256": "3d7913b1a88cef9ec1b6dd1d9a629c1e91f4a15415fc704c0df1c38d34c1878e"
+  },
+  "delta": {
+    "path": ".cache/vfx-private-upload/vfx-upload.patch",
+    "sha256": "ae3a69a2f74642fb118db11da905ac84eef300c66b1a45d02238f9289890940f"
+  },
+  "validation": {
+    "baseline": {
+      "path": ".cache/vfx-private-upload/before.tap",
+      "sha256": "627e6f9bfb9765b306fbd17a0d0b688712b8427ac0d408a3d392cab3937d851c"
+    },
+    "suite": {
+      "path": ".cache/vfx-private-upload/root-regression.tap",
+      "sha256": "671ba5bfa8c666b3995138c80ef62d20a240bf6a5b6161b94c59fcff6ea12829",
+      "passed": 367,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build": {
+      "path": ".cache/vfx-private-upload/root-build.log",
+      "sha256": "984813fcc75cf16eb51470bace669bd409da56d5d8f1b3590afee7a904aba7e9"
+    }
+  },
+  "hardware": {
+    "receipt": {
+      "path": ".cache/native-flee-sabana-civil-private-vfx-nvidia-20261125.failure.json",
+      "sha256": "dd87770d45224dbac6414a9007c5092cd0d8361232384d3fa40744772c39818e"
+    },
+    "trace": {
+      "path": ".cache/native-flee-sabana-civil-private-vfx-nvidia-20261125.trace.json.gz",
+      "sha256": "aaf6244b3e1e3e82fb9a01b9b9be93e190b8b3d3a95db17ebd7c2fbb09f40008"
+    },
+    "stages": {
+      "path": ".cache/native-flee-sabana-civil-private-vfx-nvidia-20261125.civil-stages.json",
+      "sha256": "0e9f97c646bc7d63772b0ebafefe943ed81eff3717e2601d7b8721ec1b55f734"
+    },
+    "reader": {
+      "path": ".cache/flee-return/read-stage-marks.py",
+      "sha256": "bfb72fa45313223b447c50888c61d06246c952ada5683f78d66d302c583cce64"
+    },
+    "probe": {
+      "path": ".cache/flee-return/stage-timing.mjs",
+      "sha256": "9d485bee147b8091b20cea37948d032fc78fe429ed1805e729e4f80a5d35c2a0"
+    },
+    "traceLoss": false,
+    "scenario": {
+      "pendingFarm": false,
+      "expectAnimal": true,
+      "currentFrameBeforeAttach": true,
+      "expectCivilReturn": true,
+      "collectResourceErrors": false,
+      "measureCivilStages": true,
+      "measurePrivateVfx": true,
+      "qualification": {
+        "qualifyFarmFlee": true,
+        "qualifyAnimalCrop": true
+      },
+      "handoffOnly": false
+    },
+    "order": {
+      "verified": true,
+      "acknowledgements": 154,
+      "uniqueTextures": 154,
+      "independentWhileStaged": {
+        "name": "WG-civil-private-vfx-upload",
+        "ts": 28159835364,
+        "durationMs": 0.6,
+        "pid": 16780,
+        "tid": 18596,
+        "detail": {
+          "id": "Texture:10574",
+          "ordered": true,
+          "format": "rgba32float",
+          "width": 1024,
+          "height": 62,
+          "stagedBefore": 60,
+          "stagedAfter": 59,
+          "activeSequence": 411
+        },
+        "absoluteMs": 1795614653433.0378
+      }
+    },
+    "firstHandoff": {
+      "hit": {
+        "attackId": "attack-48",
+        "targetId": "plant-5",
+        "simulationTime": 658.4499999999368
+      },
+      "render": {
+        "name": "WG-civil-surface-render",
+        "ts": 28159859068,
+        "durationMs": 263.2,
+        "pid": 16780,
+        "tid": 11236,
+        "detail": {
+          "sequence": 1175,
+          "ticket": 13,
+          "preparedTerrain": false
+        },
+        "absoluteMs": 1795614653456.742
+      },
+      "capture": {
+        "name": "WG-civil-preparer-capture",
+        "ts": 28159857568,
+        "durationMs": 264.799,
+        "pid": 16780,
+        "tid": 11236,
+        "detail": {
+          "sequence": 1175,
+          "ticket": 13
+        },
+        "absoluteMs": 1795614653455.242
+      }
+    },
+    "fullTrajectory": "rejected-retirement-fence",
+    "fence": {
+      "stage": "complete both crop strikes and leave the raid",
+      "elapsed": 658.8999999999364,
+      "consumerBlockReported": "Buffer:852",
+      "error": "Error: Error: A fence cannot cover uncommitted changes to a published frame; publish the next frame first. State: {\"retained\":true,\"pending\":false,\"admitting\":false,\"hold\":false,\"retiring\":false,\"recovery\":false,\"block\":{\"key\":\"Buffer:852\",\"uniform\":false}}. Deferred: [{\"method\":\"writeBuffer\",\"resources\":[{\"id\":\"Buffer:8637\",\"kind\":\"createBuffer\",\"label\":\"bindingBuffer_object\",\"usage\":76,\"size\":80}]},{\"method\":\"writeBuffer\",\"resources\":[{\"id\":\"Buffer:8638\",\"kind\":\"createBuffer\",\"label\":\"bindingBuffer_UniformBuffer_234\",\"usage\":76,\"size\":512}]},{\"method\":\"writeBuffer\",\"resources\":[{\"id\":\"Buffer:10479\",\"kind\":\"createBuffer\",\"label\":\"bindingBuffer_UniformBuffer_250\",\"usage\":76,\"size\":128}]},{\"method\":\"writeBuffer\",\"resources\":[{\"id\":\"Buffer:10455\",\"kind\":\"createBuffer\",\"label\":\"bindingBuffer_UniformBuffer_246\",\"usage\":76,\"size\":16}]},{\"method\":\"writeBuffer\",\"resources\":[{\"id\":\"Buffer:10467\",\"kind\":\"createBuffer\",\"label\":\"bindingBuffer_UniformBuffer_248\",\"usage\":76,\"size\":16}]},{\"method\":\"writeBuffer\",\"resources\":[{\"id\":\"Buffer:10442\",\"kind\":\"createBuffer\",\"label\":\"bindingBuffer_UniformBuffer_244\",\"usage\":76,\"size\":16}]},{\"method\":\"writeBuffer\",\"resources\":[{\"id\":\"Buffer:5213\",\"kind\":\"createBuffer\",\"label\":\"bindingBuffer_object\",\"usage\":76,\"size\":192}]},{\"method\":\"writeBuffer\",\"resources\":[{\"id\":\"Buffer:4985\",\"kind\":\"createBuffer\",\"label\":\"bindingBuffer_object\",\"usage\":76,\"size\":192}]}]"
+    }
+  },
+  "cadence": {
+    "refreshHz": 30,
+    "targetMs": 16.666666666666668,
+    "accepted": false
+  }
+}

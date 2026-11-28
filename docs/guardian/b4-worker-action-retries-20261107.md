@@ -1,0 +1,5 @@
+# Reintento de acciones GPU de trabajadores
+
+Las descargas de carrera, cosecha, reposo, vigilancia, riego, plantación y transporte comparten una cola de reintentos acotados dentro del roster. Una descarga transitoriamente fallida puede volver a solicitarse sin esperar a otra publicación; el actor y su rig confirmados permanecen activos hasta que la admisión de la acción GPU termine. Los cambios de acción o de tarea invalidan el reintento anterior y se cancelan al retirar al trabajador. Los errores de admisión y las cancelaciones no se reintentan automáticamente. Las descargas de caída y levantamiento utilizan la misma cola: un cambio de fase o de parámetros invalida el intento anterior, sin modificar la física autoritativa.
+
+Las pruebas cubren las nueve acciones, el máximo de reintentos, la retirada, fallos tardíos y el fallo de admisión, usando bancos y renderizador simulados. No prueban continuidad visual, tiempos de fotograma ni comportamiento en una GPU real. Las expresiones faciales y su deformación continúan calculándose en CPU; su migración requiere preservar morph targets, selección y sombras en la presentación GPU.

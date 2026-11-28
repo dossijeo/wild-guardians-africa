@@ -1,0 +1,22 @@
+{
+  "baselineRevision": "4b51c656fdb045d81c48c18e39f06ebee72687a4",
+  "candidateSources": {
+    "src/rendering/remote-webgpu-host.js": "7f0dccc392641a82c037c52e49349688aba7e85e2aa7b33be06e749ed2196093",
+    "src/rendering/remote-webgpu-client.js": "3b86d8f98eaf280c4e6a88dd66a2fab9d75bcad37e657ece4a604a636c440582",
+    "src/rendering/remote-resource-batch.js": "d5d6105b182ec4894ac79978dbae62dc08c06efc9cb5f2306eef0e14308e3272",
+    "src/rendering/webgpu-draw-worker.js": "735d0e2075131441e8859a39fdf5adb31ad5c23846882cb6d592102a046b4b63"
+  },
+  "artifact": "native-savanna-lion-dawn4-batch.json",
+  "sha256": "702eaf0ee54629c64c3abb0554f6cd8565f0aed4be8aa54c25bddda9317cf8e3",
+  "scenario": {"biome": "sabana", "seed": 714, "day": 4, "clock": "Hosted ordinario"},
+  "request": {"id": 5, "ticket": 9, "effectiveTime": 2137.8487094517645, "minSequence": 6964},
+  "surface": {"atOpenMs": 1.505126953125, "appliedAtOpen": 6900, "receivedAtOpen": 6932, "sourceAppliedMs": 3508.925048828125},
+  "beforeRoster": {"acknowledgedFrames": 7, "returnThroughSendMs": 999.984619140625, "receiptThroughAdmissionMs": 725.560302734375},
+  "batchCounters": {"previousFrame": 1380, "lastFrame": 1388, "messages": 4067, "operations": 14330},
+  "acquired": {"ticket": 10, "afterRequestMs": 9047.68017578125, "actorId": 24, "bodyId": 2},
+  "draw": {"sequence": 1390, "clockElapsed": 2149.5987094518073, "relativeTime": 0},
+  "ledgerBalance": 711,
+  "drained": true,
+  "pageErrors": 0,
+  "unattributedConsole404s": 2
+}

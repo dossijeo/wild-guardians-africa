@@ -1,0 +1,189 @@
+{
+  "base": "006f9150c4e312d5f3ab20ed6de009662bcd983c",
+  "seed": 712,
+  "day": 2,
+  "residentChunks": 25,
+  "artifactsDirectory": "E:/wild-guardians-qa/native-menu-20261126",
+  "inputs": {
+    "src/simulation/raids.js": "646232d5f78493d16631a0119db2b3503321ca11134885d3418822d65404d8fe",
+    "src/simulation/simulation-authority.js": "bb4efc0646e6449de83cfef471fcee745fbdb7c834a6a3b9b51376875ca3dc77",
+    "src/world/wild-engine/spatial-intent-bridge.js": "339f6afd8b9a5925dcf07b601892c7c830c1923ef54a1d77d50ed2d8625450de",
+    "src/world/wild-engine/spatial-animal-route-proposal.inc": "81ddbfef06e33c38331adf1fc1c413860e51924505be3c120d143106d940d13c",
+    "src/world/wild-engine/spatial-intent-state.cpp": "1e5702641d543bf7232bfe5edde3c8f16503fafec6f845db63441347a586811c",
+    "src/world/wild-engine/spatial-savanna.wasm": "498d77e3b61c17fe8796d52de017df630264c6cdd7c8521358bc40d6219beafa",
+    "public/wild-engine/spatial-threaded.wasm": "567f4f5715fadf5fa1984541aa2f9800a1663a7bcbe6e5307274f739fd4ce090",
+    "public/wild-engine/spatial-threaded.mjs": "e47b605aa07d7a1f41ced6410b581b610da262a4b0abcc6c9608036ccbd76858",
+    ".cache/savanna-daytime-center-physical-input.json": "bc07a1306e84e4150f0f103779908712f8ac6c25266493ce83de789ead953dc1",
+    ".cache/savanna-daytime-center-ruin-physical-input.json": "22f9329fb6e5ae7ce8fdab22c5e2fd64d4626f466345db69cb9a0de118409b68",
+    ".cache/flee-lifecycle-center-physical.mjs": "31d1743cfedd9ecf98640707d14063c94fbed3cd58b2c56b89768e7d4c2d46a1",
+    ".cache/flee-lifecycle-center-browser.mjs": "a4e38a774681d3506aef5f45032949211ab14871e2053ee069e206d3088eaf63",
+    ".cache/flee-lifecycle-center-worker.mjs": "103275a0ac0d5713640496302d20bc6be1a00377f9dc6cbcf41d161ad3dc4944",
+    ".cache/flee-mixed/check-savanna-daytime-center-abi.mjs": "cc00fa6ce7618d9fd9024c6e0630fe0902c63a4afa018416cd89f5eb09093e2e"
+  },
+  "inheritedRenderingSources": {
+    "src/rendering/character-preload.js": "b1637fb2ed5d0cf0aa12a1ab5eac5923319a0096413071d28376992314be2835",
+    "src/rendering/destruction-native.js": "363ffd6447b051739da75d65a6a2be1431094f0df588361158de83023ceab7b4",
+    "src/rendering/scene.js": "1cfefd4f86dee90af82300fe6762a29408d798dbb852605f5b30a45493c198da"
+  },
+  "artifacts": {
+    "native-savanna-daytime-center-before.tap": "2ccded86681736cef2f5216ec064a95e606598bfa30fc8e08f53df46ef56062f",
+    "native-savanna-daytime-center-save-before.tap": "11f302b9ac9787bc16e7e2e0286fec56b4b9107b6306b23c5fe48fe3f86be7e8",
+    "native-savanna-daytime-center-ruin-before.tap": "6a90c0882688971e1c1aca4efaa4beaba8400038bd185d3d95107bdd3dee9d80",
+    "native-savanna-daytime-center-focal.tap": "248c8046cf5bac71f6999862ad9eaa160212e9face9bfcba45cf0b626b3ded49",
+    "native-savanna-daytime-center-impact.tap": "7e8596e3cb3c618f8f5a164d6bfa299da52e67f4ddd8febd2d41772fef101043",
+    "native-savanna-daytime-center-wasm-build.log": "0a1dd3e50f18749fc6ed1f16bca14e7ae5ea45dea0c59b408dfc2f43900e6ebc",
+    "native-savanna-daytime-center-abi.log": "d820a4d3b32172b8b40bf768f68b52728cb1adf2e13e99a097853000bb1ecc32",
+    "native-savanna-daytime-center-product-build.log": "ce54d60eaba03a768196246e47f9cd3f1a7df5d02f0fff32a1ff2c152386fdd4"
+  },
+  "testCount": 48,
+  "scenarios": {
+    "center": {
+      "artifact": "native-savanna-daytime-center-nvidia.json",
+      "sha256": "5642097d194c410fd480dd3c0bb8ece8dea3c84405259d0d081fd56373bc925c",
+      "snapshotSHA256": "6b668d4547a4bc3c4938f7ca4c892beb365fede0f4685d86a18e65167132b4e8",
+      "adapter": "turing",
+      "authorityOptions": {
+        "nativeWorkerLifecycle": true,
+        "qualifyAnimalCrop": false,
+        "qualifyFarmFlee": false
+      },
+      "spawn": {
+        "id": "event-45",
+        "simulationTime": 603.9999999999864
+      },
+      "farmBody": 1,
+      "homeBody": 1,
+      "animalBody": 2,
+      "animalFirstAge": 0,
+      "submittedPairs": 8,
+      "submittedPairFirstSequence": 89,
+      "submittedPairLastSequence": 98,
+      "reuse": {
+        "compared": 2967,
+        "sameReference": 2967,
+        "sameVersion": 2967
+      },
+      "refuge": {
+        "retiredSequence": 9,
+        "ticket": 11,
+        "at": 612.1999999999789
+      },
+      "hp": [
+        560,
+        540
+      ],
+      "attacks": [
+        {
+          "id": "event-48",
+          "attackId": "attack-46",
+          "targetId": "structure-2",
+          "simulationTime": 637.7499999999557
+        },
+        {
+          "id": "event-51",
+          "attackId": "attack-49",
+          "targetId": "structure-2",
+          "simulationTime": 641.0499999999527
+        }
+      ],
+      "ended": {
+        "id": "event-53",
+        "simulationTime": 648.8199999999456
+      },
+      "balance": {
+        "n": "190",
+        "d": "1"
+      },
+      "drained": true,
+      "civilReturn": {
+        "body": 3,
+        "refugeSequence": 9,
+        "absenceFrame": 344,
+        "returnFrame": 345,
+        "idleAt": 684.3499999999133,
+        "worker": {
+          "id": "worker-21",
+          "personId": "person-9",
+          "contractDay": 2,
+          "nativeRouteAdmission": "native-idle",
+          "hits": 0
+        }
+      },
+      "animalFirstSequence": 89
+    },
+    "center-ruin": {
+      "artifact": "native-savanna-daytime-center-ruin-nvidia.json",
+      "sha256": "6457b5618a9475e8e0b935082b67b5bc6400dacf31401a97a0866bb3b574e9f2",
+      "snapshotSHA256": "c4c4679fc18d74cb6b78e4c626c3cdd6b58f6398cb184da7d631cd1379d314df",
+      "adapter": "turing",
+      "authorityOptions": {
+        "nativeWorkerLifecycle": true,
+        "qualifyAnimalCrop": false,
+        "qualifyFarmFlee": false
+      },
+      "spawn": {
+        "id": "event-45",
+        "simulationTime": 603.9999999999864
+      },
+      "farmBody": 1,
+      "homeBody": 1,
+      "animalBody": 2,
+      "animalFirstAge": 0,
+      "submittedPairs": 11,
+      "submittedPairFirstSequence": 87,
+      "submittedPairLastSequence": 96,
+      "reuse": {
+        "compared": 2969,
+        "sameReference": 2969,
+        "sameVersion": 2966
+      },
+      "refuge": {
+        "retiredSequence": 9,
+        "ticket": 11,
+        "at": 611.9499999999791
+      },
+      "hp": [
+        126
+      ],
+      "attacks": [
+        {
+          "id": "event-48",
+          "attackId": "attack-46",
+          "targetId": "structure-2",
+          "simulationTime": 637.5999999999558
+        }
+      ],
+      "ended": {
+        "id": "event-52",
+        "simulationTime": 645.8699999999483
+      },
+      "balance": {
+        "n": "190",
+        "d": "1"
+      },
+      "drained": true,
+      "ruin": {
+        "event": {
+          "id": "event-51",
+          "targetId": "structure-2",
+          "simulationTime": 640.7999999999529
+        },
+        "ticket": 16,
+        "polygon": 9,
+        "submittedSequence": 289,
+        "absenceSequence": 323,
+        "gameOver": {
+          "id": "event-54",
+          "simulationTime": 645.8699999999483
+        }
+      },
+      "animalFirstSequence": 87
+    }
+  },
+  "productBuild": {
+    "tool": "Vite 6.4.3",
+    "profile": "webgpu-worker / remote Draw",
+    "passed": true,
+    "seconds": 47.56
+  }
+}

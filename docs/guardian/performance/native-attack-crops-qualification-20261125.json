@@ -1,0 +1,1897 @@
+{
+  "version": 1,
+  "mode": "DEV qualification, one substep, stop dispatch after first logical hit",
+  "fixture": "tests/fixtures/sabana712-d1-native-active-raid.json.gz",
+  "receipt": {
+    "file": "native-attack-crops-adopted-nvidia-20261125.json",
+    "sha256": "8985e722c8323c2617da17e54d0a4434218d7394d8fb427d91c9fe2eab831221"
+  },
+  "display": {
+    "refreshHz": 30,
+    "width": 640,
+    "height": 480,
+    "quality": "muy_baja"
+  },
+  "trace": {
+    "sha256": "d718ba9573f24c8205987abe091249d8572483dd5ef300ff74781f071c202c5a",
+    "complete": true,
+    "loss": false
+  },
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 128.29999999981374
+    }
+  },
+  "crop": "plant-373",
+  "actor": "animal-396",
+  "originalPhase": 4.497729763870326,
+  "motion": {
+    "ticket": 2,
+    "preparedTicket": 1,
+    "at": 379.80000000000274,
+    "firstAge": 0,
+    "lastAge": 16.25389862060547,
+    "switchAfter": 1.4565299212779905,
+    "samples": 66
+  },
+  "strike": {
+    "ticket": 4,
+    "preparedTicket": 3,
+    "at": 397.69999999998646,
+    "firstAge": 0,
+    "lastAge": 4.253899574279785,
+    "duration": 4.541666824370623,
+    "firstDrawAt": 1795593038264.7
+  },
+  "body": 1,
+  "endpoint": [
+    90.31144714355469,
+    9.17122745513916,
+    20.84452945958807
+  ],
+  "attackId": "attack-661",
+  "hit": {
+    "id": "event-664",
+    "type": "AnimalLogicalHit",
+    "attackId": "attack-661",
+    "targetId": "plant-373",
+    "species": "warthog",
+    "presentation": {
+      "version": 1,
+      "elapsed": 402.2499999999823,
+      "animal": {
+        "x": 90.31144714355469,
+        "z": 9.17122745513916,
+        "heading": -2.9573478356832616
+      },
+      "target": {
+        "x": 90,
+        "z": 7.5
+      },
+      "shield": null
+    },
+    "simulationTime": 402.2499999999823
+  },
+  "remaining": 1,
+  "originalGeometry": {
+    "root": 338,
+    "geometries": [
+      258,
+      259,
+      260,
+      261
+    ]
+  },
+  "residentBuffers": [
+    {
+      "stage": "route",
+      "compared": 78,
+      "retained": 78
+    },
+    {
+      "stage": "walking",
+      "compared": 78,
+      "retained": 78
+    },
+    {
+      "stage": "terminal",
+      "compared": 78,
+      "retained": 78
+    },
+    {
+      "stage": "attack",
+      "compared": 78,
+      "retained": 78
+    },
+    {
+      "stage": "afterHit",
+      "compared": 78,
+      "retained": 78
+    }
+  ],
+  "firstSourceHold": {
+    "before": 51,
+    "after": 51,
+    "draws": 18
+  },
+  "secondSourceHold": {
+    "draws": 8
+  },
+  "releaseToDrawMs": {
+    "route": 13.099853515625,
+    "strike": 14.699951171875
+  },
+  "drawCadence": {
+    "sampledIntervals": 1000,
+    "prelude": {
+      "count": 326,
+      "peaks": [
+        {
+          "at": 1795593016902.5999,
+          "sequence": 48,
+          "intervalMs": 38,
+          "drawMs": 4.10009765625,
+          "trigger": "raf",
+          "ticket": null
+        },
+        {
+          "at": 1795593015767.9,
+          "sequence": 37,
+          "intervalMs": 36.60009765625,
+          "drawMs": 3.699951171875,
+          "trigger": "raf",
+          "ticket": null
+        },
+        {
+          "at": 1795593009601,
+          "sequence": 1,
+          "intervalMs": 36.400146484375,
+          "drawMs": 0.39990234375,
+          "trigger": "raf",
+          "ticket": null
+        }
+      ]
+    },
+    "route": {
+      "count": 537,
+      "peaks": [
+        {
+          "at": 1795593036805.2,
+          "sequence": 201,
+          "intervalMs": 40.60009765625,
+          "drawMs": 4.800048828125,
+          "trigger": "raf",
+          "ticket": 2
+        },
+        {
+          "at": 1795593032803.7,
+          "sequence": 162,
+          "intervalMs": 39,
+          "drawMs": 6.099853515625,
+          "trigger": "raf",
+          "ticket": 2
+        },
+        {
+          "at": 1795593029136.7998,
+          "sequence": 126,
+          "intervalMs": 38.89990234375,
+          "drawMs": 2.7001953125,
+          "trigger": "raf",
+          "ticket": 2
+        }
+      ]
+    },
+    "strike": {
+      "count": 139,
+      "peaks": [
+        {
+          "at": 1795593043398.4,
+          "sequence": 246,
+          "intervalMs": 633.699951171875,
+          "drawMs": 5.199951171875,
+          "trigger": "raf",
+          "ticket": 4
+        },
+        {
+          "at": 1795593038804.9,
+          "sequence": 206,
+          "intervalMs": 40.199951171875,
+          "drawMs": 2.39990234375,
+          "trigger": "raf",
+          "ticket": 4
+        },
+        {
+          "at": 1795593039837.2,
+          "sequence": 216,
+          "intervalMs": 39.199951171875,
+          "drawMs": 2.699951171875,
+          "trigger": "raf",
+          "ticket": 4
+        }
+      ]
+    },
+    "terminalGap": {
+      "fromSequence": 245,
+      "toSequence": 246,
+      "intervalMs": 633.699951171875,
+      "opportunities": {
+        "count": 18,
+        "outcome": "stale-binding",
+        "ticket": 4
+      },
+      "closedToSendMs": 515,
+      "sendToNextDrawMs": 28.199951171875,
+      "previousClock": 402.1538999023509,
+      "newClock": 402.2499999999823,
+      "preparer": {
+        "pid": 21536,
+        "tid": 1576,
+        "function": "pump",
+        "script": "src/rendering/webgpu-pipeline-admission.js",
+        "startedAfterPreviousDrawMs": 90.971,
+        "endedAfterPreviousDrawMs": 605.308,
+        "wallMs": 514.337,
+        "cpuMs": 508.174,
+        "preparationRequest": null
+      }
+    }
+  },
+  "presentation": {
+    "scope": {
+      "stepBatch": 1,
+      "endsDispatchAfterFirstHit": true
+    },
+    "publicationCounts": {
+      "total": 666,
+      "positionChanges": 327
+    },
+    "drained": true
+  },
+  "blockedPreparer": null,
+  "adopted": [
+    {
+      "ticket": 2,
+      "preparedSequence": 128,
+      "sequence": 136,
+      "elapsed": 375.7500000000064
+    },
+    {
+      "ticket": 4,
+      "preparedSequence": 545,
+      "sequence": 577,
+      "elapsed": 397.79999999998637
+    }
+  ],
+  "negativeControls": {
+    "originalRig": {
+      "file": "native-attack-crops-first-failure-nvidia-20261125.failure.json",
+      "sha256": "6c210b8994f467136801b474069dfbbe85bf707e15f639bee1f42a3115c290fb",
+      "minSequence": 110,
+      "observedSequence": 9,
+      "readySequence": 117,
+      "waitMs": 1823.39990234375,
+      "visible": true,
+      "bakedWalking": true,
+      "bakedRunning": true,
+      "optionalHistoricalMotionPreparing": true
+    },
+    "historicalAdoption": {
+      "file": "native-attack-crops-adoption-diagnostics-nvidia-20261125.failure.json",
+      "sha256": "88200e0549d8a2a843dfd27225818aab187bf7700754e9df4406ecb60d4f1909",
+      "surfaceSequence": 123,
+      "front": {
+        "sequence": 124,
+        "elapsed": 375.40000000000674,
+        "terrainReady": true
+      },
+      "preparedWaiting": {
+        "token": 1,
+        "sequence": 124,
+        "start": 375.3500000000068,
+        "end": 375.40000000000674,
+        "sealed": false,
+        "held": false
+      }
+    }
+  },
+  "cadenceAcceptance": false,
+  "nativeBinaries": {
+    "standalone": "5787838cc35f8448d6affd3f9fb352b16193a7ae6ee402d30b4f077743b4c2ec",
+    "pthread": "553aee6a1264131c614fa35b5eab772bac4de857989f49fadace8856e9a62b78",
+    "pthreadGlue": "11e9e12e5298d8ec89d238b433691e658863cceaeeffdf2d4028853683996c94",
+    "pthreadGlueWindowsBuild": "9cde90ea47fa28f1038d78052759560f4fd9e4f0ab367bb2482c2c3c8b3edb9e"
+  },
+  "validation": {
+    "selected": 522,
+    "passed": 512,
+    "knownQa100Failures": 5,
+    "skipped": 5,
+    "productBuildSecondsReported": 65,
+    "previousWasmSignaturesPreserved": true,
+    "addedFunctions": 25
+  },
+  "preparerBlock": [
+    {
+      "receipt": {
+        "file": "native-attack-crops-blocked-preparer-nvidia-20261125.failure.json",
+        "sha256": "c505a11a9fe737084e1337f4b74a214d1531dd80d8fb23bc48eb8c104f371e8a"
+      },
+      "block": {
+        "start": 1795593411277.7002,
+        "end": 1795593411827.7002,
+        "durationMs": 550
+      },
+      "route": {
+        "ticket": 2,
+        "sequence": 52,
+        "draws": 16,
+        "fromClock": 379.91210009766337,
+        "toClock": 380.41210009766337,
+        "maxDrawIntervalMs": 33.5
+      },
+      "events": [
+        "CropHit",
+        "AnimalLogicalHit"
+      ],
+      "firstTerminalError": "Animal crop preparation lacks its current native source"
+    },
+    {
+      "receipt": {
+        "file": "native-attack-crops-terminal-pipeline-nvidia-20261125.failure.json",
+        "sha256": "c941076af7380f55ebe14f6b9c3f7117f2ecf55618fbf3812d24041feb67ba1f"
+      },
+      "block": {
+        "start": 1795593549843,
+        "end": 1795593550393.1,
+        "durationMs": 550.10009765625
+      },
+      "route": {
+        "ticket": 2,
+        "sequence": 51,
+        "draws": 16,
+        "fromClock": 379.8795002441477,
+        "toClock": 380.3794001464915,
+        "maxDrawIntervalMs": 33.400146484375
+      },
+      "events": [
+        "CropHit",
+        "AnimalLogicalHit"
+      ],
+      "firstTerminalError": "Animal crop preparation lacks its current native source",
+      "rejectedOrdinaryBinding": {
+        "kind": 27,
+        "actor": 396,
+        "body": 1,
+        "sourceSequence": 11,
+        "controlSequence": 13,
+        "preparedTicket": 3,
+        "preparingTicket": null,
+        "matchingEpoch": true,
+        "actorState": null,
+        "active": false,
+        "clockThrough": 401.99999999998255
+      },
+      "trace": {
+        "file": "native-attack-crops-terminal-pipeline-nvidia-20261125.trace.json.gz",
+        "sha256": "1d79fcb85e98e5ee382619997e856460ed319cd71ce3522ca1363d87f30c5a22",
+        "loss": false
+      }
+    }
+  ],
+  "orderedTerminalPacket": {
+    "mode": "DEV qualification with hit drawn before shutdown, 30 Hz",
+    "receipt": {
+      "file": "native-attack-crops-terminal-drawn-nvidia-20261125.json",
+      "sha256": "51466a2af93c0a2d15b1d6d86f0b5434edc991d8b19c46b763d51436a9066218"
+    },
+    "trace": {
+      "file": "native-attack-crops-terminal-drawn-nvidia-20261125.trace.json.gz",
+      "sha256": "3d6434570b0d7e35a83852704bc8aa4e385181bd51ebe87170407c02da22bee0",
+      "loss": false
+    },
+    "attackId": "attack-661",
+    "body": 1,
+    "ordinaryFrame": {
+      "sequence": 245,
+      "clockElapsed": 402.0499999999825,
+      "retiredBinding": true
+    },
+    "snapshots": {
+      "comparedResidentBuffers": 78,
+      "drained": true,
+      "errorCount": 0
+    },
+    "blockedPreparer": {
+      "durationMs": 550.199951171875,
+      "totalDraws": 17,
+      "replayDraws": 15,
+      "sequence": 54,
+      "postedBeforeBlockByMs": [
+        30.699951171875
+      ],
+      "clockAdvance": 0.4666999511719041
+    },
+    "cadence": {
+      "terminalIntervalMs": 133.300048828125,
+      "staleBindingOpportunities": 3,
+      "previousDrawSequence": 244,
+      "previousDrawAt": 1795594400904.2998,
+      "retireGraphicsAt": 1795594400966.228,
+      "endFrameReturnedAt": 1795594400995.5,
+      "sendStartedAt": 1795594400996.7,
+      "drawAt": 1795594401037.5999,
+      "closedToSendMs": 1.199951171875,
+      "compile": {
+        "root": 340,
+        "source": "prepareLateHistoricalMotion",
+        "alternatives": 12,
+        "startedAt": 1795594401009.1,
+        "finishedAt": 1795594401535.126,
+        "synchronousMs": 526.02587890625
+      }
+    },
+    "regression": {
+      "tests": 343,
+      "passed": 343,
+      "buildSeconds": 57.51
+    }
+  },
+  "historicalDemandRetirement": {
+    "mode": "DEV qualification, NVIDIA, physical 30 Hz",
+    "demandOnly": {
+      "receipt": {
+        "file": "native-attack-crops-on-demand-nvidia-20261125.failure.json",
+        "sha256": "b796a1abdaab068bf38deaa2492886998c27427d1181d39863f7621d8cd08ffd",
+        "trace": {
+          "file": "native-attack-crops-on-demand-nvidia-20261125.trace.json.gz",
+          "sha256": "405dc2c57b688b48712c5596e7e6238c7bd194b9189f559ee4d5e40843fa5923",
+          "loss": false
+        }
+      },
+      "firstError": "uncommitted-published-resources",
+      "publishedVertex": "Buffer:7023"
+    },
+    "demandAndFence": {
+      "receipt": {
+        "file": "native-attack-crops-demand-retirement-nvidia-20261125.failure.json",
+        "sha256": "71281bd4f4afd107c281568d622d9286651faba9e4917ded0d55d1cfd87fcf14",
+        "trace": {
+          "file": "native-attack-crops-demand-retirement-nvidia-20261125.trace.json.gz",
+          "sha256": "3c2dd8c5206d724ebcf909e82dc648d8bec6edb254d8854ab64f881b2a93af15",
+          "loss": false
+        }
+      },
+      "hitPublication": 688,
+      "terminalPacketNotDrawn": 237,
+      "lastDraw": 236,
+      "retirementFence": {
+        "requestId": "request:7294",
+        "retainedOperations": 70,
+        "throughSequence": 237,
+        "completionMs": 0.7
+      },
+      "staleBindingOpportunities": 298,
+      "staleWindowMs": 9932.6
+    },
+    "completedRetirement": {
+      "receipt": {
+        "file": "native-attack-crops-demand-wake-nvidia-20261125.json",
+        "sha256": "a8225b14150d2e0caa3e76943e3a917b82ec793ce105dc2a482491b3f0f49001",
+        "trace": {
+          "file": "native-attack-crops-demand-wake-nvidia-20261125.trace.json.gz",
+          "sha256": "462b947e936b3dabfaf9711f0d277cc8e66024f3feddc7127ecbdc2dc2f4295e",
+          "loss": false
+        }
+      },
+      "attackId": "attack-661",
+      "crop": "plant-373",
+      "body": 1,
+      "retiredStrikeTicket": 4,
+      "terminalPacket": {
+        "sequence": 242,
+        "elapsed": 402.19999999998237,
+        "previousSequence": 240
+      },
+      "inspectedFrame": {
+        "sequence": 244,
+        "elapsed": 402.19999999998237,
+        "bindings": 0
+      },
+      "originalRig": {
+        "root": 338,
+        "geometries": [
+          218,
+          219,
+          220,
+          221
+        ]
+      },
+      "residentBuffers": [
+        {
+          "stage": "route",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "walking",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "terminal",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "attack",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "afterHit",
+          "compared": 78,
+          "retained": 78
+        }
+      ],
+      "postRetirementHistoricalAdmissions": 0,
+      "postRetirementHistoricalCompiles": 0,
+      "drained": true,
+      "errors": [],
+      "blockedPreparer": {
+        "durationMs": 550,
+        "draws": 17,
+        "replayDraws": 16,
+        "clockAdvanceSeconds": 0.5
+      },
+      "cadence": {
+        "terminalIntervalMs": 166.599853515625,
+        "retireToDrawMs": 74.438232421875,
+        "closedToSendMs": 0.199951171875,
+        "staleBindingOpportunities": 4,
+        "preparerPhasesMs": {
+          "timeline": 29.901123046875,
+          "capture": 22.89990234375,
+          "encode": 1.39990234375,
+          "rendererInCapture": 21.801,
+          "beforeReceive": 21.7
+        },
+        "retirementFence": {
+          "requestId": "request:7125",
+          "producerRequestedAt": 1795596737605.4,
+          "workerReceivedAt": 1795596737608.9001,
+          "startedAt": 1795596737631.9001,
+          "caller": null,
+          "finishedAt": 1795596737632.4001
+        },
+        "c4Accepted": false
+      }
+    },
+    "regression": {
+      "selection": 382,
+      "passed": 382,
+      "failedWhileBuildConcurrent": 1,
+      "buildSeconds": 52.34,
+      "binariesChanged": false
+    }
+  },
+  "successorQualification": {
+    "mode": "DEV qualification across two crops, NVIDIA, physical 30 Hz",
+    "preCorrection": {
+      "receipt": {
+        "file": "native-attack-crops-successor-nvidia-20261125.failure.json",
+        "sha256": "83dbadb968e37d3e02287a7bae938d4239206fdda4c1bf45f5581b483f691f39",
+        "trace": {
+          "file": "native-attack-crops-successor-nvidia-20261125.trace.json.gz",
+          "sha256": "aefa5d2bfe798ce44a5bfdf90e101b9df07460e97baf1dc6ebf8fcb4f1428fe4",
+          "loss": false
+        }
+      },
+      "requestedTicket": 5,
+      "target": "plant-337",
+      "sourceSequence": 644,
+      "armedHistoricalSequence": 645,
+      "unsealedToken": 2,
+      "error": "Animal crop source or original clip bank unavailable",
+      "previewDecodeMs": 16.233,
+      "firstRendererRecordMs": 28.101
+    },
+    "result": {
+      "receipt": {
+        "file": "native-attack-crops-successor-history-nvidia-20261125.json",
+        "sha256": "e26e5b2beb502dbd38a151f4ccbc5104eee31debd8a4bed867f02dc8e445bedf",
+        "trace": {
+          "file": "native-attack-crops-successor-history-nvidia-20261125.trace.json.gz",
+          "sha256": "14e8cfcf2ec99c9f2248f60e572af55f09ca3891ee446be5c3abb7af68f2e00e",
+          "loss": false
+        }
+      },
+      "originalRig": {
+        "root": 341,
+        "geometries": [
+          218,
+          219,
+          220,
+          221
+        ]
+      },
+      "body": 1,
+      "sourcePose": {
+        "x": 90.31144714355469,
+        "z": 9.17122745513916,
+        "phase": 20.84452945958807
+      },
+      "damage": [
+        {
+          "attackId": "attack-661",
+          "target": "plant-373",
+          "elapsed": 402.09999999998246,
+          "count": 1
+        },
+        {
+          "attackId": "attack-665",
+          "target": "plant-337",
+          "elapsed": 408.8999999999763,
+          "count": 1
+        }
+      ],
+      "tickets": [
+        {
+          "kind": 26,
+          "target": 373,
+          "prepared": 1,
+          "ticket": 2,
+          "firstAge": 0,
+          "draws": 66
+        },
+        {
+          "kind": 27,
+          "target": 373,
+          "prepared": 3,
+          "ticket": 4,
+          "firstAge": 0,
+          "draws": 18
+        },
+        {
+          "kind": 26,
+          "target": 337,
+          "prepared": 5,
+          "ticket": 6,
+          "firstAge": 0,
+          "draws": 3
+        },
+        {
+          "kind": 27,
+          "target": 337,
+          "prepared": 7,
+          "ticket": 8,
+          "firstAge": 0,
+          "draws": 18
+        }
+      ],
+      "terminal": {
+        "sequence": 298,
+        "elapsed": 408.8999999999763,
+        "bindings": 0
+      },
+      "comparedBuffers": [
+        {
+          "stage": "route",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "walking",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "terminal",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "attack",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "successorRoute",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "successorStrike",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "afterHit",
+          "compared": 78,
+          "retained": 78
+        }
+      ],
+      "drained": true,
+      "errors": [],
+      "blockedPreparer": {
+        "durationMs": 550.10009765625,
+        "draws": 17,
+        "retainedDraws": 15,
+        "causalAdvanceSeconds": 0.46669995117184726
+      }
+    },
+    "cadence": {
+      "sampledIntervals": 1188,
+      "overTarget": 1188,
+      "targetMs": 16.666666666666668,
+      "retirementTimings": [
+        {
+          "previousSequence": 244,
+          "drawSequence": 245,
+          "intervalMs": 133.39990234375,
+          "staleBindingOpportunities": 3,
+          "phasesMs": {
+            "terminal-timeline": 38.300048828125,
+            "scene-renderer": 30.89892578125,
+            "terminal-capture": 32.5,
+            "historicalDecode": 18.136962890625
+          },
+          "sendAfterPacketClosedMs": 0.199951171875,
+          "postedAfterLastDrawMs": 106.900146484375,
+          "admittedAfterLastDrawMs": 131.5,
+          "resourcesWaitMs": 0,
+          "thirdStaleAfterLastDrawMs": 100.199951171875,
+          "admissionToDrawMs": 1.89990234375
+        },
+        {
+          "previousSequence": 297,
+          "drawSequence": 298,
+          "intervalMs": 133.39990234375,
+          "staleBindingOpportunities": 3,
+          "phasesMs": {
+            "terminal-timeline": 23.701171875,
+            "scene-renderer": 19.60009765625,
+            "terminal-capture": 20.5,
+            "historicalDecode": 12.473876953125
+          },
+          "sendAfterPacketClosedMs": 0.199951171875,
+          "postedAfterLastDrawMs": 79.60009765625,
+          "admittedAfterLastDrawMs": 102.599853515625,
+          "resourcesWaitMs": 0,
+          "thirdStaleAfterLastDrawMs": 101.89990234375,
+          "admissionToDrawMs": 30.800048828125
+        }
+      ],
+      "c4Accepted": false
+    },
+    "nativeBuild": {
+      "inputs": 66,
+      "standaloneExports": 815,
+      "pthreadRawExports": 836,
+      "pthreadPublicExports": 821,
+      "added": [
+        "nav_animal_finished_strike_snapshot",
+        "nav_animal_plan_finished_crop"
+      ],
+      "standalone": "641295591b3b4d6add4457c4c3d264440fabfb586d9e3533c3a87d5c44998721",
+      "pthread": "5849ea499cf450609bb5ab37b39816f89cbc6dbbe006a9ae34e404d0648e2d01",
+      "pthreadGlue": "a4f5d5dce4686615bde471bb6ea750e6aa1621cbf381db40d046008def1ce938",
+      "pthreadGlueCommittedLF": "453272f1b047ff4c0dd31246d36b618822b2386b8cde692bb5fb720a8db6b4b4"
+    },
+    "regression": {
+      "selected": 420,
+      "passed": 415,
+      "skippedExperimental": 5,
+      "failed": 0,
+      "knownHistoricalContentionFailures": 3,
+      "buildSeconds": 49
+    }
+  },
+  "retreatQualification": {
+    "mode": "DEV qualification with two crops and completed retreat, NVIDIA, physical 30 Hz",
+    "firstPhysicalAttempt": {
+      "receipt": {
+        "file": "native-attack-crops-retreat-nvidia-20261125.failure.json",
+        "sha256": "270c1681113916a3556b30ba3cd06e18b4e2351565b8e550399cac6492ae0fc4",
+        "trace": {
+          "file": "native-attack-crops-retreat-nvidia-20261125.trace.json.gz",
+          "sha256": "125552b8264a4b2db80a364dca48f979e3c86300685a53bdb61be93ccb02e359",
+          "loss": false
+        }
+      },
+      "error": "Native resource preparation timed out",
+      "preparationTicket": 5,
+      "sourcePublication": 738,
+      "surfacePublication": 697,
+      "pendingPublications": 32,
+      "lastReceivedPublication": 729,
+      "waitMs": 10001.5,
+      "prepCallbacksAfterRequest": 300,
+      "drawCallsAfterRequest": 0,
+      "exactPacketOrderKnown": false
+    },
+    "result": {
+      "receipt": {
+        "file": "native-attack-crops-retreat-pending-nvidia-20261125.json",
+        "sha256": "8d879451aec7b7af9fd469e7e8e13e8c6378773358f31add74898f091e379984",
+        "trace": {
+          "file": "native-attack-crops-retreat-pending-nvidia-20261125.trace.json.gz",
+          "sha256": "c80cc030ab5f3b400e3b55de1649775738e81ca6e0178c96f831cc3cdd601fa2",
+          "loss": false
+        }
+      },
+      "body": 1,
+      "damage": [
+        {
+          "attackId": "attack-661",
+          "target": "plant-373",
+          "elapsed": 401.99999999998255,
+          "count": 1
+        },
+        {
+          "attackId": "attack-665",
+          "target": "plant-337",
+          "elapsed": 408.8499999999763,
+          "count": 1
+        }
+      ],
+      "preparedAndAcquired": [
+        {
+          "kind": 26,
+          "target": 373,
+          "prepared": 1,
+          "ticket": 2,
+          "firstAge": 0,
+          "draws": 66
+        },
+        {
+          "kind": 27,
+          "target": 373,
+          "prepared": 3,
+          "ticket": 4,
+          "firstAge": 0,
+          "draws": 18
+        },
+        {
+          "kind": 26,
+          "target": 337,
+          "prepared": 5,
+          "ticket": 6,
+          "firstAge": 0,
+          "draws": 3
+        },
+        {
+          "kind": 27,
+          "target": 337,
+          "prepared": 7,
+          "ticket": 8,
+          "firstAge": 0,
+          "draws": 18
+        },
+        {
+          "kind": 26,
+          "target": null,
+          "prepared": 9,
+          "ticket": 10,
+          "firstAge": 0,
+          "draws": 33
+        }
+      ],
+      "originalRig": {
+        "root": 341,
+        "geometries": [
+          259,
+          260,
+          261,
+          262
+        ]
+      },
+      "retainedAnimalAttributes": [
+        {
+          "stage": "route",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "walking",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "terminal",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "attack",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "successorRoute",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "successorStrike",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "afterHit",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "retreat",
+          "compared": 78,
+          "retained": 78
+        }
+      ],
+      "retainedOtherAttributes": {
+        "comparable": 1324,
+        "sameBuffer": 1324,
+        "sameVersion": 1259,
+        "updatedInPlace": 65,
+        "formerEntriesAbsent": 13,
+        "replaced": 0,
+        "uniqueRetainedBuffers": 1182
+      },
+      "exit": {
+        "ticket": 10,
+        "start": {
+          "time": 408.8999999999763,
+          "x": 89.74946594238281,
+          "z": 8.652749061584473,
+          "phase": 21.3542756775147,
+          "running": true,
+          "speed": 3.8
+        },
+        "last": {
+          "time": 417.1247352977074,
+          "x": 96.83492279052734,
+          "z": 39.09113693237305,
+          "phase": 29.579010975245797,
+          "running": false,
+          "speed": 0
+        },
+        "expectedArrival": 418.27473529770634,
+        "gone": {
+          "sequence": 986,
+          "kind": "animalGone",
+          "actorId": "animal-396",
+          "at": 418.28999999996773
+        },
+        "rendered": {
+          "sequence": 381,
+          "clockElapsed": 418.33999999996774,
+          "presentationElapsed": 418.3399963378906,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "523cf434-32e1-463e-9aa2-a3c1b68f43a4/1",
+            "nativeSession": 1,
+            "ticket": 10,
+            "effectiveTime": 410.0499999999752
+          },
+          "bindings": []
+        },
+        "raidEnded": {
+          "id": "event-670",
+          "type": "RaidEnded",
+          "simulationTime": 418.28999999996773
+        }
+      },
+      "drained": true,
+      "blockedPreparer": {
+        "duration": 550,
+        "draws": 16,
+        "stable": 16,
+        "advance": 0.49989990234377046
+      },
+      "obsoletes": [
+        {
+          "at": 1795601614333.046,
+          "sequence": 379,
+          "wasPending": false,
+          "lastReceived": 379,
+          "activeSequence": 378,
+          "reason": "The acquired crop strike was revoked before this frame arrived"
+        }
+      ]
+    },
+    "pendingOrderControl": {
+      "reproducedInDeterministicHost": true,
+      "observedInPositivePhysicalRun": false
+    },
+    "cadence": {
+      "sampledIntervals": 1476,
+      "overTarget": 1476,
+      "targetMs": 16.666666666666668,
+      "maximum": {
+        "at": 1795601598171.5999,
+        "sequence": 245,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "523cf434-32e1-463e-9aa2-a3c1b68f43a4/1",
+          "nativeSession": 1,
+          "ticket": 4,
+          "effectiveTime": 397.4499999999867
+        },
+        "intervalMs": 166.699951171875,
+        "drawMs": 4.60009765625,
+        "replay": false,
+        "clockElapsed": 401.99999999998255,
+        "safeUntil": 401.99999999998255,
+        "cameraVersion": null
+      },
+      "runMaximum": {
+        "at": 1795601607976.2,
+        "sequence": 316,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "523cf434-32e1-463e-9aa2-a3c1b68f43a4/1",
+          "nativeSession": 1,
+          "ticket": 10,
+          "effectiveTime": 410.0499999999752
+        },
+        "intervalMs": 38,
+        "drawMs": 3.099853515625,
+        "replay": true,
+        "clockElapsed": 411.8908000488352,
+        "safeUntil": 411.9499999999735,
+        "cameraVersion": null
+      },
+      "exitMaximum": {
+        "at": 1795601614405.0999,
+        "sequence": 380,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "523cf434-32e1-463e-9aa2-a3c1b68f43a4/1",
+          "nativeSession": 1,
+          "ticket": 10,
+          "effectiveTime": 410.0499999999752
+        },
+        "intervalMs": 96.099853515625,
+        "drawMs": 4.60009765625,
+        "replay": false,
+        "clockElapsed": 418.33999999996774,
+        "safeUntil": 418.33999999996774,
+        "cameraVersion": null
+      },
+      "c4Accepted": false
+    },
+    "nativeBuild": {
+      "inputs": 66,
+      "standaloneExports": 817,
+      "pthreadRawExports": 838,
+      "pthreadPublicExports": 823,
+      "added": [
+        "nav_animal_plan_finished_retreat",
+        "nav_animal_finish_retreat"
+      ],
+      "standalone": "4ad348a2369ef5187b172fe2ce172830e7815f690463739c3677d42859928a3e",
+      "pthread": "e10672265f7fa52ab61be5750dea45aa53d108d168778f5c330b89cbc482d9ca",
+      "pthreadGlue": "ce25e8aef9d10b56cdd274256d107b191e9e809f08192999a6b7fb7a7878c18c",
+      "pthreadGlueCommittedLF": "f6cf9f70c544557368aa47983e7157c59f7fe2efd65ebb0201b033926869c902"
+    },
+    "regression": {
+      "selected": 422,
+      "passed": 417,
+      "skippedExperimental": 5,
+      "failed": 0,
+      "buildSeconds": 51.29
+    }
+  },
+  "historicalEventDemand": {
+    "base": "93faafe8819dd40224d7203f41d9996031b0d5ce",
+    "patchSHA256": "adf36f9931e940f8dede4bad229dfc1e87ed095400e47883083d59873535705e",
+    "fixture": {
+      "path": "tests/fixtures/sabana712-d1-native-active-raid.json.gz",
+      "sha256": "8520884802b64d0bd89644ddcb4252dad60a0ba1b81b77ffc722a53fe95e5c81"
+    },
+    "raw": {
+      "path": ".cache/native-attack-crops-deferred-preview-nvidia-20261125.json",
+      "sha256": "5257eb5a943a69a78c74d9d346a71187ed1c9e751684b70603b7acd588ce7309"
+    },
+    "trace": {
+      "path": ".cache/native-attack-crops-deferred-preview-nvidia-20261125.trace.json.gz",
+      "sha256": "b50ac322e641841d92679758da4623fec0b81e23db1c3a876dc4a1668874b2ad"
+    },
+    "baseline": {
+      "path": ".cache/native-attack-crops-retreat-pending-nvidia-20261125.json",
+      "sha256": "8d879451aec7b7af9fd469e7e8e13e8c6378773358f31add74898f091e379984"
+    },
+    "comparison": {
+      "path": ".cache/native-attack-crops-deferred-preview-nvidia-20261125.comparison.json",
+      "sha256": "116d4cd104d650886a97d889e7c9d23d06a21f93b995fb04cc8747eaf239aa14"
+    },
+    "phases": {
+      "path": ".cache/native-attack-crops-deferred-preview-nvidia-20261125.probe-marks.json",
+      "sha256": "944f6ebddca5d4592ba466383884e1814364207fb11f0c693a22622c34f411e5"
+    },
+    "functionalDiagnostics": {
+      "path": ".cache/native-attack-crops-deferred-preview-nvidia-20261125.functional-deviation.json",
+      "sha256": "b7e75ecb452bc4945b621e3a4b65054c139ea0d8fbaede7185fe23d74750e2c4"
+    },
+    "harness": {
+      "path": ".cache/native-ordinary-raid-preview-physical.mjs",
+      "sha256": "eb5591b1f84cacb662387fedbab9495d7bab29f41e9405e0c694af46016291bd"
+    },
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 102.60000000149012
+      }
+    },
+    "displayHz": 30,
+    "displayResolution": [
+      3840,
+      2160
+    ],
+    "traceLoss": false,
+    "cropTerminalPublications": {
+      "baseline": [
+        {
+          "attackId": "attack-661",
+          "target": "plant-373",
+          "sequence": 245,
+          "intervalMs": 166.699951171875,
+          "opportunities": [
+            [
+              33.4,
+              244,
+              "stale-binding"
+            ],
+            [
+              66.7,
+              244,
+              "stale-binding"
+            ],
+            [
+              100,
+              244,
+              "stale-binding"
+            ],
+            [
+              135.1,
+              244,
+              "stale-binding"
+            ],
+            [
+              166.7,
+              245,
+              "submitted"
+            ]
+          ],
+          "eventGroupDeferrals": 0,
+          "eagerPreviewDecodeCalls": 1,
+          "eagerPreviewDecodeWallMs": 23.819091796875,
+          "decoderEntries": null,
+          "timelineWallMs": 44.60009765625,
+          "rendererRecordWallMs": 28.800048828125,
+          "transportFromPreviousDrawMs": {
+            "endFrameCalledAt": 108.2,
+            "endFrameReturnedAt": 109.8,
+            "sendStartedAt": 110,
+            "postedAt": 110,
+            "workerReceivedAt": 116.8,
+            "admissionStartedAt": 122.8,
+            "resourcesWaitStartedAt": 131.5,
+            "resourcesReadyAt": 131.5,
+            "admittedAt": 135.7,
+            "firstDrawStartedAt": 166.7,
+            "firstDrawCompletedAt": 171.3
+          }
+        },
+        {
+          "attackId": "attack-665",
+          "target": "plant-337",
+          "sequence": 297,
+          "intervalMs": 133.300048828125,
+          "opportunities": [
+            [
+              33.5,
+              296,
+              "stale-binding"
+            ],
+            [
+              66.7,
+              296,
+              "stale-binding"
+            ],
+            [
+              100.5,
+              296,
+              "stale-binding"
+            ],
+            [
+              133.3,
+              297,
+              "submitted"
+            ]
+          ],
+          "eventGroupDeferrals": 0,
+          "eagerPreviewDecodeCalls": 1,
+          "eagerPreviewDecodeWallMs": 11.738037109375,
+          "decoderEntries": null,
+          "timelineWallMs": 22.2998046875,
+          "rendererRecordWallMs": 24.900146484375,
+          "transportFromPreviousDrawMs": {
+            "endFrameCalledAt": 81.9,
+            "endFrameReturnedAt": 83.7,
+            "sendStartedAt": 83.9,
+            "postedAt": 83.9,
+            "workerReceivedAt": 90,
+            "admissionStartedAt": 94.6,
+            "resourcesWaitStartedAt": 104.7,
+            "resourcesReadyAt": 104.7,
+            "admittedAt": 108.1,
+            "firstDrawStartedAt": 133.3,
+            "firstDrawCompletedAt": 137.3
+          }
+        }
+      ],
+      "candidate": [
+        {
+          "attackId": "attack-661",
+          "target": "plant-373",
+          "sequence": 243,
+          "intervalMs": 200.10009765625,
+          "opportunities": [
+            [
+              33.3,
+              241,
+              "stale-binding"
+            ],
+            [
+              68.1,
+              241,
+              "stale-binding"
+            ],
+            [
+              100,
+              241,
+              "stale-binding"
+            ],
+            [
+              133.3,
+              241,
+              "stale-binding"
+            ],
+            [
+              167.1,
+              241,
+              "stale-binding"
+            ],
+            [
+              200.1,
+              243,
+              "submitted"
+            ]
+          ],
+          "eventGroupDeferrals": 1,
+          "eagerPreviewDecodeCalls": 0,
+          "eagerPreviewDecodeWallMs": 0,
+          "decoderEntries": 0,
+          "timelineWallMs": 24.39892578125,
+          "rendererRecordWallMs": 27.60009765625,
+          "transportFromPreviousDrawMs": {
+            "endFrameCalledAt": 153.6,
+            "endFrameReturnedAt": 155.2,
+            "sendStartedAt": 156.2,
+            "postedAt": 156.2,
+            "workerReceivedAt": 162.8,
+            "admissionStartedAt": 170.7,
+            "resourcesWaitStartedAt": 180.4,
+            "resourcesReadyAt": 180.4,
+            "admittedAt": 183.9,
+            "firstDrawStartedAt": 200.1,
+            "firstDrawCompletedAt": 205.7
+          }
+        },
+        {
+          "attackId": "attack-665",
+          "target": "plant-337",
+          "sequence": 295,
+          "intervalMs": 99.89990234375,
+          "opportunities": [
+            [
+              33.4,
+              294,
+              "stale-binding"
+            ],
+            [
+              66.6,
+              294,
+              "stale-binding"
+            ],
+            [
+              99.9,
+              295,
+              "submitted"
+            ]
+          ],
+          "eventGroupDeferrals": 1,
+          "eagerPreviewDecodeCalls": 0,
+          "eagerPreviewDecodeWallMs": 0,
+          "decoderEntries": 0,
+          "timelineWallMs": 16.39990234375,
+          "rendererRecordWallMs": 20,
+          "transportFromPreviousDrawMs": {
+            "endFrameCalledAt": 71.2,
+            "endFrameReturnedAt": 72.7,
+            "sendStartedAt": 73,
+            "postedAt": 73,
+            "workerReceivedAt": 79.4,
+            "admissionStartedAt": 83.8,
+            "resourcesWaitStartedAt": 92.7,
+            "resourcesReadyAt": 92.7,
+            "admittedAt": 95.9,
+            "firstDrawStartedAt": 99.9,
+            "firstDrawCompletedAt": 103.6
+          }
+        }
+      ]
+    },
+    "nodeInstrumented": {
+      "before": {
+        "664": {
+          "totalDecodes": 9,
+          "samples": 9,
+          "medianWarmPumpWallMs": 32.306
+        },
+        "668": {
+          "totalDecodes": 9,
+          "samples": 9,
+          "medianWarmPumpWallMs": 31.403
+        }
+      },
+      "after": {
+        "664": {
+          "totalDecodes": 0,
+          "samples": 9,
+          "medianWarmPumpWallMs": 15.117
+        },
+        "668": {
+          "totalDecodes": 0,
+          "samples": 9,
+          "medianWarmPumpWallMs": 14.259
+        }
+      }
+    },
+    "proof": [
+      {
+        "kind": 26,
+        "target": 373,
+        "prepared": 1,
+        "ticket": 2,
+        "firstAge": 0,
+        "draws": 66
+      },
+      {
+        "kind": 27,
+        "target": 373,
+        "prepared": 3,
+        "ticket": 4,
+        "firstAge": 0,
+        "draws": 18
+      },
+      {
+        "kind": 26,
+        "target": 337,
+        "prepared": 5,
+        "ticket": 6,
+        "firstAge": 0,
+        "draws": 3
+      },
+      {
+        "kind": 27,
+        "target": 337,
+        "prepared": 7,
+        "ticket": 8,
+        "firstAge": 0,
+        "draws": 18
+      },
+      {
+        "kind": 26,
+        "target": null,
+        "prepared": 9,
+        "ticket": 10,
+        "firstAge": 0.0023000487126410007,
+        "draws": 33
+      }
+    ],
+    "ageZeroCheck": {
+      "passed": false,
+      "sequence": 297,
+      "ticket": 10,
+      "effectiveTime": 410.24999999997505,
+      "clockElapsed": 410.25230004883525,
+      "safeUntil": 410.299999999975,
+      "firstScalar": 0.0023000487126410007,
+      "replay": false
+    },
+    "hitEvents": [
+      [
+        "attack-661",
+        "plant-373",
+        402.2499999999823
+      ],
+      [
+        "attack-665",
+        "plant-337",
+        409.0999999999761
+      ]
+    ],
+    "visibleRig": {
+      "root": 341,
+      "geometries": [
+        218,
+        219,
+        220,
+        221
+      ]
+    },
+    "comparedBuffers": [
+      {
+        "stage": "route",
+        "compared": 78,
+        "retained": 78
+      },
+      {
+        "stage": "walking",
+        "compared": 78,
+        "retained": 78
+      },
+      {
+        "stage": "terminal",
+        "compared": 78,
+        "retained": 78
+      },
+      {
+        "stage": "attack",
+        "compared": 78,
+        "retained": 78
+      },
+      {
+        "stage": "successorRoute",
+        "compared": 78,
+        "retained": 78
+      },
+      {
+        "stage": "successorStrike",
+        "compared": 78,
+        "retained": 78
+      },
+      {
+        "stage": "afterHit",
+        "compared": 78,
+        "retained": 78
+      },
+      {
+        "stage": "retreat",
+        "compared": 78,
+        "retained": 78
+      }
+    ],
+    "unrelatedAtExit": {
+      "before": 1415,
+      "after": 1324,
+      "comparable": 1324,
+      "samePhysicalBuffer": 1324,
+      "sameVersion": 1259
+    },
+    "exit": {
+      "expectedArrival": 418.47473529770616,
+      "gone": {
+        "sequence": 989,
+        "kind": "animalGone",
+        "actorId": "animal-396",
+        "at": 418.48999999996755
+      },
+      "drawSequence": 379,
+      "bindings": 0,
+      "raidEnded": {
+        "id": "event-670",
+        "type": "RaidEnded",
+        "simulationTime": 418.48999999996755
+      }
+    },
+    "drained": true,
+    "cadence": {
+      "targetMs": 16.666666666666668,
+      "sampled": 1481,
+      "overTarget": 1481,
+      "maximum": {
+        "at": 1795602982278,
+        "sequence": 243,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "e47a954a-9f66-4246-8cf0-af134b70bfe5/1",
+          "nativeSession": 1,
+          "ticket": 4,
+          "effectiveTime": 397.69999999998646
+        },
+        "intervalMs": 200.10009765625,
+        "drawMs": 5.599853515625,
+        "replay": false,
+        "clockElapsed": 402.2999999999823,
+        "safeUntil": 402.2999999999823,
+        "cameraVersion": null
+      },
+      "exitInterval": {
+        "sequence": 378,
+        "intervalMs": 133.39990234375,
+        "drawMs": 4.400146484375,
+        "replay": false,
+        "ticket": 10
+      },
+      "travelReplay": {
+        "sequence": 90,
+        "intervalMs": 39,
+        "drawMs": 3.099853515625,
+        "replay": true,
+        "ticket": 2
+      },
+      "targetPassed": false
+    },
+    "regression": {
+      "tests": 483,
+      "passed": 480,
+      "baselineFailures": [
+        "real authority incremental motion preview leaves state, clock, events and decoder untouched",
+        "real host direct rejects a stale historical handoff and propagates replay failure",
+        "real host prepared early rejects a stale historical handoff and propagates replay failure"
+      ],
+      "tap": {
+        "path": ".cache/c4-crop-preview/root-regression.tap",
+        "sha256": "f999b1a93c9782b8b2098fd62c5c6efc92ae2ca084954858c9457a43f9258765"
+      },
+      "baselineControl": {
+        "path": ".cache/c4-crop-preview/root-regression-baseline-red.tap",
+        "sha256": "8eb4e6c02e3af50dd95f933c4b8e51e4c6b9956d5813da126e4ca052caf62b2b"
+      },
+      "buildSeconds": 49.31,
+      "buildLog": {
+        "path": ".cache/c4-crop-preview/root-build.log",
+        "sha256": "5396709d604bf8fa10bc1ed60a1d0b1d77a7e271ea43cb30f5173b15c97b1f75"
+      }
+    },
+    "correlation": {
+      "cuts": {
+        "path": ".cache/native-attack-crops-deferred-preview-nvidia-20261125.astra-cuts.json",
+        "sha256": "ad5d9189dffb5cdd93da79edd89bf8ee74481df03645d8238e49e4ad378cbf63"
+      },
+      "recipe": {
+        "path": ".cache/c4-crop-preview/physical-cuts.py",
+        "sha256": "05c6a1668967b262662134bfbbda5a30ec16ff838193e7f0ccda87c2bd84b409"
+      },
+      "firstHit": {
+        "precedingPacket": 242,
+        "preparerDrawStartMs": 33.552,
+        "preparerDrawWallMs": 25.411,
+        "receiverRejectedAtMs": 85.712,
+        "wasPending": false,
+        "replacementDrawStartMs": 100.179
+      },
+      "exit": {
+        "precedingPacket": 377,
+        "receiverRejectedAtMs": 33.67,
+        "wasPending": true,
+        "replacementDrawStartMs": 67.233,
+        "replacementDrawWallMs": 31.756,
+        "postedMs": 99.1,
+        "resourceWaitMs": 0,
+        "admittedMs": 127.3,
+        "firstDrawStartedMs": 133.4
+      },
+      "travelReplay": {
+        "sequence": 90,
+        "intervalMs": 39,
+        "vizBeginFrameMs": 33.334,
+        "drawDeserializeStartMs": 32.634,
+        "drawDeserializeWallMs": 6.385,
+        "drawDeserializeCpuMs": 6.371,
+        "drawBeginFrameMs": 39.113,
+        "displayPayloadIdentified": false
+      }
+    }
+  },
+  "firstGoOrigin": {
+    "base": "65dccf8d56cca81dc03c88dc5829794e75adeb70",
+    "patchSHA256": "737ef1524dd7023a847a171f1589bc2691dfe6c79ce9142b8b07634373bba146",
+    "receipt": {
+      "path": ".cache/native-attack-crops-first-go-clock-nvidia-20261125.json",
+      "sha256": "bf310d85c53de2b67936a67af485a0134768682ff9850b253bc0868410ca57c6"
+    },
+    "trace": {
+      "path": ".cache/native-attack-crops-first-go-clock-nvidia-20261125.trace.json.gz",
+      "sha256": "2aa4bf9b2b7f0b7625412160e54f46ebdbbc16c848e4e62cc3d9e5991c8f0bc8"
+    },
+    "markers": {
+      "path": ".cache/native-attack-crops-first-go-clock-nvidia-20261125.probe-marks.json",
+      "sha256": "e00846d437ebe6365843881c3cf036e3acbfd4851832e828195d633f9aff28e7"
+    },
+    "originCheck": {
+      "path": ".cache/native-attack-crops-first-go-clock-nvidia-20261125.origin.json",
+      "sha256": "c003bf3a629435cf0c9a16ba496f1f7e8c7107b2d768736ba2094262b128f213"
+    },
+    "physicalCheck": {
+      "path": ".cache/native-attack-crops-first-go-clock-nvidia-20261125.summary.json",
+      "sha256": "d1c163cbf62ab6c639e27af640d58ea73b3902c7c1d5c15699c9d7d99d52338c"
+    },
+    "harness": {
+      "path": ".cache/native-raid-first-go-clock-physical.mjs",
+      "sha256": "ca7ab54e566eabdd2724effd017d09af962700a666c6898305f7c6e08db30b21"
+    },
+    "negativeBeforeDeferral": {
+      "path": ".cache/crop-first-go/pre-c4.tap",
+      "sha256": "fae7669f1356fadbc4da8a8e4caea90bf998bd2ffcf697ab1247531a4066cc9a"
+    },
+    "negativeBeforeOriginFix": {
+      "path": ".cache/crop-first-go/final-base.tap",
+      "sha256": "9b142bd07e4b1204dc2fb0f15161d9c0b78c5e3127eb780eb181299bc6d86247"
+    },
+    "negativeRelativeTime": 0.04999999701976776,
+    "deliberateHold": {
+      "requestedMs": 125,
+      "observedMs": 133.30517578125
+    },
+    "origin": {
+      "ticket": 10,
+      "sequence": 301,
+      "executionEpoch": 410.299999999975,
+      "globalElapsedAtFirstDraw": 410.44539990235086,
+      "admittedCoverage": 410.4999999999748,
+      "physicalRelativeTime": 0,
+      "laterRelativeWitness": 0.2786000967025757
+    },
+    "fiveAcquiredTickets": [
+      {
+        "kind": 26,
+        "target": 373,
+        "prepared": 1,
+        "ticket": 2,
+        "firstAge": 0,
+        "draws": 66
+      },
+      {
+        "kind": 27,
+        "target": 373,
+        "prepared": 3,
+        "ticket": 4,
+        "firstAge": 0,
+        "draws": 18
+      },
+      {
+        "kind": 26,
+        "target": 337,
+        "prepared": 5,
+        "ticket": 6,
+        "firstAge": 0,
+        "draws": 3
+      },
+      {
+        "kind": 27,
+        "target": 337,
+        "prepared": 7,
+        "ticket": 8,
+        "firstAge": 0,
+        "draws": 18
+      },
+      {
+        "kind": 26,
+        "target": null,
+        "prepared": 9,
+        "ticket": 10,
+        "firstAge": 0,
+        "draws": 33
+      }
+    ],
+    "hits": [
+      [
+        "attack-661",
+        "plant-373",
+        402.2999999999823
+      ],
+      [
+        "attack-665",
+        "plant-337",
+        409.199999999976
+      ]
+    ],
+    "exit": {
+      "expectedArrival": 418.5247352977061,
+      "event": {
+        "sequence": 989,
+        "kind": "animalGone",
+        "actorId": "animal-396",
+        "at": 418.5399999999675
+      },
+      "drawSequence": 382
+    },
+    "geometry": [
+      218,
+      219,
+      220,
+      221
+    ],
+    "comparedBuffersByStage": [
+      [
+        "route",
+        78,
+        78
+      ],
+      [
+        "walking",
+        78,
+        78
+      ],
+      [
+        "terminal",
+        78,
+        78
+      ],
+      [
+        "attack",
+        78,
+        78
+      ],
+      [
+        "successorRoute",
+        78,
+        78
+      ],
+      [
+        "successorStrike",
+        78,
+        78
+      ],
+      [
+        "afterHit",
+        78,
+        78
+      ],
+      [
+        "retreat",
+        78,
+        78
+      ]
+    ],
+    "otherBuffers": {
+      "comparable": 1324,
+      "samePhysicalBuffer": 1324,
+      "sameVersion": 1259
+    },
+    "drained": true,
+    "cadence": {
+      "displayHz": 30,
+      "targetMs": 16.666666666666668,
+      "sampled": 1471,
+      "overTarget": 1471,
+      "maximum": {
+        "at": 1795603899815.7,
+        "sequence": 300,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "2fc7caf1-16a3-4100-ae97-7eb6c7312fe0/1",
+          "nativeSession": 1,
+          "ticket": 8,
+          "effectiveTime": 404.64999999998014
+        },
+        "intervalMs": 200,
+        "drawMs": 4.10009765625,
+        "replay": false,
+        "clockElapsed": 409.2999999999759,
+        "safeUntil": 409.2999999999759,
+        "cameraVersion": null
+      },
+      "includesIntentionalHold": true,
+      "targetPassed": false
+    },
+    "correlation": {
+      "traceCuts": {
+        "path": ".cache/native-attack-crops-first-go-clock-nvidia-20261125.astra-cuts.json",
+        "sha256": "92374740e7f1e6e8dc63a82de9d23381d696ea3ca8e3e5c2d572dc923b9ea46e"
+      },
+      "recipe": {
+        "path": ".cache/crop-first-go/cuts.py",
+        "sha256": "4078d88f2411f0bf45406404938fdef2394737a310bad3c89e9ced6bec349009"
+      },
+      "naturalIntervals": [
+        {
+          "sequence": 300,
+          "intervalMs": 200,
+          "preceding": 299,
+          "rejectedMs": 80.097,
+          "wasPending": false,
+          "replacementDrawMs": 100.106,
+          "postedMs": 151.3,
+          "admittedMs": 179.8
+        },
+        {
+          "sequence": 245,
+          "intervalMs": 166.1,
+          "preceding": 244,
+          "rejectedMs": 32.97,
+          "wasPending": true,
+          "replacementDrawMs": 66.16,
+          "postedMs": 123.8,
+          "admittedMs": 157.6
+        },
+        {
+          "sequence": 381,
+          "intervalMs": 166.8,
+          "preceding": 380,
+          "rejectedMs": 59.84,
+          "wasPending": false,
+          "replacementDrawMs": 79.718,
+          "postedMs": 109.9,
+          "admittedMs": 140
+        },
+        {
+          "sequence": 139,
+          "intervalMs": 40.4,
+          "drawMajorGcWallMs": 3.056,
+          "drawDeserializeWallMs": 4.139,
+          "vizBeginFrameMs": 33.056,
+          "drawBeginFrameMs": 40.311,
+          "payloadIdentified": false
+        }
+      ]
+    },
+    "regression": {
+      "tests": 413,
+      "passed": 413,
+      "failures": 0,
+      "skipped": 0,
+      "tap": {
+        "path": ".cache/crop-first-go/root-regression.tap",
+        "sha256": "ac6fe50783209863b40bbd1cf49cd6f6c6e7880d1d158cc5104e86d65f9b9874"
+      },
+      "buildSeconds": 48.23,
+      "build": {
+        "path": ".cache/crop-first-go/root-build.log",
+        "sha256": "fcc44bb6b16767cddfa61d3fcc7a41f7a34c450328ed3abfc8a47003c5c2ca7c"
+      }
+    }
+  },
+  "historicalFixtureValidation": {
+    "base": "b3e6b0caeb09caff76bc6d9f088d380ace967d75",
+    "corrected": [
+      "confirmed-motion-preview",
+      "historical recovery direct",
+      "historical recovery prepared early"
+    ],
+    "tests": 484,
+    "passed": 484,
+    "failed": 0,
+    "tap": {
+      "path": ".cache/migration-test-fixtures-root-regression.tap",
+      "sha256": "88186551cb4be0d52e838df5e3795c3510c6920813fdff4f2cc20bf68a295a55"
+    }
+  }
+}

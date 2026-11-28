@@ -3,20 +3,38 @@
 export function createSpatialChunkRetention(core,{loaded,desired,onRetain=()=>{},onRelease=()=>{}}){
   let demand=new Set(),disposed=false;
   const deferred=new Map();
+  // These are native resource decisions and their metadata revisions, not JS
+  // route/footprint validation. Retry only when a native pin frontier changes.
+  const nativePinned=new Map();
+  const pinRevision=()=>core.residencyPinRevision?.()??0;
   const keyOf=(cx,cz)=>`${cx},${cz}`;
   const keep=(cx,cz)=>{
     const key=keyOf(cx,cz);
     if(!disposed&&demand.has(key)){deferred.set(key,[cx,cz]);onRetain(cx,cz);return true;}
+    if(nativePinned.has(key)&&nativePinned.get(key)===pinRevision()){
+      deferred.set(key,[cx,cz]);return true;
+    }
+    nativePinned.delete(key);
     deferred.delete(key);return false;
   };
+  function recordRemoval(coordinates){
+    const revision=pinRevision();
+    for(const [cx,cz] of coordinates){
+      const key=keyOf(cx,cz);
+      if(core.hasResidentChunk?.(cx,cz)){
+        deferred.set(key,[cx,cz]);nativePinned.set(key,revision);onRetain(cx,cz);
+      }else{deferred.delete(key);nativePinned.delete(key);onRelease(cx,cz);}
+    }
+  }
   function releaseChunk(cx,cz){
     if(keep(cx,cz))return 0;
-    const count=core.removeChunk(cx,cz);onRelease(cx,cz);return count;
+    const count=core.releaseChunk?core.releaseChunk(cx,cz):core.removeChunk(cx,cz);
+    recordRemoval([[cx,cz]]);return count;
   }
   function removeBatch(coordinates){
     if(!coordinates.length)return 0;
-    const count=core.removeChunks(coordinates);
-    for(const [cx,cz] of coordinates)onRelease(cx,cz);
+    const count=core.releaseChunks?core.releaseChunks(coordinates):core.removeChunks(coordinates);
+    recordRemoval(coordinates);
     return count;
   }
   function releaseChunks(coordinates){
@@ -28,11 +46,13 @@ export function createSpatialChunkRetention(core,{loaded,desired,onRetain=()=>{}
   }
   function reconcile(){
     const removable=[];
+    const revision=nativePinned.size?pinRevision():null;
     for(const [key,coordinates] of deferred){
       if(demand.has(key))continue;
-      deferred.delete(key);
       // A chunk can return to graphical ownership while its native lease ends.
-      if(!loaded().has(key)&&!desired().has(key))removable.push(coordinates);
+      if(loaded().has(key)||desired().has(key)){deferred.delete(key);nativePinned.delete(key);continue;}
+      if(nativePinned.has(key)&&nativePinned.get(key)===revision)continue;
+      deferred.delete(key);nativePinned.delete(key);removable.push(coordinates);
     }
     return removeBatch(removable);
   }

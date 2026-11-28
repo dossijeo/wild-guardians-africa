@@ -1,0 +1,587 @@
+{
+  "base": "ae16c21f4b3a7064b3bd6704096be58dcbb36189",
+  "candidateStandalone": "6b073c9a4f614d594128a981b5d177e871d91281c95ab3f1a2c997549f0fe775",
+  "profile": "explicit nativeWorkerLifecycle",
+  "world": "Sabana, Mapungubwe, seed 714",
+  "cases": [
+    {
+      "phase": "pending-intact-retreat",
+      "raw": {
+        "name": "native-menu-savanna-terminal-pending-intact-retreat-extended.json",
+        "sha256": "736a5dc1f01b141c68fc8f622fe0d6adb927bf212a8364ad584541dda3ba146f"
+      },
+      "save": {
+        "name": "savanna-center-pending-intact-retreat-checkpoint.json",
+        "sha256": "24731bf3880abba6bea21d6900fcfef78ec2a624b33d582d4c922dd0f465f380",
+        "elapsed": 410.4281464807039,
+        "actor": "animal-10",
+        "phase": 23.141493011405228,
+        "attack": "attack-18",
+        "pathNodes": 48
+      },
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 92.23499999940395
+        }
+      },
+      "loss": {
+        "firstDraw": {
+          "sequence": 46,
+          "clockElapsed": 413.67814648070095,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "301b76e8-dc7f-43dc-8dc3-82817d72ed76/1",
+            "nativeSession": 1,
+            "ticket": 3,
+            "effectiveTime": 413.57814648070104
+          },
+          "animal": {
+            "nativeAnimalCrop": {
+              "version": 1,
+              "kind": 26,
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "301b76e8-dc7f-43dc-8dc3-82817d72ed76/1",
+                "nativeSession": 1,
+                "ticket": 2,
+                "effectiveTime": 410.6781464807037
+              },
+              "sourceControlSequence": 3,
+              "endTime": 422.9596979537258,
+              "purpose": "retreat",
+              "actorId": 10,
+              "bodyId": 1,
+              "targetId": null,
+              "centerId": null,
+              "requestSequence": 3,
+              "slot": 0,
+              "generation": 3,
+              "radius": 1.1,
+              "x": 82.24744415283203,
+              "z": 3.6053192615509033,
+              "phase": 23.141493011405228,
+              "yaw": 2.9358124615130357,
+              "targetX": 76.17933421477156,
+              "targetZ": 36.09736330223256,
+              "centerX": null,
+              "centerZ": null
+            },
+            "relativeTime": 0.09999999403953552,
+            "semantic": "relative",
+            "epoch": 410.6781464807037,
+            "executionEpoch": 413.57814648070104,
+            "elapsed": 410.7781464747432
+          }
+        },
+        "retired": {
+          "version": 1,
+          "session": "75cc46de-735b-443f-9e1b-f2a47280ca66",
+          "terminal": true,
+          "callbacksSettled": true
+        },
+        "drained": true
+      },
+      "replacement": {
+        "sequence": 1,
+        "clockElapsed": 413.67814648070095,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "301b76e8-dc7f-43dc-8dc3-82817d72ed76/1",
+          "nativeSession": 1,
+          "ticket": 3,
+          "effectiveTime": 413.57814648070104
+        },
+        "animal": {
+          "nativeAnimalCrop": {
+            "version": 1,
+            "kind": 26,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "301b76e8-dc7f-43dc-8dc3-82817d72ed76/1",
+              "nativeSession": 1,
+              "ticket": 3,
+              "effectiveTime": 413.57814648070104
+            },
+            "sourceControlSequence": 3,
+            "endTime": 425.8596979537232,
+            "purpose": "retreat",
+            "actorId": 10,
+            "bodyId": 1,
+            "targetId": null,
+            "centerId": null,
+            "requestSequence": 3,
+            "slot": 0,
+            "generation": 3,
+            "radius": 1.1,
+            "x": 82.24744415283203,
+            "z": 3.6053192615509033,
+            "phase": 23.141493011405228,
+            "yaw": 2.9358124615130357,
+            "targetX": 76.17933421477156,
+            "targetZ": 36.09736330223256,
+            "centerX": null,
+            "centerZ": null
+          },
+          "relativeTime": 0.09999999403953552,
+          "semantic": "relative",
+          "epoch": 413.57814648070104,
+          "executionEpoch": 413.57814648070104,
+          "elapsed": 413.6781464747406
+        }
+      },
+      "verification": [
+        {
+          "stage": "attachResources",
+          "hold": 39,
+          "sequence": 1,
+          "elapsed": 413.67814648070095,
+          "assignment": 4,
+          "age": 0.09999999403953552
+        },
+        {
+          "stage": "release",
+          "hold": 39,
+          "sequence": 1,
+          "elapsed": 413.67814648070095,
+          "assignment": 4,
+          "age": 0.09999999403953552
+        }
+      ],
+      "continuation": {
+        "elapsed": 427.66814648069027,
+        "hits": [],
+        "raidEnded": [
+          {
+            "id": "event-24",
+            "type": "RaidEnded",
+            "simulationTime": 425.86814648068986
+          }
+        ],
+        "absence": {
+          "sequence": 95,
+          "clockElapsed": 426.66814648069004,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "301b76e8-dc7f-43dc-8dc3-82817d72ed76/1",
+            "nativeSession": 1,
+            "ticket": 3,
+            "effectiveTime": 413.57814648070104
+          }
+        },
+        "centerHp": 560,
+        "balance": {
+          "n": "510",
+          "d": "1"
+        }
+      },
+      "replacementDrained": true,
+      "pageErrors": [],
+      "consoleErrors": [
+        {
+          "text": "THREE.WebGPURenderer: WebGPU Device Lost:\n\nMessage: Device was destroyed.\nReason: destroyed",
+          "url": "http://127.0.0.1:5298/.cache/flee-mixed/vite-menu-phase-cuts/deps/chunk-4LGQLZ6N.js?v=108c2005"
+        }
+      ]
+    },
+    {
+      "phase": "moving-approach",
+      "raw": {
+        "name": "native-menu-savanna-terminal-moving-approach-extended.json",
+        "sha256": "1a949ad4c71e41fe0196aa037556057d1edd6b8b592944733b55450ef9857171"
+      },
+      "save": {
+        "name": "savanna-center-moving-approach-checkpoint.json",
+        "sha256": "030ba15ffb261e2bc167f3416aa3afa17a465220520a1d58a0d57d0997e38d02",
+        "elapsed": 2745.750000000065,
+        "actor": "animal-23",
+        "phase": 1.3000000000047294,
+        "attack": null,
+        "pathNodes": 41
+      },
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 92.9050000011921
+        }
+      },
+      "loss": {
+        "firstDraw": {
+          "sequence": 51,
+          "clockElapsed": 2750.0000000000805,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "2bd44526-289c-43f9-8221-9f1446582df0/1",
+            "nativeSession": 1,
+            "ticket": 3,
+            "effectiveTime": 2749.9500000000803
+          },
+          "animal": {
+            "nativeAnimalCrop": {
+              "version": 1,
+              "kind": 26,
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "2bd44526-289c-43f9-8221-9f1446582df0/1",
+                "nativeSession": 1,
+                "ticket": 2,
+                "effectiveTime": 2746.000000000066
+              },
+              "sourceControlSequence": 3,
+              "endTime": 2767.997122620321,
+              "purpose": "center",
+              "actorId": 23,
+              "bodyId": 1,
+              "targetId": 2,
+              "centerId": 2,
+              "requestSequence": 3,
+              "slot": 0,
+              "generation": 3,
+              "radius": 1.55,
+              "x": 72,
+              "z": 33.52343907171894,
+              "phase": 1.3000000000047294,
+              "yaw": 3.141592653589793,
+              "targetX": 83,
+              "targetZ": 0,
+              "centerX": 83,
+              "centerZ": 0
+            },
+            "relativeTime": 0.04999999701976776,
+            "semantic": "relative",
+            "epoch": 2746.000000000066,
+            "executionEpoch": 2749.9500000000803,
+            "elapsed": 2746.0499999970857
+          }
+        },
+        "retired": {
+          "version": 1,
+          "session": "5c4d29a0-c2eb-476b-a3e6-4fa26bd3cf12",
+          "terminal": true,
+          "callbacksSettled": true
+        },
+        "drained": true
+      },
+      "replacement": {
+        "sequence": 1,
+        "clockElapsed": 2750.0500000000807,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "2bd44526-289c-43f9-8221-9f1446582df0/1",
+          "nativeSession": 1,
+          "ticket": 3,
+          "effectiveTime": 2749.9500000000803
+        },
+        "animal": {
+          "nativeAnimalCrop": {
+            "version": 1,
+            "kind": 26,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "2bd44526-289c-43f9-8221-9f1446582df0/1",
+              "nativeSession": 1,
+              "ticket": 3,
+              "effectiveTime": 2749.9500000000803
+            },
+            "sourceControlSequence": 3,
+            "endTime": 2771.9471226203354,
+            "purpose": "center",
+            "actorId": 23,
+            "bodyId": 1,
+            "targetId": 2,
+            "centerId": 2,
+            "requestSequence": 3,
+            "slot": 0,
+            "generation": 3,
+            "radius": 1.55,
+            "x": 72,
+            "z": 33.52343907171894,
+            "phase": 1.3000000000047294,
+            "yaw": 3.141592653589793,
+            "targetX": 83,
+            "targetZ": 0,
+            "centerX": 83,
+            "centerZ": 0
+          },
+          "relativeTime": 0.09999999403953552,
+          "semantic": "relative",
+          "epoch": 2749.9500000000803,
+          "executionEpoch": 2749.9500000000803,
+          "elapsed": 2750.04999999412
+        }
+      },
+      "verification": [
+        {
+          "stage": "attachResources",
+          "hold": 37,
+          "sequence": 1,
+          "elapsed": 2750.0500000000807,
+          "assignment": 4,
+          "age": 0.09999999403953552
+        },
+        {
+          "stage": "release",
+          "hold": 37,
+          "sequence": 1,
+          "elapsed": 2750.0500000000807,
+          "assignment": 4,
+          "age": 0.09999999403953552
+        }
+      ],
+      "continuation": {
+        "elapsed": 2775.100000000172,
+        "hits": [
+          {
+            "id": "event-106",
+            "attackId": "attack-103",
+            "targetId": "structure-2",
+            "simulationTime": 2775.0000000001714
+          }
+        ],
+        "raidEnded": [],
+        "absence": null,
+        "centerHp": 125,
+        "balance": {
+          "n": "671",
+          "d": "1"
+        }
+      },
+      "replacementDrained": true,
+      "pageErrors": [],
+      "consoleErrors": [
+        {
+          "text": "THREE.WebGPURenderer: WebGPU Device Lost:\n\nMessage: Device was destroyed.\nReason: destroyed",
+          "url": "http://127.0.0.1:5298/.cache/flee-mixed/vite-menu-phase-cuts/deps/chunk-4LGQLZ6N.js?v=108c2005"
+        }
+      ]
+    },
+    {
+      "phase": "acquired-strike",
+      "raw": {
+        "name": "native-menu-savanna-terminal-acquired-strike-extended.json",
+        "sha256": "19e62f16c52eb2d29f715fdaf98126b75c4c9b88b0a7cefa4e400897865a32f9"
+      },
+      "save": {
+        "name": "savanna-center-acquired-strike-checkpoint.json",
+        "sha256": "9ee08948c10924d3eb7bbf9fc218ec13d1a8f1c293c145abaea31c2447d22183",
+        "elapsed": 2769.05000000015,
+        "actor": "animal-23",
+        "phase": 23.297122620259874,
+        "attack": "attack-101",
+        "pathNodes": 0
+      },
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 96.18500000238419
+        }
+      },
+      "loss": {
+        "firstDraw": {
+          "sequence": 59,
+          "clockElapsed": 2772.450000000162,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "d66eafeb-b443-4896-99e0-5197197c08b6/1",
+            "nativeSession": 1,
+            "ticket": 3,
+            "effectiveTime": 2772.3000000001616
+          },
+          "animal": {
+            "nativeAnimalCrop": {
+              "version": 1,
+              "kind": 27,
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "d66eafeb-b443-4896-99e0-5197197c08b6/1",
+                "nativeSession": 1,
+                "ticket": 2,
+                "effectiveTime": 2769.3000000001507
+              },
+              "sourceControlSequence": 3,
+              "endTime": 2770.1416667053095,
+              "purpose": "center",
+              "restore": {
+                "attackId": 101,
+                "clip": 0,
+                "duration": 1.541666705161333,
+                "remaining": 0.8416667051587865,
+                "requestedAt": 2769.05000000015
+              },
+              "clip": 0,
+              "duration": 1.541666705161333,
+              "actorId": 23,
+              "bodyId": 1,
+              "targetId": 2,
+              "centerId": 2,
+              "requestSequence": 3,
+              "radius": 1.55,
+              "x": 82.16815185546875,
+              "z": 4.047098159790039,
+              "phase": 23.297122620259874,
+              "yaw": 2.9388740909628397,
+              "targetX": 83,
+              "targetZ": 0,
+              "centerX": 83,
+              "centerZ": 0
+            },
+            "relativeTime": 0.14999999105930328,
+            "semantic": "relative",
+            "epoch": 2769.3000000001507,
+            "executionEpoch": 2772.3000000001616,
+            "elapsed": 2769.44999999121
+          }
+        },
+        "retired": {
+          "version": 1,
+          "session": "c7ab03e4-425b-4230-8134-42b3c12f9185",
+          "terminal": true,
+          "callbacksSettled": true
+        },
+        "drained": true
+      },
+      "replacement": {
+        "sequence": 1,
+        "clockElapsed": 2772.5500000001625,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "d66eafeb-b443-4896-99e0-5197197c08b6/1",
+          "nativeSession": 1,
+          "ticket": 3,
+          "effectiveTime": 2772.3000000001616
+        },
+        "animal": {
+          "nativeAnimalCrop": {
+            "version": 1,
+            "kind": 27,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "d66eafeb-b443-4896-99e0-5197197c08b6/1",
+              "nativeSession": 1,
+              "ticket": 3,
+              "effectiveTime": 2772.3000000001616
+            },
+            "sourceControlSequence": 3,
+            "endTime": 2773.1416667053204,
+            "purpose": "center",
+            "restore": {
+              "attackId": 101,
+              "clip": 0,
+              "duration": 1.541666705161333,
+              "remaining": 0.8416667051587865,
+              "requestedAt": 2769.05000000015
+            },
+            "clip": 0,
+            "duration": 1.541666705161333,
+            "actorId": 23,
+            "bodyId": 1,
+            "targetId": 2,
+            "centerId": 2,
+            "requestSequence": 3,
+            "radius": 1.55,
+            "x": 82.16815185546875,
+            "z": 4.047098159790039,
+            "phase": 23.297122620259874,
+            "yaw": 2.9388740909628397,
+            "targetX": 83,
+            "targetZ": 0,
+            "centerX": 83,
+            "centerZ": 0
+          },
+          "relativeTime": 0.25,
+          "semantic": "relative",
+          "epoch": 2772.3000000001616,
+          "executionEpoch": 2772.3000000001616,
+          "elapsed": 2772.5500000001616
+        }
+      },
+      "verification": [
+        {
+          "stage": "attachResources",
+          "hold": 34,
+          "sequence": 1,
+          "elapsed": 2772.5500000001625,
+          "assignment": 4,
+          "age": 0.25
+        },
+        {
+          "stage": "release",
+          "hold": 34,
+          "sequence": 1,
+          "elapsed": 2772.5500000001625,
+          "assignment": 4,
+          "age": 0.25
+        }
+      ],
+      "continuation": {
+        "elapsed": 2788.890000000222,
+        "hits": [
+          {
+            "id": "event-106",
+            "attackId": "attack-101",
+            "targetId": "structure-2",
+            "simulationTime": 2773.1500000001647
+          }
+        ],
+        "raidEnded": [
+          {
+            "id": "event-111",
+            "type": "RaidEnded",
+            "simulationTime": 2788.890000000222
+          }
+        ],
+        "absence": {
+          "sequence": 82,
+          "clockElapsed": 2788.890000000222,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "d66eafeb-b443-4896-99e0-5197197c08b6/1",
+            "nativeSession": 1,
+            "ticket": 6,
+            "effectiveTime": 2776.3500000001764
+          }
+        },
+        "centerHp": 0,
+        "balance": {
+          "n": "671",
+          "d": "1"
+        }
+      },
+      "replacementDrained": true,
+      "pageErrors": [],
+      "consoleErrors": [
+        {
+          "text": "THREE.WebGPURenderer: WebGPU Device Lost:\n\nMessage: Device was destroyed.\nReason: destroyed",
+          "url": "http://127.0.0.1:5298/.cache/flee-mixed/vite-menu-phase-cuts/deps/chunk-4LGQLZ6N.js?v=108c2005"
+        }
+      ]
+    }
+  ]
+}

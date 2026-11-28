@@ -1,0 +1,166 @@
+{
+  "date": "2026-11-15",
+  "scope": "Ungated Carry delivery to original Idle, coherent credit and genuine next-task claim while the same Surface is adopting. Actual retained/direct ports and hardware; source is in-page and independent B is the explicit Home fixture. Gated settlement, Home, initial Idle, ordinary feed and recovery remain pending.",
+  "changes": [
+    "Native settlement templates and direct clock bindings use the existing retained host/client/queue-drain lifecycle.",
+    "Surface reuses the resident worker for original Idle and a real following TaskStart, with stale-publication draining and adoption-slot waiting.",
+    "Idle matches workerPose logical time using the existing native origin-modulo plus submitted relative-age pattern; no animation reset or new timer.",
+    "No C++ or native artifact changes; stationary baseline bootstrap and gated settlement are still rejected."
+  ],
+  "research": [
+    {
+      "project": "Dawn",
+      "revision": "922930e3193753e58591f14a96ab116e5d630964",
+      "files": [
+        "src/dawn/wire/server/ObjectStorage.h",
+        "src/dawn/wire/server/ServerDevice.cpp",
+        "src/dawn/wire/server/ServerQueue.cpp"
+      ],
+      "adaptation": "Exact generation/retained-frame association and completion callback correlation on the existing owner. No new dependency."
+    },
+    {
+      "project": "Three.js",
+      "revision": "r180 / installed 0.180.0",
+      "files": [
+        "src/animation/AnimationMixer.js",
+        "src/animation/AnimationAction.js"
+      ],
+      "adaptation": "Reversible resident bindings and authored looping, alongside the already validated native GPU phase split."
+    }
+  ],
+  "unitRegression": {
+    "tests": 538,
+    "pass": 538,
+    "skip": 0,
+    "files": [
+      "tests/native-task-settlement-proposal.test.js",
+      "tests/native-task-settlement-game.test.js",
+      "tests/settlement-notification.test.js",
+      "tests/native-task-consequence-proposal.test.js",
+      "tests/native-task-consequence-game.test.js",
+      "tests/native-task-consequence-admission.test.js",
+      "tests/native-task-consequence-control.test.js",
+      "tests/native-task-consequence-graphics.test.js",
+      "tests/native-task-consequence-crops.test.js",
+      "tests/delivery-consequence-data.test.js",
+      "tests/harvest-consequence.test.js",
+      "tests/agricultural-power.test.js",
+      "tests/closest-center-delivery.test.js",
+      "tests/native-task-action-binding.test.js",
+      "tests/native-task-action-game-execution.test.js",
+      "tests/native-task-action-restoration.test.js",
+      "tests/native-task-action-proposal.test.js",
+      "tests/native-task-action-clock.test.js",
+      "tests/native-task-start-proposal.test.js",
+      "tests/native-task-start-binding.test.js",
+      "tests/native-task-start-graphics.test.js",
+      "tests/native-resource-preparation-channel.test.js",
+      "tests/native-admission-vertical.test.js",
+      "tests/spatial-native-causal-clock.test.js",
+      "tests/spatial-native-route-execution.test.js",
+      "tests/spatial-native-route-reservations.test.js",
+      "tests/spatial-native-gate-transactions.test.js",
+      "tests/spatial-native-gate-resume.test.js",
+      "tests/spatial-native-gate-crossings.test.js",
+      "tests/spatial-native-gate-waits.test.js",
+      "tests/native-gate-causal-transaction.test.js",
+      "tests/native-gate-gpu-binding.test.js",
+      "tests/remote-webgpu.test.js",
+      "tests/native-route-pick-frame.test.js",
+      "tests/native-resume-control.test.js",
+      "tests/native-resume-graphics.test.js",
+      "tests/native-resume-time-translation.test.js",
+      "tests/money-rational-add.test.js",
+      "tests/money-decimal.test.js",
+      "tests/acceptance-economic-boundaries.test.js",
+      "tests/repair-settlement-evidence.test.js",
+      "tests/native-task-settlement-clock.test.js",
+      "tests/native-task-settlement-control.test.js",
+      "tests/native-task-settlement-gpu-motion.test.js",
+      "tests/native-task-settlement-graphics.test.js",
+      "tests/native-task-settlement-remote.test.js",
+      "tests/native-task-settlement-publication.test.js"
+    ],
+    "seconds": 91.846,
+    "log": ".cache/native-settlement-live-regression.log",
+    "command": ".cache/tooling/node20.exe --test --test-concurrency=4 <the listed files>"
+  },
+  "productBuild": {
+    "status": "pass",
+    "seconds": 50.39,
+    "log": ".cache/native-settlement-live-consumer-build.log",
+    "command": ".cache/tooling/node20.exe node_modules/vite/bin/vite.js build",
+    "warnings": "Existing dynamic-import/chunk-size warnings."
+  },
+  "hardware": {
+    "artifact": "native-delivery-idle-next-task-gpu-20261115.json",
+    "sha256": "3daf089530fa751e50afdf7be8c8acd11a84dd3a2d141a47b6a2b7b73d09377a",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "idle": {
+      "resourcesPrepared": 96,
+      "resourcesAfterReady": 0,
+      "drawsDuringBlockedPreparer": 52,
+      "blockMs": 1800.02490234375,
+      "sourceBodyUnchanged": true,
+      "independentActorAndWorldBatchesRetained": true,
+      "creditEntriesAdded": 1,
+      "stalePublicationAcknowledged": true,
+      "pendingTaskClaimRetainsIdle": true,
+      "submittedAge": 2.379999876022339,
+      "inputEntity": "worker-900011",
+      "originalActorRootBonesAndGeometryRetained": true
+    },
+    "nextTask": {
+      "resourcesPrepared": 98,
+      "resourcesAfterReady": 0,
+      "drawsDuringBlockedPreparer": 54,
+      "blockMs": 1800.025146484375,
+      "sameActorRootBonesAndGeometry": true,
+      "inputEntity": "worker-900011"
+    },
+    "drained": true,
+    "gpuErrors": 0,
+    "pageErrors": [],
+    "consoleErrors": [],
+    "httpFailures": [],
+    "requestFailures": [],
+    "visualInspection": [
+      "native-delivery-idle-20261115.png",
+      "native-delivery-next-task-20261115.png"
+    ]
+  },
+  "negativeControl": {
+    "artifact": "native-delivery-adoption-negative-20261115.json",
+    "status": "expected failure",
+    "exitCode": 1,
+    "readOnlyInterception": true,
+    "replacements": 1,
+    "change": "Only the adoption wait is replaced with the previous immediate rejection; all other current code remains. This is not a full parent-commit baseline.",
+    "observedError": "Error: page.evaluate: Error: Next task after Idle failed {\"next\":{\"status\":\"control-failed\",\"authorizedAutonomy\":false,\"authorizedPassage\":false,\"error\":\"Native gate resource surface unavailable (adoption negative control)\"},\"errors\":[]}\n    at auditNativeFirstTaskWorldOwner (http://127.0.0.1:5181/tests/browser/native-first-task-world-owner.js?t=1794757981142:188:181)\n    at async <anonymous>:337:30",
+    "pageErrors": [],
+    "consoleErrors": [],
+    "httpFailures": [],
+    "requestFailures": []
+  },
+  "initialTrial": {
+    "log": ".cache/native-settlement-live-gpu.log",
+    "status": "failed in harness setup before new Idle admission",
+    "cause": "The test set elapsed before unpausing the native clock; nav_intent_set_time correctly rejected bypassing physical execution. Corrected to the existing unpause/advance/commit sequence."
+  },
+  "preservation": {
+    "otherOriginalFilesWithUnchangedByteHashes": 16,
+    "stream": "confirmed-presentation-stream.js was intentionally changed in an earlier increment and is unchanged here."
+  },
+  "remaining": [
+    "genuine Home after delivery when the contract has ended",
+    "gated settlement graphical resources and exact motor effects",
+    "native initial Idle and other task-completion/cancellation availability transitions",
+    "fresh stationary consumer bootstrap, actual load/recovery and historical 3123-resource healthy-device reuse acceptance",
+    "ordinary producer/all classes, remaining A6/A/B/C and then measured optimization D"
+  ]
+}

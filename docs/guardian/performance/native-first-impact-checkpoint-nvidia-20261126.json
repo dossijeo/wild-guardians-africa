@@ -1,0 +1,229 @@
+{
+  "version": 1,
+  "scope": "Desierto sin portón, cohorte DEV del encuentro. Guardado público entre golpes y recarga con Authority Worker, Preparer y Draw nuevos.",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 113.30000000447035
+    }
+  },
+  "sourceReceiptSha256": "33bc9971fa89aa0555556c07c34e48ca626e9e3fe96365e27f801db4ec52ceea",
+  "artifacts": {
+    "src/world/wild-engine/spatial-savanna.wasm": "e2df824da9e3a5e785c4b8b5b58737eb647530f71fe8122c599d885cd10092b0",
+    "public/wild-engine/spatial-threaded.wasm": "96e2862d6f93616eaaf4d730babebb1cbcd48e2205d326eb8a006b9152b2f9f1",
+    "public/wild-engine/spatial-threaded.mjs": "7ff2cb7b9b24fe3ddc31ab60e522394d385ff48efe572431dc2721df8e77480f"
+  },
+  "save": {
+    "storage": "IndexedDB",
+    "sequence": 118,
+    "bytes": 281630,
+    "elapsed": 12.179999999999954,
+    "encounter": {
+      "version": 3,
+      "workerId": 900011,
+      "animalId": 1000000,
+      "hit": 29209,
+      "spawn": 29208,
+      "approachPath": [
+        {
+          "x": -17,
+          "z": 2
+        },
+        {
+          "x": -16,
+          "z": 2
+        },
+        {
+          "x": -16.46571922302246,
+          "z": 1.516031265258789
+        }
+      ]
+    }
+  },
+  "originalHome": {
+    "version": 1,
+    "authorityEpoch": "5b09a799-0b30-4457-9edb-9f643b08d4ca/1",
+    "nativeSession": 1,
+    "ticket": 7,
+    "effectiveTime": 10.89999999999998
+  },
+  "firstRestoredApproach": {
+    "boundary": {
+      "version": 1,
+      "authorityEpoch": "167cf6bd-544b-4b10-9d9c-b26c4da8d84a/1",
+      "nativeSession": 1,
+      "ticket": 2,
+      "effectiveTime": 12.179999999999954
+    },
+    "actorId": 1000000,
+    "bodyId": 2,
+    "x": -17.27610998419931,
+    "z": 2,
+    "phase": 1.219999999999974,
+    "sequence": 17,
+    "clockElapsed": 12.179999999999954,
+    "relativeTime": 0,
+    "workerBodyId": 1,
+    "workerX": -14.520928903743672,
+    "workerZ": 2.5523155738541687,
+    "fallRemaining": 3.5216665077209472
+  },
+  "preflight": {
+    "uninterrupted": {
+      "elapsed": 12.599999999999945,
+      "x": -16.64610998419932,
+      "z": 2,
+      "phase": 1.639999999999965,
+      "fall": 3.101666507720947,
+      "rng": 1909268553
+    },
+    "restored": {
+      "elapsed": 12.599999999999945,
+      "x": -16.64610998419932,
+      "z": 2,
+      "phase": 1.639999999999965,
+      "fall": 3.101666507720947,
+      "rng": 1909268553
+    }
+  },
+  "retreat": {
+    "ack": {
+      "version": 1,
+      "sequence": 24,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "167cf6bd-544b-4b10-9d9c-b26c4da8d84a/1",
+        "nativeSession": 1,
+        "ticket": 4,
+        "effectiveTime": 12.619999999999944
+      },
+      "elapsed": 12.619999999999944,
+      "assignment": 5
+    },
+    "submit": {
+      "version": 1,
+      "sequence": 24,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "167cf6bd-544b-4b10-9d9c-b26c4da8d84a/1",
+        "nativeSession": 1,
+        "ticket": 4,
+        "effectiveTime": 12.619999999999944
+      },
+      "elapsed": 12.619999999999944,
+      "assignment": 5
+    },
+    "heldAt": 12.599999999999945,
+    "after": 12.639999999999944
+  },
+  "home": {
+    "first": {
+      "sequence": 234,
+      "clockElapsed": 18.91999999999981,
+      "binding": {
+        "nativeHome": {
+          "kind": "native-home-route-reference",
+          "version": 1,
+          "actorId": 900011,
+          "bodyId": 1,
+          "sourceRequest": {
+            "kind": "native-home-request-reference",
+            "version": 3,
+            "recoveryHit": 29210,
+            "authorityEpoch": "167cf6bd-544b-4b10-9d9c-b26c4da8d84a/1",
+            "nativeSession": 1,
+            "actorId": 900011,
+            "bodyId": 1,
+            "bodyFlags": 1,
+            "requestSequence": 7,
+            "requestedAt": 18.91999999999981,
+            "profile": 1,
+            "home": {
+              "villageId": 1,
+              "x": -5.800000000000001,
+              "z": 0.2
+            },
+            "pose": {
+              "x": -14.791069342739112,
+              "z": 2.2152638339379633,
+              "yaw": 0,
+              "radius": 0.28,
+              "runPhase": 24.509999999999973,
+              "walkPhase": 8.414999999999973,
+              "carryPhase": 9.5,
+              "runRemaining": 40
+            }
+          },
+          "expectedRouteHandle": {
+            "authorityEpoch": "167cf6bd-544b-4b10-9d9c-b26c4da8d84a/1",
+            "session": 1,
+            "slot": 0,
+            "generation": 10
+          },
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "167cf6bd-544b-4b10-9d9c-b26c4da8d84a/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 18.91999999999981
+          },
+          "sourceControlSequence": 7,
+          "endTime": 34.50918544303032
+        },
+        "relativeTime": 0,
+        "semantic": "relative",
+        "epoch": 18.91999999999981,
+        "executionEpoch": 18.91999999999981,
+        "elapsed": 18.91999999999981
+      }
+    },
+    "bodyId": 1,
+    "recoveryHit": 29210,
+    "retiredAt": 34.899999999999984,
+    "absence": {
+      "sequence": 345,
+      "boundary": {
+        "version": 1,
+        "authorityEpoch": "167cf6bd-544b-4b10-9d9c-b26c4da8d84a/1",
+        "nativeSession": 1,
+        "ticket": 8,
+        "effectiveTime": 34.899999999999984
+      }
+    },
+    "status": "home",
+    "runRemaining": 40
+  },
+  "events": [
+    {
+      "id": "event-29209",
+      "type": "WorkerHit",
+      "simulationTime": 12.179999999999954
+    },
+    {
+      "id": "event-29210",
+      "type": "WorkerIncapacitated",
+      "simulationTime": 12.619999999999944
+    },
+    {
+      "id": "event-29211",
+      "type": "AnimalRetreating",
+      "simulationTime": 12.619999999999944
+    },
+    {
+      "id": "event-29212",
+      "type": "RaidEnded",
+      "simulationTime": 14.339999999999907
+    }
+  ],
+  "drainedConsumers": 2,
+  "elapsed": 34.98
+}

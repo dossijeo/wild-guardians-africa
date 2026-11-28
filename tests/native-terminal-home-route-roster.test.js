@@ -1,0 +1,68 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
+import {nativeFarmAuthoritySave} from './helpers/native-farm-authority-save.js';
+import {nativeWorkerGraphicsFixture} from './helpers/native-task-consequence-graphics.js';
+import {fixture,flush} from './helpers/remote-webgpu-fixture.js';
+import {copyNativeHomeRouteResources,nativeHomeRouteAttestationCovers} from '../src/world/native-home-route.js';
+import {captureNativeRoutePickFrame} from '../src/rendering/native-route-pick-frame.js';
+import {nativeClockResourceEnd} from '../src/rendering/native-clock-resource-end.js';
+import {floorFloat32} from '../src/rendering/float32-time.js';
+
+test('terminal Draw loss recovers the original civil Home18 body at its exact submitted clock',async t=>{
+ const {state}=nativeFarmAuthoritySave({profile:'youngFemale',approach:true});
+ const worker=state.workers[0],village=state.villages.find(v=>v.id===worker.villageId);
+ Object.assign(worker,{status:'returning',nativeRouteAdmission:'pending-home-resources',idleState:null,destinationId:null});
+ village.entry={x:worker.x,z:worker.z+6};
+ const f=await nativeProductionAuthority(state),ports=new MessageChannel();
+ let draw,rig;
+ try{
+  await untilProduction(f,()=>f.records.some(row=>row.kind==='home-route'&&row.committed));
+  f.advance();await f.present();
+  const body=f.host.inspect().nativeRouteFrame.bindings.find(row=>row.nativeHome);
+  assert(body.relativeTime>0);
+  const view=f.snapshot();
+  assert.equal(view.workers[0].nativeRouteAdmission,'native-home');
+  f.gpu.device.destroy();f.retireResourceEndpoint();
+  const hold=await f.authority.quiesceNativeIntentProduction();
+  assert((await f.authority.flushNativeResourcePreparation({allowRetired:true})).terminal);
+  const route=await f.authority.terminalWorkerRoute();
+  assert.deepEqual(route,{kind:18,actorId:body.nativeHome.actorId});
+  draw=await fixture({capabilities:{nativeHomeRouteVersion:1}},
+   {intentControl:{port:ports.port2,session:'production-control',recoveryHold:30}});
+  const {recoveredWorkerRoute:source}=await f.authority.attachHeldWorkerRoute(ports.port1,'production-control',30,hold,route);
+  const {execution,resources}=source,binding=resources.nativeHomeRouteBinding;
+  const ref=binding.reference,boundary=ref.worldBoundary,epoch=boundary.effectiveTime;
+  assert.equal(execution.executedThrough,view.elapsed);
+  assert(nativeHomeRouteAttestationCovers(binding,body.nativeHome));
+  const otherRoute={...resources.nativeRoute,assignmentSequence:binding.assignmentSequence+1};
+  assert.throws(()=>copyNativeHomeRouteResources({...resources,nativeRoute:otherRoute}),/resource association/);
+  await assert.rejects(f.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
+  const payloads=new Map();f.authority.publishResidentTerrainForQa(p=>payloads.set(p.cx+','+p.cz,p));
+  let selected;
+  const actor=view.workers[0].id,session={core:{selectChunk(x,z){selected=payloads.get(x+','+z);assert(selected);},chunkPayload:()=>selected}};
+  rig=await nativeWorkerGraphicsFixture({state:view,worker:view.workers[0],actor,session,close(){}},{clips:['Walk_Skip','Idle'],idle:true});
+  const descriptor={...source,terrain:rig.terrain,terrainManifest:rig.manifest};
+  const options={signal:new AbortController().signal,isCurrent:()=>true,getPickTime:()=>view.elapsed};
+  await assert.rejects(async()=>rig.roster.prepareRecoveredWorkerRoute({...descriptor,execution:{...execution,x:execution.x+.01}},options),/Recovery pose/);
+  await rig.roster.prepareRecoveredWorkerRoute(descriptor,options);
+  assert(rig.roster.nativeRouteCurrent(actor,resources.nativeRoute));
+  const metadata={nativeWorldBoundary:boundary,clock:{version:1,epoch:1,elapsed:view.elapsed,safeUntil:view.elapsed,anchorAbsoluteMs:0,paused:true,segments:[]}};
+  const withheld=assert.rejects(draw.frame(76,metadata),/Replacement requires its bound worker clock/);
+  await flush();await draw.host.idle();draw.host.present();await withheld;
+  await assert.rejects(f.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
+  draw.client.registerClockBinding(draw.buffer,{byteOffset:0,epoch,semantic:'relative',nativeHome:ref,resourceEnd:nativeClockResourceEnd(epoch,ref.endTime)});
+  const frame=draw.frame(77,metadata);
+  await flush();await draw.host.idle();draw.host.present();await frame;
+  const checked=await f.authority.checkHeldDraw(30,hold,route);
+  assert.equal(checked.relativeTime,floorFloat32(view.elapsed-epoch));
+  assert.equal(checked.kind,18);
+  assert.deepEqual(checked.nativeHome,ref);
+  const pick=captureNativeRoutePickFrame(draw.host.inspect());
+  assert.equal(pick.getHomeElapsed(ref),checked.relativeTime);
+  const next=draw.frame(78,metadata);
+  await flush();await draw.host.idle();draw.host.present();await next;
+  assert.deepEqual(await f.authority.checkHeldDraw(30,hold,route),checked);
+  t.diagnostic(JSON.stringify({bodyId:ref.bodyId,route:resources.nativeRoute,at:view.elapsed,age:checked.relativeTime}));
+ }finally{rig?.close();draw?.client.dispose();await draw?.host.dispose();ports.port1.close();ports.port2.close();await f.close();}
+});

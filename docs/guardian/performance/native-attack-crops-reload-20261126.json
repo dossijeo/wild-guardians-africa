@@ -1,0 +1,53 @@
+{
+  "baseline": "9e4ef24aafe5b864affad55ceb8043f67178e8dc",
+  "scope": "DEV AttackCrops, one moving warthog in Sabana, native authority save v3",
+  "fixture": "tests/fixtures/sabana712-d1-native-active-raid.json.gz",
+  "inputSha256": "01241ef90c13423afb5ad714904e8736dcde994f1832e4fca71ef4313cd1d03e",
+  "baselineControl": {
+    "elapsed": 378.5000000000039,
+    "savedZ": 21.91478687551537,
+    "restartedFirstWaypointZ": 30,
+    "restartedFirstYaw": 0,
+    "restartedArrival": 402.12708386170436,
+    "uninterruptedArrival": 391.3467996957248
+  },
+  "physical": {
+    "browser": "Edge 158.0.4370.33",
+    "adapter": {"vendor": "nvidia", "architecture": "turing"},
+    "actor": "animal-396",
+    "target": "plant-373",
+    "hitsRemaining": 2,
+    "heldReadyMs": 300,
+    "sourceAndRestoredEpochDiffer": true,
+    "saved": {
+      "elapsed": 378.5000000000039,
+      "position": [84, 21.91478687551537],
+      "heading": 3.141592653589793,
+      "phase": 7.997729763867142
+    },
+    "restoredFirstWaypoint": [84, 21],
+    "restoredArrival": 391.3467996957248,
+    "firstSubmit": {"sequence": 40, "ticket": 2, "replay": false, "relativeAge": 0},
+    "nextGpuAge": 0.09999999403953552,
+    "nextSnapshot": {
+      "elapsed": 378.70000000000374,
+      "position": [84, 21.614786875515644],
+      "phase": 8.19772976386696
+    },
+    "ledgerUnchanged": true,
+    "drained": true,
+    "receiptSha256": "4fe5975fb3d62ac8e31b6353b763650225b0980fdd3fb7292a29f7b9cac20c41",
+    "trace": {
+      "sha256": "bb35cfe2553a483744b119e41ff941f58d87f57593f4549ce2e113c9adf12f37",
+      "bytes": 16755971,
+      "dataLossOccurred": false
+    }
+  },
+  "regression": {
+    "test": "tests/native-ordinary-animal-crop-host.test.js",
+    "case": "an AttackCrops checkpoint resumes after a fresh READY",
+    "variants": ["native suffix", "legacy path"],
+    "focused": {"passed": 21, "failed": 0, "skipped": 0},
+    "broader": {"passed": 31, "failed": 5, "skipped": 19, "failuresAlsoOnBaseline": 5}
+  }
+}

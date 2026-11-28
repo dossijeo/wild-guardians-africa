@@ -1,7 +1,16 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {fixture,probe} from '../tools/probe-raid-reservation-saturation.mjs';
 import {spawnRaid,updateRaid} from '../src/simulation/raids.js';import {serialize,deserialize} from '../src/persistence/snapshots.js';import {Navigation} from '../src/world/navigation.js';import {RAID_WAIT_SECONDS} from '../src/simulation/raid-contention.js';import {actorBlockers,actorSegmentClear} from '../src/simulation/actor-motion.js';
-function start(layout='mono',group=Array.from({length:12},()=> 'warthog')){const {s,nav}=fixture(layout);if(layout==='saturated'){s.plants=s.plants.slice(0,1);s.structures=[];nav.setState(s);}assert(spawnRaid(s,{group},nav));const raid=s.raid,budget=raid.animals.reduce((n,a)=>n+a.hitsRemaining,0);updateRaid(s,0,nav);return {s,nav,raid,budget};}
+function start(layout='mono',group=Array.from({length:12},()=> 'warthog')){
+ const {s,nav}=fixture(layout);
+ if(layout==='saturated'){s.plants=s.plants.slice(0,1);s.structures=[];nav.setState(s);}
+ const plan=s.nightPlan={at:s.time,group,done:false};
+ assert(spawnRaid(s,plan,nav));
+ plan.done=true;
+ const raid=s.raid,budget=raid.animals.reduce((n,a)=>n+a.hitsRemaining,0);
+ updateRaid(s,0,nav);
+ return {s,nav,raid,budget};
+}
 function tick(s,nav,dt){s.elapsed+=dt;updateRaid(s,dt,nav);}
 function finish(s,nav,dt,max=400){for(let i=0;i<max/dt&&s.raid;i++)tick(s,nav,dt);assert.equal(s.raid,null);}
 for(const dt of [.1,1])test(`a full connected crop cohort consumes real native budget at dt${dt}`,()=>{const r=probe('mono',12,{duration:400,dt});assert(r.raidEnded);assert.equal(r.budgetSpent,r.budgetInitial);assert.equal(r.animalsSpending,12);assert.equal(r.animalsRetreatingWithBudget,0);});

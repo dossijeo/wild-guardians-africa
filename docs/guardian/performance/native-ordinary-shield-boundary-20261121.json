@@ -1,0 +1,465 @@
+{
+  "source": "aef56063fd54538e95185c47de6594b80112641d",
+  "withGraphics": {
+    "mode": "Edge hosted WebGPU Worker with remote draw",
+    "quality": "muy_baja",
+    "width": 640,
+    "height": 480,
+    "displayHz": 30,
+    "outside": {
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 132.30000007152557
+        }
+      },
+      "phase": "Shield expiry and continued Farm",
+      "bodyId": 1,
+      "before": {
+        "position": [
+          -14,
+          11.638000000000003
+        ],
+        "elapsed": 10.149999999999997
+      },
+      "picked": {
+        "entityId": null,
+        "hitPoint": null,
+        "point": {
+          "x": -6,
+          "z": 8.212528453554476
+        },
+        "sequence": 182
+      },
+      "activation": {
+        "id": "event-29207",
+        "type": "SpellActivated",
+        "commandId": "ordinary-guardian-shield",
+        "spellId": "spell-1000000",
+        "simulationDay": 15,
+        "kind": "shield",
+        "x": -6,
+        "z": 8.212528453554476,
+        "benefited": false,
+        "power": null,
+        "duration": 20,
+        "targetId": null,
+        "presentation": {
+          "elapsed": 10.249999999999995,
+          "origin": {
+            "x": -4,
+            "y": 16.10382843017578,
+            "z": 8.7
+          },
+          "contact": {
+            "x": -6,
+            "y": 16.10382843017578,
+            "z": 8.212528453554476
+          }
+        },
+        "simulationTime": 10.249999999999995
+      },
+      "visual": {
+        "id": "spell-1000000",
+        "family": "shield",
+        "time": 0.1000000000000007,
+        "visible": true,
+        "sprites": 10,
+        "fragments": 0,
+        "geometryVertices": 0,
+        "qaGeometryVertices": 1,
+        "guardian": {
+          "closed": false,
+          "began": 1,
+          "confirmed": 1,
+          "rejected": 0,
+          "provisionalFrames": 0,
+          "lastCommand": "ordinary-guardian-shield",
+          "active": {
+            "id": "ordinary-guardian-shield",
+            "provisional": false,
+            "kind": "shield"
+          },
+          "ritualPreview": false,
+          "ritualReady": false,
+          "cropBeams": 2,
+          "modelReady": true,
+          "effectsReady": true,
+          "beamVisible": false,
+          "coreVisible": true
+        }
+      },
+      "during": {
+        "elapsed": 10.49999999999999,
+        "position": [
+          -14,
+          11.260000000000012
+        ],
+        "worker": {
+          "status": "arriving",
+          "admission": "native-farm-arrival"
+        },
+        "sequence": 192
+      },
+      "lastConfirmed": {
+        "position": [
+          -14,
+          10.93600000000002
+        ],
+        "admission": "native-farm-arrival",
+        "elapsed": 10.799999999999983,
+        "sequence": 198
+      },
+      "error": "Native world changed outside its committed resource boundary",
+      "diagnosticSha256": "b4095f33af0cb3be18b6160b4b85b8f94765811594a105ce3b78b099272c3017"
+    },
+    "across": {
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 108.70000004768372
+        }
+      },
+      "phase": "Shield dome becomes visible",
+      "bodyId": 1,
+      "before": {
+        "position": [
+          -14,
+          11.638000000000003
+        ],
+        "elapsed": 10.149999999999997
+      },
+      "picked": {
+        "entityId": null,
+        "hitPoint": null,
+        "point": {
+          "x": -14,
+          "z": 8.218564675535523
+        },
+        "sequence": 154
+      },
+      "activation": {
+        "id": "event-29207",
+        "type": "SpellActivated",
+        "commandId": "ordinary-guardian-shield",
+        "spellId": "spell-1000000",
+        "simulationDay": 15,
+        "kind": "shield",
+        "x": -14,
+        "z": 8.218564675535523,
+        "benefited": false,
+        "power": null,
+        "duration": 20,
+        "targetId": null,
+        "presentation": {
+          "elapsed": 10.199999999999996,
+          "origin": {
+            "x": -12,
+            "y": 15.42777156829834,
+            "z": 8.7
+          },
+          "contact": {
+            "x": -14,
+            "y": 15.42777156829834,
+            "z": 8.218564675535523
+          }
+        },
+        "simulationTime": 10.199999999999996
+      },
+      "visual": [
+        {
+          "id": "spell-1000000",
+          "family": "shield",
+          "time": 1.899999999999999,
+          "visible": true,
+          "sprites": 0,
+          "fragments": 0,
+          "geometryVertices": null
+        }
+      ],
+      "during": null,
+      "lastConfirmed": {
+        "position": [
+          -14,
+          11.584000000000005
+        ],
+        "admission": "native-farm-arrival-held",
+        "elapsed": 12.099999999999955,
+        "sequence": 195
+      },
+      "error": "Native world changed outside its committed resource boundary",
+      "diagnosticSha256": "eaf4d5320533b6e78720f561030d97d1dbcf7b44802b3610befff6d01b656d80"
+    }
+  },
+  "withoutGraphics": {
+    "mode": "WASM production authority and deterministic Host",
+    "cases": [
+      {
+        "variation": "outside",
+        "stage": "resume through shield lifetime",
+        "cast": {
+          "kind": "castShield",
+          "id": "shield-farm-outside",
+          "x": -6,
+          "z": 8.2
+        },
+        "before": {
+          "time": 100.27999999999994,
+          "elapsed": 10.279999999999994,
+          "position": [
+            -14,
+            11.497600000000007
+          ],
+          "admission": "native-farm-arrival",
+          "shield": null,
+          "cooldown": 0,
+          "committed": false
+        },
+        "spell": {
+          "value": true,
+          "events": [
+            {
+              "id": "event-29207",
+              "type": "SpellActivated",
+              "commandId": "shield-farm-outside",
+              "spellId": "spell-1000000",
+              "simulationDay": 15,
+              "kind": "shield",
+              "x": -6,
+              "z": 8.2,
+              "benefited": false,
+              "power": null,
+              "duration": 20,
+              "targetId": null,
+              "presentation": {
+                "elapsed": 10.279999999999994,
+                "origin": null,
+                "contact": {
+                  "x": -6,
+                  "y": 17.507015228271484,
+                  "z": 8.2
+                }
+              },
+              "simulationTime": 10.279999999999994
+            }
+          ]
+        },
+        "after": {
+          "time": 100.45999999999992,
+          "elapsed": 10.45999999999999,
+          "position": [
+            -14,
+            11.303200000000011
+          ],
+          "admission": "native-farm-arrival",
+          "shield": {
+            "id": "spell-1000000",
+            "kind": "shield",
+            "x": -6,
+            "z": 8.2,
+            "radius": 1.95,
+            "remaining": 19.82
+          },
+          "cooldown": 89.82000000000002,
+          "committed": true
+        },
+        "duplicate": false,
+        "changes": [
+          {
+            "time": 106.35999999999959,
+            "elapsed": 16.35999999999988,
+            "position": [
+              -14,
+              5.199999809265137
+            ],
+            "admission": "native-idle",
+            "shield": {
+              "id": "spell-1000000",
+              "kind": "shield",
+              "x": -6,
+              "z": 8.2,
+              "radius": 1.95,
+              "remaining": 13.919999999999991
+            },
+            "cooldown": 83.92000000000036,
+            "committed": true
+          },
+          {
+            "time": 120.35999999999879,
+            "elapsed": 30.360000000000078,
+            "position": [
+              -14,
+              5.199999809265137
+            ],
+            "admission": "native-idle",
+            "shield": null,
+            "cooldown": 69.92000000000115,
+            "committed": true
+          }
+        ],
+        "records": [
+          {
+            "kind": "farm-arrival",
+            "body": 1,
+            "points": [
+              -14,
+              11,
+              -14,
+              5.199999809265137
+            ],
+            "committed": true
+          },
+          {
+            "kind": "idle-cycle",
+            "points": null,
+            "committed": true
+          }
+        ],
+        "faults": [],
+        "failure": null
+      },
+      {
+        "variation": "across",
+        "stage": "resume through shield lifetime",
+        "cast": {
+          "kind": "castShield",
+          "id": "shield-farm-across",
+          "x": -14,
+          "z": 8.2
+        },
+        "before": {
+          "time": 100.27999999999994,
+          "elapsed": 10.279999999999994,
+          "position": [
+            -14,
+            11.497600000000007
+          ],
+          "admission": "native-farm-arrival",
+          "shield": null,
+          "cooldown": 0,
+          "committed": false
+        },
+        "spell": {
+          "value": true,
+          "events": [
+            {
+              "id": "event-29207",
+              "type": "SpellActivated",
+              "commandId": "shield-farm-across",
+              "spellId": "spell-1000000",
+              "simulationDay": 15,
+              "kind": "shield",
+              "x": -14,
+              "z": 8.2,
+              "benefited": false,
+              "power": null,
+              "duration": 20,
+              "targetId": null,
+              "presentation": {
+                "elapsed": 10.279999999999994,
+                "origin": null,
+                "contact": {
+                  "x": -14,
+                  "y": 17.507015228271484,
+                  "z": 8.2
+                }
+              },
+              "simulationTime": 10.279999999999994
+            }
+          ]
+        },
+        "after": {
+          "time": 100.45999999999992,
+          "elapsed": 10.45999999999999,
+          "position": [
+            -14,
+            11.497600000000007
+          ],
+          "admission": "native-farm-arrival-held",
+          "shield": {
+            "id": "spell-1000000",
+            "kind": "shield",
+            "x": -14,
+            "z": 8.2,
+            "radius": 1.95,
+            "remaining": 19.82
+          },
+          "cooldown": 89.82000000000002,
+          "committed": true
+        },
+        "duplicate": false,
+        "changes": [
+          {
+            "time": 120.35999999999879,
+            "elapsed": 30.360000000000078,
+            "position": [
+              -14,
+              11.497600000000007
+            ],
+            "admission": "native-farm-arrival-held",
+            "shield": null,
+            "cooldown": 69.92000000000115,
+            "committed": true
+          }
+        ],
+        "records": [
+          {
+            "kind": "farm-arrival",
+            "body": 1,
+            "points": [
+              -14,
+              11,
+              -14,
+              5.199999809265137
+            ],
+            "committed": true
+          },
+          {
+            "kind": "farm-arrival",
+            "body": 1,
+            "points": [
+              -14,
+              11,
+              -14,
+              10,
+              -14,
+              9,
+              -14,
+              8,
+              -14,
+              7,
+              -14,
+              6,
+              -14,
+              5.199999809265137
+            ],
+            "committed": false
+          }
+        ],
+        "faults": [
+          "Error: Prepared world frame unavailable"
+        ],
+        "failure": "Error: Prepared world frame unavailable"
+      }
+    ],
+    "diagnosticSha256": "64c03977a864afed3f75789f5bd8f14a4609f7c41e08b6c4897c90b0ba800edb"
+  }
+}

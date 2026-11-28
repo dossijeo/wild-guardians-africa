@@ -1,0 +1,73 @@
+{
+  "baseCommit": "087d5c546369907492fb360a62d669b65a0903a4",
+  "files": {
+    "tools/guardian/audit_native_farm_birth_world_owner.mjs": "1026080eabc40f27859eaa6bcde6ecd7568156887b03448abe7f3ef13c4fc3b8",
+    "tests/browser/native-farm-birth-world-owner.js": "0f4857dd65f2ae256ce41bdfb0937a27cd59e18b018a7aaa1927ff78d3b71106",
+    "tests/browser/native-farm-birth-task-scenario.js": "198685f7107aa0bf56f94ac04e219de9477240b30b98f84db498d81a15f05f15",
+    "tests/browser/fixtures/native-farm-birth-audit-worker.js": "54d8d5f4e1358a92967e48751be5ae417ab2d658f5b077c1608688a02397167b",
+    "src/rendering/webgpu-worker-roster.js": "42a77f77e9c7e747e5869ec24ca9e89596c96dc7109361f97ba7d4d50451611c",
+    "src/rendering/webgpu-world-surface.js": "02b8b0f2f1370cc795bbae3037651f6ef052171977ac5a62be9de9278c9405c5",
+    "tests/browser/native-post-settlement-task-scenario.js": "4779ec583ead09fb0e7ddc8cd54d3e78321aea009177d3189ac607413a1835f4",
+    "tests/native-task-pending-source-pick.test.js": "dff9ee53d49cd0f62318544d75a1473ba38158dff5dbf9525c28b79dcf8c4917"
+  },
+  "cases": [
+    {
+      "label": "olderMale",
+      "profile": "olderMale",
+      "output": ".cache/native-next-task-reviewed-pilot-olderMale.json",
+      "log": ".cache/native-next-task-reviewed-pilot-olderMale.log",
+      "startedAt": "2026-11-20T09:14:16.668Z",
+      "finishedAt": "2026-11-20T09:16:08.638Z",
+      "wallMs": 111968,
+      "exitCode": 0,
+      "followNextTask": true,
+      "reusedFrom": ".cache/native-next-task-reviewed-pilot-frozen.json",
+      "scope": "Identical final-source pilot; reused without repeating completed hardware work."
+    },
+    {
+      "label": "olderFemale",
+      "profile": "olderFemale",
+      "followNextTask": true,
+      "output": ".cache/native-next-task-final-olderFemale.json",
+      "log": ".cache/native-next-task-final-olderFemale.log",
+      "startedAt": "2026-11-20T09:18:08.124Z",
+      "finishedAt": "2026-11-20T09:19:58.795Z",
+      "wallMs": 110670,
+      "exitCode": 0
+    },
+    {
+      "label": "youngMale",
+      "profile": "youngMale",
+      "followNextTask": true,
+      "output": ".cache/native-next-task-final-youngMale.json",
+      "log": ".cache/native-next-task-final-youngMale.log",
+      "startedAt": "2026-11-20T09:19:58.802Z",
+      "finishedAt": "2026-11-20T09:21:51.780Z",
+      "wallMs": 112977,
+      "exitCode": 0
+    },
+    {
+      "label": "youngFemale",
+      "profile": "youngFemale",
+      "followNextTask": true,
+      "output": ".cache/native-next-task-final-youngFemale.json",
+      "log": ".cache/native-next-task-final-youngFemale.log",
+      "startedAt": "2026-11-20T09:21:51.785Z",
+      "finishedAt": "2026-11-20T09:23:43.944Z",
+      "wallMs": 112159,
+      "exitCode": 0
+    },
+    {
+      "label": "settlement-control",
+      "profile": "olderMale",
+      "followNextTask": false,
+      "output": ".cache/native-next-task-final-settlement-control.json",
+      "log": ".cache/native-next-task-final-settlement-control.log",
+      "startedAt": "2026-11-20T09:23:43.950Z",
+      "finishedAt": "2026-11-20T09:25:00.999Z",
+      "wallMs": 77049,
+      "exitCode": 0
+    }
+  ],
+  "scope": "Four ordinary profiles through first settlement and second Task14, plus default-off first-settlement control. Same authority/producer/Surface/native body; retained-source picking keeps existing incomplete readiness guard."
+}

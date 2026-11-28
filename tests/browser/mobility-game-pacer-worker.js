@@ -1,0 +1,3 @@
+import {createGamePhysics} from './mobility-game-physics-core.js';let session;
+try{session=await createGamePhysics({originalClips:true,initialAnimation:true});postMessage({kind:'ready',initialTime:session.clock()});}catch(error){postMessage({kind:'error',error:String(error?.stack??error)});}
+self.onmessage=e=>{if(e.data.kind!=='step'||!session)return;try{const result=session.step(),state=e.data.final?session.state():null;postMessage({kind:'result',sequence:e.data.sequence,result,simulationTime:session.clock(),state});}catch(error){postMessage({kind:'error',error:String(error?.stack??error)});}};

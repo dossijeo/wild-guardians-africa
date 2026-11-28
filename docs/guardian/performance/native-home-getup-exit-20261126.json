@@ -1,0 +1,167 @@
+{
+  "baseline": "106b3d7b48b7944dd742e3d04159c3c4b76c367c",
+  "controls": {
+    "baselineFailure": "Combined shader must use the supplied exit",
+    "realRig": {
+      "profile": "youngMale",
+      "clips": [
+        "Walk_Skip",
+        "Run",
+        "Idle"
+      ],
+      "blendRemainingTestedSeconds": [
+        0.24,
+        0.12,
+        0
+      ],
+      "passes": [
+        "color",
+        "shadow",
+        "CPU picking proxy compared with AnimationMixer"
+      ],
+      "maximumVertexDifferenceUnderMeters": 0.05,
+      "phaseReadsPerPick": 1
+    }
+  },
+  "ordinaryDesert": {
+    "events": [
+      {
+        "type": "WorkerHit",
+        "simulationTime": 11.699999999999964,
+        "pushed": 0
+      }
+    ],
+    "start": {
+      "at": 18.43999999999982,
+      "x": -16.27014043899544,
+      "z": 0.35610554760911617,
+      "exit": 0.24,
+      "heading": 0,
+      "running": true,
+      "runPhase": 24.12999999999998,
+      "walkPhase": 8.325000000000001,
+      "runRemaining": 40
+    },
+    "firstStep": {
+      "at": 18.45999999999982,
+      "x": -16.24113047388369,
+      "z": 0.31786392206554015,
+      "exit": 0.22,
+      "heading": 2.4926124181474165,
+      "running": true,
+      "runPhase": 24.14999999999998,
+      "walkPhase": 8.325000000000001,
+      "runRemaining": 40
+    },
+    "at240ms": {
+      "at": 18.679999999999815,
+      "x": -16,
+      "z": 0.12902458924607985,
+      "exit": 2.0816681711721685e-17,
+      "heading": 0,
+      "running": true,
+      "runPhase": 24.369999999999976,
+      "walkPhase": 8.325000000000001,
+      "runRemaining": 40
+    },
+    "firstStepDistance": 0.048000000000000875,
+    "distanceFromStartAt240ms": 0.3529045457793429
+  },
+  "nativeHomeComponent": {
+    "from": 28.094101905186534,
+    "to": 28.394101905186535,
+    "execution": 28.394101905186535,
+    "tickets": [
+      5,
+      6
+    ],
+    "actor": "worker-900011",
+    "body": 1,
+    "points": [
+      {
+        "age": 0,
+        "relativeTime": 0,
+        "remaining": 0.23999999463558197,
+        "x": -7.436453342437744,
+        "z": 3.6734347343444824,
+        "currentSpeed": 1.0800000429153442,
+        "clip": "Walk_Skip"
+      },
+      {
+        "age": 0.02,
+        "relativeTime": 0.01999952271580696,
+        "remaining": 0.2199999988079071,
+        "x": -7.419159031154212,
+        "z": 3.686374768958701,
+        "currentSpeed": 1.0800000429153442,
+        "clip": "Walk_Skip"
+      },
+      {
+        "age": 0.05,
+        "relativeTime": 0.04999952390789986,
+        "remaining": 0.1899999976158142,
+        "x": -7.393216944110689,
+        "z": 3.7057852848679365,
+        "currentSpeed": 1.0800000429153442,
+        "clip": "Walk_Skip"
+      },
+      {
+        "age": 0.12,
+        "relativeTime": 0.11999952048063278,
+        "remaining": 0.11999999731779099,
+        "x": -7.332685413044789,
+        "z": 3.7510764846389413,
+        "currentSpeed": 1.0800000429153442,
+        "clip": "Walk_Skip"
+      },
+      {
+        "age": 0.24,
+        "relativeTime": 0.23999951779842377,
+        "remaining": 0,
+        "x": -7.228917071313482,
+        "z": 3.828718543455229,
+        "currentSpeed": 1.0800000429153442,
+        "clip": "Walk_Skip"
+      },
+      {
+        "age": 0.26,
+        "relativeTime": 0.25999951362609863,
+        "remaining": 0,
+        "x": -7.211622350912991,
+        "z": 3.8416588841809505,
+        "currentSpeed": 1.0800000429153442,
+        "clip": "Walk_Skip"
+      }
+    ],
+    "compilesSameShader": true,
+    "clockBindings": 1,
+    "scope": "Real Home proposal and GPU clock graph with actor and NodeBuilder, exit proof supplied by the test"
+  },
+  "regression": {
+    "workerHomeAndRenderer": {
+      "passed": 98,
+      "failed": 0,
+      "skipped": 0
+    },
+    "sharedAnimalAndWorker": {
+      "passed": 77,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "build": {
+    "seconds": 49.3,
+    "canonicalArtifactsByteIdentical": true
+  },
+  "scope": "Three shader compilation and CPU proxies, ordinary Game and a native Home proposal sourced from delivery. The test supplies the recovery exit to the clock graph. Authority-to-Draw GetUp admission and physical presentation are still pending.",
+  "localEvidenceSha256": {
+    ".cache/flee-mixed/native-exit-before.tap": "bbb3659e0d61ccf11206a176c2fbb174860bc755452e3ff94a326097b23828a5",
+    ".cache/flee-mixed/native-exit-impact.tap": "674e6573cc2d333103c2f6b877190c2a0fe1a9627a77594b226558c7e50e7fec",
+    ".cache/flee-mixed/native-exit-shared-impact.tap": "1bd699948418cb01c65ff36f52e22d7fd6e80577c6a6053f99157ceb17859b41",
+    ".cache/flee-mixed/native-exit-vite.log": "8d0b86461dbfefabaa9de622dd60416e389496d275c4386db5b648e9aa120eae",
+    ".cache/flee-mixed/probe-native-home-exit.mjs": "3f1aada826ebd9905f80bf8406f10162fd27d9406478ccc10112b30f79367c2d",
+    ".cache/flee-mixed/probe-getup-exit-movement.mjs": "2809b2d0c5dd076b4ebe304f0870f7c812855dde620db85ff7fcf0aae3902387",
+    ".cache/flee-mixed/native-home-exit-probe.log": "c70992b1169d9590c56c6977da71669aa0651e23998e96bb7e75b263e1157589",
+    ".cache/flee-mixed/getup-exit-movement.json": "790b2e86f92ff5522c34605cdbe67737f53d7c15126cc5f67b94619721abf67e"
+  }
+}

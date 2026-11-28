@@ -21,13 +21,15 @@ export class MicroeventSpace {
   worldPosition(p,out=this.point){this.offset(p.x,p.y,p.phase,out);out.add(this.origin(this.hitPoint));if(this.def.behavior.pull)out.y+=p.progress*this.unit*25;return out;}
   toLocal(clientX,clientY,rect,camera){this.refresh();this.ndc.set((clientX-rect.left)/rect.width*2-1,1-(clientY-rect.top)/rect.height*2);this.raycaster.setFromCamera(this.ndc,camera);if(!this.raycaster.ray.intersectPlane(this.plane,this.point))return null;this.point.sub(this.origin(this.hitPoint));return this.local.set(this.point.dot(this.u)/this.unit,this.point.dot(this.v)/this.unit);}
   project(p,camera,rect,out={}){this.worldPosition(p,this.point).project(camera);out.x=rect.left+(this.point.x+1)*rect.width*.5;out.y=rect.top+(1-this.point.y)*rect.height*.5;out.z=this.point.z;return out;}
-  hit(particles,clientX,clientY,camera,rect,world){let best=-1,distance=Infinity;const projected={};for(let i=0;i<particles.count;i++){const p=particles.pool[i];if(p.progress>=.95||p.reveal<=.2)continue;this.project(p,camera,rect,projected);if(projected.z< -1||projected.z>1)continue;const d=Math.hypot(clientX-projected.x,clientY-projected.y);if(d<Math.max(24,(particles.def.hitRadius??40)*this.pixelsPerUnit(camera,rect))&&d<distance){distance=d;best=i;}}
+  hitCandidate(particles,clientX,clientY,camera,rect){let best=-1,distance=Infinity;const projected={};for(let i=0;i<particles.count;i++){const p=particles.pool[i];if(p.progress>=.95||p.reveal<=.2)continue;this.project(p,camera,rect,projected);if(projected.z< -1||projected.z>1)continue;const d=Math.hypot(clientX-projected.x,clientY-projected.y);if(d<Math.max(24,(particles.def.hitRadius??40)*this.pixelsPerUnit(camera,rect))&&d<distance){distance=d;best=i;}}return best;}
+  hit(particles,clientX,clientY,camera,rect,world){const best=this.hitCandidate(particles,clientX,clientY,camera,rect);
     if(best<0)return -1;
     this.worldPosition(particles.pool[best],this.point);if(this.occluded(this.point,camera,world))return -1;
     return best;
   }
   occluded(point,camera,world){
-    if(!world?.objects||!world?.terrainMeshes)return false;
+    // Missing geometry cannot establish that an interactive target is visible.
+    if(!world?.objects||!world?.terrainMeshes)return true;
     this.hitPoint.copy(point).sub(camera.position);const length=this.hitPoint.length();this.raycaster.ray.set(camera.position,this.hitPoint.normalize());this.raycaster.near=.01;this.raycaster.far=Math.max(.01,length-.08);this.hits.length=0;
     this.raycaster.intersectObjects([...world.terrainMeshes,...world.objects.values()].filter(o=>o.visible),true,this.hits);this.raycaster.far=Infinity;return this.hits.length>0;
   }

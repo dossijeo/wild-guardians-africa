@@ -1,0 +1,28 @@
+{
+  "scenario": "Sabana 714, recarga del Retreat del rinoceronte antes del derrumbe y sustitución física de Draw",
+  "sourceRevision": "daf2cfb97afbee4725e80212df0b4da7ad4040c7",
+  "adapter": {"vendor": "nvidia", "architecture": "turing"},
+  "artifacts": {
+    "savanna-retreat-before-ruin-checkpoint.json": "7f9d7bba2c3677ba449b6306d3628cb557bb08d914be3c8f8501a5b4e4fe2506",
+    "rhino-saved-before-ruin-replacement-draw-nvidia.json": "e47d0272d0e613d1408ab5e4e5225cf2f46c73753162cf016aaed01fc5e56ae9"
+  },
+  "coldRestore": {
+    "actor": "animal-23", "body": 1, "assignment": 4, "hitsRemaining": 4,
+    "time": 2773.2500000000455, "x": 74.15462326059031, "z": 7, "yaw": -1.5707963267948966, "phase": 26.197122620270424,
+    "preparedTicket": 1, "acquiredTicket": 2, "firstDraw": 48, "relativeAge": 0, "adoptedPublication": 4
+  },
+  "centerRuin": {
+    "ticket": 3, "preparedAt": 2773.3000000000457, "acquiredAt": 2773.3200000000456, "removedPolygon": 9,
+    "originalDraw": 51, "originalRelativeAge": 0.06999999284744263
+  },
+  "replacement": {
+    "destroyedDevice": true, "hold": 7, "baseCheckpoint": 1,
+    "firstDraw": 1, "time": 2773.6000000000467, "relativeAge": 0.3499999940395355, "worldTicket": 3,
+    "body": 1, "assignment": 4, "hitsRemaining": 4, "x": 72.82462326058547, "z": 7, "yaw": -1.5707963267948966, "phase": 26.547122620271697,
+    "activationPublication": 11, "drained": true
+  },
+  "terminal": {
+    "events": [["StructureRuined", "event-106", 2773.3200000000456], ["RaidEnded", "event-107", 2782.9000000000806], ["GameOver", "event-109", 2782.9000000000806]],
+    "frameWithoutAnimal": 89, "hp": 0, "balance": 671, "errors": [], "traceDataLoss": false
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "scope": "Frozen first worker-hit pose, closed eyes and open mouth; native mangrove/suajili WorldScene. Attacking animal removed using day control, then time changed without moving camera. Not full blink/fall/recovery validation.",
+  "errors": [],
+  "pairs": [
+    {
+      "profile": "olderFemale",
+      "phase": "day",
+      "changedPixels": 142083,
+      "maxChannelDelta": 19
+    },
+    {
+      "profile": "olderFemale",
+      "phase": "night",
+      "changedPixels": 101300,
+      "maxChannelDelta": 15
+    },
+    {
+      "profile": "olderMale",
+      "phase": "day",
+      "changedPixels": 142019,
+      "maxChannelDelta": 20
+    },
+    {
+      "profile": "olderMale",
+      "phase": "night",
+      "changedPixels": 105677,
+      "maxChannelDelta": 18
+    }
+  ],
+  "remaining": [
+    "Review olderMale nocturnal skin highlights present with AO off too",
+    "Review open eyes, other side and motion",
+    "Young workers and strategic distances"
+  ]
+}

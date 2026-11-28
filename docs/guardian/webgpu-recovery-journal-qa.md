@@ -1,0 +1,132 @@
+# Recuperación QA de presentación WebGPU
+
+La opción QA conserva un checkpoint de presentación candidato y solo lo reconoce como base tras el ACK exacto del Worker gráfico. Un journal acotado retiene, desde esa frontera, las publicaciones completas y sus eventos, poses e invalidaciones, así como los lotes de terreno previos a cada publicación. El replay envía el checkpoint sin volver a emitir sus eventos y entrega después cada lote de terreno y publicación en orden, esperando un ACK con sesión, identificador, fase y secuencia antes del siguiente. Las publicaciones siguen guardando sus fronteras originales: este mecanismo no consolida snapshots por tick.
+
+La admisión de simulación se detiene durante el reenganche QA. El presupuesto usa límites configurables de entradas y una estimación de bytes; la sobrecarga real del heap y las copias temporales no están incluidas exactamente. No existe todavía renovación automática de checkpoint. El journal no está listo para producción ni garantiza funcionamiento prolongado.
+
+La recuperación rechaza un journal con error de canal, candidato pendiente, terreno incompleto, secuencia distinta de la autoridad o saturación. La autoridad permanece detenida ante esos errores y se informa del fallo; no se reengancha silenciosamente con un hueco. La recuperación no constituye rollback físico de la simulación.
+
+## Evidencia
+
+- Prueba real QA WebGPU de sustitución de Worker y canvas: checkpoint 170, replay hasta 197 y continuación hasta 213, con 25 chunks. El intervalo observado estaba pausado y no demuestra por sí solo replay de eventos o poses físicas.
+- Una segunda prueba real restauró una pose Rapier activa: base 816 y replay hasta 853. La caída y el impacto eran anteriores a la base; no demuestra replay de un evento posterior.
+- Se reprodujo saturación: base 302, through/ACK 430 y 128 entradas, con el canal visual al día pero órdenes y pasos pendientes. Sin renovación, el umbral detiene el despacho e impide ejecutar el checkpoint que permitiría liberar el journal. Esto sigue pendiente.
+- Se está comprobando un evento posterior al checkpoint. Hasta completar esa prueba no se afirma que todos los efectos/eventos y su deduplicación estén verificados en juego real.
+
+Pruebas dirigidas reproducibles con Node 20 del repositorio:
+
+```powershell
+.\.cache\tooling\node20.exe --test tests/presentation-recovery-journal.test.js tests/presentation-recovery-replay.test.js tests/visual-publication-stream.test.js tests/host-publication-queue.test.js
+```
+
+34 pruebas pasaron tras añadir las guardas fail-closed. Cubren orden, ACK y cursor, eventos y poses en publicaciones, tandas de terreno, límites, duplicados, journal incompleto y overflow. Son pruebas de contrato; no sustituyen validación visual, rendimiento sostenido o recuperación real tras pérdida de dispositivo.
+
+## Renovación experimental sobre comandos existentes
+
+La vía QA solicita un nuevo checkpoint al llegar a la mitad del límite del journal, adjuntándolo al siguiente comando que ya le corresponde por orden. No encola un snapshot adicional ni adelanta órdenes. El candidato no reemplaza la base hasta su ACK exacto; una solicitud explícita de checkpoint espera en su posición mientras hay otro candidato. La publicación que lleva el checkpoint constituye una frontera que no se fusiona con ticks vecinos.
+
+Una comparación determinista con dos Workers de simulación y Rapier reales ejecutó 120 pasos posteriores a un impacto, con pose activa en los 120 y 30 checkpoints adjuntos a pasos normales. Los snapshots, eventos y poses físicas activas fueron idénticos entre ambas ejecuciones. Esta prueba cubre ese impacto y no demuestra equivalencia de todos los escenarios físicos. Las pruebas unitarias también ejercitan 400 publicaciones con ACK inmediato, superando 128 y promoviendo bases sucesivas; no prueban rendimiento sostenido del juego ni ausencia de bloqueo si el renderizador deja de responder.
+
+La copia periódica completa del terreno, la retención de snapshots y la contrapresión si falla o se demora el ACK siguen siendo limitaciones de QA. No hay recuperación de pérdida espontánea del dispositivo, ni validación completa del replay de eventos posteriores; esta renovación no convierte el mecanismo en una solución de producción ni elimina el acoplamiento temporal.
+
+En la renovación automática, el Worker gráfico vivo registra ahora el checkpoint como base de recuperación sin reconstruir los chunks que ya recibe por su canal de terreno. Tampoco descarta mensajes tardíos de ese canal. Los checkpoints explícitos y la reconstrucción de un Worker nuevo siguen aplicando la base completa. Las pruebas verifican el ACK exacto, la recepción de terreno tardío y el envío de una base automática completa al replay. El cambio elimina una reconstrucción periódica de geometría e instancias, pero no se ha medido todavía su efecto sobre la memoria ni se ha demostrado que explique la espera observada.
+
+## Auditoría de evento posterior: resultado inconcluso
+
+Tras introducir la renovación se inició `tools/experiments/audit_live_webgpu_reconnect_event.mjs` contra Vite local, con Edge headless y `--enable-unsafe-swiftshader`. La prueba alcanzó el arranque de partida, confirmó un backend WebGPU y un actor preparado, y entró en la etapa de checkpoint. No se observó confirmación del checkpoint ni finalización de la prueba. La salida quedó en el hito `QA stage: checkpoint`; tampoco se observó el diagnóstico posterior al límite instrumentado. Por tanto, no se alcanzaron ni el evento posterior ni el reenganche.
+
+Durante la espera, el proceso GPU de esa sesión Playwright creció aproximadamente de 3,998 a 4,039 GB y un renderer de 3,561 a 3,595 GB entre dos sondeos consecutivos. Solo se identificó esa familia de procesos Edge. Se cerró exclusivamente la sesión de prueba para proteger la memoria del equipo. Estas cifras son conjuntos de trabajo observados en Windows, no mediciones de memoria GPU ni un benchmark de producción. No se ha determinado qué causó el crecimiento, la espera o la ausencia de diagnóstico; puede intervenir el laboratorio, el navegador o el juego. No se debe interpretar como evidencia de éxito ni de fallo concreto de la renovación. Se deben investigar las asignaciones antes de repetir una carga pesada.
+
+## Compactación conservadora del journal QA
+
+El journal puede sustituir varios ticks contiguos por el último snapshot solo cuando todos carecen de eventos, lifecycle, terreno, checkpoint, poses físicas y datos de movimiento o invalidación, y no cambia la pausa. El replay transporta el intervalo original y confirma el extremo, sin fusionar fronteras ni cambiar el orden. Las entradas entregadas al replay quedan selladas ante nuevas publicaciones. En partida de desarrollo, `qa-webgpu-recovery-uncompacted` conserva la referencia sin compactar; la opción del journal también se puede seleccionar por API.
+
+En una prueba sintética con 100 ticks elegibles se retuvo un snapshot en lugar de 100; una comparación con el receptor real conservó el estado final y el evento posterior. Son pruebas de contrato, no un benchmark ni una validación de partida prolongada. La autoridad sigue serializando cada publicación y el journal todavía clona la entrada antes de decidir su sustitución. Los ticks con pose, eventos, movimiento o terreno no se compactan; la simulación conserva contrapresión y recuperación experimental.
+
+El VFX WebGPU de bendiciones recibe ahora la lista completa y ordenada de eventos confirmados de cada publicación, sin depender exclusivamente del anillo de 200 eventos del estado. Deduplica identificadores y descarta la presentación pendiente si el objetivo ya no existe, ha perdido la bendición o ha dejado de estar activo. Esto no reconstruye una bendición temporal cuyo objetivo desapareció antes del snapshot final: otros observadores también necesitan contexto causal autocontenido. Por tanto, aún no permite fusionar publicaciones con eventos ni acredita una mejora de rendimiento. Las pruebas dirigidas cubren un evento expulsado del anillo, duplicados y objetivos ausentes o destruidos; falta validación visual en partida.
+
+Los eventos nuevos de aplicación y pérdida de bendición llevan además `presentation.source`, una copia pequeña de la identidad, tipo, posición y, para cultivos, especie y crecimiento del objetivo en ese instante. Los eventos antiguos sin ese campo siguen siendo compatibles. El ritual heredado puede utilizar ese contexto exclusivamente para dimensionar su efecto temporal cuando el objetivo ya no figura en el último estado; no lo incorpora a la simulación ni recrea una fuente persistente. Esto prepara información causal para el transporte, pero no habilita la fusión de eventos ni resuelve por sí solo la presentación WebGPU de rituales y efectos temporales sobre objetivos desaparecidos. Hay pruebas de eventos reales, guardado/restauración y ritual tardío; todavía falta una comparación de partida entre publicaciones individuales y acumuladas.
+
+Los efectos WebGPU de impactos de bestias, muros y escudos también reciben los eventos confirmados completos. Una ventana de presentación conserva cada `AnimalLogicalHit` por ID durante la duración máxima de esos efectos, según el tiempo de simulación; la pausa no hace avanzar su caducidad. El anillo del estado continúa sirviendo para restaurar y para eventos antiguos sin ID. Una prueba integra un impacto expulsado del anillo con la carga asíncrona del atlas, y pruebas de contrato cubren orden, duplicados, pausa y expiración. La ventana está limitada en tiempo, no por una cota absoluta de eventos en un mismo instante. Este cambio no acredita una mejora de rendimiento ni valida la mezcla de publicaciones con eventos.
+
+### Fronteras necesarias para agrupar eventos
+
+No se deben concatenar los journals de publicaciones distintas: el guardián decide si un objetivo desapareció **dentro de la misma publicación** y mantiene un gesto ya iniciado si desaparece en una publicación posterior. `tests/webgpu-guardian-attack.test.js` compara explícitamente lanzamiento y desaparición en la misma publicación, en publicaciones separadas y con eventos antiguos sin journal. Al aplanar las dos primeras se cambia el resultado visual.
+
+Una posible evolución enviaría un único snapshot final junto a segmentos ordenados que conserven para cada publicación original su secuencia y sus listas de eventos y lifecycle, sin duplicar el snapshot. El receptor debería validar huecos, duplicados, orden y relación entre cada evento y su segmento antes de reconciliar; el guardián consumiría los segmentos por separado. Esta representación todavía necesita cubrir los observadores que consultan el estado intermedio, el orden de terrenos en su puerto independiente, poses físicas, movimiento e invalidaciones, además de prueba comparativa en partida. Hasta entonces sigue prohibido fusionar publicaciones con eventos o cruzar esas fronteras.
+
+Se ensayó y **descartó** una agrupación de eventos autocontenidos al comprobar que podía saltar una frontera con movimiento de actores sin disponer de sus trayectorias intermedias certificadas. En la captura determinista `manglares-123-d10`, 101 publicaciones de Wild Engine y dos eventos `AnimalTargetUnavailable` produjeron 4 snapshots con la cola de referencia (que ya compacta ticks silenciosos) y 2 con el experimento, con consumidor artificialmente detenido. La estimación JSON fue 4.667.783 frente a 2.293.713 bytes; estado final, eventos y planes de VFX coincidieron en pruebas de contrato. Los eventos se separaban unos ocho segundos de simulación: esos resultados **no prueban continuidad visual ni ausencia de atravesamientos**, ni miden structured clone, GPU o rendimiento en partida. La autoridad seguía serializando las 101 publicaciones. No se conserva ninguna opción activa de agrupación: antes de retomarla hay que certificar y reproducir los tramos de todos los actores y preservar las fronteras de terreno, física e invalidaciones.
+
+La ventana de hechos confirmados sí alimenta a los VFX legados de ataque, muralla y Shield sin modificar `state.events`; una prueba de receptor y planes verifica dos impactos expulsados del anillo de 200. Esta mejora de entrega de hechos no certifica movimiento ni habilita fusionar publicaciones con eventos.
+
+Cada resultado de la autoridad informa ahora `terrainChanged` a partir del callback que ya entrega chunks nativos: incluye cambios y cargas indirectas ocurridos desde la publicación anterior, sin consultar ni copiar terreno adicionalmente. Los chunks iniciales se publican por separado en la secuencia cero. La cola normal y el journal QA mantienen cualquier resultado con cambio de terreno como frontera; un valor malformado también impide fusionarlo, y la ausencia del campo sigue siendo compatible con productores anteriores. Las pruebas usan Wild Engine WASM para verificar cargas directas e indirectas, resultados compactos y errores, además de comprobar que la cola no elimina esas fronteras. Esta información prepara una futura acumulación segura; no habilita todavía la fusión de eventos ni mide mejoras de rendimiento.
+
+Audio y GameJuice reciben ahora directamente la lista completa de eventos de cada publicación Worker después de reconciliarla. Los fotogramas posteriores mantienen los temporizadores con una lista vacía, y la simulación local conserva el anillo anterior. La primera actualización tras el arranque o una cinemática usa el anillo como referencia de compatibilidad. La deduplicación de audio retiene ese anillo al compactar IDs; GameJuice descarta eventos confirmados ya procesados. Una prueba con el receptor real entrega 205 eventos y otra publicación antes de un fotograma, incluidos hechos ya expulsados del anillo, y verifica audio/UI una sola vez; también se comprueban errores de presentación aislados y la ruta Worker directa. Durante la cinemática activa se conserva el comportamiento previo de diferir presentación mediante el anillo: **aún no se garantiza la entrega si se producen más de 200 eventos durante esa fase**. Esto no habilita fusionar publicaciones con eventos ni sustituye una prueba de partida real.
+
+## Confirmaciones compactas durante la pausa
+
+La opción de desarrollo `qa-worker-compact-paused` activa una ruta experimental que sustituye el snapshot de un `advance` por una confirmación `unchanged` con secuencia, identidad, tiempo, pausas, disponibilidad de guardado y número de pasos ejecutados cuando procede. Solo se aplica después de haber publicado un snapshot y mientras la partida permanece pausada; no se usa para avanzar la simulación activa. El bucle y sus llamadas habituales siguen ejecutándose. La opción está desactivada por defecto y el snapshot explícito sigue siendo la referencia de recuperación.
+
+Se conserva la publicación completa si se solicita `visualTerrain`, incluido un checkpoint de renovación `visualRecoveryOnly`; si hay rigs físicos registrados, seguimiento de trayectorias, eventos, hechos de ciclo de vida, orientaciones pendientes o cambios de terreno; si la economía necesita reparar un día obsoleto; o si existe un servicio adicional de navegación. Una física sin rigs conserva su llamada habitual de publicación. Los checkpoints físicos siguen limitados a comandos `snapshot`. Las confirmaciones no transportan ni agrupan eventos, poses, terreno o movimiento.
+
+El journal QA compacta únicamente confirmaciones consecutivas de esta clase con la misma identidad, secuencia de estado, tiempo, pausa y disponibilidad de guardado. Preserva el primer número de secuencia, los checkpoints y las entradas selladas para replay; cualquier evento, pose, terreno, cambio de identidad u otra frontera interrumpe la compactación. La cola existente puede incorporar la secuencia compacta a una publicación posterior sin perder su evento confirmado. Las pruebas no acreditan que se puedan fusionar publicaciones con movimiento o eventos.
+
+La batería dirigida de autoridad nativa, receptor, journal, cola, runtime y cliente pasó 67 pruebas. Incluye 205 avances pausados de Wild Engine con economía habilitada, comparación con la ruta de snapshots y reanudación, replay sobre el receptor real, y una pausa sintética de 599 confirmaciones con pruebas de sellado y barreras. Una prueba adicional comprueba los checkpoints visuales y de renovación durante un avance pausado. La fixture `tests/browser/authority-compact-paused-physics.html` prepara una comparación de dos Workers con registro físico vacío y con un impacto Rapier activo, pero **aún no se ha ejecutado**: no se ha demostrado paridad física en navegador ni el comportamiento de esta opción en una partida prolongada. No se ha medido una mejora global de rendimiento.
+
+## Experimento descartado: deltas de tareas
+
+Se ensayó un protocolo QA para enviar las mutaciones de `tasks` y serializar el resto del estado, con espejo de cobertura que obligaba a emitir snapshot completo ante cambios no observados. Incluía las escrituras de bloqueo del planificador nativo y barreras para no perder operaciones al acumular publicaciones. La reconstrucción coincidió con Wild Engine en 200 ticks de una incursión de manglares (sin cambios de tareas en esa ventana) y en 40 ticks de una captura diurna de desierto con 106 cambios de tareas. Las pruebas dirigidas cubrieron los receptores de escena y WebGPU. No se demostró una secuencia de mutaciones de tareas durante la incursión.
+
+En una pasada exploratoria con la misma captura diurna y consumidor inmediato, los 40 resultados ocuparon 49.329.785 bytes JSON completos y 48.638.125 bytes con el delta, una reducción del 1,4 %. El tiempo medio de la autoridad fue 22,15 frente a 20,81 ms y el del receptor 22,57 frente a 22,53 ms; son mediciones secuenciales únicas, no evidencia de mejora reproducible. El espejo QA aislado de 115 tareas tardó una media de 0,167 ms y p95 de 0,216 ms en 1.000 comprobaciones sin mutaciones.
+
+Con idéntico consumidor detenido y 40 ticks pendientes, la cola existente absorbió 38 ticks y envió 3 publicaciones, 3.699.770 bytes JSON; la alternativa con dependencias de deltas conservó los 40 ticks y envió 41 publicaciones, 49.875.510 bytes, aproximadamente 13,5 veces más. Son bytes JSON estimados, no transferencias ni memoria GPU medidas. El experimento se descartó: no queda un flag activo ni se cambia el protocolo. Una alternativa futura tendría que acumular deltas y mantener sus fronteras causales sin impedir la compactación existente, antes de alegar ahorro.
+
+## Replay concurrente experimental
+
+Con `qa-webgpu-recovery` y `qa-webgpu-recovery-concurrent`, ambos solo en desarrollo, el host mantiene avanzando la autoridad mientras un nuevo consumidor reproduce el checkpoint y el journal. La base queda fijada durante la operación y el replay se despierta al recibir nuevas publicaciones o bloques de terreno. Cuando alcanza la secuencia actual, el host verifica la frontera y cambia de puerto en el mismo turno síncrono. La transferencia del puerto de terreno sí requiere una barrera asíncrona breve: se deja terminar el comando de autoridad en curso, se cambia el puerto y se reanuda el despacho antes de esperar al replay. Los comandos y eventos conservan su orden. La opción está desactivada por defecto.
+
+La cancelación antes de transferir el puerto restaura el despacho. Una cancelación posterior se rechaza explícitamente, porque no es seguro volver al puerto antiguo sin reconstruir el canal de terreno. Un ACK inválido, un error de transferencia o un timeout de 10 segundos rechaza la promesa de recuperación; tras iniciar la transferencia, la admisión se detiene y conserva el journal, a la espera de una recuperación explícita. Los comandos en espera y los posteriores se rechazan; los pasos de simulación pendientes no se descartan. Esto evita fingir que el renderer antiguo sigue sincronizado. Los límites de cola y journal siguen aplicándose; si el replay no alcanza a un productor más rápido, puede saturarse y frenar la autoridad. La operación aún no es un desacoplamiento completo ni una recuperación automática de pérdida de dispositivo.
+
+Una fixture ligera de Edge headless ejecutó host y autoridad reales en Workers anidados con puertos simulados, sin WebGPU: el estado avanzó durante la preparación y el replay, que alcanzó la secuencia 17 desde la base 2; se probaron cancelación anterior y rechazo posterior a la transferencia, error de ACK y timeout sin promesas pendientes. En el timeout el journal llegó a 100 entradas y aproximadamente 201 MB estimados, superando su umbral; no es una medición de GPU. Las pruebas unitarias cubren productor más rápido y lento, entrada de terreno pendiente, fallo y cancelación del replay. Una prueba adicional en el host real ejecutó `previewVillage` durante el replay: Wild Engine cargó los chunks 6,0 y 7,0 y el journal entregó el bloque de terreno antes de su publicación; los puertos gráficos seguían simulados. Otra prueba usó un Worker con un dispositivo WebGPU y un OffscreenCanvas de 16×16 que ejecuta pases de limpieza mientras confirma el replay (base 2 hasta secuencia 14). Una prueba combinada repitió la carga real de chunks con ese consumidor WebGPU mínimo: los chunks 6,0 y 7,0 llegaron como `recoveryTerrain` en la secuencia 15 antes de su publicación, y el replay alcanzó la secuencia 22. El consumidor solo confirma los mensajes y limpia el canvas: no construye el terreno, no carga la escena del juego ni valida equivalencia visual, física o rendimiento; no se ha validado con el renderer WebGPU completo. La batería dirigida de replay, journal, runtime y cliente pasó 47 pruebas.
+
+Reproducción de la fixture sin renderer, desde PowerShell (dos terminales):
+
+```powershell
+.\.cache\tooling\node20.exe .\node_modules\vite\bin\vite.js --host 127.0.0.1 --port 5187 --strictPort
+```
+
+```powershell
+$env:NODE_PATH='C:\Users\Gabriel\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules'
+.\.cache\tooling\node20.exe .\tools\experiments\audit_worker_concurrent_recovery.mjs
+```
+
+El script ejecuta éxito, cancelación y errores, incluido un timeout intencionado de 10 segundos; se le pueden pasar modos individuales (`success`, `terrain`, `cancel`, `preFailure`, `cancelAfter`, `failure`, `timeout`, `gpu`, `gpuTerrain`). `QA_BASE_URL` y `PLAYWRIGHT_MODULE` permiten usar otra URL o instalación de Playwright. Los modos `gpu` y `gpuTerrain` son opcionales y usa un adaptador WebGPU disponible en el navegador; los modos por defecto no requieren WebGPU. Hay que detener Vite al terminar.
+
+### Renderer Three.js WebGPU mínimo
+
+Se añadió una fixture separada con `createWebGpuWorldClient` y su Worker Three.js reales, dos canvas de 32×32 y un estado de prueba con un único edificio de un layout existente, inicialmente un chunk nativo y ningún trabajador o animal. El reloj se coloca inmediatamente antes de la noche y se pausa después del evento para mantener el escenario acotado. El renderer todavía descarga el binario completo del poblado (4.706.020 bytes) y su textura WebP (1.279.936 bytes); no es una escena sin recursos.
+
+Dos ejecuciones headless sobre Edge confirmaron backend WebGPU. En la última, el replay partió del checkpoint 2 y alcanzó la publicación 58; conservó exactamente un evento `NightStarted` y restauró tres chunks, incluidos `1,0` y `2,0` cargados por `previewVillage`. La superficie real comprueba que las posiciones del terreno restaurado coincidan con el payload recibido. El evento y la carga de terreno ocurrieron después de preparar la recuperación y antes de iniciar el replay; la simulación estaba pausada durante la recuperación gráfica. No es prueba de una incursión, animaciones, rendimiento, equivalencia visual ni fallos de dispositivo; los casos de fallo y timeout se probaron solo con puertos simulados en la fixture anterior. El adaptador y su hardware no se identificaron.
+
+Con Vite iniciado como en el comando anterior, se reproduce con:
+
+```powershell
+$env:NODE_PATH='C:\Users\Gabriel\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules'
+.\.cache\tooling\node20.exe .\tools\experiments\audit_worker_concurrent_webgpu_minimal.mjs
+```
+
+La prueba cierra normalmente navegador y Workers; detén Vite al terminar.
+
+La misma fixture se amplió para mantener activa la simulación durante el replay. Parte pausada inmediatamente antes de la noche, registra 16 snapshots pequeños y reanuda la autoridad después de iniciar el reenganche. Un relé de prueba retrasa cada ACK del replay 15 ms para mantener abierta la ventana; no simula el renderer ni modifica los datos. Mientras se reproduce se emiten `NightStarted` y la consulta `previewVillage` carga terreno nativo. En una ejecución con Three.js WebGPU real, la autoridad avanzó de 299,95 a 306,75 segundos de simulación, el replay pasó de la base 2 a la secuencia 79, conservó el evento exactamente una vez y restauró los chunks `1,0` y `2,0` antes de su publicación; hubo tres chunks residentes y ningún error. El mismo comando de la fixture anterior reproduce este caso. No mide FPS ni prueba una sobrecarga real de GPU, personajes, incursiones, fallos de dispositivo o equivalencia visual completa.
+
+## Autoridad de incursión con presentación retenida
+
+La fixture `tests/browser/authority-raid-visual-delay.html` ejecuta dos Workers de autoridad reales desde la misma captura de desierto, con dos runtimes controlados por el mismo reloj manual y sin renderer. Uno de los consumidores visuales confirma normalmente y el otro retiene su primer ACK durante 60 ticks de 0,05 s. Se comparan el estado completo y los eventos tras cada tick, además del snapshot final. Después se libera el ACK y se comprueba la entrega visual completa y ordenada de eventos.
+
+En la ejecución observada, ambas incursiones empezaron en el tick 1 con cinco bestias; los estados, decisiones representadas y eventos fueron idénticos en los 60 ticks y también coincidió el snapshot final. El consumidor retenido recibió los 11 eventos una sola vez y en orden al liberarse. Mientras retenía el ACK, la cola tenía siete publicaciones pendientes y había fusionado 57. No alcanzó el límite de 128: esta prueba no demuestra progreso bajo saturación, no incluye GPU ni pérdida de dispositivo y no cubre la incursión hasta su final.
+
+Con Vite en `http://127.0.0.1:5187`, reproduce desde PowerShell con el mismo `NODE_PATH` indicado arriba:
+
+```powershell
+.\.cache\tooling\node20.exe .\tools\experiments\audit_authority_raid_visual_delay.mjs
+```

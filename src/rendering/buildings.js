@@ -1,3 +1,4 @@
+import {buildingFacePolicy,buildingFaceShaders} from './building-face-policy.js';
 import {loadingYieldBudget} from './loading-yield-budget.js';
 import {withScreenTarget} from './screen-target.js';
 import {loadingSyncWitness,loadingAwaitWitness} from './loading-sync-witness.js';
@@ -19,11 +20,12 @@ export function centerVisualDamage(entity){
   if(entity.status==='collapsing')return COLLAPSE_THRESHOLD+(1-COLLAPSE_THRESHOLD)*clamp(1-entity.collapseRemaining/COLLAPSE_SECONDS);
   return clamp(1-entity.hp/entity.maxHp);
 }
-function geometry(data,repairNormals=null){
+function geometry(data,repairNormals=null,facePolicy=null){
   const result=new THREE.BufferGeometry(),buffer=new THREE.InterleavedBuffer(data,12);
   for(const [name,size,offset] of [['aPos',3,0],['aNormal',3,3],['aUV',2,6],['aAnchor',3,8],['aSeed',1,11]])result.setAttribute(name,new THREE.InterleavedBufferAttribute(buffer,size,offset));
   // Three uses position for frustum bounds; the shader uses the same source data.
   result.setAttribute('position',result.getAttribute('aPos'));
+  result.setAttribute('aFacePolicy',new THREE.BufferAttribute(facePolicy??buildingFacePolicy(result.getAttribute('aPos')),1));
   result.setAttribute('aRepairNormal',new THREE.BufferAttribute(repairNormals??new Float32Array(data.length/4),3));
   result.computeBoundingBox();result.computeBoundingSphere();return result;
 }
@@ -47,7 +49,7 @@ export async function prepareNativeBuildingAsync(gltf,building,{signal}={}){
 }
 export function prepareNativeBuilding(gltf,building,{source=buildingInput(gltf),prepared=null}={}){
   const {mesh,original,input}=source;
-  const kernel=createNativeDestruction(building,input,prepared),body=geometry(kernel.vertices,kernel.repairNormals),ash=geometry(kernel.ash);
+  const kernel=createNativeDestruction(building,input,prepared),body=geometry(kernel.vertices,kernel.repairNormals,prepared?.facePolicy),ash=geometry(kernel.ash,null,new Float32Array(kernel.ash.length/12));
   const noise=new THREE.Data3DTexture(kernel.noiseBytes,32,32,32);noise.format=THREE.RedFormat;noise.type=THREE.UnsignedByteType;noise.minFilter=noise.magFilter=THREE.LinearFilter;noise.wrapS=noise.wrapT=noise.wrapR=THREE.RepeatWrapping;noise.unpackAlignment=1;noise.needsUpdate=true;
   let disposed=false;
   return {building,kernel,body,ash,noise,material:mesh.material,scale:1,culling:nativeBuildingBounds(body,ash),
@@ -64,7 +66,8 @@ function shaderMaterial(uniforms,fragmentShader,visualSearch){
     fragmentShader=fragmentShader.slice(0,start)+' float fog=smoothstep(uWorldFogRange.x,uWorldFogRange.y,length(uEye-vWorld)*uWorldScale);\n fragColor=vec4(mix(toSRGB(tonemap(color)),uWorldFogColor,fog),1.);'+fragmentShader.slice(end);
   }
   if(fragmentShader.includes('uWorldFogColor'))fragmentShader=toonDestruction(fragmentShader,visualSearch);
-  return new THREE.RawShaderMaterial({vertexShader:glsl(destructionVertex),fragmentShader:glsl(fragmentShader),glslVersion:THREE.GLSL3,uniforms,side:THREE.DoubleSide,toneMapped:false});
+  const faces=buildingFaceShaders(destructionVertex,fragmentShader);
+  return new THREE.RawShaderMaterial({vertexShader:glsl(faces.vertex),fragmentShader:glsl(faces.fragment),glslVersion:THREE.GLSL3,uniforms,side:THREE.DoubleSide,toneMapped:false});
 }
 export class NativeBuilding extends THREE.Group {
   constructor(template,entity,pipeline,elapsed=0){
@@ -72,6 +75,7 @@ export class NativeBuilding extends THREE.Group {
     this.scale.setScalar(template.scale);this.rotation.y=entity.yaw??0;
     const value=x=>({value:x}),material=template.material;
     this.uniforms={uFineNoise:pipeline.fineNoiseUniform??value(1),uWorldOrigin:pipeline.worldOriginUniform??value(new THREE.Vector2()),uVP:value(new THREE.Matrix4()),uLightVP:value(new THREE.Matrix4()),uDamage:value(0),uInner:value(0),uMode:value(0),uHoles:value(Array.from({length:8},()=>new THREE.Vector4())),uNoise:value(template.noise),uEye:value(new THREE.Vector3()),uSun:value(new THREE.Vector3(-8,13,9).normalize()),uAlbedo:value(material.map),uNormalMap:value(material.normalMap),uMR:value(material.roughnessMap),uShadow:value(null),uIntactDepth:value(pipeline.target.depthTexture),uOpeningMask:value(pipeline.target.texture),uResolution:value(new THREE.Vector2(1,1)),uAshAge:value(0),uRepair:value(template.building.repairPlaster?1:0),uTime:value(0),uShadowSize:value(1024),uShadows:value(0),uEmbers:value(1),uQuality:value(1)};
+    Object.assign(this.uniforms,{uCinemaGround:pipeline.cinemaGroundUniform??value(new THREE.Vector3(.16,.13,.075)),uBuildingAO:{value:template.ambientVisibility??material.roughnessMap},uBuildingAOOn:{value:template.ambientVisibility?1:0}});
     Object.assign(this.uniforms,{uWorldFogColor:value(new THREE.Color()),uWorldFogRange:value(new THREE.Vector2(1e8,1e9)),uWorldScale:value(template.scale),uWorldSun:value(1),uWorldAmbient:value(1),uToonModel:value(new THREE.Matrix4()),uNight:value(0),uNightLight:value(1),uExposure:value(1),uKind:value(0),uSurfaceType:value(1)});
     Object.assign(this.uniforms,pipeline.environmentUniforms??{uEnvEndpoints:value(1),uNativeEnvEnabled:value(0),uEnvDay:value(null),uEnvNight:value(null),uEnvYaw:value(0)});
     this.outer=new THREE.Mesh(template.body,shaderMaterial(this.uniforms,destructionFragment,pipeline.visualSearch));

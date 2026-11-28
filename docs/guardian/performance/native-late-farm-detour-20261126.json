@@ -1,0 +1,212 @@
+{
+  "baseCommit": "22333abd0a6981f173ca9d5ad60e8bf7224aa41d",
+  "tests": {
+    "baseline": {
+      "tests": 30,
+      "pass": 0,
+      "fail": 1,
+      "skipped": 29
+    },
+    "impact": {
+      "tests": 333,
+      "pass": 333,
+      "fail": 0,
+      "skipped": 0
+    },
+    "productionBuild": true,
+    "buildBackend": "webgpu-worker",
+    "remoteDraw": true
+  },
+  "wasm": {
+    "src/world/wild-engine/spatial-savanna.wasm": "e4cd8fbf495f8648b7533f2ac4b7f1bb68e182985f00f53d8971a59087a60412",
+    "public/wild-engine/spatial-threaded.wasm": "6f8151d8f9ed76a40c85d4bf6a1b866e7dcb4c1f0a7c1a626bd031bd200a3e5b",
+    "public/wild-engine/spatial-threaded.mjs": "230f39ad46821ca64fce4ee3989d7548e695529912f2cc4f613f4750e366449c"
+  },
+  "physical": {
+    "rawSha256": "8510ca81a929817701ec92c055371e038e3b39d4b2d8a4aa8b322b932422278f",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 113.90000000223517
+      }
+    },
+    "coordinates": [
+      "x",
+      "z",
+      "heading",
+      "walkPhase",
+      "runPhase",
+      "carryPhase",
+      "runRemaining"
+    ],
+    "hiredId": "worker-1000003",
+    "hireAt": 17.9499999999999,
+    "charge": {
+      "n": "-26",
+      "d": "1"
+    },
+    "parked": [
+      -13.97523021697998,
+      5.199846267700195,
+      -3.1292060741233034,
+      16.292991407378103,
+      23.25,
+      9.5,
+      40
+    ],
+    "first": {
+      "actorId": 900011,
+      "bodyId": 1,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "86e9badb-e05e-4704-85d5-de71cfd8601b/1",
+        "nativeSession": 1,
+        "ticket": 2,
+        "effectiveTime": 10
+      },
+      "assignmentSequence": 3,
+      "gateIds": [
+        1000000
+      ],
+      "requestedAt": 10,
+      "goal": {
+        "x": -14,
+        "z": 3.2,
+        "centerX": -18.954998779296876,
+        "centerZ": 3.2,
+        "arrivalRadius": 2
+      },
+      "destination": {
+        "x": -13.97523021697998,
+        "z": 5.199846267700195
+      },
+      "endTime": 16.711994271585404
+    },
+    "newFarm": {
+      "actorId": 1000003,
+      "bodyId": 2,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "86e9badb-e05e-4704-85d5-de71cfd8601b/1",
+        "nativeSession": 1,
+        "ticket": 6,
+        "effectiveTime": 21.44999999999995
+      },
+      "assignmentSequence": 7,
+      "gateIds": [
+        1000000
+      ],
+      "requestedAt": 17.9499999999999,
+      "goal": {
+        "x": -14,
+        "z": 13,
+        "centerX": -18.954998779296876,
+        "centerZ": 13,
+        "arrivalRadius": 2
+      },
+      "destination": {
+        "x": -13.968306541442871,
+        "z": 11.000251770019531
+      },
+      "endTime": 28.17329871378453
+    },
+    "nearParked": [
+      {
+        "at": 22.449999999999964,
+        "x": -14.550264710631648,
+        "z": 5.1177584156899725,
+        "opening": 1
+      },
+      {
+        "at": 22.499999999999964,
+        "x": -14.560799693874763,
+        "z": 5.170720799775919,
+        "opening": 1
+      },
+      {
+        "at": 22.549999999999965,
+        "x": -14.561851663214153,
+        "z": 5.223683183861866,
+        "opening": 1
+      },
+      {
+        "at": 22.599999999999966,
+        "x": -14.551316679971038,
+        "z": 5.276645567947813,
+        "opening": 1
+      },
+      {
+        "at": 22.649999999999967,
+        "x": -14.54078169672792,
+        "z": 5.32960795203376,
+        "opening": 1
+      }
+    ],
+    "crossing": {
+      "at": 25.300000000000004,
+      "x": -13.949600219726562,
+      "z": 7.89723739208455,
+      "opening": 1
+    },
+    "workers": [
+      {
+        "id": "worker-900011",
+        "centerId": "structure-2",
+        "nativeRouteAdmission": "native-idle",
+        "x": -13.97523021697998,
+        "z": 5.199846267700195
+      },
+      {
+        "id": "worker-1000003",
+        "centerId": "structure-1000002",
+        "nativeRouteAdmission": "native-idle",
+        "x": -13.968306541442871,
+        "z": 11.000251770019531
+      }
+    ],
+    "modelRoots": [
+      {
+        "id": 622,
+        "geometryCount": 32
+      },
+      {
+        "id": 803,
+        "geometryCount": 32
+      }
+    ],
+    "retainedConsumer": true,
+    "firstDetourSubmit": {
+      "at": 1795662832574.7,
+      "sequence": 110,
+      "trigger": "raf",
+      "nativeWorldBoundary": {
+        "version": 1,
+        "authorityEpoch": "86e9badb-e05e-4704-85d5-de71cfd8601b/1",
+        "nativeSession": 1,
+        "ticket": 6,
+        "effectiveTime": 21.44999999999995
+      },
+      "intervalMs": 33.39990234375,
+      "drawMs": 2.7001953125,
+      "replay": false,
+      "clockElapsed": 21.44999999999995,
+      "safeUntil": 21.44999999999995,
+      "cameraVersion": null
+    },
+    "drained": {
+      "disposed": true
+    },
+    "failed": false,
+    "gpuErrors": 0,
+    "errors": []
+  }
+}

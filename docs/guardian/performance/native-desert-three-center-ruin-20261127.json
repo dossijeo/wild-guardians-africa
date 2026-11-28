@@ -1,0 +1,336 @@
+{
+  "base": "67108da9892a526e34922a43670c77debe67ad41",
+  "input": {
+    "path": ".cache/flee-return/center-three-ruin-physical-input.json",
+    "sha256": "96a22c05f0d5f823b9973fa10a23d05cccffc8c401fa5f107603b1e7c6625e99",
+    "snapshotSHA256": "631678884ff72d159b0cbe0d81def75d324fb90b8febab63c2324a383fca7aea"
+  },
+  "wasm": {
+    "standalone": {
+      "path": "src/world/wild-engine/spatial-savanna.wasm",
+      "sha256": "3f6dbf536c062332673fd7324af872cef81b850a75ab07442475d13682a231dc"
+    },
+    "pthread": {
+      "path": "public/wild-engine/spatial-threaded.wasm",
+      "sha256": "1ca2103f404cbe3b1efb34cb9aa055e3c458056e7579bcbe54b3a215c5a39b31"
+    },
+    "pthreadModule": {
+      "path": "public/wild-engine/spatial-threaded.mjs",
+      "sha256": "af4d14881387450286ec3fc479a0b1c4f7de4a0615f5f500e8fed0706e949ed3"
+    }
+  },
+  "validation": {
+    "baseline": {
+      "path": ".cache/center-three-ruin-before.tap",
+      "sha256": "e74c78d297ba03eb4da9e84f96bcda557b980ac7388fb713b6454bdeaa3dbb5e"
+    },
+    "held": {
+      "path": ".cache/center-three-ruin-first.tap",
+      "sha256": "fa36eaf9092cd1b2c20c7fc3b940e2e700e72595882a57be439e77ff3ad4ca5d"
+    },
+    "final": {
+      "path": ".cache/center-three-ruin-final.tap",
+      "sha256": "d1ed13059ba438392d5cac2633d3f0946d270dafd74cb50c197ea468f3e4f812"
+    },
+    "passed": 29,
+    "failed": 0,
+    "ordinarySelection": {
+      "raw": {
+        "path": ".cache/center-three-ruin-probe.log",
+        "sha256": "c87ee6ff5f88dbd18df91e477723f41c555b1f4aed2bd575f3ccbd5921c9adcd"
+      },
+      "x": -5,
+      "z": -16,
+      "selected": "structure-1000000",
+      "hits": [
+        [
+          22.23999999999974,
+          "structure-1000000",
+          160
+        ],
+        [
+          23.819999999999705,
+          "structure-1000000",
+          140
+        ],
+        [
+          28.399999999999608,
+          "structure-1000000",
+          120
+        ]
+      ],
+      "workerHits": 0,
+      "afterRetarget": {
+        "at": 28.419999999999607,
+        "pose": [
+          -17.683496120770613,
+          -15.65436867498008
+        ],
+        "approach": {
+          "id": "approach-structure-1000001-direct-0",
+          "x": -10.751947703962083,
+          "z": -15.83295619846667
+        }
+      },
+      "lastAttack": {
+        "at": 40.280000000000825,
+        "attack": "attack-29219",
+        "remaining": 3.70833333209157,
+        "pose": [
+          -10.751947703962083,
+          -15.83295619846667
+        ],
+        "approach": {
+          "id": "approach-structure-1000001-direct-0",
+          "x": -10.751947703962083,
+          "z": -15.83295619846667
+        }
+      },
+      "atRuin": {
+        "at": 31.59999999999954,
+        "status": "walking",
+        "remaining": 0,
+        "pose": [
+          -13.698653089611328,
+          -16
+        ],
+        "target": "structure-1000001"
+      }
+    }
+  },
+  "hardware": {
+    "raw": {
+      "path": "D:/wild-guardians-qa/center-three-ruin-nvidia-20261127.json",
+      "sha256": "91d5f3e4af1ef9f6d471ae8a1b341d3c84306ac16c629ffd14fa7f70b8e8c211"
+    },
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 111.10000002384186
+      }
+    },
+    "center": "structure-1000000",
+    "polygon": 10,
+    "hits": [
+      {
+        "attackId": "attack-29209",
+        "targetId": "structure-1000000",
+        "simulationTime": 37.60000000000058
+      },
+      {
+        "attackId": "attack-29212",
+        "targetId": "structure-1000000",
+        "simulationTime": 40.45000000000082
+      },
+      {
+        "attackId": "attack-29215",
+        "targetId": "structure-1000000",
+        "simulationTime": 46.500000000001336
+      },
+      {
+        "attackId": "attack-29219",
+        "targetId": "structure-1000001",
+        "simulationTime": 63.97000000000283
+      }
+    ],
+    "ruin": {
+      "prepared": {
+        "version": 1,
+        "authorityEpoch": "43555bba-b16d-4d7c-98aa-f8919e5913aa/1",
+        "nativeSession": 1,
+        "ticket": 24,
+        "effectiveTime": 49.69000000000161
+      },
+      "acquired": {
+        "version": 1,
+        "authorityEpoch": "43555bba-b16d-4d7c-98aa-f8919e5913aa/1",
+        "nativeSession": 1,
+        "ticket": 24,
+        "effectiveTime": 49.70000000000161
+      },
+      "sequence": 313,
+      "capture": {
+        "id": "structure-1000000",
+        "p": 49.650000000001604,
+        "end": 49.70000000000161,
+        "meshes": [
+          {
+            "mesh": 674,
+            "geometry": 324,
+            "material": 231,
+            "visible": false,
+            "instances": null
+          },
+          {
+            "mesh": 675,
+            "geometry": 325,
+            "material": 230,
+            "visible": true,
+            "instances": null
+          },
+          {
+            "mesh": 677,
+            "geometry": 326,
+            "material": 232,
+            "visible": true,
+            "instances": 270
+          },
+          {
+            "mesh": 678,
+            "geometry": 327,
+            "material": 233,
+            "visible": true,
+            "instances": 88
+          }
+        ],
+        "effects": {
+          "smoke": 88,
+          "debris": 270,
+          "emitted": 105
+        }
+      },
+      "approach": {
+        "nativeAnimalCrop": {
+          "version": 1,
+          "kind": 26,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "43555bba-b16d-4d7c-98aa-f8919e5913aa/1",
+            "nativeSession": 1,
+            "ticket": 22,
+            "effectiveTime": 46.55000000000134
+          },
+          "sourceControlSequence": 20,
+          "endTime": 58.41513786910283,
+          "purpose": "center",
+          "actorId": 1000002,
+          "bodyId": 2,
+          "targetId": 1000001,
+          "centerId": 1000001,
+          "requestSequence": 20,
+          "slot": 0,
+          "generation": 15,
+          "radius": 1.1,
+          "x": -17.663236618041992,
+          "z": -15.632244110107422,
+          "phase": 16.607308477232987,
+          "yaw": -0.09245066456966995,
+          "targetX": -5,
+          "targetZ": -16,
+          "centerX": -5,
+          "centerZ": -16
+        },
+        "relativeTime": 2.5,
+        "semantic": "relative",
+        "epoch": 46.55000000000134,
+        "executionEpoch": 47.200000000001396,
+        "elapsed": 49.05000000000134
+      }
+    },
+    "centers": [
+      {
+        "id": "structure-2",
+        "hp": 600
+      },
+      {
+        "id": "structure-1000000",
+        "hp": 0
+      },
+      {
+        "id": "structure-1000001",
+        "hp": 580
+      }
+    ],
+    "retreatAbsence": {
+      "sequence": 488,
+      "at": 1795780483617.0999,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "43555bba-b16d-4d7c-98aa-f8919e5913aa/1",
+        "nativeSession": 1,
+        "ticket": 28,
+        "effectiveTime": 64.65000000000279
+      },
+      "clockElapsed": 68.75000000000256,
+      "previous": {
+        "actorId": 1000002,
+        "bodyId": 2,
+        "executionEpoch": 64.65000000000279,
+        "sequence": 486,
+        "at": 1795780483483.8
+      }
+    },
+    "raidEndedAt": 68.72000000000256,
+    "civilReturn": {
+      "worker": "worker-900011",
+      "contract": 15,
+      "center": "structure-2",
+      "atIdle": 73.4000000000023,
+      "balance": {
+        "n": "100000",
+        "d": "1"
+      }
+    },
+    "drain": {
+      "disposed": true
+    }
+  },
+  "cadence": {
+    "accepted": false,
+    "targetFrameMs": 16.666666666666668,
+    "declaredSamples": null,
+    "recordedSamples": 2129,
+    "recordedIntervals": 2128,
+    "completeHistory": true,
+    "missingPredecessors": 0,
+    "recordedOpportunities": 1218,
+    "intervalsAboveTarget": 2127,
+    "maxRecordedIntervalMs": 200.099853515625,
+    "topIntervals": [
+      {
+        "at": 1795780452583.9,
+        "intervalMs": 200.099853515625,
+        "drawMs": 4.400146484375,
+        "sequence": 216,
+        "trigger": "raf",
+        "from": 1795780452383.8,
+        "excessOverTargetMs": 183.43318684895834,
+        "previousDrawMs": 2.699951171875,
+        "afterPreviousDrawUntilCurrentStartMs": 197.39990234375
+      },
+      {
+        "at": 1795780478950.5,
+        "intervalMs": 166.60009765625,
+        "drawMs": 4.300048828125,
+        "sequence": 446,
+        "trigger": "raf",
+        "from": 1795780478783.9,
+        "excessOverTargetMs": 149.93343098958334,
+        "previousDrawMs": 4,
+        "afterPreviousDrawUntilCurrentStartMs": 162.60009765625
+      },
+      {
+        "at": 1795780455317.2,
+        "intervalMs": 133.300048828125,
+        "drawMs": 2.60009765625,
+        "sequence": 235,
+        "trigger": "raf",
+        "from": 1795780455183.9,
+        "excessOverTargetMs": 116.63338216145833,
+        "previousDrawMs": 2.5,
+        "afterPreviousDrawUntilCurrentStartMs": 130.800048828125
+      }
+    ],
+    "attribution": "Unattributed: intervals are Host draw-start spacing, drawMs is instrumented host wall time; neither is GPU execution or scanout.",
+    "coverage": "Contiguous recorded history only; this does not establish full-session or physical-presentation coverage."
+  }
+}

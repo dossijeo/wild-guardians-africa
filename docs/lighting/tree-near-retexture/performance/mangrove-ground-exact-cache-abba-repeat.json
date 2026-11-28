@@ -1,0 +1,157 @@
+{
+  "runs": [
+    {
+      "mode": "reference",
+      "cacheStats": {
+        "hits": 0,
+        "misses": 0
+      },
+      "imageHash": 1711427073,
+      "renderMs": {
+        "count": 75,
+        "p50": 24.479999989271164,
+        "p95": 25.84500001370907,
+        "p99": 28.08500000834465,
+        "max": 32.44499999284744
+      },
+      "frameMs": {
+        "count": 74,
+        "p50": 33.33499999999913,
+        "p95": 33.400000000001455,
+        "p99": 33.42000000000553,
+        "max": 33.455000000001746
+      },
+      "gpuMs": {
+        "count": 75,
+        "p50": 13.504512,
+        "p95": 15.38288,
+        "p99": 15.972352,
+        "max": 16.120096
+      }
+    },
+    {
+      "mode": "cache",
+      "cacheStats": {
+        "hits": 1480,
+        "misses": 20
+      },
+      "imageHash": 616920561,
+      "renderMs": {
+        "count": 75,
+        "p50": 19.66499999165535,
+        "p95": 20.99500000476837,
+        "p99": 23.570000007748604,
+        "max": 27.634999990463257
+      },
+      "frameMs": {
+        "count": 74,
+        "p50": 33.33499999999913,
+        "p95": 33.400000000001455,
+        "p99": 33.44499999999971,
+        "max": 33.45999999999913
+      },
+      "gpuMs": {
+        "count": 75,
+        "p50": 4.173792,
+        "p95": 21.666784,
+        "p99": 22.038656,
+        "max": 24.213504
+      }
+    },
+    {
+      "mode": "cache",
+      "cacheStats": {
+        "hits": 1500,
+        "misses": 0
+      },
+      "imageHash": 3534568994,
+      "renderMs": {
+        "count": 75,
+        "p50": 19.299999997019768,
+        "p95": 20.260000005364418,
+        "p99": 20.59000000357628,
+        "max": 20.594999998807907
+      },
+      "frameMs": {
+        "count": 74,
+        "p50": 33.33499999999913,
+        "p95": 33.404999999998836,
+        "p99": 33.44499999999971,
+        "max": 33.46499999999651
+      },
+      "gpuMs": {
+        "count": 75,
+        "p50": 9.400448,
+        "p95": 10.366016,
+        "p99": 10.520544,
+        "max": 10.907648
+      }
+    },
+    {
+      "mode": "reference",
+      "cacheStats": {
+        "hits": 0,
+        "misses": 0
+      },
+      "imageHash": 616920561,
+      "renderMs": {
+        "count": 75,
+        "p50": 23.695000007748604,
+        "p95": 25.25,
+        "p99": 28.549999997019768,
+        "max": 31.060000002384186
+      },
+      "frameMs": {
+        "count": 74,
+        "p50": 33.33499999999913,
+        "p95": 33.38999999999942,
+        "p99": 33.42000000000553,
+        "max": 33.43000000000029
+      },
+      "gpuMs": {
+        "count": 75,
+        "p50": 9.78896,
+        "p95": 21.284512,
+        "p99": 21.991424,
+        "max": 22.228256
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "a": 0,
+      "b": 1,
+      "changedPixels": 8,
+      "totalPixels": 921600,
+      "maxChannel": 4,
+      "meanChannelDifference": 0.0000070529513888888886,
+      "changedPoseValues": 0,
+      "maxPoseMatrixDifference": 0
+    },
+    {
+      "a": 1,
+      "b": 2,
+      "changedPixels": 6,
+      "totalPixels": 921600,
+      "maxChannel": 1,
+      "meanChannelDifference": 0.0000018988715277777777,
+      "changedPoseValues": 0,
+      "maxPoseMatrixDifference": 0
+    },
+    {
+      "a": 0,
+      "b": 3,
+      "changedPixels": 8,
+      "totalPixels": 921600,
+      "maxChannel": 4,
+      "meanChannelDifference": 0.0000070529513888888886,
+      "changedPoseValues": 0,
+      "maxPoseMatrixDifference": 0
+    }
+  ],
+  "pixelsEqual": false,
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "animals": 20,
+  "sceneErrors": [],
+  "scope": "Single Edge headless session; frozen island mangrove, camera and elapsed time, 20 animals, exact-key experimental ground-minimum cache. Pixel readbacks after blocks only; no production integration, moving camera, physics, gameplay or simulation."
+}

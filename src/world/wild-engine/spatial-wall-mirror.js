@@ -1,4 +1,7 @@
-import {spatialStructureBarriers,removeSpatialStructure} from './spatial-wall-bridge.js';
+import {nativeGateCollisionProxies,spatialStructureBarriers,removeSpatialStructure} from './spatial-wall-bridge.js';
+import {gateScale,nativeGateModelId} from '../gate-passages.js';
+import {copyNativeBarrierAdditionAttestation,nativeBarrierAdditionGates,nativeBarrierAdditionOwners} from '../native-barrier-addition.js';
+import {sameNativeWorldBoundary} from '../native-world-boundary.js';
 
 function boundsForNativeBarriers(barriers){
   const bounds=[Infinity,Infinity,-Infinity,-Infinity];
@@ -14,9 +17,28 @@ function boundsForNativeBarriers(barriers){
   return bounds;
 }
 
+function sameNativeWallShape(expected,actual){
+  return !!actual&&['x','z','halfX','halfZ','yaw'].every(key=>Number.isFinite(expected[key])&&Math.fround(expected[key])===actual[key])&&
+    (expected.passMask??0)===actual.passMask;
+}
+
 // Experimental state-to-topology seam. The game remains responsible for
 // authorizing placement, damage and destruction; this only mirrors the
 // resulting rigid footprints into the spatial navigator.
+// Persist proxy order under the existing wall owner, never infer ownership from
+// matching bytes when an explicit checkpoint is available.
+export function validateSpatialWallOwners(owners,spatialState){
+  if(!Array.isArray(owners)||owners.length>100000||!Array.isArray(spatialState?.barriers))throw TypeError('Invalid native wall owners');
+  const ids=new Set(spatialState.barriers.map(row=>row.id)),used=new Set(),entities=new Set();
+  for(const row of owners){
+    if(typeof row?.entityId!=='string'||!row.entityId||entities.has(row.entityId)||!Array.isArray(row.ids)||![1,3].includes(row.ids.length))throw TypeError('Invalid native wall owner');
+    entities.add(row.entityId);
+    for(const id of row.ids){if(!Number.isSafeInteger(id)||!ids.has(id)||used.has(id))throw TypeError('Invalid native wall proxy identity');used.add(id);}
+  }
+  if(used.size!==ids.size)throw Error('Native wall ownership is incomplete');
+  return owners;
+}
+
 export function createSpatialWallMirror(core){
   const installed=new Map();
   let revision=0;
@@ -74,6 +96,70 @@ export function createSpatialWallMirror(core){
     }
     return {count:installed.size,added:additions.length};
   }
+  // Called synchronously after the existing native kind2 commit, before the
+  // Game mirror is published. This adopts physical IDs; it never creates them.
+  function prepareNativeAdditionAdoption(structures,{worldBoundary,ids,nativeBarrierAdditionBinding}={}){
+    const binding=nativeBarrierAdditionBinding?copyNativeBarrierAdditionAttestation(nativeBarrierAdditionBinding):null;
+    const gates=binding?nativeBarrierAdditionGates(binding.reference):[],owners=binding?nativeBarrierAdditionOwners(binding.reference):null;
+    if(binding&&(binding.reference.removal||!sameNativeWorldBoundary(worldBoundary,binding.reference.worldBoundary)||!Array.isArray(ids)||ids.length!==binding.nativeIds.length||ids.some((id,index)=>id!==binding.nativeIds[index])))throw Error('Native wall adoption receipt differs from its acquired boundary');
+    if(!Array.isArray(structures)||!structures.length||structures.length>256||
+       owners&&owners.length!==structures.length||structures.some((w,index)=>!w||w.kind!=='wall'||w.status==='ruined'||typeof w.id!=='string'||!w.id||installed.has(w.id)||
+         Boolean(w.gate)!==(index<gates.length)||owners&&owners[index].entityId!==w.id)||
+       new Set(structures.map(w=>w.id)).size!==structures.length||!Array.isArray(ids)||ids.length!==structures.length+2*gates.length||
+       ids.some(id=>!Number.isSafeInteger(id)||id<=0)||new Set(ids).size!==ids.length)throw TypeError('Invalid native wall additions');
+    const resources=core.captureNativeWorldResources(worldBoundary);
+    if(resources.kind!==2||resources.chunks.length||resources.removed.length)throw Error('Native wall adoption requires its empty terrain commit');
+    const wasm=core.wasm,count=wasm.spatial_world_proposal_result_count();
+    if(count!==ids.length)throw Error('Native wall result differs from its committed IDs');
+    const actualIds=Array.from(new Int32Array(wasm.memory.buffer,wasm.spatial_world_proposal_result_ptr(),count));
+    if(ids.some((id,i)=>id!==actualIds[i])||[...installed.values()].some(record=>record.ids.some(id=>ids.includes(id))))throw Error('Native wall result differs from its committed IDs');
+    // Read only the existing barrier ABI, not a full world/prop snapshot.
+    const wanted=new Set(ids),physical=new Map(),barrierCount=wasm.spatial_barrier_state_count();
+    if(!Number.isSafeInteger(barrierCount)||barrierCount<ids.length)throw Error('Native wall registry unavailable');
+    const pointer=wasm.spatial_barrier_state_ptr(),view=new DataView(wasm.memory.buffer,pointer,barrierCount*28);
+    for(let i=0;i<barrierCount;i++){const at=i*28,id=view.getInt32(at,true);if(wanted.has(id))physical.set(id,{x:view.getFloat32(at+4,true),z:view.getFloat32(at+8,true),halfX:view.getFloat32(at+12,true),halfZ:view.getFloat32(at+16,true),yaw:view.getFloat32(at+20,true),passMask:view.getInt32(at+24,true)});}
+    for(let i=0;i<gates.length;i++){
+      const gate=gates[i],wall=structures[i],scale=gateScale(wall),numeric=Number(gate.entityId.slice('structure-'.length));
+      if(wall.status!=='intact'||wall.hp!==wall.maxHp||nativeGateModelId(wall.material)!==gate.modelId||wall.x!==gate.x||wall.z!==gate.z||(wall.yaw??0)!==gate.yaw||scale*(wall.baseScaleX??1)!==gate.sx||scale!==gate.sz)throw Error('Native gate adoption differs from its quoted placement');
+      if(wasm.nav_gate_mechanism_pose(numeric)!==1)throw Error('Native gate adoption lost its acquired mechanism');
+      const pose=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_mechanism_pose_ptr(),typeof wasm.nav_gate_mechanism_install_travel==='function'?42:typeof wasm.nav_gate_mechanism_install_reverse==='function'?41:40));
+      if(pose[0]!==numeric||pose[1]!==gate.modelId||pose[2]!==gate.mechanismId||pose[6]!==worldBoundary.effectiveTime||pose[7]!==gate.opening||(pose[40]===-1?-1:undefined)!==gate.openingDirection||(pose[41]<90?pose[41]:undefined)!==gate.openingDegrees||!pose.slice(8,24).every((value,index)=>value===gate.rootMatrix[index])||!pose.slice(24,40).every((value,index)=>value===gate.leafMatrix[index]))throw Error('Native gate adoption pose differs from its prepared mechanism');
+    }
+    const records=[];let offset=0;
+    for(let i=0;i<structures.length;i++){
+      // Gate geometry is prepared by WASM. Reprojecting the legacy JS
+      // footprint here can differ by one float32 ULP after world/local transforms.
+      // Adopt the exact prepared triplet; solid walls retain their original check.
+      const wall=structures[i],gate=gates[i],parts=gate?gate.proxies:spatialStructureBarriers(wall),size=gate?3:1;
+      const partIds=ids.slice(offset,offset+size);offset+=size;
+      if(parts.length!==partIds.length||parts.some((part,index)=>{
+        const actual=physical.get(partIds[index]);
+        return !sameNativeWallShape(part,actual);
+      }))throw Error('Native wall footprint differs from its committed ID');
+      records.push([wall.id,{signature:signature(wall),bounds:boundsForNativeBarriers(parts),ids:partIds}]);
+    }
+    const priorRevision=revision;let consumed=false;
+    return ()=>{
+    if(consumed||revision!==priorRevision)throw Error('Native wall mirror adoption is stale');consumed=true;
+    // All checks precede the first mirror write; observers cannot see a prefix.
+    for(const [id,record] of records)installed.set(id,record);
+    const bounds=[Infinity,Infinity,-Infinity,-Infinity];for(const [,record] of records){const box=record.bounds;bounds[0]=Math.min(bounds[0],box[0]);bounds[1]=Math.min(bounds[1],box[1]);bounds[2]=Math.max(bounds[2],box[2]);bounds[3]=Math.max(bounds[3],box[3]);}
+    changes.push({from:revision++,bounds});if(changes.length>64)changes.shift();return true;
+    };
+  }
+  function prepareNativeRemovalAdoption(structure,{worldBoundary,ids,nativeBarrierAdditionBinding}={}){
+    const proof=copyNativeBarrierAdditionAttestation(nativeBarrierAdditionBinding),r=proof.reference.removal;
+    if(!r||structure.id!==r.entityId||!sameNativeWorldBoundary(worldBoundary,proof.reference.worldBoundary)||JSON.stringify(ids)!==JSON.stringify(r.nativeIds))throw Error('Native wall removal receipt mismatch');
+    const record=installed.get(structure.id),prior=revision;
+    const wasm=core.wasm,resources=core.captureNativeWorldResources(worldBoundary),count=wasm.spatial_barrier_state_count();
+    if(resources.kind!==2||resources.chunks.length||resources.removed.length||!Number.isSafeInteger(count)||count<0)throw Error('Native wall removal has no world receipt');
+    if(wasm.spatial_world_proposal_result_count()!==3||Array.from(new Int32Array(wasm.memory.buffer,wasm.spatial_world_proposal_result_ptr(),3)).some((id,i)=>id!==ids[i]))throw Error('Native wall removal has another committed triplet');
+    const view=new DataView(wasm.memory.buffer,wasm.spatial_barrier_state_ptr(),count*28);
+    for(let i=0;i<count;i++)if(ids.includes(view.getInt32(i*28,true)))throw Error('Native removed proxy is still live');
+    if(!record||record.signature!==signature(structure)||JSON.stringify(record.ids)!==JSON.stringify(ids)||wasm.nav_gate_mechanism_pose(Number(r.entityId.slice(10)))!==0)throw Error('Native wall removal has not retired its exact owner');
+    let used=false;return ()=>{if(used||revision!==prior||installed.get(structure.id)!==record)throw Error('Native wall removal adoption is stale');used=true;installed.delete(structure.id);changes.push({from:revision++,bounds:record.bounds});if(changes.length>64)changes.shift();return true;};
+  }
+  const adoptNativeAdditions=(structures,receipt)=>prepareNativeAdditionAdoption(structures,receipt)();
   function routeUnaffectedSince(from,points,radius){
     if(!Number.isInteger(from)||from<0||from>revision||
       !Array.isArray(points)||points.length<2||!Number.isFinite(radius))return false;
@@ -100,6 +186,56 @@ export function createSpatialWallMirror(core){
     }
     installed.clear();
   }
-  return {sync,clear,revision:()=>revision,routeUnaffectedSince,
+  function captureOwners(){
+    return [...installed].sort(([a],[b])=>a<b?-1:a>b?1:0).map(([entityId,record])=>({entityId,ids:[...record.ids]}));
+  }
+  // Constructor only: no bodies, intent bindings, routes or published chunks
+  // exist yet. Normal Repair keeps its acquired resources and never calls this.
+  function prepareBootstrap(actual,expected,structures){
+    const actualOwners=captureOwners();
+    validateSpatialWallOwners(actualOwners,actual);
+    let owners=expected.wallOwners;
+    if(expected.version===1){
+      // Keep exact legacy reconstruction first. Only a complete bijection of
+      // unique proxy shapes can recover a legacy allocation order difference.
+      if(JSON.stringify(actual.barriers)===JSON.stringify(expected.spatialState.barriers))owners=actualOwners;
+      else{
+        const shape=({id,...rest})=>JSON.stringify(rest),byShape=new Map();
+        for(const row of expected.spatialState.barriers){const key=shape(row);if(byShape.has(key))throw Error('Ambiguous legacy native wall proxies');byShape.set(key,row.id);}
+        const actualShapes=new Set(),mapping=new Map();
+        for(const row of actual.barriers){const key=shape(row);if(actualShapes.has(key)||!byShape.has(key))throw Error('Legacy native wall reconstruction mismatch');actualShapes.add(key);mapping.set(row.id,byShape.get(key));}
+        if(actualShapes.size!==byShape.size)throw Error('Legacy native wall reconstruction mismatch');
+        owners=actualOwners.map(row=>({entityId:row.entityId,ids:row.ids.map(id=>mapping.get(id))}));
+      }
+    }
+    validateSpatialWallOwners(owners,expected.spatialState);
+    if(owners.length!==installed.size)throw Error('Native wall owners differ from Game');
+    const actualById=new Map(actual.barriers.map(row=>[row.id,row]));
+    const savedById=new Map(expected.spatialState.barriers.map(row=>[row.id,row]));
+    const gates=new Map(structures.filter(structure=>structure.kind==='wall'&&structure.gate).map(gate=>[gate.id,gate]));
+    const remapped=[];
+    const nextRecords=[];
+    for(const row of owners){
+      const record=installed.get(row.entityId);
+      if(!record||record.ids.length!==row.ids.length)throw Error('Native wall owner differs from Game');
+      const saved=row.ids.map(id=>savedById.get(id));
+      let parts=record.ids.map(id=>actualById.get(id));
+      const matches=geometry=>geometry?.length===saved.length&&geometry.every((part,i)=>sameNativeWallShape(part,saved[i]));
+      if(!matches(parts)){
+        const gate=gates.get(row.entityId);
+        parts=expected.version>=2&&gate?nativeGateCollisionProxies(core,gate):null;
+        if(!matches(parts))throw Error('Native world bootstrap reconstruction mismatch');
+      }
+      for(let i=0;i<parts.length;i++){
+        const {x,z,halfX,halfZ,yaw,passMask}=parts[i];
+        remapped.push({id:row.ids[i],x,z,halfX,halfZ,yaw,passMask});
+      }
+      nextRecords.push([row.entityId,{...record,ids:[...row.ids],bounds:boundsForNativeBarriers(parts)}]);
+    }
+    remapped.sort((a,b)=>a.id-b.id);
+    return {barriers:remapped,adopt(){for(const [id,record] of nextRecords)installed.set(id,record);}};
+  }
+
+  return {sync,captureOwners,prepareBootstrap,adoptNativeAdditions,prepareNativeAdditionAdoption,prepareNativeRemovalAdoption,clear,revision:()=>revision,routeUnaffectedSince,
     barrierIds:id=>installed.get(id)?.ids.slice()??[]};
 }

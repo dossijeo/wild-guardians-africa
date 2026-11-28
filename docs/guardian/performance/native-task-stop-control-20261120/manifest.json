@@ -1,0 +1,105 @@
+{
+  "base": "e538d930bf4b163e9b8890ce94fba8790f345efa",
+  "scope": "Task25 route control and stopped clock projection, exact native assignments, neighboring stop/clock/start/resume/remote regressions. Production build. No physical GPU.",
+  "selection": [
+    "tests/native-farm-arrival-control.test.js",
+    "tests/native-farm-arrival-route-control.test.js",
+    "tests/native-farm-arrival-stop-clock.test.js",
+    "tests/native-farm-arrival-stop-control.test.js",
+    "tests/native-farm-arrival-stop-remote.test.js",
+    "tests/native-farm-arrived-home-control.test.js",
+    "tests/native-farm-moving-home-control.test.js",
+    "tests/native-farm-pending-home-control.test.js",
+    "tests/native-home-arrival-control.test.js",
+    "tests/native-home-route-control.test.js",
+    "tests/native-idle-completed-home-control.test.js",
+    "tests/native-idle-stroll-control.test.js",
+    "tests/native-idle-stroll-restoration-control.test.js",
+    "tests/native-idle-stroll-stop-control.test.js",
+    "tests/native-idle-stroll-stop-gpu-motion.test.js",
+    "tests/native-idle-stroll-stop-remote.test.js",
+    "tests/native-intent-control-authority.test.js",
+    "tests/native-intent-control-cohort.test.js",
+    "tests/native-intent-control-publication.test.js",
+    "tests/native-resume-control.test.js",
+    "tests/native-route-control.test.js",
+    "tests/native-task-route-stop-control.test.js",
+    "tests/native-task-route-stop-ports.test.js",
+    "tests/native-task-route-stop-source.test.js",
+    "tests/native-task-start-proposal.test.js",
+    "tests/native-worker-roster.test.js"
+  ],
+  "tests": {
+    "exitCode": 0,
+    "tests": 330,
+    "pass": 330,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "build": {
+    "exitCode": 0,
+    "vitePhaseText": [
+      "1m 4s"
+    ]
+  },
+  "inputCounts": {
+    "frozenInputs": 9056,
+    "nativeBuiltInputs": 64,
+    "preservedFiles": 16,
+    "externalCommittedInputs": 38
+  },
+  "changed": {
+    "frozenInputs": [],
+    "nativeBuiltInputs": [],
+    "preservedFiles": [],
+    "externalCommittedInputs": []
+  },
+  "nativeOutputs": {
+    "src/world/wild-engine/spatial-savanna.wasm": "2f3a850ea0e459cade584febb34d11cdb05622f5fa26b11edf4f112856cf5464",
+    "public/wild-engine/spatial-threaded.mjs": "3e49ae9e327afaf1c4b6ea289cff04747277e7f9ea0576487ae1369675a9771b",
+    "public/wild-engine/spatial-threaded.wasm": "28b190233a9e80246883c1d5e64d45854abbb7ee691f1617cd6e846d278b23d1"
+  },
+  "sources": [
+    "https://github.com/chromium/chromium/blob/128.0.6613.119/gpu/command_buffer/service/sync_point_manager.cc#L407-L428",
+    "https://github.com/chromium/chromium/blob/128.0.6613.119/gpu/command_buffer/service/sync_point_manager.cc#L462-L478"
+  ],
+  "artifacts": {
+    "validate.py.gz": {
+      "payloadBytes": 3637,
+      "payloadSha256": "85fd487b4575623d4518d6855c4f19afbf351bb52b67b933f4680a7acb45aad4",
+      "gzipBytes": 1748,
+      "gzipSha256": "84d20d861c065e889580d998e663787f0178ba483d50552c3a8ad38dc75ba1ee"
+    },
+    "validation.json.gz": {
+      "payloadBytes": 1182349,
+      "payloadSha256": "a05e32f62629a4e49fd9fa3530dc4b2028c0486392e5ae93cfe41c96c87e45e9",
+      "gzipBytes": 446091,
+      "gzipSha256": "9e4529e8d1840c3b3f092eb51ebae8cb1a6d727531f6db214d9797b5c668c190"
+    },
+    "red.log.gz": {
+      "payloadBytes": 4363,
+      "payloadSha256": "13707c6d8a927703ea353c530052925e200552dbba2da68cf6549893bcf2e9f1",
+      "gzipBytes": 1041,
+      "gzipSha256": "6232667e565f47e3f9ffdb2925651dabf262766b81de9de0eedd42dc36ce407c"
+    },
+    "directed.log.gz": {
+      "payloadBytes": 1323,
+      "payloadSha256": "2cc48ff6e184ab426e86aad0e6c7123216abf6442dfc477dd09742d9b4827d75",
+      "gzipBytes": 528,
+      "gzipSha256": "388458eff7f0acafae7d8897c19599b998434040daa030d9e8866ba738b6e29a"
+    },
+    "tests.log.gz": {
+      "payloadBytes": 89931,
+      "payloadSha256": "1d00c56362f448dfff6aa7e551063424093514fb41a735309fa082d9b215ab75",
+      "gzipBytes": 13163,
+      "gzipSha256": "cc33afc0a5d939df22755cf12383e79f4d07deb47462e9c915178e16a587d6d5"
+    },
+    "build.log.gz": {
+      "payloadBytes": 3937,
+      "payloadSha256": "e2427f8eef5bfb5b51b7e5dd4fe7012da2747ed80d1d44784cda4e8d54f48808",
+      "gzipBytes": 1564,
+      "gzipSha256": "b5381f34444a109fc90772f8b96cc6498e71f96b810df1ce74b1c7ab33c3dcd5"
+    }
+  }
+}

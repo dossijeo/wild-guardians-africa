@@ -1,0 +1,103 @@
+TAP version 13
+# (node:20272) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./.cache/native-pipeline-candidate5-loader.mjs", pathToFileURL("./"));'
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:20272) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (node:20272) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: pending native compilation bounds native starts while dispatch, resident draws and inspection continue
+ok 1 - pending native compilation bounds native starts while dispatch, resident draws and inspection continue
+  ---
+  duration_ms: 49.3652
+  ...
+# Subtest: render and compute compilation share admission and retain the original layout dependency
+ok 2 - render and compute compilation share admission and retain the original layout dependency
+  ---
+  duration_ms: 9.0712
+  ...
+# Subtest: disposal rejects queued compilation and does not wait for or start the next native factory
+ok 3 - disposal rejects queued compilation and does not wait for or start the next native factory
+  ---
+  duration_ms: 5.3391
+  ...
+# Subtest: a rejected compilation fails admission without starting the queued pipeline
+ok 4 - a rejected compilation fails admission without starting the queued pipeline
+  ---
+  duration_ms: 5.384
+  ...
+# Subtest: retirement during the existing budget yield cannot restart a queued pipeline factory
+ok 5 - retirement during the existing budget yield cannot restart a queued pipeline factory
+  ---
+  duration_ms: 5.3835
+  ...
+# Subtest: a drained native consumer does not start queued factories when an earlier compiler finishes late
+ok 6 - a drained native consumer does not start queued factories when an earlier compiler finishes late
+  ---
+  duration_ms: 1120.276
+  ...
+# (node:2808) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./.cache/native-pipeline-candidate5-loader.mjs", pathToFileURL("./"));'
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# Subtest: resource reception stays bounded before the receiver can execute a resource job
+ok 7 - resource reception stays bounded before the receiver can execute a resource job
+  ---
+  duration_ms: 62.7655
+  ...
+# Subtest: dispatch credits preserve FIFO without waiting for a native pipeline completion
+ok 8 - dispatch credits preserve FIFO without waiting for a native pipeline completion
+  ---
+  duration_ms: 124.4255
+  ...
+# Subtest: transport transfers captured write bytes without detaching caller memory
+ok 9 - transport transfers captured write bytes without detaching caller memory
+  ---
+  duration_ms: 55.0784
+  ...
+# Subtest: forged transport acknowledgements cannot grant capacity
+ok 10 - forged transport acknowledgements cannot grant capacity
+  ---
+  duration_ms: 7.6323
+  ...
+# Subtest: unsent canvas capture is closed after dispose
+ok 11 - unsent canvas capture is closed after dispose
+  ---
+  duration_ms: 4.1896
+  ...
+# Subtest: unsent canvas capture is closed after lost
+ok 12 - unsent canvas capture is closed after lost
+  ---
+  duration_ms: 4.2693
+  ...
+# Subtest: unsent canvas capture is closed after error
+ok 13 - unsent canvas capture is closed after error
+  ---
+  duration_ms: 21.0124
+  ...
+# Subtest: a producer cannot inject Host-owned prepared binding identities
+ok 14 - a producer cannot inject Host-owned prepared binding identities
+  ---
+  duration_ms: 1.6929
+  ...
+# Subtest: a late canvas capture cannot restart transport after dispose
+ok 15 - a late canvas capture cannot restart transport after dispose
+  ---
+  duration_ms: 3.0203
+  ...
+# Subtest: a late canvas capture cannot restart transport after lost
+ok 16 - a late canvas capture cannot restart transport after lost
+  ---
+  duration_ms: 2.0636
+  ...
+# Subtest: a late canvas capture cannot restart transport after error
+ok 17 - a late canvas capture cannot restart transport after error
+  ---
+  duration_ms: 1.9733
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2495.8318

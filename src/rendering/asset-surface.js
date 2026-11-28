@@ -12,6 +12,9 @@ export function nativeAssetMaterial(pack,asset,index,textures,bounds){
   const surface=describeSurface(nativeAssetSurface(pack,asset,index),0,pack.biomeId),factor=pack.material.baseColorFactor??[1,1,1,1];
   const material=new THREE.MeshStandardMaterial({map:textures.baseColor,normalMap:textures.normal,roughnessMap:textures.metallicRoughness,metalnessMap:textures.metallicRoughness,roughness:surface.params[0],metalness:surface.params[1],alphaTest:.35,opacity:factor[3],side:THREE.FrontSide,shadowSide:THREE.FrontSide});
   material.color.fromArray(factor);material.normalScale.setScalar(pack.material.normalScale??.6);
+  // Reviewed open palm fronds disappear from the back under face culling.
+  // Keep this asset-specific; closed tree/rock meshes retain FrontSide.
+  if(asset.doubleSidedFoliage)material.side=THREE.DoubleSide;
   material.userData.nativeSurface=surface;
   material.userData.artBounds={min:bounds.min.clone(),size:bounds.getSize(new THREE.Vector3()),crown:nativeAssetSurface(pack,asset,index).group===0?.68:.43};
   const uniforms={uNativeVolcanicGlow:{value:pack.material.volcanicGlow??0},uNativeSurface:{value:new THREE.Vector4(...surface.params)},uNativeMinY:{value:bounds.min.y},uNativeSizeY:{value:bounds.max.y-bounds.min.y}};

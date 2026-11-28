@@ -1,0 +1,1531 @@
+TAP version 13
+# Subtest: mutation observation requires every original host seam
+ok 1 - mutation observation requires every original host seam
+  ---
+  duration_ms: 13.8781
+  ...
+# Subtest: mutation observation requires every original publication seam
+ok 2 - mutation observation requires every original publication seam
+  ---
+  duration_ms: 1.1456
+  ...
+# Subtest: mutation observation requires every original admission seam
+ok 3 - mutation observation requires every original admission seam
+  ---
+  duration_ms: 1.2777
+  ...
+# Subtest: mutation and preparation annotations compose in the same Host response
+ok 4 - mutation and preparation annotations compose in the same Host response
+  ---
+  duration_ms: 9.423
+  ...
+# Subtest: an interval below 50ms is still reported against the caller target, independently of a short draw
+ok 5 - an interval below 50ms is still reported against the caller target, independently of a short draw
+  ---
+  duration_ms: 5.5381
+  ...
+# Subtest: no supplied target means no invented acceptance threshold
+ok 6 - no supplied target means no invented acceptance threshold
+  ---
+  duration_ms: 0.8005
+  ...
+# Subtest: duplicate snapshots are not extra evidence and incomplete or misordered holds are not completed
+ok 7 - duplicate snapshots are not extra evidence and incomplete or misordered holds are not completed
+  ---
+  duration_ms: 7.503
+  ...
+# Subtest: a truncated ring without whole-history instrumentation cannot substitute for the complete record
+ok 8 - a truncated ring without whole-history instrumentation cannot substitute for the complete record
+  ---
+  duration_ms: 1.3649
+  ...
+# Subtest: trace reconciles a post-inspect tail and only terminal observation can certify its recorded lifetime
+ok 9 - trace reconciles a post-inspect tail and only terminal observation can certify its recorded lifetime
+  ---
+  duration_ms: 7.4736
+  ...
+# Subtest: preparation annotations match the actual Host and reject changed seams
+ok 10 - preparation annotations match the actual Host and reject changed seams
+  ---
+  duration_ms: 24.4421
+  ...
+# Subtest: failed and incomplete runs keep their status and async waits
+ok 11 - failed and incomplete runs keep their status and async waits
+  ---
+  duration_ms: 1.5959
+  ...
+# Subtest: missing or contradictory marks cannot produce preparation claims
+ok 12 - missing or contradictory marks cannot produce preparation claims
+  ---
+  duration_ms: 0.6518
+  ...
+# (node:3940) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:3940) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: olderMale exact Farm acquire uses actual retained Host receipt, relative clock and first submitted pick witness
+ok 13 - olderMale exact Farm acquire uses actual retained Host receipt, relative clock and first submitted pick witness
+  ---
+  duration_ms: 1339.6031
+  ...
+# Subtest: olderMale late Farm acquire uses actual retained Host receipt, relative clock and first submitted pick witness
+ok 14 - olderMale late Farm acquire uses actual retained Host receipt, relative clock and first submitted pick witness
+  ---
+  duration_ms: 908.9255
+  ...
+# Subtest: olderFemale exact Farm acquire uses actual retained Host receipt, relative clock and first submitted pick witness
+ok 15 - olderFemale exact Farm acquire uses actual retained Host receipt, relative clock and first submitted pick witness
+  ---
+  duration_ms: 855.8089
+  ...
+# Subtest: olderFemale late Farm acquire uses actual retained Host receipt, relative clock and first submitted pick witness
+ok 16 - olderFemale late Farm acquire uses actual retained Host receipt, relative clock and first submitted pick witness
+  ---
+  duration_ms: 882.9299
+  ...
+# Subtest: youngMale exact Farm acquire uses actual retained Host receipt, relative clock and first submitted pick witness
+ok 17 - youngMale exact Farm acquire uses actual retained Host receipt, relative clock and first submitted pick witness
+  ---
+  duration_ms: 768.4843
+  ...
+# Subtest: youngMale late Farm acquire uses actual retained Host receipt, relative clock and first submitted pick witness
+ok 18 - youngMale late Farm acquire uses actual retained Host receipt, relative clock and first submitted pick witness
+  ---
+  duration_ms: 703.2869
+  ...
+# Subtest: youngFemale exact Farm acquire uses actual retained Host receipt, relative clock and first submitted pick witness
+ok 19 - youngFemale exact Farm acquire uses actual retained Host receipt, relative clock and first submitted pick witness
+  ---
+  duration_ms: 773.8707
+  ...
+# Subtest: youngFemale late Farm acquire uses actual retained Host receipt, relative clock and first submitted pick witness
+ok 20 - youngFemale late Farm acquire uses actual retained Host receipt, relative clock and first submitted pick witness
+  ---
+  duration_ms: 695.9834
+  ...
+# Subtest: a missing-relative Farm retained packet cannot acquire native movement through the real Host
+ok 21 - a missing-relative Farm retained packet cannot acquire native movement through the real Host
+  ---
+  duration_ms: 670.6919
+  ...
+# Subtest: a missing-template Farm retained packet cannot acquire native movement through the real Host
+ok 22 - a missing-template Farm retained packet cannot acquire native movement through the real Host
+  ---
+  duration_ms: 627.4245
+  ...
+# Subtest: a foreign-source Farm retained packet cannot acquire native movement through the real Host
+ok 23 - a foreign-source Farm retained packet cannot acquire native movement through the real Host
+  ---
+  duration_ms: 697.9177
+  ...
+# Subtest: a wrong-epoch Farm retained packet cannot acquire native movement through the real Host
+ok 24 - a wrong-epoch Farm retained packet cannot acquire native movement through the real Host
+  ---
+  duration_ms: 619.9824
+  ...
+# Subtest: a consumer without advertised Farm support rejects the binding before a frame can be prepared
+ok 25 - a consumer without advertised Farm support rejects the binding before a frame can be prepared
+  ---
+  duration_ms: 570.18
+  ...
+# Subtest: zero Farm arrival keeps the exact native endpoint while the actual Host installs the zero-age route
+ok 26 - zero Farm arrival keeps the exact native endpoint while the actual Host installs the zero-age route
+  ---
+  duration_ms: 640.9166
+  ...
+# Subtest: the physical owner remains pending until the actual Host submitted-work drain completes
+ok 27 - the physical owner remains pending until the actual Host submitted-work drain completes
+  ---
+  duration_ms: 669.51
+  ...
+# Subtest: missing final Farm release stays an explicit committed/control failure and never adopts the prepared image
+ok 28 - missing final Farm release stays an explicit committed/control failure and never adopts the prepared image
+  ---
+  duration_ms: 625.0885
+  ...
+# Subtest: pthread obtains the same real Host Farm receipt and submitted clock
+ok 29 - pthread obtains the same real Host Farm receipt and submitted clock
+  ---
+  duration_ms: 919.899
+  ...
+# Subtest: cancellation during the actual Host drain preserves the original physical source
+ok 30 - cancellation during the actual Host drain preserves the original physical source
+  ---
+  duration_ms: 546.2762
+  ...
+# Subtest: a Farm clock cannot borrow a Home reference or another prepared epoch on the actual client
+ok 31 - a Farm clock cannot borrow a Home reference or another prepared epoch on the actual client
+  ---
+  duration_ms: 535.3907
+  ...
+# (node:16824) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:16824) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: Home absence needs its retained template, retired source and no old actor clock (exact)
+ok 32 - Home absence needs its retained template, retired source and no old actor clock (exact)
+  ---
+  duration_ms: 2455.801
+  ...
+# Subtest: Home absence needs its retained template, retired source and no old actor clock (late)
+ok 33 - Home absence needs its retained template, retired source and no old actor clock (late)
+  ---
+  duration_ms: 1985.7048
+  ...
+# Subtest: Home absence needs its retained template, retired source and no old actor clock (missing-template)
+ok 34 - Home absence needs its retained template, retired source and no old actor clock (missing-template)
+  ---
+  duration_ms: 1560.245
+  ...
+# Subtest: Home absence needs its retained template, retired source and no old actor clock (still-visible)
+ok 35 - Home absence needs its retained template, retired source and no old actor clock (still-visible)
+  ---
+  duration_ms: 1533.6229
+  ...
+# Subtest: Home absence needs its retained template, retired source and no old actor clock (missing-attestation)
+ok 36 - Home absence needs its retained template, retired source and no old actor clock (missing-attestation)
+  ---
+  duration_ms: 1551.1462
+  ...
+# Subtest: Home absence needs its retained template, retired source and no old actor clock (unsupported)
+ok 37 - Home absence needs its retained template, retired source and no old actor clock (unsupported)
+  ---
+  duration_ms: 1424.4045
+  ...
+# Subtest: Home absence needs its retained template, retired source and no old actor clock (gated-template)
+ok 38 - Home absence needs its retained template, retired source and no old actor clock (gated-template)
+  ---
+  duration_ms: 1423.0867
+  ...
+# Subtest: the actual absence ACK waits for the submitted queue drain while the Home endpoint stays owned
+ok 39 - the actual absence ACK waits for the submitted queue drain while the Home endpoint stays owned
+  ---
+  duration_ms: 1317.011
+  ...
+# Subtest: a tampered actual Home absence ACK cannot mint admission (version)
+ok 40 - a tampered actual Home absence ACK cannot mint admission (version)
+  ---
+  duration_ms: 1118.7302
+  ...
+# Subtest: a tampered actual Home absence ACK cannot mint admission (template)
+ok 41 - a tampered actual Home absence ACK cannot mint admission (template)
+  ---
+  duration_ms: 1064.5553
+  ...
+# Subtest: a tampered actual Home absence ACK cannot mint admission (frame)
+ok 42 - a tampered actual Home absence ACK cannot mint admission (frame)
+  ---
+  duration_ms: 1004.9222
+  ...
+# (node:4784) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:4784) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: Home needs its exact retained template, relative clock, issued association and queue drain (exact)
+ok 43 - Home needs its exact retained template, relative clock, issued association and queue drain (exact)
+  ---
+  duration_ms: 2335.0322
+  ...
+# Subtest: Home needs its exact retained template, relative clock, issued association and queue drain (late)
+ok 44 - Home needs its exact retained template, relative clock, issued association and queue drain (late)
+  ---
+  duration_ms: 1945.1332
+  ...
+# Subtest: Home needs its exact retained template, relative clock, issued association and queue drain (missing-template)
+ok 45 - Home needs its exact retained template, relative clock, issued association and queue drain (missing-template)
+  ---
+  duration_ms: 1558.2667
+  ...
+# Subtest: Home needs its exact retained template, relative clock, issued association and queue drain (missing-clock)
+ok 46 - Home needs its exact retained template, relative clock, issued association and queue drain (missing-clock)
+  ---
+  duration_ms: 1579.4521
+  ...
+# Subtest: Home needs its exact retained template, relative clock, issued association and queue drain (missing-attestation)
+ok 47 - Home needs its exact retained template, relative clock, issued association and queue drain (missing-attestation)
+  ---
+  duration_ms: 1482.0255
+  ...
+# Subtest: Home cannot consume or move the stationary body before actual submitted queue work finishes
+ok 48 - Home cannot consume or move the stationary body before actual submitted queue work finishes
+  ---
+  duration_ms: 1361.1191
+  ...
+# (node:22764) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:22764) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: a coherent later world adopts an installed terminal WALK image awaiting Home below the new physical floor
+ok 49 - a coherent later world adopts an installed terminal WALK image awaiting Home below the new physical floor
+  ---
+  duration_ms: 1699.4118
+  ...
+# (node:10992) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:10992) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: retained stopped uniforms acquire final native values after moving preparation (exact drain)
+ok 50 - retained stopped uniforms acquire final native values after moving preparation (exact drain)
+  ---
+  duration_ms: 1497.737
+  ...
+# Subtest: retained stopped uniforms acquire final native values after moving preparation (moving drain)
+ok 51 - retained stopped uniforms acquire final native values after moving preparation (moving drain)
+  ---
+  duration_ms: 1022.5639
+  ...
+# Subtest: retained stopped uniforms acquire final native values after moving preparation (expired source)
+ok 52 - retained stopped uniforms acquire final native values after moving preparation (expired source)
+  ---
+  duration_ms: 1091.0484
+  ...
+# Subtest: retained stopped uniforms acquire final native values after moving preparation (per-pass replay)
+ok 53 - retained stopped uniforms acquire final native values after moving preparation (per-pass replay)
+  ---
+  duration_ms: 862.2501
+  ...
+# (node:23592) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:23592) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: preflight freezes cohort membership until cancellation settles, without closing healthy channels or taking a hold
+ok 54 - preflight freezes cohort membership until cancellation settles, without closing healthy channels or taking a hold
+  ---
+  duration_ms: 1046.0506
+  ...
+# Subtest: the cohort forwards a prepared world requirement and rejects peers without the connection-bound frame witness
+ok 55 - the cohort forwards a prepared world requirement and rejects peers without the connection-bound frame witness
+  ---
+  duration_ms: 1624.9627
+  ...
+# Subtest: a pending replacement cannot be omitted from a conditioned world boundary, even before its baseline ACK
+ok 56 - a pending replacement cannot be omitted from a conditioned world boundary, even before its baseline ACK
+  ---
+  duration_ms: 911.5025
+  ...
+# Subtest: membership is frozen during a physical proposal and a copied old cohort receipt cannot release it
+ok 57 - membership is frozen during a physical proposal and a copied old cohort receipt cannot release it
+  ---
+  duration_ms: 689.6482
+  ...
+# Subtest: an undrained or silently lost predecessor stays registered and blocks both physical commit and later replacement
+ok 58 - an undrained or silently lost predecessor stays registered and blocks both physical commit and later replacement
+  ---
+  duration_ms: 2415.1985
+  ...
+# Subtest: silence after quiescence was requested cannot apply a staged native mutation
+ok 59 - silence after quiescence was requested cannot apply a staged native mutation
+  ---
+  duration_ms: 883.243
+  ...
+# Subtest: the native owner rejects an individual receipt that omits another registered GPU consumer, including a closed port
+ok 60 - the native owner rejects an individual receipt that omits another registered GPU consumer, including a closed port
+  ---
+  duration_ms: 612.7855
+  ...
+# Subtest: a copied publisher identity cannot stand in for the registered owner of a physical boundary
+ok 61 - a copied publisher identity cannot stand in for the registered owner of a physical boundary
+  ---
+  duration_ms: 623.7452
+  ...
+# Subtest: naming another publisher as owner without registering membership cannot omit a GPU queue
+ok 62 - naming another publisher as owner without registering membership cannot omit a GPU queue
+  ---
+  duration_ms: 633.7504
+  ...
+# Subtest: a consumer arriving during the GPU drain cancels the physical proposal before commit
+ok 63 - a consumer arriving during the GPU drain cancels the physical proposal before commit
+  ---
+  duration_ms: 611.0841
+  ...
+# Subtest: direct native publication starts from a high-water baseline, not obsolete event replay
+ok 64 - direct native publication starts from a high-water baseline, not obsolete event replay
+  ---
+  duration_ms: 47.7063
+  ...
+# Subtest: GPU retirement waits for an exact fresh drain token before closing its observer and connection
+ok 65 - GPU retirement waits for an exact fresh drain token before closing its observer and connection
+  ---
+  duration_ms: 5.6611
+  ...
+# Subtest: old, forged, silent and prematurely retired consumers cannot certify a GPU drain
+ok 66 - old, forged, silent and prematurely retired consumers cannot certify a GPU drain
+  ---
+  duration_ms: 76.0738
+  ...
+# Subtest: a terminal drain proof from a different Worker in the same authority epoch cannot retire this connection
+ok 67 - a terminal drain proof from a different Worker in the same authority epoch cannot retire this connection
+  ---
+  duration_ms: 7.0484
+  ...
+# Subtest: an acknowledgement from another transport session closes the source
+ok 68 - an acknowledgement from another transport session closes the source
+  ---
+  duration_ms: 2.3277
+  ...
+# Subtest: native reset retires a live connection and releases its observer
+ok 69 - native reset retires a live connection and releases its observer
+  ---
+  duration_ms: 3.0898
+  ...
+# Subtest: GPU drain receipts are separate from ordinary control ACKs and keep their exact causal boundary
+ok 70 - GPU drain receipts are separate from ordinary control ACKs and keep their exact causal boundary
+  ---
+  duration_ms: 3.2124
+  ...
+# Subtest: wrong epoch or forged GPU drain receipts cannot authorize the pending boundary
+ok 71 - wrong epoch or forged GPU drain receipts cannot authorize the pending boundary
+  ---
+  duration_ms: 10.7188
+  ...
+# Subtest: retirement and missing GPU receipts reject pending fences rather than silently granting them
+ok 72 - retirement and missing GPU receipts reject pending fences rather than silently granting them
+  ---
+  duration_ms: 1040.4322
+  ...
+# Subtest: native causal clock publication retains its anchor for watermarks and reanchors policy changes outside preparation
+ok 73 - native causal clock publication retains its anchor for watermarks and reanchors policy changes outside preparation
+  ---
+  duration_ms: 4.3344
+  ...
+# Subtest: a forged causal clock bootstrap acknowledgement cannot make a draw connection ready
+ok 74 - a forged causal clock bootstrap acknowledgement cannot make a draw connection ready
+  ---
+  duration_ms: 4.0782
+  ...
+# Subtest: an already-live legacy connection cannot be silently upgraded into a causal clock permit
+ok 75 - an already-live legacy connection cannot be silently upgraded into a causal clock permit
+  ---
+  duration_ms: 1.8472
+  ...
+# Subtest: mutation quiescence requires a clock-aware applied connection and releases an exact one-use receipt
+ok 76 - mutation quiescence requires a clock-aware applied connection and releases an exact one-use receipt
+  ---
+  duration_ms: 5.8808
+  ...
+# (node:11240) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:11240) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: a missed presentation resumes at the exact committed release without a second RAF (30ms virtual hold)
+ok 77 - a missed presentation resumes at the exact committed release without a second RAF (30ms virtual hold)
+  ---
+  duration_ms: 1173.1578
+  ...
+# Subtest: a missed presentation resumes at the exact committed release without a second RAF (50ms virtual hold)
+ok 78 - a missed presentation resumes at the exact committed release without a second RAF (50ms virtual hold)
+  ---
+  duration_ms: 1008.3146
+  ...
+# Subtest: a missed presentation resumes at the exact committed release without a second RAF (100ms virtual hold)
+ok 79 - a missed presentation resumes at the exact committed release without a second RAF (100ms virtual hold)
+  ---
+  duration_ms: 863.6414
+  ...
+# Subtest: release presentation preserves the normal draw guards (abort)
+ok 80 - release presentation preserves the normal draw guards (abort)
+  ---
+  duration_ms: 632.2402
+  ...
+# Subtest: release presentation preserves the normal draw guards (no-missed-frame)
+ok 81 - release presentation preserves the normal draw guards (no-missed-frame)
+  ---
+  duration_ms: 756.0824
+  ...
+# Subtest: release presentation preserves the normal draw guards (hidden)
+ok 82 - release presentation preserves the normal draw guards (hidden)
+  ---
+  duration_ms: 698.3218
+  ...
+# Subtest: a release without replacement commands never replays the old world to finish its missed presentation
+ok 83 - a release without replacement commands never replays the old world to finish its missed presentation
+  ---
+  duration_ms: 709.0937
+  ...
+# (node:7540) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:7540) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: mutation preflight starts a short mutation after the existing opportunity, without sacrificing that opportunity
+ok 84 - mutation preflight starts a short mutation after the existing opportunity, without sacrificing that opportunity
+  ---
+  duration_ms: 1370.4889
+  ...
+# Subtest: bootstrap needs no previous image or RAF: {"initial":false}
+ok 85 - bootstrap needs no previous image or RAF: {"initial":false}
+  ---
+  duration_ms: 778.0909
+  ...
+# Subtest: bootstrap needs no previous image or RAF: {"initial":false,"hidden":true}
+ok 86 - bootstrap needs no previous image or RAF: {"initial":false,"hidden":true}
+  ---
+  duration_ms: 790.4236
+  ...
+# Subtest: hidden consumers do not depend on a suspended RAF (already hidden)
+ok 87 - hidden consumers do not depend on a suspended RAF (already hidden)
+  ---
+  duration_ms: 818.6317
+  ...
+# Subtest: hidden consumers do not depend on a suspended RAF (hide while waiting)
+ok 88 - hidden consumers do not depend on a suspended RAF (hide while waiting)
+  ---
+  duration_ms: 732.7856
+  ...
+# Subtest: cancel releases a mutation preflight waiter without publishing the cancelled preparation
+ok 89 - cancel releases a mutation preflight waiter without publishing the cancelled preparation
+  ---
+  duration_ms: 770.3563
+  ...
+# Subtest: retire releases a mutation preflight waiter without publishing the cancelled preparation
+ok 90 - retire releases a mutation preflight waiter without publishing the cancelled preparation
+  ---
+  duration_ms: 699.2608
+  ...
+# Subtest: dispose releases a mutation preflight waiter without publishing the cancelled preparation
+ok 91 - dispose releases a mutation preflight waiter without publishing the cancelled preparation
+  ---
+  duration_ms: 716.6722
+  ...
+# Subtest: device-loss releases a mutation preflight waiter without publishing the cancelled preparation
+ok 92 - device-loss releases a mutation preflight waiter without publishing the cancelled preparation
+  ---
+  duration_ms: 664.6245
+  ...
+# Subtest: a normal opportunity that cannot submit still releases mutation preflight, without manufacturing a presentation
+ok 93 - a normal opportunity that cannot submit still releases mutation preflight, without manufacturing a presentation
+  ---
+  duration_ms: 687.8782
+  ...
+# Subtest: acquisition delayed after READY obtains a fresh opportunity, never a remembered presentation slot
+ok 94 - acquisition delayed after READY obtains a fresh opportunity, never a remembered presentation slot
+  ---
+  duration_ms: 747.8358
+  ...
+# Subtest: a real preflight NACK rejects a cancelled packet despite a lying local valid handle, without closing a healthy channel
+ok 95 - a real preflight NACK rejects a cancelled packet despite a lying local valid handle, without closing a healthy channel
+  ---
+  duration_ms: 710.6537
+  ...
+# Subtest: preflight does not freeze native movement or clock and the later physical receipt captures fresh state
+ok 96 - preflight does not freeze native movement or clock and the later physical receipt captures fresh state
+  ---
+  duration_ms: 619.8328
+  ...
+# Subtest: the common Farm admission keeps actor B moving during preflight and captures its expected receipt afterwards
+ok 97 - the common Farm admission keeps actor B moving during preflight and captures its expected receipt afterwards
+  ---
+  duration_ms: 644.6687
+  ...
+# Subtest: abort before a hold permits immediate retry, including an in-transit notification: false
+ok 98 - abort before a hold permits immediate retry, including an in-transit notification: false
+  ---
+  duration_ms: 571.6156
+  ...
+# Subtest: abort before a hold permits immediate retry, including an in-transit notification: true
+ok 99 - abort before a hold permits immediate retry, including an in-transit notification: true
+  ---
+  duration_ms: 550.1982
+  ...
+# Subtest: an invalid or missing opportunity cannot authorize a physical hold: session
+ok 100 - an invalid or missing opportunity cannot authorize a physical hold: session
+  ---
+  duration_ms: 544.8221
+  ...
+# Subtest: an invalid or missing opportunity cannot authorize a physical hold: consumerToken
+ok 101 - an invalid or missing opportunity cannot authorize a physical hold: consumerToken
+  ---
+  duration_ms: 542.3763
+  ...
+# Subtest: an invalid or missing opportunity cannot authorize a physical hold: opportunityId
+ok 102 - an invalid or missing opportunity cannot authorize a physical hold: opportunityId
+  ---
+  duration_ms: 449.3939
+  ...
+# Subtest: an invalid or missing opportunity cannot authorize a physical hold: duplicate
+ok 103 - an invalid or missing opportunity cannot authorize a physical hold: duplicate
+  ---
+  duration_ms: 445.953
+  ...
+# Subtest: an invalid or missing opportunity cannot authorize a physical hold: timeout
+ok 104 - an invalid or missing opportunity cannot authorize a physical hold: timeout
+  ---
+  duration_ms: 414.0758
+  ...
+# (node:1756) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:1756) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: the native settlement consumer requires its retained clock, actual association and submitted drain (exact)
+ok 105 - the native settlement consumer requires its retained clock, actual association and submitted drain (exact)
+  ---
+  duration_ms: 1946.288
+  ...
+# Subtest: the native settlement consumer requires its retained clock, actual association and submitted drain (late)
+ok 106 - the native settlement consumer requires its retained clock, actual association and submitted drain (late)
+  ---
+  duration_ms: 1470.9777
+  ...
+# Subtest: the native settlement consumer requires its retained clock, actual association and submitted drain (missing-template)
+ok 107 - the native settlement consumer requires its retained clock, actual association and submitted drain (missing-template)
+  ---
+  duration_ms: 1299.8134
+  ...
+# Subtest: the native settlement consumer requires its retained clock, actual association and submitted drain (missing-clock)
+ok 108 - the native settlement consumer requires its retained clock, actual association and submitted drain (missing-clock)
+  ---
+  duration_ms: 1345.0632
+  ...
+# Subtest: the native settlement consumer requires its retained clock, actual association and submitted drain (missing-attestation)
+ok 109 - the native settlement consumer requires its retained clock, actual association and submitted drain (missing-attestation)
+  ---
+  duration_ms: 1287.8911
+  ...
+# Subtest: Idle remains drawable through a genuine pending task and stops when its actual next route is issued
+ok 110 - Idle remains drawable through a genuine pending task and stops when its actual next route is issued
+  ---
+  duration_ms: 1103.1653
+  ...
+# Subtest: stationary admission cannot consume resources or credit the crate before the actual queue drain
+ok 111 - stationary admission cannot consume resources or credit the crate before the actual queue drain
+  ---
+  duration_ms: 1015.3277
+  ...
+# Subtest: an older draw consumer cannot register or prepare the new stationary authority
+ok 112 - an older draw consumer cannot register or prepare the new stationary authority
+  ---
+  duration_ms: 962.0315
+  ...
+# (node:4120) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:4120) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: one large prepared packet yields internally before GPU changes and keeps the acquired image drawable
+ok 113 - one large prepared packet yields internally before GPU changes and keeps the acquired image drawable
+  ---
+  duration_ms: 993.5408
+  ...
+# Subtest: cancellation at inspection slice 1 with transport false retains CPU preparations without acquiring the proposal; the retry can use them
+ok 114 - cancellation at inspection slice 1 with transport false retains CPU preparations without acquiring the proposal; the retry can use them
+  ---
+  duration_ms: 793.7368
+  ...
+# Subtest: cancellation at inspection slice 4 with transport false retains CPU preparations without acquiring the proposal; the retry can use them
+ok 115 - cancellation at inspection slice 4 with transport false retains CPU preparations without acquiring the proposal; the retry can use them
+  ---
+  duration_ms: 850.7844
+  ...
+# Subtest: cancellation at inspection slice 6 with transport false retains CPU preparations without acquiring the proposal; the retry can use them
+ok 116 - cancellation at inspection slice 6 with transport false retains CPU preparations without acquiring the proposal; the retry can use them
+  ---
+  duration_ms: 783.368
+  ...
+# Subtest: cancellation at inspection slice 1 with transport true retains CPU preparations without acquiring the proposal; the retry can use them
+ok 117 - cancellation at inspection slice 1 with transport true retains CPU preparations without acquiring the proposal; the retry can use them
+  ---
+  duration_ms: 793.5955
+  ...
+# Subtest: a late command-count violation remains a failure after slices, with no upload or native acquisition
+ok 118 - a late command-count violation remains a failure after slices, with no upload or native acquisition
+  ---
+  duration_ms: 604.0001
+  ...
+# Subtest: byte limits count typed payloads after a large command tree, before any native upload
+ok 119 - byte limits count typed payloads after a large command tree, before any native upload
+  ---
+  duration_ms: 597.051
+  ...
+# Subtest: a cyclic wire packet fails inspection instead of resuming forever
+ok 120 - a cyclic wire packet fails inspection instead of resuming forever
+  ---
+  duration_ms: 468.8968
+  ...
+# Subtest: cancellation inside prepared uploads preserves the displayed generation and retries retained bytes
+ok 121 - cancellation inside prepared uploads preserves the displayed generation and retries retained bytes
+  ---
+  duration_ms: 575.5223
+  ...
+# Subtest: cancelling between COW buffers repins retained dependencies before the retry forks the remaining buffers
+ok 122 - cancelling between COW buffers repins retained dependencies before the retry forks the remaining buffers
+  ---
+  duration_ms: 488.3557
+  ...
+# (node:7004) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:7004) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: first use executes the original native pipeline and banks on compatible private MSAA/resolve attachments
+ok 123 - first use executes the original native pipeline and banks on compatible private MSAA/resolve attachments
+  ---
+  duration_ms: 6.3243
+  ...
+# Subtest: an already used native generation creates no targets, writes, commands or additional first-use work
+ok 124 - an already used native generation creates no targets, writes, commands or additional first-use work
+  ---
+  duration_ms: 0.5283
+  ...
+# Subtest: a new pipeline generation is exercised even when its producer identity matches a used predecessor
+ok 125 - a new pipeline generation is exercised even when its producer identity matches a used predecessor
+  ---
+  duration_ms: 0.8379
+  ...
+# Subtest: in-flight first use is shared by its exact resource entry without duplicating any GPU work
+ok 126 - in-flight first use is shared by its exact resource entry without duplicating any GPU work
+  ---
+  duration_ms: 0.5222
+  ...
+# Subtest: only cold draws execute when the same pass also contains an already used pipeline
+ok 127 - only cold draws execute when the same pass also contains an already used pipeline
+  ---
+  duration_ms: 0.649
+  ...
+# Subtest: binding a pipeline or drawing zero vertices/instances is not first use [{"__remoteGpuId":"pipeline"}]
+ok 128 - binding a pipeline or drawing zero vertices/instances is not first use [{"__remoteGpuId":"pipeline"}]
+  ---
+  duration_ms: 0.3954
+  ...
+# Subtest: binding a pipeline or drawing zero vertices/instances is not first use [0]
+ok 129 - binding a pipeline or drawing zero vertices/instances is not first use [0]
+  ---
+  duration_ms: 0.5519
+  ...
+# Subtest: binding a pipeline or drawing zero vertices/instances is not first use [3,0]
+ok 130 - binding a pipeline or drawing zero vertices/instances is not first use [3,0]
+  ---
+  duration_ms: 0.4698
+  ...
+# Subtest: private depth/stencil attachments retain format and view generation without modifying published targets
+ok 131 - private depth/stencil attachments retain format and view generation without modifying published targets
+  ---
+  duration_ms: 0.9843
+  ...
+# Subtest: query writes and readbacks are not duplicated by a warm-up
+ok 132 - query writes and readbacks are not duplicated by a warm-up
+  ---
+  duration_ms: 0.9896
+  ...
+# Subtest: render-target copies remain one-shot image work and are not duplicated for pipeline first use
+ok 133 - render-target copies remain one-shot image work and are not duplicated for pipeline first use
+  ---
+  duration_ms: 0.827
+  ...
+# Subtest: per-pass uniforms are restored in order using the already isolated native buffers
+ok 134 - per-pass uniforms are restored in order using the already isolated native buffers
+  ---
+  duration_ms: 0.9094
+  ...
+# Subtest: first use rejects unsandboxed writable-buffer before allocating GPU targets
+ok 135 - first use rejects unsandboxed writable-buffer before allocating GPU targets
+  ---
+  duration_ms: 1.1389
+  ...
+# Subtest: first use rejects unsandboxed writable-texture before allocating GPU targets
+ok 136 - first use rejects unsandboxed writable-texture before allocating GPU targets
+  ---
+  duration_ms: 0.5252
+  ...
+# Subtest: first use rejects unsandboxed unknown-storage-texture before allocating GPU targets
+ok 137 - first use rejects unsandboxed unknown-storage-texture before allocating GPU targets
+  ---
+  duration_ms: 0.4399
+  ...
+# Subtest: encoding failure disposes all private targets without touching native shared resources
+ok 138 - encoding failure disposes all private targets without touching native shared resources
+  ---
+  duration_ms: 0.9159
+  ...
+# Subtest: cold bundle draws reuse their exact native resources while preserving the original bundle
+ok 139 - cold bundle draws reuse their exact native resources while preserving the original bundle
+  ---
+  duration_ms: 0.8774
+  ...
+# Subtest: READY waits for actual private first use, preserves the old image/body and retires targets before adoption
+ok 140 - READY waits for actual private first use, preserves the old image/body and retires targets before adoption
+  ---
+  duration_ms: 1083.0093
+  ...
+# Subtest: native first-use validation failure cannot credit a prepared result or authorize the future world
+ok 141 - native first-use validation failure cannot credit a prepared result or authorize the future world
+  ---
+  duration_ms: 681.1962
+  ...
+# Subtest: an upload-only or malformed receipt cannot certify first use: undefined
+ok 142 - an upload-only or malformed receipt cannot certify first use: undefined
+  ---
+  duration_ms: 1.5355
+  ...
+# Subtest: an upload-only or malformed receipt cannot certify first use: false
+ok 143 - an upload-only or malformed receipt cannot certify first use: false
+  ---
+  duration_ms: 0.8016
+  ...
+# Subtest: an upload-only or malformed receipt cannot certify first use: 1
+ok 144 - an upload-only or malformed receipt cannot certify first use: 1
+  ---
+  duration_ms: 0.6157
+  ...
+# Subtest: unchanged writable draws do not block or execute in cold first use (pass)
+ok 145 - unchanged writable draws do not block or execute in cold first use (pass)
+  ---
+  duration_ms: 1.7812
+  ...
+# Subtest: unchanged writable draws do not block or execute in cold first use (bundle)
+ok 146 - unchanged writable draws do not block or execute in cold first use (bundle)
+  ---
+  duration_ms: 0.7002
+  ...
+# Subtest: producer cannot supply host-owned preparedWorldBoundary
+ok 147 - producer cannot supply host-owned preparedWorldBoundary
+  ---
+  duration_ms: 10.3368
+  ...
+# Subtest: producer cannot supply host-owned preparedUploadsComplete
+ok 148 - producer cannot supply host-owned preparedUploadsComplete
+  ---
+  duration_ms: 2.4343
+  ...
+# Subtest: producer cannot supply host-owned initializedPreparation
+ok 149 - producer cannot supply host-owned initializedPreparation
+  ---
+  duration_ms: 1.5741
+  ...
+# Subtest: producer cannot supply host-owned drawnPipelines
+ok 150 - producer cannot supply host-owned drawnPipelines
+  ---
+  duration_ms: 1.9902
+  ...
+# Subtest: producer cannot supply host-owned firstUseTracked
+ok 151 - producer cannot supply host-owned firstUseTracked
+  ---
+  duration_ms: 1.6232
+  ...
+# (node:21336) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:21336) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: an issued native action patches only its bounded relative phase and publishes the same pick age (exact origin)
+ok 152 - an issued native action patches only its bounded relative phase and publishes the same pick age (exact origin)
+  ---
+  duration_ms: 1021.9851
+  ...
+# Subtest: an issued native action patches only its bounded relative phase and publishes the same pick age (retained origin)
+ok 153 - an issued native action patches only its bounded relative phase and publishes the same pick age (retained origin)
+  ---
+  duration_ms: 736.8553
+  ...
+# Subtest: a long-lived action packet never plays beyond the declared action duration
+ok 154 - a long-lived action packet never plays beyond the declared action duration
+  ---
+  duration_ms: 617.1352
+  ...
+# Subtest: an action reaching a rounded absolute end submits the terminal declared phase
+ok 155 - an action reaching a rounded absolute end submits the terminal declared phase
+  ---
+  duration_ms: 622.643
+  ...
+# Subtest: action clocks fail closed when the draw owner lacks their capability
+ok 156 - action clocks fail closed when the draw owner lacks their capability
+  ---
+  duration_ms: 3.6711
+  ...
+# Subtest: native action admission requires its retained packet and actual direct identity (exact)
+ok 157 - native action admission requires its retained packet and actual direct identity (exact)
+  ---
+  duration_ms: 570.7248
+  ...
+# Subtest: native action admission requires its retained packet and actual direct identity (late)
+ok 158 - native action admission requires its retained packet and actual direct identity (late)
+  ---
+  duration_ms: 491.6933
+  ...
+# Subtest: native action admission requires its retained packet and actual direct identity (missing-template)
+ok 159 - native action admission requires its retained packet and actual direct identity (missing-template)
+  ---
+  duration_ms: 434.5462
+  ...
+# Subtest: native action admission requires its retained packet and actual direct identity (missing-attestation)
+ok 160 - native action admission requires its retained packet and actual direct identity (missing-attestation)
+  ---
+  duration_ms: 488.6787
+  ...
+# Subtest: native action admission requires its retained packet and actual direct identity (cancel-during-drain)
+ok 161 - native action admission requires its retained packet and actual direct identity (cancel-during-drain)
+  ---
+  duration_ms: 432.2271
+  ...
+# Subtest: native action admission cannot consume a locally ready packet before its actual queue drain
+ok 162 - native action admission cannot consume a locally ready packet before its actual queue drain
+  ---
+  duration_ms: 375.248
+  ...
+# Subtest: native action clock admission rejects changed-source
+ok 163 - native action clock admission rejects changed-source
+  ---
+  duration_ms: 427.8223
+  ...
+# Subtest: native action clock admission rejects future-world
+ok 164 - native action clock admission rejects future-world
+  ---
+  duration_ms: 403.8428
+  ...
+# Subtest: native action clock admission rejects wrong-epoch
+ok 165 - native action clock admission rejects wrong-epoch
+  ---
+  duration_ms: 404.4243
+  ...
+# Subtest: native action clock admission rejects absolute-clock
+ok 166 - native action clock admission rejects absolute-clock
+  ---
+  duration_ms: 394.0938
+  ...
+# Subtest: native action clock admission rejects resource-extension
+ok 167 - native action clock admission rejects resource-extension
+  ---
+  duration_ms: 403.3792
+  ...
+# Subtest: native action clock admission rejects mixed-route
+ok 168 - native action clock admission rejects mixed-route
+  ---
+  duration_ms: 400.3935
+  ...
+# Subtest: native boundary observers wake only after the validated direct requirement is installed
+ok 169 - native boundary observers wake only after the validated direct requirement is installed
+  ---
+  duration_ms: 1.0524
+  ...
+# Subtest: retained CPU texture updates fork only the changed texture and its views, preserving displayed pixels and every mip
+ok 170 - retained CPU texture updates fork only the changed texture and its views, preserving displayed pixels and every mip
+  ---
+  duration_ms: 411.7418
+  ...
+# Subtest: a prepared world packet uploads a separate generation and adopts only the exact direct commit without another producer turn
+ok 171 - a prepared world packet uploads a separate generation and adopts only the exact direct commit without another producer turn
+  ---
+  duration_ms: 390.588
+  ...
+# Subtest: an actual native suspended body requires direct attestation (true) and stops drawing after cancellation
+ok 172 - an actual native suspended body requires direct attestation (true) and stops drawing after cancellation
+  ---
+  duration_ms: 725.1111
+  ...
+# Subtest: an actual native suspended body requires direct attestation (false) and stops drawing after cancellation
+ok 173 - an actual native suspended body requires direct attestation (false) and stops drawing after cancellation
+  ---
+  duration_ms: 719.978
+  ...
+# Subtest: a native resume packet needs the actual direct assignment (true, stale false, deferred false, missing template false, drain cancellation false, large delay false, independent horizon false) before causal execution and picking
+ok 174 - a native resume packet needs the actual direct assignment (true, stale false, deferred false, missing template false, drain cancellation false, large delay false, independent horizon false) before causal execution and picking
+  ---
+  duration_ms: 836.8622
+  ...
+# Subtest: a native resume packet needs the actual direct assignment (false, stale false, deferred false, missing template false, drain cancellation false, large delay false, independent horizon false) before causal execution and picking
+ok 175 - a native resume packet needs the actual direct assignment (false, stale false, deferred false, missing template false, drain cancellation false, large delay false, independent horizon false) before causal execution and picking
+  ---
+  duration_ms: 790.8422
+  ...
+# Subtest: a native resume packet needs the actual direct assignment (true, stale true, deferred false, missing template false, drain cancellation false, large delay false, independent horizon false) before causal execution and picking
+ok 176 - a native resume packet needs the actual direct assignment (true, stale true, deferred false, missing template false, drain cancellation false, large delay false, independent horizon false) before causal execution and picking
+  ---
+  duration_ms: 777.5021
+  ...
+# Subtest: a native resume packet needs the actual direct assignment (true, stale false, deferred true, missing template false, drain cancellation false, large delay false, independent horizon false) before causal execution and picking
+ok 177 - a native resume packet needs the actual direct assignment (true, stale false, deferred true, missing template false, drain cancellation false, large delay false, independent horizon false) before causal execution and picking
+  ---
+  duration_ms: 800.5626
+  ...
+# Subtest: a native resume packet needs the actual direct assignment (true, stale false, deferred true, missing template true, drain cancellation false, large delay false, independent horizon false) before causal execution and picking
+ok 178 - a native resume packet needs the actual direct assignment (true, stale false, deferred true, missing template true, drain cancellation false, large delay false, independent horizon false) before causal execution and picking
+  ---
+  duration_ms: 769.3535
+  ...
+# Subtest: a native resume packet needs the actual direct assignment (true, stale false, deferred true, missing template false, drain cancellation true, large delay false, independent horizon false) before causal execution and picking
+ok 179 - a native resume packet needs the actual direct assignment (true, stale false, deferred true, missing template false, drain cancellation true, large delay false, independent horizon false) before causal execution and picking
+  ---
+  duration_ms: 771.344
+  ...
+# Subtest: a native resume packet needs the actual direct assignment (true, stale false, deferred true, missing template false, drain cancellation false, large delay true, independent horizon false) before causal execution and picking
+ok 180 - a native resume packet needs the actual direct assignment (true, stale false, deferred true, missing template false, drain cancellation false, large delay true, independent horizon false) before causal execution and picking
+  ---
+  duration_ms: 804.1772
+  ...
+# Subtest: a native resume packet needs the actual direct assignment (true, stale false, deferred true, missing template false, drain cancellation false, large delay false, independent horizon true) before causal execution and picking
+ok 181 - a native resume packet needs the actual direct assignment (true, stale false, deferred true, missing template false, drain cancellation false, large delay false, independent horizon true) before causal execution and picking
+  ---
+  duration_ms: 802.3317
+  ...
+# Subtest: a first-task retained packet requires its genuine request and direct assignment (current)
+ok 182 - a first-task retained packet requires its genuine request and direct assignment (current)
+  ---
+  duration_ms: 374.5798
+  ...
+# Subtest: a first-task retained packet requires its genuine request and direct assignment (missing-template)
+ok 183 - a first-task retained packet requires its genuine request and direct assignment (missing-template)
+  ---
+  duration_ms: 347.4283
+  ...
+# Subtest: a first-task retained packet requires its genuine request and direct assignment (cancel-during-drain)
+ok 184 - a first-task retained packet requires its genuine request and direct assignment (cancel-during-drain)
+  ---
+  duration_ms: 357.4985
+  ...
+# Subtest: a first-task retained packet requires its genuine request and direct assignment (missing-attestation)
+ok 185 - a first-task retained packet requires its genuine request and direct assignment (missing-attestation)
+  ---
+  duration_ms: 357.2445
+  ...
+# Subtest: a draw owner without resume support refuses the candidate clock
+ok 186 - a draw owner without resume support refuses the candidate clock
+  ---
+  duration_ms: 1.409
+  ...
+# Subtest: a preparer cannot inject direct native execution bindings into a packet
+ok 187 - a preparer cannot inject direct native execution bindings into a packet
+  ---
+  duration_ms: 1.4491
+  ...
+# Subtest: a draw owner without suspension support cannot silently accept the new clock as an ordinary clock
+ok 188 - a draw owner without suspension support cannot silently accept the new clock as an ordinary clock
+  ---
+  duration_ms: 0.7114
+  ...
+# Subtest: a cancelled ready world packet retains the displayed generation and cannot activate on a later different commit
+ok 189 - a cancelled ready world packet retains the displayed generation and cannot activate on a later different commit
+  ---
+  duration_ms: 385.6511
+  ...
+# Subtest: a prepared packet ready receipt waits for the actual upload fence while the prior image keeps drawing
+ok 190 - a prepared packet ready receipt waits for the actual upload fence while the prior image keeps drawing
+  ---
+  duration_ms: 345.9455
+  ...
+# Subtest: prepared drawing preserves first-submit resource copies instead of silently treating them as replay
+ok 191 - prepared drawing preserves first-submit resource copies instead of silently treating them as replay
+  ---
+  duration_ms: 398.0159
+  ...
+# Subtest: an already aborted prepared frame is cancelled before FIFO admission without stranding its RPC
+ok 192 - an already aborted prepared frame is cancelled before FIFO admission without stranding its RPC
+  ---
+  duration_ms: 339.7771
+  ...
+# Subtest: a ready packet naming a different ticket never adopts the real native mutation
+ok 193 - a ready packet naming a different ticket never adopts the real native mutation
+  ---
+  duration_ms: 398.6883
+  ...
+# Subtest: native consumer retirement invalidates its prepared successor before any later draw
+ok 194 - native consumer retirement invalidates its prepared successor before any later draw
+  ---
+  duration_ms: 342.5333
+  ...
+# Subtest: prepared clock references are immutable even if the producer retags their logical buffer before the commit
+ok 195 - prepared clock references are immutable even if the producer retags their logical buffer before the commit
+  ---
+  duration_ms: 384.4142
+  ...
+# Subtest: a GPU copy cannot overwrite a prepared native presentation clock after consumer patching
+ok 196 - a GPU copy cannot overwrite a prepared native presentation clock after consumer patching
+  ---
+  duration_ms: 342.9151
+  ...
+# Subtest: cancelling a successor before quiescence prevents physical commit even if the caller reports its local handle as valid
+ok 197 - cancelling a successor before quiescence prevents physical commit even if the caller reports its local handle as valid
+  ---
+  duration_ms: 389.3677
+  ...
+# Subtest: the quiesced receipt retains its exact successor through late producer cancellation until native release
+ok 198 - the quiesced receipt retains its exact successor through late producer cancellation until native release
+  ---
+  duration_ms: 384.379
+  ...
+# Subtest: a future world resource tag cannot prepare an unauthorized native actor assignment
+ok 199 - a future world resource tag cannot prepare an unauthorized native actor assignment
+  ---
+  duration_ms: 347.0916
+  ...
+# Subtest: upload-only command buffers cannot stand in for a prepared world image
+ok 200 - upload-only command buffers cannot stand in for a prepared world image
+  ---
+  duration_ms: 350.058
+  ...
+# Subtest: obsolete initialization survives until fresh commands use the same GPU buffer, without resending its upload
+ok 201 - obsolete initialization survives until fresh commands use the same GPU buffer, without resending its upload
+  ---
+  duration_ms: 395.1855
+  ...
+# Subtest: retained native uniforms can finish admission behind a real fence without modifying the last displayed buffers
+ok 202 - retained native uniforms can finish admission behind a real fence without modifying the last displayed buffers
+  ---
+  duration_ms: 413.565
+  ...
+# Subtest: independent gate resource coverage never grants time beyond the direct native causal clock
+ok 203 - independent gate resource coverage never grants time beyond the direct native causal clock
+  ---
+  duration_ms: 382.3259
+  ...
+# Subtest: independent gate clocks reject uncommitted and foreign native world references
+ok 204 - independent gate clocks reject uncommitted and foreign native world references
+  ---
+  duration_ms: 766.8652
+  ...
+# Subtest: native commit cancels an obsolete frame waiting for an unused pipeline, preserving only its uploads
+ok 205 - native commit cancels an obsolete frame waiting for an unused pipeline, preserving only its uploads
+  ---
+  duration_ms: 392.36
+  ...
+# Subtest: already admitted pending uploads transfer their exact resource pins after a physical commit
+ok 206 - already admitted pending uploads transfer their exact resource pins after a physical commit
+  ---
+  duration_ms: 394.0592
+  ...
+# Subtest: later writes follow the retained initialization and unused released resources retire without being uploaded
+ok 207 - later writes follow the retained initialization and unused released resources retire without being uploaded
+  ---
+  duration_ms: 386.0495
+  ...
+# Subtest: unrepeatable rejected compute requires explicit recovery instead of losing its state and presenting a partial repair
+ok 208 - unrepeatable rejected compute requires explicit recovery instead of losing its state and presenting a partial repair
+  ---
+  duration_ms: 410.3184
+  ...
+# Subtest: retained payload capacity is bounded across rejected frames and an overflow releases its retained generations
+ok 209 - retained payload capacity is bounded across rejected frames and an overflow releases its retained generations
+  ---
+  duration_ms: 378.0523
+  ...
+# Subtest: retirement discards unsubmitted retained uploads before draining the original GPU queue
+ok 210 - retirement discards unsubmitted retained uploads before draining the original GPU queue
+  ---
+  duration_ms: 385.7756
+  ...
+# Subtest: producer-supplied snapshot metadata cannot choose the native generation retained for an obsolete upload
+ok 211 - producer-supplied snapshot metadata cannot choose the native generation retained for an obsolete upload
+  ---
+  duration_ms: 384.9466
+  ...
+# Subtest: retained texture uploads and declared mip passes execute once on the next world, using the original texture
+ok 212 - retained texture uploads and declared mip passes execute once on the next world, using the original texture
+  ---
+  duration_ms: 389.6457
+  ...
+# Subtest: declared offscreen texture preparation survives a native commit and runs once across frame replay
+ok 213 - declared offscreen texture preparation survives a native commit and runs once across frame replay
+  ---
+  duration_ms: 390.2875
+  ...
+# Subtest: remote drawing continues during delayed pipeline preparation, using fresh command buffers and swapchain views
+ok 214 - remote drawing continues during delayed pipeline preparation, using fresh command buffers and swapchain views
+  ---
+  duration_ms: 1.8668
+  ...
+# Subtest: native retirement bypasses blocked preparation, freezes every submission and waits for the real queue drain
+ok 215 - native retirement bypasses blocked preparation, freezes every submission and waits for the real queue drain
+  ---
+  duration_ms: 343.3616
+  ...
+# Subtest: a late producer frame is cancelled without poisoning an accepted native retirement drain
+ok 216 - a late producer frame is cancelled without poisoning an accepted native retirement drain
+  ---
+  duration_ms: 347.4131
+  ...
+# Subtest: a pending operation cannot resume and submit after a native retirement receipt
+ok 217 - a pending operation cannot resume and submit after a native retirement receipt
+  ---
+  duration_ms: 350.4476
+  ...
+# Subtest: disposal does not certify retirement before the queue drains, and actual device loss retires its own connection
+ok 218 - disposal does not certify retirement before the queue drains, and actual device loss retires its own connection
+  ---
+  duration_ms: 695.646
+  ...
+# Subtest: native revocation bypasses a resource FIFO blocked on a pending pipeline
+ok 219 - native revocation bypasses a resource FIFO blocked on a pending pipeline
+  ---
+  duration_ms: 7.5246
+  ...
+# Subtest: a failed submission cannot publish new native input clocks
+ok 220 - a failed submission cannot publish new native input clocks
+  ---
+  duration_ms: 2.7845
+  ...
+# Subtest: real native causal watermarks, pause, speed and revocation control one prepared GPU packet outside a blocked resource FIFO
+ok 221 - real native causal watermarks, pause, speed and revocation control one prepared GPU packet outside a blocked resource FIFO
+  ---
+  duration_ms: 345.8551
+  ...
+# Subtest: a later prepared packet cannot drop a native-route tag to escape the causal clock of its connection
+ok 222 - a later prepared packet cannot drop a native-route tag to escape the causal clock of its connection
+  ---
+  duration_ms: 3.6401
+  ...
+# Subtest: native clock authority cannot widen the prepared resource ceiling, even when a later pause anchors beyond it
+ok 223 - native clock authority cannot widen the prepared resource ceiling, even when a later pause anchors beyond it
+  ---
+  duration_ms: 2.8193
+  ...
+# Subtest: a prepared future resource generation waits for causal time instead of selecting its own logical start
+ok 224 - a prepared future resource generation waits for causal time instead of selecting its own logical start
+  ---
+  duration_ms: 3.4987
+  ...
+# Subtest: conditioned native barrier drains GPU, blocks pre-commit packets and waits for fresh resources at the safe boundary
+ok 225 - conditioned native barrier drains GPU, blocks pre-commit packets and waits for fresh resources at the safe boundary
+  ---
+  duration_ms: 372.937
+  ...
+# Subtest: a cancelled native hold never advances expired prepared resources beyond their validity ceiling
+ok 226 - a cancelled native hold never advances expired prepared resources beyond their validity ceiling
+  ---
+  duration_ms: 343.7233
+  ...
+# Subtest: a frame prepared before the physical commit but sent afterwards cannot borrow the new consumer epoch
+ok 227 - a frame prepared before the physical commit but sent afterwards cannot borrow the new consumer epoch
+  ---
+  duration_ms: 392.9922
+  ...
+# Subtest: a producer cannot relabel an already prepared frame with a later native world identity
+ok 228 - a producer cannot relabel an already prepared frame with a later native world identity
+  ---
+  duration_ms: 1.1389
+  ...
+# Subtest: old command buffers cannot be wrapped in a newly tagged frame or submitted outside the frame after commit
+ok 229 - old command buffers cannot be wrapped in a newly tagged frame or submitted outside the frame after commit
+  ---
+  duration_ms: 383.1297
+  ...
+# Subtest: a control-bound drawing owner cannot present even an untagged scene before receiving its native baseline
+ok 230 - a control-bound drawing owner cannot present even an untagged scene before receiving its native baseline
+  ---
+  duration_ms: 354.178
+  ...
+# Subtest: standalone canvas commands cannot bypass the native bootstrap wait
+ok 231 - standalone canvas commands cannot bypass the native bootstrap wait
+  ---
+  duration_ms: 1.3461
+  ...
+# Subtest: an older packet still waiting for GPU preparation is rejected after a conditioned mutation instead of resurrecting
+ok 232 - an older packet still waiting for GPU preparation is rejected after a conditioned mutation instead of resurrecting
+  ---
+  duration_ms: 350.4661
+  ...
+# Subtest: standalone GPU queue submissions cannot slip between a mutation drain and release
+ok 233 - standalone GPU queue submissions cannot slip between a mutation drain and release
+  ---
+  duration_ms: 689.7933
+  ...
+# Subtest: native permission is checked after resource preparation, preventing late resurrection
+ok 234 - native permission is checked after resource preparation, preventing late resurrection
+  ---
+  duration_ms: 2.5884
+  ...
+# Subtest: an obsolete route packet retains the healthy device and last frame until a prepared replacement arrives
+ok 235 - an obsolete route packet retains the healthy device and last frame until a prepared replacement arrives
+  ---
+  duration_ms: 4.5696
+  ...
+# Subtest: direct native GPU fence waits for submitted GPU work while bypassing a blocked resource FIFO
+ok 236 - direct native GPU fence waits for submitted GPU work while bypassing a blocked resource FIFO
+  ---
+  duration_ms: 3.1762
+  ...
+# Subtest: a native GPU fence cannot name an unreceived sequence or outlive its retired draw connection
+ok 237 - a native GPU fence cannot name an unreceived sequence or outlive its retired draw connection
+  ---
+  duration_ms: 2.1721
+  ...
+# Subtest: GPU drain failure closes drawing without issuing a successful native fence receipt
+ok 238 - GPU drain failure closes drawing without issuing a successful native fence receipt
+  ---
+  duration_ms: 1.3493
+  ...
+# Subtest: publication and draw host exchange an exact GPU fence through their live control endpoints
+ok 239 - publication and draw host exchange an exact GPU fence through their live control endpoints
+  ---
+  duration_ms: 1.4165
+  ...
+# Subtest: queued route clock bindings capture the native identity before caller mutation
+ok 240 - queued route clock bindings capture the native identity before caller mutation
+  ---
+  duration_ms: 1.6547
+  ...
+# Subtest: a prepared native frame waits for its direct bootstrap rather than using an unscoped permission
+ok 241 - a prepared native frame waits for its direct bootstrap rather than using an unscoped permission
+  ---
+  duration_ms: 1.8469
+  ...
+# Subtest: retiring a control connection freezes its admitted clocks without reviving old packets
+ok 242 - retiring a control connection freezes its admitted clocks without reviving old packets
+  ---
+  duration_ms: 1.9998
+  ...
+# Subtest: missing native control fails admission explicitly instead of holding a generation forever
+ok 243 - missing native control fails admission explicitly instead of holding a generation forever
+  ---
+  duration_ms: 9.6391
+  ...
+# Subtest: frame publication is bounded and writes are invisible until the atomic presentation boundary
+ok 244 - frame publication is bounded and writes are invisible until the atomic presentation boundary
+  ---
+  duration_ms: 1.9045
+  ...
+# Subtest: writeBuffer snapshots typed-array ranges without detaching or observing later mutations
+ok 245 - writeBuffer snapshots typed-array ranges without detaching or observing later mutations
+  ---
+  duration_ms: 0.8766
+  ...
+# Subtest: mappedAtCreation uploads through the native mapping without requiring COPY_DST
+ok 246 - mappedAtCreation uploads through the native mapping without requiring COPY_DST
+  ---
+  duration_ms: 1.0753
+  ...
+# Subtest: destroy retains resources referenced by the active frame, then retires after replacement
+ok 247 - destroy retains resources referenced by the active frame, then retires after replacement
+  ---
+  duration_ms: 2.2823
+  ...
+# Subtest: clock patch advances only inside a confirmed lease and overrides producer writes
+ok 248 - clock patch advances only inside a confirmed lease and overrides producer writes
+  ---
+  duration_ms: 1.941
+  ...
+# Subtest: one-shot buffer copies do not replay and resource fences work before any frame
+ok 249 - one-shot buffer copies do not replay and resource fences work before any frame
+  ---
+  duration_ms: 2.2769
+  ...
+# Subtest: preparation cannot mutate published buffers until the next frame commits
+ok 250 - preparation cannot mutate published buffers until the next frame commits
+  ---
+  duration_ms: 5.2441
+  ...
+# Subtest: a write after packet publication forks the pending generation instead of reordering writes
+ok 251 - a write after packet publication forks the pending generation instead of reordering writes
+  ---
+  duration_ms: 1.6286
+  ...
+# Subtest: partial preparation writes fork the logical state of an already published pending frame
+ok 252 - partial preparation writes fork the logical state of an already published pending frame
+  ---
+  duration_ms: 1.539
+  ...
+# Subtest: endFrame metadata is the final clock/event boundary, not the metadata at beginFrame
+ok 253 - endFrame metadata is the final clock/event boundary, not the metadata at beginFrame
+  ---
+  duration_ms: 1.1694
+  ...
+# Subtest: multipass uniform writes retain queue order on independent replay
+ok 254 - multipass uniform writes retain queue order on independent replay
+  ---
+  duration_ms: 1.4248
+  ...
+# Subtest: replay restores the baseline when a draw precedes the only uniform write
+ok 255 - replay restores the baseline when a draw precedes the only uniform write
+  ---
+  duration_ms: 1.5623
+  ...
+# Subtest: a current-texture view created for a future frame survives unrelated retirement
+ok 256 - a current-texture view created for a future frame survives unrelated retirement
+  ---
+  duration_ms: 2.0581
+  ...
+# Subtest: canceling presentation preserves completed upload bookkeeping without publishing the canceled frame
+ok 257 - canceling presentation preserves completed upload bookkeeping without publishing the canceled frame
+  ---
+  duration_ms: 2.6499
+  ...
+# Subtest: one-shot compute cannot silently freeze while a remote animation clock advances
+ok 258 - one-shot compute cannot silently freeze while a remote animation clock advances
+  ---
+  duration_ms: 1.0029
+  ...
+# Subtest: finalizer release drops producer ownership without calling native destroy
+ok 259 - finalizer release drops producer ownership without calling native destroy
+  ---
+  duration_ms: 1.0696
+  ...
+# Subtest: recorded proxies remain retained through ACK and native frame pins outlive producer finalization
+ok 260 - recorded proxies remain retained through ACK and native frame pins outlive producer finalization
+  ---
+  duration_ms: 2.3338
+  ...
+# Subtest: a bind group retains released native buffer storage until its own release
+ok 261 - a bind group retains released native buffer storage until its own release
+  ---
+  duration_ms: 1.2923
+  ...
+# Subtest: a prepared successor cannot replace the currently executing interval early
+ok 262 - a prepared successor cannot replace the currently executing interval early
+  ---
+  duration_ms: 6.4827
+  ...
+# Subtest: late preparation holds the old safe endpoint then begins the new interval without rewind
+ok 263 - late preparation holds the old safe endpoint then begins the new interval without rewind
+  ---
+  duration_ms: 6.6284
+  ...
+# Subtest: visibility suspension preserves the active interval and shifts the queued successor without catch-up
+ok 264 - visibility suspension preserves the active interval and shifts the queued successor without catch-up
+  ---
+  duration_ms: 16.3309
+  ...
+# Subtest: a first packet received while hidden starts at resume rather than skipping its interval
+ok 265 - a first packet received while hidden starts at resume rather than skipping its interval
+  ---
+  duration_ms: 1.6021
+  ...
+# Subtest: invalid resource references are rejected before any frame upload mutates the displayed generation
+ok 266 - invalid resource references are rejected before any frame upload mutates the displayed generation
+  ---
+  duration_ms: 1.8731
+  ...
+# Subtest: a valid but regressive clock cannot mutate resources or replace the displayed generation
+ok 267 - a valid but regressive clock cannot mutate resources or replace the displayed generation
+  ---
+  duration_ms: 2.7137
+  ...
+# Subtest: retiring N unrelated resources performs N localized checks and no active graph traversals
+ok 268 - retiring N unrelated resources performs N localized checks and no active graph traversals
+  ---
+  duration_ms: 15.9262
+  ...
+# Subtest: explicit native destruction waits for staged preparation to reach a generation boundary
+ok 269 - explicit native destruction waits for staged preparation to reach a generation boundary
+  ---
+  duration_ms: 2.6057
+  ...
+# Subtest: an unrelated asynchronous pipeline cannot block publication of a newer frame using ready resources
+ok 270 - an unrelated asynchronous pipeline cannot block publication of a newer frame using ready resources
+  ---
+  duration_ms: 4.0928
+  ...
+# Subtest: pipeline-derived layouts and bind groups wait only on their branch and follow uniform forks
+ok 271 - pipeline-derived layouts and bind groups wait only on their branch and follow uniform forks
+  ---
+  duration_ms: 50.6862
+  ...
+# Subtest: explicit proxy device destruction reaches the native device and resolves lost before cleanup
+ok 272 - explicit proxy device destruction reaches the native device and resolves lost before cleanup
+  ---
+  duration_ms: 1.3162
+  ...
+# Subtest: clock offsets override stale multipass uniforms and baseline restoration before every submission
+ok 273 - clock offsets override stale multipass uniforms and baseline restoration before every submission
+  ---
+  duration_ms: 1.5615
+  ...
+# Subtest: frame and fence diagnostics distinguish posting, admission, first draw, ACK and local refusal
+ok 274 - frame and fence diagnostics distinguish posting, admission, first draw, ACK and local refusal
+  ---
+  duration_ms: 1.6875
+  ...
+# Subtest: pending native fence promises preserve their queue prefixes without blocking later resources or frames
+ok 275 - pending native fence promises preserve their queue prefixes without blocking later resources or frames
+  ---
+  duration_ms: 3.4024
+  ...
+# Subtest: device loss rejects a pending fence without waiting for its native promise to finish
+ok 276 - device loss rejects a pending fence without waiting for its native promise to finish
+  ---
+  duration_ms: 1.0124
+  ...
+# Subtest: pending mapping, shader diagnostics and error scopes do not block ready frames
+ok 277 - pending mapping, shader diagnostics and error scopes do not block ready frames
+  ---
+  duration_ms: 6.4015
+  ...
+# Subtest: pending mapping cancellation preserves newer mappings and explicit destruction
+ok 278 - pending mapping cancellation preserves newer mappings and explicit destruction
+  ---
+  duration_ms: 2.3287
+  ...
+# Subtest: native mapping rejection and device loss restore proxy mapState
+ok 279 - native mapping rejection and device loss restore proxy mapState
+  ---
+  duration_ms: 1.583
+  ...
+# Subtest: readonly storage forks by native copy, retains GPU contents and preserves the published generation
+ok 280 - readonly storage forks by native copy, retains GPU contents and preserves the published generation
+  ---
+  duration_ms: 4.0359
+  ...
+# Subtest: native storage fork overlays pending CPU writes without publishing them early
+ok 281 - native storage fork overlays pending CPU writes without publishing them early
+  ---
+  duration_ms: 1.9196
+  ...
+# Subtest: writable or unclassified storage and pending GPU outputs cannot bypass the fence invariant
+ok 282 - writable or unclassified storage and pending GPU outputs cannot bypass the fence invariant
+  ---
+  duration_ms: 5.708
+  ...
+# Subtest: published vertex and index buffers use generation copies without CPU shadows
+ok 283 - published vertex and index buffers use generation copies without CPU shadows
+  ---
+  duration_ms: 1.9516
+  ...
+# Subtest: canvas reconfiguration cannot invalidate pending or active frames and unconfigure stops replay
+ok 284 - canvas reconfiguration cannot invalidate pending or active frames and unconfigure stops replay
+  ---
+  duration_ms: 1.4345
+  ...
+# Subtest: pending query resolution protects its actual destination buffer from premature generation copies
+ok 285 - pending query resolution protects its actual destination buffer from premature generation copies
+  ---
+  duration_ms: 2.1176
+  ...
+# Subtest: ordered resource admission acknowledges captured writes before GPU completion without weakening real fences
+ok 286 - ordered resource admission acknowledges captured writes before GPU completion without weakening real fences
+  ---
+  duration_ms: 2.0524
+  ...
+# Subtest: ordered admission rejects uncommitted local frames and unsafe published mutations
+ok 287 - ordered admission rejects uncommitted local frames and unsafe published mutations
+  ---
+  duration_ms: 2.2379
+  ...
+# Subtest: ordered admission cannot hide a preceding resource upload error
+ok 288 - ordered admission cannot hide a preceding resource upload error
+  ---
+  duration_ms: 0.9366
+  ...
+# Subtest: ordered admission waits for captured external image payloads, never their GPU completion
+ok 289 - ordered admission waits for captured external image payloads, never their GPU completion
+  ---
+  duration_ms: 2.768
+  ...
+# Subtest: acknowledged remote disposal waits for the real native queue drain before retiring its control connection
+ok 290 - acknowledged remote disposal waits for the real native queue drain before retiring its control connection
+  ---
+  duration_ms: 369.6457
+  ...
+# Subtest: failed disposal RPC rejects without fabricating a successful close acknowledgement
+ok 291 - failed disposal RPC rejects without fabricating a successful close acknowledgement
+  ---
+  duration_ms: 1.0181
+  ...
+# Subtest: a close RPC joins an already stopped host and survives expected device loss until its receipt
+ok 292 - a close RPC joins an already stopped host and survives expected device loss until its receipt
+  ---
+  duration_ms: 0.9182
+  ...
+# Subtest: retained unpublished non-uniform upload reaches the existing queue fence without changing the displayed generation
+ok 293 - retained unpublished non-uniform upload reaches the existing queue fence without changing the displayed generation
+  ---
+  duration_ms: 399.2603
+  ...
+# Subtest: destroyed unpublished retained buffer completes its queued upload before actual deferred destruction
+ok 294 - destroyed unpublished retained buffer completes its queued upload before actual deferred destruction
+  ---
+  duration_ms: 384.2863
+  ...
+# Subtest: a retained published vertex buffer remains protected from admission fence uploads
+ok 295 - a retained published vertex buffer remains protected from admission fence uploads
+  ---
+  duration_ms: 392.8342
+  ...
+# Subtest: an unpublished COW vertex generation can finish retained uploads while the old published generation remains unchanged
+ok 296 - an unpublished COW vertex generation can finish retained uploads while the old published generation remains unchanged
+  ---
+  duration_ms: 399.9225
+  ...
+# Subtest: a mixed retained fence batch validates every destination before writing an unpublished buffer or forking a displayed uniform
+ok 297 - a mixed retained fence batch validates every destination before writing an unpublished buffer or forking a displayed uniform
+  ---
+  duration_ms: 398.0516
+  ...
+1..297
+# tests 297
+# suites 0
+# pass 297
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 47713.926

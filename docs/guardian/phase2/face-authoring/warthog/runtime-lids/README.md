@@ -1,0 +1,9 @@
+# Warthog eyelids: Three.js interpolation correction
+
+The v11 asset passed static Blender views but failed at a 0.65 blink in the actual Three.js fixture: the iris/sclera intersected the cap. before-interpolation.png records the failure. Morph interpolation follows straight chords; a sphere-conforming endpoint alone cannot keep those chords outside the eyeball.
+
+v12 expands each row by the analytic secant of half its quarter-step angular travel. This is authored geometry, not a runtime correction, extra morph or extra draw. after-interpolation.png records the same 0.65 closure without the intersections. Full closure was inspected with Running paused at 0.35 s (quarter view) and 0.58 s (opposite profile), with the fixture following the head. Neutral was checked after stopping the clip. These are sampled runtime poses, not a recorded exhaustive animation pass. The fixture reports three draws, eight eyelid bindings and no errors; that is not an engine performance benchmark.
+
+The new audit_eyelid_envelope.py samples 101 values per eye, checking affected vertices, triangle centroids and edge midpoints against the source eye bounding sphere. It rejects v11 (about 6 mm penetration) and accepts v12 (about 1 mm minimum clearance). Run Blender with --python-exit-code 1 for a failing CI exit status. The audit covers rest-space interpolation only, not skinning or all triangle points. The separate original-animation audit still passes seven clips and 287 poses.
+
+Reproduce v12 with the committed add_actor_eyelids.py and warthog eyelid-profile.json; local editable file C:/tmp/guardian-faces/warthog-lids-v12.blend. Copy exported GLB to test-results/warthog-face-candidate.glb and open tests/browser/actor-expression.html?actor=warthog. The active game catalog remains unchanged. Mouth authoring and full in-game impact/ragdoll validation are pending.

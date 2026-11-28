@@ -1,0 +1,20 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Native gate object sweep audit</title>
+<h1>Native gate object sweep audit</h1>
+<p>Canonical static objects, pending native motor and direct GPU receipt. No gate mesh/collider installation, terrain clearance, character locomotion or crossing admission.</p>
+<pre id="result">Ready</pre>
+<script type="module">
+import {auditNativeRouteControl} from './native-route-control.js';
+window.runNativeGateObjectsAudit=async()=>{
+ const results=[];
+ try{
+  for(let i=0;i<4;i++){
+   document.querySelector('#result').textContent=`Running ${i+1}/4`;
+   results.push(await auditNativeRouteControl({gpuFence:true,gateTransaction:true,gateStaticObjects:true,invalidateGateObjectProposal:i===3}));
+  }
+  window.nativeGateObjectsAudit=results;
+  document.querySelector('#result').textContent=JSON.stringify(results,null,2);return results;
+ }catch(error){document.querySelector('#result').textContent=String(error.stack??error);throw error;}
+};
+</script>

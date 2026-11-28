@@ -1,0 +1,69 @@
+{
+  "baseline": "a9cab4ca4d363d138967ace05136dbf06e791eeb",
+  "scope": "DEV, one acquired Sabana Retreat after a public save reload, inactive civil actors",
+  "inputSha256": "fdf60e3589c75341430de8cffc23aee7ccf4374ad9103b585695d785ad164936",
+  "browser": "Edge 158.0.4370.33",
+  "adapter": {"vendor": "nvidia", "architecture": "turing"},
+  "original": {
+    "frame": 40,
+    "time": 402.599999999982,
+    "relativeAge": 0.5999999642372131
+  },
+  "hold": {
+    "id": 5,
+    "replayBase": 1,
+    "replayedThrough": 15,
+    "effectiveTime": 402.64999999998196,
+    "actor": "animal-396",
+    "bodyId": 1,
+    "assignmentSequence": 11,
+    "slot": 0,
+    "generation": 3,
+    "preparedTicket": 1,
+    "acquiredTicket": 2,
+    "position": [90.93362325281082, 13.644208914584597],
+    "motionPhase": 22.704275677513472,
+    "corridorKnots": 3
+  },
+  "replacement": {
+    "frame": 1,
+    "effectiveTime": 402.64999999998196,
+    "relativeAge": 0.6499999761581421,
+    "activationSequence": 16,
+    "continuedFrame": 5,
+    "continuedTime": 402.99999999998164,
+    "continuedRelativeAge": 0.9999999403953552,
+    "additionalRouteAcquisitions": 0
+  },
+  "departure": {
+    "exit": [96.83492619725185, 39.091138178228455],
+    "nativeEndpoint": [96.83492279052734, 39.09113693237305],
+    "programEnd": 409.5247352977143,
+    "animalGoneCount": 1,
+    "raidEndedCount": 1,
+    "animalGoneTime": 409.5399999999757,
+    "raidEndedTime": 409.5399999999757,
+    "observedFrameWithoutBinding": 71,
+    "observedFrameWithoutBindingTime": 409.83999999997576
+  },
+  "ledgerUnchanged": true,
+  "drained": true,
+  "unexpectedErrors": 0,
+  "expectedDestroyedPageErrors": 2,
+  "baselineDidNotOfferTerminalRoute": true,
+  "baselineProbeSha256": "bc5d7f4a09acfbfb996e571fc1401303c3ce8b8bcb05b0a048873874086c744c",
+  "verification": {
+    "passed": 39,
+    "failed": 0,
+    "skipped": 0,
+    "regressionTapSha256": "5c27fbce1efc67f7a4329afb1fd230d1e3fe4df037fdcd748d633223d5027c1a",
+    "webGpuWorkerRemoteDrawBuildSeconds": 47.97,
+    "buildLogSha256": "e1300aa63eeae9f7d6bc44c77a15f9d76a5156208d1772a112e050aa2140ede5"
+  },
+  "receiptSha256": "a2d92cfc17a73fcb5e3c59b56e61fc64957618b36ab619942c5a3f564907c3f7",
+  "trace": {
+    "sha256": "b54285c8cb86d4609c4780be8171f7c59080a2bc9cd3235f55bfd6044659f2d9",
+    "bytes": 34184295,
+    "dataLossOccurred": false
+  }
+}

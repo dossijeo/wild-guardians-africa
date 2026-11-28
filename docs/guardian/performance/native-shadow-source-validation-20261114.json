@@ -1,0 +1,509 @@
+{
+  "date": "2026-11-14",
+  "baseRevision": "f2e519e7d",
+  "scope": "Backport existing Three source-material shadow ownership and mixed-length ChainMap keys to pinned r180. No ordinary native producer/executor or full A/B/C acceptance.",
+  "upstream": {
+    "commit": "253fa7ad003181df28015efdb541c2916895a816",
+    "files": [
+      "Renderer.js",
+      "RenderObjects.js",
+      "RenderObject.js",
+      "ChainMap.js"
+    ],
+    "sourceSha256": {
+      "Renderer.js": "57f8c118a074a4276c42e55bba81c267dd3799d60fea35019a8956bdc84d0e1c",
+      "RenderObjects.js": "54db3ca382d92c8f48adbee5f6f0d541cd79edc7667c202297bb850fa14e6a88",
+      "RenderObject.js": "e6c131c392d9ceb092c81e8800d6aed5f8a98b71f2e1b68d9c2bf19287b825d3",
+      "ChainMap.js": "b3265c8a108d2a501c2550f0ac30e9a6af2b853f60b060cfbb894070899a5a9b"
+    },
+    "license": "MIT, included in patch-three-source-material.mjs"
+  },
+  "tests": {
+    "directed": {
+      "log": ".cache/native-shadow-source-directed.tap",
+      "tests": 12,
+      "pass": 12,
+      "fail": 0,
+      "skipped": 0,
+      "failures": []
+    },
+    "regression": {
+      "log": ".cache/native-shadow-source-regression.tap",
+      "tests": 1392,
+      "pass": 1390,
+      "fail": 2,
+      "skipped": 0,
+      "failures": [
+        "late crate admission is rejected after drop and retries a later pickup",
+        "confirmed harvest installs its sampled GPU horizon and cancels on changed target"
+      ]
+    },
+    "baselineEvidence": "native-selected-materials-validation-20261114.json and native-carry-validation-20261114.json record the same two legacy carry/harvest failures on prior sources; no new failure.",
+    "concurrency": 2
+  },
+  "expandedTestFiles": [
+    "tests/admission-scene-reference.test.js",
+    "tests/authority-compact-paused.test.js",
+    "tests/authority-visual-terrain-checkpoint.test.js",
+    "tests/baked-walk-catalog.test.js",
+    "tests/baked-worker-walk-catalog.test.js",
+    "tests/camera-terrain-exclusion.test.js",
+    "tests/confirmed-camera-terrain.test.js",
+    "tests/confirmed-terrain-receiver.test.js",
+    "tests/confirmed-terrain-retirement.test.js",
+    "tests/continuous-grass-mangrove-water.test.js",
+    "tests/continuous-grass-river.test.js",
+    "tests/continuous-grass.test.js",
+    "tests/grass-chunk-data.test.js",
+    "tests/grass-generation-queue.test.js",
+    "tests/grass-obstacles.test.js",
+    "tests/grass-terrain-sampling.test.js",
+    "tests/grass-tile-generation.test.js",
+    "tests/grass-transfer-instrumentation.test.js",
+    "tests/grass-water.test.js",
+    "tests/historical-event-auto-recovery-integration.test.js",
+    "tests/historical-terrain-recovery.test.js",
+    "tests/host-publication-queue.test.js",
+    "tests/live-terrain-checkpoint.test.js",
+    "tests/native-biome-retention.test.js",
+    "tests/native-frame-continuation.test.js",
+    "tests/native-gpu-motion.test.js",
+    "tests/native-intent-control-authority.test.js",
+    "tests/native-route-terrain-support.test.js",
+    "tests/native-terrain-retention.test.js",
+    "tests/native-worker-roster.test.js",
+    "tests/native-world-checkpoint.test.js",
+    "tests/native-world-prepared-commit.test.js",
+    "tests/native-world-prepared-props.test.js",
+    "tests/native-world-prepared-terrain.test.js",
+    "tests/native-world-resource-preview.test.js",
+    "tests/native-world-resource-projection.test.js",
+    "tests/native-world-resource-reconciliation.test.js",
+    "tests/presentation-recovery-journal.test.js",
+    "tests/presentation-recovery-replay.test.js",
+    "tests/raid-camera-terrain.test.js",
+    "tests/remote-frame-preparations.test.js",
+    "tests/remote-texture-preparation.test.js",
+    "tests/remote-webgpu.test.js",
+    "tests/simulation-authority-chunks.test.js",
+    "tests/simulation-authority-client.test.js",
+    "tests/simulation-terrain-history-worker.test.js",
+    "tests/spatial-native-barrier-proposal.test.js",
+    "tests/spatial-native-overlay-proposal.test.js",
+    "tests/spatial-native-prop-mutations.test.js",
+    "tests/spatial-native-residency.test.js",
+    "tests/spatial-native-terrain-mutations.test.js",
+    "tests/temporal-recovery-pipeline.test.js",
+    "tests/temporal-recovery-receiver.test.js",
+    "tests/temporal-surface-recovery.test.js",
+    "tests/terrain-bootstrap-publication.test.js",
+    "tests/terrain-camera.test.js",
+    "tests/terrain-history-cancellation.test.js",
+    "tests/terrain-history-detached.test.js",
+    "tests/terrain-history-replay.test.js",
+    "tests/terrain-history.test.js",
+    "tests/terrain-native-proposal.test.js",
+    "tests/terrain-publication.test.js",
+    "tests/terrain-resource-payload.test.js",
+    "tests/terrain-resource-removal.test.js",
+    "tests/three-webgpu-pipeline-patch.test.js",
+    "tests/three-webgpu-shadow-compile.test.js",
+    "tests/three-webgpu-source-material.test.js",
+    "tests/visible-camera-terrain.test.js",
+    "tests/webgpu-actor-motion-binding.test.js",
+    "tests/webgpu-admission-scene.test.js",
+    "tests/webgpu-auto-recovery-qa.test.js",
+    "tests/webgpu-baked-walk.test.js",
+    "tests/webgpu-biome-props.test.js",
+    "tests/webgpu-chunk-batch.test.js",
+    "tests/webgpu-chunk-publication.test.js",
+    "tests/webgpu-confirmed-worker-clock.test.js",
+    "tests/webgpu-graphical-chunk-batch.test.js",
+    "tests/webgpu-grass-bootstrap-zero.test.js",
+    "tests/webgpu-grass-hidden-fluid.test.js",
+    "tests/webgpu-grass-local-eviction.test.js",
+    "tests/webgpu-grass-local-readmission-integration.test.js",
+    "tests/webgpu-grass-material.test.js",
+    "tests/webgpu-grass-owner.test.js",
+    "tests/webgpu-grass-temporal-recovery.test.js",
+    "tests/webgpu-guardian-worker-boundary.test.js",
+    "tests/webgpu-hidden-actor-motion.test.js",
+    "tests/webgpu-native-world-admission.test.js",
+    "tests/webgpu-pipeline-admission.test.js",
+    "tests/webgpu-prepared-terrain-removal.test.js",
+    "tests/webgpu-recovery-failure.test.js",
+    "tests/webgpu-resource-registry.test.js",
+    "tests/webgpu-settlement-height.test.js",
+    "tests/webgpu-settlement-terrain-retention.test.js",
+    "tests/webgpu-shared-shadow.test.js",
+    "tests/webgpu-surface-handoff.test.js",
+    "tests/webgpu-surface-owner.test.js",
+    "tests/webgpu-temporal-checkpoint.test.js",
+    "tests/webgpu-temporal-recovery-worker.test.js",
+    "tests/webgpu-temporal-terrain.test.js",
+    "tests/webgpu-terrain-motion-invalidation.test.js",
+    "tests/webgpu-terrain-residency.test.js",
+    "tests/webgpu-village-admission.test.js",
+    "tests/webgpu-village-preview.test.js",
+    "tests/webgpu-worker-action-retry.test.js",
+    "tests/webgpu-worker-baked-alert.test.js",
+    "tests/webgpu-worker-baked-carry.test.js",
+    "tests/webgpu-worker-baked-fall.test.js",
+    "tests/webgpu-worker-baked-getup.test.js",
+    "tests/webgpu-worker-baked-harvest.test.js",
+    "tests/webgpu-worker-baked-idle.test.js",
+    "tests/webgpu-worker-baked-plant.test.js",
+    "tests/webgpu-worker-baked-run.test.js",
+    "tests/webgpu-worker-baked-walk.test.js",
+    "tests/webgpu-worker-baked-water.test.js",
+    "tests/webgpu-worker-carry-roster.test.js",
+    "tests/webgpu-worker-carry-tool.test.js",
+    "tests/webgpu-worker-fall-roster.test.js",
+    "tests/webgpu-worker-getup-roster.test.js",
+    "tests/webgpu-worker-harvest-roster.test.js",
+    "tests/webgpu-worker-recovery-exit-motion.test.js",
+    "tests/webgpu-worker-roster.test.js",
+    "tests/webgpu-worker-run-roster.test.js",
+    "tests/webgpu-worker-water-tools.test.js",
+    "tests/webgpu-world-client-temporal-profile.test.js",
+    "tests/webgpu-world-client.test.js"
+  ],
+  "hardware": {
+    "carry": {
+      "receipt": "native-worker-world-owner-carry-shadow-source-20261114.json",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": ""
+      },
+      "block": {
+        "start": 1794644207319.3398,
+        "end": 1794644207819.42,
+        "blockedMs": 500.080078125,
+        "drawFrames": 15,
+        "minClock": 10.08248046875,
+        "maxClock": 11.9257001953125
+      },
+      "resourcesBeforeReuse": 2249,
+      "resourcesAfterReuse": 2249,
+      "initialRenderFactories": {
+        "createBuffer": 0,
+        "createTexture": 0,
+        "createSampler": 0,
+        "createBindGroup": 0,
+        "createBindGroupLayout": 0,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "replacementRenderFactories": {
+        "createBuffer": 0,
+        "createTexture": 0,
+        "createSampler": 0,
+        "createBindGroup": 0,
+        "createBindGroupLayout": 0,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "preparationDelta": {
+        "createBuffer": 90,
+        "createTexture": 1,
+        "createSampler": 1,
+        "createBindGroup": 48,
+        "createBindGroupLayout": 48,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "rig": {
+        "before": {
+          "attachments": [
+            {
+              "id": 573,
+              "geometry": 150,
+              "index": 0
+            },
+            {
+              "id": 574,
+              "geometry": 151,
+              "index": 1
+            },
+            {
+              "id": 575,
+              "geometry": 152,
+              "index": 2
+            },
+            {
+              "id": 576,
+              "geometry": 153,
+              "index": 3
+            },
+            {
+              "id": 577,
+              "geometry": 154,
+              "index": 4
+            },
+            {
+              "id": 578,
+              "geometry": 155,
+              "index": 5
+            },
+            {
+              "id": 579,
+              "geometry": 156,
+              "index": 6
+            },
+            {
+              "id": 580,
+              "geometry": 157,
+              "index": 7
+            },
+            {
+              "id": 581,
+              "geometry": 158,
+              "index": 8
+            }
+          ],
+          "poseHash": 2842450917
+        },
+        "after": {
+          "attachments": [
+            {
+              "id": 573,
+              "geometry": 150,
+              "index": 0
+            },
+            {
+              "id": 574,
+              "geometry": 151,
+              "index": 1
+            },
+            {
+              "id": 575,
+              "geometry": 152,
+              "index": 2
+            },
+            {
+              "id": 576,
+              "geometry": 153,
+              "index": 3
+            },
+            {
+              "id": 577,
+              "geometry": 154,
+              "index": 4
+            },
+            {
+              "id": 578,
+              "geometry": 155,
+              "index": 5
+            },
+            {
+              "id": 579,
+              "geometry": 156,
+              "index": 6
+            },
+            {
+              "id": 580,
+              "geometry": 157,
+              "index": 7
+            },
+            {
+              "id": 581,
+              "geometry": 158,
+              "index": 8
+            }
+          ],
+          "poseHash": 2842450917
+        },
+        "replaced": {
+          "attachments": [
+            {
+              "id": 573,
+              "geometry": 150,
+              "index": 0
+            },
+            {
+              "id": 574,
+              "geometry": 151,
+              "index": 1
+            },
+            {
+              "id": 575,
+              "geometry": 152,
+              "index": 2
+            },
+            {
+              "id": 576,
+              "geometry": 153,
+              "index": 3
+            },
+            {
+              "id": 577,
+              "geometry": 154,
+              "index": 4
+            },
+            {
+              "id": 578,
+              "geometry": 155,
+              "index": 5
+            },
+            {
+              "id": 579,
+              "geometry": 156,
+              "index": 6
+            },
+            {
+              "id": 580,
+              "geometry": 157,
+              "index": 7
+            },
+            {
+              "id": 581,
+              "geometry": 158,
+              "index": 8
+            }
+          ],
+          "poseHash": 2842450917
+        }
+      },
+      "transition": null,
+      "drained": true,
+      "errors": [],
+      "gpuErrors": 0
+    },
+    "runWalk": {
+      "receipt": "native-worker-world-owner-run-walk-shadow-source-20261114.json",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": ""
+      },
+      "block": {
+        "start": 1794644220585.625,
+        "end": 1794644221085.7,
+        "blockedMs": 500.074951171875,
+        "drawFrames": 15,
+        "minClock": 10.0841796875,
+        "maxClock": 11.921639648437507
+      },
+      "resourcesBeforeReuse": 1750,
+      "resourcesAfterReuse": 1750,
+      "initialRenderFactories": {
+        "createBuffer": 0,
+        "createTexture": 0,
+        "createSampler": 0,
+        "createBindGroup": 0,
+        "createBindGroupLayout": 0,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "replacementRenderFactories": {
+        "createBuffer": 0,
+        "createTexture": 0,
+        "createSampler": 0,
+        "createBindGroup": 0,
+        "createBindGroupLayout": 0,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "preparationDelta": {
+        "createBuffer": 27,
+        "createTexture": 1,
+        "createSampler": 1,
+        "createBindGroup": 12,
+        "createBindGroupLayout": 12,
+        "createPipelineLayout": 6,
+        "createShaderModule": 10,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 6,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "rig": null,
+      "transition": {
+        "at": 10.416666666666666,
+        "before": {
+          "x": 7.175999999999999,
+          "z": -11.800000015513103,
+          "distance": 0.9759999999999992,
+          "phase": 0.4066666666666663,
+          "yaw": 1.5707963426894676,
+          "firstRemainingPoint": 0,
+          "arrived": false,
+          "at": 10.406666666666666,
+          "duration": 10.601852558277272,
+          "runPhase": 0.4066666666666663,
+          "walkPhase": 0,
+          "carryPhase": 0,
+          "runDistance": 0.9759999999999992,
+          "walkDistance": 0,
+          "runRemaining": 0.0240000000000008,
+          "running": true,
+          "currentSpeed": 2.4000000000000004
+        },
+        "after": {
+          "x": 7.210799999999999,
+          "z": -11.800000016066233,
+          "distance": 1.0107999999999993,
+          "phase": 0.4266666666666659,
+          "yaw": 1.5707963426894676,
+          "firstRemainingPoint": 0,
+          "arrived": false,
+          "at": 10.426666666666666,
+          "duration": 10.601852558277272,
+          "runPhase": 0.41666666666666663,
+          "walkPhase": 0.014999999999998966,
+          "carryPhase": 0,
+          "runDistance": 1,
+          "walkDistance": 0.010799999999999255,
+          "runRemaining": 0,
+          "running": false,
+          "currentSpeed": 1.08
+        },
+        "drawsBefore": 3,
+        "drawsAfter": 12
+      },
+      "drained": true,
+      "errors": [],
+      "gpuErrors": 0
+    },
+    "environmentRestarts": "Forced Vite dependency reoptimization reloaded two initial attempts. Receipts from the stable freshly optimized server, not old optimized modules."
+  },
+  "build": {
+    "command": "VITE_WEBGPU_REMOTE_DRAW=true .cache/tooling/node20.exe node_modules/vite/bin/vite.js build",
+    "status": "passed",
+    "seconds": 42.82,
+    "log": ".cache/native-shadow-source-build.log",
+    "warnings": [
+      "Existing Vite chunk size advice."
+    ]
+  },
+  "browserSyntax": {
+    "status": "passed",
+    "log": ".cache/native-shadow-source-syntax.log"
+  },
+  "completeMigration": false,
+  "ordinaryNativeAutonomyEnabled": false,
+  "remaining": "Buffers/bind groups still prepared per changed material; memory/latency acceptance, Idle/gates/actions, persistent phases, ordinary producer/executor and all intents remain open."
+}

@@ -1,0 +1,249 @@
+{
+  "ready": true,
+  "campaign": false,
+  "entityCounts": {
+    "workers": 1,
+    "structures": 1,
+    "crops": 1,
+    "animals": 2
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 0,
+  "maxVisibleGuardians": 1,
+  "elapsed": 3032.019219999974,
+  "simulate": true,
+  "active": 0,
+  "origins": [],
+  "retainedAttacks": [],
+  "retainedDraws": 0,
+  "attackVisual": [],
+  "reused": 1,
+  "health": 28,
+  "animalState": "attacking",
+  "animalPosition": [
+    88.99638345830937,
+    -6.104098730530762
+  ],
+  "draws": 71,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "spirit_appear",
+      "at": 3024.020419999977,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3024.020419999977,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3024.1370199999774,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3024.1370199999774,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3024.2367199999776,
+      "emitter": "qa-beast-0",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3024.2367199999776,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3024.2367199999776,
+      "emitter": "qa-beast-1",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3024.2367199999776,
+      "emitter": "impact:qa-beast-1",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3026.1985199999767,
+      "emitter": "guardian-world",
+      "played": false
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 6.200000047683716,
+    "maxStepMs": 22,
+    "solverMs": 0,
+    "solverSteps": 0,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": {
+      "species": "hyena",
+      "captureMs": 0.30000007152557373,
+      "colliderFitMs": 2.0999999046325684,
+      "environmentMs": 0.30000007152557373,
+      "bodiesMs": 3.399999976158142
+    },
+    "recoveryFollowMs": 0,
+    "bakedActive": 0,
+    "kinematic": 0
+  },
+  "physicsWorlds": 0,
+  "physicalBodies": 0,
+  "allDown": [
+    {
+      "id": "qa-beast-0",
+      "x": 88.99638345830937,
+      "z": -6.104098730530762
+    },
+    {
+      "id": "qa-beast-1",
+      "x": 87.8426611092472,
+      "z": -3.6435640390131128
+    }
+  ],
+  "errors": [],
+  "report": {
+    "scope": "Real Attack cycles, continuous Game.tick and WorldScene. Diagnostic, not a paired before/after benchmark.",
+    "requestedImpacts": 2,
+    "headOn": true,
+    "rejectedPhysics": 0,
+    "completedSimulation": true,
+    "species": "hyena",
+    "direction": "auto",
+    "wallMs": 8409,
+    "simulationSeconds": 8.048499999997148,
+    "frames": 209,
+    "hiddenFrames": 0,
+    "metrics": {
+      "dt": {
+        "mean": 40.25885167464116,
+        "p95": 66.5,
+        "p99": 83.19999999999709,
+        "max": 83.40000000000146
+      },
+      "renderMs": {
+        "mean": 9.418181816926984,
+        "p95": 13.899999976158142,
+        "p99": 17,
+        "max": 18.899999976158142
+      },
+      "physicsTotal": {
+        "mean": 2.3449760806617554,
+        "p95": 5.300000071525574,
+        "p99": 6,
+        "max": 22
+      },
+      "solverMs": {
+        "mean": 1.4200956964036495,
+        "p95": 3.399999976158142,
+        "p99": 4.200000047683716,
+        "max": 5.099999904632568
+      },
+      "solverSteps": {
+        "mean": 1.923444976076555,
+        "p95": 3,
+        "p99": 3,
+        "max": 3
+      },
+      "creationMs": {
+        "mean": 0.07607655490984756,
+        "p95": 0,
+        "p99": 0,
+        "max": 15.899999976158142
+      },
+      "bindingMs": {
+        "mean": 0.12009569674587706,
+        "p95": 0.30000007152557373,
+        "p99": 0.5,
+        "max": 0.7000000476837158
+      },
+      "recoverySetupMs": {
+        "mean": 0.02296650694888174,
+        "p95": 0,
+        "p99": 0,
+        "max": 3.299999952316284
+      },
+      "recoveryFollowMs": {
+        "mean": 0.6354066971956828,
+        "p95": 2.100000023841858,
+        "p99": 2.600000023841858,
+        "max": 4.100000023841858
+      },
+      "recoveryMs": {
+        "mean": 0.3851674629740738,
+        "p95": 1.399999976158142,
+        "p99": 1.600000023841858,
+        "max": 1.899999976158142
+      },
+      "animationMs": {
+        "mean": 0.05837320654015792,
+        "p95": 0.2999999523162842,
+        "p99": 0.3999999761581421,
+        "max": 0.6000000238418579
+      },
+      "vfxMs": {
+        "mean": 0.3172248790138646,
+        "p95": 1.7999999523162842,
+        "p99": 2.3000000715255737,
+        "max": 2.6999999284744263
+      },
+      "draws": {
+        "mean": 71.42105263157895,
+        "p95": 83,
+        "p99": 88,
+        "max": 88
+      }
+    },
+    "peakActive": 2,
+    "peakBaked": 0,
+    "finalDownCount": 0,
+    "finalDown": null,
+    "memory": {
+      "geometries": 194,
+      "textures": 76
+    },
+    "heap": 426289842,
+    "errors": []
+  },
+  "commandCosts": [
+    {
+      "kind": "attack",
+      "plan": 1.2999999523162842,
+      "logic": 0.7000000476837158,
+      "render": 0,
+      "total": 2
+    },
+    {
+      "kind": "attack",
+      "plan": 1.100000023841858,
+      "logic": 0.10000002384185791,
+      "render": 0,
+      "total": 1.2000000476837158
+    }
+  ]
+}

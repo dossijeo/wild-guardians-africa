@@ -1,0 +1,209 @@
+{
+  "ok": true,
+  "backend": "WebGPU",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": ""
+  },
+  "mode": "prepared-native-delta",
+  "gpuErrors": 0,
+  "errors": [],
+  "scope": "Real native precommit resource proposal through the existing terrain channel and real product surface owners, one GPU device/draw Worker. Chunk removal/readmission, canonical prop removal/restoration and terrain changes, retaining unchanged GPU resources; one stationary worker. No ordinary gameplay activation, blocked-preparer locomotion or no-stutter acceptance.",
+  "disposalAndGpuDrainVerified": true,
+  "sourceArtifact": ".cache\\native-prepared-first-frame-outbox.json",
+  "sourceCommit": "a759a4212",
+  "mutations": [
+    {
+      "sequence": 2,
+      "mutation": {
+        "type": "removeChunks",
+        "chunks": [
+          [
+            -1,
+            -1
+          ]
+        ],
+        "releaseOnly": true
+      },
+      "physicalCommitAndProjectionMs": 2.099853515625,
+      "presentation": {
+        "phaseTimings": {
+          "stageCommittedPayloadsMs": 0.199951171875,
+          "armPreparedProposalMs": 0.2001953125,
+          "releaseNativeMutationMs": 0.89990234375,
+          "commitTerrainPublicationMs": 0.10009765625,
+          "deliverConfirmedBoundaryMs": 7.699951171875,
+          "activatePreparedBoundaryMs": 8.099853515625,
+          "firstRenderRoundTripMs": 51.2001953125
+        },
+        "firstPreparedAfterDrainMs": 69.10009765625,
+        "firstPreparedAfterNativeCommitMs": 67.000244140625,
+        "maxNativeFrameGapMs": 99.900146484375
+      },
+      "sendDelayMs": 20.39990234375,
+      "recordingMs": 6.0,
+      "factoriesDuringRecording": 0,
+      "resourcesPostedBeforeAck": 59
+    },
+    {
+      "sequence": 3,
+      "mutation": {
+        "type": "addChunk",
+        "cx": -1,
+        "cz": -1
+      },
+      "physicalCommitAndProjectionMs": 1.599853515625,
+      "presentation": {
+        "phaseTimings": {
+          "stageCommittedPayloadsMs": 0.900146484375,
+          "armPreparedProposalMs": 0.699951171875,
+          "releaseNativeMutationMs": 0.300048828125,
+          "commitTerrainPublicationMs": 0.39990234375,
+          "deliverConfirmedBoundaryMs": 8,
+          "activatePreparedBoundaryMs": 6.89990234375,
+          "firstRenderRoundTripMs": 39.900146484375
+        },
+        "firstPreparedAfterDrainMs": 57.60009765625,
+        "firstPreparedAfterNativeCommitMs": 56.000244140625,
+        "maxNativeFrameGapMs": 66.5
+      },
+      "sendDelayMs": 20.699951171875,
+      "recordingMs": 5.800048828125,
+      "factoriesDuringRecording": 8,
+      "resourcesPostedBeforeAck": 67
+    },
+    {
+      "sequence": 4,
+      "mutation": {
+        "type": "removeProp",
+        "group": 0,
+        "gx": -2,
+        "gz": -3
+      },
+      "physicalCommitAndProjectionMs": 0.89990234375,
+      "presentation": {
+        "phaseTimings": {
+          "stageCommittedPayloadsMs": 1.300048828125,
+          "armPreparedProposalMs": 2.39990234375,
+          "releaseNativeMutationMs": 0.10009765625,
+          "commitTerrainPublicationMs": 1.39990234375,
+          "deliverConfirmedBoundaryMs": 8.60009765625,
+          "activatePreparedBoundaryMs": 8.300048828125,
+          "firstRenderRoundTripMs": 34.2998046875
+        },
+        "firstPreparedAfterDrainMs": 56.300048828125,
+        "firstPreparedAfterNativeCommitMs": 55.400146484375,
+        "maxNativeFrameGapMs": 67
+      },
+      "sendDelayMs": 19.5,
+      "recordingMs": 5.2998046875,
+      "factoriesDuringRecording": 0,
+      "resourcesPostedBeforeAck": 59
+    },
+    {
+      "sequence": 5,
+      "mutation": {
+        "type": "restoreRemovedProps",
+        "records": []
+      },
+      "physicalCommitAndProjectionMs": 1.199951171875,
+      "presentation": {
+        "phaseTimings": {
+          "stageCommittedPayloadsMs": 0.60009765625,
+          "armPreparedProposalMs": 1,
+          "releaseNativeMutationMs": 0.099853515625,
+          "commitTerrainPublicationMs": 0.60009765625,
+          "deliverConfirmedBoundaryMs": 8,
+          "activatePreparedBoundaryMs": 13.5,
+          "firstRenderRoundTripMs": 56.60009765625
+        },
+        "firstPreparedAfterDrainMs": 80,
+        "firstPreparedAfterNativeCommitMs": 78.800048828125,
+        "maxNativeFrameGapMs": 100
+      },
+      "sendDelayMs": 19.699951171875,
+      "recordingMs": 4.5,
+      "factoriesDuringRecording": 0,
+      "resourcesPostedBeforeAck": 59
+    },
+    {
+      "sequence": 6,
+      "mutation": {
+        "type": "settlements",
+        "sites": [
+          {
+            "x": 60,
+            "z": -60,
+            "hx": 2,
+            "hz": 2
+          }
+        ]
+      },
+      "physicalCommitAndProjectionMs": 5.099853515625,
+      "presentation": {
+        "phaseTimings": {
+          "stageCommittedPayloadsMs": 1,
+          "armPreparedProposalMs": 1.60009765625,
+          "releaseNativeMutationMs": 0.099853515625,
+          "commitTerrainPublicationMs": 0.7001953125,
+          "deliverConfirmedBoundaryMs": 7.5,
+          "activatePreparedBoundaryMs": 13.2998046875,
+          "firstRenderRoundTripMs": 60.400146484375
+        },
+        "firstPreparedAfterDrainMs": 88.60009765625,
+        "firstPreparedAfterNativeCommitMs": 83.500244140625,
+        "maxNativeFrameGapMs": 100
+      },
+      "sendDelayMs": 23.39990234375,
+      "recordingMs": 4.60009765625,
+      "factoriesDuringRecording": 8,
+      "resourcesPostedBeforeAck": 67
+    },
+    {
+      "sequence": 7,
+      "mutation": {
+        "type": "settlements",
+        "replace": true,
+        "sites": [
+          {
+            "x": 20,
+            "z": 30,
+            "hx": 20,
+            "hz": 20
+          }
+        ]
+      },
+      "physicalCommitAndProjectionMs": 11.2998046875,
+      "presentation": {
+        "phaseTimings": {
+          "stageCommittedPayloadsMs": 2.300048828125,
+          "armPreparedProposalMs": 3.60009765625,
+          "releaseNativeMutationMs": 0.199951171875,
+          "commitTerrainPublicationMs": 1.699951171875,
+          "deliverConfirmedBoundaryMs": 7.400146484375,
+          "activatePreparedBoundaryMs": 26.599853515625,
+          "firstRenderRoundTripMs": 54.800048828125
+        },
+        "firstPreparedAfterDrainMs": 106.800048828125,
+        "firstPreparedAfterNativeCommitMs": 95.500244140625,
+        "maxNativeFrameGapMs": 133.300048828125
+      },
+      "sendDelayMs": 21.5,
+      "recordingMs": 5.0,
+      "factoriesDuringRecording": 20,
+      "resourcesPostedBeforeAck": 79
+    }
+  ],
+  "diagnosis": {
+    "lateAdmissionArtifact": ".cache/native-prepared-late-admission-origin.json",
+    "cpuProfileArtifact": ".cache/native-prepared-first-frame.cpuprofile",
+    "profileReport": ".cache/native-prepared-first-frame-profile.json",
+    "profileScope": "CDP sampling on the fixture presentation Worker, last mutation endFrameCalledAt through sendStartedAt; diagnostic instrumentation, not acceptance timing.",
+    "lastWindowMs": 23.2001953125,
+    "sampledProjectExecuteMs": 20.92,
+    "lateCandidateChildren": 9,
+    "lateRequester": "webgpu-replacement-slot.js prepareAndPublish, confirmed village layout invalidated by terrainEpoch"
+  }
+}

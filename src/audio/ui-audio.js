@@ -44,7 +44,8 @@ export class UiAudio {
 }
 
 // Read the currently displayed guide; no procedural/pathfinding query on input.
-export function guidedPlacementKind(tool,hands){
-  const kind=tool?.kind;if(!['center','plant'].includes(kind)||!hands?.mesh?.visible||hands.adapter?.phase!=='reading')return null;
+export function guidedPlacementKind(tool,hands,guide=null){
+  const kind=tool?.kind;if(guide&&['center','plant'].includes(kind)&&guide.target===(kind==='center'?'center-site':'plant-site'))return kind;
+  if(!['center','plant'].includes(kind)||!hands?.mesh?.visible||hands.adapter?.phase!=='reading')return null;
   return hands.hints?.custom?.target===(kind==='center'?'center-site':'plant-site')?kind:null;
 }

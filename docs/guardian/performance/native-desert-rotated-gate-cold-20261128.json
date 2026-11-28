@@ -1,0 +1,35 @@
+{
+  "scope": "Public save of a gate bought in the initial construction phase in Desert 712. Cold reload and ordinary removal at elapsed zero, before hiring and the first raid.",
+  "source": {
+    "snapshotSha256": "467e45de79194c7a4962211bdd75a2a6084277048372918ef49c0dceb2009027",
+    "fixture": "tests/fixtures/desierto712-native-gate-prehire.json.gz",
+    "fixtureSha256": "3345c418cfe821411b6f7e165f254b2f15b8b998d5cc4cd4053415ed5aa676d2",
+    "entity": "structure-7",
+    "material": "zarzas",
+    "position": [97, 6],
+    "yaw": 1.5707963267948966,
+    "collisionIds": [1, 2, 3],
+    "balanceAfterPurchase": 390,
+    "firstProxyHalfX": {"boughtNative": 0.42091476917266846, "reconstructedJavaScript": 0.42091473937034607}
+  },
+  "control": {
+    "before": "Native world bootstrap reconstruction mismatch",
+    "after": "Exact spatial state and ownership round trip. Removal uses the original projection IDs. Legacy exact JavaScript geometry restores. Modified geometry, mask and owner order reject.",
+    "beforeTapSha256": "201bef6a1c14e253041b9073e331700a9fc5d4e1355140f918ae3c2c7a5d826d",
+    "afterTapSha256": "7173bcf1a64cb9fb8ed7585a1375e96f3ee4e33b241597997c6a5da9ab2aedb2"
+  },
+  "physical": {
+    "adapter": {"vendor": "nvidia", "architecture": "turing"},
+    "restored": {"draw": 11, "visibleMeshes": 1, "opening": 0, "balance": 390},
+    "removed": {"preparedTicket": 1, "acquiredTicket": 2, "mechanismId": 1, "collisionIds": [1, 2, 3], "absencePublication": 4, "draw": 15, "wallRemovedEvents": 1, "refund": 10, "balance": 400},
+    "drained": true,
+    "errors": [],
+    "receiptSha256": "9554f69ba26bd94b01594a2960523742f276080a1baacdafeafd3c948c0ba9b3"
+  },
+  "native": {
+    "standaloneSha256": "ddbb80da1970f617dd9108ee16d5ead93272cc0f252aef9be7becde70f677390",
+    "pthreadSha256": "ea56e77c74d5a07560198f16098bd4637cb2f3134e22908353c7411774ae8285",
+    "pthreadLoaderSha256": "2390d611e9a7b896a60d6983ad8ee0ee91f0694d9959723e1e8862a8a903de66"
+  },
+  "regression": {"passed": 56, "failed": 0, "skipped": 0, "productionBuild": true}
+}

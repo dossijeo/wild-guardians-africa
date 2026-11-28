@@ -1,0 +1,99 @@
+{
+  "base": "68ed9dc79341d17eea0f02f10cfb04e6094711da",
+  "scope": "Desert with one native animal and a selected center. Both Draws use NVIDIA Turing. The original Draw calls the GPU queue fence for the prepared packet. The audit withholds its acknowledgement until device loss. This controls acknowledgement delivery and does not measure when the physical queue drained. Hosted replays its pending step after the first replacement submission.",
+  "raw": {
+    "file": "center-ruin-fence-loss-nvidia-20261128.json",
+    "sha256": "ea945bc8a64e1e2032e00e24127aae993aaaaeadc8a9062c827d30c28441ba8c"
+  },
+  "inputs": {
+    ".cache/center-ruin-fence-loss-physical.mjs": "9d000c7225a218a1b8d1ad3a8f11c4254421b643214bf55425fa9c60ab972f75",
+    ".cache/center-ruin-fence-loss-browser.mjs": "2a87d598657a9b169896ef78588fc8002586b278d582230891231898b559505a",
+    ".cache/center-ruin-fence-loss-worker.mjs": "612b0f0c67bf8e865b7bb20ffd11aca5e038c3ff0df084bdf03c5ee70d3e7188",
+    ".cache/center-ruin-active-strike-input.json": "3c0c2c34cd9206a1dbed07db59369ab0264d68f16e0eb8301da02d2c1f7742fa",
+    "src/simulation/native-intent-control-cohort.js": "0c72eb550f97ba314552a41a25d4e575222cba77a0af509b74a9d9cbadaa5e50",
+    "src/simulation/simulation-authority.js": "26d389753b3f5dcae52bb0de99f7b7add4413c1e314d3b9a99628885cf5e81ec"
+  },
+  "original": {
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 119.7999999821186
+      }
+    },
+    "epoch": "d5488da4-f047-474b-87e1-b0930cf161ab/1",
+    "bodyId": 1,
+    "approachTicket": 14,
+    "endpoint": 37.32300000000029,
+    "lossAt": 37.35800000000029,
+    "preparedRuinRequest": 9,
+    "abandonedRuinTicket": 16,
+    "plannedRuinTime": 37.37800000000029,
+    "queuedStepsAtLoss": 3,
+    "mutationFence": {
+      "hold": 8,
+      "ticket": 16,
+      "elapsed": 37.35800000000029,
+      "preparedFrameSequence": 290,
+      "ackSent": false
+    }
+  },
+  "replacement": {
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 76.59999999403954
+      }
+    },
+    "checkpoint": 521,
+    "publication": 536,
+    "firstFrame": 1,
+    "elapsed": 37.35800000000029,
+    "age": 2.1964406967163086,
+    "bodyId": 1,
+    "worldTicket": 14,
+    "centerBodyVisible": true,
+    "picked": "animal-1000001",
+    "pickReads": 6
+  },
+  "ruin": {
+    "event": "event-29218",
+    "center": "structure-1000000",
+    "polygon": 10,
+    "ticket": 17,
+    "at": 37.37800000000029,
+    "frame": 4,
+    "count": 1,
+    "smoke": 86,
+    "debris": 270
+  },
+  "strike": {
+    "id": "attack-29219",
+    "ticket": 19,
+    "bodyId": 1,
+    "at": 42.02800000000069,
+    "count": 1,
+    "hp": 580
+  },
+  "retreat": {
+    "absentFrame": 112,
+    "drained": true
+  }
+}

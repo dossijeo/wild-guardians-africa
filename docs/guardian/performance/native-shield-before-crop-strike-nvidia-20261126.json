@@ -1,0 +1,291 @@
+{
+  "qualification": "DEV",
+  "observedDisplayHz": 30,
+  "frameBudgetMs": 16.666666666666668,
+  "versions": {
+    "standalone": "8e5da5c6532e9c2a097bbe75dc27b070c1221c9490a7c6dabcdfd137309ac64c",
+    "pthread": "228de3b8fecda0bd20738bf4706e9558628cf3e5adc68eb10b178f69a43902c2"
+  },
+  "entries": [
+    {
+      "variant": "moving",
+      "body": 1,
+      "checkpoint": {
+        "sequence": 445,
+        "elapsed": 396.94999999998714
+      },
+      "border": {
+        "sequence": 50,
+        "ticket": 5,
+        "effectiveTime": 381.10000000000156,
+        "clockElapsed": 381.10000000000156,
+        "bindings": [
+          {
+            "relativeTime": 0,
+            "executionEpoch": 381.10000000000156,
+            "preparedTicket": 4,
+            "generation": 8,
+            "targetId": 373,
+            "bodyId": 1
+          }
+        ],
+        "origin": {
+          "x": 84,
+          "z": 30.51480569445,
+          "yaw": 3.141592653589793,
+          "phase": 4.497729763870326
+        },
+        "endTime": 395.7961249451527
+      },
+      "ready4": {
+        "version": 1,
+        "authorityEpoch": "0beed97d-233d-44ca-a29f-dd929fb93b2c/1",
+        "nativeSession": 1,
+        "ticket": 6,
+        "effectiveTime": 394.9999999999889
+      },
+      "heldElapsed": 394.94999999998896,
+      "expiry": {
+        "sequence": 192,
+        "ticket": 6,
+        "effectiveTime": 394.9999999999889,
+        "clockElapsed": 395.04999999998887,
+        "bindings": []
+      },
+      "stop": {
+        "version": 1,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "0beed97d-233d-44ca-a29f-dd929fb93b2c/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 394.9999999999889
+        },
+        "slot": 0,
+        "removal": true,
+        "running": false,
+        "actorId": 396,
+        "assignmentSequence": 14,
+        "generation": 8,
+        "bodyId": 1,
+        "targetId": 373,
+        "routeTicket": 5,
+        "x": 88.30216498850992,
+        "z": 11,
+        "phase": 18.397729763857683,
+        "yaw": 1.5707963267948966
+      },
+      "replacement": {
+        "sequence": 193,
+        "ticket": 8,
+        "effectiveTime": 396.84999999998723,
+        "clockElapsed": 396.84999999998723,
+        "bindings": [
+          {
+            "relativeTime": 0,
+            "executionEpoch": 396.84999999998723,
+            "preparedTicket": 7,
+            "generation": 13,
+            "targetId": 373,
+            "bodyId": 1
+          }
+        ],
+        "origin": {
+          "x": 88.30216498850992,
+          "z": 11,
+          "yaw": 1.5707963267948966,
+          "phase": 18.397729763857683
+        },
+        "endTime": 399.22458400544485
+      },
+      "abortedStrike": false,
+      "drain": {
+        "disposed": true
+      },
+      "intervals": {
+        "count": 1023,
+        "overBudget": 1023,
+        "p95": 35,
+        "p99": 36.599853515625,
+        "maximum": {
+          "at": 1795654751958.5,
+          "sequence": 35,
+          "trigger": "raf",
+          "nativeWorldBoundary": null,
+          "intervalMs": 38.199951171875,
+          "drawMs": 3.10009765625,
+          "replay": true,
+          "clockElapsed": 375.0000000000071,
+          "safeUntil": 375.0000000000071,
+          "cameraVersion": null
+        },
+        "maximumOpportunities": []
+      },
+      "hardware": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 125.79999999888241
+        }
+      },
+      "browser": "158.0.4370.33",
+      "evidence": {
+        "path": ".cache/shield-protected-crop/before-strike-moving.json",
+        "sha256": "c2e72d135f6e355690d528c197c02de7aee58fd0324bf166dc9a7777c3ec4150",
+        "traceSha256": "4d6acd82df9ccf05347267334b50e42d8dcf2ec0d665a4be67ebfd2050cb028e",
+        "traceLoss": false
+      }
+    },
+    {
+      "variant": "arrived",
+      "body": 1,
+      "checkpoint": {
+        "sequence": 456,
+        "elapsed": 397.4499999999867
+      },
+      "border": {
+        "sequence": 59,
+        "ticket": 5,
+        "effectiveTime": 378.1000000000043,
+        "clockElapsed": 378.1000000000043,
+        "bindings": [
+          {
+            "relativeTime": 0,
+            "executionEpoch": 378.1000000000043,
+            "preparedTicket": 4,
+            "generation": 8,
+            "targetId": 373,
+            "bodyId": 1
+          }
+        ],
+        "origin": {
+          "x": 84,
+          "z": 30.51480569445,
+          "yaw": 3.141592653589793,
+          "phase": 4.497729763870326
+        },
+        "endTime": 392.79612494515544
+      },
+      "ready4": {
+        "version": 1,
+        "authorityEpoch": "7a27ec51-b31c-40fa-b7ec-b4f1edd1c34b/1",
+        "nativeSession": 1,
+        "ticket": 7,
+        "effectiveTime": 394.9999999999889
+      },
+      "heldElapsed": 394.94999999998896,
+      "expiry": {
+        "sequence": 215,
+        "ticket": 7,
+        "effectiveTime": 394.9999999999889,
+        "clockElapsed": 394.9999999999889,
+        "bindings": []
+      },
+      "stop": {
+        "version": 1,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "7a27ec51-b31c-40fa-b7ec-b4f1edd1c34b/1",
+          "nativeSession": 1,
+          "ticket": 7,
+          "effectiveTime": 394.9999999999889
+        },
+        "slot": 0,
+        "removal": true,
+        "running": false,
+        "actorId": 396,
+        "assignmentSequence": 14,
+        "generation": 8,
+        "bodyId": 1,
+        "targetId": 373,
+        "routeTicket": 5,
+        "x": 89.20535278320312,
+        "z": 10.54811954498291,
+        "phase": 19.19385470902147,
+        "yaw": 2.715052140753473
+      },
+      "replacement": {
+        "sequence": 216,
+        "ticket": 9,
+        "effectiveTime": 397.3499999999868,
+        "clockElapsed": 397.3499999999868,
+        "bindings": [
+          {
+            "relativeTime": 0,
+            "executionEpoch": 397.3499999999868,
+            "preparedTicket": 8,
+            "generation": 13,
+            "targetId": 373,
+            "bodyId": 1
+          }
+        ],
+        "origin": {
+          "x": 89.20535278320312,
+          "z": 10.54811954498291,
+          "yaw": 2.715052140753473,
+          "phase": 19.19385470902147
+        },
+        "endTime": 398.31666627385243
+      },
+      "abortedStrike": true,
+      "drain": {
+        "disposed": true
+      },
+      "intervals": {
+        "count": 1092,
+        "overBudget": 1092,
+        "p95": 34.800048828125,
+        "p99": 36.400146484375,
+        "maximum": {
+          "at": 1795655163760.1,
+          "sequence": 51,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "7a27ec51-b31c-40fa-b7ec-b4f1edd1c34b/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 375.0000000000071
+          },
+          "intervalMs": 39.400146484375,
+          "drawMs": 4.699951171875,
+          "replay": true,
+          "clockElapsed": 375.0000000000071,
+          "safeUntil": 375.0000000000071,
+          "cameraVersion": null
+        },
+        "maximumOpportunities": []
+      },
+      "hardware": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 106.70000000111759
+        }
+      },
+      "browser": "158.0.4370.33",
+      "evidence": {
+        "path": ".cache/shield-protected-crop/before-strike-arrived-bounded.json",
+        "sha256": "5117eada7d9ddbccf45ad383e1ca2b513c5d7a53a685deb283a05e86ff24946d",
+        "traceSha256": "5d4e437524a12ec329b1fb1e04dc7e8eb575c5bea51440fa26a05828e9af628b",
+        "traceLoss": false
+      }
+    }
+  ]
+}

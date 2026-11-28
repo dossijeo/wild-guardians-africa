@@ -1,0 +1,830 @@
+{
+  "scope": "After correcting the short deadline, instrumentation showed activation frozen at the admission watermark without a candidate. The graphics queue had already drained. This exposed the missing renewal permission during activation.",
+  "status": {
+    "running": true,
+    "closed": false,
+    "fault": null,
+    "busy": false,
+    "queued": 8,
+    "pendingSteps": 718,
+    "pendingChunks": 0,
+    "confirmedSequence": 194,
+    "confirmedElapsed": 15.749744999994991,
+    "tutorialUpdate": {
+      "needed": true,
+      "narrated": "magic.shield"
+    },
+    "saveAvailable": true,
+    "farQuery": {
+      "mode": "replica",
+      "state": "ready",
+      "failure": null,
+      "pending": null,
+      "outstanding": null,
+      "revision": 4,
+      "pendingRevision": 4,
+      "expectedSequence": null,
+      "expectedRevision": null,
+      "dispatchAllowed": true,
+      "blockers": {
+        "tutorialCommand": 3,
+        "snapshot": 1
+      }
+    },
+    "outbox": {
+      "inFlight": 0,
+      "queued": 0,
+      "coalesced": 12,
+      "acknowledged": 194,
+      "foldedViewCount": 0,
+      "capacity": {
+        "queued": 256,
+        "snapshotChars": 134217728,
+        "eventFacts": 65536,
+        "bytes": 536870912
+      },
+      "retained": {
+        "snapshotChars": 0,
+        "eventFacts": 0,
+        "bytes": 0
+      }
+    },
+    "recoveryBaseSequence": 66,
+    "recoveryBaseBytes": 4253728,
+    "recoveryJournal": {
+      "base": 66,
+      "candidate": null,
+      "through": 194,
+      "entries": 128,
+      "bytes": 49502104,
+      "entryBytes": 43243920,
+      "overheadBytes": 6258184,
+      "capacity": 256,
+      "highWatermark": 128,
+      "maxBytes": 268435456,
+      "highWatermarkBytes": 201326592,
+      "pendingTerrain": false,
+      "saturated": true,
+      "encoderFault": false,
+      "checkpointDeferred": false,
+      "checkpointRetry": false,
+      "closed": false
+    },
+    "recoveryFault": null,
+    "pendingRecoveryRequests": [
+      "attachVisualRecovery"
+    ],
+    "visualDispatchBlocked": true,
+    "visualDispatchReason": "Visual recovery has not published a confirmed surface; commands are blocked",
+    "tutorialGuideRevision": null
+  },
+  "state": {
+    "closed": false,
+    "sequence": 66,
+    "lastElapsed": 6.499744999995189,
+    "fault": false,
+    "historicalEventMetrics": {
+      "starts": 0,
+      "boundaries": 0,
+      "events": 0,
+      "completed": 0
+    },
+    "historicalEventRejection": null,
+    "timing": {
+      "samples": 0,
+      "decode": null,
+      "reconcile": null,
+      "hooks": null,
+      "total": null
+    }
+  },
+  "preparation": {
+    "admission": {
+      "closed": false,
+      "queued": 14,
+      "active": true,
+      "inflightCompiles": 1,
+      "shadowWaiters": 0,
+      "uploads": 25,
+      "structuralRevision": 1,
+      "compilesStarted": 213,
+      "compilesSettled": 212,
+      "queueHead": [
+        {
+          "name": "Group",
+          "meshCount": 8,
+          "meshes": [
+            {
+              "name": "Mesh_0_1",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh_0_2",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "WarthogOralAnatomy",
+              "ground": false,
+              "slot": null,
+              "material": "Warthog oral tissue"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Warthog oral tissue"
+            }
+          ]
+        },
+        {
+          "name": "Group",
+          "meshCount": 10,
+          "meshes": [
+            {
+              "name": "LionOralAnatomy",
+              "ground": false,
+              "slot": null,
+              "material": "LionOralTissue"
+            },
+            {
+              "name": "Mesh_0_1",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh_0_2",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "RearCloth",
+              "ground": false,
+              "slot": null,
+              "material": "Rear cloth"
+            }
+          ]
+        },
+        {
+          "name": "Group",
+          "meshCount": 8,
+          "meshes": [
+            {
+              "name": "Mesh_0_1",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh_0_2",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "WarthogOralAnatomy",
+              "ground": false,
+              "slot": null,
+              "material": "Warthog oral tissue"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Warthog oral tissue"
+            }
+          ]
+        },
+        {
+          "name": "Group",
+          "meshCount": 8,
+          "meshes": [
+            {
+              "name": "Mesh_0_1",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh_0_2",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "WarthogOralAnatomy",
+              "ground": false,
+              "slot": null,
+              "material": "Warthog oral tissue"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Warthog oral tissue"
+            }
+          ]
+        },
+        {
+          "name": "Group",
+          "meshCount": 8,
+          "meshes": [
+            {
+              "name": "Mesh_0_1",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh_0_2",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "WarthogOralAnatomy",
+              "ground": false,
+              "slot": null,
+              "material": "Warthog oral tissue"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Warthog oral tissue"
+            }
+          ]
+        },
+        {
+          "name": "Group",
+          "meshCount": 8,
+          "meshes": [
+            {
+              "name": "Mesh_0_1",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0 muzzle repair authoring"
+            },
+            {
+              "name": "Mesh_0_2",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs muzzle repair authoring"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0 muzzle repair authoring"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs muzzle repair authoring"
+            },
+            {
+              "name": "OralCavity",
+              "ground": false,
+              "slot": null,
+              "material": "Oral surfaces"
+            },
+            {
+              "name": "FacialLids",
+              "ground": false,
+              "slot": null,
+              "material": "Original fur eyelid atlas"
+            }
+          ]
+        },
+        {
+          "name": "Group",
+          "meshCount": 8,
+          "meshes": [
+            {
+              "name": "Mesh_0_1",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh_0_2",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "WarthogOralAnatomy",
+              "ground": false,
+              "slot": null,
+              "material": "Warthog oral tissue"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Warthog oral tissue"
+            }
+          ]
+        },
+        {
+          "name": "Group",
+          "meshCount": 8,
+          "meshes": [
+            {
+              "name": "Mesh_0_1",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh_0_2",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "WarthogOralAnatomy",
+              "ground": false,
+              "slot": null,
+              "material": "Warthog oral tissue"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Warthog oral tissue"
+            }
+          ]
+        }
+      ],
+      "queueTail": [
+        {
+          "name": "Group",
+          "meshCount": 8,
+          "meshes": [
+            {
+              "name": "Mesh_0_1",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh_0_2",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "WarthogOralAnatomy",
+              "ground": false,
+              "slot": null,
+              "material": "Warthog oral tissue"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Warthog oral tissue"
+            }
+          ]
+        },
+        {
+          "name": "Group",
+          "meshCount": 8,
+          "meshes": [
+            {
+              "name": "Mesh_0_1",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh_0_2",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "WarthogOralAnatomy",
+              "ground": false,
+              "slot": null,
+              "material": "Warthog oral tissue"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Warthog oral tissue"
+            }
+          ]
+        },
+        {
+          "name": "Group",
+          "meshCount": 8,
+          "meshes": [
+            {
+              "name": "Mesh_0_1",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh_0_2",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "WarthogOralAnatomy",
+              "ground": false,
+              "slot": null,
+              "material": "Warthog oral tissue"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Warthog oral tissue"
+            }
+          ]
+        },
+        {
+          "name": "Group",
+          "meshCount": 8,
+          "meshes": [
+            {
+              "name": "Mesh_0_1",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh_0_2",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "WarthogOralAnatomy",
+              "ground": false,
+              "slot": null,
+              "material": "Warthog oral tissue"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Warthog oral tissue"
+            }
+          ]
+        },
+        {
+          "name": "Group",
+          "meshCount": 8,
+          "meshes": [
+            {
+              "name": "Mesh_0_1",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh_0_2",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "WarthogOralAnatomy",
+              "ground": false,
+              "slot": null,
+              "material": "Warthog oral tissue"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Warthog oral tissue"
+            }
+          ]
+        },
+        {
+          "name": "Group",
+          "meshCount": 8,
+          "meshes": [
+            {
+              "name": "Mesh_0_1",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh_0_2",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Mane repairs"
+            },
+            {
+              "name": "WarthogOralAnatomy",
+              "ground": false,
+              "slot": null,
+              "material": "Warthog oral tissue"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Warthog oral tissue"
+            }
+          ]
+        },
+        {
+          "name": "Group",
+          "meshCount": 6,
+          "meshes": [
+            {
+              "name": "BuffaloOralAnatomy",
+              "ground": false,
+              "slot": null,
+              "material": "Buffalo oral tissue"
+            },
+            {
+              "name": "Mesh_0",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Buffalo oral tissue"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Material_0"
+            },
+            {
+              "name": "ActorFacialLids",
+              "ground": false,
+              "slot": null,
+              "material": "Actor eyelid original fur"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "Actor eyelid original fur"
+            }
+          ]
+        },
+        {
+          "name": "Group",
+          "meshCount": 10,
+          "meshes": [
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "MeshStandardNodeMaterial"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "MeshStandardNodeMaterial"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "MeshStandardNodeMaterial"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "MeshStandardNodeMaterial"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "MeshStandardNodeMaterial"
+            },
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "MeshStandardNodeMaterial"
+            }
+          ]
+        }
+      ],
+      "compiling": [
+        {
+          "name": "Mesh",
+          "meshCount": 1,
+          "meshes": [
+            {
+              "name": "Mesh",
+              "ground": false,
+              "slot": null,
+              "material": "atlas_1"
+            }
+          ],
+          "ageMs": 1.6950000002980232,
+          "children": []
+        }
+      ]
+    },
+    "timeline": {
+      "pending": 0,
+      "bytes": 0,
+      "waiting": false,
+      "waitingBytes": 0,
+      "receivedSequence": 66,
+      "receivedElapsed": 6.499744999995189,
+      "target": 6.499744999995189,
+      "negotiated": false
+    },
+    "pump": {
+      "closed": false,
+      "lastClock": null,
+      "historicalPending": null,
+      "historicalHold": null,
+      "historicalFallback": null
+    }
+  },
+  "auto": {
+    "closed": false,
+    "blocked": false,
+    "recovering": true,
+    "stage": "retry",
+    "current": true
+  }
+}

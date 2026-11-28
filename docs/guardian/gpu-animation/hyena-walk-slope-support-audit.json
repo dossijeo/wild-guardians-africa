@@ -1,0 +1,4059 @@
+{
+  "scope": "Offline hyena Walking on flat and synthetic slopes plus sampled native Wild Engine savanna and island-network mangrove terrain, three fixed root yaws; sampled points are not validated for navigation or obstacles; exact current CPU foot support is applied to original pose, while an experimental CPU reconstruction of interpolated baked matrices computes the same support correction. Compares all vertices with >50% foot/toe weight; mesh transforms still come from original evaluated rig. No actual GPU, animated morphs, irregular terrain, temporal sliding, collision/obstacles, runtime cost, simulation, image/video or other species.",
+  "feet": 552,
+  "contactSamples": 16,
+  "byKind": {
+    "sample": {
+      "cases": 105,
+      "maxLiftDifference": 3.091566891377795e-9,
+      "maxFootPositionError": 1.9477742081990587e-8,
+      "maxHorizontalDifference": 1.8849209804375864e-8,
+      "worstReferenceClearance": -0.0023870325737841806,
+      "worstBakedClearance": -0.002387032587984901
+    },
+    "midpoint": {
+      "cases": 105,
+      "maxLiftDifference": 0.0014362558025400318,
+      "maxFootPositionError": 0.005930418842747367,
+      "maxHorizontalDifference": 0.0051276692583475765,
+      "worstReferenceClearance": -0.0019623190421499855,
+      "worstBakedClearance": -0.001947754220294997
+    }
+  },
+  "terrains": [
+    {
+      "name": "plane:0,0",
+      "tx": 4,
+      "tz": 3,
+      "slope": 0
+    },
+    {
+      "name": "plane:0.2,-0.1",
+      "tx": 4,
+      "tz": 3,
+      "slope": 0.223606797749979
+    },
+    {
+      "name": "plane:-0.2,0.1",
+      "tx": 4,
+      "tz": 3,
+      "slope": 0.223606797749979
+    },
+    {
+      "name": "native:mangrove:0",
+      "tx": -40,
+      "tz": -40,
+      "slope": 0
+    },
+    {
+      "name": "native:savanna:0.05",
+      "tx": 0,
+      "tz": 15,
+      "slope": 0.050043103522472474
+    },
+    {
+      "name": "native:savanna:0.15",
+      "tx": 30,
+      "tz": 15,
+      "slope": 0.15026110015671923
+    },
+    {
+      "name": "native:savanna:0.25",
+      "tx": 15,
+      "tz": -35,
+      "slope": 0.2459625540364157
+    }
+  ],
+  "rows": [
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999974,
+      "bakedMinimumFootClearance": 0.022000000920235914,
+      "maxFootPositionError": 6.609393274772288e-9,
+      "maxHorizontalDifference": 6.456698610685712e-9,
+      "rmsFootPositionError": 3.5664972655939018e-9
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.016666666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02199999999999998,
+      "bakedMinimumFootClearance": 0.022000003008222437,
+      "maxFootPositionError": 0.00048347257637995037,
+      "maxHorizontalDifference": 0.00018621437407495008,
+      "rmsFootPositionError": 0.0003271841429215156
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0.13333333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999954,
+      "bakedMinimumFootClearance": 0.021999999084657648,
+      "maxFootPositionError": 1.2408789117798031e-8,
+      "maxHorizontalDifference": 1.2362057803401777e-8,
+      "rmsFootPositionError": 7.524354545178918e-9
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.15,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.022000000000000075,
+      "bakedMinimumFootClearance": 0.022000000803302354,
+      "maxFootPositionError": 0.0010190818127301731,
+      "maxHorizontalDifference": 0.0007311717830887187,
+      "rmsFootPositionError": 0.0007196276139790847
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02199999999999996,
+      "bakedMinimumFootClearance": 0.021999999824962403,
+      "maxFootPositionError": 1.0802694962026996e-8,
+      "maxHorizontalDifference": 1.0802199143250586e-8,
+      "rmsFootPositionError": 6.620104453071036e-9
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.022000000000000044,
+      "bakedMinimumFootClearance": 0.02199999998221961,
+      "maxFootPositionError": 0.0059304188427425995,
+      "maxHorizontalDifference": 0.005127669258341835,
+      "rmsFootPositionError": 0.0033951724534696057
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0.6666666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999985,
+      "bakedMinimumFootClearance": 0.021999999596677516,
+      "maxFootPositionError": 1.886638993000885e-8,
+      "maxHorizontalDifference": 1.8849194308416963e-8,
+      "rmsFootPositionError": 1.2834773114041532e-8
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.6833333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02200000000000002,
+      "bakedMinimumFootClearance": 0.022000002113214637,
+      "maxFootPositionError": 0.0015713060474221315,
+      "maxHorizontalDifference": 0.0008902231932872266,
+      "rmsFootPositionError": 0.0012009278984411891
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 1,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02199999999999999,
+      "bakedMinimumFootClearance": 0.0220000000435921,
+      "maxFootPositionError": 1.2060267525152606e-8,
+      "maxHorizontalDifference": 1.2060188739893198e-8,
+      "rmsFootPositionError": 7.648382386845649e-9
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 1.0166666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999957,
+      "bakedMinimumFootClearance": 0.022000018382724862,
+      "maxFootPositionError": 0.0005006840358754295,
+      "maxHorizontalDifference": 0.00032047035249236575,
+      "rmsFootPositionError": 0.00032254722777679955
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02199999999999997,
+      "bakedMinimumFootClearance": 0.02200000092023591,
+      "maxFootPositionError": 6.609393072310973e-9,
+      "maxHorizontalDifference": 6.456698403436384e-9,
+      "rmsFootPositionError": 3.566497404105725e-9
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.016666666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02199999999999998,
+      "bakedMinimumFootClearance": 0.022000003008222437,
+      "maxFootPositionError": 0.00048347257638001266,
+      "maxHorizontalDifference": 0.0001862143740761528,
+      "rmsFootPositionError": 0.00032718414292166214
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0.13333333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999954,
+      "bakedMinimumFootClearance": 0.021999999084657648,
+      "maxFootPositionError": 1.2408788875230026e-8,
+      "maxHorizontalDifference": 1.2362057559916811e-8,
+      "rmsFootPositionError": 7.524354502295012e-9
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.15,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02200000000000007,
+      "bakedMinimumFootClearance": 0.02200000080330235,
+      "maxFootPositionError": 0.0010190818127308616,
+      "maxHorizontalDifference": 0.0007311717830896647,
+      "rmsFootPositionError": 0.0007196276139787249
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02199999999999996,
+      "bakedMinimumFootClearance": 0.021999999824962403,
+      "maxFootPositionError": 1.0802694473127964e-8,
+      "maxHorizontalDifference": 1.080219865432911e-8,
+      "rmsFootPositionError": 6.620104225228282e-9
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02200000000000004,
+      "bakedMinimumFootClearance": 0.02199999998221961,
+      "maxFootPositionError": 0.005930418842742606,
+      "maxHorizontalDifference": 0.005127669258341843,
+      "rmsFootPositionError": 0.003395172453469685
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0.6666666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02199999999999998,
+      "bakedMinimumFootClearance": 0.021999999596677512,
+      "maxFootPositionError": 1.8866388795779552e-8,
+      "maxHorizontalDifference": 1.8849193173449396e-8,
+      "rmsFootPositionError": 1.2834772768936131e-8
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.6833333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.022000000000000016,
+      "bakedMinimumFootClearance": 0.022000002113214637,
+      "maxFootPositionError": 0.0015713060474221874,
+      "maxHorizontalDifference": 0.000890223193287133,
+      "rmsFootPositionError": 0.0012009278984410898
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 1,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02199999999999999,
+      "bakedMinimumFootClearance": 0.022000000043592097,
+      "maxFootPositionError": 1.206026808297192e-8,
+      "maxHorizontalDifference": 1.2060189297728697e-8,
+      "rmsFootPositionError": 7.648382737617492e-9
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 1.0166666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999954,
+      "bakedMinimumFootClearance": 0.022000018382724862,
+      "maxFootPositionError": 0.0005006840358762258,
+      "maxHorizontalDifference": 0.00032047035249335113,
+      "rmsFootPositionError": 0.00032254722777709294
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999974,
+      "bakedMinimumFootClearance": 0.022000000920235914,
+      "maxFootPositionError": 6.609392780119492e-9,
+      "maxHorizontalDifference": 6.456698104334857e-9,
+      "rmsFootPositionError": 3.5664970376331373e-9
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.016666666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02199999999999998,
+      "bakedMinimumFootClearance": 0.022000003008222437,
+      "maxFootPositionError": 0.00048347257638017203,
+      "maxHorizontalDifference": 0.0001862143740755751,
+      "rmsFootPositionError": 0.0003271841429215325
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0.13333333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02199999999999995,
+      "bakedMinimumFootClearance": 0.021999999084657645,
+      "maxFootPositionError": 1.2408788890455414e-8,
+      "maxHorizontalDifference": 1.2362057575199756e-8,
+      "rmsFootPositionError": 7.524354304314766e-9
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.15,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02200000000000007,
+      "bakedMinimumFootClearance": 0.022000000803302354,
+      "maxFootPositionError": 0.0010190818127319406,
+      "maxHorizontalDifference": 0.0007311717830911685,
+      "rmsFootPositionError": 0.0007196276139795355
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02199999999999996,
+      "bakedMinimumFootClearance": 0.021999999824962403,
+      "maxFootPositionError": 1.0802694381602996e-8,
+      "maxHorizontalDifference": 1.0802198562799943e-8,
+      "rmsFootPositionError": 6.620104594102516e-9
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.022000000000000044,
+      "bakedMinimumFootClearance": 0.021999999982219607,
+      "maxFootPositionError": 0.005930418842742372,
+      "maxHorizontalDifference": 0.005127669258341573,
+      "rmsFootPositionError": 0.003395172453469387
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0.6666666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999985,
+      "bakedMinimumFootClearance": 0.021999999596677516,
+      "maxFootPositionError": 1.8866389476333464e-8,
+      "maxHorizontalDifference": 1.88491938543277e-8,
+      "rmsFootPositionError": 1.2834773425099187e-8
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.6833333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02200000000000002,
+      "bakedMinimumFootClearance": 0.022000002113214633,
+      "maxFootPositionError": 0.001571306047422146,
+      "maxHorizontalDifference": 0.0008902231932857316,
+      "rmsFootPositionError": 0.001200927898440813
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 1,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02199999999999999,
+      "bakedMinimumFootClearance": 0.0220000000435921,
+      "maxFootPositionError": 1.2060267855180955e-8,
+      "maxHorizontalDifference": 1.2060189069923706e-8,
+      "rmsFootPositionError": 7.648382646916023e-9
+    },
+    {
+      "terrain": "plane:0,0",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 1.0166666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999957,
+      "bakedMinimumFootClearance": 0.022000018382724862,
+      "maxFootPositionError": 0.0005006840358754553,
+      "maxHorizontalDifference": 0.00032047035249251245,
+      "rmsFootPositionError": 0.0003225472277768177
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0,
+      "referenceLift": 0.013602393366280337,
+      "bakedLift": 0.01360239548624985,
+      "liftDifference": 2.119969512437425e-9,
+      "referenceMinimumFootClearance": 0.009999999999999995,
+      "bakedMinimumFootClearance": 0.010000000000000002,
+      "maxFootPositionError": 6.495343483506735e-9,
+      "maxHorizontalDifference": 6.456698610685712e-9,
+      "rmsFootPositionError": 4.21427396100381e-9
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.016666666666666666,
+      "referenceLift": 0.01885348968681158,
+      "bakedLift": 0.018419932433591628,
+      "liftDifference": -0.00043355725321995303,
+      "referenceMinimumFootClearance": 0.009999999999999974,
+      "bakedMinimumFootClearance": 0.010000000000000002,
+      "maxFootPositionError": 0.00043638248669151757,
+      "maxHorizontalDifference": 0.00018621437407495008,
+      "rmsFootPositionError": 0.0003228106023996909
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0.13333333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.029881838055578674,
+      "bakedMinimumFootClearance": 0.029881835457921217,
+      "maxFootPositionError": 1.2408789117798031e-8,
+      "maxHorizontalDifference": 1.2362057803401777e-8,
+      "rmsFootPositionError": 7.524354545178918e-9
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.15,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.043161855074529895,
+      "bakedMinimumFootClearance": 0.043928167058413105,
+      "maxFootPositionError": 0.0010190818127301731,
+      "maxHorizontalDifference": 0.0007311717830887187,
+      "rmsFootPositionError": 0.0007196276139790847
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "referenceLift": 0.010951492878304006,
+      "bakedLift": 0.010951493421428801,
+      "liftDifference": 5.431247951381835e-10,
+      "referenceMinimumFootClearance": 0.009999999999999988,
+      "bakedMinimumFootClearance": 0.010000000000000002,
+      "maxFootPositionError": 1.0838082713033672e-8,
+      "maxHorizontalDifference": 1.0802199143250586e-8,
+      "rmsFootPositionError": 6.550012368592204e-9
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "referenceLift": 0.012479793302378694,
+      "bakedLift": 0.012482366679952575,
+      "liftDifference": 0.000002573377573880653,
+      "referenceMinimumFootClearance": 0.010000000000000002,
+      "bakedMinimumFootClearance": 0.010000000000000002,
+      "maxFootPositionError": 0.005929126410025328,
+      "maxHorizontalDifference": 0.005127669258341835,
+      "rmsFootPositionError": 0.0033941479351549974
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0.6666666666666666,
+      "referenceLift": 0.025811303940060273,
+      "bakedLift": 0.025811301931904174,
+      "liftDifference": -2.008156099742031e-9,
+      "referenceMinimumFootClearance": 0.009999999999999981,
+      "bakedMinimumFootClearance": 0.010000000000000002,
+      "maxFootPositionError": 1.9058010990854325e-8,
+      "maxHorizontalDifference": 1.8849194308416963e-8,
+      "rmsFootPositionError": 1.3128377678937829e-8
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.6833333333333333,
+      "referenceLift": 0.03223171751744401,
+      "bakedLift": 0.03364444402268796,
+      "liftDifference": 0.001412726505243947,
+      "referenceMinimumFootClearance": 0.009999999999999953,
+      "bakedMinimumFootClearance": 0.010000000000000002,
+      "maxFootPositionError": 0.0016363111596072598,
+      "maxHorizontalDifference": 0.0008902231932872266,
+      "rmsFootPositionError": 0.0010734671954392527
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 1,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.04603359215788523,
+      "bakedMinimumFootClearance": 0.04603358893196509,
+      "maxFootPositionError": 1.2060267525152606e-8,
+      "maxHorizontalDifference": 1.2060188739893198e-8,
+      "rmsFootPositionError": 7.648382386845649e-9
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 1.0166666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.0375129624674224,
+      "bakedMinimumFootClearance": 0.037955967253735165,
+      "maxFootPositionError": 0.0005006840358754295,
+      "maxHorizontalDifference": 0.00032047035249236575,
+      "rmsFootPositionError": 0.00032254722777679955
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0,
+      "referenceLift": 0.04505951245291097,
+      "bakedLift": 0.045059513593930955,
+      "liftDifference": 1.141019986827807e-9,
+      "referenceMinimumFootClearance": 0.009999999999999967,
+      "bakedMinimumFootClearance": 0.009999999999999995,
+      "maxFootPositionError": 6.462402739773434e-9,
+      "maxHorizontalDifference": 6.456698403436384e-9,
+      "rmsFootPositionError": 3.822776725945143e-9
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.016666666666666666,
+      "referenceLift": 0.05316017710318041,
+      "bakedLift": 0.05274759232440644,
+      "liftDifference": -0.0004125847787739695,
+      "referenceMinimumFootClearance": 0.010000000000000023,
+      "bakedMinimumFootClearance": 0.009999999999999995,
+      "maxFootPositionError": 0.00041542354384101215,
+      "maxHorizontalDifference": 0.0001862143740761528,
+      "rmsFootPositionError": 0.0003093401449113901
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0.13333333333333333,
+      "referenceLift": 0.056181069628299635,
+      "bakedLift": 0.05618106998400162,
+      "liftDifference": 3.5570198869683267e-10,
+      "referenceMinimumFootClearance": 0.009931130730139348,
+      "bakedMinimumFootClearance": 0.009931130573118424,
+      "maxFootPositionError": 1.2383019085295608e-8,
+      "maxHorizontalDifference": 1.2362057559916811e-8,
+      "rmsFootPositionError": 7.54993991981061e-9
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.15,
+      "referenceLift": 0.047496065372776716,
+      "bakedLift": 0.046659950536790826,
+      "liftDifference": -0.0008361148359858905,
+      "referenceMinimumFootClearance": 0.00961301240233968,
+      "bakedMinimumFootClearance": 0.00962395985416814,
+      "maxFootPositionError": 0.0009757477369025936,
+      "maxHorizontalDifference": 0.0007311717830896647,
+      "rmsFootPositionError": 0.0008205026703622897
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "referenceLift": 0.0794738183060711,
+      "bakedLift": 0.07947381776311821,
+      "liftDifference": -5.429528909806081e-10,
+      "referenceMinimumFootClearance": 0.008231825161810646,
+      "bakedMinimumFootClearance": 0.008231825265705539,
+      "maxFootPositionError": 1.0875772835465463e-8,
+      "maxHorizontalDifference": 1.080219865432911e-8,
+      "rmsFootPositionError": 6.8934042650033555e-9
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "referenceLift": 0.07786567185883167,
+      "bakedLift": 0.07797505143493895,
+      "liftDifference": 0.00010937957610727966,
+      "referenceMinimumFootClearance": 0.008239947096815997,
+      "bakedMinimumFootClearance": 0.008237192864934961,
+      "maxFootPositionError": 0.005876228266651409,
+      "maxHorizontalDifference": 0.005127669258341843,
+      "rmsFootPositionError": 0.00335309163683842
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0.6666666666666666,
+      "referenceLift": 0.04791831426566043,
+      "bakedLift": 0.04791831197701894,
+      "liftDifference": -2.2886414846601255e-9,
+      "referenceMinimumFootClearance": 0.008188812706323156,
+      "bakedMinimumFootClearance": 0.008188812825040956,
+      "maxFootPositionError": 1.9101431662388045e-8,
+      "maxHorizontalDifference": 1.8849193173449396e-8,
+      "rmsFootPositionError": 1.3210506955480617e-8
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.6833333333333333,
+      "referenceLift": 0.05185254585112692,
+      "bakedLift": 0.053287548186118805,
+      "liftDifference": 0.0014350023349918861,
+      "referenceMinimumFootClearance": 0.008164901077480802,
+      "bakedMinimumFootClearance": 0.008178184282112227,
+      "maxFootPositionError": 0.0016554770873327162,
+      "maxHorizontalDifference": 0.000890223193287133,
+      "rmsFootPositionError": 0.001086152164699244
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 1,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02871020935894391,
+      "bakedMinimumFootClearance": 0.02871021141441155,
+      "maxFootPositionError": 1.206026808297192e-8,
+      "maxHorizontalDifference": 1.2060189297728697e-8,
+      "rmsFootPositionError": 7.648382737617492e-9
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 1.0166666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02402090906931721,
+      "bakedMinimumFootClearance": 0.024431474457128108,
+      "maxFootPositionError": 0.0005006840358762258,
+      "maxHorizontalDifference": 0.00032047035249335113,
+      "rmsFootPositionError": 0.00032254722777709294
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.052412286488785514,
+      "bakedMinimumFootClearance": 0.052412287333777785,
+      "maxFootPositionError": 6.609392780119492e-9,
+      "maxHorizontalDifference": 6.456698104334857e-9,
+      "rmsFootPositionError": 3.5664970376331373e-9
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.016666666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.05117833719729609,
+      "bakedMinimumFootClearance": 0.05118210631182468,
+      "maxFootPositionError": 0.00048347257638017203,
+      "maxHorizontalDifference": 0.0001862143740755751,
+      "rmsFootPositionError": 0.0003271841429215325
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0.13333333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.030567871251717338,
+      "bakedMinimumFootClearance": 0.030567870408740733,
+      "maxFootPositionError": 1.2408788890455414e-8,
+      "maxHorizontalDifference": 1.2362057575199756e-8,
+      "rmsFootPositionError": 7.524354304314766e-9
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.15,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.026544181080163296,
+      "bakedMinimumFootClearance": 0.026537422283830284,
+      "maxFootPositionError": 0.0010190818127319406,
+      "maxHorizontalDifference": 0.0007311717830911685,
+      "rmsFootPositionError": 0.0007196276139795355
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.07926511679034488,
+      "bakedMinimumFootClearance": 0.07926511545128015,
+      "maxFootPositionError": 1.0802694381602996e-8,
+      "maxHorizontalDifference": 1.0802198562799943e-8,
+      "rmsFootPositionError": 6.620104594102516e-9
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.0837058225990826,
+      "bakedMinimumFootClearance": 0.08386639128845505,
+      "maxFootPositionError": 0.005930418842742372,
+      "maxHorizontalDifference": 0.005127669258341573,
+      "rmsFootPositionError": 0.003395172453469387
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0.6666666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.03550665029945996,
+      "bakedMinimumFootClearance": 0.035506650232480244,
+      "maxFootPositionError": 1.8866389476333464e-8,
+      "maxHorizontalDifference": 1.88491938543277e-8,
+      "rmsFootPositionError": 1.2834773425099187e-8
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.6833333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.027697999657136305,
+      "bakedMinimumFootClearance": 0.02623670453345621,
+      "maxFootPositionError": 0.001571306047422146,
+      "maxHorizontalDifference": 0.0008902231932857316,
+      "rmsFootPositionError": 0.001200927898440813
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 1,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.06427136196392617,
+      "bakedMinimumFootClearance": 0.06427136090145955,
+      "maxFootPositionError": 1.2060267855180955e-8,
+      "maxHorizontalDifference": 1.2060189069923706e-8,
+      "rmsFootPositionError": 7.648382646916023e-9
+    },
+    {
+      "terrain": "plane:0.2,-0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 1.0166666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.06214774149203141,
+      "bakedMinimumFootClearance": 0.062152104966501934,
+      "maxFootPositionError": 0.0005006840358754553,
+      "maxHorizontalDifference": 0.00032047035249251245,
+      "rmsFootPositionError": 0.0003225472277768177
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0,
+      "referenceLift": 0.0737914960428184,
+      "bakedLift": 0.07379149471437893,
+      "liftDifference": -1.3284394695389778e-9,
+      "referenceMinimumFootClearance": 0.010000000000000078,
+      "bakedMinimumFootClearance": 0.009999999999999981,
+      "maxFootPositionError": 7.014388171190073e-9,
+      "maxHorizontalDifference": 6.456698610685712e-9,
+      "rmsFootPositionError": 3.93787457659428e-9
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.016666666666666666,
+      "referenceLift": 0.07319146289130359,
+      "bakedLift": 0.07319271450023918,
+      "liftDifference": 0.000001251608935590176,
+      "referenceMinimumFootClearance": 0.010000000000000092,
+      "bakedMinimumFootClearance": 0.009999999999999995,
+      "maxFootPositionError": 0.0004846627052760718,
+      "maxHorizontalDifference": 0.00018621437407495008,
+      "rmsFootPositionError": 0.00032802729077726896
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0.13333333333333333,
+      "referenceLift": 0.062102321475485195,
+      "bakedLift": 0.06210232208647723,
+      "liftDifference": 6.109920347441289e-10,
+      "referenceMinimumFootClearance": 0.009999999999999967,
+      "bakedMinimumFootClearance": 0.009999999999999995,
+      "maxFootPositionError": 1.237079700109848e-8,
+      "maxHorizontalDifference": 1.2362057803401777e-8,
+      "rmsFootPositionError": 7.564425679996802e-9
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.15,
+      "referenceLift": 0.06044235914832834,
+      "bakedLift": 0.060385843881853404,
+      "liftDifference": -0.000056515266474932435,
+      "referenceMinimumFootClearance": 0.010000000000000175,
+      "bakedMinimumFootClearance": 0.009999999999999995,
+      "maxFootPositionError": 0.0009805532724914687,
+      "maxHorizontalDifference": 0.0007311717830887187,
+      "rmsFootPositionError": 0.0006959209088161744
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "referenceLift": 0.0010856173146908399,
+      "bakedLift": 0.0010856171080998525,
+      "liftDifference": -2.0659098737274562e-10,
+      "referenceMinimumFootClearance": -0.0023870325737841806,
+      "bakedMinimumFootClearance": -0.002387032587984901,
+      "maxFootPositionError": 1.0802494171815657e-8,
+      "maxHorizontalDifference": 1.0802199143250586e-8,
+      "rmsFootPositionError": 6.661811096849646e-9
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": -0.0019623190421499855,
+      "bakedMinimumFootClearance": -0.001947754220294997,
+      "maxFootPositionError": 0.0059304188427425995,
+      "maxHorizontalDifference": 0.005127669258341835,
+      "rmsFootPositionError": 0.0033951724534696057
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0.6666666666666666,
+      "referenceLift": 0.10860007521191642,
+      "bakedLift": 0.10860007212034953,
+      "liftDifference": -3.091566891377795e-9,
+      "referenceMinimumFootClearance": 0.010000000000000078,
+      "bakedMinimumFootClearance": 0.010000000000000009,
+      "maxFootPositionError": 1.9477742081990587e-8,
+      "maxHorizontalDifference": 1.8849194308416963e-8,
+      "rmsFootPositionError": 1.3518088417372326e-8
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.6833333333333333,
+      "referenceLift": 0.11056198103727168,
+      "bakedLift": 0.11044051960046863,
+      "liftDifference": -0.00012146143680304144,
+      "referenceMinimumFootClearance": 0.009999999999999981,
+      "bakedMinimumFootClearance": 0.010000000000000009,
+      "maxFootPositionError": 0.0016927530271127538,
+      "maxHorizontalDifference": 0.0008902231932872266,
+      "rmsFootPositionError": 0.0012858836310181828
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 1,
+      "referenceLift": 0.07804637909880807,
+      "bakedLift": 0.07804638073447427,
+      "liftDifference": 1.6356661997063426e-9,
+      "referenceMinimumFootClearance": 0.009999999999999995,
+      "bakedMinimumFootClearance": 0.009999999999999995,
+      "maxFootPositionError": 1.2176537412436542e-8,
+      "maxHorizontalDifference": 1.2060188739893198e-8,
+      "rmsFootPositionError": 7.419007477646623e-9
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 1.0166666666666666,
+      "referenceLift": 0.07733484023511525,
+      "bakedLift": 0.07733501135238038,
+      "liftDifference": 1.71117265135301e-7,
+      "referenceMinimumFootClearance": 0.010000000000000092,
+      "bakedMinimumFootClearance": 0.009999999999999981,
+      "maxFootPositionError": 0.0005008246488307347,
+      "maxHorizontalDifference": 0.00032047035249236575,
+      "rmsFootPositionError": 0.0003226446909637169
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0,
+      "referenceLift": 0.03634410329311459,
+      "bakedLift": 0.0363441017157492,
+      "liftDifference": -1.5773653910811092e-9,
+      "referenceMinimumFootClearance": 0.009656206843649498,
+      "bakedMinimumFootClearance": 0.009656206778457195,
+      "maxFootPositionError": 7.115348082090117e-9,
+      "maxHorizontalDifference": 6.456698403436384e-9,
+      "rmsFootPositionError": 3.898890696339643e-9
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.016666666666666666,
+      "referenceLift": 0.03658856456044652,
+      "bakedLift": 0.036586702558885915,
+      "liftDifference": -0.0000018620015606041207,
+      "referenceMinimumFootClearance": 0.009651008830711204,
+      "bakedMinimumFootClearance": 0.009650923614046847,
+      "maxFootPositionError": 0.0004817026145115241,
+      "maxHorizontalDifference": 0.0001862143740761528,
+      "rmsFootPositionError": 0.00032593473089758074
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0.13333333333333333,
+      "referenceLift": 0.03923264562928943,
+      "bakedLift": 0.03923264606280304,
+      "liftDifference": 4.335136069566481e-10,
+      "referenceMinimumFootClearance": 0.00976267555669779,
+      "bakedMinimumFootClearance": 0.009762675526430474,
+      "maxFootPositionError": 1.2378737234646526e-8,
+      "maxHorizontalDifference": 1.2362057559916811e-8,
+      "rmsFootPositionError": 7.534328543126602e-9
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.15,
+      "referenceLift": 0.04025462336920542,
+      "bakedLift": 0.04018807340955075,
+      "liftDifference": -0.00006654995965466731,
+      "referenceMinimumFootClearance": 0.009822361845899644,
+      "bakedMinimumFootClearance": 0.009816397438209154,
+      "maxFootPositionError": 0.000973895777071044,
+      "maxHorizontalDifference": 0.0007311717830896647,
+      "rmsFootPositionError": 0.0006921092656829178
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.050725076768421196,
+      "bakedMinimumFootClearance": 0.05072507297888082,
+      "maxFootPositionError": 1.0802694473127964e-8,
+      "maxHorizontalDifference": 1.080219865432911e-8,
+      "rmsFootPositionError": 6.620104225228282e-9
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.05859307048967108,
+      "bakedMinimumFootClearance": 0.055942880866262854,
+      "maxFootPositionError": 0.005930418842742606,
+      "maxHorizontalDifference": 0.005127669258341843,
+      "rmsFootPositionError": 0.003395172453469685
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0.6666666666666666,
+      "referenceLift": 0.03579400340466323,
+      "bakedLift": 0.035794002129172206,
+      "liftDifference": -1.2754910252987806e-9,
+      "referenceMinimumFootClearance": 0.010000000000000092,
+      "bakedMinimumFootClearance": 0.010000000000000002,
+      "maxFootPositionError": 1.8963698609896346e-8,
+      "maxHorizontalDifference": 1.8849193173449396e-8,
+      "rmsFootPositionError": 1.2994277645260183e-8
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.6833333333333333,
+      "referenceLift": 0.034144423930449766,
+      "bakedLift": 0.034103577024387245,
+      "liftDifference": -0.00004084690606252078,
+      "referenceMinimumFootClearance": 0.00987301963842803,
+      "bakedMinimumFootClearance": 0.009868093825296173,
+      "maxFootPositionError": 0.0016121478485262672,
+      "maxHorizontalDifference": 0.000890223193287133,
+      "rmsFootPositionError": 0.001228813934511961
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 1,
+      "referenceLift": 0.03245463635477121,
+      "bakedLift": 0.0324546389642733,
+      "liftDifference": 2.6095020935756885e-9,
+      "referenceMinimumFootClearance": 0.009632121143091803,
+      "bakedMinimumFootClearance": 0.009632121190152998,
+      "maxFootPositionError": 1.234856585837171e-8,
+      "maxHorizontalDifference": 1.2060189297728697e-8,
+      "rmsFootPositionError": 7.358237811158785e-9
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 1.0166666666666666,
+      "referenceLift": 0.03320725777800876,
+      "bakedLift": 0.03320625061563964,
+      "liftDifference": -0.0000010071623691154663,
+      "referenceMinimumFootClearance": 0.009636415082858923,
+      "bakedMinimumFootClearance": 0.009634480906806367,
+      "maxFootPositionError": 0.0004998568013396392,
+      "maxHorizontalDifference": 0.00032047035249335113,
+      "rmsFootPositionError": 0.00032197504965864385
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0,
+      "referenceLift": 0.07548796180513775,
+      "bakedLift": 0.07548796149867101,
+      "liftDifference": -3.0646674087364545e-10,
+      "referenceMinimumFootClearance": 0.010000000000000023,
+      "bakedMinimumFootClearance": 0.009999999999999995,
+      "maxFootPositionError": 6.68159833379478e-9,
+      "maxHorizontalDifference": 6.456698104334857e-9,
+      "rmsFootPositionError": 3.736870796635535e-9
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.016666666666666666,
+      "referenceLift": 0.074247741803472,
+      "bakedLift": 0.07425316929821066,
+      "liftDifference": 0.000005427494738655114,
+      "referenceMinimumFootClearance": 0.010000000000000092,
+      "bakedMinimumFootClearance": 0.009999999999999995,
+      "maxFootPositionError": 0.0004886356906424286,
+      "maxHorizontalDifference": 0.0001862143740755751,
+      "rmsFootPositionError": 0.00033085897408395023
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0.13333333333333333,
+      "referenceLift": 0.08325096279695382,
+      "bakedLift": 0.0832509612844555,
+      "liftDifference": -1.5124983210323961e-9,
+      "referenceMinimumFootClearance": 0.010000000000000231,
+      "bakedMinimumFootClearance": 0.010000000000000009,
+      "maxFootPositionError": 1.2630134866148973e-8,
+      "maxHorizontalDifference": 1.2362057575199756e-8,
+      "rmsFootPositionError": 7.809804334872766e-9
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.15,
+      "referenceLift": 0.07957110758726871,
+      "bakedLift": 0.07876730824730156,
+      "liftDifference": -0.0008037993399671456,
+      "referenceMinimumFootClearance": 0.010000000000000009,
+      "bakedMinimumFootClearance": 0.010000000000000009,
+      "maxFootPositionError": 0.0009459113226524404,
+      "maxHorizontalDifference": 0.0007311717830911685,
+      "rmsFootPositionError": 0.0008007776963707536
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "referenceLift": 0.11778532978391233,
+      "bakedLift": 0.11778532919838006,
+      "liftDifference": -5.855322754433345e-10,
+      "referenceMinimumFootClearance": 0.010000000000000009,
+      "bakedMinimumFootClearance": 0.010000000000000009,
+      "maxFootPositionError": 1.0993320057367008e-8,
+      "maxHorizontalDifference": 1.0802198562799943e-8,
+      "rmsFootPositionError": 7.0436949491441225e-9
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "referenceLift": 0.11323920998410678,
+      "bakedLift": 0.11338777243279048,
+      "liftDifference": 0.00014856244868370616,
+      "referenceMinimumFootClearance": 0.010000000000000092,
+      "bakedMinimumFootClearance": 0.010000000000000009,
+      "maxFootPositionError": 0.005857190621444935,
+      "maxHorizontalDifference": 0.005127669258341573,
+      "rmsFootPositionError": 0.0033387599012096123
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0.6666666666666666,
+      "referenceLift": 0.12812425211544293,
+      "bakedLift": 0.12812424987518478,
+      "liftDifference": -2.2402581456582027e-9,
+      "referenceMinimumFootClearance": 0.010000000000000175,
+      "bakedMinimumFootClearance": 0.010000000000000009,
+      "maxFootPositionError": 1.9352281167833666e-8,
+      "maxHorizontalDifference": 1.88491938543277e-8,
+      "rmsFootPositionError": 1.3327135839950203e-8
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.6833333333333333,
+      "referenceLift": 0.13377068275447593,
+      "bakedLift": 0.133689269854309,
+      "liftDifference": -0.00008141290016691616,
+      "referenceMinimumFootClearance": 0.009999999999999953,
+      "bakedMinimumFootClearance": 0.010000000000000009,
+      "maxFootPositionError": 0.001652709022506623,
+      "maxHorizontalDifference": 0.0008902231932857316,
+      "rmsFootPositionError": 0.0012572096708061708
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 1,
+      "referenceLift": 0.08732979516702362,
+      "bakedLift": 0.08732979415672754,
+      "liftDifference": -1.0102960829039276e-9,
+      "referenceMinimumFootClearance": 0.010000000000000037,
+      "bakedMinimumFootClearance": 0.009999999999999995,
+      "maxFootPositionError": 1.2175777658682437e-8,
+      "maxHorizontalDifference": 1.2060189069923706e-8,
+      "rmsFootPositionError": 8.097468705945667e-9
+    },
+    {
+      "terrain": "plane:-0.2,0.1",
+      "point": [
+        4,
+        3
+      ],
+      "terrainSlope": 0.223606797749979,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 1.0166666666666666,
+      "referenceLift": 0.08520742976192183,
+      "bakedLift": 0.085211688806152,
+      "liftDifference": 0.000004259044230167652,
+      "referenceMinimumFootClearance": 0.010000000000000078,
+      "bakedMinimumFootClearance": 0.009999999999999995,
+      "maxFootPositionError": 0.0005041894465383146,
+      "maxHorizontalDifference": 0.00032047035249251245,
+      "rmsFootPositionError": 0.0003249903030589558
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02200000000000024,
+      "bakedMinimumFootClearance": 0.02200000092023613,
+      "maxFootPositionError": 6.6093894262127836e-9,
+      "maxHorizontalDifference": 6.45669460735647e-9,
+      "rmsFootPositionError": 3.566496905507824e-9
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.016666666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02199999999999891,
+      "bakedMinimumFootClearance": 0.022000003008222357,
+      "maxFootPositionError": 0.00048347257638138157,
+      "maxHorizontalDifference": 0.00018621437406559006,
+      "rmsFootPositionError": 0.00032718414292221405
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0.13333333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999353,
+      "bakedMinimumFootClearance": 0.021999999084657773,
+      "maxFootPositionError": 1.2408785347217052e-8,
+      "maxHorizontalDifference": 1.2362054113985296e-8,
+      "rmsFootPositionError": 7.524354510333366e-9
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.15,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999797,
+      "bakedMinimumFootClearance": 0.022000000803302555,
+      "maxFootPositionError": 0.0010190818127380908,
+      "maxHorizontalDifference": 0.000731171783098218,
+      "rmsFootPositionError": 0.0007196276139831228
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999797,
+      "bakedMinimumFootClearance": 0.02199999982496248,
+      "maxFootPositionError": 1.0802686261785162e-8,
+      "maxHorizontalDifference": 1.0802190441678638e-8,
+      "rmsFootPositionError": 6.620103914281501e-9
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999797,
+      "bakedMinimumFootClearance": 0.021999999982219798,
+      "maxFootPositionError": 0.0059304188427406115,
+      "maxHorizontalDifference": 0.005127669258339762,
+      "rmsFootPositionError": 0.003395172453470032
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0.6666666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999353,
+      "bakedMinimumFootClearance": 0.021999999596677533,
+      "maxFootPositionError": 1.8866390858645792e-8,
+      "maxHorizontalDifference": 1.884919525835684e-8,
+      "rmsFootPositionError": 1.2834773906450617e-8
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.6833333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999797,
+      "bakedMinimumFootClearance": 0.022000002113214734,
+      "maxFootPositionError": 0.0015713060474215467,
+      "maxHorizontalDifference": 0.000890223193296678,
+      "rmsFootPositionError": 0.0012009278984425862
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 1,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999797,
+      "bakedMinimumFootClearance": 0.02200000004359204,
+      "maxFootPositionError": 1.2060268697737049e-8,
+      "maxHorizontalDifference": 1.2060189911469502e-8,
+      "rmsFootPositionError": 7.648383225931983e-9
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 1.0166666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999797,
+      "bakedMinimumFootClearance": 0.022000018382724917,
+      "maxFootPositionError": 0.0005006840358743717,
+      "maxHorizontalDifference": 0.0003204703524999514,
+      "rmsFootPositionError": 0.00032254722777697655
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999797,
+      "bakedMinimumFootClearance": 0.02200000092023524,
+      "maxFootPositionError": 6.6094089765855356e-9,
+      "maxHorizontalDifference": 6.456714522925755e-9,
+      "rmsFootPositionError": 3.566502279508918e-9
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.016666666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999998465,
+      "bakedMinimumFootClearance": 0.022000003008221913,
+      "maxFootPositionError": 0.00048347257638521824,
+      "maxHorizontalDifference": 0.00018621437406526566,
+      "rmsFootPositionError": 0.00032718414292286945
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0.13333333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02199999999999891,
+      "bakedMinimumFootClearance": 0.021999999084656885,
+      "maxFootPositionError": 1.2408787631834217e-8,
+      "maxHorizontalDifference": 1.236205636858844e-8,
+      "rmsFootPositionError": 7.524358407782908e-9
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.15,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02199999999999891,
+      "bakedMinimumFootClearance": 0.02200000080330211,
+      "maxFootPositionError": 0.0010190818127346192,
+      "maxHorizontalDifference": 0.0007311717830929484,
+      "rmsFootPositionError": 0.0007196276139793471
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02199999999999891,
+      "bakedMinimumFootClearance": 0.02199999982496248,
+      "maxFootPositionError": 1.0802693226852988e-8,
+      "maxHorizontalDifference": 1.0802197398556189e-8,
+      "rmsFootPositionError": 6.6201024138139306e-9
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02199999999999891,
+      "bakedMinimumFootClearance": 0.021999999982219354,
+      "maxFootPositionError": 0.0059304188427349806,
+      "maxHorizontalDifference": 0.005127669258333508,
+      "rmsFootPositionError": 0.0033951724534635685
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0.6666666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02199999999999891,
+      "bakedMinimumFootClearance": 0.02199999959667709,
+      "maxFootPositionError": 1.88663904716873e-8,
+      "maxHorizontalDifference": 1.8849194871045337e-8,
+      "rmsFootPositionError": 1.2834770964962186e-8
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.6833333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999353,
+      "bakedMinimumFootClearance": 0.022000002113213846,
+      "maxFootPositionError": 0.0015713060474218546,
+      "maxHorizontalDifference": 0.0008902231932684239,
+      "rmsFootPositionError": 0.0012009278984393425
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 1,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02199999999999891,
+      "bakedMinimumFootClearance": 0.02200000004359204,
+      "maxFootPositionError": 1.2060249384435676e-8,
+      "maxHorizontalDifference": 1.2060170594831488e-8,
+      "rmsFootPositionError": 7.64837541656656e-9
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 1.0166666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999353,
+      "bakedMinimumFootClearance": 0.022000018382724917,
+      "maxFootPositionError": 0.0005006840358741434,
+      "maxHorizontalDifference": 0.0003204703525057583,
+      "rmsFootPositionError": 0.00032254722777894134
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02200000000000024,
+      "bakedMinimumFootClearance": 0.02200000092023613,
+      "maxFootPositionError": 6.609388764904347e-9,
+      "maxHorizontalDifference": 6.456693930408702e-9,
+      "rmsFootPositionError": 3.566496131018783e-9
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.016666666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02199999999999891,
+      "bakedMinimumFootClearance": 0.022000003008222357,
+      "maxFootPositionError": 0.000483472576384802,
+      "maxHorizontalDifference": 0.0001862143740856015,
+      "rmsFootPositionError": 0.00032718414292419326
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0.13333333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02199999999999891,
+      "bakedMinimumFootClearance": 0.021999999084657773,
+      "maxFootPositionError": 1.2408781903424445e-8,
+      "maxHorizontalDifference": 1.236205069582477e-8,
+      "rmsFootPositionError": 7.524357365935569e-9
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.15,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999797,
+      "bakedMinimumFootClearance": 0.022000000803302555,
+      "maxFootPositionError": 0.0010190818127277527,
+      "maxHorizontalDifference": 0.0007311717830838092,
+      "rmsFootPositionError": 0.0007196276139763278
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999797,
+      "bakedMinimumFootClearance": 0.02199999982496248,
+      "maxFootPositionError": 1.080267549441698e-8,
+      "maxHorizontalDifference": 1.080217967381623e-8,
+      "rmsFootPositionError": 6.6201030397111475e-9
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999797,
+      "bakedMinimumFootClearance": 0.021999999982219798,
+      "maxFootPositionError": 0.005930418842747367,
+      "maxHorizontalDifference": 0.0051276692583475765,
+      "rmsFootPositionError": 0.0033951724534730036
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0.6666666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999353,
+      "bakedMinimumFootClearance": 0.02199999959667709,
+      "maxFootPositionError": 1.8866384186392573e-8,
+      "maxHorizontalDifference": 1.8849188561043234e-8,
+      "rmsFootPositionError": 1.2834771802064283e-8
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.6833333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999797,
+      "bakedMinimumFootClearance": 0.022000002113214734,
+      "maxFootPositionError": 0.0015713060474214263,
+      "maxHorizontalDifference": 0.0008902231932812788,
+      "rmsFootPositionError": 0.0012009278984394776
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 1,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999797,
+      "bakedMinimumFootClearance": 0.02200000004359204,
+      "maxFootPositionError": 1.2060265904093729e-8,
+      "maxHorizontalDifference": 1.2060187117807933e-8,
+      "rmsFootPositionError": 7.648380535638462e-9
+    },
+    {
+      "terrain": "native:mangrove:0",
+      "point": [
+        -40,
+        -40
+      ],
+      "terrainSlope": 0,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 1.0166666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021999999999999797,
+      "bakedMinimumFootClearance": 0.022000018382724917,
+      "maxFootPositionError": 0.0005006840358724523,
+      "maxHorizontalDifference": 0.0003204703525049679,
+      "rmsFootPositionError": 0.00032254722777560254
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.019195262976212213,
+      "bakedMinimumFootClearance": 0.0191952638964481,
+      "maxFootPositionError": 6.609392902906171e-9,
+      "maxHorizontalDifference": 6.456698166270377e-9,
+      "rmsFootPositionError": 3.566497315261606e-9
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.016666666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.019322439674632985,
+      "bakedMinimumFootClearance": 0.019319738347668647,
+      "maxFootPositionError": 0.0004834725763819577,
+      "maxHorizontalDifference": 0.00018621437407286733,
+      "rmsFootPositionError": 0.00032718414292241447
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0.13333333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021159516806658285,
+      "bakedMinimumFootClearance": 0.021159515891505,
+      "maxFootPositionError": 1.2408790840394366e-8,
+      "maxHorizontalDifference": 1.2362059589277642e-8,
+      "rmsFootPositionError": 7.524355419540048e-9
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.15,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.021633859081574336,
+      "bakedMinimumFootClearance": 0.021609802102590336,
+      "maxFootPositionError": 0.0010190818127318237,
+      "maxHorizontalDifference": 0.0007311717830894831,
+      "rmsFootPositionError": 0.0007196276139799622
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "referenceLift": 0.014285780553814131,
+      "bakedLift": 0.014285780728253705,
+      "liftDifference": 1.7443957389673415e-10,
+      "referenceMinimumFootClearance": 0.009999999999999343,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 1.0817974259445098e-8,
+      "maxHorizontalDifference": 1.0802202222110461e-8,
+      "rmsFootPositionError": 6.6020831247101466e-9
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "referenceLift": 0.013693555461661955,
+      "bakedLift": 0.013714889251556173,
+      "liftDifference": 0.00002133378989421786,
+      "referenceMinimumFootClearance": 0.009999999999999343,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 0.005919729607560909,
+      "maxHorizontalDifference": 0.0051276692583426525,
+      "rmsFootPositionError": 0.0033867285995781687
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0.6666666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.01602409546321404,
+      "bakedMinimumFootClearance": 0.01602409505989222,
+      "maxFootPositionError": 1.886639061909385e-8,
+      "maxHorizontalDifference": 1.8849195018586363e-8,
+      "rmsFootPositionError": 1.2834773663644465e-8
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.6833333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.014505906766530519,
+      "bakedMinimumFootClearance": 0.013067982033938996,
+      "maxFootPositionError": 0.0015713060474219754,
+      "maxHorizontalDifference": 0.000890223193285236,
+      "rmsFootPositionError": 0.001200927898440584
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 1,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.01767274195783397,
+      "bakedMinimumFootClearance": 0.017672742001428432,
+      "maxFootPositionError": 1.2060267682437476e-8,
+      "maxHorizontalDifference": 1.2060188896163299e-8,
+      "rmsFootPositionError": 7.648382456768704e-9
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 1.0166666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.017957235553967443,
+      "bakedMinimumFootClearance": 0.017955847423071436,
+      "maxFootPositionError": 0.0005006840358760083,
+      "maxHorizontalDifference": 0.00032047035249341277,
+      "rmsFootPositionError": 0.00032254722777729476
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0,
+      "referenceLift": 0.0031593464611061606,
+      "bakedLift": 0.003159345540870717,
+      "liftDifference": -9.202354434023619e-10,
+      "referenceMinimumFootClearance": 0.009999999999998899,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 6.865171064303759e-9,
+      "maxHorizontalDifference": 6.456700049149696e-9,
+      "rmsFootPositionError": 3.6499234423996503e-9
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.016666666666666666,
+      "referenceLift": 0.002895021176520629,
+      "bakedLift": 0.0028976781984657585,
+      "liftDifference": 0.000002657021945129401,
+      "referenceMinimumFootClearance": 0.009999999999999343,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 0.00048599945142098315,
+      "maxHorizontalDifference": 0.0001862143740719661,
+      "rmsFootPositionError": 0.0003289770768461399
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0.13333333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.011366769790649212,
+      "bakedMinimumFootClearance": 0.011366768875306299,
+      "maxFootPositionError": 1.240879114137427e-8,
+      "maxHorizontalDifference": 1.2362059775444165e-8,
+      "rmsFootPositionError": 7.524356476048621e-9
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.15,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.012251064300536907,
+      "bakedMinimumFootClearance": 0.012239859430621891,
+      "maxFootPositionError": 0.0010190818127334687,
+      "maxHorizontalDifference": 0.000731171783091776,
+      "rmsFootPositionError": 0.0007196276139805698
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "referenceLift": 0.020464185477616414,
+      "bakedLift": 0.02046418565231134,
+      "liftDifference": 1.7469492519239793e-10,
+      "referenceMinimumFootClearance": 0.010000000000000231,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 1.0825941741473248e-8,
+      "maxHorizontalDifference": 1.0802202391858453e-8,
+      "rmsFootPositionError": 6.609066278525465e-9
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "referenceLift": 0.019443390909161806,
+      "bakedLift": 0.019476856948945187,
+      "liftDifference": 0.00003346603978338081,
+      "referenceMinimumFootClearance": 0.009999999999998899,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 0.005913676488648019,
+      "maxHorizontalDifference": 0.005127669258336338,
+      "rmsFootPositionError": 0.0033819773099869445
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0.6666666666666666,
+      "referenceLift": 0.013306651543120829,
+      "bakedLift": 0.013306651946442205,
+      "liftDifference": 4.03321376296617e-10,
+      "referenceMinimumFootClearance": 0.009999999999999343,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 1.885349097188361e-8,
+      "maxHorizontalDifference": 1.8849204695618735e-8,
+      "rmsFootPositionError": 1.2816089630049454e-8
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.6833333333333333,
+      "referenceLift": 0.014523076186121475,
+      "bakedLift": 0.014589233596008722,
+      "liftDifference": 0.00006615740988724639,
+      "referenceMinimumFootClearance": 0.009999999999999343,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 0.0015051574935128287,
+      "maxHorizontalDifference": 0.0008902231932977527,
+      "rmsFootPositionError": 0.001157396464411094
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 1,
+      "referenceLift": 0.005821039431182395,
+      "bakedLift": 0.005821039387587934,
+      "liftDifference": -4.359446137414125e-11,
+      "referenceMinimumFootClearance": 0.009999999999999343,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 1.2060184523834248e-8,
+      "maxHorizontalDifference": 1.2060184523834176e-8,
+      "rmsFootPositionError": 7.660862038412276e-9
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 1.0166666666666666,
+      "referenceLift": 0.005338904054010385,
+      "bakedLift": 0.005340164875331954,
+      "liftDifference": 0.0000012608213215692388,
+      "referenceMinimumFootClearance": 0.009999999999998455,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 0.0005017205408665802,
+      "maxHorizontalDifference": 0.0003204703524833422,
+      "rmsFootPositionError": 0.0003232665290322816
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.03358213862593917,
+      "bakedMinimumFootClearance": 0.03358213954617417,
+      "maxFootPositionError": 6.609400643251415e-9,
+      "maxHorizontalDifference": 6.4567059925168586e-9,
+      "rmsFootPositionError": 3.5665045933294417e-9
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.016666666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.0319441208301785,
+      "bakedMinimumFootClearance": 0.03237357912078931,
+      "maxFootPositionError": 0.00048347257637825137,
+      "maxHorizontalDifference": 0.00018621437406810925,
+      "rmsFootPositionError": 0.00032718414291989695
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0.13333333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.030566968060262045,
+      "bakedMinimumFootClearance": 0.03056696714602758,
+      "maxFootPositionError": 1.2408798678450162e-8,
+      "maxHorizontalDifference": 1.2362067418312616e-8,
+      "rmsFootPositionError": 7.524361377737452e-9
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.15,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.030102572210928713,
+      "bakedMinimumFootClearance": 0.030064465690621933,
+      "maxFootPositionError": 0.0010190818127322914,
+      "maxHorizontalDifference": 0.0007311717830909973,
+      "rmsFootPositionError": 0.0007196276139807814
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.019910757481819363,
+      "bakedMinimumFootClearance": 0.019910757307411764,
+      "maxFootPositionError": 1.0802703798238253e-8,
+      "maxHorizontalDifference": 1.0802207987446535e-8,
+      "rmsFootPositionError": 6.620105992870432e-9
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.0194186452498446,
+      "bakedMinimumFootClearance": 0.019437293620345297,
+      "maxFootPositionError": 0.0059304188427359026,
+      "maxHorizontalDifference": 0.005127669258333801,
+      "rmsFootPositionError": 0.0033951724534637875
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0.6666666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.026481352243872713,
+      "bakedMinimumFootClearance": 0.026481352111721534,
+      "maxFootPositionError": 1.8866400984878537e-8,
+      "maxHorizontalDifference": 1.8849205355880547e-8,
+      "rmsFootPositionError": 1.283477876296378e-8
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.6833333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.02165771970599817,
+      "bakedMinimumFootClearance": 0.020244781649052523,
+      "maxFootPositionError": 0.0015713060474237522,
+      "maxHorizontalDifference": 0.000890223193299978,
+      "rmsFootPositionError": 0.0012009278984456654
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 1,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.03480428222280496,
+      "bakedMinimumFootClearance": 0.034804282266396314,
+      "maxFootPositionError": 1.206026505913061e-8,
+      "maxHorizontalDifference": 1.2060186274444506e-8,
+      "rmsFootPositionError": 7.648382945495471e-9
+    },
+    {
+      "terrain": "native:savanna:0.05",
+      "point": [
+        0,
+        15
+      ],
+      "terrainSlope": 0.050043103522472474,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 1.0166666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.03459720578477743,
+      "bakedMinimumFootClearance": 0.034597077254596265,
+      "maxFootPositionError": 0.0005006840358682221,
+      "maxHorizontalDifference": 0.0003204703524827906,
+      "rmsFootPositionError": 0.0003225472277713486
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0,
+      "referenceLift": 0.018414783389646416,
+      "bakedLift": 0.01841478480213432,
+      "liftDifference": 1.4124879044175032e-9,
+      "referenceMinimumFootClearance": 0.009999999999999787,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 6.456707031398197e-9,
+      "maxHorizontalDifference": 6.4567070313981966e-9,
+      "rmsFootPositionError": 3.8864570322552315e-9
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.016666666666666666,
+      "referenceLift": 0.026187187260074296,
+      "bakedLift": 0.025771487249736325,
+      "liftDifference": -0.00041570001033797155,
+      "referenceMinimumFootClearance": 0.009999999999999787,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 0.00041853667970584635,
+      "maxHorizontalDifference": 0.00018621437406752332,
+      "rmsFootPositionError": 0.0003112884957008178
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0.13333333333333333,
+      "referenceLift": 0.023009744934745946,
+      "bakedLift": 0.023009746010591137,
+      "liftDifference": 1.0758451907122435e-9,
+      "referenceMinimumFootClearance": 0.009999999999999787,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 1.236206865032321e-8,
+      "maxHorizontalDifference": 1.236206865016687e-8,
+      "rmsFootPositionError": 7.570095962140527e-9
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.15,
+      "referenceLift": 0.01359998017341546,
+      "bakedLift": 0.01280568255632808,
+      "liftDifference": -0.0007942976170873806,
+      "referenceMinimumFootClearance": 0.009920525872239239,
+      "bakedMinimumFootClearance": 0.009930035279388072,
+      "maxFootPositionError": 0.000937167723859122,
+      "maxHorizontalDifference": 0.0007311717830908806,
+      "rmsFootPositionError": 0.0007951346137518875
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "referenceLift": 0.05134508765220325,
+      "bakedLift": 0.05134508782664238,
+      "liftDifference": 1.744391298075243e-10,
+      "referenceMinimumFootClearance": 0.00899054398064969,
+      "bakedMinimumFootClearance": 0.00899054398072785,
+      "maxFootPositionError": 1.0889719571847818e-8,
+      "maxHorizontalDifference": 1.080220973314916e-8,
+      "rmsFootPositionError": 6.661763495864856e-9
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "referenceLift": 0.05019901620079814,
+      "bakedLift": 0.05027041789230324,
+      "liftDifference": 0.0000714016915051019,
+      "referenceMinimumFootClearance": 0.00899464850219811,
+      "bakedMinimumFootClearance": 0.008993981441099308,
+      "maxFootPositionError": 0.005894870331386435,
+      "maxHorizontalDifference": 0.005127669258334499,
+      "rmsFootPositionError": 0.0033673595654221374
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0.6666666666666666,
+      "referenceLift": 0.024053433596795237,
+      "bakedLift": 0.024053433728945528,
+      "liftDifference": 1.3215029071034223e-10,
+      "referenceMinimumFootClearance": 0.008960032690995767,
+      "bakedMinimumFootClearance": 0.008960032690994879,
+      "maxFootPositionError": 1.8861226642021062e-8,
+      "maxHorizontalDifference": 1.8849209804375864e-8,
+      "rmsFootPositionError": 1.2831326811546838e-8
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.6833333333333333,
+      "referenceLift": 0.028006758028388923,
+      "bakedLift": 0.029443013830928955,
+      "liftDifference": 0.0014362558025400318,
+      "referenceMinimumFootClearance": 0.00893478622686672,
+      "bakedMinimumFootClearance": 0.008949617966136358,
+      "maxFootPositionError": 0.001656557871856457,
+      "maxHorizontalDifference": 0.0008902231932968451,
+      "rmsFootPositionError": 0.0010868751733528687
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 1,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.025559151717356343,
+      "bakedMinimumFootClearance": 0.025559151760949916,
+      "maxFootPositionError": 1.2060265788299145e-8,
+      "maxHorizontalDifference": 1.2060187006828176e-8,
+      "rmsFootPositionError": 7.64838336281512e-9
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 1.0166666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.026109958866345373,
+      "bakedMinimumFootClearance": 0.026106186549658794,
+      "maxFootPositionError": 0.000500684035869617,
+      "maxHorizontalDifference": 0.0003204703524841879,
+      "rmsFootPositionError": 0.00032254722777251153
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0,
+      "referenceLift": 0.02276972800753807,
+      "bakedLift": 0.02276972942002775,
+      "liftDifference": 1.4124896807743426e-9,
+      "referenceMinimumFootClearance": 0.009999999999998899,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 6.4567008600420174e-9,
+      "maxHorizontalDifference": 6.456700860041956e-9,
+      "rmsFootPositionError": 3.889014309774281e-9
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.016666666666666666,
+      "referenceLift": 0.03206914406135919,
+      "bakedLift": 0.031655277632350654,
+      "liftDifference": -0.0004138664290085359,
+      "referenceMinimumFootClearance": 0.009999999999999787,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 0.0004167043280850369,
+      "maxHorizontalDifference": 0.00018621437406050442,
+      "rmsFootPositionError": 0.00031013939385920254
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0.13333333333333333,
+      "referenceLift": 0.04999513887845897,
+      "bakedLift": 0.04999513995411764,
+      "liftDifference": 1.0756586732441065e-9,
+      "referenceMinimumFootClearance": 0.009999999999998899,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 1.236206473295566e-8,
+      "maxHorizontalDifference": 1.2362064730454189e-8,
+      "rmsFootPositionError": 7.585386609113673e-9
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.15,
+      "referenceLift": 0.04305516229518336,
+      "bakedLift": 0.04226669085735413,
+      "liftDifference": -0.0007884714378292301,
+      "referenceMinimumFootClearance": 0.009999999999998899,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 0.0009318156788098459,
+      "maxHorizontalDifference": 0.0007311717830941341,
+      "rmsFootPositionError": 0.0007917110684010972
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "referenceLift": 0.07962346434724399,
+      "bakedLift": 0.07962346452194158,
+      "liftDifference": 1.7469758972765703e-10,
+      "referenceMinimumFootClearance": 0.009999999999997122,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 1.0982847036210593e-8,
+      "maxHorizontalDifference": 1.0802203539928845e-8,
+      "rmsFootPositionError": 6.735112317663333e-9
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "referenceLift": 0.07689249331089609,
+      "bakedLift": 0.07700344538888793,
+      "liftDifference": 0.00011095207799183271,
+      "referenceMinimumFootClearance": 0.009999999999999787,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 0.005875460395777538,
+      "maxHorizontalDifference": 0.005127669258331621,
+      "rmsFootPositionError": 0.003352508826409561
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0.6666666666666666,
+      "referenceLift": 0.043794188927152256,
+      "bakedLift": 0.043794189330474964,
+      "liftDifference": 4.0332270856424657e-10,
+      "referenceMinimumFootClearance": 0.008803622601426753,
+      "bakedMinimumFootClearance": 0.008803622601426753,
+      "maxFootPositionError": 1.885348739295704e-8,
+      "maxHorizontalDifference": 1.8849201134820636e-8,
+      "rmsFootPositionError": 1.2828780818705316e-8
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.6833333333333333,
+      "referenceLift": 0.04736404336446576,
+      "bakedLift": 0.04739038487164393,
+      "liftDifference": 0.00002634150717817363,
+      "referenceMinimumFootClearance": 0.0091607802210536,
+      "bakedMinimumFootClearance": 0.009115212933036965,
+      "maxFootPositionError": 0.0015449679755108732,
+      "maxHorizontalDifference": 0.0008902231932954303,
+      "rmsFootPositionError": 0.001183343970288396
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 1,
+      "referenceLift": 0.027029087298001464,
+      "bakedLift": 0.027029087254411444,
+      "liftDifference": -4.3590020482042746e-11,
+      "referenceMinimumFootClearance": 0.009269490541236713,
+      "bakedMinimumFootClearance": 0.00926949054123849,
+      "maxFootPositionError": 1.2060184238463388e-8,
+      "maxHorizontalDifference": 1.2060184238463387e-8,
+      "rmsFootPositionError": 7.669333315296202e-9
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 1.0166666666666666,
+      "referenceLift": 0.02574777284368235,
+      "bakedLift": 0.025751656269376255,
+      "liftDifference": 0.000003883425693906872,
+      "referenceMinimumFootClearance": 0.0092671135764828,
+      "bakedMinimumFootClearance": 0.009267701522646554,
+      "maxFootPositionError": 0.0005038798263821273,
+      "maxHorizontalDifference": 0.00032047035248323954,
+      "rmsFootPositionError": 0.0003247733109155974
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.027384242521288016,
+      "bakedMinimumFootClearance": 0.02738424110880011,
+      "maxFootPositionError": 6.609396363401965e-9,
+      "maxHorizontalDifference": 6.456701805753877e-9,
+      "rmsFootPositionError": 3.5665020494441796e-9
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.016666666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.022465551799417227,
+      "bakedMinimumFootClearance": 0.02290550050750806,
+      "maxFootPositionError": 0.0004834725763786656,
+      "maxHorizontalDifference": 0.00018621437406834293,
+      "rmsFootPositionError": 0.0003271841429198412
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0.13333333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.0457955672292929,
+      "bakedMinimumFootClearance": 0.04579556631518589,
+      "maxFootPositionError": 1.2408796642088422e-8,
+      "maxHorizontalDifference": 1.2362065258301843e-8,
+      "rmsFootPositionError": 7.524360073560638e-9
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.15,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.04383425967243326,
+      "bakedMinimumFootClearance": 0.043780734078634254,
+      "maxFootPositionError": 0.0010190818127294964,
+      "maxHorizontalDifference": 0.0007311717830866707,
+      "rmsFootPositionError": 0.000719627613980022
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.03393477672315104,
+      "bakedMinimumFootClearance": 0.03393477654874477,
+      "maxFootPositionError": 1.0802709146751137e-8,
+      "maxHorizontalDifference": 1.0802213310675044e-8,
+      "rmsFootPositionError": 6.620105944702881e-9
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.03180401359701168,
+      "bakedMinimumFootClearance": 0.03185890159153626,
+      "maxFootPositionError": 0.0059304188427405915,
+      "maxHorizontalDifference": 0.00512766925833974,
+      "rmsFootPositionError": 0.0033951724534658765
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0.6666666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.014306507502051424,
+      "bakedMinimumFootClearance": 0.014306507369900245,
+      "maxFootPositionError": 1.8866405295707978e-8,
+      "maxHorizontalDifference": 1.884920967064264e-8,
+      "rmsFootPositionError": 1.2834778248865603e-8
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.6833333333333333,
+      "referenceLift": 0.0020420502677573893,
+      "bakedLift": 0.0034497431159614678,
+      "liftDifference": 0.0014076928482040785,
+      "referenceMinimumFootClearance": 0.010000000000000675,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 0.0016319911841812277,
+      "maxHorizontalDifference": 0.0008902231932885315,
+      "rmsFootPositionError": 0.0010706442160585495
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 1,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.06285064488824421,
+      "bakedMinimumFootClearance": 0.06285064493183512,
+      "maxFootPositionError": 1.2060262159052087e-8,
+      "maxHorizontalDifference": 1.2060183377557411e-8,
+      "rmsFootPositionError": 7.648379522583672e-9
+    },
+    {
+      "terrain": "native:savanna:0.15",
+      "point": [
+        30,
+        15
+      ],
+      "terrainSlope": 0.15026110015671923,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 1.0166666666666666,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.06193003767475247,
+      "bakedMinimumFootClearance": 0.06193274988757569,
+      "maxFootPositionError": 0.0005006840358784649,
+      "maxHorizontalDifference": 0.00032047035249034453,
+      "rmsFootPositionError": 0.0003225472277773047
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0,
+      "referenceLift": 0.05193668830375797,
+      "bakedLift": 0.05193668738352164,
+      "liftDifference": -9.202363315807816e-10,
+      "referenceMinimumFootClearance": 0.009999999999999343,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 6.865166240720771e-9,
+      "maxHorizontalDifference": 6.45669459952369e-9,
+      "rmsFootPositionError": 3.7414875130096734e-9
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.016666666666666666,
+      "referenceLift": 0.05116548512000252,
+      "bakedLift": 0.05116885739768362,
+      "liftDifference": 0.0000033722776811018207,
+      "referenceMinimumFootClearance": 0.010000000000000231,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 0.00048667990914050513,
+      "maxHorizontalDifference": 0.00018621437406655673,
+      "rmsFootPositionError": 0.0003294617405523672
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0.13333333333333333,
+      "referenceLift": 0.038179816697216484,
+      "bakedLift": 0.03817981761184974,
+      "liftDifference": 9.146332580201033e-10,
+      "referenceMinimumFootClearance": 0.009601123849972915,
+      "bakedMinimumFootClearance": 0.00960112384968026,
+      "maxFootPositionError": 1.2363106416445542e-8,
+      "maxHorizontalDifference": 1.2362054501591247e-8,
+      "rmsFootPositionError": 7.56044356736285e-9
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.15,
+      "referenceLift": 0.03799133066533411,
+      "bakedLift": 0.03794312208027506,
+      "liftDifference": -0.00004820858505905079,
+      "referenceMinimumFootClearance": 0.00954623099412677,
+      "bakedMinimumFootClearance": 0.009552362839256201,
+      "maxFootPositionError": 0.0009861075712771909,
+      "maxHorizontalDifference": 0.0007311717830908806,
+      "rmsFootPositionError": 0.0006991693938030466
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "referenceLift": 0.01781861910689786,
+      "bakedLift": 0.017818619216747322,
+      "liftDifference": 1.0984946285930164e-10,
+      "referenceMinimumFootClearance": -0.0005234734071408731,
+      "bakedMinimumFootClearance": -0.0005234734723282841,
+      "maxFootPositionError": 1.0818565136963913e-8,
+      "maxHorizontalDifference": 1.0802189110108473e-8,
+      "rmsFootPositionError": 6.616656256946941e-9
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "referenceLift": 0.01563557500262025,
+      "bakedLift": 0.0156392442982054,
+      "liftDifference": 0.0000036692955851513887,
+      "referenceMinimumFootClearance": -0.0005350010929610072,
+      "bakedMinimumFootClearance": -0.000529424466523043,
+      "maxFootPositionError": 0.005928576258461595,
+      "maxHorizontalDifference": 0.00512766925834004,
+      "rmsFootPositionError": 0.003393712121593678
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 0.6666666666666666,
+      "referenceLift": 0.08745769066665643,
+      "bakedLift": 0.08745769106997692,
+      "liftDifference": 4.033204881181973e-10,
+      "referenceMinimumFootClearance": 0.010000000000000231,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 1.8853488679075403e-8,
+      "maxHorizontalDifference": 1.8849202383346787e-8,
+      "rmsFootPositionError": 1.2872767864878356e-8
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 0.6833333333333333,
+      "referenceLift": 0.09050636209005303,
+      "bakedLift": 0.09047810574261428,
+      "liftDifference": -0.00002825634743874872,
+      "referenceMinimumFootClearance": 0.009999999999999343,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 0.0015995588356472808,
+      "maxHorizontalDifference": 0.0008902231932999887,
+      "rmsFootPositionError": 0.0012201405509144813
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": 0,
+      "kind": "sample",
+      "time": 1,
+      "referenceLift": 0.05884103988894651,
+      "bakedLift": 0.058841039845351606,
+      "liftDifference": -4.35949054633511e-11,
+      "referenceMinimumFootClearance": 0.009999999999999787,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 1.2060180164530761e-8,
+      "maxHorizontalDifference": 1.206018016453063e-8,
+      "rmsFootPositionError": 7.704520667925221e-9
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": 0,
+      "kind": "midpoint",
+      "time": 1.0166666666666666,
+      "referenceLift": 0.05761813798650639,
+      "bakedLift": 0.05761963722640573,
+      "liftDifference": 0.0000014992398993385336,
+      "referenceMinimumFootClearance": 0.009999999999999787,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 0.0005019166571500149,
+      "maxHorizontalDifference": 0.0003204703524987667,
+      "rmsFootPositionError": 0.000323402943404743
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0,
+      "referenceLift": 0.04169685289333058,
+      "bakedLift": 0.04169685197309647,
+      "liftDifference": -9.202341111347323e-10,
+      "referenceMinimumFootClearance": 0.007853275144471539,
+      "bakedMinimumFootClearance": 0.007853275144472427,
+      "maxFootPositionError": 6.86518302699303e-9,
+      "maxHorizontalDifference": 6.456712768634614e-9,
+      "rmsFootPositionError": 3.7115680444403545e-9
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.016666666666666666,
+      "referenceLift": 0.041867493609649475,
+      "bakedLift": 0.04186595149204786,
+      "liftDifference": -0.0000015421176016161553,
+      "referenceMinimumFootClearance": 0.008421605442573643,
+      "bakedMinimumFootClearance": 0.008419580737642818,
+      "maxFootPositionError": 0.0004820066371025288,
+      "maxHorizontalDifference": 0.00018621437407420282,
+      "rmsFootPositionError": 0.00032614896443117425
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0.13333333333333333,
+      "referenceLift": 0.037110027835193016,
+      "bakedLift": 0.037110028750335644,
+      "liftDifference": 9.151426283438013e-10,
+      "referenceMinimumFootClearance": 0.009999999999999343,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 1.2363111763391526e-8,
+      "maxHorizontalDifference": 1.2362066483613648e-8,
+      "rmsFootPositionError": 7.559821728581696e-9
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.15,
+      "referenceLift": 0.03599771551696884,
+      "bakedLift": 0.03596091729642259,
+      "liftDifference": -0.00003679822054625248,
+      "referenceMinimumFootClearance": 0.009999999999998455,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 0.0009937997468099323,
+      "maxHorizontalDifference": 0.0007311717830768761,
+      "rmsFootPositionError": 0.0007037670542995357
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.06615609208675455,
+      "bakedMinimumFootClearance": 0.06615608922558636,
+      "maxFootPositionError": 1.0802701743860008e-8,
+      "maxHorizontalDifference": 1.0802205941483812e-8,
+      "rmsFootPositionError": 6.620097708575567e-9
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "referenceLift": 0,
+      "bakedLift": 0,
+      "liftDifference": 0,
+      "referenceMinimumFootClearance": 0.07433090412574161,
+      "bakedMinimumFootClearance": 0.07184689692501456,
+      "maxFootPositionError": 0.005930418842732479,
+      "maxHorizontalDifference": 0.005127669258329582,
+      "rmsFootPositionError": 0.0033951724534633998
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 0.6666666666666666,
+      "referenceLift": 0.05504520628907228,
+      "bakedLift": 0.05504520669239499,
+      "liftDifference": 4.0332270856424657e-10,
+      "referenceMinimumFootClearance": 0.009999999999999343,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 1.885349529040665e-8,
+      "maxHorizontalDifference": 1.884920902459496e-8,
+      "rmsFootPositionError": 1.2837212421039434e-8
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 0.6833333333333333,
+      "referenceLift": 0.05363806533813298,
+      "bakedLift": 0.0535741670457206,
+      "liftDifference": -0.00006389829241237877,
+      "referenceMinimumFootClearance": 0.00999999999999801,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 0.0016351964665325088,
+      "maxHorizontalDifference": 0.0008902231932865915,
+      "rmsFootPositionError": 0.00124486694877201
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": 0.7,
+      "kind": "sample",
+      "time": 1,
+      "referenceLift": 0.043072780816402645,
+      "bakedLift": 0.043072780772811736,
+      "liftDifference": -4.3590908660462446e-11,
+      "referenceMinimumFootClearance": 0.008964316254772786,
+      "bakedMinimumFootClearance": 0.00896431625477545,
+      "maxFootPositionError": 1.206017685268058e-8,
+      "maxHorizontalDifference": 1.2060176852680452e-8,
+      "rmsFootPositionError": 7.683716762883953e-9
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": 0.7,
+      "kind": "midpoint",
+      "time": 1.0166666666666666,
+      "referenceLift": 0.042589180197502685,
+      "bakedLift": 0.04259191383571714,
+      "liftDifference": 0.000002733638214458267,
+      "referenceMinimumFootClearance": 0.0077606479753460356,
+      "bakedMinimumFootClearance": 0.007766380149231811,
+      "maxFootPositionError": 0.0005029326222609092,
+      "maxHorizontalDifference": 0.0003204703524846879,
+      "rmsFootPositionError": 0.00032411097760803566
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0,
+      "referenceLift": 0.06637293326835803,
+      "bakedLift": 0.06637293234812125,
+      "liftDifference": -9.202367756699914e-10,
+      "referenceMinimumFootClearance": 0.009999999999999787,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 6.865174560304131e-9,
+      "maxHorizontalDifference": 6.456703284986674e-9,
+      "rmsFootPositionError": 3.792941287949289e-9
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.016666666666666666,
+      "referenceLift": 0.06542720768469934,
+      "bakedLift": 0.06543081838095999,
+      "liftDifference": 0.0000036106962606474724,
+      "referenceMinimumFootClearance": 0.009999999999999787,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 0.00048690675054929026,
+      "maxHorizontalDifference": 0.00018621437407588344,
+      "rmsFootPositionError": 0.000329623480752449
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0.13333333333333333,
+      "referenceLift": 0.04625554346525229,
+      "bakedLift": 0.0462555445409083,
+      "liftDifference": 1.0756560087088474e-9,
+      "referenceMinimumFootClearance": 0.009999999999999787,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 1.2362065547126434e-8,
+      "maxHorizontalDifference": 1.2362065544607064e-8,
+      "rmsFootPositionError": 7.582088066375963e-9
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.15,
+      "referenceLift": 0.04213484573364301,
+      "bakedLift": 0.04216893878715133,
+      "liftDifference": 0.0000340930535083217,
+      "referenceMinimumFootClearance": 0.010000000000000231,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 0.0010431171344536705,
+      "maxHorizontalDifference": 0.000731171783067873,
+      "rmsFootPositionError": 0.0007356609615611557
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "referenceLift": 0.07543656981467883,
+      "bakedLift": 0.07543656998911841,
+      "liftDifference": 1.7443957389673415e-10,
+      "referenceMinimumFootClearance": 0.009999999999999787,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 1.0966949997298018e-8,
+      "maxHorizontalDifference": 1.0802195712104211e-8,
+      "rmsFootPositionError": 6.72279469619282e-9
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "referenceLift": 0.07289598809410869,
+      "bakedLift": 0.07300196047958352,
+      "liftDifference": 0.00010597238547482846,
+      "referenceMinimumFootClearance": 0.009999999999999787,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 0.005877893136387216,
+      "maxHorizontalDifference": 0.00512766925834313,
+      "rmsFootPositionError": 0.0033543566030364816
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 0.6666666666666666,
+      "referenceLift": 0.10993937058303827,
+      "bakedLift": 0.10993937098635875,
+      "liftDifference": 4.033204881181973e-10,
+      "referenceMinimumFootClearance": 0.010000000000000231,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 1.885348815789056e-8,
+      "maxHorizontalDifference": 1.884920186204343e-8,
+      "rmsFootPositionError": 1.2907188924061887e-8
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 0.6833333333333333,
+      "referenceLift": 0.11371879495138115,
+      "bakedLift": 0.11366145153729201,
+      "liftDifference": -0.000057343414089139344,
+      "referenceMinimumFootClearance": 0.009999999999998455,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 0.0016286423674399361,
+      "maxHorizontalDifference": 0.0008902231932991394,
+      "rmsFootPositionError": 0.001240279658380825
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": -1.1,
+      "kind": "sample",
+      "time": 1,
+      "referenceLift": 0.07485132431277464,
+      "bakedLift": 0.07485132426917973,
+      "liftDifference": -4.35949054633511e-11,
+      "referenceMinimumFootClearance": 0.009999999999999787,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 1.2060172060428146e-8,
+      "maxHorizontalDifference": 1.2060172060428014e-8,
+      "rmsFootPositionError": 7.73233499901863e-9
+    },
+    {
+      "terrain": "native:savanna:0.25",
+      "point": [
+        15,
+        -35
+      ],
+      "terrainSlope": 0.2459625540364157,
+      "yaw": -1.1,
+      "kind": "midpoint",
+      "time": 1.0166666666666666,
+      "referenceLift": 0.07334923425420659,
+      "bakedLift": 0.07335097191268503,
+      "liftDifference": 0.0000017376584784400961,
+      "referenceMinimumFootClearance": 0.009999999999999343,
+      "bakedMinimumFootClearance": 0.009999999999999787,
+      "maxFootPositionError": 0.0005021128100396416,
+      "maxHorizontalDifference": 0.0003204703524892957,
+      "rmsFootPositionError": 0.00032353945927813426
+    }
+  ]
+}

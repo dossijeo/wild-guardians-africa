@@ -1,0 +1,1478 @@
+TAP version 13
+# Subtest: complete schema passes; this fixture is not hardware evidence
+ok 1 - complete schema passes; this fixture is not hardware evidence
+  ---
+  duration_ms: 7.531
+  ...
+# Subtest: A5 rejects missing cold sample
+ok 2 - A5 rejects missing cold sample
+  ---
+  duration_ms: 1.3565
+  ...
+# Subtest: A5 rejects missing incremental demand
+ok 3 - A5 rejects missing incremental demand
+  ---
+  duration_ms: 1.5426
+  ...
+# Subtest: A5 rejects missing local scenario
+ok 4 - A5 rejects missing local scenario
+  ---
+  duration_ms: 0.9479
+  ...
+# Subtest: A5 rejects missing recovery
+ok 5 - A5 rejects missing recovery
+  ---
+  duration_ms: 1.1017
+  ...
+# Subtest: A5 rejects reconstructed warm geometry
+ok 6 - A5 rejects reconstructed warm geometry
+  ---
+  duration_ms: 1.218
+  ...
+# Subtest: A5 rejects extra warm factory
+ok 7 - A5 rejects extra warm factory
+  ---
+  duration_ms: 2.5843
+  ...
+# Subtest: A5 rejects extra warm fork
+ok 8 - A5 rejects extra warm fork
+  ---
+  duration_ms: 1.3222
+  ...
+# Subtest: A5 rejects incomplete regional demand
+ok 9 - A5 rejects incomplete regional demand
+  ---
+  duration_ms: 1.4347
+  ...
+# Subtest: A5 rejects unrelated pair changed
+ok 10 - A5 rejects unrelated pair changed
+  ---
+  duration_ms: 1.4401
+  ...
+# Subtest: A5 rejects old pair never retired
+ok 11 - A5 rejects old pair never retired
+  ---
+  duration_ms: 1.2093
+  ...
+# Subtest: A5 rejects source bytes changed
+ok 12 - A5 rejects source bytes changed
+  ---
+  duration_ms: 1.0541
+  ...
+# Subtest: A5 rejects premature source disposal
+ok 13 - A5 rejects premature source disposal
+  ---
+  duration_ms: 1.4269
+  ...
+# Subtest: A5 rejects candidate cancellation unobserved
+ok 14 - A5 rejects candidate cancellation unobserved
+  ---
+  duration_ms: 1.0859
+  ...
+# Subtest: A5 rejects candidate leaked
+ok 15 - A5 rejects candidate leaked
+  ---
+  duration_ms: 1.1398
+  ...
+# Subtest: A5 rejects atlas lease leaked
+ok 16 - A5 rejects atlas lease leaked
+  ---
+  duration_ms: 1.2636
+  ...
+# Subtest: A5 rejects atlas texture leaked
+ok 17 - A5 rejects atlas texture leaked
+  ---
+  duration_ms: 1.0798
+  ...
+# Subtest: A5 rejects private buffer leaked
+ok 18 - A5 rejects private buffer leaked
+  ---
+  duration_ms: 1.1442
+  ...
+# Subtest: A5 rejects missing drain
+ok 19 - A5 rejects missing drain
+  ---
+  duration_ms: 1.128
+  ...
+# Subtest: A5 rejects unrelated actor retired
+ok 20 - A5 rejects unrelated actor retired
+  ---
+  duration_ms: 1.1396
+  ...
+# Subtest: A5 rejects presentation lost
+ok 21 - A5 rejects presentation lost
+  ---
+  duration_ms: 1.0997
+  ...
+# Subtest: A5 rejects unsafe GPU alias
+ok 22 - A5 rejects unsafe GPU alias
+  ---
+  duration_ms: 1.0239
+  ...
+# Subtest: A5 rejects unsafe CPU alias
+ok 23 - A5 rejects unsafe CPU alias
+  ---
+  duration_ms: 1.0087
+  ...
+# Subtest: A5 rejects unexplained missing owner
+ok 24 - A5 rejects unexplained missing owner
+  ---
+  duration_ms: 1.0127
+  ...
+# Subtest: QA rewrites apply once to real existing modules and reject drift
+ok 25 - QA rewrites apply once to real existing modules and reject drift
+  ---
+  duration_ms: 3.0189
+  ...
+# Subtest: A5 disposal preserves another live owner: deep-clone
+ok 26 - A5 disposal preserves another live owner: deep-clone
+  ---
+  duration_ms: 5.9547
+  ...
+# Subtest: A5 disposal preserves another live owner: cpu-array-shared-private-attributes
+ok 27 - A5 disposal preserves another live owner: cpu-array-shared-private-attributes
+  ---
+  duration_ms: 1.4224
+  ...
+# Subtest: A5 negative control detects premature destruction: shared-attribute
+ok 28 - A5 negative control detects premature destruction: shared-attribute
+  ---
+  duration_ms: 1.0226
+  ...
+# Subtest: private GPU attributes do not isolate writers of a shared CPU array
+ok 29 - private GPU attributes do not isolate writers of a shared CPU array
+  ---
+  duration_ms: 0.43
+  ...
+# Subtest: stripping geometry before disposal breaks actual RenderObject listener
+ok 30 - stripping geometry before disposal breaks actual RenderObject listener
+  ---
+  duration_ms: 1.3354
+  ...
+# Subtest: shrub LOD uses authored distances, cancels stale swaps and returns after a fully culled chunk
+ok 31 - shrub LOD uses authored distances, cancels stale swaps and returns after a fully culled chunk
+  ---
+  duration_ms: 44.7862
+  ...
+# Subtest: a shrub with a missing LOD retains its original geometry
+ok 32 - a shrub with a missing LOD retains its original geometry
+  ---
+  duration_ms: 2.4904
+  ...
+# Subtest: savanna shrubs use the real authored middle-distance geometry
+ok 33 - savanna shrubs use the real authored middle-distance geometry
+  ---
+  duration_ms: 22.6805
+  ...
+# Subtest: coordinated culling is intentional and does not mark visible vegetation incomplete
+ok 34 - coordinated culling is intentional and does not mark visible vegetation incomplete
+  ---
+  duration_ms: 10.7771
+  ...
+# Subtest: ground contact publications follow only admitted biome revisions
+ok 35 - ground contact publications follow only admitted biome revisions
+  ---
+  duration_ms: 8.8962
+  ...
+# Subtest: ground contact publication removes suppressed instances when the empty replacement becomes visible
+ok 36 - ground contact publication removes suppressed instances when the empty replacement becomes visible
+  ---
+  duration_ms: 5.3996
+  ...
+# Subtest: nonresident far sources admit real 3D invisibly and revoke on residency or disposal
+ok 37 - nonresident far sources admit real 3D invisibly and revoke on residency or disposal
+  ---
+  duration_ms: 6.9766
+  ...
+# Subtest: nonresident admission cancels cleanly and only relevant suppressions invalidate
+ok 38 - nonresident admission cancels cleanly and only relevant suppressions invalidate
+  ---
+  duration_ms: 4.7069
+  ...
+# Subtest: far sources require matching resident identities and invalidate before suppression or removal
+ok 39 - far sources require matching resident identities and invalidate before suppression or removal
+  ---
+  duration_ms: 3.7876
+  ...
+# Subtest: resident far sources accept a stable external revision across publications
+ok 40 - resident far sources accept a stable external revision across publications
+  ---
+  duration_ms: 2.0334
+  ...
+# Subtest: camera LOD replacement keeps native trees visible and selectable until admission
+ok 41 - camera LOD replacement keeps native trees visible and selectable until admission
+  ---
+  duration_ms: 9.1662
+  ...
+# Subtest: camera LOD replacement keeps attributes trees visible and selectable until admission
+ok 42 - camera LOD replacement keeps attributes trees visible and selectable until admission
+  ---
+  duration_ms: 6.3386
+  ...
+# Subtest: camera movement cancels an obsolete LOD admission without replacing the visible trees
+ok 43 - camera movement cancels an obsolete LOD admission without replacing the visible trees
+  ---
+  duration_ms: 3.9242
+  ...
+# Subtest: first biome batch uses the latest bootstrap camera before asset loading finishes
+ok 44 - first biome batch uses the latest bootstrap camera before asset loading finishes
+  ---
+  duration_ms: 3.3467
+  ...
+# Subtest: first biome batch is re-prepared if the bootstrap camera changes during admission
+ok 45 - first biome batch is re-prepared if the bootstrap camera changes during admission
+  ---
+  duration_ms: 4.612
+  ...
+# Subtest: coordinated first biome offer retries when its bootstrap camera becomes stale
+ok 46 - coordinated first biome offer retries when its bootstrap camera becomes stale
+  ---
+  duration_ms: 4.6004
+  ...
+# Subtest: real chunk coordinator retries the first tree batch if the bootstrap camera changes during admission
+ok 47 - real chunk coordinator retries the first tree batch if the bootstrap camera changes during admission
+  ---
+  duration_ms: 5.2103
+  ...
+# Subtest: coordinated LOD bins retain every tree in camera metadata and apply suppression
+ok 48 - coordinated LOD bins retain every tree in camera metadata and apply suppression
+  ---
+  duration_ms: 4.6712
+  ...
+# Subtest: authored LOD sources are created on demand, shared and owned by the biome provider
+ok 49 - authored LOD sources are created on demand, shared and owned by the biome provider
+  ---
+  duration_ms: 3.6312
+  ...
+# Subtest: a transient demand texture failure can be retried without poisoning later biome slots
+ok 50 - a transient demand texture failure can be retried without poisoning later biome slots
+  ---
+  duration_ms: 3.258
+  ...
+# Subtest: a failed close tree texture keeps the original tree visible and upgrades it after retry
+ok 51 - a failed close tree texture keeps the original tree visible and upgrades it after retry
+  ---
+  duration_ms: 373.4816
+  ...
+# Subtest: persistent close texture failure leaves the original tree usable and retry bounded
+ok 52 - persistent close texture failure leaves the original tree usable and retry bounded
+  ---
+  duration_ms: 603.4386
+  ...
+# Subtest: tree upgrade keeps the admitted original until the close material is admitted
+ok 53 - tree upgrade keeps the admitted original until the close material is admitted
+  ---
+  duration_ms: 302.6029
+  ...
+# Subtest: near textures retain the original tree and respect vertex buffer limits (native)
+ok 54 - near textures retain the original tree and respect vertex buffer limits (native)
+  ---
+  duration_ms: 3.8087
+  ...
+# Subtest: near textures retain the original tree and respect vertex buffer limits (attributes)
+ok 55 - near textures retain the original tree and respect vertex buffer limits (attributes)
+  ---
+  duration_ms: 3.4738
+  ...
+# Subtest: near download does not replace a tree that left range before preparation finished
+ok 56 - near download does not replace a tree that left range before preparation finished
+  ---
+  duration_ms: 3.2692
+  ...
+# Subtest: closing the biome cancels the delayed close texture retry
+ok 57 - closing the biome cancels the delayed close texture retry
+  ---
+  duration_ms: 324.031
+  ...
+# Subtest: a new confirmed chunk revision retries a failed demanded tree without a per-frame retry loop
+ok 58 - a new confirmed chunk revision retries a failed demanded tree without a per-frame retry loop
+  ---
+  duration_ms: 2.5666
+  ...
+# Subtest: a visible tree retries one transient demand failure without another chunk revision
+ok 59 - a visible tree retries one transient demand failure without another chunk revision
+  ---
+  duration_ms: 413.2708
+  ...
+# Subtest: a persistent tree load failure has a bounded retry
+ok 60 - a persistent tree load failure has a bounded retry
+  ---
+  duration_ms: 955.7304
+  ...
+# Subtest: disposing the biome cancels a scheduled tree retry
+ok 61 - disposing the biome cancels a scheduled tree retry
+  ---
+  duration_ms: 366.0487
+  ...
+# Subtest: coordinated biome waits for all demanded models and publishes only when finalized
+ok 62 - coordinated biome waits for all demanded models and publishes only when finalized
+  ---
+  duration_ms: 4.2391
+  ...
+# Subtest: coordinated biome withdraws obsolete work and keeps the prior revision visible
+ok 63 - coordinated biome withdraws obsolete work and keeps the prior revision visible
+  ---
+  duration_ms: 4.019
+  ...
+# Subtest: reentrant cancellation detaches partially attached biome immediately while retaining GPU resources
+ok 64 - reentrant cancellation detaches partially attached biome immediately while retaining GPU resources
+  ---
+  duration_ms: 4.1478
+  ...
+# Subtest: coordinated demand loading waits for all visible slots and represents an empty chunk
+ok 65 - coordinated demand loading waits for all visible slots and represents an empty chunk
+  ---
+  duration_ms: 2.3306
+  ...
+# Subtest: unloaded previously suppressed visible prop leaves camera and selection incomplete
+ok 66 - unloaded previously suppressed visible prop leaves camera and selection incomplete
+  ---
+  duration_ms: 3.3209
+  ...
+# Subtest: late native model restores the old visible revision without cancelling the incoming one
+ok 67 - late native model restores the old visible revision without cancelling the incoming one
+  ---
+  duration_ms: 6.9624
+  ...
+# Subtest: late attributes model restores the old visible revision without cancelling the incoming one
+ok 68 - late attributes model restores the old visible revision without cancelling the incoming one
+  ---
+  duration_ms: 4.653
+  ...
+# Subtest: late visible restoration is cancelled on resuppression, supersession and disposal
+ok 69 - late visible restoration is cancelled on resuppression, supersession and disposal
+  ---
+  duration_ms: 9.0497
+  ...
+# Subtest: late visible restoration updates camera after its snapshot transfers to a newer pending revision
+ok 70 - late visible restoration updates camera after its snapshot transfers to a newer pending revision
+  ---
+  duration_ms: 4.7245
+  ...
+# Subtest: late native restoration preserves off-origin coordinates and shadows
+ok 71 - late native restoration preserves off-origin coordinates and shadows
+  ---
+  duration_ms: 4.6724
+  ...
+# Subtest: late attributes restoration preserves off-origin coordinates and shadows
+ok 72 - late attributes restoration preserves off-origin coordinates and shadows
+  ---
+  duration_ms: 2.4111
+  ...
+# Subtest: resuppression during a delayed model load prevents a stale visible restoration
+ok 73 - resuppression during a delayed model load prevents a stale visible restoration
+  ---
+  duration_ms: 12.2342
+  ...
+# Subtest: restoring a missing model within the visible revision uses one biome offer
+ok 74 - restoring a missing model within the visible revision uses one biome offer
+  ---
+  duration_ms: 2.5885
+  ...
+# Subtest: real chunk coordinator handles visible publication first
+ok 75 - real chunk coordinator handles visible publication first
+  ---
+  duration_ms: 5.5505
+  ...
+# Subtest: real chunk coordinator handles incoming publication first
+ok 76 - real chunk coordinator handles incoming publication first
+  ---
+  duration_ms: 3.4081
+  ...
+# Subtest: a deferred biome notification cannot publish metadata from a superseded revision
+ok 77 - a deferred biome notification cannot publish metadata from a superseded revision
+  ---
+  duration_ms: 1.5102
+  ...
+# Subtest: visible native props apply and reverse suppression during a pending revision
+ok 78 - visible native props apply and reverse suppression during a pending revision
+  ---
+  duration_ms: 3.0266
+  ...
+# Subtest: visible attributes props apply and reverse suppression during a pending revision
+ok 79 - visible attributes props apply and reverse suppression during a pending revision
+  ---
+  duration_ms: 2.3337
+  ...
+# Subtest: previously suppressed native props reappear while replacement is pending
+ok 80 - previously suppressed native props reappear while replacement is pending
+  ---
+  duration_ms: 2.0389
+  ...
+# Subtest: previously suppressed attributes props reappear while replacement is pending
+ok 81 - previously suppressed attributes props reappear while replacement is pending
+  ---
+  duration_ms: 1.5426
+  ...
+# Subtest: suppression keeps native pond and fluid instances aligned
+ok 82 - suppression keeps native pond and fluid instances aligned
+  ---
+  duration_ms: 4.7864
+  ...
+# Subtest: suppression keeps attributes pond and fluid instances aligned
+ok 83 - suppression keeps attributes pond and fluid instances aligned
+  ---
+  duration_ms: 2.2791
+  ...
+# Subtest: coordinated recovery rejects an incomplete chunk instead of leaving a terrain offer unmatched
+ok 84 - coordinated recovery rejects an incomplete chunk instead of leaving a terrain offer unmatched
+  ---
+  duration_ms: 0.6797
+  ...
+# Subtest: versioned checkpoint equivalence refers to confirmed data while graphical publication waits
+ok 85 - versioned checkpoint equivalence refers to confirmed data while graphical publication waits
+  ---
+  duration_ms: 0.9252
+  ...
+# Subtest: legacy checkpoint visual epoch does not alias the next live revision
+ok 86 - legacy checkpoint visual epoch does not alias the next live revision
+  ---
+  duration_ms: 0.8947
+  ...
+# Subtest: checkpoint publication epoch does not alter its logical identity
+ok 87 - checkpoint publication epoch does not alter its logical identity
+  ---
+  duration_ms: 0.6707
+  ...
+# Subtest: checkpoint publication revision is independent from its confirmed source revision
+ok 88 - checkpoint publication revision is independent from its confirmed source revision
+  ---
+  duration_ms: 0.9694
+  ...
+# Subtest: biome removal withdraws pending work, tombstones the revision and clears visible trees
+ok 89 - biome removal withdraws pending work, tombstones the revision and clears visible trees
+  ---
+  duration_ms: 1.7411
+  ...
+# Subtest: biome removal before catalog completion cannot resurrect a removed chunk
+ok 90 - biome removal before catalog completion cannot resurrect a removed chunk
+  ---
+  duration_ms: 6.5712
+  ...
+# Subtest: failed biome preparation defers instance disposal until admission releases it
+ok 91 - failed biome preparation defers instance disposal until admission releases it
+  ---
+  duration_ms: 1.8524
+  ...
+# Subtest: failed biome attachment retains the previous revision and reports the failure
+ok 92 - failed biome attachment retains the previous revision and reports the failure
+  ---
+  duration_ms: 2.5175
+  ...
+# Subtest: biome notification failure does not discard an already attached replacement
+ok 93 - biome notification failure does not discard an already attached replacement
+  ---
+  duration_ms: 2.0506
+  ...
+# Subtest: synchronous biome attachment failure releases new instances and retains the old revision
+ok 94 - synchronous biome attachment failure releases new instances and retains the old revision
+  ---
+  duration_ms: 1.6197
+  ...
+# Subtest: confirmed suppression changes control invalidation without losing sequence updates
+ok 95 - confirmed suppression changes control invalidation without losing sequence updates
+  ---
+  duration_ms: 1.2534
+  ...
+# Subtest: chunks received before biome catalogue publish complete empty tree data
+ok 96 - chunks received before biome catalogue publish complete empty tree data
+  ---
+  duration_ms: 1.7395
+  ...
+# Subtest: confirmed biome demand loads only needed slots and updates when chunks change
+ok 97 - confirmed biome demand loads only needed slots and updates when chunks change
+  ---
+  duration_ms: 1.875
+  ...
+# Subtest: biome demand skips a suppressed type until it becomes visible
+ok 98 - biome demand skips a suppressed type until it becomes visible
+  ---
+  duration_ms: 1.3476
+  ...
+# Subtest: suppression updates only chunks containing the changed prop and reindexes replacements
+ok 99 - suppression updates only chunks containing the changed prop and reindexes replacements
+  ---
+  duration_ms: 1.6869
+  ...
+# Subtest: one prop identity shared by two chunks invalidates both
+ok 100 - one prop identity shared by two chunks invalidates both
+  ---
+  duration_ms: 5.0997
+  ...
+# Subtest: pending biome admission blocks selection until its instances are published
+ok 101 - pending biome admission blocks selection until its instances are published
+  ---
+  duration_ms: 8.0924
+  ...
+# Subtest: biome maps are decoded by the supplied auxiliary loader and owned until disposal
+ok 102 - biome maps are decoded by the supplied auxiliary loader and owned until disposal
+  ---
+  duration_ms: 1.9091
+  ...
+# Subtest: biome geometry bytes come from the auxiliary loader without a graphical-worker fetch
+ok 103 - biome geometry bytes come from the auxiliary loader without a graphical-worker fetch
+  ---
+  duration_ms: 1.4711
+  ...
+# Subtest: closing biome props retains pending instance and shared resources through compilation
+ok 104 - closing biome props retains pending instance and shared resources through compilation
+  ---
+  duration_ms: 33.805
+  ...
+# Subtest: chunk replacement preserves admitted props and cancels obsolete preparations
+ok 105 - chunk replacement preserves admitted props and cancels obsolete preparations
+  ---
+  duration_ms: 5.8805
+  ...
+# Subtest: loading an additional slot while a chunk is pending retains every slot
+ok 106 - loading an additional slot while a chunk is pending retains every slot
+  ---
+  duration_ms: 5.4467
+  ...
+# Subtest: publishes effective tree bounds and versions on terrain and suppression changes
+ok 107 - publishes effective tree bounds and versions on terrain and suppression changes
+  ---
+  duration_ms: 8.0649
+  ...
+# Subtest: installs real chunk instance transforms and responds to authoritative suppressions and revisions
+ok 108 - installs real chunk instance transforms and responds to authoritative suppressions and revisions
+  ---
+  duration_ms: 7.3553
+  ...
+# Subtest: renders solid biome slots including the clipped special asset
+ok 109 - renders solid biome slots including the clipped special asset
+  ---
+  duration_ms: 5.5614
+  ...
+# Subtest: shares only matching materials while keeping instance buffers and shadows independent
+ok 110 - shares only matching materials while keeping instance buffers and shadows independent
+  ---
+  duration_ms: 10.3951
+  ...
+# Subtest: attribute instance contract preserves chunk batches and suppression lifecycle
+ok 111 - attribute instance contract preserves chunk batches and suppression lifecycle
+  ---
+  duration_ms: 3.905
+  ...
+# Subtest: attribute instance picking matches native transformed geometry
+ok 112 - attribute instance picking matches native transformed geometry
+  ---
+  duration_ms: 8.1565
+  ...
+# Subtest: biome shadow cutout preserves texture coverage by default and shares compatible graphs
+ok 113 - biome shadow cutout preserves texture coverage by default and shares compatible graphs
+  ---
+  duration_ms: 9.077
+  ...
+# Subtest: loads only requested slots and preserves existing instance buffers on later requests
+ok 114 - loads only requested slots and preserves existing instance buffers on later requests
+  ---
+  duration_ms: 3.6821
+  ...
+# Subtest: selectable invalidation tracks asynchronous prop availability, suppression and replacement
+ok 115 - selectable invalidation tracks asynchronous prop availability, suppression and replacement
+  ---
+  duration_ms: 2.3722
+  ...
+# Subtest: renders the dry desert special slot in both instance layouts without generating water
+ok 116 - renders the dry desert special slot in both instance layouts without generating water
+  ---
+  duration_ms: 2.4397
+  ...
+# Subtest: desert special geometry consumes an actual Wild Engine chunk and authored asset
+ok 117 - desert special geometry consumes an actual Wild Engine chunk and authored asset
+  ---
+  duration_ms: 46.9927
+  ...
+# Subtest: clipped asset and water share chunk bounds while using shared shader graphs
+ok 118 - clipped asset and water share chunk bounds while using shared shader graphs
+  ---
+  duration_ms: 6.6552
+  ...
+# Subtest: ponds use confirmed Wild Engine instances and the real biome fluid outlines
+ok 119 - ponds use confirmed Wild Engine instances and the real biome fluid outlines
+  ---
+  duration_ms: 49.0948
+  ...
+# Subtest: volcanic asset uses real Wild Engine instances, authored fluid and the confirmed clock
+ok 120 - volcanic asset uses real Wild Engine instances, authored fluid and the confirmed clock
+  ---
+  duration_ms: 30.4414
+  ...
+# Subtest: biome instances borrow the surface-owned water material
+ok 121 - biome instances borrow the surface-owned water material
+  ---
+  duration_ms: 2.0019
+  ...
+# Subtest: biome contact notifications retain admission source sequence across later confirmations
+ok 122 - biome contact notifications retain admission source sequence across later confirmations
+  ---
+  duration_ms: 12.8743
+  ...
+# Subtest: biome contact order follows the committed readmission of the same logical revision
+ok 123 - biome contact order follows the committed readmission of the same logical revision
+  ---
+  duration_ms: 3.7877
+  ...
+# Subtest: prepared terrain batch survives a near-texture prototype upgrade
+ok 124 - prepared terrain batch survives a near-texture prototype upgrade
+  ---
+  duration_ms: 5.3833
+  ...
+# Subtest: atlas leases share textures and defer disposal until users and compilation finish
+ok 125 - atlas leases share textures and defer disposal until users and compilation finish
+  ---
+  duration_ms: 10.9866
+  ...
+# Subtest: cancelling one waiter preserves a concurrent shared load
+ok 126 - cancelling one waiter preserves a concurrent shared load
+  ---
+  duration_ms: 3.303
+  ...
+# Subtest: invalid image dimensions close decoded image and reject without a lease
+ok 127 - invalid image dimensions close decoded image and reject without a lease
+  ---
+  duration_ms: 0.6788
+  ...
+# Subtest: surface disposal during a pending decode releases the late bitmap
+ok 128 - surface disposal during a pending decode releases the late bitmap
+  ---
+  duration_ms: 3.419
+  ...
+# Subtest: atlas stays alive until already submitted GPU work has completed
+ok 129 - atlas stays alive until already submitted GPU work has completed
+  ---
+  duration_ms: 1.9911
+  ...
+# Subtest: a transient manifest failure can be retried without replacing the owner
+ok 130 - a transient manifest failure can be retried without replacing the owner
+  ---
+  duration_ms: 1.8686
+  ...
+# Subtest: manifest diagnostics distinguish waiting, response and decoded data
+ok 131 - manifest diagnostics distinguish waiting, response and decoded data
+  ---
+  duration_ms: 0.7435
+  ...
+# Subtest: confirmed regional chunk reaches admitted swap and restores before source invalidation
+ok 132 - confirmed regional chunk reaches admitted swap and restores before source invalidation
+  ---
+  duration_ms: 13.9004
+  ...
+# Subtest: losing revision support invalidates coverage before strict sequence fallback
+ok 133 - losing revision support invalidates coverage before strict sequence fallback
+  ---
+  duration_ms: 3.1587
+  ...
+# Subtest: missing shadow reservation or source defers without acquiring atlases
+ok 134 - missing shadow reservation or source defers without acquiring atlases
+  ---
+  duration_ms: 6.7484
+  ...
+# Subtest: failed swap acquisition releases prior atlas leases
+ok 135 - failed swap acquisition releases prior atlas leases
+  ---
+  duration_ms: 1.8155
+  ...
+# Subtest: detached fallback is retained during invalidation and retired when its chunk leaves the region
+ok 136 - detached fallback is retained during invalidation and retired when its chunk leaves the region
+  ---
+  duration_ms: 2.0218
+  ...
+# Subtest: a current empty regional result retires detached old coverage, but a stale result does not
+ok 137 - a current empty regional result retires detached old coverage, but a stale result does not
+  ---
+  duration_ms: 2.3972
+  ...
+# Subtest: bootstrap cancellation does not wait for an unavailable manifest
+ok 138 - bootstrap cancellation does not wait for an unavailable manifest
+  ---
+  duration_ms: 1.9061
+  ...
+# Subtest: aborting a live owner removes its subscription and closes it
+ok 139 - aborting a live owner removes its subscription and closes it
+  ---
+  duration_ms: 1.2213
+  ...
+# Subtest: nonresident coverage retains real 3D until a resident replacement is published
+ok 140 - nonresident coverage retains real 3D until a resident replacement is published
+  ---
+  duration_ms: 34.362
+  ...
+# Subtest: real biome sources publish a pair and restore 3D before a suppression rebuild
+ok 141 - real biome sources publish a pair and restore 3D before a suppression rebuild
+  ---
+  duration_ms: 6.693
+  ...
+# Subtest: confirmed revision cancels the first unserved far request through the coverage owner
+ok 142 - confirmed revision cancels the first unserved far request through the coverage owner
+  ---
+  duration_ms: 1.7136
+  ...
+# Subtest: far pair excludes color draw but preserves shadow and near fallback (native)
+ok 143 - far pair excludes color draw but preserves shadow and near fallback (native)
+  ---
+  duration_ms: 19.9747
+  ...
+# Subtest: far pair excludes color draw but preserves shadow and near fallback (attributes)
+ok 144 - far pair excludes color draw but preserves shadow and near fallback (attributes)
+  ---
+  duration_ms: 2.7494
+  ...
+# Subtest: far-only drawing fails closed without a reserved shadow pass
+ok 145 - far-only drawing fails closed without a reserved shadow pass
+  ---
+  duration_ms: 1.8175
+  ...
+# Subtest: transition becomes shadow-only once the entire batch is far
+ok 146 - transition becomes shadow-only once the entire batch is far
+  ---
+  duration_ms: 1.2475
+  ...
+# Subtest: approaching and receding preserve complementary coverage without re-admission
+ok 147 - approaching and receding preserve complementary coverage without re-admission
+  ---
+  duration_ms: 1.7705
+  ...
+# Subtest: mixed-distance batches retain both draws until every unsuppressed tree is near or far
+ok 148 - mixed-distance batches retain both draws until every unsuppressed tree is near or far
+  ---
+  duration_ms: 1.7213
+  ...
+# Subtest: large tree keeps 3D coverage near its canopy (native)
+ok 149 - large tree keeps 3D coverage near its canopy (native)
+  ---
+  duration_ms: 2.3178
+  ...
+# Subtest: large tree keeps 3D coverage near its canopy (attributes)
+ok 150 - large tree keeps 3D coverage near its canopy (attributes)
+  ---
+  duration_ms: 2.5615
+  ...
+# Subtest: large world coordinates retain both draws around a float32 boundary
+ok 151 - large world coordinates retain both draws around a float32 boundary
+  ---
+  duration_ms: 1.9175
+  ...
+# Subtest: candidate bounds beyond the atlas expand both paired radii
+ok 152 - candidate bounds beyond the atlas expand both paired radii
+  ---
+  duration_ms: 1.5325
+  ...
+# Subtest: missing or invalid bounds are computed on the clone without mutating the source
+ok 153 - missing or invalid bounds are computed on the clone without mutating the source
+  ---
+  duration_ms: 2.5755
+  ...
+# Subtest: non-finite vertex bounds reject the candidate and release clones while retaining the 3D source
+ok 154 - non-finite vertex bounds reject the candidate and release clones while retaining the 3D source
+  ---
+  duration_ms: 3.0387
+  ...
+# Subtest: GPU-only positions reject even an apparently valid box without modifying the source
+ok 155 - GPU-only positions reject even an apparently valid box without modifying the source
+  ---
+  duration_ms: 1.1448
+  ...
+# Subtest: the stored float32 radius never rounds below the required bound
+ok 156 - the stored float32 radius never rounds below the required bound
+  ---
+  duration_ms: 1.2295
+  ...
+# Subtest: pair swap waits for admission, rejects stale work and restores its source atomically
+ok 157 - pair swap waits for admission, rejects stale work and restores its source atomically
+  ---
+  duration_ms: 3.1566
+  ...
+# Subtest: cancelled admission retains one slot until its underlying work settles
+ok 158 - cancelled admission retains one slot until its underlying work settles
+  ---
+  duration_ms: 1.7493
+  ...
+# Subtest: all batches of a chunk publish together only after admission and current revision
+ok 159 - all batches of a chunk publish together only after admission and current revision
+  ---
+  duration_ms: 5.38
+  ...
+# Subtest: caster identity remains registered until deferred GPU release, then unregisters once
+ok 160 - caster identity remains registered until deferred GPU release, then unregisters once
+  ---
+  duration_ms: 1.9851
+  ...
+# Subtest: chunk publishes the latest night phase even if it changed during admission
+ok 161 - chunk publishes the latest night phase even if it changed during admission
+  ---
+  duration_ms: 1.877
+  ...
+# Subtest: detached source retains fallback until coverage is explicitly confirmed
+ok 162 - detached source retains fallback until coverage is explicitly confirmed
+  ---
+  duration_ms: 1.9249
+  ...
+# Subtest: real sabana near-tree far pair preserves surface and fits eight WebGPU vertex buffers
+ok 163 - real sabana near-tree far pair preserves surface and fits eight WebGPU vertex buffers
+  ---
+  duration_ms: 153.7459
+  ...
+# Subtest: real manglares near-tree far pair preserves surface and fits eight WebGPU vertex buffers
+ok 164 - real manglares near-tree far pair preserves surface and fits eight WebGPU vertex buffers
+  ---
+  duration_ms: 58.7593
+  ...
+# Subtest: regional queries are bounded, filtered and offered at the confirmed boundary
+ok 165 - regional queries are bounded, filtered and offered at the confirmed boundary
+  ---
+  duration_ms: 12.2412
+  ...
+# Subtest: cancellation and stale sequence cannot publish late responses
+ok 166 - cancellation and stale sequence cannot publish late responses
+  ---
+  duration_ms: 1.6273
+  ...
+# Subtest: a changed native revision invalidates old coverage before offering new chunks
+ok 167 - a changed native revision invalidates old coverage before offering new chunks
+  ---
+  duration_ms: 2.1294
+  ...
+# Subtest: coverage is confirmed only after admission, with cancellation on camera replacement
+ok 168 - coverage is confirmed only after admission, with cancellation on camera replacement
+  ---
+  duration_ms: 1.4413
+  ...
+# Subtest: unchanged world revision keeps an admission valid across ticks but a changed revision rejects it
+ok 169 - unchanged world revision keeps an admission valid across ticks but a changed revision rejects it
+  ---
+  duration_ms: 1.4699
+  ...
+# Subtest: rejected asynchronous admission retries without falsely recording coverage
+ok 170 - rejected asynchronous admission retries without falsely recording coverage
+  ---
+  duration_ms: 1.277
+  ...
+# Subtest: a deferred nonresident chunk does not block others and can be retried on residency change
+ok 171 - a deferred nonresident chunk does not block others and can be retried on residency change
+  ---
+  duration_ms: 1.7258
+  ...
+# Subtest: temporary rejection cools only its own chunk
+ok 172 - temporary rejection cools only its own chunk
+  ---
+  duration_ms: 1.5561
+  ...
+# Subtest: a precise invalidation rearms only affected coverage
+ok 173 - a precise invalidation rearms only affected coverage
+  ---
+  duration_ms: 1.8904
+  ...
+# Subtest: a local invalidation preserves unrelated in-flight admission but cancels the affected chunk
+ok 174 - a local invalidation preserves unrelated in-flight admission but cancels the affected chunk
+  ---
+  duration_ms: 2.0691
+  ...
+# Subtest: null responses respect retry delay and invalid camera is rejected
+ok 175 - null responses respect retry delay and invalid camera is rejected
+  ---
+  duration_ms: 2.7136
+  ...
+# Subtest: oversized regions are rejected before iterating or replacing the last camera
+ok 176 - oversized regions are rejected before iterating or replacing the last camera
+  ---
+  duration_ms: 0.5178
+  ...
+# Subtest: regional owner consumes real Wild Engine instances without changing residency
+ok 177 - regional owner consumes real Wild Engine instances without changing residency
+  ---
+  duration_ms: 44.0837
+  ...
+# Subtest: revision change cancels the first pending query before any sector is published
+ok 178 - revision change cancels the first pending query before any sector is published
+  ---
+  duration_ms: 1.6464
+  ...
+# Subtest: revision change cancels an in-progress first graphical admission
+ok 179 - revision change cancels an in-progress first graphical admission
+  ---
+  duration_ms: 1.5765
+  ...
+# Subtest: without native revision a new confirmed sequence cancels a pending query
+ok 180 - without native revision a new confirmed sequence cancels a pending query
+  ---
+  duration_ms: 1.27
+  ...
+# (node:24512) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:24512) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: resource completion waits for its queue prefix while later preparations remain independent
+ok 181 - resource completion waits for its queue prefix while later preparations remain independent
+  ---
+  duration_ms: 7.9649
+  ...
+# Subtest: resource completion stops waiting on abort without requiring the driver fence to finish
+ok 182 - resource completion stops waiting on abort without requiring the driver fence to finish
+  ---
+  duration_ms: 1.4822
+  ...
+# Subtest: resource completion stops waiting on dispose without requiring the driver fence to finish
+ok 183 - resource completion stops waiting on dispose without requiring the driver fence to finish
+  ---
+  duration_ms: 0.5602
+  ...
+# Subtest: resource completion stops waiting on loss without requiring the driver fence to finish
+ok 184 - resource completion stops waiting on loss without requiring the driver fence to finish
+  ---
+  duration_ms: 0.6571
+  ...
+# Subtest: resource completion preserves a asynchronous queue failure
+ok 185 - resource completion preserves a asynchronous queue failure
+  ---
+  duration_ms: 0.9615
+  ...
+# Subtest: resource completion preserves a synchronous queue failure
+ok 186 - resource completion preserves a synchronous queue failure
+  ---
+  duration_ms: 0.3835
+  ...
+# Subtest: shadow admission uses its actual light node with shared color lighting false and restores ownership on resolve
+ok 187 - shadow admission uses its actual light node with shared color lighting false and restores ownership on resolve
+  ---
+  duration_ms: 3.7665
+  ...
+# Subtest: shadow admission uses its actual light node with shared color lighting false and restores ownership on reject
+ok 188 - shadow admission uses its actual light node with shared color lighting false and restores ownership on reject
+  ---
+  duration_ms: 1.2746
+  ...
+# Subtest: shadow admission uses its actual light node with shared color lighting false and restores ownership on throw
+ok 189 - shadow admission uses its actual light node with shared color lighting false and restores ownership on throw
+  ---
+  duration_ms: 1.4471
+  ...
+# Subtest: shadow admission uses its actual light node with shared color lighting true and restores ownership on resolve
+ok 190 - shadow admission uses its actual light node with shared color lighting true and restores ownership on resolve
+  ---
+  duration_ms: 1.8185
+  ...
+# Subtest: shadow admission uses its actual light node with shared color lighting true and restores ownership on reject
+ok 191 - shadow admission uses its actual light node with shared color lighting true and restores ownership on reject
+  ---
+  duration_ms: 1.2671
+  ...
+# Subtest: shadow admission uses its actual light node with shared color lighting true and restores ownership on throw
+ok 192 - shadow admission uses its actual light node with shared color lighting true and restores ownership on throw
+  ---
+  duration_ms: 1.1889
+  ...
+# Subtest: stable key admission invalidates object materials and supports the independent sky transaction
+ok 193 - stable key admission invalidates object materials and supports the independent sky transaction
+  ---
+  duration_ms: 24.0433
+  ...
+# Subtest: default shared scene lighting is restored before asynchronous admission settles
+ok 194 - default shared scene lighting is restored before asynchronous admission settles
+  ---
+  duration_ms: 1.3679
+  ...
+# Subtest: visible admissions are bounded fairly, preserve order and honour cancellation
+ok 195 - visible admissions are bounded fairly, preserve order and honour cancellation
+  ---
+  duration_ms: 25.7535
+  ...
+# Subtest: a normal request arriving during a visible burst is not starved
+ok 196 - a normal request arriving during a visible burst is not starved
+  ---
+  duration_ms: 2.0194
+  ...
+# Subtest: admission diagnostics identify active and queued mesh owners without publishing them
+ok 197 - admission diagnostics identify active and queued mesh owners without publishing them
+  ---
+  duration_ms: 2.6158
+  ...
+# Subtest: real scene background preparation isolates geometry only during synchronous setup
+ok 198 - real scene background preparation isolates geometry only during synchronous setup
+  ---
+  duration_ms: 1.9288
+  ...
+# Subtest: a cancelled background compile leaves the fallback and defers resources
+ok 199 - a cancelled background compile leaves the fallback and defers resources
+  ---
+  duration_ms: 1.8584
+  ...
+# Subtest: background conflicts preserve the new owner and genuine compilation failures retire the renderer
+ok 200 - background conflicts preserve the new owner and genuine compilation failures retire the renderer
+  ---
+  duration_ms: 1.262
+  ...
+# Subtest: a reentrant background replacement is not overwritten by synchronous restoration
+ok 201 - a reentrant background replacement is not overwritten by synchronous restoration
+  ---
+  duration_ms: 0.574
+  ...
+# Subtest: a background compilation failure retires the renderer even if ownership changes
+ok 202 - a background compilation failure retires the renderer even if ownership changes
+  ---
+  duration_ms: 0.6322
+  ...
+# Subtest: background retries when the framebuffer or visible light list changes during preparation
+ok 203 - background retries when the framebuffer or visible light list changes during preparation
+  ---
+  duration_ms: 2.9581
+  ...
+# Subtest: renderer shutdown does not destroy the device while a cancelled compilation remains active
+ok 204 - renderer shutdown does not destroy the device while a cancelled compilation remains active
+  ---
+  duration_ms: 1.1739
+  ...
+# Subtest: preparation remains hidden while compilation is pending and serializes requests
+ok 205 - preparation remains hidden while compilation is pending and serializes requests
+  ---
+  duration_ms: 0.6755
+  ...
+# Subtest: admissions share a queue fence without waiting to become ready
+ok 206 - admissions share a queue fence without waiting to become ready
+  ---
+  duration_ms: 28.0438
+  ...
+# Subtest: later admissions proceed during a GPU fence and are retained through the next batch
+ok 207 - later admissions proceed during a GPU fence and are retained through the next batch
+  ---
+  duration_ms: 31.5043
+  ...
+# Subtest: cancelled compilation keeps its resources through a later upload batch
+ok 208 - cancelled compilation keeps its resources through a later upload batch
+  ---
+  duration_ms: 31.9741
+  ...
+# Subtest: a detached child cannot be released while its former group is compiling or uploading
+ok 209 - a detached child cannot be released while its former group is compiling or uploading
+  ---
+  duration_ms: 32.0201
+  ...
+# Subtest: a retired parent cannot be released while its detached child is compiling
+ok 210 - a retired parent cannot be released while its detached child is compiling
+  ---
+  duration_ms: 31.781
+  ...
+# Subtest: retiring a group also protects a child detached while its GPU fence is pending
+ok 211 - retiring a group also protects a child detached while its GPU fence is pending
+  ---
+  duration_ms: 31.4146
+  ...
+# Subtest: device loss releases a pending shared upload fence
+ok 212 - device loss releases a pending shared upload fence
+  ---
+  duration_ms: 15.6728
+  ...
+# Subtest: renderer shutdown waits for the shared queue batch without blocking admission
+ok 213 - renderer shutdown waits for the shared queue batch without blocking admission
+  ---
+  duration_ms: 15.9904
+  ...
+# Subtest: failed compilation retires the renderer instead of retrying its poisoned cache
+ok 214 - failed compilation retires the renderer instead of retrying its poisoned cache
+  ---
+  duration_ms: 0.8957
+  ...
+# Subtest: disposal invalidates a pending result without reporting a fatal error
+ok 215 - disposal invalidates a pending result without reporting a fatal error
+  ---
+  duration_ms: 0.7659
+  ...
+# Subtest: prepares with the actual framebuffer target and restores it before awaiting
+ok 216 - prepares with the actual framebuffer target and restores it before awaiting
+  ---
+  duration_ms: 0.7874
+  ...
+# Subtest: explicit offscreen admission restores target and MRT while compiling and retries changed depth format
+ok 217 - explicit offscreen admission restores target and MRT while compiling and retries changed depth format
+  ---
+  duration_ms: 3.3595
+  ...
+# Subtest: failed offscreen compilation restores the destination and MRT
+ok 218 - failed offscreen compilation restores the destination and MRT
+  ---
+  duration_ms: 1.093
+  ...
+# Subtest: explicit pass context reaches the compiler without replacing the world context
+ok 219 - explicit pass context reaches the compiler without replacing the world context
+  ---
+  duration_ms: 1.7216
+  ...
+# Subtest: world admission prepares registered auxiliary targets before publishing
+ok 220 - world admission prepares registered auxiliary targets before publishing
+  ---
+  duration_ms: 3.4919
+  ...
+# Subtest: publication is synchronous with the final pass validation
+ok 221 - publication is synchronous with the final pass validation
+  ---
+  duration_ms: 3.0088
+  ...
+# Subtest: publication errors reject only the request and do not poison later admissions
+ok 222 - publication errors reject only the request and do not poison later admissions
+  ---
+  duration_ms: 1.4009
+  ...
+# Subtest: a preparation ticket tracks compiled inputs and auxiliary pass ownership
+ok 223 - a preparation ticket tracks compiled inputs and auxiliary pass ownership
+  ---
+  duration_ms: 1.7898
+  ...
+# Subtest: device loss invalidates previously prepared tickets and prevents publication
+ok 224 - device loss invalidates previously prepared tickets and prevents publication
+  ---
+  duration_ms: 3.0342
+  ...
+# Subtest: a group publishes only after every prepared object is still current
+ok 225 - a group publishes only after every prepared object is still current
+  ---
+  duration_ms: 3.1042
+  ...
+# Subtest: removing an auxiliary target while it compiles avoids retries using retired resources
+ok 226 - removing an auxiliary target while it compiles avoids retries using retired resources
+  ---
+  duration_ms: 1.9045
+  ...
+# Subtest: a framebuffer replaced during compilation must be prepared before admission
+ok 227 - a framebuffer replaced during compilation must be prepared before admission
+  ---
+  duration_ms: 7.5476
+  ...
+# Subtest: structural changes during compilation require a fresh admission
+ok 228 - structural changes during compilation require a fresh admission
+  ---
+  duration_ms: 2.2661
+  ...
+# Subtest: camera, object and light layer changes invalidate an in-flight admission
+ok 229 - camera, object and light layer changes invalidate an in-flight admission
+  ---
+  duration_ms: 2.0547
+  ...
+# Subtest: buffer and morph format changes invalidate an in-flight admission
+ok 230 - buffer and morph format changes invalidate an in-flight admission
+  ---
+  duration_ms: 2.0125
+  ...
+# Subtest: material visibility and geometry groups invalidate an in-flight admission
+ok 231 - material visibility and geometry groups invalidate an in-flight admission
+  ---
+  duration_ms: 2.4306
+  ...
+# Subtest: material pipeline state and sampler changes invalidate without needsUpdate
+ok 232 - material pipeline state and sampler changes invalidate without needsUpdate
+  ---
+  duration_ms: 2.7247
+  ...
+# Subtest: renderer output and shadow configuration invalidate pending pipelines
+ok 233 - renderer output and shadow configuration invalidate pending pipelines
+  ---
+  duration_ms: 2.1377
+  ...
+# Subtest: compatible RGBA and BC7 texture bindings do not invalidate a pending material
+ok 234 - compatible RGBA and BC7 texture bindings do not invalidate a pending material
+  ---
+  duration_ms: 3.6795
+  ...
+# Subtest: different WebGPU texture sample types still invalidate pending material admission
+ok 235 - different WebGPU texture sample types still invalidate pending material admission
+  ---
+  duration_ms: 1.9555
+  ...
+# Subtest: device loss rejects active admission without waiting for the compiler
+ok 236 - device loss rejects active admission without waiting for the compiler
+  ---
+  duration_ms: 0.65
+  ...
+# Subtest: preparation includes objects outside the camera and restores their culling
+ok 237 - preparation includes objects outside the camera and restores their culling
+  ---
+  duration_ms: 0.8651
+  ...
+# Subtest: hidden alternate meshes are included in both passes without becoming visible between frames
+ok 238 - hidden alternate meshes are included in both passes without becoming visible between frames
+  ---
+  duration_ms: 3.7164
+  ...
+# Subtest: included alternatives under hidden parents reach both passes without revealing their hierarchy
+ok 239 - included alternatives under hidden parents reach both passes without revealing their hierarchy
+  ---
+  duration_ms: 1.85
+  ...
+# Subtest: a reparented alternative cannot be compiled through its former owner
+ok 240 - a reparented alternative cannot be compiled through its former owner
+  ---
+  duration_ms: 1.2318
+  ...
+# Subtest: a ticket covers visibility switches for explicitly included alternatives
+ok 241 - a ticket covers visibility switches for explicitly included alternatives
+  ---
+  duration_ms: 1.9238
+  ...
+# Subtest: an explicitly included root can be published without invalidating its structural ticket
+ok 242 - an explicitly included root can be published without invalidating its structural ticket
+  ---
+  duration_ms: 2.3183
+  ...
+# Subtest: admission cannot temporarily reveal objects owned by another root
+ok 243 - admission cannot temporarily reveal objects owned by another root
+  ---
+  duration_ms: 0.4234
+  ...
+# Subtest: compilation suppresses implicit shadow updates only during synchronous setup
+ok 244 - compilation suppresses implicit shadow updates only during synchronous setup
+  ---
+  duration_ms: 0.5782
+  ...
+# Subtest: synchronous preparation failure restores the original shadow flags
+ok 245 - synchronous preparation failure restores the original shadow flags
+  ---
+  duration_ms: 0.5373
+  ...
+# Subtest: shadow lights can be registered and removed without scanning the scene per admission
+ok 246 - shadow lights can be registered and removed without scanning the scene per admission
+  ---
+  duration_ms: 0.7996
+  ...
+# Subtest: a shared shadow light stays registered until every owner releases it
+ok 247 - a shared shadow light stays registered until every owner releases it
+  ---
+  duration_ms: 0.4938
+  ...
+# Subtest: a light added during compilation requires preparation against the updated scene
+ok 248 - a light added during compilation requires preparation against the updated scene
+  ---
+  duration_ms: 2.3534
+  ...
+# Subtest: changing shadow light ownership without changing membership does not restart compilation
+ok 249 - changing shadow light ownership without changing membership does not restart compilation
+  ---
+  duration_ms: 0.5492
+  ...
+# Subtest: removing a shadow light during compilation invalidates that admission
+ok 250 - removing a shadow light during compilation invalidates that admission
+  ---
+  duration_ms: 1.0465
+  ...
+# Subtest: shadow-enabled admission waits for both passes and keeps the object hidden
+ok 251 - shadow-enabled admission waits for both passes and keeps the object hidden
+  ---
+  duration_ms: 1.7351
+  ...
+# Subtest: shadow-enabled admission fails closed when shadow preparation fails
+ok 252 - shadow-enabled admission fails closed when shadow preparation fails
+  ---
+  duration_ms: 0.9818
+  ...
+# Subtest: cancelling while the shadow pipeline is pending never publishes the object
+ok 253 - cancelling while the shadow pipeline is pending never publishes the object
+  ---
+  duration_ms: 1.6049
+  ...
+# Subtest: shadow admission waits for the target created by the ordinary world render
+ok 254 - shadow admission waits for the target created by the ordinary world render
+  ---
+  duration_ms: 2.2085
+  ...
+# Subtest: recovery admission rejects a missing shadow target without parking or poisoning normal admission
+ok 255 - recovery admission rejects a missing shadow target without parking or poisoning normal admission
+  ---
+  duration_ms: 1.7919
+  ...
+# Subtest: recovery admission accepts the target created while compiling an actual receiver
+ok 256 - recovery admission accepts the target created while compiling an actual receiver
+  ---
+  duration_ms: 2.0303
+  ...
+# Subtest: a missing shadow target does not block later non-casting objects from admission
+ok 257 - a missing shadow target does not block later non-casting objects from admission
+  ---
+  duration_ms: 2.2658
+  ...
+# Subtest: cancelling a parked shadow request does not affect following admissions
+ok 258 - cancelling a parked shadow request does not affect following admissions
+  ---
+  duration_ms: 1.5343
+  ...
+# Subtest: cancelling a target wait does not strand the admission queue
+ok 259 - cancelling a target wait does not strand the admission queue
+  ---
+  duration_ms: 1.767
+  ...
+# Subtest: removing a light releases its target wait and recompiles with the new light set
+ok 260 - removing a light releases its target wait and recompiles with the new light set
+  ---
+  duration_ms: 1.407
+  ...
+# Subtest: replacing a shadow map while it compiles requires admission of the replacement
+ok 261 - replacing a shadow map while it compiles requires admission of the replacement
+  ---
+  duration_ms: 1.5676
+  ...
+# Subtest: enabling shadows on a registered light during compilation revisits its passes
+ok 262 - enabling shadows on a registered light during compilation revisits its passes
+  ---
+  duration_ms: 1.367
+  ...
+# Subtest: aborting an actor does not retire the shared renderer or publish a late result
+ok 263 - aborting an actor does not retire the shared renderer or publish a late result
+  ---
+  duration_ms: 0.6786
+  ...
+# Subtest: a cancelled active compile must settle before the next compile starts
+ok 264 - a cancelled active compile must settle before the next compile starts
+  ---
+  duration_ms: 1.4875
+  ...
+# Subtest: a cancelled shadow compile also serializes the next preparation
+ok 265 - a cancelled shadow compile also serializes the next preparation
+  ---
+  duration_ms: 5.0816
+  ...
+# Subtest: late failure of a cancelled compile rejects queued work before it starts
+ok 266 - late failure of a cancelled compile rejects queued work before it starts
+  ---
+  duration_ms: 0.8714
+  ...
+# Subtest: a cancelled compilation that later fails still retires its renderer
+ok 267 - a cancelled compilation that later fails still retires its renderer
+  ---
+  duration_ms: 1.1647
+  ...
+# Subtest: an aborted queued object is removed without waiting for the active compilation
+ok 268 - an aborted queued object is removed without waiting for the active compilation
+  ---
+  duration_ms: 0.8308
+  ...
+# Subtest: disposing rejects queued admissions even if the active compiler never finishes
+ok 269 - disposing rejects queued admissions even if the active compiler never finishes
+  ---
+  duration_ms: 0.5074
+  ...
+# Subtest: a failed active pipeline rejects queued work without compiling it
+ok 270 - a failed active pipeline rejects queued work without compiling it
+  ---
+  duration_ms: 0.6512
+  ...
+# Subtest: structural revision changes only when registered pass or light membership changes
+ok 271 - structural revision changes only when registered pass or light membership changes
+  ---
+  duration_ms: 0.4717
+  ...
+# Subtest: material alternatives compile on the real object in color, shadow and auxiliary passes without appearing during waits
+ok 272 - material alternatives compile on the real object in color, shadow and auxiliary passes without appearing during waits
+  ---
+  duration_ms: 2.9795
+  ...
+# Subtest: cancelled or stale material alternatives never replace the current owner
+ok 273 - cancelled or stale material alternatives never replace the current owner
+  ---
+  duration_ms: 1.6303
+  ...
+# Subtest: a detached alternative mesh cannot be admitted or overwrite its new owner
+ok 274 - a detached alternative mesh cannot be admitted or overwrite its new owner
+  ---
+  duration_ms: 1.2516
+  ...
+# Subtest: renderer generation lease survives shutdown until in-flight compilation settles
+ok 275 - renderer generation lease survives shutdown until in-flight compilation settles
+  ---
+  duration_ms: 1.3476
+  ...
+# Subtest: batch tickets distinguish expected scene attachment from ownership or material changes
+ok 276 - batch tickets distinguish expected scene attachment from ownership or material changes
+  ---
+  duration_ms: 1.3996
+  ...
+# Subtest: an atomic publisher can validate only its exact compiled material set after attachment
+ok 277 - an atomic publisher can validate only its exact compiled material set after attachment
+  ---
+  duration_ms: 2.3278
+  ...
+# Subtest: closed generations cannot publish prepared resources but preserve deferred release
+ok 278 - closed generations cannot publish prepared resources but preserve deferred release
+  ---
+  duration_ms: 3.7016
+  ...
+# Subtest: one registry owns deduplicated pending work, leases and bounded idle resources
+ok 279 - one registry owns deduplicated pending work, leases and bounded idle resources
+  ---
+  duration_ms: 3.8399
+  ...
+# Subtest: closing a generation cancels pending work and retains leased assets until release
+ok 280 - closing a generation cancels pending work and retains leased assets until release
+  ---
+  duration_ms: 2.3944
+  ...
+# Subtest: resource identity changes after eviction and failures are retryable
+ok 281 - resource identity changes after eviction and failures are retryable
+  ---
+  duration_ms: 1.2486
+  ...
+# Subtest: world owner lives under a generation lease and retires exactly once with unknown bytes
+ok 282 - world owner lives under a generation lease and retires exactly once with unknown bytes
+  ---
+  duration_ms: 0.5506
+  ...
+# Subtest: known active pressure evicts only idle resources and restores the idle allowance
+ok 283 - known active pressure evicts only idle resources and restores the idle allowance
+  ---
+  duration_ms: 2.1135
+  ...
+# Subtest: a progressive upload wait completes or stops promptly on cancellation or device loss
+ok 284 - a progressive upload wait completes or stops promptly on cancellation or device loss
+  ---
+  duration_ms: 3.9067
+  ...
+# Subtest: upload readiness waits for the submitted work without releasing the texture
+ok 285 - upload readiness waits for the submitted work without releasing the texture
+  ---
+  duration_ms: 7.9631
+  ...
+# Subtest: cancellation rejects promptly but retains the texture until queued work completes
+ok 286 - cancellation rejects promptly but retains the texture until queued work completes
+  ---
+  duration_ms: 1.7188
+  ...
+# Subtest: device loss rejects and releases even if the work completion never arrives
+ok 287 - device loss rejects and releases even if the work completion never arrives
+  ---
+  duration_ms: 1.0309
+  ...
+# Subtest: already cancelled requests release without submitting
+ok 288 - already cancelled requests release without submitting
+  ---
+  duration_ms: 0.5743
+  ...
+# Subtest: a disposed progressive asset retains its resources until submitted uploads settle
+ok 289 - a disposed progressive asset retains its resources until submitted uploads settle
+  ---
+  duration_ms: 1.6277
+  ...
+# Subtest: device loss releases a disposed progressive asset even when uploads never finish
+ok 290 - device loss releases a disposed progressive asset even when uploads never finish
+  ---
+  duration_ms: 0.5239
+  ...
+# Subtest: shared resources outlive both pending compilation and upload in either order
+ok 291 - shared resources outlive both pending compilation and upload in either order
+  ---
+  duration_ms: 1.9714
+  ...
+# Subtest: remote texture readiness needs ordered submission, not completed GPU execution
+ok 292 - remote texture readiness needs ordered submission, not completed GPU execution
+  ---
+  duration_ms: 1.3161
+  ...
+# Subtest: cancelled ordered preparation retains its resource until an actual completion fence
+ok 293 - cancelled ordered preparation retains its resource until an actual completion fence
+  ---
+  duration_ms: 1.3865
+  ...
+1..293
+# tests 293
+# suites 0
+# pass 293
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4476.5449

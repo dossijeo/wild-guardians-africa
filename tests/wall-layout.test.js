@@ -18,6 +18,9 @@ const hp={zarzas:100,empalizada:200,adobe:300,piedra:500,reforzado:400};
 const square=[[0,0],[8,0],[8,8],[0,8],[0,0]];
 function flat(){const nav=new Navigation(712,'sabana',{});nav.field={blocked:()=>false,slope:()=>0,surface:()=>0};nav.propsAt=()=>[];return nav;}
 function fixture(){const state=Game.newGame({seed:712}),nav=flat();Game.resume(state,'intro');Game.placeStructure(state,'center',{x:-10,z:-10},nav);return {state,nav};}
+test('wall chain event identifies each actually committed segment for visual reconciliation',()=>{
+ const {state,nav}=fixture();assert.ok(Game.buildWallChain(state,'chain','zarzas',[[0,0],[8,0]],nav,{smooth:false,snap:false}));const event=state.events.find(item=>item.type==='WallChainBuilt'&&item.commandId==='chain'),ids=state.structures.filter(item=>item.kind==='wall').map(item=>item.id);assert.ok(ids.length>1);assert.deepEqual(event.presentation.targetIds,ids);assert.equal(event.targetId,ids[0]);assert.equal(event.count,ids.length);
+});
 test('Native wall layout source and extracted module retain their hashes',()=>{
   for(const [file,hash] of [[manifest.source,manifest.sourceSha256],['src/world/wall-layout-native.js',manifest.moduleSha256]])assert.equal(createHash('sha256').update(readFileSync(new URL('../'+file,import.meta.url))).digest('hex'),hash);
 });
@@ -73,6 +76,20 @@ test('a single paid wall also replaces a coincident ruin',()=>{
   assert.equal(state.structures.filter(item=>item.kind==='wall').length,1);
   assert.equal(state.structures.some(item=>item.id===ruin.id),false);
   assert.equal(Number(state.ledger.balance.n),balance-10);
+});
+test('a prepared single gate commits its quoted entity once without querying placement again',()=>{
+  const {state,nav}=fixture();
+  const options={kind:'wall',material:'zarzas',gate:true,x:0,z:0,yaw:0};
+  const quote=Game.prepareStructurePlacement(state,options,nav);
+  const balance=Number(state.ledger.balance.n);
+  nav.wallPlacement=()=>{throw Error('Placement must use its prepared quote');};
+  assert.equal(Game.commitStructurePlacement(state,'prepared-gate',quote,nav),true);
+  assert.equal(state.structures.at(-1),quote.entity);
+  assert.equal(Number(state.ledger.balance.n),balance-quote.cost);
+  assert.equal(Game.commitStructurePlacement(state,'prepared-gate',quote,nav),false);
+  const saved=serialize(state);
+  assert.throws(()=>Game.commitStructurePlacement(state,'stale-gate',quote,nav),/ha caducado/);
+  assert.equal(serialize(state),saved);
 });
 test('Enclosure graph and deterministic gates match source including crossings and T junctions',()=>{
   const paths=[square,[...square,[8,4],[0,4]],[[0,0],[8,0],[8,8]],[[0,0],[8,8],[0,8],[8,0],[0,0]]];

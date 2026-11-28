@@ -1,0 +1,783 @@
+{
+  "version": 1,
+  "date": "2026-11-20",
+  "baseCommit": "59c7d4a9c921a8d530c71492fb00258294cfb35c",
+  "production": [
+    "src/rendering/native-resource-preparation-receiver.js",
+    "src/rendering/webgpu-world-worker.js"
+  ],
+  "scope": "Incremental automatic recovery after typed retained Worker failure; no gate closure. Main fault injection and real native component mutation are separate.",
+  "configuration": {
+    "node": "20",
+    "three": "0.180.0",
+    "baseUrl": "http://127.0.0.1:5218",
+    "mainFixture": "tests/fixtures/microevent-world.json",
+    "componentFixture": "desierto983-d15-partial-state.json.gz",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    }
+  },
+  "verification": {
+    "inputs": 5807,
+    "changed": [],
+    "foreign": 15,
+    "foreignChanged": []
+  },
+  "cpu": {
+    "beforeReceiver": {
+      "pass": 1,
+      "fail": 5
+    },
+    "beforeWorkerNew": {
+      "pass": 2,
+      "fail": 2,
+      "skippedExisting": 11
+    },
+    "firstIncomplete": {
+      "pass": 117,
+      "fail": 1
+    },
+    "final": {
+      "pass": 118,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "files": 10
+    },
+    "build": {
+      "exitCode": 0,
+      "viteReportedSeconds": 59.61,
+      "includesPostprocessing": true
+    },
+    "fullSuite": false
+  },
+  "main": {
+    "before": {
+      "accepted": false,
+      "error": "page.waitForFunction: Timeout 60000ms exceeded.\n    at triggerAutomaticRecovery (C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tools\\experiments\\native-auto-recovery-audit.mjs:18:13)\n    at async file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tools/experiments/audit_main_retained_resources.mjs:33:49",
+      "notices": [
+        {
+          "message": "Native resource flush unavailable or preparation pending",
+          "loadingFailure": false
+        }
+      ]
+    },
+    "after": {
+      "accepted": true,
+      "reuse": {
+        "accepted": true,
+        "violations": [],
+        "residentDataRows": 15423,
+        "referenceWindows": 2,
+        "retainedRecoveries": 2,
+        "producerResourcesCreated": 26673,
+        "compiles": 907,
+        "scope": "Settled paused actual-main reuse; not cold allocation minimality, native WALK integration or cadence acceptance."
+      },
+      "automatic": {
+        "injection": "typed obsolete failure at real Worker.fail; not a native commit",
+        "attempts": [
+          {
+            "at": 52802.38499999046
+          },
+          {
+            "at": 59576.799999952316
+          }
+        ],
+        "marks": [
+          52799.5,
+          59573.14499998093
+        ],
+        "results": [
+          {
+            "base": 1,
+            "sequence": 14,
+            "retained": true
+          },
+          {
+            "base": 1,
+            "sequence": 15,
+            "retained": true
+          }
+        ]
+      },
+      "dispatchBlocked": [
+        false,
+        false
+      ],
+      "framesCurrent": [
+        true,
+        true
+      ]
+    }
+  },
+  "component": {
+    "accepted": true,
+    "obsolete": {
+      "code": "remote-frame-native-mutation-obsolete",
+      "resourcePreparationsRetained": true,
+      "beforeUpload": 0,
+      "afterUpload": 123
+    },
+    "recoveryCalls": [
+      "mark-lost",
+      "retained-surface"
+    ],
+    "created": 81,
+    "types": {
+      "createBindGroup": 15,
+      "createBindGroupLayout": 12,
+      "createBuffer": 34,
+      "createPipelineLayout": 6,
+      "createRenderPipelineAsync": 6,
+      "createSampler": 1,
+      "createShaderModule": 6,
+      "createTexture": 1
+    },
+    "retainedNodes": 175,
+    "retainedChunks": 9,
+    "retainedImmutableNativeGenerations": 180,
+    "forks": {
+      "uniformForks": 59,
+      "bindingForks": 65,
+      "bufferForks": 0,
+      "textureForks": 0
+    },
+    "unchangedCheckpoint": {
+      "created": 0,
+      "factories": 0
+    },
+    "visual": {
+      "width": 512,
+      "height": 512,
+      "region": {
+        "minX": 217,
+        "minY": 210,
+        "maxX": 305,
+        "maxY": 279
+      },
+      "minimum": 500,
+      "workerRegionMinimum": 50,
+      "differingPixels": 58104,
+      "workerRegionPixels": 2316,
+      "ok": true,
+      "blankControlRejected": true,
+      "screenshotSha256": "2b37183648a9a4560cb6c8c78aa32b28dc368ce7f1578ab3683a85fcf1a46682"
+    },
+    "drained": true
+  },
+  "historicalFresh": {
+    "resources": 1893,
+    "calls": [
+      "mark-lost",
+      "fresh-surface"
+    ],
+    "obsolete": {
+      "code": "remote-frame-native-mutation-obsolete",
+      "resourcePreparationsRetained": true,
+      "discardedUpload": 0,
+      "controlUpload": null
+    }
+  },
+  "realDeviceLoss": {
+    "accepted": false,
+    "preexisting": true,
+    "before": {
+      "error": "Error: Ordinary renderer did not reach a stable preparation boundary\n    at waitStable (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tools/experiments/audit_early_native_gpu_view.mjs:43:1443)\n    at async auditRetainedMainRecovery (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tools/experiments/audit_early_native_gpu_view.mjs:54:117)\n    at async file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tools/experiments/audit_early_native_gpu_view.mjs:5:50",
+      "notices": [
+        {
+          "message": "Native resource flush unavailable",
+          "loadingFailure": false
+        }
+      ]
+    },
+    "after": {
+      "error": "page.evaluate: Error: Error: WebGPU device lost: Device was destroyed.\n    at http://127.0.0.1:5218/src/rendering/webgpu-world-surface.js?t=1795168994938:168:833\n    at http://127.0.0.1:5218/src/rendering/webgpu-world-surface.js?t=1795168994938:168:833\n    at worker.onmessage (http://127.0.0.1:5218/src/rendering/webgpu-world-client.js?t=1795168994938:29:1299)\n    at inspect (C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tools\\experiments\\audit_early_native_gpu_view.mjs:42:26)\n    at waitStable (C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tools\\experiments\\audit_early_native_gpu_view.mjs:43:410)\n    at async auditRetainedMainRecovery (C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tools\\experiments\\audit_early_native_gpu_view.mjs:54:117)\n    at async file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tools/experiments/audit_early_native_gpu_view.mjs:5:50",
+      "notices": [
+        {
+          "message": "Native resource flush unavailable",
+          "loadingFailure": false
+        }
+      ]
+    },
+    "owner": "Sol; terminal authority/producer recovery",
+    "reason": "Closed original preparation endpoint cannot certify its flush. Do not acknowledge a destroyed owner."
+  },
+  "invalidPilot": {
+    "source": "auto.json",
+    "reason": "HMR reload during QA edits; not acceptance"
+  },
+  "artifacts": [
+    {
+      "source": ".cache/incremental-20261120-auto-admission-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto-admission-served.js.gz",
+      "rawSha256": "6c3b45fcab0caa737e7b468b2a947c98ba129b2c86292a6e07ac3044241d17e6",
+      "sha256": "caaf1b6e91fc6c40bb3f55661ae0aa4a98746121bbce4d0fe7a93a87271d402b",
+      "bytes": 36674
+    },
+    {
+      "source": ".cache/incremental-20261120-auto-before.png",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto-before.png",
+      "rawSha256": "69817d58cbeafe909ee708d902e896f048009c3631784facc52cc27e4c580b3f",
+      "sha256": "69817d58cbeafe909ee708d902e896f048009c3631784facc52cc27e4c580b3f",
+      "bytes": 525422
+    },
+    {
+      "source": ".cache/incremental-20261120-auto-client-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto-client-served.js.gz",
+      "rawSha256": "b7fedc2546e14fcdd259b1ef1d386202d5f3a40b4529f035dd235e3527a43fd9",
+      "sha256": "6671eb0df272ded53cfd676f3ec204c6c2d05f7fe9b9925e8f22ad6705abbb86",
+      "bytes": 31026
+    },
+    {
+      "source": ".cache/incremental-20261120-auto-fixed-admission-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto-fixed-admission-served.js.gz",
+      "rawSha256": "6c3b45fcab0caa737e7b468b2a947c98ba129b2c86292a6e07ac3044241d17e6",
+      "sha256": "caaf1b6e91fc6c40bb3f55661ae0aa4a98746121bbce4d0fe7a93a87271d402b",
+      "bytes": 36674
+    },
+    {
+      "source": ".cache/incremental-20261120-auto-fixed-after1.png",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto-fixed-after1.png",
+      "rawSha256": "af3df73baf4c80bf8c48dae40308e062fb2e61e7821910792b38d29d3bcd7322",
+      "sha256": "af3df73baf4c80bf8c48dae40308e062fb2e61e7821910792b38d29d3bcd7322",
+      "bytes": 596590
+    },
+    {
+      "source": ".cache/incremental-20261120-auto-fixed-after2.png",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto-fixed-after2.png",
+      "rawSha256": "77ec2dca055cbf6bafd8fce931fcdb3484a8e99afbf38877bda96101d849c58a",
+      "sha256": "77ec2dca055cbf6bafd8fce931fcdb3484a8e99afbf38877bda96101d849c58a",
+      "bytes": 596576
+    },
+    {
+      "source": ".cache/incremental-20261120-auto-fixed-before.png",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto-fixed-before.png",
+      "rawSha256": "3872bb12ee47f5e50f36a83d90fb4beae3947ec29e47469a2c769ff187897358",
+      "sha256": "3872bb12ee47f5e50f36a83d90fb4beae3947ec29e47469a2c769ff187897358",
+      "bytes": 596601
+    },
+    {
+      "source": ".cache/incremental-20261120-auto-fixed-client-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto-fixed-client-served.js.gz",
+      "rawSha256": "b7fedc2546e14fcdd259b1ef1d386202d5f3a40b4529f035dd235e3527a43fd9",
+      "sha256": "6671eb0df272ded53cfd676f3ec204c6c2d05f7fe9b9925e8f22ad6705abbb86",
+      "bytes": 31026
+    },
+    {
+      "source": ".cache/incremental-20261120-auto-fixed-fixture-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto-fixed-fixture-served.js.gz",
+      "rawSha256": "c93d89858266fc291a7878634af9772498a179cf25d5983f91ae30b599a26419",
+      "sha256": "d3f88717e2d80aafb7f57ea1fe8b6ebe7653b2fd077a30214f1489de46e0671f",
+      "bytes": 10651
+    },
+    {
+      "source": ".cache/incremental-20261120-auto-fixed-main-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto-fixed-main-served.js.gz",
+      "rawSha256": "995b3104af4561c696bf6eea4e06f9ecd9a4c57934bb25e8a9994920a2192721",
+      "sha256": "578cf4be7c3619193276ccb99225a5776e5222b851e823e903918ea6a1b14564",
+      "bytes": 160307
+    },
+    {
+      "source": ".cache/incremental-20261120-auto-fixed-runtime-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto-fixed-runtime-served.js.gz",
+      "rawSha256": "f84421d2f8d45db9d8719ac5caa35dbd7d7b140c0007490356167e3679549442",
+      "sha256": "f0cf5e6ecd926896421287d317fcc7384b1eaabf9d01cd0936874b281e7d6c29",
+      "bytes": 23810
+    },
+    {
+      "source": ".cache/incremental-20261120-auto-fixed-startup-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto-fixed-startup-served.js.gz",
+      "rawSha256": "c5892ef386119819877893327b85b3ea89e2f1f10b9a9ce6695e269252454fb4",
+      "sha256": "6f9eee0a02cbc9929f85b5141d2576eecd80da92d9738e8811de0bdd092b905f",
+      "bytes": 2067
+    },
+    {
+      "source": ".cache/incremental-20261120-auto-fixed-world-worker-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto-fixed-world-worker-served.js.gz",
+      "rawSha256": "3ab9c1e9e768def8511993c5c679f441e3c0221d1310bf03a9683fd935c0b67a",
+      "sha256": "93c95e1bde798af9812f4eadef5f75392e1c9d974d24717929433afb5decd40e",
+      "bytes": 32587
+    },
+    {
+      "source": ".cache/incremental-20261120-auto-fixed.json",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto-fixed.json.gz",
+      "rawSha256": "a0eaaf25b3ad9c8dddd9a801f784667b78fe3901a87ae2feaf71f2f55e4a9f8d",
+      "sha256": "f42e43eefb36de165dead5f444cb96532ef7a53127f44bdb3818ac6a428fb297",
+      "bytes": 4918792
+    },
+    {
+      "source": ".cache/incremental-20261120-auto-fixed.log",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto-fixed.log.gz",
+      "rawSha256": "f712c70538f5cf6579c3922cbf9c35adafcee63dc6e094a530488d9ee0618e2c",
+      "sha256": "2711edadf34ff330bc43d49ecdd71869feae6cd3a3afa8d1a258598bf029663f",
+      "bytes": 380
+    },
+    {
+      "source": ".cache/incremental-20261120-auto-fixture-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto-fixture-served.js.gz",
+      "rawSha256": "fc484b889dc24c3e9c4ead508c999a2bbb6eb7549a809ec809b742ca6a084fb5",
+      "sha256": "046c1cbeed165d7148c5d9e9f3df321976f3cdde4d70c8a3345f8743a5940995",
+      "bytes": 10652
+    },
+    {
+      "source": ".cache/incremental-20261120-auto-main-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto-main-served.js.gz",
+      "rawSha256": "995b3104af4561c696bf6eea4e06f9ecd9a4c57934bb25e8a9994920a2192721",
+      "sha256": "578cf4be7c3619193276ccb99225a5776e5222b851e823e903918ea6a1b14564",
+      "bytes": 160307
+    },
+    {
+      "source": ".cache/incremental-20261120-auto-runtime-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto-runtime-served.js.gz",
+      "rawSha256": "f84421d2f8d45db9d8719ac5caa35dbd7d7b140c0007490356167e3679549442",
+      "sha256": "f0cf5e6ecd926896421287d317fcc7384b1eaabf9d01cd0936874b281e7d6c29",
+      "bytes": 23810
+    },
+    {
+      "source": ".cache/incremental-20261120-auto-startup-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto-startup-served.js.gz",
+      "rawSha256": "c5892ef386119819877893327b85b3ea89e2f1f10b9a9ce6695e269252454fb4",
+      "sha256": "6f9eee0a02cbc9929f85b5141d2576eecd80da92d9738e8811de0bdd092b905f",
+      "bytes": 2067
+    },
+    {
+      "source": ".cache/incremental-20261120-auto-world-worker-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto-world-worker-served.js.gz",
+      "rawSha256": "8f97839fd738ed9e56158294b976446f849472efdc145eb6c0af43fcdd8bd181",
+      "sha256": "f495fec5670411085bcf0180dfee3b54e005528feec542f68ca9e8df8d28d2b2",
+      "bytes": 32085
+    },
+    {
+      "source": ".cache/incremental-20261120-auto.json",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto.json.gz",
+      "rawSha256": "b97cf598ad8dfde66e078f2a923df5a4782f0325688c2b5684de61bafece0a44",
+      "sha256": "0c4fdce3582f1e461dc6d000e278c11ec111d29a7208536a3e23a8aad9383996",
+      "bytes": 2079366
+    },
+    {
+      "source": ".cache/incremental-20261120-auto.log",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto.log.gz",
+      "rawSha256": "ffce05a0657d3b920de6ad714e0a126382dbd4c144a602b384d9577ee3e8734c",
+      "sha256": "5c33d33c423133f1276b7b48a1abffe8310e6cb8032482af722de4ecc92567f2",
+      "bytes": 534
+    },
+    {
+      "source": ".cache/incremental-20261120-auto2-admission-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto2-admission-served.js.gz",
+      "rawSha256": "6c3b45fcab0caa737e7b468b2a947c98ba129b2c86292a6e07ac3044241d17e6",
+      "sha256": "caaf1b6e91fc6c40bb3f55661ae0aa4a98746121bbce4d0fe7a93a87271d402b",
+      "bytes": 36674
+    },
+    {
+      "source": ".cache/incremental-20261120-auto2-before.png",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto2-before.png",
+      "rawSha256": "0238f60ca0d3affcaa1110c5a55f1e27042f1cafde432c1c34a0e7444db4937e",
+      "sha256": "0238f60ca0d3affcaa1110c5a55f1e27042f1cafde432c1c34a0e7444db4937e",
+      "bytes": 596603
+    },
+    {
+      "source": ".cache/incremental-20261120-auto2-client-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto2-client-served.js.gz",
+      "rawSha256": "b7fedc2546e14fcdd259b1ef1d386202d5f3a40b4529f035dd235e3527a43fd9",
+      "sha256": "6671eb0df272ded53cfd676f3ec204c6c2d05f7fe9b9925e8f22ad6705abbb86",
+      "bytes": 31026
+    },
+    {
+      "source": ".cache/incremental-20261120-auto2-fixture-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto2-fixture-served.js.gz",
+      "rawSha256": "fc484b889dc24c3e9c4ead508c999a2bbb6eb7549a809ec809b742ca6a084fb5",
+      "sha256": "046c1cbeed165d7148c5d9e9f3df321976f3cdde4d70c8a3345f8743a5940995",
+      "bytes": 10652
+    },
+    {
+      "source": ".cache/incremental-20261120-auto2-main-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto2-main-served.js.gz",
+      "rawSha256": "995b3104af4561c696bf6eea4e06f9ecd9a4c57934bb25e8a9994920a2192721",
+      "sha256": "578cf4be7c3619193276ccb99225a5776e5222b851e823e903918ea6a1b14564",
+      "bytes": 160307
+    },
+    {
+      "source": ".cache/incremental-20261120-auto2-runtime-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto2-runtime-served.js.gz",
+      "rawSha256": "f84421d2f8d45db9d8719ac5caa35dbd7d7b140c0007490356167e3679549442",
+      "sha256": "f0cf5e6ecd926896421287d317fcc7384b1eaabf9d01cd0936874b281e7d6c29",
+      "bytes": 23810
+    },
+    {
+      "source": ".cache/incremental-20261120-auto2-startup-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto2-startup-served.js.gz",
+      "rawSha256": "c5892ef386119819877893327b85b3ea89e2f1f10b9a9ce6695e269252454fb4",
+      "sha256": "6f9eee0a02cbc9929f85b5141d2576eecd80da92d9738e8811de0bdd092b905f",
+      "bytes": 2067
+    },
+    {
+      "source": ".cache/incremental-20261120-auto2-world-worker-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto2-world-worker-served.js.gz",
+      "rawSha256": "8f97839fd738ed9e56158294b976446f849472efdc145eb6c0af43fcdd8bd181",
+      "sha256": "f495fec5670411085bcf0180dfee3b54e005528feec542f68ca9e8df8d28d2b2",
+      "bytes": 32085
+    },
+    {
+      "source": ".cache/incremental-20261120-auto2.json",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto2.json.gz",
+      "rawSha256": "c46c15333da3e1a606be8933f89d242c04d868528d975dd976bd4f0677b66b69",
+      "sha256": "0e567ba56fd36e43ff51470ac610697decce6f6eb5123a6b7ed01a1c94510ad3",
+      "bytes": 3503672
+    },
+    {
+      "source": ".cache/incremental-20261120-auto2.log",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-auto2.log.gz",
+      "rawSha256": "f6671eee9e0d60b38decd9f05e811968cb54e2dcf7a79a4b67fcc9175398f1a1",
+      "sha256": "83c3ea86ca6e43f98ae61b39f41d92e8b2e0cb2de3ac51381ab7434453813d9b",
+      "bytes": 514
+    },
+    {
+      "source": ".cache/incremental-20261120-baseline.json",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-baseline.json.gz",
+      "rawSha256": "da6bf57608cf4121240eb2a3520309a6cdd69a19312fbd7674b1cf3ad3fdc55e",
+      "sha256": "9cbac9db02409b433678d1d804f970ea6cf44045585c87fcdcf726f19876e70f",
+      "bytes": 1017
+    },
+    {
+      "source": ".cache/incremental-20261120-before-tests.log",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-before-tests.log.gz",
+      "rawSha256": "bd22601691c9796ddf50f9dbaed9c1817685e7b026a381a0932f72a20969039b",
+      "sha256": "557a77246af57d3737676b4208df97431475c06d9c1a0ca1dda01281ad6f2f25",
+      "bytes": 929
+    },
+    {
+      "source": ".cache/incremental-20261120-build.log",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-build.log.gz",
+      "rawSha256": "2bfaaa701cd5bd0e1421adb6e4461abca74352501f6098d80587775ea61ba6c0",
+      "sha256": "23c48b83ca793223ac6995ac46103e227dfc96051a58dcbcc94c4491eacaec3d",
+      "bytes": 1572
+    },
+    {
+      "source": ".cache/incremental-20261120-device-loss-baseline-before.png",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-device-loss-baseline-before.png",
+      "rawSha256": "3872bb12ee47f5e50f36a83d90fb4beae3947ec29e47469a2c769ff187897358",
+      "sha256": "3872bb12ee47f5e50f36a83d90fb4beae3947ec29e47469a2c769ff187897358",
+      "bytes": 596601
+    },
+    {
+      "source": ".cache/incremental-20261120-device-loss-baseline-client-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-device-loss-baseline-client-served.js.gz",
+      "rawSha256": "12c2dac78aa510ad1415ec821f9073c9606d6d3fdf9f87c538723bd19ad7fc53",
+      "sha256": "ae66d89eab2cb7af8d735cd4c4d82a5d0e129b9f6cbc0ad40c1f65cde4843219",
+      "bytes": 31223
+    },
+    {
+      "source": ".cache/incremental-20261120-device-loss-baseline-main-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-device-loss-baseline-main-served.js.gz",
+      "rawSha256": "e1d0419c592555d31d1cb241da9d056215ccbbb733413bcced86d77bdfbc9cc6",
+      "sha256": "e1a6bc823ef05feaa06a44f80b75e1fba67d49d99767fddb7e3f07884dbccf5c",
+      "bytes": 160287
+    },
+    {
+      "source": ".cache/incremental-20261120-device-loss-baseline-remote-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-device-loss-baseline-remote-served.js.gz",
+      "rawSha256": "52f3f375c127b2e40647f9f872ed5bac6bc868bb8ba13d0399fa3bfb01cd1e04",
+      "sha256": "39da18687aa378c87991584e199e0f7ddffc50f033cf3679f88513f0a4d28e50",
+      "bytes": 38487
+    },
+    {
+      "source": ".cache/incremental-20261120-device-loss-baseline-runtime-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-device-loss-baseline-runtime-served.js.gz",
+      "rawSha256": "f84421d2f8d45db9d8719ac5caa35dbd7d7b140c0007490356167e3679549442",
+      "sha256": "f0cf5e6ecd926896421287d317fcc7384b1eaabf9d01cd0936874b281e7d6c29",
+      "bytes": 23810
+    },
+    {
+      "source": ".cache/incremental-20261120-device-loss-baseline-surface-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-device-loss-baseline-surface-served.js.gz",
+      "rawSha256": "622cb2e93d1489e4d8acf7e5e719b96e6c483f84961fea243ff1c4b3abb79359",
+      "sha256": "cd584d2ec90c3a51a000636d36eee0334ce1a9ccaaebd1cf584cc2ae3b98f7bd",
+      "bytes": 103022
+    },
+    {
+      "source": ".cache/incremental-20261120-device-loss-baseline-worker-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-device-loss-baseline-worker-served.js.gz",
+      "rawSha256": "470dd59a90464e016b4c4655522abd1c04dafa8aa23f3359ff4396b2f4467e58",
+      "sha256": "844c7a31604ad016c6c81fe4737fefe3bc077d1bad8e8acf9130fbe8b3e3e72c",
+      "bytes": 31988
+    },
+    {
+      "source": ".cache/incremental-20261120-device-loss-baseline.json",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-device-loss-baseline.json.gz",
+      "rawSha256": "a86bd83678cf158b13a3a27c9f245f7ccd16e74acefde0af5056f991df484e3b",
+      "sha256": "e6a010536759f01e86810f80ed1c0cb519b3faaed0bbf5fb5c86d01ac68e2303",
+      "bytes": 145416
+    },
+    {
+      "source": ".cache/incremental-20261120-device-loss-baseline.log",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-device-loss-baseline.log.gz",
+      "rawSha256": "5509bf891b2179187b9033e2c37bf43cb362a90d30b82c68e242bd79a4d37ee3",
+      "sha256": "2c928ac63b5e6b334abe1757b92a728eb01913b23eb559cdf40fb50a0c976a3d",
+      "bytes": 266
+    },
+    {
+      "source": ".cache/incremental-20261120-device-loss-before.png",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-device-loss-before.png",
+      "rawSha256": "3a79b806330fae37e4b526bdc3855574d7cb5d2529fbc55d85293126123286f6",
+      "sha256": "3a79b806330fae37e4b526bdc3855574d7cb5d2529fbc55d85293126123286f6",
+      "bytes": 596591
+    },
+    {
+      "source": ".cache/incremental-20261120-device-loss-client-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-device-loss-client-served.js.gz",
+      "rawSha256": "12c2dac78aa510ad1415ec821f9073c9606d6d3fdf9f87c538723bd19ad7fc53",
+      "sha256": "ae66d89eab2cb7af8d735cd4c4d82a5d0e129b9f6cbc0ad40c1f65cde4843219",
+      "bytes": 31223
+    },
+    {
+      "source": ".cache/incremental-20261120-device-loss-main-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-device-loss-main-served.js.gz",
+      "rawSha256": "e1d0419c592555d31d1cb241da9d056215ccbbb733413bcced86d77bdfbc9cc6",
+      "sha256": "e1a6bc823ef05feaa06a44f80b75e1fba67d49d99767fddb7e3f07884dbccf5c",
+      "bytes": 160287
+    },
+    {
+      "source": ".cache/incremental-20261120-device-loss-remote-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-device-loss-remote-served.js.gz",
+      "rawSha256": "52f3f375c127b2e40647f9f872ed5bac6bc868bb8ba13d0399fa3bfb01cd1e04",
+      "sha256": "39da18687aa378c87991584e199e0f7ddffc50f033cf3679f88513f0a4d28e50",
+      "bytes": 38487
+    },
+    {
+      "source": ".cache/incremental-20261120-device-loss-runtime-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-device-loss-runtime-served.js.gz",
+      "rawSha256": "f84421d2f8d45db9d8719ac5caa35dbd7d7b140c0007490356167e3679549442",
+      "sha256": "f0cf5e6ecd926896421287d317fcc7384b1eaabf9d01cd0936874b281e7d6c29",
+      "bytes": 23810
+    },
+    {
+      "source": ".cache/incremental-20261120-device-loss-surface-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-device-loss-surface-served.js.gz",
+      "rawSha256": "622cb2e93d1489e4d8acf7e5e719b96e6c483f84961fea243ff1c4b3abb79359",
+      "sha256": "cd584d2ec90c3a51a000636d36eee0334ce1a9ccaaebd1cf584cc2ae3b98f7bd",
+      "bytes": 103022
+    },
+    {
+      "source": ".cache/incremental-20261120-device-loss-worker-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-device-loss-worker-served.js.gz",
+      "rawSha256": "f00ec4a49ca8b4afefaea8081087ac5dc1437bb634eed89bb176f67ab3d2970c",
+      "sha256": "3bbd39658dff75f839fb755f4b36876e0c33b44d2a249d908a4e77eeeb5048ed",
+      "bytes": 32509
+    },
+    {
+      "source": ".cache/incremental-20261120-device-loss.json",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-device-loss.json.gz",
+      "rawSha256": "e6efd38f6f00f14390b9bc487e7d9567d189f15d7fbfaa95ffac790677184131",
+      "sha256": "9da75b259b41c20dee19be72a20e3469015a247d5e0cac2e66e0211143e7db7d",
+      "bytes": 71620
+    },
+    {
+      "source": ".cache/incremental-20261120-device-loss.log",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-device-loss.log.gz",
+      "rawSha256": "8e91de37a208192c68b9fbab973f906e20da9c21e0cbbab7142ce2d8e8b8472e",
+      "sha256": "8506d115a0a355fecdd85f4bf08a9281b00375a84e3a309df848f50917f8693a",
+      "bytes": 406
+    },
+    {
+      "source": ".cache/incremental-20261120-fixed-native-resource-preparation-receiver.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-fixed-native-resource-preparation-receiver.js.gz",
+      "rawSha256": "f9cbeea679e5043917013ca9ff9e3b1006db3e80f426ce17fb76ed590da2c3de",
+      "sha256": "5605c5ff07dfae0dc67b4ab846fc074dc52be085cc8b2fa0217149f92eb97b7a",
+      "bytes": 2751
+    },
+    {
+      "source": ".cache/incremental-20261120-fixed-webgpu-world-worker.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-fixed-webgpu-world-worker.js.gz",
+      "rawSha256": "d1ed78bce91333463d6fd1c19fd7c66798b3d25e20ece590b46ff415efe49069",
+      "sha256": "aaeacc064bc88c47de7e4af28dfed8b1ff1e3149a073e68db8ca1e65e43bbb52",
+      "bytes": 9029
+    },
+    {
+      "source": ".cache/incremental-20261120-focused.log",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-focused.log.gz",
+      "rawSha256": "7e188406448922f90b6072b0a08ef6472c93b6be96ee7487b092826a012985f6",
+      "sha256": "4271ab9e411377b1a0f50522c6f528048096714c7a6867072455b7113596da2a",
+      "bytes": 5718
+    },
+    {
+      "source": ".cache/incremental-20261120-focused2.log",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-focused2.log.gz",
+      "rawSha256": "9793d5bc649c5a2a131745b5bb0f82731543790db4308b697422db3c0af9c595",
+      "sha256": "f22a4a13ee453d1799ea2c47df60449d47ba907d9ee063e2ec419fc773949ee1",
+      "bytes": 5356
+    },
+    {
+      "source": ".cache/incremental-20261120-fresh.json",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-fresh.json.gz",
+      "rawSha256": "1738f9ddd5ad86f050b865de6644cd3479f0349ee4d621f1fcc4ecd5c06cc1d1",
+      "sha256": "e3f34a764c1544c553d01a0b2756dbf76288901ec4859fe026ba6d63e55d2e9e",
+      "bytes": 1749
+    },
+    {
+      "source": ".cache/incremental-20261120-fresh.log",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-fresh.log.gz",
+      "rawSha256": "fb27c27a5f4db4b24a94b0d711db40ed2f0cc0782242c21ea4bebcb11bdad23c",
+      "sha256": "933b9c774493e1c0c9aa46d651afef38f7ad98268f71dbbb4303ed2aa9b6ce81",
+      "bytes": 1524
+    },
+    {
+      "source": ".cache/incremental-20261120-fresh.png",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-fresh.png",
+      "rawSha256": "5649ad2541036bf5b33aa78ed2493da4f42d442c44469890eff4b1808dd519c9",
+      "sha256": "5649ad2541036bf5b33aa78ed2493da4f42d442c44469890eff4b1808dd519c9",
+      "bytes": 24084
+    },
+    {
+      "source": ".cache/incremental-20261120-inputs.json",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-inputs.json.gz",
+      "rawSha256": "d5478b7e4a88b16e10594e06b10aac9e686a6abade8ea1d692fc42426af43c4d",
+      "sha256": "73241d9186bf0927a8683175f5eefbd06dd2ee519df1ed1c12740a44e68f10de",
+      "bytes": 274889
+    },
+    {
+      "source": ".cache/incremental-20261120-obsolete-fixed-host-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-obsolete-fixed-host-served.js.gz",
+      "rawSha256": "0311122d00a0b5cb1704cd47efb004f796f3fe22ad66e5d5272af69e2b19f8b9",
+      "sha256": "b41640517e674c93c8e1cd9d1a276f5c4f46d04bce8f90835175c88461f5b779",
+      "bytes": 127005
+    },
+    {
+      "source": ".cache/incremental-20261120-obsolete-fixed-stream-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-obsolete-fixed-stream-served.js.gz",
+      "rawSha256": "e45e619e4fadd5207ff3a6df7020124d1d1950dee4b373742cb9f0407fe88369",
+      "sha256": "4e281feb0af67b94aea7cb9afafbefc3756e78978f2bd03580032a9ac504dc6b",
+      "bytes": 33938
+    },
+    {
+      "source": ".cache/incremental-20261120-obsolete-fixed-surface-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-obsolete-fixed-surface-served.js.gz",
+      "rawSha256": "622cb2e93d1489e4d8acf7e5e719b96e6c483f84961fea243ff1c4b3abb79359",
+      "sha256": "cd584d2ec90c3a51a000636d36eee0334ce1a9ccaaebd1cf584cc2ae3b98f7bd",
+      "bytes": 103022
+    },
+    {
+      "source": ".cache/incremental-20261120-obsolete-fixed-terrain-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-obsolete-fixed-terrain-served.js.gz",
+      "rawSha256": "0539a90c0202703b205224ddb63116c7afcd190d89f2d2e0a24aded18c491028",
+      "sha256": "24bcc6a6e6d57f29e0be1cb329f7d00583bdcc63341a775c1b67eb7c2b728199",
+      "bytes": 20457
+    },
+    {
+      "source": ".cache/incremental-20261120-obsolete-fixed-worker-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-obsolete-fixed-worker-served.js.gz",
+      "rawSha256": "3b761d1a12c2e15e20f477c47e2ee7593b4d621c6c2daba82fe53591bc7f8ff9",
+      "sha256": "6fec2af881f8bf63d463da2d8cf42c93eac69b10b92716c90ae5ab905609e8a0",
+      "bytes": 70384
+    },
+    {
+      "source": ".cache/incremental-20261120-obsolete-fixed.json",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-obsolete-fixed.json.gz",
+      "rawSha256": "551bb2faa6618f94a15ef91ef7331e4c21622ebc91202f2e03a05ac03e406332",
+      "sha256": "a281f131583dac1af28283ab5e4d1ab98a7f64bcf7058376639bb13ce20f0177",
+      "bytes": 239591
+    },
+    {
+      "source": ".cache/incremental-20261120-obsolete-fixed.log",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-obsolete-fixed.log.gz",
+      "rawSha256": "6988c46ad9b358e3e38c79767803efdad8a573bf4b06a4c7ee22646b8a31abac",
+      "sha256": "d16d3d1dd261c244b69bb122573c9c75af17d4d1e627289e515d12ce94e38d7a",
+      "bytes": 317
+    },
+    {
+      "source": ".cache/incremental-20261120-obsolete-fixed.png",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-obsolete-fixed.png",
+      "rawSha256": "2b37183648a9a4560cb6c8c78aa32b28dc368ce7f1578ab3683a85fcf1a46682",
+      "sha256": "2b37183648a9a4560cb6c8c78aa32b28dc368ce7f1578ab3683a85fcf1a46682",
+      "bytes": 23840
+    },
+    {
+      "source": ".cache/incremental-20261120-obsolete-host-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-obsolete-host-served.js.gz",
+      "rawSha256": "0311122d00a0b5cb1704cd47efb004f796f3fe22ad66e5d5272af69e2b19f8b9",
+      "sha256": "b41640517e674c93c8e1cd9d1a276f5c4f46d04bce8f90835175c88461f5b779",
+      "bytes": 127005
+    },
+    {
+      "source": ".cache/incremental-20261120-obsolete-stream-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-obsolete-stream-served.js.gz",
+      "rawSha256": "e45e619e4fadd5207ff3a6df7020124d1d1950dee4b373742cb9f0407fe88369",
+      "sha256": "4e281feb0af67b94aea7cb9afafbefc3756e78978f2bd03580032a9ac504dc6b",
+      "bytes": 33938
+    },
+    {
+      "source": ".cache/incremental-20261120-obsolete-surface-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-obsolete-surface-served.js.gz",
+      "rawSha256": "622cb2e93d1489e4d8acf7e5e719b96e6c483f84961fea243ff1c4b3abb79359",
+      "sha256": "cd584d2ec90c3a51a000636d36eee0334ce1a9ccaaebd1cf584cc2ae3b98f7bd",
+      "bytes": 103022
+    },
+    {
+      "source": ".cache/incremental-20261120-obsolete-terrain-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-obsolete-terrain-served.js.gz",
+      "rawSha256": "0539a90c0202703b205224ddb63116c7afcd190d89f2d2e0a24aded18c491028",
+      "sha256": "24bcc6a6e6d57f29e0be1cb329f7d00583bdcc63341a775c1b67eb7c2b728199",
+      "bytes": 20457
+    },
+    {
+      "source": ".cache/incremental-20261120-obsolete-worker-served.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-obsolete-worker-served.js.gz",
+      "rawSha256": "3b761d1a12c2e15e20f477c47e2ee7593b4d621c6c2daba82fe53591bc7f8ff9",
+      "sha256": "6fec2af881f8bf63d463da2d8cf42c93eac69b10b92716c90ae5ab905609e8a0",
+      "bytes": 70384
+    },
+    {
+      "source": ".cache/incremental-20261120-obsolete.json",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-obsolete.json.gz",
+      "rawSha256": "e2296a87f26ec23451bde54021df7e04c08351ce8a9d1e996c169effbf08d805",
+      "sha256": "ceade99d3b8d325af94f5012fdb6246b6e1ffb7df82b906b8464b9a990c58369",
+      "bytes": 247651
+    },
+    {
+      "source": ".cache/incremental-20261120-obsolete.log",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-obsolete.log.gz",
+      "rawSha256": "834d46923f429cb1a0ffe3f779ace9844046985de0bb318800d9b79465fff700",
+      "sha256": "64d21a88581dbc8e733c91c0014c283658c3fd1b0435e34f90fbfa1cb2dcb84f",
+      "bytes": 315
+    },
+    {
+      "source": ".cache/incremental-20261120-obsolete.png",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-obsolete.png",
+      "rawSha256": "2b37183648a9a4560cb6c8c78aa32b28dc368ce7f1578ab3683a85fcf1a46682",
+      "sha256": "2b37183648a9a4560cb6c8c78aa32b28dc368ce7f1578ab3683a85fcf1a46682",
+      "bytes": 23840
+    },
+    {
+      "source": ".cache/incremental-20261120-source-verification.json",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-source-verification.json.gz",
+      "rawSha256": "6e518a45bc6f67466ae09a07b6870cb106abbaba4ad38da24834171824a8aaf0",
+      "sha256": "95367618ad8907da74c2dafc2b0eb5053241b6c07981543cad3e0062f492aad7",
+      "bytes": 74
+    },
+    {
+      "source": ".cache/incremental-20261120-worker-before.log",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/incremental-20261120-worker-before.log.gz",
+      "rawSha256": "34db6273e980c979db489dbec28f455fe84e2b5474dd5185877bbb01d1eb8463",
+      "sha256": "e449c7a4e5ccbce705f986b9c9c2f4e27241d336b1400aba57bfda620e157289",
+      "bytes": 1299
+    },
+    {
+      "source": "59c7d4a9c:src/rendering/native-resource-preparation-receiver.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/baseline-native-resource-preparation-receiver.js.gz",
+      "rawSha256": "d8e1008839d578bfa907ecde515e43879930d6c3a0ecd45d0d7f86edadf38394",
+      "sha256": "1ef6730e3315619f6d3de3ac1d0e614b26ef5e7bf69a081441215d583ac6ad07",
+      "bytes": 2662
+    },
+    {
+      "source": "59c7d4a9c:src/rendering/webgpu-world-worker.js",
+      "path": "docs/guardian/performance/native-incremental-auto-recovery-20261120/baseline-webgpu-world-worker.js.gz",
+      "rawSha256": "e838d7881075978a591f45187e79efa4c2defc39cb54e9703330c545c8e88ba7",
+      "sha256": "af9f8e5dca7d2733940dc0d1064ba490a046289f24dc4663206299b4fd2c214c",
+      "bytes": 8889
+    }
+  ],
+  "implementationCommit": "78aacb1348cb5d666d180d1f6716ef3c5e3bea8c"
+}

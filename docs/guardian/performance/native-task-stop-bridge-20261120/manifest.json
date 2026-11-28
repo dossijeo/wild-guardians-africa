@@ -1,0 +1,186 @@
+{
+  "scope": "Typed Task25 bridge and nearby native, stop, Home, renderer and preparation regressions. Production build. No physical GPU.",
+  "base": "38ee48af6a4b9647663934e868c0fc48ba30ec47",
+  "selection": [
+    "tests/native-farm-arrival-stop-admission.test.js",
+    "tests/native-farm-arrival-stop-clock.test.js",
+    "tests/native-farm-arrival-stop-control.test.js",
+    "tests/native-farm-arrival-stop-data.test.js",
+    "tests/native-farm-arrival-stop-graphics.test.js",
+    "tests/native-farm-arrival-stop-ports.test.js",
+    "tests/native-farm-arrival-stop-remote.test.js",
+    "tests/native-farm-arrival-stop-source.test.js",
+    "tests/native-farm-arrived-home-source.test.js",
+    "tests/native-farm-held-continuation-control.test.js",
+    "tests/native-farm-held-continuation-graphics.test.js",
+    "tests/native-farm-held-continuation-ports.test.js",
+    "tests/native-farm-held-continuation-production.test.js",
+    "tests/native-farm-held-continuation.test.js",
+    "tests/native-farm-moving-home-admission.test.js",
+    "tests/native-farm-moving-home-source.test.js",
+    "tests/native-farm-pending-home-source.test.js",
+    "tests/native-home-arrival-game.test.js",
+    "tests/native-home-arrival-proposal.test.js",
+    "tests/native-home-inactive-restoration.test.js",
+    "tests/native-home-restoration.test.js",
+    "tests/native-home-route-game.test.js",
+    "tests/native-home-route-proposal.test.js",
+    "tests/native-home-route-remote.test.js",
+    "tests/native-idle-current-home-source.test.js",
+    "tests/native-idle-home-pending-proposal.test.js",
+    "tests/native-idle-moving-home-source.test.js",
+    "tests/native-idle-stroll-contract-home.test.js",
+    "tests/native-idle-stroll-stop-admission.test.js",
+    "tests/native-idle-stroll-stop-control.test.js",
+    "tests/native-idle-stroll-stop-data.test.js",
+    "tests/native-idle-stroll-stop-game.test.js",
+    "tests/native-idle-stroll-stop-gpu-motion.test.js",
+    "tests/native-idle-stroll-stop-graphics.test.js",
+    "tests/native-idle-stroll-stop-projection.test.js",
+    "tests/native-idle-stroll-stop-proposal.test.js",
+    "tests/native-idle-stroll-stop-publication.test.js",
+    "tests/native-idle-stroll-stop-remote.test.js",
+    "tests/native-idle-stroll-stop-revalidation.test.js",
+    "tests/native-idle-stroll-stop-terrain.test.js",
+    "tests/native-resource-preparation-channel.test.js",
+    "tests/native-task-action-game-execution.test.js",
+    "tests/native-task-game-execution.test.js",
+    "tests/native-task-route-stop-source.test.js",
+    "tests/native-task-shift-end-game.test.js",
+    "tests/native-world-stop-effects.test.js"
+  ],
+  "tests": {
+    "tests": 693,
+    "pass": 693,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "exitCode": 0
+  },
+  "build": {
+    "exitCode": 0,
+    "vitePhaseText": [
+      "1m 8s"
+    ]
+  },
+  "inputCounts": {
+    "frozenInputs": 9054,
+    "nativeBuiltInputs": 64,
+    "preservedFiles": 16,
+    "externalCommittedInputs": 38
+  },
+  "changed": {
+    "frozenInputs": [],
+    "nativeBuiltInputs": [],
+    "preservedFiles": [],
+    "externalCommittedInputs": []
+  },
+  "abi": {
+    "standalone": {
+      "before": 752,
+      "after": 753,
+      "oldNamesAndKindsPreserved": true,
+      "importsUnchanged": true
+    },
+    "pthread": {
+      "before": 773,
+      "after": 774,
+      "publicBefore": 758,
+      "publicAfter": 759,
+      "publicNamesPreserved": true,
+      "pairedFactoryInstantiated": true
+    },
+    "additiveNames": [
+      "nav_task_route_stop_proposal_source_matches"
+    ]
+  },
+  "nativeOutputs": {
+    "src/world/wild-engine/spatial-savanna.wasm": "2f3a850ea0e459cade584febb34d11cdb05622f5fa26b11edf4f112856cf5464",
+    "public/wild-engine/spatial-threaded.mjs": "3e49ae9e327afaf1c4b6ea289cff04747277e7f9ea0576487ae1369675a9771b",
+    "public/wild-engine/spatial-threaded.wasm": "28b190233a9e80246883c1d5e64d45854abbb7ee691f1617cd6e846d278b23d1"
+  },
+  "sources": [
+    "https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp#L607-L662",
+    "https://github.com/godotengine/godot/blob/4.4-stable/scene/3d/navigation_agent_3d.cpp#L643-L655"
+  ],
+  "artifacts": {
+    "validation.json.gz": {
+      "payloadSha256": "78368c27a180add2ef445058d5ae0a2dd4b0609557faadc9e495ac3dadb4e2f8",
+      "payloadBytes": 1184376,
+      "gzipSha256": "3aa3a293f55e4246efdaf17d1f63ddd57ab8f58b9237ffb95eea3b08a064bd9b",
+      "gzipBytes": 446164
+    },
+    "canonical-build.json.gz": {
+      "payloadSha256": "f8b714185d05838879059fbc1bf29246d7ca41592af027476eda0ca02cd37636",
+      "payloadBytes": 22344,
+      "gzipSha256": "9ebb0f218a813bff6603e95802700c57c6395054514e08348b5e3a9cc03ab39c",
+      "gzipBytes": 4962
+    },
+    "canonical-build.py.gz": {
+      "payloadSha256": "d98de1519770af3554056894eaff6dea12135b86c51a6422e29d716813812cfc",
+      "payloadBytes": 6922,
+      "gzipSha256": "b112785155573e0c4c3ad94522ccb2999fa619913c2b9ba9a299cd393241dc08",
+      "gzipBytes": 2534
+    },
+    "validate.py.gz": {
+      "payloadSha256": "6d8f08376f64fc7fdb6c3061d46e53198f49422aeaede0f5f296ae08f5c9e66f",
+      "payloadBytes": 3743,
+      "gzipSha256": "f6c11091715e4cca8dd2a027b6967d96e656c915152041c481e3b5686ac329b2",
+      "gzipBytes": 1768
+    },
+    "initial-red.log.gz": {
+      "payloadSha256": "1e5b141781e56391b07f55bd39e4a8372e12879b9eadd87eda19df4f8e1db6af",
+      "payloadBytes": 10614,
+      "gzipSha256": "bcad97e9e5b857a81a2a501ed4c6a112ffc4b68625fd03d8da0aa1c77d48c5c4",
+      "gzipBytes": 1655
+    },
+    "intermediate.log.gz": {
+      "payloadSha256": "2512b5c6936dbc5184aeaf3ce59d055c284b29c490fa7555606bf28b6daee0c8",
+      "payloadBytes": 17776,
+      "gzipSha256": "f5c011b420499db8f0eb6540c9de6be965a0594c320ff17f97b2c4ff033381fd",
+      "gzipBytes": 2961
+    },
+    "receipt-negative.log.gz": {
+      "payloadSha256": "ab7e9dd05abf8d41da221b608e52a20d31dc05dd5ccbfb2c2e1ac5afe207c2ef",
+      "payloadBytes": 8403,
+      "gzipSha256": "2aa845f7c59fea4969c2f676fbb7849d8b17da9637b73de4b6213db59b061515",
+      "gzipBytes": 1591
+    },
+    "directed.log.gz": {
+      "payloadSha256": "f40f9d0a21a6332b0f55a6ed01e44ee6e5e1fd278c4cb08866474d6db86b14d6",
+      "payloadBytes": 7138,
+      "gzipSha256": "b25e2079a8fb9ed9e493f0fb23d049d06b2effecf303e118909f13b5f793c306",
+      "gzipBytes": 1214
+    },
+    "selected.log.gz": {
+      "payloadSha256": "d303d47743fc0a408734720227a4f3d99438eb8eb13aa6069e1bc161cf490982",
+      "payloadBytes": 188349,
+      "gzipSha256": "315ee702d7ff9ba1a03793bae8c96b9b3d073c5788db33f34db08a4fbb298e3b",
+      "gzipBytes": 22363
+    },
+    "product-build.log.gz": {
+      "payloadSha256": "27939a114df776c42e628c2495c553dd4f632c9414f00b2c694ab77b39cdc3fa",
+      "payloadBytes": 3937,
+      "gzipSha256": "8fee3f4847c67bd043e9012c22b860be7e2a600dabd679d24b45ca2721e98a64",
+      "gzipBytes": 1574
+    },
+    "standalone-compiler.log.gz": {
+      "payloadSha256": "ebb75272bb804419d1eed04c056d62520bcaa3bbc3749a83670f4c7be09968f0",
+      "payloadBytes": 318,
+      "gzipSha256": "b98e07a01c1f7dff62ff23ee2e4bda9904533e9488ff956fd393c06d43b2ed67",
+      "gzipBytes": 232
+    },
+    "pthread-compiler.log.gz": {
+      "payloadSha256": "05b388a063fdb68dd1ec817386fe5d9aa240af81cd87a704f013a36525fa0c0b",
+      "payloadBytes": 473,
+      "gzipSha256": "bf6592bdaa490e70365b69ae868b8632d5ba5b0d4eda8dbf1ff54023af7f02a0",
+      "gzipBytes": 343
+    },
+    "verify-abi.mjs.gz": {
+      "payloadSha256": "ac0ba2c94275b1c02ab165ba98bf0353814e63eb399aa6322053a6e45fd1a9ae",
+      "payloadBytes": 2575,
+      "gzipSha256": "74a3607e4d5caf8e4e913b100a5bcc8a9dc494c1df11e5d288b50ba82e028505",
+      "gzipBytes": 909
+    }
+  }
+}

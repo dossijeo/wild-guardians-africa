@@ -1,0 +1,185 @@
+{
+  "revision": "6c3a6f3c109259cd1a84d9bc85869ecd4ab8c3dc",
+  "scenario": {
+    "biome": "desierto",
+    "seed": 983,
+    "center": "structure-1000002",
+    "worker": "Home19",
+    "trigger": "Controlled native gate close during the countdown after the third impact"
+  },
+  "scope": "CPU with production Game, authority, WASM and Host. Deterministic GPU queue and minimal render packets. Gate close timing is controlled by the probe.",
+  "originalWasm": "74e05776f913f3c49c881103a59b8e29fc7c1de591854e45a330034a8581e505",
+  "withPublishedGateMotor": {
+    "acquisition": {
+      "sequence": 12,
+      "previous": {
+        "version": 1,
+        "authorityEpoch": "3cb9fae4-56a7-4eee-9554-f185fa4164b3/1",
+        "nativeSession": 1,
+        "ticket": 22,
+        "effectiveTime": 46.30000000000132
+      },
+      "world": {
+        "version": 1,
+        "authorityEpoch": "3cb9fae4-56a7-4eee-9554-f185fa4164b3/1",
+        "nativeSession": 1,
+        "ticket": 23,
+        "effectiveTime": 48.80000000000153
+      },
+      "animal": {
+        "version": 1,
+        "kind": 26,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "3cb9fae4-56a7-4eee-9554-f185fa4164b3/1",
+          "nativeSession": 1,
+          "ticket": 21,
+          "effectiveTime": 46.1000000000013
+        },
+        "sourceControlSequence": 20,
+        "endTime": 64.78277166717918,
+        "purpose": "center",
+        "actorId": 1000003,
+        "bodyId": 2,
+        "targetId": 2,
+        "centerId": 2,
+        "requestSequence": 20,
+        "slot": 0,
+        "generation": 18,
+        "radius": 1.1,
+        "x": -17.663236618041992,
+        "z": -15.632244110107422,
+        "phase": 16.607308477232987,
+        "yaw": -0.09245066456966995,
+        "targetX": -18.954998779296876,
+        "targetZ": 3.2,
+        "centerX": -18.954998779296876,
+        "centerZ": 3.2
+      },
+      "gates": [
+        {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "3cb9fae4-56a7-4eee-9554-f185fa4164b3/1",
+            "nativeSession": 1,
+            "ticket": 23,
+            "effectiveTime": 48.80000000000153
+          }
+        },
+        {
+          "gateId": 1000001,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "3cb9fae4-56a7-4eee-9554-f185fa4164b3/1",
+            "nativeSession": 1,
+            "ticket": 23,
+            "effectiveTime": 48.80000000000153
+          }
+        }
+      ]
+    },
+    "error": "Center ruin requires an acquired animal route",
+    "motors": [
+      {
+        "id": 1000000,
+        "from": 1,
+        "opening": 0.26666666666659933,
+        "target": 0,
+        "start": 48.80000000000153,
+        "end": 49.40000000000153,
+        "requested": false,
+        "occupied": false,
+        "time": 49.24000000000157
+      },
+      {
+        "id": 1000001,
+        "from": 1,
+        "opening": 0.26666666666659933,
+        "target": 0,
+        "start": 48.80000000000153,
+        "end": 49.40000000000153,
+        "requested": false,
+        "occupied": false,
+        "time": 49.24000000000157
+      }
+    ],
+    "centerRuinReady": false
+  },
+  "nativeOnly": {
+    "error": "Center ruin could not reserve its native substep",
+    "motors": [
+      {
+        "id": 1000000,
+        "from": 1,
+        "opening": 0.26666666666659933,
+        "target": 0,
+        "start": 48.20000000000148,
+        "end": 48.80000000000148,
+        "requested": false,
+        "occupied": false,
+        "time": 48.64000000000152
+      },
+      {
+        "id": 1000001,
+        "from": 1,
+        "opening": 0.26666666666659933,
+        "target": 0,
+        "start": 48.20000000000148,
+        "end": 48.80000000000148,
+        "requested": false,
+        "occupied": false,
+        "time": 48.64000000000152
+      }
+    ],
+    "centerRuinReady": false
+  },
+  "privateNativeCandidate": {
+    "wasm": "ed37c2137b2d556c551c98b344ed8d9d30def78278fea7666db14eae79c300a9",
+    "center": "structure-1000002",
+    "polygonRemoved": 10,
+    "ruinTime": 48.65000000000152,
+    "structureRuinedCount": 1,
+    "drawSequence": 12,
+    "gateBindingsOnRuinPacket": 0,
+    "motorsAfterBatch": [
+      {
+        "id": 1000000,
+        "from": 1,
+        "opening": 0.16666666666659558,
+        "target": 0,
+        "start": 48.20000000000148,
+        "end": 48.80000000000148,
+        "requested": false,
+        "occupied": false,
+        "time": 48.70000000000152
+      },
+      {
+        "id": 1000001,
+        "from": 1,
+        "opening": 0.16666666666659558,
+        "target": 0,
+        "start": 48.20000000000148,
+        "end": 48.80000000000148,
+        "requested": false,
+        "occupied": false,
+        "time": 48.70000000000152
+      }
+    ]
+  },
+  "regression": {
+    "selected": 3,
+    "passed": 3,
+    "outsideFilter": 36
+  },
+  "pending": "Adopt the committed gate programs and retained animal under the same center-ruin packet. The private native experiment did not mark a gate world boundary on Draw.",
+  "evidenceSha256": {
+    "center-moving-gate-native-cut.tap": "20a0d93e58049c860c543c471e00b64734a63bd5b28aa931701f7fc38a0d2a93",
+    "center-moving-gate-control-cut.tap": "f5105b4a9b3025b67ac5d224dab3abba1b0c144023c45f0193a855d56b5a039c",
+    "center-moving-gate-component.tap": "183ac877a37298527409f86acdf184b1b8af1828490df3779472b9e061f87702",
+    "center-moving-gate-current-regression.tap": "1c2b4c2ea6cfc04f4c95f67197c8e769ac9295cb234efe55decb75948a30b42f",
+    "center-moving-gate-native-cut.test.mjs": "44a28e0eb24a1f1dea0a95de25a56e56919a54fa086a33138a3b0dae4aabb2da",
+    "center-moving-gate-control-cut.test.mjs": "b902baeb60868a43d6bbd2e7a2b3db1e706bda6013aeaf292d0295285842486d",
+    "center-moving-gate-control-loader.mjs": "2b1a81d92c98305e79292277d07d86100727c8790150ecb2e1d88cc0619e00da"
+  }
+}

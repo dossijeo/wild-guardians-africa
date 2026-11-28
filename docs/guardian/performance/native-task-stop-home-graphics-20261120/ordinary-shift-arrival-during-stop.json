@@ -1,0 +1,67 @@
+{
+  "commit": "0e3eff04123b059ffac4d930e9ad8f8451c9965b",
+  "profile": "olderFemale",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing"
+  },
+  "viewport": [
+    640,
+    480
+  ],
+  "shiftEnd": 300,
+  "actorId": 900011,
+  "bodyId": 1,
+  "taskId": 1000001,
+  "acquiredDrawTickets": [
+    2,
+    5
+  ],
+  "routeEndElapsed": 21.507116508851595,
+  "heldStop": {
+    "preparedTicket": 6,
+    "preparedAtElapsed": 14.999999999999893,
+    "ready": {
+      "time": 302.2500000000005,
+      "elapsed": 17.24999999999991,
+      "x": -20,
+      "z": 2.685157287525347,
+      "admission": "native-task",
+      "status": "walking",
+      "sequence": 321
+    }
+  },
+  "lastPublications": [
+    {
+      "time": 306.00000000000136,
+      "elapsed": 20.999999999999964,
+      "x": -20,
+      "z": 6.735157287525405,
+      "admission": "native-task",
+      "status": "walking",
+      "sequence": 336
+    },
+    {
+      "time": 306.2500000000014,
+      "elapsed": 21.249999999999968,
+      "x": -19.996353238323742,
+      "z": 7.00364674428721,
+      "admission": "native-task",
+      "status": "walking",
+      "sequence": 337
+    },
+    {
+      "time": 306.5000000000015,
+      "elapsed": 21.49999999999997,
+      "x": -19.8054339522186,
+      "z": 7.194565120021727,
+      "admission": "native-task",
+      "status": "walking",
+      "sequence": 338
+    }
+  ],
+  "authorityFault": "Error: Error: Expired Task lost its executed moving source",
+  "consumersWithFault": 2,
+  "acquiredStop": false,
+  "acquiredHome": false
+}

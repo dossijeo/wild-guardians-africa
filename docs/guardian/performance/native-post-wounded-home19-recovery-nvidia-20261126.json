@@ -1,0 +1,140 @@
+{
+  "version": 1,
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 79.5
+    }
+  },
+  "scope": "Calificación DEV de Desierto, después de Home19 confirmado y dibujado, un trabajador incapacitado y sin portón.",
+  "raw": {
+    "file": "E:/wild-guardians-qa/after-wounded-home19-20261126/nvidia-2.json",
+    "sha256": "03d98862f78c989192ea781140420d0099d43d5f504e8dae0e4552575ab087c5"
+  },
+  "preimage": {
+    "file": "E:/wild-guardians-qa/after-wounded-home19-20261126/nvidia.json",
+    "sha256": "c35a14e9e5c981eea010f981d651cec4db6a12e3d49356d3c04064d0df55e9f8",
+    "stage": "markVisualLost after Home19",
+    "error": "Error: Visual recovery request timed out",
+    "elapsed": 34.519999999999925,
+    "worldBoundary": {
+      "version": 1,
+      "authorityEpoch": "2a4dfc9c-b521-42a3-abe7-6e675230c06a/1",
+      "nativeSession": 1,
+      "ticket": 15,
+      "effectiveTime": 34.519999999999925
+    },
+    "visibleSequence": 391,
+    "journal": {
+      "base": 781,
+      "candidate": null,
+      "through": 845,
+      "entries": 64,
+      "bytes": 5492822,
+      "entryBytes": 656330,
+      "overheadBytes": 4836492,
+      "capacity": 256,
+      "highWatermark": 128,
+      "maxBytes": 268435456,
+      "highWatermarkBytes": 201326592,
+      "pendingTerrain": false,
+      "saturated": false,
+      "encoderFault": false,
+      "checkpointDeferred": false,
+      "checkpointRetry": true,
+      "closed": false
+    }
+  },
+  "loss": {
+    "elapsed": 34.519999999999925,
+    "visibleSequence": 390,
+    "retiredSequence": 16,
+    "prepared": {
+      "version": 1,
+      "authorityEpoch": "23b73a8d-6704-4b9c-8d37-b6ae1074f067/1",
+      "nativeSession": 1,
+      "ticket": 14,
+      "effectiveTime": 34.519999999999925
+    },
+    "acquired": {
+      "version": 1,
+      "authorityEpoch": "23b73a8d-6704-4b9c-8d37-b6ae1074f067/1",
+      "nativeSession": 1,
+      "ticket": 15,
+      "effectiveTime": 34.519999999999925
+    },
+    "bodyId": 1,
+    "worker": {
+      "id": "worker-900011",
+      "status": "home",
+      "incapacitated": true,
+      "hits": 2,
+      "x": -5.800000000000001,
+      "z": 0.2,
+      "heading": 0.7853976791094822,
+      "runPhase": 29.96621490506065,
+      "walkPhase": 8.414999999999973,
+      "carryPhase": 9.5,
+      "runRemaining": 40
+    }
+  },
+  "replacement": {
+    "basePublication": 781,
+    "throughPublication": 845,
+    "frame": {
+      "sequence": 1,
+      "clockElapsed": 34.519999999999925,
+      "presentationElapsed": 34.519996643066406,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "23b73a8d-6704-4b9c-8d37-b6ae1074f067/1",
+        "nativeSession": 1,
+        "ticket": 15,
+        "effectiveTime": 34.519999999999925
+      },
+      "bindings": []
+    },
+    "confirmedRetiredSequence": 16,
+    "home19Acquisitions": 1,
+    "finalElapsed": 34.55999999999993,
+    "drawDrained": true
+  },
+  "encounterEvents": [
+    {
+      "id": "event-29209",
+      "type": "WorkerHit",
+      "targetId": "worker-900011",
+      "simulationTime": 12.179999999999954
+    },
+    {
+      "id": "event-29210",
+      "type": "WorkerIncapacitated",
+      "targetId": "worker-900011",
+      "simulationTime": 12.619999999999944
+    },
+    {
+      "id": "event-29211",
+      "type": "AnimalRetreating",
+      "targetId": "animal-1000000",
+      "simulationTime": 12.619999999999944
+    },
+    {
+      "id": "event-29212",
+      "type": "RaidEnded",
+      "simulationTime": 14.339999999999907
+    }
+  ],
+  "diagnostics": {
+    "expectedDeviceLoss": "THREE.WebGPURenderer: WebGPU Device Lost:\n\nMessage: Device was destroyed.\nReason: destroyed",
+    "runtimeErrors": []
+  }
+}

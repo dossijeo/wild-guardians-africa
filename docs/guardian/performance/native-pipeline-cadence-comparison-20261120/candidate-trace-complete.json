@@ -1,0 +1,34 @@
+{
+  "dataLossOccurred": false,
+  "traceFormat": "json",
+  "streamCompression": "gzip",
+  "browserVersion": "157.0.4341.60",
+  "options": {
+    "traceConfig": {
+      "recordMode": "recordUntilFull",
+      "traceBufferSizeInKb": 524288,
+      "includedCategories": [
+        "toplevel",
+        "blink",
+        "blink.user_timing",
+        "devtools.timeline",
+        "v8.execute",
+        "gpu",
+        "viz",
+        "cc",
+        "benchmark",
+        "disabled-by-default-gpu.dawn"
+      ]
+    },
+    "transferMode": "ReturnAsStream",
+    "streamFormat": "json",
+    "streamCompression": "gzip",
+    "bufferUsageReportingInterval": 1000
+  },
+  "peakBufferUsage": 0.3912426829338074,
+  "usageReports": 111,
+  "collectionComplete": true,
+  "tracePath": ".cache/native-pipeline-60hz-candidate1.trace.json.gz",
+  "exportedBytes": 84052832,
+  "sha256": "d43e746d9615b931cb1b1e674f9bd71f073746c5fd1f49bd6e1b0bcc5c4d033c"
+}

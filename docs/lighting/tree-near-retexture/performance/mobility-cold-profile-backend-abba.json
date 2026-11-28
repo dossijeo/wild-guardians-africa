@@ -1,0 +1,392 @@
+{
+  "runs": [
+    {
+      "requested": "standalone",
+      "backend": "standalone",
+      "isolated": true,
+      "chunks": [
+        "0,-1",
+        "0,-2",
+        "0,0",
+        "0,1",
+        "0,2",
+        "1,-1",
+        "1,-2",
+        "1,0",
+        "1,1",
+        "1,2",
+        "2,-1",
+        "2,-2",
+        "2,0",
+        "2,1",
+        "2,2",
+        "3,-1",
+        "3,-2",
+        "3,0",
+        "3,1",
+        "3,2",
+        "4,-1",
+        "4,-2",
+        "4,0",
+        "4,1",
+        "4,2"
+      ],
+      "firstTick": 938.6949999928474,
+      "regionCalls": 237,
+      "regionSlow": [
+        {
+          "radius": 0.9,
+          "worker": false,
+          "ms": 231.99000000953674
+        },
+        {
+          "radius": 0.85,
+          "worker": false,
+          "ms": 233.25999999046326
+        },
+        {
+          "radius": 0.97,
+          "worker": false,
+          "ms": 224.0949999988079
+        },
+        {
+          "radius": 1.55,
+          "worker": false,
+          "ms": 191.50499999523163
+        }
+      ],
+      "tick": {
+        "count": 120,
+        "p95": 13.489999994635582,
+        "p99": 18.265000000596046,
+        "max": 938.6949999928474
+      },
+      "render": {
+        "count": 120,
+        "p95": 50.849999994039536,
+        "p99": 62.37000000476837,
+        "max": 233.78499999642372
+      },
+      "total": {
+        "count": 120,
+        "p95": 61.62999999523163,
+        "p99": 81.2199999988079,
+        "max": 987.5799999982119
+      },
+      "frames": {
+        "count": 119,
+        "p95": 61.929999992251396,
+        "p99": 81.70499999821186,
+        "max": 987.9300000071526
+      },
+      "gpu": {
+        "samples": 120,
+        "disjoint": 0,
+        "discarded": 0,
+        "elapsed": {
+          "count": 120,
+          "p95": 32.798336,
+          "p99": 45.76944,
+          "max": 194.703616
+        }
+      },
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "sceneErrors": [],
+      "hashes": {
+        "initial": "eda7456b3f81ce73b00c474af4217973c92a958cf51b904433364c564d9a9d0e",
+        "final": "ca2338389a4f4018a12ff34e569c0da8dbe92494bb504a1176f0a4b2e85bd62b",
+        "chunks": "4f2d501510695806c3a971f8c69016a1090545e5461f793386b9feadd1a129dd"
+      }
+    },
+    {
+      "requested": "pthreads",
+      "backend": "pthreads",
+      "isolated": true,
+      "chunks": [
+        "0,-1",
+        "0,0",
+        "0,1",
+        "0,2",
+        "1,-1",
+        "1,0",
+        "1,1",
+        "1,2",
+        "2,-1",
+        "2,0",
+        "2,1",
+        "2,2",
+        "3,-1",
+        "3,0",
+        "3,1",
+        "3,2",
+        "4,-1",
+        "4,0",
+        "4,1",
+        "4,2"
+      ],
+      "firstTick": 979.9700000137091,
+      "regionCalls": 237,
+      "regionSlow": [
+        {
+          "radius": 0.9,
+          "worker": false,
+          "ms": 243.54499998688698
+        },
+        {
+          "radius": 0.85,
+          "worker": false,
+          "ms": 242.76999999582767
+        },
+        {
+          "radius": 0.97,
+          "worker": false,
+          "ms": 235.18000000715256
+        },
+        {
+          "radius": 1.55,
+          "worker": false,
+          "ms": 204.5700000077486
+        }
+      ],
+      "tick": {
+        "count": 120,
+        "p95": 12.215000003576279,
+        "p99": 16.945000007748604,
+        "max": 979.9700000137091
+      },
+      "render": {
+        "count": 120,
+        "p95": 57.78999999165535,
+        "p99": 61.17499999701977,
+        "max": 91.76500000059605
+      },
+      "total": {
+        "count": 120,
+        "p95": 65.70000000298023,
+        "p99": 72.45000000298023,
+        "max": 1026.5250000059605
+      },
+      "frames": {
+        "count": 119,
+        "p95": 65.99500000476837,
+        "p99": 72.84000000357628,
+        "max": 1026.8649999946356
+      },
+      "gpu": {
+        "samples": 120,
+        "disjoint": 0,
+        "discarded": 0,
+        "elapsed": {
+          "count": 120,
+          "p95": 39.28736,
+          "p99": 42.332032,
+          "max": 44.708288
+        }
+      },
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "sceneErrors": [],
+      "hashes": {
+        "initial": "eda7456b3f81ce73b00c474af4217973c92a958cf51b904433364c564d9a9d0e",
+        "final": "353a4b036017374caf7b393601fc5c85a26ac13db44e00b6b1cfd673a0074f9e",
+        "chunks": "850057a3db363cca18e4ce0fdac5d4c1dbbddc6c7f0289664748ce305cf0948c"
+      }
+    },
+    {
+      "requested": "pthreads",
+      "backend": "pthreads",
+      "isolated": true,
+      "chunks": [
+        "0,-1",
+        "0,0",
+        "0,1",
+        "0,2",
+        "1,-1",
+        "1,0",
+        "1,1",
+        "1,2",
+        "2,-1",
+        "2,0",
+        "2,1",
+        "2,2",
+        "3,-1",
+        "3,0",
+        "3,1",
+        "3,2",
+        "4,-1",
+        "4,0",
+        "4,1",
+        "4,2"
+      ],
+      "firstTick": 989.2049999982119,
+      "regionCalls": 237,
+      "regionSlow": [
+        {
+          "radius": 0.9,
+          "worker": false,
+          "ms": 240.2749999910593
+        },
+        {
+          "radius": 0.85,
+          "worker": false,
+          "ms": 242.74000000953674
+        },
+        {
+          "radius": 0.97,
+          "worker": false,
+          "ms": 248.73499999940395
+        },
+        {
+          "radius": 1.55,
+          "worker": false,
+          "ms": 204.6199999898672
+        }
+      ],
+      "tick": {
+        "count": 120,
+        "p95": 12.840000003576279,
+        "p99": 16.41500000655651,
+        "max": 989.2049999982119
+      },
+      "render": {
+        "count": 120,
+        "p95": 51.78499999642372,
+        "p99": 58.71999999880791,
+        "max": 72.22999998927116
+      },
+      "total": {
+        "count": 120,
+        "p95": 64.76000000536442,
+        "p99": 75.5249999910593,
+        "max": 1037.690000012517
+      },
+      "frames": {
+        "count": 119,
+        "p95": 65.10500000417233,
+        "p99": 76.73999999463558,
+        "max": 1037.969999998808
+      },
+      "gpu": {
+        "samples": 120,
+        "disjoint": 0,
+        "discarded": 0,
+        "elapsed": {
+          "count": 120,
+          "p95": 41.205376,
+          "p99": 44.381824,
+          "max": 46.165664
+        }
+      },
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "sceneErrors": [],
+      "hashes": {
+        "initial": "eda7456b3f81ce73b00c474af4217973c92a958cf51b904433364c564d9a9d0e",
+        "final": "353a4b036017374caf7b393601fc5c85a26ac13db44e00b6b1cfd673a0074f9e",
+        "chunks": "850057a3db363cca18e4ce0fdac5d4c1dbbddc6c7f0289664748ce305cf0948c"
+      }
+    },
+    {
+      "requested": "standalone",
+      "backend": "standalone",
+      "isolated": true,
+      "chunks": [
+        "0,-1",
+        "0,-2",
+        "0,0",
+        "0,1",
+        "0,2",
+        "1,-1",
+        "1,-2",
+        "1,0",
+        "1,1",
+        "1,2",
+        "2,-1",
+        "2,-2",
+        "2,0",
+        "2,1",
+        "2,2",
+        "3,-1",
+        "3,-2",
+        "3,0",
+        "3,1",
+        "3,2",
+        "4,-1",
+        "4,-2",
+        "4,0",
+        "4,1",
+        "4,2"
+      ],
+      "firstTick": 949.4449999928474,
+      "regionCalls": 237,
+      "regionSlow": [
+        {
+          "radius": 0.9,
+          "worker": false,
+          "ms": 231.39000000059605
+        },
+        {
+          "radius": 0.85,
+          "worker": false,
+          "ms": 244.66999998688698
+        },
+        {
+          "radius": 0.97,
+          "worker": false,
+          "ms": 225.14499999582767
+        },
+        {
+          "radius": 1.55,
+          "worker": false,
+          "ms": 193.33500000834465
+        }
+      ],
+      "tick": {
+        "count": 120,
+        "p95": 13.064999997615814,
+        "p99": 17.310000002384186,
+        "max": 949.4449999928474
+      },
+      "render": {
+        "count": 120,
+        "p95": 51.81999999284744,
+        "p99": 54.29500000178814,
+        "max": 87.76000000536442
+      },
+      "total": {
+        "count": 120,
+        "p95": 60.63500000536442,
+        "p99": 67.00999999046326,
+        "max": 998.015000000596
+      },
+      "frames": {
+        "count": 119,
+        "p95": 60.93000000715256,
+        "p99": 67.2749999910593,
+        "max": 998.2950000017881
+      },
+      "gpu": {
+        "samples": 120,
+        "disjoint": 0,
+        "discarded": 0,
+        "elapsed": {
+          "count": 120,
+          "p95": 37.328,
+          "p99": 46.036608,
+          "max": 49.51248
+        }
+      },
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "sceneErrors": [],
+      "hashes": {
+        "initial": "eda7456b3f81ce73b00c474af4217973c92a958cf51b904433364c564d9a9d0e",
+        "final": "ca2338389a4f4018a12ff34e569c0da8dbe92494bb504a1176f0a4b2e85bd62b",
+        "chunks": "4f2d501510695806c3a971f8c69016a1090545e5461f793386b9feadd1a129dd"
+      }
+    }
+  ],
+  "equality": {
+    "initial": true,
+    "final": false,
+    "chunks": false
+  },
+  "scope": "Four independent active QA scenes, mangrove island network, 20 synthetic actors, 120 advanceReal(.05) calls in standalone/pthreads/pthreads/standalone order; actual WorldScene and native session per run. First-use instrumentation on regionFor and GPU timers perturb timing. Fixed logical clock and slot ID; no real input, Rapier, complete native-state equivalence, campaign, integrated GPU, or Worker-owned simulation."
+}

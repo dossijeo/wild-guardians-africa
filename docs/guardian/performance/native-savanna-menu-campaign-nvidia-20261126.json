@@ -1,0 +1,43 @@
+{
+  "scenario": "Sabana 714, Mapungubwe desde el menú, una contratación por jornada y reloj normal de Hosted",
+  "sourceRevision": "ff0bee3ebd51a72b7d3e8e85933830f78ca4c5ec",
+  "profile": {"nativeWorkerLifecycle": true, "selection": "explicit QA startup", "nightFastForward": true},
+  "adapter": {"vendor": "nvidia", "architecture": "turing"},
+  "source": {"name": "native-menu-campaign-714-extended.json", "sha256": "c4d6c74bc15c3e2489e1c6c30a159989277ecc20993509b0471f27dd4d33d930"},
+  "hiring": [
+    {"day": 1, "event": "event-9", "balance": 510},
+    {"day": 2, "event": "event-40", "worker": "worker-13", "balance": 470},
+    {"day": 3, "event": "event-66", "worker": "worker-18", "balance": 430},
+    {"day": 4, "event": "event-99", "worker": "worker-23", "balance": 711}
+  ],
+  "delivery": {"event": "event-75", "worker": "worker-18", "crate": "crate-21", "elapsed": 1333.9499999993466, "credit": 321},
+  "raidColumns": ["day", "species", "actor", "centerHpAfterEachHit", "firstRouteTicket", "firstRouteFrame", "retreatTicket", "retreatFrame", "raidEnded"],
+  "completedRaids": [
+    [1, "warthog", "animal-10", [580, 560], 48, 1145, 56, 1227, 433.4781464806829],
+    [2, "hyena", "animal-17", [535, 510, 485], 107, 2279, 119, 2359, 1018.8794285575324],
+    [3, "buffalo", "animal-22", [450, 415, 380, 345], 161, 3553, 177, 3646, 1700.091211758036]
+  ],
+  "failure": {
+    "stage": "day 4 through night",
+    "spawn": {"actor": "animal-24", "species": "lion", "elapsed": 2137.8108868149616, "hitsRemaining": 4},
+    "request": {"id": 94, "kind": "prepareNativeAnimalCropRouteResources", "ticket": 186, "effectiveTime": 2137.848709451739, "minSequence": 32672},
+    "samplesColumns": ["millisecondsSinceRequest", "phase", "requestedSequence", "surfaceApplied", "surfaceReceived"],
+    "samples": [
+      [7.170, "prerequisite wait", 32569, 32568, 32600],
+      [175.875, "prerequisite applied", 32569, 32569, 32600],
+      [275.670, "requested publication wait", 32672, 32576, 32600],
+      [4932.055, "requested publication applied", 32672, 32672, 32703],
+      [5027.250, "proposal preparing", 32672, 32679, 32703]
+    ],
+    "authorityTimeoutMs": 10011.265,
+    "receiverCancellationMs": 10012.955,
+    "authorityError": "Native resource preparation timed out",
+    "receiverError": "Pipeline admission cancelled",
+    "ready": false,
+    "commit": false,
+    "lastDraw": {"sequence": 4748, "clockElapsed": 2138.5487094517416, "ticket": 185},
+    "lastAuthorityElapsed": 2145.748709451768,
+    "lastState": {"worker": "worker-23", "workerStatus": "home", "centerHp": 345, "balance": 711},
+    "drainVerified": false
+  }
+}

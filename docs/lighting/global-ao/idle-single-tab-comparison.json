@@ -1,0 +1,76 @@
+{
+  "scope": "First single-tab off/on pair; one order, no repetitions. Differences are observations, not causal attribution or acceptance.",
+  "matchingMetadata": {
+    "worldAuthority": true,
+    "biome": true,
+    "culture": true,
+    "quality": true,
+    "time": true,
+    "camera": true,
+    "renderSize": true,
+    "pixelRatio": true,
+    "actorsReady": true,
+    "treePreparation": true,
+    "population": true
+  },
+  "off": {
+    "frame": {
+      "count": 330,
+      "p50": 33.23500000000058,
+      "p95": 33.36500000000524,
+      "p99": 33.455000000001746,
+      "max": 34.38000000000466
+    },
+    "renderCPU": {
+      "count": 330,
+      "p50": 11.77999997138977,
+      "p95": 14.40499997138977,
+      "p99": 15.625,
+      "max": 16.570000052452087
+    },
+    "draws": {
+      "count": 330,
+      "p50": 80,
+      "p95": 80,
+      "p99": 80,
+      "max": 80
+    },
+    "memory": {
+      "geometries": 326,
+      "textures": 208
+    }
+  },
+  "on": {
+    "frame": {
+      "count": 325,
+      "p50": 33.23999999999069,
+      "p95": 49.88500000000931,
+      "p99": 50.30000000000291,
+      "max": 66.50999999999476
+    },
+    "renderCPU": {
+      "count": 325,
+      "p50": 11.840000033378601,
+      "p95": 14.399999976158142,
+      "p99": 15.18500006198883,
+      "max": 17.240000009536743
+    },
+    "draws": {
+      "count": 325,
+      "p50": 82,
+      "p95": 82,
+      "p99": 82,
+      "max": 82
+    },
+    "memory": {
+      "geometries": 328,
+      "textures": 215
+    }
+  },
+  "remaining": [
+    "Explain two additional geometries/draws and seven textures before treating frames as identical render workloads",
+    "Repeat in alternating order",
+    "Measure casts and populated raids separately",
+    "GPU time and byte residency are not measured"
+  ]
+}

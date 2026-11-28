@@ -18,7 +18,8 @@ for(const species of [...group,'complete-group'])test(`recorded desert ${species
  s.nightPlan={at:400,group:chosen,done:false};let request;
  const worker={postMessage(data){request=data;},terminate(){}},preparer=new RaidEntryPreparer(nav,{createWorker:()=>worker});preparer.update(s);
  const before=serialize(s);worker.onmessage({data:computeRaidEntry(request)});assert.equal(serialize(s),before);
- spawnRaid(s,{group:chosen},nav);assert.equal(preparer.stats.used,1);assert.ok(s.raid);
+ assert.equal(spawnRaid(s,{group:chosen},nav),true);s.nightPlan.done=true;
+ assert.equal(preparer.stats.used,1);assert.ok(s.raid);
  const births=s.raid.animals.map(a=>({...a}));
  for(const a of births){assert.ok(Math.hypot(a.x-center.x,a.z-center.z)<40);assert.ok(nav.segmentClear(a,a.exit,a.radius,null,false));}
  for(let i=0;i<births.length;i++)for(let j=0;j<i;j++)assert.ok(Math.hypot(births[i].x-births[j].x,births[i].z-births[j].z)>births[i].radius+births[j].radius+1);

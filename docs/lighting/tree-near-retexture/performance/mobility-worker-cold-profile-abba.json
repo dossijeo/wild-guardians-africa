@@ -1,0 +1,124 @@
+{
+  "results": [
+    {
+      "mode": "idle",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": {
+        "count": 90,
+        "p95": 33.36999999999989,
+        "p99": 33.399999999999636,
+        "max": 33.399999999999636
+      },
+      "overlap": {
+        "count": 0,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "profile": null,
+      "gpu": {
+        "reason": null,
+        "samples": 91,
+        "p95": 0.481248,
+        "p99": 0.577568
+      },
+      "scope": "One real cold native navigation-profile build in an isolated Worker, synthetic mangrove island network and synthetic version invalidation. Static animal pose, no gameplay state or safety guarantee."
+    },
+    {
+      "mode": "worker",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": {
+        "count": 90,
+        "p95": 33.36500000000024,
+        "p99": 33.39000000000033,
+        "max": 33.39000000000033
+      },
+      "overlap": {
+        "count": 4,
+        "p95": 33.36500000000024,
+        "p99": 33.36500000000024,
+        "max": 33.36500000000024
+      },
+      "profile": {
+        "elapsedMs": 118.64000000059605,
+        "requestToResultMs": 119.1900000050664,
+        "cancelHandledMs": 106.97001953423023,
+        "accepted": false,
+        "cancelAccepted": false,
+        "region": {
+          "ids": [
+            1584
+          ],
+          "unknown": false
+        }
+      },
+      "gpu": {
+        "reason": null,
+        "samples": 91,
+        "p95": 0.51664,
+        "p99": 2.05216
+      },
+      "scope": "One real cold native navigation-profile build in an isolated Worker, synthetic mangrove island network and synthetic version invalidation. Static animal pose, no gameplay state or safety guarantee."
+    },
+    {
+      "mode": "worker",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": {
+        "count": 90,
+        "p95": 33.4050000000002,
+        "p99": 33.45500000000038,
+        "max": 33.45500000000038
+      },
+      "overlap": {
+        "count": 4,
+        "p95": 33.42000000000007,
+        "p99": 33.42000000000007,
+        "max": 33.42000000000007
+      },
+      "profile": {
+        "elapsedMs": 118.80000000447035,
+        "requestToResultMs": 119.30499999970198,
+        "cancelHandledMs": 107.67999999970198,
+        "accepted": false,
+        "cancelAccepted": false,
+        "region": {
+          "ids": [
+            1584
+          ],
+          "unknown": false
+        }
+      },
+      "gpu": {
+        "reason": null,
+        "samples": 91,
+        "p95": 0.505632,
+        "p99": 0.718816
+      },
+      "scope": "One real cold native navigation-profile build in an isolated Worker, synthetic mangrove island network and synthetic version invalidation. Static animal pose, no gameplay state or safety guarantee."
+    },
+    {
+      "mode": "idle",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": {
+        "count": 91,
+        "p95": 33.38999999999987,
+        "p99": 33.465000000000146,
+        "max": 33.465000000000146
+      },
+      "overlap": {
+        "count": 0,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "profile": null,
+      "gpu": {
+        "reason": null,
+        "samples": 92,
+        "p95": 0.50608,
+        "p99": 0.615712
+      },
+      "scope": "One real cold native navigation-profile build in an isolated Worker, synthetic mangrove island network and synthetic version invalidation. Static animal pose, no gameplay state or safety guarantee."
+    }
+  ]
+}

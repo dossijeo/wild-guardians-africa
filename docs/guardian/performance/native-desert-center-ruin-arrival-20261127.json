@@ -1,0 +1,135 @@
+{
+  "base": "28e8d54e308e8be0c2f0ed9cc1c74c8fd65f0104",
+  "scenario": "Isolated Desert center collapse with the approach to a different center ending in the same simulation substep. Hosted uses its normal clock before the third hit and after GO of the successor strike. QA controls the exact expiry substep and retains READY.",
+  "raw": {
+    "file": "center-ruin-arrived-26-final-nvidia-20261127.json",
+    "sha256": "5d5e5303680544cf2b8d40968d3318d5226dec9c200e0ca95ca803f0c8166027"
+  },
+  "inputs": [
+    {
+      "path": ".cache/center-ruin-active-strike-input.json",
+      "sha256": "3c0c2c34cd9206a1dbed07db59369ab0264d68f16e0eb8301da02d2c1f7742fa"
+    },
+    {
+      "path": ".cache/center-ruin-arrival-physical.mjs",
+      "sha256": "aabb8bb1c77dba29aca0bdafa8cab0ff938cfcf84bef9416b6291a5926961c31"
+    },
+    {
+      "path": ".cache/center-ruin-arrival-browser.mjs",
+      "sha256": "5ac85a2ace655b55ff9d826f3ab27e0a7277d9f3d511e5225ef2934dd30e904d"
+    },
+    {
+      "path": ".cache/center-ruin-arrival-worker.mjs",
+      "sha256": "d693f45e3c09c71ae043c33a3de8b9c8037f91a7df8aa6fe711ebfae42663a43"
+    },
+    {
+      "path": "src/world/wild-engine/spatial-savanna.wasm",
+      "sha256": "f891df7c17eda5fa9123208c3ef10a379f495c6f65540931be12865f756db139"
+    },
+    {
+      "path": "public/wild-engine/spatial-threaded.wasm",
+      "sha256": "637d2dbf967f7bd28ec25283ff1aefe9716a639206610bf69a44e912d94438c8"
+    },
+    {
+      "path": "public/wild-engine/spatial-threaded.mjs",
+      "sha256": "71b4a1931384d4d498b1054201c9f8295915d34424ae9311795583d2e646391c"
+    }
+  ],
+  "snapshotSHA256": "01d2ce26dc45382edb923578fb9d4b66cf197431970ae21b0672d0d8f3bf5046",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing"
+  },
+  "before": {
+    "elapsed": 37.35800000000029,
+    "x": -19.341821584363124,
+    "z": -17.70556261214306,
+    "phase": 12.098411866492006,
+    "heading": -2.6904487332264315,
+    "status": "walking",
+    "target": "structure-2"
+  },
+  "after": {
+    "elapsed": 37.37800000000029,
+    "x": -19.34705352783203,
+    "z": -17.71636199951172,
+    "phase": 12.10641186649201,
+    "heading": -2.6904487332264315,
+    "status": "walking",
+    "target": "structure-2"
+  },
+  "deadline": 37.37000000000029,
+  "approach": {
+    "bodyId": 1,
+    "ticket": 14,
+    "elapsed": 35.16956327740794,
+    "endpoint": 37.36600000000029,
+    "assignment": 16,
+    "target": "structure-2"
+  },
+  "ruin": {
+    "ticket": 15,
+    "elapsed": 37.37800000000029,
+    "sequence": 287,
+    "center": "structure-1000000",
+    "polygon": 10,
+    "executionEpoch": 35.16956327740794,
+    "relativeTime": 2.1964406967163086,
+    "meshes": [
+      {
+        "mesh": 51,
+        "geometry": 20,
+        "material": 30,
+        "visible": false,
+        "instances": null
+      },
+      {
+        "mesh": 52,
+        "geometry": 21,
+        "material": 29,
+        "visible": true,
+        "instances": null
+      },
+      {
+        "mesh": 54,
+        "geometry": 22,
+        "material": 31,
+        "visible": true,
+        "instances": 270
+      },
+      {
+        "mesh": 55,
+        "geometry": 23,
+        "material": 32,
+        "visible": true,
+        "instances": 83
+      }
+    ]
+  },
+  "successor": {
+    "bodyId": 1,
+    "ticket": 17,
+    "attackId": "attack-29219",
+    "hit": 41.09800000000061,
+    "target": "structure-2",
+    "hp": 580
+  },
+  "retreat": {
+    "absenceFrame": 409,
+    "elapsed": 46.72800000000109,
+    "drained": true
+  },
+  "previousHarnessRuns": [
+    {
+      "file": "center-ruin-arrived-26-nvidia-20261127.failure.json",
+      "reason": "Accelerated start outran preparation, stopping after the first hit.",
+      "sha256": "f1f0b2b1859a58797f7e791974aee0149c943a80d6ed532628eb1824daf403fa"
+    },
+    {
+      "file": "center-ruin-arrived-26-hosted-nvidia-20261127.failure.json",
+      "reason": "Kind4 and the endpoint submitted. Accelerated continuation triggered a stale strike error.",
+      "sha256": "e680cbf487500144839a6d56879624e33118c53b884b33ee37a93fcf9e6af2a8"
+    }
+  ],
+  "errors": []
+}

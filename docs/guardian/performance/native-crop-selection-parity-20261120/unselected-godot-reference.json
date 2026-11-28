@@ -1,0 +1,27 @@
+{
+  "project": "Godot",
+  "tag": "4.5-stable",
+  "commit": "876b290332ec6f2e6d173d08162a02aa7e6ca46d",
+  "verifiedBy": "git ls-remote tag plus identical tag/commit source bytes",
+  "files": [
+    {
+      "path": "servers/rendering/renderer_rd/storage_rd/mesh_storage.cpp",
+      "source": ".cache/native-crop-picking-godot-mesh-storage-pinned.cpp",
+      "url": "https://github.com/godotengine/godot/blob/876b290332ec6f2e6d173d08162a02aa7e6ca46d/servers/rendering/renderer_rd/storage_rd/mesh_storage.cpp",
+      "sha256": "38d6a4426dcb3cf3b24d54b42fa25591f250e507f282d490f56d9dc4a19fc1ee",
+      "bytes": 89731
+    },
+    {
+      "path": "servers/rendering_server.cpp",
+      "source": ".cache/native-crop-picking-godot-rendering-server-pinned.cpp",
+      "url": "https://github.com/godotengine/godot/blob/876b290332ec6f2e6d173d08162a02aa7e6ca46d/servers/rendering_server.cpp",
+      "sha256": "3f3329c507795ccdf49ef93978a90177a149336d02ff18a191263e5e0b52f7c4",
+      "bytes": 190062
+    }
+  ],
+  "sections": [
+    "_surface_set_data: nonzero skin influences expand each bone AABB",
+    "MeshStorage::mesh_get_aabb: pose transforms/union and skeleton RID/version cache"
+  ],
+  "decision": "Candidate only. Profile the current 119–149ms pick phases first. Consider adapting bone bounds only if actor deformation is a measured bottleneck; no engine/dependency/implementation introduced."
+}

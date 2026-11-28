@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "scope": "Semilla 714 de Sabana. Perfil explícito nativeWorkerLifecycle. Primera incursión nocturna con los civiles en casa. Hosted, Worker de autoridad, Preparer y Draw.",
+  "clock": "Monotónico de Hosted con el avance nocturno normal",
+  "baseline": "4c461221b710d04bd16fda39af81f35cfb23087a",
+  "input": {
+    "file": "E:/wild-guardians-qa/savanna-idle-and-home-20261126/home-source.json",
+    "elapsed": 250,
+    "sha256": "1a229de81022e201cf02fe92c40cc458d56b2e3d221122f2e93f6198ccfc246e"
+  },
+  "raw": {
+    "file": "E:/wild-guardians-qa/savanna-task-stop-exact-20261126/nvidia-native-dawn-next-task.json",
+    "sha256": "d2abf0fb7b3a6a13f7c99f9386d3067ab5609a6ca558d7ffc7dfb9a5f8a28b91"
+  },
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 98.79999999701977
+    }
+  },
+  "elapsed": 631.5399999999344,
+  "home": {
+    "ticket": 2,
+    "frame": 48,
+    "elapsed": 250.08000000000004,
+    "bodyId": 1
+  },
+  "homeArrival": {
+    "ticket": 4,
+    "frame": 446,
+    "elapsed": 290.6999999999715,
+    "bodyId": 1
+  },
+  "born": {
+    "id": "animal-10",
+    "bodyId": 2
+  },
+  "hits": [
+    {
+      "target": "structure-2",
+      "before": 600,
+      "after": 580,
+      "at": 407.2281464807085
+    },
+    {
+      "target": "structure-2",
+      "before": 580,
+      "after": 560,
+      "at": 413.14814648070313
+    }
+  ],
+  "dawn": 599.999999999963,
+  "dayTwoWorker": {
+    "id": "worker-11",
+    "personId": "person-5",
+    "ticket": 16,
+    "frame": 1768,
+    "elapsed": 604.3799999999591,
+    "bodyId": 3
+  },
+  "dayTwoTask": {
+    "ticket": 20,
+    "frame": 1998,
+    "elapsed": 631.2996000976193,
+    "bodyId": 3
+  },
+  "balanceBeforeHire": {
+    "n": "510",
+    "d": "1"
+  },
+  "balanceAfterHire": {
+    "n": "470",
+    "d": "1"
+  },
+  "drained": true,
+  "draws": [
+    {
+      "program": "center-approach",
+      "ticket": 6,
+      "frame": 793,
+      "elapsed": 379.8881464807334
+    },
+    {
+      "program": "center-strike",
+      "ticket": 8,
+      "frame": 1007,
+      "elapsed": 405.66814648070994
+    },
+    {
+      "program": "center-approach",
+      "ticket": 10,
+      "frame": 1022,
+      "elapsed": 408.1481483880563
+    },
+    {
+      "program": "center-strike",
+      "ticket": 12,
+      "frame": 1028,
+      "elapsed": 409.4309831497523
+    },
+    {
+      "program": "retreat",
+      "ticket": 14,
+      "frame": 1066,
+      "elapsed": 414.397583003268
+    },
+    {
+      "program": "animal-absence",
+      "ticket": 14,
+      "frame": 1189,
+      "elapsed": 426.6881464806908
+    }
+  ],
+  "hireCount": 1,
+  "hireDebit": {
+    "n": "-40",
+    "d": "1"
+  },
+  "destroyedCrops": 0,
+  "errors": []
+}

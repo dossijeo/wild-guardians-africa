@@ -1,0 +1,113 @@
+{
+  "scope": "Edge headless, converted mangrove islands fixture, nine synthetic chunks, same-sender FIFO messages and shared flag checked between completed ticks. Pauses before/during/after a 40-step batch, duplicate token and reattempt after resume, including replay of a stale shared token. No message loss, Worker failure, multi-producer ordering, full gameplay, render or production integration.",
+  "runs": [
+    {
+      "mode": "before",
+      "performed": 0,
+      "interrupted": true,
+      "remainder": 39,
+      "ackPaused": true,
+      "duplicateSafe": true,
+      "staleSignalSafe": true,
+      "target": 40,
+      "pauseLatencyMs": 18.344999998807907,
+      "snapshotEqual": true
+    },
+    {
+      "mode": "before",
+      "performed": 0,
+      "interrupted": true,
+      "remainder": 39,
+      "ackPaused": true,
+      "duplicateSafe": true,
+      "staleSignalSafe": true,
+      "target": 40,
+      "pauseLatencyMs": 18.53499999642372,
+      "snapshotEqual": true
+    },
+    {
+      "mode": "before",
+      "performed": 0,
+      "interrupted": true,
+      "remainder": 39,
+      "ackPaused": true,
+      "duplicateSafe": true,
+      "staleSignalSafe": true,
+      "target": 40,
+      "pauseLatencyMs": 18.114999994635582,
+      "snapshotEqual": true
+    },
+    {
+      "mode": "during",
+      "performed": 1,
+      "interrupted": true,
+      "remainder": 38,
+      "ackPaused": true,
+      "duplicateSafe": true,
+      "staleSignalSafe": true,
+      "target": 40,
+      "pauseLatencyMs": 140.84000000357628,
+      "snapshotEqual": true
+    },
+    {
+      "mode": "during",
+      "performed": 1,
+      "interrupted": true,
+      "remainder": 38,
+      "ackPaused": true,
+      "duplicateSafe": true,
+      "staleSignalSafe": true,
+      "target": 40,
+      "pauseLatencyMs": 134.9299999922514,
+      "snapshotEqual": true
+    },
+    {
+      "mode": "during",
+      "performed": 1,
+      "interrupted": true,
+      "remainder": 38,
+      "ackPaused": true,
+      "duplicateSafe": true,
+      "staleSignalSafe": true,
+      "target": 40,
+      "pauseLatencyMs": 129.625,
+      "snapshotEqual": true
+    },
+    {
+      "mode": "after",
+      "performed": 40,
+      "interrupted": false,
+      "remainder": 0,
+      "ackPaused": true,
+      "duplicateSafe": true,
+      "staleSignalSafe": true,
+      "target": 41,
+      "pauseLatencyMs": 8.949999988079071,
+      "snapshotEqual": true
+    },
+    {
+      "mode": "after",
+      "performed": 40,
+      "interrupted": false,
+      "remainder": 0,
+      "ackPaused": true,
+      "duplicateSafe": true,
+      "staleSignalSafe": true,
+      "target": 41,
+      "pauseLatencyMs": 8.604999989271164,
+      "snapshotEqual": true
+    },
+    {
+      "mode": "after",
+      "performed": 40,
+      "interrupted": false,
+      "remainder": 0,
+      "ackPaused": true,
+      "duplicateSafe": true,
+      "staleSignalSafe": true,
+      "target": 41,
+      "pauseLatencyMs": 9.465000003576279,
+      "snapshotEqual": true
+    }
+  ]
+}

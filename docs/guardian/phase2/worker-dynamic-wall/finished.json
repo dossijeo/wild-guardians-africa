@@ -1,0 +1,131 @@
+{
+  "ready": true,
+  "campaign": false,
+  "paused": true,
+  "workerCandidate": "olderMale",
+  "workerGround": null,
+  "workers": [
+    {
+      "id": "qa-worker-0",
+      "profile": "olderMale",
+      "x": 87.34683751648987,
+      "z": -4.270172656425061,
+      "status": "fleeing",
+      "hits": 1,
+      "fallRemaining": 0,
+      "exit": 0.22
+    }
+  ],
+  "faceCandidate": false,
+  "faceCandidateSpecies": null,
+  "expressions": [
+    {
+      "id": "qa-worker-0",
+      "weights": [
+        0,
+        0,
+        0.4957617685447281
+      ],
+      "bindings": 10
+    },
+    {
+      "id": "qa-beast-1",
+      "weights": [
+        0,
+        0,
+        0.00005122658212075549
+      ],
+      "bindings": 11
+    }
+  ],
+  "entityCounts": {
+    "workers": 1,
+    "structures": 2,
+    "crops": 12,
+    "animals": 1
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 0,
+  "maxVisibleGuardians": 0,
+  "guideTrial": false,
+  "guideOrigin": null,
+  "guidePosition": null,
+  "elapsed": 3031.355015000006,
+  "simulate": true,
+  "clockMode": "Game.tick",
+  "shields": [],
+  "active": 0,
+  "origins": [],
+  "retainedAttacks": [],
+  "retainedDraws": 0,
+  "attackVisual": [],
+  "reused": 0,
+  "animalState": "walking",
+  "animalPosition": [
+    83.33830664858355,
+    -9.27191138205886
+  ],
+  "draws": 55,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "npc_hit",
+      "at": 3024.515015000012,
+      "emitter": "qa-worker-0",
+      "played": false
+    },
+    {
+      "id": "beast_hit_character",
+      "at": 3024.515015000012,
+      "emitter": "qa-beast-1",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "build_place",
+      "at": 3028.5950150000085,
+      "emitter": "structure-41",
+      "played": false
+    },
+    {
+      "id": "build_complete",
+      "at": 3028.5950150000085,
+      "emitter": "structure-41",
+      "played": false
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0.014999985694885254,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 0,
+    "maxStepMs": 0.06500005722045898,
+    "solverMs": 0,
+    "solverSteps": 0,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": null,
+    "recoveryFollowMs": 0,
+    "bakedActive": 0,
+    "kinematic": 0
+  },
+  "physicsWorlds": 0,
+  "physicalBodies": 0,
+  "allDown": [
+    {
+      "id": "qa-beast-1",
+      "x": 83.33830664858355,
+      "z": -9.27191138205886
+    }
+  ],
+  "errors": [],
+  "report": null,
+  "commandCosts": []
+}

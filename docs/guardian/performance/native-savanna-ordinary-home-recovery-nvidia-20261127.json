@@ -1,0 +1,26 @@
+{
+  "scenario": "Sabana 714 desde 250 s, pérdida explícita de Draw después de Home19 y antes de la primera incursión",
+  "sourceRevision": "c6045335ec2e4123a2eeef84007ab45e17d7f4dd",
+  "productionSource": "Candidato de recuperación de Home19 ordinario",
+  "adapter": {"vendor": "nvidia", "architecture": "turing"},
+  "artifacts": {
+    "native-ordinary-home-source-714.json": "872a767c1f52b230fa6965c62e105d42f463779bc70810ac9ae78931dbc5379e",
+    "native-menu-savanna-ordinary-home-replacement-extended.json": "11099f2b665c8c64527a2641b2c51128ed59926e3202c8ff59e03ed43592485f",
+    "native-menu-savanna-ordinary-home-final-extended.json": "74db58688352eb21ec446fc1560fc310ea3ef3aa872b5122d25aa1dd220fb32a"
+  },
+  "checkpoint": {"elapsed": 250, "worker": "worker-6", "admission": "pending-home-resources", "fixtureAddedWorldVersionTag": true},
+  "ordinaryHome": {"ticket": 4, "frame": 269, "elapsed": 291.4999999999691, "bindings": 0},
+  "loss": {"requestedAt": 304.9999999999625, "holdId": 504, "publicationFloor": 1228, "callbacksSettled": true, "drawClosed": true, "drawDrained": true},
+  "replacement": {"ticket": 4, "frame": 1, "elapsed": 305.4999999999626, "bindings": 0, "submittedBeforeActivation": true},
+  "activation": {"request": 512, "phases": ["request", "fifo-barrier", "candidate-drain"], "sequenceAfterFifo": 1229},
+  "continuation": {
+    "spawn": {"event": "event-18", "species": "warthog", "elapsed": 377.5351831009225},
+    "firstAnimalDraw": {"actor": "animal-10", "bodyId": 2, "frame": 106, "ticket": 6, "elapsed": 378.7781464807327, "relativeAge": 0},
+    "worker": {"id": "worker-6", "status": "home", "x": 60, "z": 0},
+    "balance": 510,
+    "drawDrained": true,
+    "pageErrors": 0
+  },
+  "earlierCandidateFailure": "Wounded refuge recovery is unavailable",
+  "spontaneousCampaignTriggerIdentified": false
+}
