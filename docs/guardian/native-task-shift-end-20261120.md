@@ -28,3 +28,9 @@ Repetición del componente con Node 20 y los WASM canónicos instalados:
     .cache/tooling/node20.exe --test tests/native-task-shift-end-game.test.js
 
 El recibo conserva la selección completa de 46 archivos, el entorno y el comando de build. Los tiempos de jobs concurrentes son cotas hasta la observación del resultado, no mediciones de rendimiento; TAP y la fase de Vite se registran por separado.
+
+## Task14 pendiente cuando vence el turno
+
+El trabajador conserva su pose estacionaria mientras espera Task14. Al vencer el turno, la autoridad acredita la solicitud y la pose contra el cuerpo Idle20 o Idle21 en WASM. Cancela ese Task14, libera su tarea y declara Home sobre el cuerpo y las fases retenidos. Un READY tardío pierde el permiso de dibujar la marcha. Los dos controles con READY retenido llegan a Home19 y conservan el saldo. Las regresiones conservan también la parada preparada de una tarea que ya está en marcha.
+
+El control continuo de Desierto 712 partió del guardado del portón pagado, contrató a dos trabajadores y cruzó el fin de turno a los 250 s. Completó las dos retiradas Home19 y guardó la partida a los 370 s con los dos contratos, 310 monedas y el portón cerrado. NVIDIA recargó desde los 207 s, observó la tarea pendiente de `worker-11` hasta el relevo a Home, confirmó las dos retiradas y presentó el refugio antes de drenar. La incursión nace a los 370,502 s al recargar el guardado nocturno. El selector de Game elige `plant-3` con el portón presente, y la guarda del perfil introductorio aún bloquea la marcha cuando hay una defensa. [Recibo del fin de turno y del corte siguiente](performance/native-desert-pending-task-shift-20261128.json).

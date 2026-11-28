@@ -1,0 +1,55 @@
+{
+  "scope": "Cancellation of unacquired Task14 from the stationary native owner, followed by Home18 and Home19.",
+  "retainedReadyControl": {
+    "owners": [20, 21],
+    "before": "Native task game cohort reached an unsupported return boundary",
+    "after": "Advance reaches the exact contract boundary. Task14 is aborted, its delayed package never presents, and the same body with exact pose and phases acquires Home. No Task25 or action is acquired.",
+    "beforeTapSha256": "fb86ca8f993d2756f936be534cd47e0c91cee0590a242ecb710176e281bf2012"
+  },
+  "continuousAuthorityControl": {
+    "world": {"biome": "desierto", "seed": "712", "gateId": "structure-7", "collisionIds": [1, 2, 3], "opening": 0},
+    "shiftEnd": 250,
+    "workers": ["worker-9", "worker-11"],
+    "refuge": [88, 0],
+    "bothAtRefugeBy": 282.9999999999768,
+    "checkpointElapsed": 369.99999999997726,
+    "balance": 310,
+    "checkpointSha256": "b09463f990286039aa8691b0d0f2b3413cd352cce222eaf4054da6956f84a0f9",
+    "baselineReceiptSha256": "57b4c0d4c4e5ac6b99a42ea5f8fd8bc3e38f36bb78252de83b1cd88437dc9371",
+    "candidateReceiptSha256": "dc7056895b1e2694c4cfa06a708abcf6ce4c7ca65e55e13b0ae05331f8ceef15"
+  },
+  "firstNightCut": {
+    "raidSpawned": 370.50227023610705,
+    "animalId": "animal-18",
+    "ordinaryTarget": "plant-3",
+    "approachPointCount": 105,
+    "currentFailure": "Native task game cohort contains an unsupported mover",
+    "selectionReceiptSha256": "09b46e6bc75d0da25b6d0528fa67ff1625724f50b80564a157c2ffcd480c9d0d"
+  },
+  "physical": {
+    "adapter": {"vendor": "nvidia", "architecture": "turing"},
+    "checkpointElapsed": 207.00000000001702,
+    "checkpointSha256": "39551351e10d91e89689e63e1d961f951e05d05f4d7fb9def73d57eb6cbcdf7c",
+    "lastObservedPendingTask": {"actor": "worker-11", "task": "task-17", "elapsed": 220.60000000002012},
+    "firstObservedPendingHome": 250.05,
+    "retirements": [
+      {"actor": "worker-11", "bodyId": 2, "homeTicket": 16, "arrivalTicket": 18},
+      {"actor": "worker-9", "bodyId": 1, "homeTicket": 20, "arrivalTicket": 22}
+    ],
+    "finalElapsed": 280.7999999999788,
+    "presentedRefugePublication": 1478,
+    "drawInspected": 727,
+    "opening": 0,
+    "balance": 310,
+    "sameContractsAndLedger": true,
+    "drained": true,
+    "errors": [],
+    "receiptSha256": "2d7c7e020ed57b9c941767d4879d10bc4579c8edadd51e76f3365defff13aeee"
+  },
+  "regression": {"passed": 54, "failed": 0, "skipped": 0, "productionBuild": true},
+  "native": {
+    "standaloneSha256": "20096b38488b83112aecdaf4ac48546f29e9d50f4b3c78da0ed2a007e70198a1",
+    "pthreadSha256": "7eacabc5d8c8e501ec60944aaa48b5d631e01a195a01f270c15ec9a60121ab86",
+    "pthreadLoaderSha256": "0dbd44b4a3bfdc94ea589fb6e36f1de1833e4d05a0314eae76b335a536ec0897"
+  }
+}
