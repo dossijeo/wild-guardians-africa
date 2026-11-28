@@ -27,5 +27,9 @@ export function nativeInitialIdleInitialization(state,worker,anchor,options){
  if(worker.idleState!=null||!anchor||!Number.isFinite(anchor.x)||!Number.isFinite(anchor.z)||!Number.isFinite(anchor.idleRadius)||anchor.idleRadius<=0||Math.hypot(worker.x-anchor.x,worker.z-anchor.z)>anchor.idleRadius)throw Error('Native initial Idle initialization requires its stationary farm anchor');
  return initialIdleState(state,worker,options,true,createIdleState(worker,anchor,state.seed));
 }
-export function nativeInitialIdleSavedState(state,worker,options){const result=initialIdleState(state,worker,options,true);if(worker.nativeRouteAdmission==='native-idle'&&!result.idleState)throw Error('Native initial Idle body has no initialized pose');return result;}
+function publishedInitialIdleState(state,worker,options,activeContract){const result=initialIdleState(state,worker,options,activeContract);if(worker.nativeRouteAdmission==='native-idle'&&!result.idleState)throw Error('Native initial Idle body has no initialized pose');return result;}
+export function nativeInitialIdleSavedState(state,worker,options){return publishedInitialIdleState(state,worker,options,true);}
+// An action already in flight can settle after shift end. Publish the acquired
+// stationary pose before Game requests Home on the next step.
+export function nativeInitialIdleLiveState(state,worker,options){return publishedInitialIdleState(state,worker,options,worker.nativeRouteAdmission!=='native-idle');}
 export function nativeInitialIdleRetainedState(state,worker,options){return initialIdleState(state,worker,options,false);}

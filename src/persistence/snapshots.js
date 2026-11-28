@@ -1,6 +1,6 @@
 import {nativeFarmArrivalState,nativeFarmArrivalExecutionState,nativeFarmArrivalHeldState,nativeFarmArrivalBoundState} from '../world/native-farm-arrival-state.js';
 import {copyNativeTaskActionProgress} from '../world/native-task-action-presentation.js';
-import {nativeInitialIdleSavedState} from '../world/native-initial-idle-state.js';
+import {nativeInitialIdleLiveState,nativeInitialIdleSavedState} from '../world/native-initial-idle-state.js';
 import {nativeIdleStrollLiveState,nativeIdleStrollSavedState} from '../world/native-idle-stroll-state.js';
 import {validDamageProfile} from '../simulation/raid-agricultural-impact.js';
 import {validateAwakenings} from '../simulation/awakenings.js';
@@ -143,7 +143,7 @@ export function validateSnapshot(state,{livePhysics=false}={}) {
       // An expired live corridor stays owned until prepared24, while a saved
       // Farm declaration must still have a valid contract before restoration.
       if(farmArrival){if(worker.nativeRouteAdmission==='native-farm-arrival-held')nativeFarmArrivalHeldState(state,worker);else if(worker.nativeRouteAdmission==='native-farm-arrival')(livePhysics?nativeFarmArrivalBoundState:nativeFarmArrivalExecutionState)(state,worker);else nativeFarmArrivalState(state,worker,{canonical:true});}
-      if(initialIdle)nativeInitialIdleSavedState(state,worker,{canonical:true});
+      if(initialIdle)(livePhysics?nativeInitialIdleLiveState:nativeInitialIdleSavedState)(state,worker,{canonical:true});
       // A live projection does not declare a loadable checkpoint. An approach
       // retains its actual WALK remaining/anchor; loading requires a fresh declaration.
       if(strolling)(livePhysics&&worker.nativeRouteAdmission==='native-idle-stroll'?nativeIdleStrollLiveState:nativeIdleStrollSavedState)(state,worker);

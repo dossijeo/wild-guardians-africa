@@ -257,6 +257,25 @@
       }
     }
   },
+  "lateWateringAtShiftEnd": {
+    "physicalRun": {
+      "path": ".cache/desert-menu-712/native-desert-menu-712-night-horizon-extended.json",
+      "sha256": "b48ceab76bb58b6349e94f710f85b7570fcd259ecf15140811342a772162f718",
+      "action15": {"ticket": 42, "effectiveTime": 249.25000000002663},
+      "idle20": {"ticket": 44, "effectiveTime": 252.10000000000048},
+      "maximumShiftTime": 250,
+      "rejectedPublication": 6171,
+      "error": "Invalid native initial Idle declaration",
+      "nightReached": false
+    },
+    "deterministicHost": {
+      "base": {"path": ".cache/desert-menu-712/late-watering-exact-base.tap", "sha256": "85f32c95312b9e1cd1594763021aa553b4e1c0f4be126249e2abba1d3a840780"},
+      "candidate": {"path": ".cache/desert-menu-712/late-watering-focal.tap", "sha256": "52013c552b94fb757f08e7b7e1ebbb55d6d2ba0167e094d520a70fdce0e1cd8f"},
+      "test": "a watering action acquired before shift end settles to the same native body and goes home",
+      "passed": true,
+      "regression": {"passed": 80, "failed": 0, "skipped": 0}
+    }
+  },
   "deterministicLegalEnclosure": {
     "points": [
       [

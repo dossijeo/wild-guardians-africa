@@ -43,7 +43,7 @@ import {copyNativeHomeRequestReference,copyNativeHomeDeclarationReference,sameNa
 import {nativeHomeWorkerStatus} from '../native-home-request-reference.js';
 import {RECOVERY_EXIT_SECONDS,woundedHomeSourceCurrent} from '../../simulation/worker-recovery.js';
 import {copyNativeInitialIdleRequestReference,copyNativeInitialIdleDeclarationReference,copyNativeInitialIdleState} from '../native-initial-idle-request-reference.js';
-import {copyNativeInitialIdleBodyReference,copyNativeInitialIdleBodyProposal,copyNativeInitialIdleBodyAttestation,copyNativeTaskCancellationSource,sameNativeTaskCancellationSource} from '../native-initial-idle-body.js';
+import {copyNativeInitialIdleBodyReference,copyNativeInitialIdleBodyProposal,copyNativeInitialIdleBodyAttestation,copyNativeTaskCancellationSource,sameNativeTaskCancellationSource,nativeInitialIdleActionSource} from '../native-initial-idle-body.js';
 import {readNativePendingTaskCancellation} from '../native-pending-task-cancellation.js';
 import {copyNativeIdleCycleReference,copyNativeIdleCycleProposal,copyNativeIdleCycleAttestation,copyNativeIdleCycleNextRequest,sameNativeIdleCycleNextRequest} from '../native-idle-cycle.js';
 import {nativeInitialIdleDeclaration,nativeInitialIdleInitialization,nativeInitialIdleRetainedState,nativeInitialIdleSavedState} from '../native-initial-idle-state.js';
@@ -5576,6 +5576,9 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,nati
     if(!state.workers.includes(worker)||worker.status!=='idle'||worker.taskId||worker.crateId||worker.nativeRouteAdmission&&!restored&&!initial&&!body&&!held&&!completed||worker.path?.length||worker.incapacitated||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining||worker.raidReturn||state.raid||!contractExpired(worker,state)&&state.time<(profileEnd.get(worker.profile)??0))throw Error('Native Idle Home requires a finished idle contract');
     const execution=restored?projectNativeIdleStrollDeclaration(state,worker):held||completed?projectNativeIdleStroll(state,worker):cycle?projectNativeIdleCycle(state,worker):body?projectNativeInitialIdleBody(state,worker):initial?projectNativeInitialIdleDeclaration(state,worker):projectNativeSettledWorkerExecution(state,worker),village=state.villages.find(v=>v.id===worker.villageId),home=village?.entry??village;
     if(!execution||!restored&&!held&&!completed&&!initial&&!body&&execution.binding.reference.home||!home)throw Error('Native Idle Home requires its actual stationary source');
+    // Game has released the completed action. Apply its task delta before the
+    // new Home request checks that this body no longer owns an assignment.
+    if(nativeInitialIdleActionSource(execution.binding?.reference))flushTaskEvents();
     const goal={villageId:numericId(village.id),x:home.x,z:home.z},request=restored?bridge.requestNativeRestoredIdleStrollHome(execution,goal):held||completed?bridge.requestNativeIdleStrollHome(execution,goal):cycle?bridge.requestNativeIdleCycleHome(execution.binding,goal):body?bridge.requestNativeInitialIdleBodyHome(execution.binding,goal):initial?bridge.requestNativeInitialIdleHome(execution,goal):bridge.requestNativeIdleHome(execution.binding,goal);
     // Only completed WALK can be busy; unbound declarations legitimately return no body reference.
     if(completed&&!request)return null;

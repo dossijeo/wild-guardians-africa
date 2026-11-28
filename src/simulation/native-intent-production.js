@@ -65,7 +65,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
    if(marker==='pending-stroll-resources'&&planner.nativeIdleStrollRequestReference(actorId))return {actorId,kind:'idle-stroll',operation:'startNativeIdleStrollAfterGpuQuiescence',prepare:'prepareNativeIdleStrollResources'};
    if((marker==='pending-home-resources'||marker==='pending-raid-flight-resources'&&planner.nativeRaidFlightMember?.(state,state.raid?.animals[0])===worker)&&planner.nativeHomeRequestReference(actorId)||!marker&&worker.status==='returning'&&planner.nativeTaskSettlementBinding(actorId)?.reference.home)return {actorId,kind:'home-route',operation:'startNativeHomeRouteAfterGpuQuiescence',prepare:'prepareNativeHomeRouteResources'};
    if(marker==='native-home'&&planner.nativeHomeRouteExecution(actorId)?.arrived)return {actorId,kind:'home-arrival',operation:'startNativeHomeArrivalAfterGpuQuiescence',prepare:'prepareNativeHomeArrivalResources'};
-   if(marker==='native-idle'){
+   if(marker==='native-idle'&&!contractExpired(worker,state)&&state.time<profileEnd.get(worker.profile)){
     const cycle=planner.nativeIdleCycleExecution(actorId),request=cycle&&planner.nativeIdleCycleNextRequest(actorId);
     if(!cycle&&planner.nativeInitialIdleBodyState(actorId)||request){const stroll=request?.idleState.mode==='walk';return {actorId,kind:stroll?'idle-stroll':'idle-cycle',operation:stroll?'startNativeIdleStrollAfterGpuQuiescence':'startNativeIdleCycleAfterGpuQuiescence',prepare:stroll?'prepareNativeIdleStrollResources':'prepareNativeIdleCycleResources'};}
    }

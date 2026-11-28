@@ -2,11 +2,12 @@ import {validateSnapshot} from '../persistence/snapshots.js';
 import {guardianImpactTime} from './guardian-timing.js';
 import {PROFILES,contractExpired} from './workforce.js';
 import {nativeIdleStrollSaveAvailable} from '../world/native-idle-stroll-state.js';
-const farmProfileEnd=new Map(PROFILES.map(p=>[p.id,p.end]));
+const profileEnd=new Map(PROFILES.map(p=>[p.id,p.end]));
 // Active Farm saves carry pose/intent, never a resident corridor. A held owner
 // may restore to Home after expiry; an expired moving corridor stays unsavable.
+// A completed action can also publish its expired Idle body before Home.
 // Full semantic validation remains in the checkpoint serializer.
-function farmSaveBlocked(state,worker){return ['pending-farm-arrival-resources','native-farm-arrival'].includes(worker.nativeRouteAdmission)&&(contractExpired(worker,state)||!farmProfileEnd.has(worker.profile)||state.time>=farmProfileEnd.get(worker.profile));}
+function nativeCivilSaveBlocked(state,worker){return ['pending-farm-arrival-resources','native-farm-arrival','native-idle'].includes(worker.nativeRouteAdmission)&&(contractExpired(worker,state)||!profileEnd.has(worker.profile)||state.time>=profileEnd.get(worker.profile));}
 
 // Live physics can roll or remain down longer than the save format permits.
 // This validation does not claim that the resulting state is restorable.
@@ -34,7 +35,7 @@ export function confirmedStateSaveAvailable(state,{allowNativeRaidFlight=false,a
   return w.nativeRefugeSequence!==undefined||!allowNativeRaidFlight&&
    (w.status==='fleeing'&&admission==='native-home'||admission==='pending-raid-flight-resources')||
    admission==='pending-farm-flight-stop'&&!allowNativeFarmStop||['pending-farm-flight-restore','pending-idle-flight-stop','pending-task-flight-stop'].includes(admission)||
-   farmSaveBlocked(state,w)||(admission==='native-idle-stroll'||admission==='pending-stroll-resources')&&!nativeIdleStrollSaveAvailable(state,w);
+   nativeCivilSaveBlocked(state,w)||(admission==='native-idle-stroll'||admission==='pending-stroll-resources')&&!nativeIdleStrollSaveAvailable(state,w);
  });
  return !workerBlocked&&!(state.raid?.animals??[]).some(a=>a.magicDown||a.magicImpact&&state.elapsed>=guardianImpactTime(a.magicImpact)&&state.elapsed-guardianImpactTime(a.magicImpact)<.5);
 }

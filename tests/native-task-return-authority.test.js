@@ -13,6 +13,7 @@ import {recoveredStoppedGateSamplesMatch,stopFields} from '../src/world/native-s
 import {copyTask25HomeResources} from '../src/world/native-task25-home-recovery.js';
 import {copyNativeStoppedClock} from '../src/rendering/native-stopped-clock.js';
 import {nativeHomeRequestContinuesIdleCycle,nativeHomeRequestContinuesInitialIdle} from '../src/world/native-home-request-reference.js';
+import {serialize} from '../src/persistence/snapshots.js';
 import {fixture,flush} from './helpers/remote-webgpu-fixture.js';
 
 const deferred=()=>{let resolve;const promise=new Promise(r=>{resolve=r;});return {promise,resolve};};
@@ -49,6 +50,63 @@ async function movingTask(profile,onReady,nativeWorkerLifecycle=false,onCommit,g
  }catch(error){await f?.close();source.close();throw error;}
 }
 const pose=w=>[w.x,w.z,w.heading,w.runPhase,w.walkPhase,w.carryPhase];
+
+test('a watering action acquired before shift end settles to the same native body and goes home',async()=>{
+ const profile=PROFILES.find(p=>p.id==='youngMale');
+ const source=nativeIdleCycleGameFixture({mode:'rest',remaining:5,profile:profile.id,peer:false});
+ const holdHome=deferred();
+ let f,home,idle,action;
+ try{
+  const state=structuredClone(source.state),worker=state.workers[0];
+  state.time=profile.end-3;
+  state.villages.find(v=>v.id===worker.villageId).entry=source.point(-9,0);
+  const crop=state.plants[0],position=source.point(-3,0);
+  Object.assign(crop,position);
+  crop.water[0].status='due';
+  f=await nativeProductionAuthority(state,{nativeWorkerLifecycle:true,onCommit(record,data){
+   if(record.kind==='task-action')action=data.nativeTaskActionBinding;
+   if(record.resources.nativeInitialIdleBody?.wateringSource)idle=data.nativeInitialIdleBodyBinding;
+  },onReady(record){
+   if(record.kind==='home-route'){home=record;return holdHome.promise;}
+  }});
+  const advance=async()=>{
+   f.advance(.05);
+   await f.present();await flush();
+  };
+  const completedWatering=()=>f.records.find(record=>record.kind==='initial-idle-body'&&record.resources.nativeInitialIdleBody.wateringSource);
+  for(let i=0;i<180&&!completedWatering();i++)await advance();
+  await untilProduction(f,()=>completedWatering()?.committed);
+  assert(action&&idle);
+  assert(state.time+action.reference.worldBoundary.effectiveTime-state.elapsed<profile.end);
+  const published=f.command({kind:'snapshot',nativeAuthorityCheckpoint:true}),stationary=JSON.parse(published.snapshot);
+  assert(stationary.time>=profile.end);
+  assert.equal(stationary.workers[0].nativeRouteAdmission,'native-idle');
+  assert.equal(published.saveAvailable,false);
+  assert.throws(()=>serialize(stationary),/Invalid native initial Idle declaration/);
+  assert.equal(stationary.events.filter(e=>e.type==='WaterSatisfied'&&e.targetId===crop.id).length,1);
+  assert.equal(idle.reference.bodyId,action.reference.request.bodyId);
+  const currentPose=pose(stationary.workers[0]);
+  await untilProduction(f,()=>f.host.inspect().nativeRouteFrame?.worldBoundary?.ticket===idle.reference.worldBoundary.ticket);
+  assert(f.host.inspect().nativeRouteFrame.bindings.some(binding=>binding.nativeInitialIdleBody?.bodyId===idle.reference.bodyId));
+  await advance();
+  await untilProduction(f,()=>home?.packet);
+  const current=f.snapshot();
+  assert.equal(current.workers[0].nativeRouteAdmission,'pending-home-resources');
+  assert.deepEqual(pose(current.workers[0]),currentPose);
+  assert.equal(home.resources.bodyId,idle.reference.bodyId);
+  assert(nativeHomeRequestContinuesInitialIdle(home.resources.sourceRequest,idle.reference.sourceRequest));
+  assert(!f.records.slice(f.records.indexOf(completedWatering())+1).some(record=>record.kind==='idle-cycle'));
+  holdHome.resolve();
+  await untilProduction(f,()=>home.committed);
+  const arrival=()=>f.records.find(record=>record.kind==='home-arrival');
+  for(let i=0;i<180&&!arrival();i++)await advance();
+  await untilProduction(f,()=>arrival()?.committed);
+  await untilProduction(f,()=>f.host.inspect().nativeRouteFrame?.worldBoundary?.ticket>home.resources.worldBoundary.ticket&&!f.host.inspect().nativeRouteFrame.bindings.length);
+  assert.equal(f.snapshot().workers[0].status,'home');
+  assert.equal(f.snapshot().events.filter(e=>e.type==='WaterSatisfied'&&e.targetId===crop.id).length,1);
+  assert.deepEqual(f.faults,[]);
+ }finally{holdHome.resolve();await f?.close();source.close();}
+});
 
 test('unsupported return checks the same rounded clock edge before moving native bodies',()=>{
  const f=createNativeTaskGameFixture();try{
