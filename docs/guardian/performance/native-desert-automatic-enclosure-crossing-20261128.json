@@ -166,6 +166,27 @@
       "errors": [],
       "failedRequests": []
     },
+    "nvidiaStop12Submit": {
+      "productCommit": "0c400d5fb",
+      "receiptSha256": "1f585e2952dc4267e10c9152ddd33d9e1ba08c47b31f97bb5318a075b5d3dea9",
+      "scope": "Second continuous run with a witness emitted after successful GPU submit. This motor stopped at opening zero. The deterministic run covers a nonzero opening.",
+      "prepared": {"ticket": 21, "effectiveTime": 619.3999999999437},
+      "acquired": {"ticket": 22, "effectiveTime": 620.2999999999429},
+      "actorId": 29,
+      "bodyId": 3,
+      "assignmentSequence": 20,
+      "gateId": 7,
+      "mechanism": 1,
+      "nativeOpening": 0,
+      "submittedOpening": 0,
+      "submittedDraw": 1747,
+      "crossingDraw": 1834,
+      "crossingAt": 629.8499999999342,
+      "wateredAt": 637.3999999999273,
+      "sameAuthorityAndDraw": true,
+      "drained": true,
+      "errors": []
+    },
     "remaining": ["The browser input is an existing public checkpoint before Home19.", "Terminal Draw replacement with a stopped Stop12 motor remains unqualified."]
   },
   "secondShift": {
